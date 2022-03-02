@@ -14,6 +14,34 @@ import java.math.BigDecimal;
 public class TarhilInvoiceDetail implements Cloneable{
 
     /**
+     * @return the gallaryName
+     */
+    public String getGallaryName() {
+        return gallaryName;
+    }
+
+    /**
+     * @param gallaryName the gallaryName to set
+     */
+    public void setGallaryName(String gallaryName) {
+        this.gallaryName = gallaryName;
+    }
+
+    /**
+     * @return the serial
+     */
+    public Integer getSerial() {
+        return serial;
+    }
+
+    /**
+     * @param serial the serial to set
+     */
+    public void setSerial(Integer serial) {
+        this.serial = serial;
+    }
+
+    /**
      * @return the costCenterId
      */
     public Integer getCostCenterId() {
@@ -62,8 +90,25 @@ public class TarhilInvoiceDetail implements Cloneable{
     public void setCostAccountId(Integer costAccountId) {
         this.costAccountId = costAccountId;
     }
+
+    /**
+     * @return the inventoryId
+     */
+    public Integer getInventoryId() {
+        return inventoryId;
+    }
+
+    /**
+     * @param inventoryId the inventoryId to set
+     */
+    public void setInventoryId(Integer inventoryId) {
+        this.inventoryId = inventoryId;
+    }
     
     private Integer costCenterId;
+    private Integer inventoryId;
     private BigDecimal totalCost;
     private Integer costAccountId;
+    private Integer serial;
+    private String gallaryName;
 }

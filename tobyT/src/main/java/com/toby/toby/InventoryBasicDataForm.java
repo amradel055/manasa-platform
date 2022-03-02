@@ -2293,7 +2293,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     }
 
     public void fillInvInvoiceDTO() {
-        fillInvInvoiceDetailDTO();
+        fillInvInvoiceDetailDTO();//here
         setInvInvoiceDTO(settingInventory(getInvInvoiceDTO()));
         fillLists();
         if (!ScreenNameClassEnum.INVTRANSFER.equals(getInvInvoiceDTO().getScreenName())

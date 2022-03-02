@@ -7,6 +7,7 @@ package com.toby.businessservice;
 
 import com.toby.dto.GeneralJournalDTO;
 import com.toby.dto.InvInvoiceDTO;
+import com.toby.entity.GeneralJournal;
 import com.toby.entity.GlBankTransaction;
 import com.toby.entity.GlBankTransactionDetail;
 import com.toby.entity.TobyUser;
@@ -46,5 +47,6 @@ public interface GlBankTransactionDetailsService {
     
     public Integer tarhilSettlementVoucher(List<GlBankTransactionDetail> list1, GlBankTransaction glBankTransaction, TobyUser tobyUser, Integer specialDocumentsTypes, boolean postFlag);
     
+    public List<GeneralJournal> tarhilCashOne(TobyUser tobyUser, Integer type);
 
 }

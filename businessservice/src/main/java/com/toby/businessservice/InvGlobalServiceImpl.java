@@ -1185,7 +1185,8 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             String itemBarcode, BigDecimal screwing, Integer itemId, BigDecimal weight, Integer unitId,
             Integer unitSerial, String unitName, Integer inventoryItem, BigDecimal number,
             BigDecimal quantityOfOneUnit, InvInventory invInventory, InvItem invItem,
-            CompanyActivityClassEnum companyActivityClassEnum, ScreenNameClassEnum screenNameClassEnum, Integer detailId, BigDecimal costAvarage) {
+            CompanyActivityClassEnum companyActivityClassEnum, ScreenNameClassEnum screenNameClassEnum, 
+            Integer detailId, BigDecimal costAvarage) {
 
 //        if (companyActivityClassEnum.equals(CompanyActivityClassEnum.RetailSaleForClothFactory)
 //                && (ScreenNameClassEnum.INVSALESINVOICEFORM.equals(screenNameClassEnum)

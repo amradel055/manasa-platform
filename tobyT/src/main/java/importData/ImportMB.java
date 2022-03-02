@@ -43,6 +43,7 @@ import com.toby.dto.SymbolDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.CostCenter;
 import com.toby.entity.Currency;
+import com.toby.entity.GeneralJournal;
 import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlAccount;
 import com.toby.entity.GlYear;
@@ -89,7 +90,7 @@ import org.primefaces.model.UploadedFile;
 @Named(value = "importMB")
 @ViewScoped
 public class ImportMB extends Basic implements Serializable {
-
+    
     private Integer index = 0;
     private UploadedFile documentFile;
     private UploadedFile costCenterFile;
@@ -104,7 +105,7 @@ public class ImportMB extends Basic implements Serializable {
     private UploadedFile GeneralJournalHeadFile;
     private UploadedFile ContractFile;
     private UploadedFile OfferCompanyFile;
-
+    
     private InputStream inputStreamUploadDocument;
     private InputStream inputStreamUploadCostCenter;
     private InputStream inputStreamUploadAdminUnit;
@@ -117,25 +118,25 @@ public class ImportMB extends Basic implements Serializable {
     private InputStream inputStreamUploadinvOpeningBalance;
     private InputStream inputStreamUploadCustomer;
     private InputStream inputStreamUploadContract;
-
+    
     private UserData userData;
-
+    
     private List<Branch> brachListFrom;
     private List<Branch> brachListTo;
-
+    
     private Branch brachListSelectFrom;
     private Branch brachListSelectTo;
-
+    
     private BranchConverter branchConverterFrom;
     private BranchConverter branchConverterTo;
-
+    
     private Integer moduleId = 1;
     private Integer level;
     private Integer progress;
-
+    
     public ImportMB() {
     }
-
+    
     @EJB
     private CostCenterService costCenterService;
     @EJB
@@ -186,25 +187,66 @@ public class ImportMB extends Basic implements Serializable {
     private GlAccountServiceDTO glAccountServiceDTO;
     @EJB
     private InvNoticeService invNoticeService;
-
+    
     public void tarhilInvoiceOne() throws CloneNotSupportedException {
         List<GeneralJournalDTO> list = invPurchaseInvoiceService_1.tarhilOne(getUserData().getUser());
-
+        
         for (GeneralJournalDTO dto : list) {
             dto.setId(null);
             generaljournalServiceDTO.addGeneralJournalDTOWithDetail(dto, getUserData().getUser());
         }
     }
+    
+    public void tarhilInvoiceOneMoshtaryat() throws CloneNotSupportedException {
+//        Integer salesTaxAccount = invPurchaseInvoiceService_1.excuteQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"SALES_TAX_ACCOUNT\" AND a.accountId IS NOT NULL");
+//        Integer salesAccountNumber = invPurchaseInvoiceService_1.excuteQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"SALES_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL");
+//        Integer managerCostAccount = invPurchaseInvoiceService_1.excuteQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"MANAGER_CURRENT_ACCOUNT\" AND a.accountId IS NOT NULL");
+//        Integer costOfSoldGoods = invPurchaseInvoiceService_1.excuteQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"COST_OF_GOODS_SOLD_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL");
+//        Integer storeAccountNumber = invPurchaseInvoiceService_1.excuteQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"STORE_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL");
+//        List<Integer> list = invPurchaseInvoiceService_1.findInvoiceIdList();
+//        for (Integer i : list) {
+//            System.err.println("----->    " + i);
+//            invPurchaseInvoiceService_1.tarhilOneMoshtrayat(getUserData().getUser(), managerCostAccount, salesTaxAccount, salesAccountNumber, managerCostAccount, costOfSoldGoods, storeAccountNumber);
+//        }
 
+        List<GeneralJournalDTO> list = invPurchaseInvoiceService_1.testTarhil(getUserData().getUser());
+        Integer serial = generaljournalServiceDTO.findMaxSerial();
+        if (serial == null) {
+            serial = 100001;
+        }
+        for (GeneralJournalDTO dto : list) {
+            dto.setId(null);
+            dto.setSerial(++serial);
+            generaljournalServiceDTO.addGeneralJournalDTOWithDetail(dto, getUserData().getUser());
+        }
+//        List<Integer> invoiceIdList = new ArrayList<Integer>(map.keySet());
+//        for (Integer id2 : invoiceIdList) {
+//            Integer tarhilId = map.get(id2);
+//            invPurchaseInvoiceService_1.updateTarhil(id2, tarhilId);
+//        }
+    }
+    
     public void tarhilCashOne() {
         List<GeneralJournalDTO> list = bankTransactionDetailsService.tarhilOne(getUserData().getUser(), 1);
-//        Integer idDtail = 1;
+        Integer serial = generaljournalServiceDTO.findMaxSerial();
+        if (serial == null) {
+            serial = 100001;
+        }
         for (GeneralJournalDTO dto : list) {
-            generaljournalServiceDTO.addGeneralJournalDTOWithDetail(dto, getUserData().getUser(), dto.getSerial());
-//            idDtail = idDtail + 5;
+            ++serial;
+            generaljournalServiceDTO.addGeneralJournalDTOWithDetail(dto, getUserData().getUser(), serial);
         }
     }
 
+//    public void tarhilCashOne2() {
+////        List<GeneralJournalDTO> list = bankTransactionDetailsService.tarhilOne(getUserData().getUser(), 1);
+//        List<GeneralJournal> list = bankTransactionDetailsService.tarhilCashOne(getUserData().getUser(), 1);
+////        Integer idDtail = 1;
+//        for (GeneralJournal dto : list) {
+//            generaljournalServiceDTO.addGeneralJournalDTOWithDetail(dto, getUserData().getUser(), dto.getSerial());
+////            idDtail = idDtail + 5;
+//        }
+//    }
     public void tarhilExitOne() {
         List<GeneralJournalDTO> list = bankTransactionDetailsService.tarhilOne(getUserData().getUser(), 0);
         Integer idDtail = 600000;
@@ -213,13 +255,13 @@ public class ImportMB extends Basic implements Serializable {
             idDtail = idDtail + 5;
         }
     }
-
+    
     public void tarhilAll() throws CloneNotSupportedException {
         tarhilCashOne();
         tarhilInvoiceOne();
         tarhilExitOne();
     }
-
+    
     public void tarhilInvNoticeOne() {
         try {
             invNoticeService.getALLInvNoticeForToby(getUserData().getUser());
@@ -227,13 +269,13 @@ public class ImportMB extends Basic implements Serializable {
             Logger.getLogger(ImportMB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     @PostConstruct
     public void init() {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         setUserData((UserData) context.getSessionMap().get("userLogInData"));
     }
-
+    
     public void OpenDlg(String dlgvar) {
         RequestContext context = RequestContext.getCurrentInstance();
         context.execute("PF('" + dlgvar + "').show();");
@@ -255,7 +297,7 @@ public class ImportMB extends Basic implements Serializable {
         importUpdateInvItem3(sheet);
         workbook.close();
     }
-
+    
     public void importUpdateEmployee(Sheet sheet) throws NumberFormatException {
         List<TobyUser> userList = new ArrayList<>();
         TobyUser user = new TobyUser();
@@ -281,14 +323,14 @@ public class ImportMB extends Basic implements Serializable {
                 Branch branch = new Branch();
                 branch.setId(182);
                 user.setBranchId(branch);
-
+                
                 user.setMsg(employeeJob.getContents());
                 user.setSallary(new BigDecimal(unitPrice.getContents()));
                 userList.add(user);
             }
-
+            
         }
-
+        
         tobyUserService.updateInvItem2(userList);
         OpenDlg("sucesses");
         System.out.println("تم الحفظ بنجاح");
@@ -309,32 +351,32 @@ public class ImportMB extends Basic implements Serializable {
         importUpdateInvItem(sheet);
         workbook.close();
     }
-
+    
     public void importUpdateInvItem(Sheet sheet) throws NumberFormatException {
         InvItem invItem;
         Map<String, InvItem> invItemMap = new HashMap<>();
-
+        
         for (int i = 1; i < sheet.getRows(); i++) {
             if (!sheet.getCell(0, i).getContents().isEmpty()) {
-
+                
                 Cell suplierName = sheet.getCell(7, i);
                 Cell storeName = sheet.getCell(8, i);
                 Cell itemName = sheet.getCell(9, i);
                 Cell itemCode = sheet.getCell(10, i);
-
+                
                 invItem = new InvItem();
-
+                
                 if (itemName != null && !itemName.getContents().trim().isEmpty() && itemCode != null && !itemCode.getContents().trim().isEmpty()) {
                     invItem.setNameen(suplierName.getContents());
                     invItem.setImage(storeName.getContents());
                     invItemMap.put(itemCode.getContents().trim(), invItem);
                 }
-
+                
             }
         }
-
+        
         invItemService.updateInvItem2(invItemMap, getUserData().getUserlogin());
-
+        
         OpenDlg("sucesses");
         System.out.println("تم الحفظ بنجاح");
     }
@@ -354,27 +396,27 @@ public class ImportMB extends Basic implements Serializable {
         importUpdateInvItem3(sheet);
         workbook.close();
     }
-
+    
     public void importUpdateInvItem3(Sheet sheet) throws NumberFormatException {
         InvItem invItem;
         Map<String, InvItem> invItemMap = new HashMap<>();
-
+        
         for (int i = 0; i < sheet.getRows(); i++) {
             if (!sheet.getCell(0, i).getContents().isEmpty()) {
-
+                
                 Cell itemCode = sheet.getCell(0, i);
-
+                
                 invItem = new InvItem();
-
+                
                 if (itemCode != null && !itemCode.getContents().trim().isEmpty()) {
                     invItemMap.put(itemCode.getContents().trim(), invItem);
                 }
-
+                
             }
         }
-
+        
         itemProductionStagesService.saveAll(invItemMap, getUserData().getUserlogin());
-
+        
         OpenDlg("sucesses");
         System.out.println("تم الحفظ بنجاح");
     }
@@ -395,7 +437,7 @@ public class ImportMB extends Basic implements Serializable {
         updateInvItemType(sheet);
         workbook.close();
     }
-
+    
     public void importInvItemCode(Sheet sheet) throws NumberFormatException {
         InvItemDTO invItem;
         List<InvItemDTO> invItemDTOList = new ArrayList<>();
@@ -412,7 +454,7 @@ public class ImportMB extends Basic implements Serializable {
         invItemService.findInvItemMap(getUserData().getUserBranch().getId(), invItemDTOList);
         System.out.println("تم الحفظ بنجاح");
     }
-
+    
     public void updateInvItemType(Sheet sheet) throws NumberFormatException {
         InvItemDTO invItem;
         List<InvItemDTO> invItemDTOList1 = new ArrayList<>();;
@@ -433,7 +475,7 @@ public class ImportMB extends Basic implements Serializable {
                     invItem.setType(Integer.parseInt(type2));
                     invItemDTOList2.add(invItem);
                 }
-
+                
             }
         }
         invItemService.updateInvItemType(getUserData().getUserBranch().getId(), invItemDTOList1, 1);
@@ -456,7 +498,7 @@ public class ImportMB extends Basic implements Serializable {
         importInvItem(sheet);
         workbook.close();
     }
-
+    
     public void importInvItem(Sheet sheet) throws NumberFormatException {
         InvItem invItem;
         Map<String, Symbol> symbolMap = new HashMap<>();
@@ -469,7 +511,7 @@ public class ImportMB extends Basic implements Serializable {
             System.out.print("not found currency");
             return;
         }
-
+        
         InventoryDelegator inventoryDelegator = new InventoryDelegator();
         List<InventoryDelegator> delegatorList = invDelegatorService.getPurchaseByBranch(getUserData().getUserBranch().getId());
         if (delegatorList != null && !delegatorList.isEmpty()) {
@@ -478,7 +520,7 @@ public class ImportMB extends Basic implements Serializable {
             System.out.print("not found delegator");
             return;
         }
-
+        
         Symbol unitSymbol = new Symbol();
         List<Symbol> unitList = symbolService.getUnitsByCompanyId(getUserData().getCompany().getId());
         if (unitList != null && !unitList.isEmpty()) {
@@ -487,9 +529,9 @@ public class ImportMB extends Basic implements Serializable {
             System.out.print("not found unit");
             return;
         }
-
+        
         Map<String, String> mapItems = invItemService.findInvItemDTOMap(getUserData().getUserBranch().getId());
-
+        
         for (int i = 1; i < sheet.getRows(); i++) {
             if (!sheet.getCell(0, i).getContents().isEmpty()) {
                 String code = sheet.getCell(8, i).getContents();
@@ -500,27 +542,27 @@ public class ImportMB extends Basic implements Serializable {
                 }
             }
         }
-
+        
         OpenDlg("sucesses");
         System.out.println("تم الحفظ بنجاح");
     }
-
+    
     public void initInvItemData(Sheet sheet, int i, InvItem invItem, Map<String, Symbol> symbolMap, Map<String, InvOrganizationSite> invOrganizationSiteMap, Currency currency, InventoryDelegator inventoryDelegator, Symbol unitSymbol) throws NumberFormatException {
-
+        
         Cell meters = sheet.getCell(0, i);
         Cell minpriceyoung = sheet.getCell(1, i);
         Cell maxpriceyoung = sheet.getCell(2, i);
         Cell minpricemen = sheet.getCell(3, i);
         Cell maxpricemen = sheet.getCell(4, i);
-
+        
         Cell type = sheet.getCell(5, i);
         Cell sellPrice = sheet.getCell(6, i);
-
+        
         Cell name = sheet.getCell(7, i);
         Cell code = sheet.getCell(8, i);
-
+        
         System.out.println("Line -> " + i + " Code -> " + code.getContents().toString() + " Name -> " + name.getContents().toString());
-
+        
         if (type.getContents() != null && type.getContents().equals("عرضين")) {
             invItem.setItemNatural(2);
         } else if (type.getContents() != null && type.getContents().equals("عرض واحد")) {
@@ -530,13 +572,13 @@ public class ImportMB extends Basic implements Serializable {
         invItem.setNumbermetersmen(new BigDecimal(meters.getContents()));
         invItem.setNumbermetersfreeyoung(new BigDecimal(meters.getContents()));
         invItem.setNumbermetersfreemen(new BigDecimal(meters.getContents()));
-
+        
         invItem.setMinpriceyoung(new BigDecimal(minpriceyoung.getContents()));
         invItem.setMaxpriceyoung(new BigDecimal(maxpriceyoung.getContents()));
         invItem.setMinpricemen(new BigDecimal(minpricemen.getContents()));
         invItem.setMaxpricemen(new BigDecimal(maxpricemen.getContents()));
         invItem.setIsNew(1);
-
+        
         invItem.setUnitId(unitSymbol);
         invItem.setSellPrice(new BigDecimal(sellPrice.getContents()));
         invItem.setCode(code.getContents());
@@ -562,7 +604,7 @@ public class ImportMB extends Basic implements Serializable {
         importOfferCompany(sheet);
         workbook.close();
     }
-
+    
     public void importOfferCompany(Sheet sheet) throws NumberFormatException {
         for (int i = 1; i < sheet.getRows(); i++) {
             if (!sheet.getCell(0, i).getContents().isEmpty()) {
@@ -576,7 +618,7 @@ public class ImportMB extends Basic implements Serializable {
                 offerCompanyService.addOfferCompany(offerCompanyDTO, getUserData().getUserlogin());
             }
         }
-
+        
         OpenDlg("sucesses");
         System.out.println("تم الحفظ بنجاح");
     }
@@ -596,7 +638,7 @@ public class ImportMB extends Basic implements Serializable {
         importinvOpeningBalance(sheet);
         workbook.close();
     }
-
+    
     public void importinvOpeningBalance(Sheet sheet) throws NumberFormatException, ParseException {
         InvOpenningBalanceItemDetail item;
         List<InvOpenningBalanceItem> invOpeningBalanceItemList = invOpeningBalanceItemService.getInvOpeningBalanceItemByBranchId(getUserData().getUserBranch().getId());
@@ -615,14 +657,14 @@ public class ImportMB extends Basic implements Serializable {
                 }
                 System.out.println(i + "\n");
             }
-
+            
             OpenDlg("sucesses");
             System.out.println("تم الحفظ بنجاح");
         } else {
             System.out.println("not found invOpeningBalance");
         }
     }
-
+    
     public void initInvOpenningBalanceData(Sheet sheet, int i, InvOpenningBalanceItemDetail item, InvOpenningBalanceItem invOpeningBalanceItem) throws NumberFormatException, ParseException {
         InvItem itemId;
         Cell qty = sheet.getCell(0, i);
@@ -664,7 +706,7 @@ public class ImportMB extends Basic implements Serializable {
         importCustomer(sheet);
         workbook.close();
     }
-
+    
     public void importCustomer(Sheet sheet) throws NumberFormatException, ParseException {
         InvOrganizationSite item;
 
@@ -685,11 +727,11 @@ public class ImportMB extends Basic implements Serializable {
                 organizationSiteService.saveOpenningBalance(new BigDecimal(value.getContents()), customerCode.getContents(), gallaryCode.getContents());
             }
         }
-
+        
         OpenDlg("sucesses");
         System.out.println("تم الحفظ بنجاح");
     }
-
+    
     public void initCustomerData(Sheet sheet, int i, InvOrganizationSite item, Currency currency) throws NumberFormatException, ParseException {
         Cell itemCode = sheet.getCell(0, i);
         Cell itemName = sheet.getCell(1, i);
@@ -724,7 +766,7 @@ public class ImportMB extends Basic implements Serializable {
         importGlAccountNew(sheet);
         workbook.close();
     }
-
+    
     public void importGlAccount(Sheet sheet) throws NumberFormatException {
         Integer parentCode = null;
         GlAccount item;
@@ -753,11 +795,11 @@ public class ImportMB extends Basic implements Serializable {
                 }
             }
         }
-
+        
         OpenDlg("sucesses");
         System.out.println("تم الحفظ بنجاح");
     }
-
+    
     public Cell initGlAccountData(Sheet sheet, int i, GlAccount item, Map<Integer, GlAccount> itemMap, Currency currency) throws NumberFormatException {
         Cell remarks = sheet.getCell(0, i);
         Cell accClass = sheet.getCell(1, i);
@@ -766,7 +808,7 @@ public class ImportMB extends Basic implements Serializable {
         Cell parent = sheet.getCell(4, i);
         Cell name = sheet.getCell(5, i);
         Cell accNumber = sheet.getCell(6, i);
-
+        
         item.setRemarks(remarks.getContents());
         item.setAccNumber(Integer.parseInt(!accNumber.getContents().isEmpty() ? accNumber.getContents() : null));
         item.setName(!name.getContents().isEmpty() ? name.getContents() : "");
@@ -806,10 +848,10 @@ public class ImportMB extends Basic implements Serializable {
         item.setCreationDate(new Date());
         item.setCompanyId(getUserData().getCompany());
         item.setCurrencyId(currency);
-
+        
         return parent;
     }
-
+    
     public void glAccountParent(Cell parent, Map<Integer, GlAccount> itemMap, GlAccount item, Integer parentCode) throws NumberFormatException {
         if (!parent.getContents().isEmpty()) {
             parentCode = Integer.parseInt(parent.getContents());
@@ -819,7 +861,7 @@ public class ImportMB extends Basic implements Serializable {
             } else {
                 itemParent = glAccountService.getAccountNumber(parentCode, getUserData().getUserBranch().getId());
             }
-
+            
             if (itemParent != null) {
                 item.setParentAcc(itemParent);
                 itemMap.put(itemParent.getAccNumber(), itemParent);
@@ -1353,10 +1395,10 @@ public class ImportMB extends Basic implements Serializable {
         Map<Integer, Integer> mapGlAccount = new HashMap<>();
         Map<Integer, Integer> mapCostCenter = new HashMap<>();
         Map<Integer, GeneralJournalDTO> mapGeneraljournal = new HashMap<>();
-
+        
         mapGlAccount = glAccountServiceDTO.getBranchGLAccountsByMap(182);
         mapCostCenter = costCenterService.getBranchCostCentersByMap(182);
-
+        
         for (int i = 1; i < sheetHead.getRows(); i++) {
             if (!sheetHead.getCell(0, i).getContents().isEmpty() && sheetHead.getCell(0, i).getContents().startsWith("0000")) {
                 Integer serial = Integer.parseInt(sheetHead.getCell(0, i).getContents());
@@ -1378,16 +1420,16 @@ public class ImportMB extends Basic implements Serializable {
                 }
             }
         }
-
+        
         List<GeneralJournalDTO> list = new ArrayList<GeneralJournalDTO>(mapGeneraljournal.values());
-
+        
         generaljournalServiceDTO.addGeneralJournalDTOWithDetailFromExcel(list, getUserData().getUser());
-
+        
         OpenDlg("sucesses");
-
+        
         System.out.println("تم الحفظ بنجاح");
     }
-
+    
     public GeneralJournalDTO initGeneralJournalHeadDataTasaheet(Sheet sheet, int i, GeneralJournalDTO item) throws NumberFormatException, ParseException {
         try {
             Cell remarkHead = sheet.getCell(4, i);
@@ -1395,11 +1437,11 @@ public class ImportMB extends Basic implements Serializable {
             Cell serial = sheet.getCell(10, i);
             System.out.println(dateHigri.getContents());
             String[] dateHigriSplit = dateHigri.getContents().split("/");
-
+            
             Integer year = Integer.parseInt(dateHigriSplit[0]);
             Integer month = Integer.parseInt(dateHigriSplit[1]);
             Integer day = Integer.parseInt(dateHigriSplit[2]);
-
+            
             Date date = findDateFromHijriFrom(year, month, day);
             item.setGeneralData(date);
             GlYear glYear = new GlYear();
@@ -1420,17 +1462,17 @@ public class ImportMB extends Basic implements Serializable {
         } catch (Exception e) {
             System.out.println(e);
         }
-
+        
         return item;
     }
-
+    
     public GeneralJournalDetails initGeneralJournalDetailDataTasaheet(Sheet sheet, int i, Integer accountId, Integer costCenterId) throws NumberFormatException {
         Cell debit = sheet.getCell(6, i);
         Cell credit = sheet.getCell(5, i);
         Cell debitF = sheet.getCell(6, i);
         Cell creditF = sheet.getCell(5, i);
         Cell remark = sheet.getCell(4, i);
-
+        
         GeneralJournalDetails journalDetails = new GeneralJournalDetails();
 
 //        GeneralJournal generalJournal1 = new GeneralJournal();
@@ -1439,11 +1481,11 @@ public class ImportMB extends Basic implements Serializable {
         CostCenter costCenter = new CostCenter();
         costCenter.setId(costCenterId);
         journalDetails.setCostCenterId(costCenter);
-
+        
         GlAccount glAccount = new GlAccount();
         glAccount.setId(accountId);
         journalDetails.setGlACCOUNTId(glAccount);
-
+        
         journalDetails.setDebitAmount(!credit.getContents().isEmpty() ? (new BigDecimal(debit.getContents())) : null);
         journalDetails.setDebitAmountLocal(!creditF.getContents().isEmpty() ? (new BigDecimal(debitF.getContents())) : null);
         journalDetails.setCreditamount(!debit.getContents().isEmpty() ? (new BigDecimal(credit.getContents())) : null);
@@ -1453,7 +1495,7 @@ public class ImportMB extends Basic implements Serializable {
         journalDetails.setCreatedBy(getUserData().getUser());
         journalDetails.setCreationDate(new Date());
         journalDetails.setCompanyId(getUserData().getCompany());
-
+        
         return journalDetails;
     }
 
@@ -1470,7 +1512,7 @@ public class ImportMB extends Basic implements Serializable {
     public void setProgress(Integer progress) {
         this.progress = progress;
     }
-
+    
     public void importGlAccountNew(Sheet sheet) throws NumberFormatException {
         Map<Integer, GlAccount> map = glAccountService.getAllGlAccountMap();
         for (int i = 1; i < sheet.getRows(); i++) {
@@ -1479,7 +1521,7 @@ public class ImportMB extends Basic implements Serializable {
                 String accuntid = sheet.getCell(0, i).getContents();
                 String accuntlevel = sheet.getCell(1, i).getContents();
                 String accuntcode = sheet.getCell(2, i).getContents();
-
+                
                 Integer accNumber = Integer.parseInt(accuntid);
                 GlAccount glaccount = map.get(accNumber);
                 if (glaccount != null) {
@@ -1487,11 +1529,11 @@ public class ImportMB extends Basic implements Serializable {
                         glaccount.setAccNumber(Integer.parseInt(accuntcode));
                         glaccount.setShotCode(Integer.parseInt(accuntcode));
                     }
-
+                    
                     if (!accuntlevel.isEmpty()) {
                         glaccount.setLevelAcc(Integer.parseInt(accuntlevel));
                     }
-
+                    
                     String accuntparent = sheet.getCell(3, i).getContents();
                     if (!accuntparent.isEmpty()) {
                         GlAccount glAccount = new GlAccount();
@@ -1507,5 +1549,5 @@ public class ImportMB extends Basic implements Serializable {
         OpenDlg("sucesses");
         System.out.println("تم الحفظ بنجاح");
     }
-
+    
 }

@@ -11,7 +11,6 @@ import com.toby.businessservice.ProFactoryDeliveryService;
 import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInvoiceDTO;
-import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.toby.InventoryBasicDataForm;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -78,7 +77,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                 }
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editInvoice")) {
                 getInvInvoiceDTO().setIsEdit(Boolean.TRUE);
-                fillInvInvoiceDTO();
+                fillInvInvoiceDTO();// here more than 20 second
                 getInvInvoiceDTO().setInvoiceStatus(invPurchaseInvoiceService.findInvoiceStatus(getInvInvoiceDTO().getId()));
                 getInvInvoiceDTO().setIsEdit(Boolean.FALSE);
                 getInvInvoiceDTO().setShowCustomerDate(Boolean.FALSE);

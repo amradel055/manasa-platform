@@ -143,5 +143,17 @@ public interface InvPurchaseInvoiceService_1 {
     public Boolean chechIfinvoiceIsReturn(Integer serial);
     
     public void updateDetailInvoiceValues(Integer invPurchaseInvoiceId);
+    
+    public GeneralJournalDTO tarhilOneMoshtrayat(TobyUser tobyUser, Integer invPurchaseInvoiceId,
+            Integer salesTaxAccount, Integer salesAccountNumber,
+            Integer managerCostAccount, Integer costOfSoldGoods, Integer storeAccountNumber) throws CloneNotSupportedException ;
+    
+    public Integer excuteQuery(String query);
+    
+    public List<Integer> findInvoiceIdList();
+    
+    public List<GeneralJournalDTO> testTarhil(TobyUser tobyUser) throws CloneNotSupportedException;
+    
+    public void updateTarhil(Integer invoiceId, Integer tarhilId);
 
 }

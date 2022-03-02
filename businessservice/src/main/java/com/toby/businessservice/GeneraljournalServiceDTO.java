@@ -55,5 +55,7 @@ public interface GeneraljournalServiceDTO {
     
     public List<JournalDocumentArrangedReportBean> printVoutcher(Integer generalJournalId) ;
     
+     public Integer findMaxSerial() ;
+    
     
 }

@@ -1591,19 +1591,26 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         dto.setOfferCopoun(entity.getOfferCopoun());
 
         if (entity.getOrganizationSiteId() != null) {
-            dto.setOrganizationSiteId(organizationSiteService.mapToDTOSmall(entity.getOrganizationSiteId()));
+            System.out.println(new Date() + " -> 1");
+            dto.setOrganizationSiteId(organizationSiteService.mapToDTOSmall(entity.getOrganizationSiteId()));// here kartha
+            System.out.println(new Date() + " -> 2");
         }
         dto.setSupplierInvoiceNumber(entity.getSupplierInvoiceNumber());
         if (entity.getInvInventoryId() != null) {
+            System.out.println(new Date() + " -> 3");
             InvInventoryDTO inventoryDTO = inventoryService.mapToDTO(entity.getInvInventoryId());
             dto.setInvInventoryId(inventoryDTO);
+            System.out.println(new Date() + " -> 4");
         }
 
         if (entity.getGalaryId() != null) {
-            InvInventoryDTO inventoryDTO = inventoryService.mapToDTO(entity.getGalaryId());
+            System.out.println(new Date() + " -> 5");
+            InvInventoryDTO inventoryDTO = inventoryService.mapToDTO(entity.getGalaryId()); //  henaKartha 2
             dto.setGallaryId(inventoryDTO);
+            System.out.println(new Date() + " -> 6");
         }
         if (dto.getScreenName() != null) {
+            System.out.println(new Date() + " -> 7");
             if (ScreenNameClassEnum.INVPURCHASEINVOICEFORM.equals(dto.getScreenName())) {
                 if (dto.getInventorySetupDTO().getSellBuy()) {
                     if (entity.getInvAddingOrderId() != null) {
@@ -1639,6 +1646,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 dto.setLoadedSerial(entity.getSerial());
             }
         }
+        System.out.println(new Date() + " -> 8");
 
         dto.setExtraCost(entity.getExtraCost());
         dto.setTaxdiscflag(entity.getTaxdiscflag());
@@ -1668,15 +1676,19 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
         List<InvDetailDTO> invPurchaseInvoiceDetailsListDTO;
         if (isLoaded) {
+            System.out.println(new Date() + " -> 9");
             invPurchaseInvoiceDetailsListDTO = invPurchaseInvoiceDetailsService.getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(dto);
         } else {
+            System.out.println(new Date() + " -> 10");
             invPurchaseInvoiceDetailsListDTO = invPurchaseInvoiceDetailsService.getAllInvPurchaseInvoiceDetailList(dto);
         }
+        System.out.println(new Date() + " -> 11");
         dto.setInvPurchaseInvoiceDetailsDeletedList(new ArrayList<InvDetailDTO>());
         dto.setInvPurchaseInvoiceDetailList(invPurchaseInvoiceDetailsListDTO);
 
 //        dto = invGlobalService.updateSummition(dto,false);
         dto = invGlobalService.updateSummitionSmall(dto);
+        System.out.println(new Date() + " -> 12 ");
         return dto;
     }
 
@@ -2621,7 +2633,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
             generaljournalDetailsService.addGenDetalil(true, dto.getTotalNetAfterDiscount(), journal.getId(), storeAccountNumber,
                     835,
-                    "فاتورة المورد " + ( dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getName() ) + " رقم " + dto.getSupplierInvoiceNumber(), tobyUser);
+                    "فاتورة المورد " + (dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getName()) + " رقم " + dto.getSupplierInvoiceNumber(), tobyUser);
             generaljournalDetailsService.addGenDetalil(false, dto.getFinalNet(), journal.getId(),
                     (dto.getOrganizationSiteId() == null || dto.getOrganizationSiteId().getAccountId() == null || dto.getOrganizationSiteId().getAccountId().getId() == null) ? null : dto.getOrganizationSiteId().getAccountId().getId(),
                     835,
@@ -2630,7 +2642,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             generaljournalDetailsService.addGenDetalil(true, dto.getTaxvalue(), journal.getId(), purchseTaxAccount,
                     835,
                     //                    (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
-                    "فاتورة " +( dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getName() ) + " رقم " + dto.getSupplierInvoiceNumber() + "رقم ضريبى " + ( dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getPostBox() ), tobyUser);
+                    "فاتورة " + (dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getName()) + " رقم " + dto.getSupplierInvoiceNumber() + "رقم ضريبى " + (dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getPostBox()), tobyUser);
 
         } else if (dto.getScreenName().equals(ScreenNameClassEnum.INVRETURNPURCHASEFORM)) {
             journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1016, dto.getSerial(), dto.getDate(), "مردود مشتريات", tobyUser, 0, true);
@@ -2697,6 +2709,22 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             }
         }
         return error.toString();
+    }
+
+    @Override
+    public Integer excuteQuery(String query) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", 182);
+        Integer account = (Integer) dao.findEntityByQuery(query, params);
+        return account;
+    }
+
+    @Override
+    public List<Integer> findInvoiceIdList() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", 182);
+        List<Integer> account = dao.findListByQuery("SELECT ipi.id from InvPurchaseInvoice ipi where ipi.branchId.id = :branchId and ipi.type = 4 and ipi.id > 28873", params);
+        return account;
     }
 
     @Override
@@ -2869,7 +2897,222 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         return journalList;
     }
 
-    public GeneralJournalDTO addGeneralJournalGlobal(Integer yearSelectionId, Integer specialDocumentsTypes, Integer serial, Date date, String remark, TobyUser tobyUser, Integer id) {
+    @Override
+    public void updateTarhil(Integer invoiceId, Integer tarhilId) {
+        InvPurchaseInvoice invPurchaseInvoice = dao.findEntityById(InvPurchaseInvoice.class, invoiceId);
+        invPurchaseInvoice.setPostFlag(1);
+        GeneralJournal generalJournal = new GeneralJournal();
+        generalJournal.setId(tarhilId);
+        invPurchaseInvoice.setGeneralJournalId(generalJournal);
+        dao.updateEntity(invPurchaseInvoice);
+    }
+
+    @Override
+    public List<GeneralJournalDTO> testTarhil(TobyUser tobyUser) throws CloneNotSupportedException {
+        List<GeneralJournalDTO> generalJournalDTOList = new ArrayList<>();
+        Integer salesTaxAccount = excuteQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"SALES_TAX_ACCOUNT\" AND a.accountId IS NOT NULL");
+        Integer salesAccountNumber = excuteQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"SALES_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL");
+        Integer managerCostAccount = excuteQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"MANAGER_CURRENT_ACCOUNT\" AND a.accountId IS NOT NULL");
+        Integer costOfSoldGoods = excuteQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"COST_OF_GOODS_SOLD_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL");
+        Integer storeAccountNumber = excuteQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"STORE_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL");
+        List<Integer> list = findInvoiceIdList();
+        for (Integer i : list) {
+            System.err.println("----->    " + i);
+            GeneralJournalDTO dTO = tarhilOneMoshtrayat(tobyUser, i, salesTaxAccount, salesAccountNumber, managerCostAccount, costOfSoldGoods, storeAccountNumber);
+            generalJournalDTOList.add(dTO);
+        }
+        return generalJournalDTOList;
+    }
+
+    @Override
+    public GeneralJournalDTO tarhilOneMoshtrayat(TobyUser tobyUser, Integer invPurchaseInvoiceId,
+            Integer salesTaxAccount, Integer salesAccountNumber,
+            Integer managerCostAccount, Integer costOfSoldGoods, Integer storeAccountNumber) throws CloneNotSupportedException {
+
+        BigDecimal totalBeforeInvoice = BigDecimal.ZERO;
+        BigDecimal TaxtotalInvoice = BigDecimal.ZERO;
+        BigDecimal totalInvoice = BigDecimal.ZERO;
+        Integer serial = null;
+        String gallaryName = "";
+        Date date = null;
+        Integer organizationAccountId = null;
+        Integer costCenterId = null;
+        Integer runningAccount = null;
+        Integer costAccount = null;
+        BigDecimal costAvarage2 = BigDecimal.ZERO;
+        BigDecimal costAvarage1 = BigDecimal.ZERO;
+        Map<String, Object> params3 = new HashMap();
+        params3.put("invPurchaseInvoiceId", invPurchaseInvoiceId);
+        StringBuilder sql = new StringBuilder();
+        if (invPurchaseInvoiceId == 48225) {
+            System.out.println("com.toby.businessservice.InvPurchaseInvoiceServiceImpl_1.tarhilOneMoshtrayat()  --------------- > erroooooooor");
+        }
+        sql.append("SELECT  sum(ipid.netAfterDiscountHead) , ipid.invPurchaseInvoiceId.serial , ");
+        sql.append(" ipid.invPurchaseInvoiceId.galaryId.name , ipid.invPurchaseInvoiceId.date , ");
+        sql.append(" ipid.invPurchaseInvoiceId.organizationSiteId.accountId.id , ");
+        sql.append(" ipid.invPurchaseInvoiceId.galaryId.costCenterId.id, ");
+        sql.append(" ipid.invPurchaseInvoiceId.galaryId.runningAccount.id , ipid.invPurchaseInvoiceId.galaryId.costAccount.id ");
+        sql.append(" FROM InvPurchaseInvoiceDetail ipid ");
+        sql.append(" WHERE ipid.invPurchaseInvoiceId.id = :invPurchaseInvoiceId ");
+
+        List<Object[]> res = dao.findListByQuery(sql.toString(), params3);
+        Iterator it = res.iterator();
+        while (it.hasNext()) {
+            Object[] line = (Object[]) it.next();
+            totalBeforeInvoice = totalBeforeInvoice.add((BigDecimal) line[0]);
+            serial = (Integer) line[1];
+            gallaryName = (String) line[2];
+            date = (Date) line[3];
+            organizationAccountId = (Integer) line[4];
+            costCenterId = (Integer) line[5];
+            runningAccount = (Integer) line[6];
+            costAccount = (Integer) line[7];
+        }
+        TaxtotalInvoice = (totalBeforeInvoice.multiply(new BigDecimal(0.15))).setScale(3, RoundingMode.HALF_UP);
+        totalInvoice = totalBeforeInvoice.add(TaxtotalInvoice);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", tobyUser.getBranchId().getId());
+        GeneralJournalDTO journal = null;
+        StringBuilder remark = new StringBuilder();
+        remark.append("مبيعات ");
+        remark.append(gallaryName);
+        remark.append(" فاتورة");
+        remark.append(serial);
+        // ادخال المبيعات
+        journal = addGeneralJournalGlobal(73, 1013, serial, date, remark.toString(), tobyUser, null);
+
+        journal.setDocumentId(invPurchaseInvoiceId);
+
+        journal.getDetailList().add(addGenDetalil(true, totalInvoice, journal.getId(),
+                organizationAccountId,
+                costCenterId,
+                remark.toString(), tobyUser, null, null));
+
+        journal.getDetailList().add(addGenDetalil(false, totalBeforeInvoice, journal.getId(), salesAccountNumber,
+                costCenterId,
+                remark.toString(), tobyUser, null, null));
+        journal.getDetailList().add(addGenDetalil(false, TaxtotalInvoice, journal.getId(), salesTaxAccount,
+                costCenterId,
+                remark.toString(), tobyUser, null, null));
+
+//        BigDecimal totalCost2 = BigDecimal.ZERO;
+        List<TarhilInvoiceDetail> tarhilInvoiceDetailList = new ArrayList<>();
+        Map<String, Object> params2 = new HashMap();
+        params2.put("invPurchaseInvoiceId", invPurchaseInvoiceId);
+        StringBuilder sql2 = new StringBuilder();
+        sql2.append("SELECT sum(ipid.costAvarage * ipid.quantity) , ipid.invInventoryId.costCenterId.id , ipid.invInventoryId.costAccount.id , ipid.invInventoryId.id FROM InvPurchaseInvoiceDetail ipid  WHERE ipid.invPurchaseInvoiceId.id = :invPurchaseInvoiceId group by ipid.invInventoryId.id");
+
+        List<Object[]> res2 = dao.findListByQuery(sql2.toString(), params2);
+
+        Iterator it2 = res2.iterator();
+        while (it2.hasNext()) {
+            Object[] line = (Object[]) it2.next();
+            TarhilInvoiceDetail tarhilInvoiceDetail = new TarhilInvoiceDetail();
+            tarhilInvoiceDetail.setTotalCost((BigDecimal) line[0]);
+            tarhilInvoiceDetail.setCostCenterId((Integer) line[1]);
+            tarhilInvoiceDetail.setCostAccountId((Integer) line[2]);
+            tarhilInvoiceDetail.setInventoryId((Integer) line[3]);
+            tarhilInvoiceDetailList.add(tarhilInvoiceDetail);
+        }
+
+        // الشيئ الثالث هو انشاء مراكز التكاليف واستدعا مركز تكلفة الإدارة
+//        Integer managerCostAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"MANAGER_CURRENT_ACCOUNT\" AND a.accountId IS NOT NULL", params);
+//        Integer costOfSoldGoods = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"COST_OF_GOODS_SOLD_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
+//        Integer storeAccountNumber = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"STORE_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
+        if (tarhilInvoiceDetailList != null && tarhilInvoiceDetailList.size() == 1) {
+            Map<String, Object> params30 = new HashMap();
+            params30.put("invPurchaseInvoiceId", invPurchaseInvoiceId);
+            List<BigDecimal> costAvarageList = dao.findListByQuery("SELECT sum(ipid.costAvarage * ipid.quantity) FROM InvPurchaseInvoiceDetail ipid  WHERE ipid.invPurchaseInvoiceId.id = :invPurchaseInvoiceId AND ipid.itemId.proGroupId.id in (1,22,27,28,31,32)", params30);
+
+            if (costAvarageList != null && !costAvarageList.isEmpty() && costAvarageList.get(0) != null) {
+                costAvarage1 = costAvarageList.get(0);
+            }
+            if (835 == tarhilInvoiceDetailList.get(0).getCostCenterId()) {
+                journal.getDetailList().add(addGenDetalil(true, costAvarage1, journal.getId(),
+                        runningAccount,
+                        835, remark.toString(), tobyUser, null, null));
+
+                journal.getDetailList().add(addGenDetalil(false, costAvarage1, journal.getId(),
+                        storeAccountNumber,
+                        835, remark.toString(), tobyUser, null, null));
+
+                journal.getDetailList().add(addGenDetalil(true, costAvarage1, journal.getId(),
+                        costOfSoldGoods,
+                        costCenterId,
+                        remark.toString(), tobyUser, null, null));
+                journal.getDetailList().add(addGenDetalil(false, costAvarage1, journal.getId(),
+                        managerCostAccount,
+                        costCenterId,
+                        remark.toString(), tobyUser, null, null));
+            } else {
+
+                journal.getDetailList().add(addGenDetalil(false, costAvarage1, journal.getId(),
+                        costAccount,
+                        tarhilInvoiceDetailList.get(0).getCostCenterId(), remark.toString(), tobyUser, null, null));
+
+                journal.getDetailList().add(addGenDetalil(true, costAvarage1, journal.getId(),
+                        costOfSoldGoods,
+                        tarhilInvoiceDetailList.get(0).getCostCenterId(),
+                        remark.toString(), tobyUser, null, null));
+            }
+        } else {
+            TarhilInvoiceDetail tarhilInvoiceDetailMaster = null;
+//            BigDecimal totalCost = BigDecimal.ZERO;
+            for (TarhilInvoiceDetail tarhilInvoiceDetail : tarhilInvoiceDetailList) {
+                Map<String, Object> params30 = new HashMap();
+                params30.put("invPurchaseInvoiceId", invPurchaseInvoiceId);
+                params30.put("invInventoryId", tarhilInvoiceDetail.getInventoryId());
+                List<BigDecimal> costAvarageList = dao.findListByQuery("SELECT sum(ipid.costAvarage * ipid.quantity) FROM InvPurchaseInvoiceDetail ipid  WHERE ipid.invPurchaseInvoiceId.id = :invPurchaseInvoiceId AND ipid.itemId.proGroupId.id in (1,22,27,28,31,32) AND ipid.invInventoryId.id  = :invInventoryId", params30);
+
+                if (costAvarageList != null && !costAvarageList.isEmpty() && costAvarageList.get(0) != null) {
+                    costAvarage2 = costAvarageList.get(0);
+                }
+
+                if (835 == tarhilInvoiceDetail.getCostCenterId()) {
+                    tarhilInvoiceDetailMaster = (TarhilInvoiceDetail) tarhilInvoiceDetail.clone();
+                } else {
+                    journal.getDetailList().add(addGenDetalil(false, costAvarage2, journal.getId(),
+                            tarhilInvoiceDetail.getCostAccountId(),
+                            tarhilInvoiceDetail.getCostCenterId(),
+                            remark.toString(), tobyUser, null, null));
+//                    totalCost = totalCost.add(costAvarage);
+                }
+            }
+
+            if (tarhilInvoiceDetailMaster != null) {
+                journal.getDetailList().add(addGenDetalil(true, costAvarage1, journal.getId(),
+                        runningAccount,
+                        835, remark.toString(), tobyUser, null, null));
+
+                journal.getDetailList().add(addGenDetalil(false, costAvarage1, journal.getId(),
+                        storeAccountNumber,
+                        835, remark.toString(), tobyUser, null, null));
+
+                journal.getDetailList().add(addGenDetalil(true, costAvarage1.add(costAvarage2), journal.getId(),
+                        costOfSoldGoods,
+                        costCenterId,
+                        remark.toString(), tobyUser, null, null));
+                journal.getDetailList().add(addGenDetalil(false, costAvarage1, journal.getId(),
+                        managerCostAccount,
+                        costCenterId,
+                        remark.toString(), tobyUser, null, null));
+            } else {
+                // here
+
+            }
+        }
+        return journal;
+//        InvPurchaseInvoice invoice = dao.findEntityById(InvPurchaseInvoice.class, invPurchaseInvoiceId);
+//        if (journal != null) {
+//            invoice.setPostFlag(1);
+//            invoice.setGeneralJournalId(journal);
+//            dao.updateEntity(invoice);
+//        }
+    }
+
+    public GeneralJournalDTO addGeneralJournalGlobal(Integer yearSelectionId, Integer specialDocumentsTypes,
+            Integer serial, Date date, String remark, TobyUser tobyUser, Integer id) {
 
         GeneralJournalDTO generalJournal = new GeneralJournalDTO();
         generalJournal.setGeneralStatement(remark);
@@ -2897,7 +3140,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         return generalJournal;
     }
 
-    public GeneralJournalDetails addGenDetalil(Boolean isDebit, BigDecimal value, Integer generalJournalId, Integer accountId, 
+    public GeneralJournalDetails addGenDetalil(Boolean isDebit, BigDecimal value, Integer generalJournalId, Integer accountId,
             Integer costCenterId, String remark, TobyUser tobyUser, Integer serial, Integer id) {
 
         GeneralJournalDetails generalJournalDetail = new GeneralJournalDetails();
@@ -3216,7 +3459,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         return false;
     }
-    
+
     @Override
     public void updateDetailInvoiceValues(Integer invPurchaseInvoiceId) {
         Map<String, Object> params = new HashMap<>();

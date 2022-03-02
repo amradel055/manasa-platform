@@ -205,6 +205,15 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
     }
 
     @Override
+    public Integer findMaxSerial() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("glYear", 73);
+        Integer max;
+        max = dao.findEntityByQuery("SELECT MAX(g.serial) FROM GeneralJournal g  WHERE g.branchId.id =182 AND g.companyId.id =125 and g.glYear.id =:glYear AND g.serial > 100000  ", params);
+        return max;
+    }
+
+    @Override
     public void addGeneralJournalDTOWithDetailFromExcel(List<GeneralJournalDTO> list, TobyUser tobyUser) {
         Integer generaldocumet = 1;
 //        Integer serial = 1;
@@ -268,7 +277,7 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
         }
         dto.setDetailList(list);
         generaljournalDetailsService.addGenDetalilsGlobal(dto.getDetailList(), tobyUser);
-
+//        return journal.getId();
     }
 
     @Override
@@ -277,7 +286,7 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
         System.err.println("----------> <---------------------" + new Date());
 
         dto.setSerial(serial);
-//        dto.setId(idHead);
+        //        dto.setId(idHead);
         GeneralJournal entity = mapFromDTO(dto, tobyUser);
         GeneralJournal journal = dao.updateEntity(entity);
         generaljournalDetailsService.addGenDetalilsGlobal2(dto.getDetailList(), tobyUser, journal.getId());
@@ -453,6 +462,7 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
         entity.setSerial(dTO.getSerial());
         entity.setMacId(dTO.getMacId());
         entity.setPost_flag(dTO.isPost_flag());
+        entity.setDocumentId(dTO.getDocumentId());
 
         if (dTO.getId() == null) {
             entity.setCreatedBy(tobyUser);
