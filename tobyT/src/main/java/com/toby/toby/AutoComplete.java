@@ -58,8 +58,7 @@ import static jdk.nashorn.internal.objects.NativeError.printStackTrace;
 public class AutoComplete {
 
     ///////////////////  CRM //////////////////
-    
-     public static List<EmployeeDTO> completeEmployeeDTO(String query, List<EmployeeDTO> employeeDTOList, EmployeeDTOConverter employeeDTOConverter) {
+    public static List<EmployeeDTO> completeEmployeeDTO(String query, List<EmployeeDTO> employeeDTOList, EmployeeDTOConverter employeeDTOConverter) {
         List<EmployeeDTO> Employee = employeeDTOList;
         if (query == null || query.trim().equals("")) {
             employeeDTOConverter = new EmployeeDTOConverter(Employee);
@@ -90,8 +89,7 @@ public class AutoComplete {
         employeeDTOConverter = new EmployeeDTOConverter(filteredEmployee);
         return filteredEmployee;
     }
-    
-    
+
     public static List<SymbolDTO> completeLeadStatus(String query, List<SymbolDTO> leadStatusList, SymbolDTOConverter leadStatusDTOConverter) {
         List<SymbolDTO> leadStatus = leadStatusList;
         if (query == null || query.trim().equals("")) {
@@ -123,7 +121,7 @@ public class AutoComplete {
         leadStatusDTOConverter = new SymbolDTOConverter(filteredRelation);
         return filteredRelation;
     }
-    
+
     public static List<SymbolDTO> completeEventStatus(String query, List<SymbolDTO> eventStatusList, SymbolDTOConverter eventStatusDTOConverter) {
         List<SymbolDTO> leadStatus = eventStatusList;
         if (query == null || query.trim().equals("")) {
@@ -156,8 +154,6 @@ public class AutoComplete {
         return filteredRelation;
     }
 
-    
-    
     public static List<SymbolDTO> completeActivityType(String query, List<SymbolDTO> activityTypeList, SymbolDTOConverter activityTypeDTOConverter) {
         List<SymbolDTO> activityType = activityTypeList;
         if (query == null || query.trim().equals("")) {
@@ -189,8 +185,7 @@ public class AutoComplete {
         activityTypeDTOConverter = new SymbolDTOConverter(filteredRelation);
         return filteredRelation;
     }
-   
-    
+
     public static List<SymbolDTO> completepriority(String query, List<SymbolDTO> priorityList, SymbolDTOConverter priorityDTOConverter) {
         List<SymbolDTO> activityType = priorityList;
         if (query == null || query.trim().equals("")) {
@@ -254,8 +249,7 @@ public class AutoComplete {
         symbolConverter = new SymbolDTOConverter(filteredRelation);
         return filteredRelation;
     }
-    
-    
+
     //////////////////////////////////////////////
     public static List<InvOrganizationSite> completOrgSite(String query, List<InvOrganizationSite> invOrgSites, InvOrganizationSiteConverter invOrgSiteConverter) {
 
@@ -604,7 +598,7 @@ public class AutoComplete {
                 }
 
                 code = glBankFilter.getCode();
-                if (code != null ) {
+                if (code != null) {
                     if (!filteredGlBanks.contains(glBankFilter)) {
                         filteredGlBanks.add(glBankFilter);
                     }
@@ -618,7 +612,7 @@ public class AutoComplete {
         }
         return filteredGlBanks;
     }
-    
+
     public static List<TobyUserDTO> completeTobyUserDTO(String query, List<TobyUserDTO> tobyUserDTOList, TobyUserDTOConverter tobyUserDTOConverter) {
         List<TobyUserDTO> list = new ArrayList<>();
         try {
@@ -676,7 +670,6 @@ public class AutoComplete {
         }
         return list;
     }
-
 
     public static List<SymbolDTO> completeSymbolDTO(String query, List<SymbolDTO> symbolList, SymbolDTOConverter symbolConverter) {
         List<SymbolDTO> list = new ArrayList<>();
@@ -747,7 +740,6 @@ public class AutoComplete {
         }
     }
 
-    
     public static List<InvGroupDTO> completeInvGroups(String query, List<InvGroupDTO> invGroupDTOList, InvGroupDTOConverter invGroupDTOConverter) {
         try {
             List<InvGroupDTO> groups = invGroupDTOList;
@@ -1178,25 +1170,22 @@ public class AutoComplete {
             return null;
         }
     }
-    
+
     public static List<TobyUserDTO> completusercode(String query, List<TobyUserDTO> tobyUserDTOList, TobyUserDTOConverter tobyUserDTOConverter) {
 
-       List<TobyUserDTO> tobyUserDTOs = tobyUserDTOList;
+        List<TobyUserDTO> tobyUserDTOs = tobyUserDTOList;
         if (query == null || query.trim().equals("")) {
 
             tobyUserDTOConverter = new TobyUserDTOConverter(tobyUserDTOs);
             return tobyUserDTOList;
         }
-         List<TobyUserDTO> filteredInvs = new ArrayList<>();
+        List<TobyUserDTO> filteredInvs = new ArrayList<>();
 
-      
         String code;
         TobyUserDTO tobyUserDTO;
 
         for (int i = 0; i < tobyUserDTOs.size(); i++) {
             tobyUserDTO = tobyUserDTOList.get(i);
-          
-           
 
             code = tobyUserDTO.getUserCode();
             if (code != null && code.toLowerCase().contains(query.toLowerCase())) {
@@ -1209,7 +1198,7 @@ public class AutoComplete {
         tobyUserDTOConverter = new TobyUserDTOConverter(filteredInvs);
         return filteredInvs;
     }
-    
+
     public static List<InvPurchaseInvoiceDTO1> completInvPurchaseInvoice(String query, List<InvPurchaseInvoiceDTO1> invPurchaseInvoiceDTOs, InvPurchaseInvoiceDTOConverter invoiceDTOConverter) {
 
         List<InvPurchaseInvoiceDTO1> invoiceDTOs = invPurchaseInvoiceDTOs;
@@ -1244,7 +1233,7 @@ public class AutoComplete {
 //        invoiceDTOConverter = new InvPurchaseInvoiceDTOConverter(filteredInvs);
         return filteredInvs;
     }
-    
+
     public static List<CostCenterDTO> completeCostCenter(String query, List<CostCenterDTO> costCenterDTOList, CostCenterDTOConverter costCenterDTOConverter) {
         try {
             List<CostCenterDTO> glAdminUnits = costCenterDTOList;
@@ -1279,7 +1268,7 @@ public class AutoComplete {
             return null;
         }
     }
-    
+
     public static List<GlAdminUnitDTO> completeAdminUnit(String query, List<GlAdminUnitDTO> glAdminUnitDTOList, GlAdminUnitDTOConverter glAdminUnitDTOConverter) {
         try {
             List<GlAdminUnitDTO> glAdminUnits = glAdminUnitDTOList;

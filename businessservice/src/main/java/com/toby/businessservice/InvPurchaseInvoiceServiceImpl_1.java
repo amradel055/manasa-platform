@@ -2391,6 +2391,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
     public GeneralJournal tarhil(InvInvoiceDTO dto, TobyUser tobyUser) throws CloneNotSupportedException {
         dao.executeNativeQuery("select toby.sql_mode_function()");
+        BigDecimal costAvarage2 = BigDecimal.ZERO;
+        BigDecimal costAvarage1 = BigDecimal.ZERO;
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", tobyUser.getBranchId().getId());
         GeneralJournal journal = null;
@@ -2443,42 +2445,58 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 Integer storeAccountNumber = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"STORE_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
 
                 if (tarhilInvoiceDetailList != null && tarhilInvoiceDetailList.size() == 1) {
+                    Map<String, Object> params30 = new HashMap();
+                    params30.put("invPurchaseInvoiceId", dto.getId());
+                    List<BigDecimal> costAvarageList = dao.findListByQuery("SELECT sum(ipid.costAvarage * ipid.quantity) FROM InvPurchaseInvoiceDetail ipid  WHERE ipid.invPurchaseInvoiceId.id = :invPurchaseInvoiceId AND ipid.itemId.proGroupId.id in (1,22,27,28,31,32)", params30);
+
+                    if (costAvarageList != null && !costAvarageList.isEmpty() && costAvarageList.get(0) != null) {
+                        costAvarage1 = costAvarageList.get(0);
+                    }
                     if (835 == tarhilInvoiceDetailList.get(0).getCostCenterId()) {
-                        generaljournalDetailsService.addGenDetalil(true, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                        generaljournalDetailsService.addGenDetalil(true, costAvarage1, journal.getId(),
                                 (dto.getGallaryId() == null || dto.getGallaryId().getRunningAccount() == null || dto.getGallaryId().getRunningAccount().getId() == null) ? null : dto.getGallaryId().getRunningAccount().getId(),
                                 835, remark.toString(), tobyUser);
 
-                        generaljournalDetailsService.addGenDetalil(false, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                        generaljournalDetailsService.addGenDetalil(false, costAvarage1, journal.getId(),
                                 storeAccountNumber,
                                 835, remark.toString(), tobyUser);
 
-                        generaljournalDetailsService.addGenDetalil(true, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                        generaljournalDetailsService.addGenDetalil(true, costAvarage1, journal.getId(),
                                 costOfSoldGoods,
                                 (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
                                 remark.toString(), tobyUser);
-                        generaljournalDetailsService.addGenDetalil(false, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                        generaljournalDetailsService.addGenDetalil(false, costAvarage1, journal.getId(),
                                 managerCostAccount,
                                 (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
                                 remark.toString(), tobyUser);
                     } else {
 
-                        generaljournalDetailsService.addGenDetalil(false, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                        generaljournalDetailsService.addGenDetalil(false, costAvarage1, journal.getId(),
                                 tarhilInvoiceDetailList.get(0).getCostAccountId(),
                                 tarhilInvoiceDetailList.get(0).getCostCenterId(), remark.toString(), tobyUser);
 
-                        generaljournalDetailsService.addGenDetalil(true, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                        generaljournalDetailsService.addGenDetalil(true, costAvarage1, journal.getId(),
                                 costOfSoldGoods,
                                 tarhilInvoiceDetailList.get(0).getCostCenterId(),
                                 remark.toString(), tobyUser);
                     }
                 } else {
                     TarhilInvoiceDetail tarhilInvoiceDetailMaster = null;
+
                     BigDecimal totalCost = BigDecimal.ZERO;
                     for (TarhilInvoiceDetail tarhilInvoiceDetail : tarhilInvoiceDetailList) {
+                        Map<String, Object> params30 = new HashMap();
+                        params30.put("invPurchaseInvoiceId", dto.getId());
+                        params30.put("invInventoryId", tarhilInvoiceDetail.getInventoryId());
+                        List<BigDecimal> costAvarageList = dao.findListByQuery("SELECT sum(ipid.costAvarage * ipid.quantity) FROM InvPurchaseInvoiceDetail ipid  WHERE ipid.invPurchaseInvoiceId.id = :invPurchaseInvoiceId AND ipid.itemId.proGroupId.id in (1,22,27,28,31,32) AND ipid.invInventoryId.id  = :invInventoryId", params30);
+
+                        if (costAvarageList != null && !costAvarageList.isEmpty() && costAvarageList.get(0) != null) {
+                            costAvarage2 = costAvarageList.get(0);
+                        }
                         if (835 == tarhilInvoiceDetail.getCostCenterId()) {
                             tarhilInvoiceDetailMaster = (TarhilInvoiceDetail) tarhilInvoiceDetail.clone();
                         } else {
-                            generaljournalDetailsService.addGenDetalil(false, tarhilInvoiceDetail.getTotalCost(), journal.getId(),
+                            generaljournalDetailsService.addGenDetalil(false, costAvarage2, journal.getId(),
                                     tarhilInvoiceDetail.getCostAccountId(),
                                     tarhilInvoiceDetail.getCostCenterId(),
                                     remark.toString(), tobyUser);
@@ -2487,19 +2505,19 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     }
 
                     if (tarhilInvoiceDetailMaster != null) {
-                        generaljournalDetailsService.addGenDetalil(true, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                        generaljournalDetailsService.addGenDetalil(true,costAvarage1, journal.getId(),
                                 (dto.getGallaryId() == null || dto.getGallaryId().getRunningAccount() == null || dto.getGallaryId().getRunningAccount().getId() == null) ? null : dto.getGallaryId().getRunningAccount().getId(),
                                 835, remark.toString(), tobyUser);
 
-                        generaljournalDetailsService.addGenDetalil(false, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                        generaljournalDetailsService.addGenDetalil(false,costAvarage1, journal.getId(),
                                 storeAccountNumber,
                                 835, remark.toString(), tobyUser);
 
-                        generaljournalDetailsService.addGenDetalil(true, tarhilInvoiceDetailList.get(0).getTotalCost().add(totalCost), journal.getId(),
+                        generaljournalDetailsService.addGenDetalil(true, costAvarage1.add(costAvarage2), journal.getId(),
                                 costOfSoldGoods,
                                 (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
                                 remark.toString(), tobyUser);
-                        generaljournalDetailsService.addGenDetalil(false, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                        generaljournalDetailsService.addGenDetalil(false, costAvarage1, journal.getId(),
                                 managerCostAccount,
                                 (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
                                 remark.toString(), tobyUser);
@@ -2723,7 +2741,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     public List<Integer> findInvoiceIdList() {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", 182);
-        List<Integer> account = dao.findListByQuery("SELECT ipi.id from InvPurchaseInvoice ipi where ipi.branchId.id = :branchId and ipi.type = 4 and ipi.id > 28873", params);
+        List<Integer> account = dao.findListByQuery("SELECT ipi.id from InvPurchaseInvoice ipi where ipi.branchId.id = :branchId and ipi.type = 4 ", params);
         return account;
     }
 

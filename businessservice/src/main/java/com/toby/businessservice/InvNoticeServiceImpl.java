@@ -9,6 +9,7 @@ import com.toby.core.GenericDAO;
 import com.toby.dto.GeneralJournalDTO;
 import com.toby.dto.GlAccountDTO;
 import com.toby.dto.InvNoticeDTO;
+import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.entity.GeneralJournal;
 import com.toby.entity.InvNotice;
 import com.toby.entity.TobyUser;
@@ -93,6 +94,39 @@ public class InvNoticeServiceImpl implements InvNoticeService {
 //            params.put("type", type);
         }
 
+        List<InvNotice> invNoticeList = dao.findListByQuery(query.toString(), params);
+
+        return returnDTOList(invNoticeList);
+    }
+
+    @Override
+    public List<InvNoticeDTO> getALLInvNoticeByBranchIdAndTypeAndSerialAndOrgan_idDTO(Integer Id, Integer type, InvOrganizationSiteDTO organizationSiteId, Integer serial) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", Id);
+
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT i FROM InvNotice i WHERE i.branchId.id = :branchId ");
+
+        if (type != null) {
+            if (type == 2) {
+                query.append(" AND i.type in (2,3,5) order by i.id desc");
+            } else {
+                query.append(" AND i.type in (0,1,4) order by i.id desc");
+            }
+            if (serial != null) {
+                params.put("serial", serial);
+                query.append(" AND i.serial = :serial");
+            }
+            if (organizationSiteId != null) {
+                params.put("organizationSiteId", organizationSiteId.getId());
+                query.append(" AND i.organizationSiteId.id = :organizationSiteId");
+            }
+
+//            params.put("type", type);
+            {
+
+            }
+        }
         List<InvNotice> invNoticeList = dao.findListByQuery(query.toString(), params);
 
         return returnDTOList(invNoticeList);
@@ -311,8 +345,10 @@ public class InvNoticeServiceImpl implements InvNoticeService {
 
         query.append(" AND i.type in (1,4) ");
 
-        List<InvNotice> invNoticeList = dao.findListByQuery(query.toString(), params);int i = 0 ;
-        for (InvNotice dto : invNoticeList) { System.err.println(i++);
+        List<InvNotice> invNoticeList = dao.findListByQuery(query.toString(), params);
+        int i = 0;
+        for (InvNotice dto : invNoticeList) {
+            System.err.println(i++);
             tarhil(dto, tobyUser, 73);
         }
     }

@@ -36,6 +36,7 @@ public class InvNoticeListMB extends BaseListBean {
     private String uri;
     private List<InvNoticeDTO> invNoticeList;
     private UserData userData;
+    
 
     @EJB
     private InvNoticeService invNoticeService;
@@ -105,6 +106,9 @@ public class InvNoticeListMB extends BaseListBean {
 //            saveError(e, "InvNoticeListMB", "load");
 //        }
 //    }
+    public void search () {
+        setInvNoticeEntityList(invNoticeService.getALLInvNoticeByBranchIdAndTypeAndSerialAndOrgan_idDTO(getUserData().getUserBranch().getId(), typeFlow,getInvNoticeEntity().getOrganizationSiteId(),getInvNoticeEntity().getSerial())) ;
+    }
     @Override
     public void load() {
         try {
