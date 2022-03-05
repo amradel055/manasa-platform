@@ -25,7 +25,8 @@ import javax.ejb.Remote;
 @Remote
 public interface GeneraljournalService {
 
-    public GeneralJournal addGeneralJournalGlobal(Integer yearSelection , Integer specialDocumentsTypes ,Integer serial,Date date ,String remark,TobyUser tobyUser,Integer type,boolean postFlag);
+    public GeneralJournal addGeneralJournalGlobal(Integer yearSelection , Integer specialDocumentsTypes ,Integer serial,Date date ,
+            String remark,TobyUser tobyUser,Integer type,boolean postFlag,Integer documentId);
             
     public GeneralJournal addGeneralJournal(GeneralJournal generalJournal);
 

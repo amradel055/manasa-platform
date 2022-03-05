@@ -68,6 +68,7 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
                         type = 4;
                     } else if (getUri().contains("invpurchaseaddinglist")) {
                         type = 5;
+                        isGallary = false;
                     }
                     Integer invInventorySelectionId = getInventoryDTOSelect() != null ? getInventoryDTOSelect().getId() : null;
                     Integer invGallarySelectionId = getGallaryDTOSelect() != null ? getGallaryDTOSelect().getId() : null;

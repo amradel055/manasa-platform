@@ -212,6 +212,15 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
         max = dao.findEntityByQuery("SELECT MAX(g.serial) FROM GeneralJournal g  WHERE g.branchId.id =182 AND g.companyId.id =125 and g.glYear.id =:glYear AND g.serial > 100000  ", params);
         return max;
     }
+    
+    @Override
+    public Integer findMaxSerialExit() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("glYear", 73);
+        Integer max;
+        max = dao.findEntityByQuery("SELECT MAX(g.serial) FROM GeneralJournal g  WHERE g.branchId.id =182 AND g.companyId.id =125 and g.glYear.id =:glYear AND g.serial < 100000  ", params);
+        return max;
+    }
 
     @Override
     public void addGeneralJournalDTOWithDetailFromExcel(List<GeneralJournalDTO> list, TobyUser tobyUser) {

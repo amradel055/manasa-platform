@@ -194,9 +194,10 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         if (invOrganizationSiteDTO!= null) {
             discountCustomer = invOrganizationSiteDTO.getDiscount();
         }
-        if (invOrganizationSiteDTO != null && invOrganizationSiteDTO.getOfferCompanyDTO() != null) {
-            discountCompany = invOrganizationSiteDTO.getOfferCompanyDTO().getDiscount();
-        }
+        // هنا يرقد خصم الشركات بسلام 
+//        if (invOrganizationSiteDTO != null && invOrganizationSiteDTO.getOfferCompanyDTO() != null) {
+//            discountCompany = invOrganizationSiteDTO.getOfferCompanyDTO().getDiscount();
+//        }
         if (discountCustomer.compareTo(discountCompany) == 1) {
 //            detailEntity.setDiscount(discountCustomer);
             return discountCustomer;

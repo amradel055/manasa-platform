@@ -75,12 +75,12 @@ public class TobyUserBankServiceImpl implements TobyUserBankService {
         List<TobyUserBank> tobyUserBankList = dao.findListByQuery(query.toString(), params);
 
         for (TobyUserBank tobyUserBank : tobyUserBankList) {
-            if (tobyUserBank.getBankId() != null) {
-                GlBank glBank = new GlBank();
-                glBank.setId(tobyUserBank.getBankId().getId());
-                glBank.setName(tobyUserBank.getBankId().getName());
-                glBank.setCode(tobyUserBank.getBankId().getCode());
-            }
+//            if (tobyUserBank.getBankId() != null) {
+//                GlBank glBank = new GlBank();
+//                glBank.setId(tobyUserBank.getBankId().getId());
+//                glBank.setName(tobyUserBank.getBankId().getName());
+//                glBank.setCode(tobyUserBank.getBankId().getCode());
+//            }
             glBankList.add(tobyUserBank.getBankId());
         }
 

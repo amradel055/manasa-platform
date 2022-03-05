@@ -179,10 +179,14 @@
                                      onclick="form.target = '_blank'" ajax="false"
                                      value="#{userData.userDDs['PRINT']} New"
                                      actionListener="#{summitionItemReportMB2.print2()}"/>
+                    <p:commandButton class="printButton2"  icon="fa fa-fw fa-print"
+                                     onclick="form.target = '_blank'" ajax="false"
+                                     value="طباعة للفروع"
+                                     actionListener="#{summitionItemReportMB2.exportPDF(actionEvent)}"/>
 
 
                     <h:commandLink   class="sdcreenimg" >  
-                        <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
+                        <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:1%;'/>  
                         <p:dataExporter type="xls"
                                         target="table" 
                                         fileName="إجماليات الفئات" />  
@@ -260,6 +264,7 @@
                         </p:columnGroup>
 
                     </p:dataTable>
+
 
                 </p:fieldset>
             </h:form>

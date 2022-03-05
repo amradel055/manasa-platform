@@ -18,6 +18,7 @@ import com.toby.dto.CostCenterDTO;
 import com.toby.dto.CurrencyDTO;
 import com.toby.dto.CurrencyOperationDTO;
 import com.toby.dto.GeneralJournalDTO;
+import com.toby.dto.GlAccountDTO;
 import com.toby.dto.GlAdminUnitDTO;
 import com.toby.dto.GlBankDTO;
 import com.toby.dto.GlYearDTO;
@@ -26,6 +27,7 @@ import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.InventoryDelegatorDTO;
+import com.toby.dto.OfferCompanyDTO;
 import com.toby.dto.PrintProductionDTO;
 import com.toby.dto.ProGroupDTO;
 import com.toby.dto.SymbolDTO;
@@ -1591,26 +1593,19 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         dto.setOfferCopoun(entity.getOfferCopoun());
 
         if (entity.getOrganizationSiteId() != null) {
-            System.out.println(new Date() + " -> 1");
-            dto.setOrganizationSiteId(organizationSiteService.mapToDTOSmall(entity.getOrganizationSiteId()));// here kartha
-            System.out.println(new Date() + " -> 2");
+            dto.setOrganizationSiteId(mapToDTOSmallOrganizationSite(entity.getOrganizationSiteId()));// here kartha
         }
         dto.setSupplierInvoiceNumber(entity.getSupplierInvoiceNumber());
         if (entity.getInvInventoryId() != null) {
-            System.out.println(new Date() + " -> 3");
-            InvInventoryDTO inventoryDTO = inventoryService.mapToDTO(entity.getInvInventoryId());
+            InvInventoryDTO inventoryDTO = mapToDTOInvInventoryDTO(entity.getInvInventoryId());
             dto.setInvInventoryId(inventoryDTO);
-            System.out.println(new Date() + " -> 4");
         }
 
         if (entity.getGalaryId() != null) {
-            System.out.println(new Date() + " -> 5");
-            InvInventoryDTO inventoryDTO = inventoryService.mapToDTO(entity.getGalaryId()); //  henaKartha 2
+            InvInventoryDTO inventoryDTO = mapToDTOInvInventoryDTO(entity.getGalaryId()); //  henaKartha 2
             dto.setGallaryId(inventoryDTO);
-            System.out.println(new Date() + " -> 6");
         }
         if (dto.getScreenName() != null) {
-            System.out.println(new Date() + " -> 7");
             if (ScreenNameClassEnum.INVPURCHASEINVOICEFORM.equals(dto.getScreenName())) {
                 if (dto.getInventorySetupDTO().getSellBuy()) {
                     if (entity.getInvAddingOrderId() != null) {
@@ -1646,8 +1641,6 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 dto.setLoadedSerial(entity.getSerial());
             }
         }
-        System.out.println(new Date() + " -> 8");
-
         dto.setExtraCost(entity.getExtraCost());
         dto.setTaxdiscflag(entity.getTaxdiscflag());
         dto.setTaxdiscvalue(entity.getTaxdiscvalue());
@@ -2403,7 +2396,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             remark.append(" فاتورة");
             remark.append(dto.getSerial());
             // ادخال المبيعات
-            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1013, dto.getSerial(), dto.getDate(), remark.toString(), tobyUser, 1, true);
+            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1013, dto.getSerial(), dto.getDate(), remark.toString(), tobyUser, 1, true, dto.getId());
 
             if (dto.getGallaryId() != null && dto.getGallaryId().getCostCenterId() != null && dto.getGallaryId().getCostCenterId().getId() != null) {
                 Integer salesTaxAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"SALES_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
@@ -2505,11 +2498,11 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     }
 
                     if (tarhilInvoiceDetailMaster != null) {
-                        generaljournalDetailsService.addGenDetalil(true,costAvarage1, journal.getId(),
+                        generaljournalDetailsService.addGenDetalil(true, costAvarage1, journal.getId(),
                                 (dto.getGallaryId() == null || dto.getGallaryId().getRunningAccount() == null || dto.getGallaryId().getRunningAccount().getId() == null) ? null : dto.getGallaryId().getRunningAccount().getId(),
                                 835, remark.toString(), tobyUser);
 
-                        generaljournalDetailsService.addGenDetalil(false,costAvarage1, journal.getId(),
+                        generaljournalDetailsService.addGenDetalil(false, costAvarage1, journal.getId(),
                                 storeAccountNumber,
                                 835, remark.toString(), tobyUser);
 
@@ -2534,7 +2527,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             remark.append(" فاتورة");
             remark.append(dto.getSerial());
             // ادخال مردود المبيعات
-            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1019, dto.getSerial(), dto.getDate(), remark.toString(), tobyUser, 0, true);
+            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1019, dto.getSerial(), dto.getDate(), remark.toString(), tobyUser, 0, true, dto.getId());
 
             if (dto.getGallaryId() != null && dto.getGallaryId().getCostCenterId() != null && dto.getGallaryId().getCostCenterId().getId() != null) {
                 Integer salesTaxAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"SALES_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
@@ -2644,7 +2637,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             }
             // ادخال المشتريات
         } else if (dto.getScreenName().equals(ScreenNameClassEnum.INVPURCHASEINVOICEFORM)) {
-            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1010, dto.getSerial(), dto.getDate(), "فاتورة مشتريات", tobyUser, 0, true);
+            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1010, dto.getSerial(), dto.getDate(), "فاتورة مشتريات", tobyUser, 0, true, dto.getId());
 
             Integer storeAccountNumber = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"STORE_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
             Integer purchseTaxAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"PURCHASE_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
@@ -2663,7 +2656,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     "فاتورة " + (dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getName()) + " رقم " + dto.getSupplierInvoiceNumber() + "رقم ضريبى " + (dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getPostBox()), tobyUser);
 
         } else if (dto.getScreenName().equals(ScreenNameClassEnum.INVRETURNPURCHASEFORM)) {
-            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1016, dto.getSerial(), dto.getDate(), "مردود مشتريات", tobyUser, 0, true);
+            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1016, dto.getSerial(), dto.getDate(), "مردود مشتريات", tobyUser, 0, true, dto.getId());
 
             Integer storeAccountNumber = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"STORE_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
             Integer purchseTaxAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"PURCHASE_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
@@ -3483,6 +3476,145 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         Map<String, Object> params = new HashMap<>();
         params.put("invPurchaseInvoiceId", invPurchaseInvoiceId);
         dao.creteQueryInvItemView(invPurchaseInvoiceId);
+    }
+
+    public InvOrganizationSiteDTO mapToDTOSmallOrganizationSite(InvOrganizationSite invOrganizationSite) {
+        InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
+        invOrganizationSiteDTO.setId(invOrganizationSite.getId());
+        invOrganizationSiteDTO.setName(invOrganizationSite.getName());
+        invOrganizationSiteDTO.setCode(invOrganizationSite.getCode());
+        invOrganizationSiteDTO.setMobile(invOrganizationSite.getMobile());
+        invOrganizationSiteDTO.setLength(invOrganizationSite.getLength());
+        invOrganizationSiteDTO.setShoulder(invOrganizationSite.getShoulder());
+        invOrganizationSiteDTO.setStep(invOrganizationSite.getStep());
+        invOrganizationSiteDTO.setDiscount(invOrganizationSite.getDiscount());
+        if (invOrganizationSite.getCurrencyId() != null) {
+            CurrencyDTO currencyDTO = new CurrencyDTO();
+            currencyDTO.setId(invOrganizationSite.getCurrencyId().getId());
+            currencyDTO.setCode(invOrganizationSite.getCurrencyId().getCode());
+            currencyDTO.setName(invOrganizationSite.getCurrencyId().getName());
+            invOrganizationSiteDTO.setCurrencyId(currencyDTO);
+        }
+        if (invOrganizationSite.getParent() != null) {
+            InvOrganizationSiteDTO parent = new InvOrganizationSiteDTO();
+            parent.setId(invOrganizationSite.getParent().getId());
+            parent.setName(invOrganizationSite.getParent().getName());
+            parent.setCode(invOrganizationSite.getParent().getCode());
+            parent.setMobile(invOrganizationSite.getParent().getMobile());
+            parent.setDiscount(invOrganizationSite.getParent().getDiscount());
+            invOrganizationSiteDTO.setParent(parent);
+        }
+        if (invOrganizationSite.getOfferCompanyId() != null) {
+            OfferCompanyDTO offerCompanyDTO = new OfferCompanyDTO();
+            offerCompanyDTO.setId(invOrganizationSite.getOfferCompanyId().getId());
+            offerCompanyDTO.setName(invOrganizationSite.getOfferCompanyId().getName());
+            offerCompanyDTO.setCode(invOrganizationSite.getOfferCompanyId().getCode());
+            offerCompanyDTO.setDiscount(invOrganizationSite.getOfferCompanyId().getDiscount());
+            invOrganizationSiteDTO.setOfferCompanyDTO(offerCompanyDTO);
+        }
+
+        if (invOrganizationSite.getGallaryId() != null) {
+            InvInventoryDTO gallary = new InvInventoryDTO();
+            gallary.setId(invOrganizationSite.getGallaryId().getId());
+            gallary.setName(invOrganizationSite.getGallaryId().getName());
+            gallary.setCode(invOrganizationSite.getGallaryId().getCode());
+            if (invOrganizationSite.getGallaryId().getCostCenterId() != null) {
+                CostCenterDTO costCenterDTO = new CostCenterDTO();
+                costCenterDTO.setId(invOrganizationSite.getGallaryId().getCostCenterId().getId());
+                gallary.setCostCenterId(costCenterDTO);
+            }
+
+            invOrganizationSiteDTO.setGallaryIdDTO(gallary);
+        }
+
+        if (invOrganizationSite.getAccountId() != null) {
+            GlAccountDTO accountDTO = new GlAccountDTO();
+            accountDTO.setAccNumber(invOrganizationSite.getAccountId().getAccNumber());
+            accountDTO.setName(invOrganizationSite.getAccountId().getName());
+            accountDTO.setId(invOrganizationSite.getAccountId().getId());
+            invOrganizationSiteDTO.setAccountId(accountDTO);
+        }
+        invOrganizationSiteDTO.setOpenBalanceCredit(invOrganizationSite.getOpenBalanceCredit());
+        invOrganizationSiteDTO.setOpenBalanceDebit(invOrganizationSite.getOpenBalanceDebit());
+        invOrganizationSiteDTO.setOpenBalanceDate(invOrganizationSite.getOpenBalanceDate());
+
+        return invOrganizationSiteDTO;
+    }
+
+    public InvInventoryDTO mapToDTOInvInventoryDTO(InvInventory entity) {
+
+        InvInventoryDTO dto = new InvInventoryDTO();
+        dto.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
+        dto.setCreatedDate(entity.getCreationDate());
+        dto.setBranchId(entity.getBranchId() != null ? entity.getBranchId().getId() : null);
+
+        maptoDTOSmallInvInventoryDTO(dto, entity);
+
+        dto.setCompanyId(entity.getCompanyId() != null ? entity.getCompanyId().getId() : null);
+        dto.setPhone(entity.getPhone());
+
+        dto.setTypeItem(entity.getTypeItem());
+
+        dto.setMsg(entity.getMsg());
+        dto.setSellerName(entity.getSellerName());
+        if (entity.getAccountId() != null) {
+            GlAccountDTO accountDTO = new GlAccountDTO();
+            accountDTO.setId(entity.getAccountId().getId());
+            accountDTO.setName(entity.getAccountId().getName());
+            accountDTO.setAccNumber(entity.getAccountId().getAccNumber());
+            dto.setAccountId(accountDTO);
+        }
+        if (entity.getRunningAccount() != null) {
+            GlAccountDTO accountDTO = new GlAccountDTO();
+            accountDTO.setId(entity.getRunningAccount().getId());
+            accountDTO.setName(entity.getRunningAccount().getName());
+            accountDTO.setAccNumber(entity.getRunningAccount().getAccNumber());
+            dto.setRunningAccount(accountDTO);
+        }
+        if (entity.getCostAccount() != null) {
+            GlAccountDTO accountDTO = new GlAccountDTO();
+            accountDTO.setId(entity.getCostAccount().getId());
+            accountDTO.setName(entity.getCostAccount().getName());
+            accountDTO.setAccNumber(entity.getCostAccount().getAccNumber());
+            dto.setCostAccount(accountDTO);
+        }
+        if (entity.getCustomerAccount() != null) {
+            GlAccountDTO accountDTO = new GlAccountDTO();
+            accountDTO.setId(entity.getCustomerAccount().getId());
+            accountDTO.setName(entity.getCustomerAccount().getName());
+            accountDTO.setAccNumber(entity.getCustomerAccount().getAccNumber());
+            dto.setCustomerAccount(accountDTO);
+        }
+        if (entity.getAdminUnitId() != null) {
+            GlAdminUnitDTO glAdminUnit = new GlAdminUnitDTO();
+            glAdminUnit.setId(entity.getAdminUnitId().getId());
+            glAdminUnit.setName(entity.getAdminUnitId().getName());
+            glAdminUnit.setCode(entity.getAdminUnitId().getCode());
+            dto.setGlAdminUnitId(glAdminUnit);
+        }
+        if (entity.getCostCenterId() != null) {
+            CostCenterDTO costCenter = new CostCenterDTO();
+            costCenter.setId(entity.getCostCenterId().getId());
+            costCenter.setName(entity.getCostCenterId().getName());
+            costCenter.setCode(entity.getCostCenterId().getCode());
+            dto.setCostCenterId(costCenter);
+        }
+        return dto;
+    }
+
+    public InvInventoryDTO maptoDTOSmallInvInventoryDTO(InvInventoryDTO dto, InvInventory entity) {
+        if (dto == null) {
+            dto = new InvInventoryDTO();
+        }
+        dto.setId(entity.getId());
+        dto.setCode(entity.getCode());
+        dto.setIndex(entity.getId());
+        dto.setInvType(entity.getInvType());
+        dto.setDaribaValue(entity.getDaribaValue());
+        dto.setSegilValue(entity.getSegilValue());
+        dto.setInvName(entity.getInvName());
+        dto.setName(entity.getName());
+        return dto;
     }
 
 }

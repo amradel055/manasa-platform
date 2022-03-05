@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.dto.GeneralJournalDTO;
 import com.toby.dto.InvNoticeDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.entity.GeneralJournal;
@@ -47,6 +48,8 @@ public interface InvNoticeService {
     public GeneralJournal tarhil(InvNotice dto, TobyUser tobyUser, Integer yearSelection) throws CloneNotSupportedException;
 
     public void getALLInvNoticeForToby(TobyUser tobyUser) throws CloneNotSupportedException;
+    
+    public List<GeneralJournalDTO> getALLInvNoticeForToby2(TobyUser tobyUser) throws CloneNotSupportedException;
 
     public List<InvNoticeDTO> getALLInvNoticeByBranchIdAndTypeAndSerialAndOrgan_idDTO(Integer Id, Integer type, InvOrganizationSiteDTO organizationSiteId, Integer serial);
 
