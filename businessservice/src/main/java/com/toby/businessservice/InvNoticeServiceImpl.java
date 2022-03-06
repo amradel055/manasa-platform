@@ -109,9 +109,9 @@ public class InvNoticeServiceImpl implements InvNoticeService {
 
         if (type != null) {
             if (type == 2) {
-                query.append(" AND i.type in (2,3,5) order by i.id desc");
+                query.append(" AND i.type in (2,3,5)");
             } else {
-                query.append(" AND i.type in (0,1,4) order by i.id desc");
+                query.append(" AND i.type in (0,1,4)");
             }
             if (serial != null) {
                 params.put("serial", serial);
@@ -121,7 +121,7 @@ public class InvNoticeServiceImpl implements InvNoticeService {
                 params.put("organizationSiteId", organizationSiteId.getId());
                 query.append(" AND i.organizationSiteId.id = :organizationSiteId");
             }
-
+            query.append(" order by i.id desc ");
 //            params.put("type", type);
             {
 
