@@ -34,11 +34,35 @@
                 </p:commandButton>
             </div>
             <p:fieldset legend="#{userData.userDDs['ADD/DISC_NOTIFI']}" id="whole">
+                <div class="ui-g-12 ui-xl-12">
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:inputText  style="width:35%!important"  required="true" value="#{invNoticeListMB.invNoticeEntity.serial}" />
+
+                    </div>
+                    <p:autoComplete style="width:35%!important" 
+                                    dropdown="true"
+                                    required="true"
+                                    converter="#{autoComplete.organizationSiteDTOConvertor}"
+                                    value="#{invNoticeListMB.invNoticeEntity.organizationSiteId}"
+                                    var="supplier"
+                                    itemLabel="#{supplier}" 
+                                    itemValue="#{supplier}" 
+                                    forceSelection="true" 
+                                    completeMethod="#{autoComplete.completeCustomerFrom}">
+                    </p:autoComplete>
+                        <p:commandButton  
+                            update="@form" 
+                            class="smsearchButtons"
+                            icon="fa fa-fw fa-search-plus"  style="background-color: rgba(63, 81, 181, 0.88);border-radius: 3px;"
+                            title="#{userData.userDDs['VIEW']}" 
+                            action="#{invNoticeListMB.search()}" >
+                        </p:commandButton>
+                </div>
                 <div>
                     <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
                 </div>
-
-
+                
+                  
 
 
 

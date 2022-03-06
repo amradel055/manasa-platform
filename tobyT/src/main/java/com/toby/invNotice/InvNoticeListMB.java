@@ -124,7 +124,7 @@ public class InvNoticeListMB extends BaseListBean {
             } else if (uri.contains("customeraddnotice") || uri.contains("customerdiscountnotice")) {
                 typeFlow = 1;
             }
-            invNoticeEntityList = invNoticeService.getALLInvNoticeByBranchIdAndTypeDTO(getUserData().getUserBranch().getId(), typeFlow);
+//            invNoticeEntityList = invNoticeService.getALLInvNoticeByBranchIdAndTypeDTO(getUserData().getUserBranch().getId(), typeFlow);
         } catch (Exception e) {
             saveError(e, "InvNoticeListMB", "load");
         }
