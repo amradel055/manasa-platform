@@ -3,6 +3,7 @@ package com.toby.invItemData;
 import com.toby.businessservice.CompanyService;
 import com.toby.businessservice.InvGroupService;
 import com.toby.businessservice.InvItemService;
+import com.toby.businessservice.InvItemTypeService;
 import com.toby.businessservice.InvPurchaseInvoiceDetailService;
 import com.toby.businessservice.ItemsDataViewService;
 import com.toby.businessservice.OrganizationSiteService;
@@ -46,8 +47,11 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
 import com.toby.businessservice.InventorySetupService;
 import com.toby.businessservice.ProGroupService;
+import com.toby.converter.InvItemTypeDTOConverter;
 import com.toby.converter.ProGroupDTOConverter;
+import com.toby.dto.InvItemTypeDTO;
 import com.toby.dto.ProGroupDTO;
+import com.toby.entity.InvItemType;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.sf.jasperreports.engine.JRException;
@@ -67,10 +71,10 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
     private String fileName;
     private String showImage;
     private String uploadedImage;
-
+    private InvItemTypeDTOConverter invItemTypeDTOConverter;
     private boolean showMessage = Boolean.FALSE;
     private Boolean delete = Boolean.FALSE;
-
+    private List<InvItemTypeDTO> invItemType;
     private List<InvGroupDTO> invGroupList;
     private InvGroupDTOConverter invGroupDTOConverter;
     private List<SymbolDTO> unitList;
@@ -126,7 +130,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
 
     @EJB
     private SymbolService symbolService;
-    
+
     @EJB
     private ProGroupService proGroupService;
 
@@ -145,6 +149,9 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
     private ItemsDataViewService itemsDataViewService;
 
     private FileUploadController fileUploadController = new FileUploadController();
+
+    @EJB
+    InvItemTypeService invItemTypeService;
 
     @Override
     @PostConstruct
@@ -206,20 +213,20 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
             saveError(e, "invItemDataFormMB", "initObjs");
         }
     }
-    
-    public void calcDiscountValue(){
-     getItemDataEntity().setDiscountvalue(getItemDataEntity().getMaxpricemen().multiply((new BigDecimal(100).subtract(getItemDataEntity().getDiscountrate())).divide(new BigDecimal(100))));
+
+    public void calcDiscountValue() {
+        getItemDataEntity().setDiscountvalue(getItemDataEntity().getMaxpricemen().multiply((new BigDecimal(100).subtract(getItemDataEntity().getDiscountrate())).divide(new BigDecimal(100))));
     }
 
     private void fillLists() {
         try {
-          invGroupList = invGroupService.getallInvGroupByBranchIdDTO(getUserData().getUserlogin()); // groups
+            invGroupList = invGroupService.getallInvGroupByBranchIdDTO(getUserData().getUserlogin()); // groups
 //            invGroupList = invGroupService.getAllSubInvGroupByBranchId(null, branchId);
             invGroupDTOConverter = new InvGroupDTOConverter(invGroupList);
 
             unitList = symbolService.getUnitCompanyId(companyId); //units
             unitDTOConverter = new SymbolDTOConverter(unitList);
-            
+
             proGroupDTOList = proGroupService.getallProGroupByBranchIdDTO(getUserData().getUserlogin());
             setProGroupDTOConverter(new ProGroupDTOConverter(proGroupDTOList));
 
@@ -578,7 +585,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
 
     }
 
-       public List<ProGroupDTO> completeproGroups(String query) {
+    public List<ProGroupDTO> completeproGroups(String query) {
         List<ProGroupDTO> invGroupsFiltered = new ArrayList<>();
         try {
             List<ProGroupDTO> groups = proGroupDTOList;
@@ -613,7 +620,6 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
 
     }
 
-    
     public List<SymbolDTO> completeUnits(String query) {
         List<SymbolDTO> list = new ArrayList<>();
         try {
@@ -811,23 +817,23 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
         }
         return filteredSuppliers;
     }
-    
+
     public void print() {
-        
+
         try {
-            if(itemDataEntity != null){
+            if (itemDataEntity != null) {
                 setItemDataEntityReportList(new ArrayList<>());
                 getItemDataEntityReportList().add(itemDataEntity);
             }
-            fillReport(prepareReport() , getUserData().getReportPath() + "itemBarcode.jasper", getItemDataEntityReportList(), "pdf");
+            fillReport(prepareReport(), getUserData().getReportPath() + "itemBarcode.jasper", getItemDataEntityReportList(), "pdf");
         } catch (JRException ex) {
             Logger.getLogger(invItemDataFormMB.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(invItemDataFormMB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-      public HashMap prepareReport() {
+
+    public HashMap prepareReport() {
         try {
             Map<String, String> userDDs = getUserData().getUserDDs();
             HashMap hashMap = new HashMap();
@@ -841,9 +847,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
 //            } else {
 //                hashMap.put("companyImage", null);
 //            }
-
-          //  hashMap.put("reportDate", new Date());
-
+            //  hashMap.put("reportDate", new Date());
             return hashMap;
         } catch (Exception e) {
             saveError(e, "invQuotationFormMB", "prepareReport");
@@ -1297,6 +1301,39 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
      */
     public void setProGroupDTOList(List<ProGroupDTO> proGroupDTOList) {
         this.proGroupDTOList = proGroupDTOList;
+    }
+
+    /**
+     * @return the invItemType
+     */
+    public List<InvItemTypeDTO> getInvItemType() {
+        if (invItemType == null) {
+            setInvItemType(invItemTypeService.getALLInvItemTypeDTOByBranchId(getUserData().getUserBranch().getId()));
+            invItemTypeDTOConverter = new InvItemTypeDTOConverter(invItemType);
+
+        }
+        return invItemType;
+    }
+
+    /**
+     * @param invItemType the invItemType to set
+     */
+    public void setInvItemType(List<InvItemTypeDTO> invItemType) {
+        this.invItemType = invItemType;
+    }
+
+    /**
+     * @return the invItemTypeDTOConverter
+     */
+    public InvItemTypeDTOConverter getInvItemTypeDTOConverter() {
+        return invItemTypeDTOConverter;
+    }
+
+    /**
+     * @param invItemTypeDTOConverter the invItemTypeDTOConverter to set
+     */
+    public void setInvItemTypeDTOConverter(InvItemTypeDTOConverter invItemTypeDTOConverter) {
+        this.invItemTypeDTOConverter = invItemTypeDTOConverter;
     }
 
 }

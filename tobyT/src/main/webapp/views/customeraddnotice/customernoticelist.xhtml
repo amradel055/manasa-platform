@@ -11,9 +11,6 @@
         <h:form  class='formmargin' id="form" dir="#{userData.dir}">
 
             <p:fieldset legend="#{userData.userDDs['ADD/DISC_NOTIFI']}" id="whole">
-                <div>
-                    <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
-                </div>
                 <div class="ui-g-12 ui-xl-12">
                     <div class="ui-g-6 ui-xl-6">
                         <p:inputText  style="width:35%!important"  required="true" value="#{invNoticeListMB.invNoticeEntity.serial}" />
@@ -38,6 +35,10 @@
                             action="#{invNoticeListMB.search()}" >
                         </p:commandButton>
                 </div>
+                <div>
+                    <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+                </div>
+                
                   
 
 

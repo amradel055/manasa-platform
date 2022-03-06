@@ -258,10 +258,14 @@
                     </div>
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
-                            <p:selectOneMenu value="#{itemDataFormMB.itemDataEntity.type}" >
+                            <p:selectOneMenu value="#{itemDataFormMB.itemDataEntity.type}" 
+                                             converter="#{itemDataFormMB.invItemTypeDTOConverter}">
                                 <f:selectItem itemLabel="اختر" itemValue="" />
-                                <f:selectItem itemLabel="صوف" itemValue="1" />
-                                <f:selectItem itemLabel="شتوي" itemValue="2" />
+                                <f:selectItems value="#{itemDataFormMB.invItemType}"  
+                                               var="InvItemType" 
+                                               itemLabel="#{InvItemType.name}"
+                                               itemValue="#{InvItemType}"/>
+
                             </p:selectOneMenu>
                         </div>     
                         <div class="ui-g-6 ui-xl-6">
