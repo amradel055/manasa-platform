@@ -2641,8 +2641,11 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
             Integer storeAccountNumber = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"STORE_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
             Integer purchseTaxAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"PURCHASE_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
-
-            generaljournalDetailsService.addGenDetalil(true, dto.getTotalNetAfterDiscount(), journal.getId(), storeAccountNumber,
+            BigDecimal totalNetAfterDiscount = dto.getTotalNetAfterDiscount();
+            if (dto.getDiscount() != null && dto.getDiscount().compareTo(BigDecimal.ZERO) == 1) {
+                totalNetAfterDiscount = totalNetAfterDiscount.add(dto.getDiscount());
+            }
+            generaljournalDetailsService.addGenDetalil(true, totalNetAfterDiscount, journal.getId(), storeAccountNumber,
                     835,
                     "فاتورة المورد " + (dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getName()) + " رقم " + dto.getSupplierInvoiceNumber(), tobyUser);
             generaljournalDetailsService.addGenDetalil(false, dto.getFinalNet(), journal.getId(),
@@ -2654,6 +2657,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     835,
                     //                    (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
                     "فاتورة " + (dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getName()) + " رقم " + dto.getSupplierInvoiceNumber() + "رقم ضريبى " + (dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getPostBox()), tobyUser);
+
+            if (dto.getDiscount() != null && dto.getDiscount().compareTo(BigDecimal.ZERO) == 1) {
+                generaljournalDetailsService.addGenDetalil(false, dto.getDiscount(), journal.getId(), 13239,
+                        835,
+                        "فاتورة " + (dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getName()) + " رقم " + dto.getSupplierInvoiceNumber() + "رقم ضريبى " + (dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getPostBox()), tobyUser);
+            }
 
         } else if (dto.getScreenName().equals(ScreenNameClassEnum.INVRETURNPURCHASEFORM)) {
             journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1016, dto.getSerial(), dto.getDate(), "مردود مشتريات", tobyUser, 0, true, dto.getId());

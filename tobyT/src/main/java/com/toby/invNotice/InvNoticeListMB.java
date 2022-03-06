@@ -35,8 +35,6 @@ public class InvNoticeListMB extends BaseListBean {
     private Integer typeFlow;
     private String uri;
     private List<InvNoticeDTO> invNoticeList;
-    private UserData userData;
-    
 
     @EJB
     private InvNoticeService invNoticeService;
@@ -47,7 +45,7 @@ public class InvNoticeListMB extends BaseListBean {
         try {
 
             reset();
-            load();
+//            load();
         } catch (Exception e) {
             saveError(e, "InvNoticeListMB", "init");
         }
@@ -106,14 +104,20 @@ public class InvNoticeListMB extends BaseListBean {
 //            saveError(e, "InvNoticeListMB", "load");
 //        }
 //    }
-    public void search () {
-        setInvNoticeEntityList(invNoticeService.getALLInvNoticeByBranchIdAndTypeAndSerialAndOrgan_idDTO(getUserData().getUserBranch().getId(), typeFlow,getInvNoticeEntity().getOrganizationSiteId(),getInvNoticeEntity().getSerial())) ;
+    public void search() {
+        if (getUri().contains("supplieraddnotice") || getUri().contains("supplierdiscountnotice")) {
+//            typeFlow = 2,3;
+            typeFlow = 2;
+        } else if (getUri().contains("customeraddnotice") || getUri().contains("customerdiscountnotice")) {
+//            typeFlow = 0,1,4;
+            typeFlow = 1;
+        }
+        setInvNoticeEntityList(invNoticeService.getALLInvNoticeByBranchIdAndTypeAndSerialAndOrgan_idDTO(getUserData().getUserBranch().getId(), typeFlow, getInvNoticeEntity().getOrganizationSiteId(), getInvNoticeEntity().getSerial()));
     }
+
     @Override
     public void load() {
         try {
-            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            userData = (UserData) context.getSessionMap().get("userLogInData");
             uri = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestURI();
             if (uri.contains("supplieraddnotice") || uri.contains("supplierdiscountnotice")) {
                 typeFlow = 2;
@@ -129,7 +133,7 @@ public class InvNoticeListMB extends BaseListBean {
     @Override
     public void delete() {
         try {
-            Map<String, String> userDDs = userData.getUserDDs();
+            Map<String, String> userDDs = getUserData().getUserDDs();
 
             Integer invNoticeId = invNoticeEntitySelected.getId() != null ? invNoticeEntitySelected.getId() : null;
             InvNotice invNotice2 = new InvNotice();
@@ -138,9 +142,9 @@ public class InvNoticeListMB extends BaseListBean {
             try {
                 invNoticeService.deleteInvNotice(invNotice2);
                 invNoticeEntityList.remove(invNoticeEntitySelected);
-                savedMeesage(userData, userDDs.get("DELETED"));
+                savedMeesage(getUserData(), userDDs.get("DELETED"));
             } catch (Exception e) {
-                errorMessage(userData, "حدث خطأ في التسجيل");
+                errorMessage(getUserData(), "حدث خطأ في التسجيل");
             }
         } catch (Exception e) {
             saveError(e, "InvNoticeListMB", "delete");
@@ -244,20 +248,6 @@ public class InvNoticeListMB extends BaseListBean {
     }
 
     /**
-     * @return the userData
-     */
-    public UserData getUserData() {
-        return userData;
-    }
-
-    /**
-     * @param userData the userData to set
-     */
-    public void setUserData(UserData userData) {
-        this.userData = userData;
-    }
-
-    /**
      * @return the invNoticeEntitySelected
      */
     public InvNoticeDTO getInvNoticeEntitySelected() {
@@ -283,19 +273,5 @@ public class InvNoticeListMB extends BaseListBean {
      */
     public void setTypeFlow(Integer typeFlow) {
         this.typeFlow = typeFlow;
-    }
-
-    /**
-     * @return the uri
-     */
-    public String getUri() {
-        return uri;
-    }
-
-    /**
-     * @param uri the uri to set
-     */
-    public void setUri(String uri) {
-        this.uri = uri;
     }
 }
