@@ -142,7 +142,8 @@ public class StudentPeriodsServiceImpl implements StudentPeriodsService {
         params.put("periodId", studentPeriodsDTO.getPeriodId());
         params.put("studentId", studentPeriodsDTO.getStudentId());
         params.put("teacherId", studentPeriodsDTO.getTeacherId());
-        List<StudentPeriods> studentPeriod = dao.findListByQuery(" SELECT e FROM StudentPeriods e WHERE e.periodId.id = :periodId "
+        params.put("materialId", studentPeriodsDTO.getMaterialId());
+        List<StudentPeriods> studentPeriod = dao.findListByQuery(" SELECT e FROM StudentPeriods e WHERE e.periodId.id = :periodId AND e.materialId.id = :materialId "
                 + " AND e.studentId.id = :studentId  AND e.teacherId.id = :teacherId ", params);
         if (studentPeriod != null && !studentPeriod.isEmpty()) {
             return Boolean.FALSE;
