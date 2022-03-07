@@ -138,7 +138,7 @@ public class GmSubscriptionsListDTOMB extends GMBasicData {
         try {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             context.getSessionMap().put("ScreenMode", "addGmSubscriptions");
-            goToScreen();
+            exit("../gmsubscriptions/gmsubscriptionsform.xhtml");
 
             return "";
         } catch (Exception e) {
@@ -222,11 +222,11 @@ public class GmSubscriptionsListDTOMB extends GMBasicData {
                     if (getInvOrganizationSiteDTOSelected() != null && getInvOrganizationSiteDTOSelected().getId() != null) {
                         context.getSessionMap().put("TamdedIdCustomer", getInvOrganizationSiteDTOSelected().getId());
                         context.getSessionMap().put("ScreenMode", "TamdedNewCustomer");
-                    }else{
+                    } else {
                         errorMsg("يجب اختيار عميل");
                     }
                 }
-                
+
                 goToScreen();
                 return "";
             } else {

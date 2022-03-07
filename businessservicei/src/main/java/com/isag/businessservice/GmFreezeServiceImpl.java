@@ -150,7 +150,7 @@ public class GmFreezeServiceImpl implements GmFreezeService {
             GmFreeze freeze;
             if (freezeDto != null && (freezeDto.getMsg() == null || freezeDto.getMsg().isEmpty())) {
                 freeze = mapToEntity(freezeDto, isagUser);
-
+                
                 freeze = dao.updateEntity(freeze);
 
             }

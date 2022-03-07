@@ -32,6 +32,7 @@ public class ActionsDTO implements Serializable{
     private String userId;
     private String screenName;
     private String type;
+    private Integer serialId ;
 
   
 
@@ -91,6 +92,20 @@ public class ActionsDTO implements Serializable{
      */
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    /**
+     * @return the serialId
+     */
+    public Integer getSerialId() {
+        return serialId;
+    }
+
+    /**
+     * @param serialId the serialId to set
+     */
+    public void setSerialId(Integer serialId) {
+        this.serialId = serialId;
     }
 
 

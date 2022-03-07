@@ -24,16 +24,18 @@ import javax.ejb.Stateless;
  */
 @Stateless
 
-public class CreateActionImpl implements CreateActionService{
-    
+public class CreateActionImpl implements CreateActionService {
+
     @EJB
     private GenericDAO dao;
-     private ActionsDTO mapToDto(CreateAction actions , IsagUser isagUser) {
+
+    private ActionsDTO mapToDto(CreateAction actions, IsagUser isagUser) {
         ActionsDTO actionsdto = new ActionsDTO();
         actionsdto.setId(actions.getId());
         actionsdto.setType(actions.getType());
         actionsdto.setUserId(actions.getUserId().getName());
         actionsdto.setDate(actions.getDateAction());
+        actionsdto.setSerialId(actions.getSerialId());
 
         actionsdto.setScreenName(actions.getScreenName());
         return actionsdto;
@@ -46,18 +48,20 @@ public class CreateActionImpl implements CreateActionService{
         actions.setUserId(isagUser);
         actions.setScreenName(actionsdto.getScreenName());
         actions.setDateAction(new Date());
+        actions.setSerialId(actionsdto.getSerialId());
+
         return actions;
     }
- 
-@Override
+
+    @Override
     public void SaveAction(ActionsDTO actionsDTO, IsagUser isagUser) {
         CreateAction actions;
         actions = mapToEntity(actionsDTO, isagUser);
         actions = dao.updateEntity(actions);
     }
-    
+
     @Override
-    public List<ActionsDTO> getAllValidSubsByDate(searchDTO search,IsagUser isagUser) {
+    public List<ActionsDTO> getAllValidSubsByDate(searchDTO search, IsagUser isagUser, ActionsDTO actionsDTO) {
 
         Map<String, Object> params = new HashMap<>();
         StringBuilder query = new StringBuilder();
@@ -66,22 +70,26 @@ public class CreateActionImpl implements CreateActionService{
             params.put("dateFrom", search.getDateFrom());
             query.append("WHERE e.dateAction >= :dateFrom");
         }
-
         if (search.getDateTo() != null) {
             params.put("dateTo", search.getDateTo());
             query.append(" AND e.dateAction <= :dateTo");
         }
+        if (actionsDTO.getSerialId() != null) {
+            params.put("serialId", actionsDTO.getSerialId());
+            query.append(" AND e.serialId <= :serialId");
+        }
 
         List<CreateAction> createActions = dao.findListByQuery(query.toString(), params);
-        List<ActionsDTO> dtos = mapToDtoList(createActions , isagUser);
+        List<ActionsDTO> dtos = mapToDtoList(createActions, isagUser);
         return dtos;
     }
-      private List<ActionsDTO> mapToDtoList(List<CreateAction> actionsDtoList,IsagUser isagUser) {
+
+    private List<ActionsDTO> mapToDtoList(List<CreateAction> actionsDtoList, IsagUser isagUser) {
         List<ActionsDTO> dtos = new ArrayList<>();
         for (int i = 0; i < actionsDtoList.size(); i++) {
-            dtos.add(mapToDto(actionsDtoList.get(i),isagUser));
+            dtos.add(mapToDto(actionsDtoList.get(i), isagUser));
         }
         return dtos;
     }
-    
+
 }

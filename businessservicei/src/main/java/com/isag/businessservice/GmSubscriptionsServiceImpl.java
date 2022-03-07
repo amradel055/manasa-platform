@@ -233,7 +233,8 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
                 if (gmSubscriptionsDTO.getId() != null) {
                     //بعمل حفظ فى حالة التعديل
                     gmSubscriptions = dao.updateEntity(gmSubscriptions);
-                    createActionService.SaveAction(SetActionDto( isagUser, "gmsubscriptions", "Save"), isagUser);
+                    Integer serialAction = gmSubscriptions.getSerial();
+                     createActionService.SaveAction(SetActionDto( isagUser, "gmsubscriptions:الجيم", "Save",serialAction), isagUser);
 
 
                 } else {
@@ -241,7 +242,8 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
                     Integer serial = genericService.getMaxGenericSerialByType(GmSubscriptions.class, gmSubscriptions.getBranchId().getId(), gmSubscriptionsDTO.getType());
                     gmSubscriptions.setSerial(serial);
                     gmSubscriptions = dao.updateEntity(gmSubscriptions);
-                     createActionService.SaveAction(SetActionDto( isagUser, "gmsubscriptions", "Save"), isagUser);
+                    Integer serialAction = gmSubscriptions.getSerial();
+                     createActionService.SaveAction(SetActionDto( isagUser, "gmsubscriptions:الجيم", "Save",serialAction), isagUser);
 
 
                 }
@@ -257,12 +259,13 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         return gmSubscriptionsDTO;
     }
 
-    public ActionsDTO SetActionDto(IsagUser isagUser,String screenname,String type) {
+    public ActionsDTO SetActionDto(IsagUser isagUser,String screenname,String type ,Integer gmSubscriptionserial) {
         ActionsDTO actionsDTO = new ActionsDTO();
         actionsDTO.setDate(new Date());
         actionsDTO.setUserId(isagUser.getName());
         actionsDTO.setScreenName(screenname);
         actionsDTO.setType(type);
+        actionsDTO.setSerialId(gmSubscriptionserial);
         return actionsDTO;
     }
 
@@ -313,7 +316,6 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
             dto.setTransDaysNumber(gmMovementService.findGmMovementDtoDaysBySubscribtionId(entity.getId()));
             dto.setDateAfterTagmeed(Utility.sumDateAndNumer(dto.getDateAfterTagmeed(), dto.getTransDaysNumber()));
             dto.setRemainPeriod(Utility.calcDaysBetween(dto.getDateAfterTagmeed(), new Date()));
-            
 
         }
 
@@ -364,7 +366,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         dto.setPayNet(entity.getPayNet());
         dto.setPayed(entity.getPayCash().add(entity.getPayNet()));
         Date today = Date.from(Instant.now());
-        if (today.after(entity.getStartDate()) && today.before(entity.getEndDate())) {
+        if (today.after(entity.getStartDate()) && today.before(dto.getDateAfterTagmeed())) {
             dto.setStatusName("ساري");
         } else {
             dto.setStatusName("منتهي");
@@ -376,7 +378,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         }
 
         dto.setFreezeStatus(gmFreezeService.calcFreezeStatusBySubscribtionId(entity.getId()));
-
+        
 //        List<GmSubscriptionsDetailDTO> gmSubscriptionsDTODetailsListDTO = gmSubscriptionsDTODetailsService.getAllGmSubscriptionsDetailDTOsByGmSubscriptionsDTOIdDTO(dto);
 //        dto.setGmSubscriptionsDetailList(gmSubscriptionsDTODetailsListDTO);
 //        dto.setGmSubscriptionsDetailDeletedList(new ArrayList<GmSubscriptionsDetailDTO>());
@@ -431,9 +433,9 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
     public GmSubscriptionsDTO getValidGmSubscriptionsDTOByCustomerId(Integer customerId) {
         Map<String, Object> filters = new HashMap<>();
         filters.put("customerId", customerId);
-        filters.put("date", new Date());
+//        filters.put("date", new Date());
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT s FROM GmSubscriptions s WHERE  s.organizationSiteId.id =:customerId  AND s.endDate >= :date  order by s.id DESC ");
+        builder.append("SELECT s FROM GmSubscriptions s WHERE  s.organizationSiteId.id =:customerId  order by s.id DESC ");
 
         List<GmSubscriptions> details = dao.findListByQuery(builder.toString(), filters);
         if (details != null && !details.isEmpty()) {

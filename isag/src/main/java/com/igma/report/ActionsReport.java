@@ -36,7 +36,7 @@ public class ActionsReport extends BaseFormBean {
     private ActionsDTO actionsDTO;
 
     public void search() {
-        actionsDTOs = actionService.getAllValidSubsByDate(searchdto, getUserData().getUser());
+        actionsDTOs = actionService.getAllValidSubsByDate(searchdto, getUserData().getUser(),actionsDTO);
     }
 
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {

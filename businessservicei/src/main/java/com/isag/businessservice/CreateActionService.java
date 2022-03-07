@@ -20,6 +20,6 @@ import javax.ejb.Remote;
 public interface CreateActionService {
 
     public void SaveAction(ActionsDTO actionsDTO, IsagUser isagUser);
-   public List<ActionsDTO> getAllValidSubsByDate(searchDTO search,IsagUser isagUser);
+  public List<ActionsDTO> getAllValidSubsByDate(searchDTO search, IsagUser isagUser, ActionsDTO actionsDTO);
 
 }

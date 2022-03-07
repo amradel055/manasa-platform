@@ -20,9 +20,9 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "create_action")
-public class CreateAction implements Serializable{
-    
-   private static final long serialVersionUID = 1L;
+public class CreateAction implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -33,17 +33,13 @@ public class CreateAction implements Serializable{
     private IsagUser userId;
     @Column(name = "type")
     private String type;
-     @Column(name = "screen_name")
+    @Column(name = "screen_name")
     private String screenName;
     @Column(name = "date")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateAction;  
-      
-    
-
-
-
-   
+    private Date dateAction;
+    @Column(name = "serial_id")
+    private Integer serialId;
 
     public IsagUser getUserId() {
         return userId;
@@ -109,8 +105,18 @@ public class CreateAction implements Serializable{
         this.id = id;
     }
 
+    /**
+     * @return the serialId
+     */
+    public Integer getSerialId() {
+        return serialId;
+    }
 
-   
-  
+    /**
+     * @param serialId the serialId to set
+     */
+    public void setSerialId(Integer serialId) {
+        this.serialId = serialId;
+    }
 
 }
