@@ -6,9 +6,11 @@
 package com.igma.gmsubscriptions;
 
 import com.igma.basic.GMBasicData;
+import com.isag.businessservice.GmFreezeService;
 import com.isag.businessservice.GmSubscriptionsService;
 import com.isag.businessservice.OrganizationSiteService;
 import com.isag.converter.InvOrganizationSiteDTOConverter;
+import com.isag.dto.GmFreezeDto;
 import com.isag.dto.GmSubscriptionsDTO;
 import com.isag.dto.InvOrganizationSiteDTO;
 import com.isag.isag.UserData;
@@ -41,6 +43,7 @@ public class GmSubscriptionsListDTOMB extends GMBasicData {
     private List<GmSubscriptionsDTO> subscribtionList;
     private List<InvOrganizationSiteDTO> invOrganizationSiteDTOList;
     private InvOrganizationSiteDTOConverter organizationSiteDTOConvertor;
+    private List<GmFreezeDto> gmFreezeDtoList;
 
     private String filename;
     private String file;
@@ -51,9 +54,12 @@ public class GmSubscriptionsListDTOMB extends GMBasicData {
 
     @EJB
     private OrganizationSiteService organizationSiteService;
+    @EJB
+    GmFreezeService gmFreezeService ;
 
     @Override
     @PostConstruct
+
     public void init() {
         try {
             load();
@@ -78,6 +84,7 @@ public class GmSubscriptionsListDTOMB extends GMBasicData {
     public void show() {
         setInvOrganizationSiteDTOSelected(organizationSiteService.findOrganizationSiteDTOById(getInvOrganizationSiteDTOSelected().getId()));
         setGmSubscriptionsDTOSelected(gmSubscriptionsService.getValidGmSubscriptionsDTOByCustomerId(getInvOrganizationSiteDTOSelected().getId()));
+        setGmFreezeDtoList(gmFreezeService.getALLgm_freezeDtoByCustomerId(getUserData().getUserBranch().getId(),getInvOrganizationSiteDTOSelected().getId(), getUserData().getUser()));
 
     }
 
@@ -452,6 +459,20 @@ public class GmSubscriptionsListDTOMB extends GMBasicData {
      */
     public void setColor(Integer color) {
         this.color = color;
+    }
+
+    /**
+     * @return the gmFreezeDtoList
+     */
+    public List<GmFreezeDto> getGmFreezeDtoList() {
+        return gmFreezeDtoList;
+    }
+
+    /**
+     * @param gmFreezeDtoList the gmFreezeDtoList to set
+     */
+    public void setGmFreezeDtoList(List<GmFreezeDto> gmFreezeDtoList) {
+        this.gmFreezeDtoList = gmFreezeDtoList;
     }
 
 }

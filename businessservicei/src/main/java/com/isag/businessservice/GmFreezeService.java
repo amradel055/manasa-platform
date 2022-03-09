@@ -25,6 +25,6 @@ public interface GmFreezeService {
     public GmFreezeDto save(GmFreezeDto freezeDto, IsagUser isagUser);
     public Integer calcTakenDaysByCustomerIdAndSubscribtionId( Integer subscribtionId);
     public boolean calcFreezeStatusBySubscribtionId(Integer subscribtionId);
+    public List<GmFreezeDto> getALLgm_freezeDtoByCustomerId(Integer branchId, Integer customerId, IsagUser isagUser);
 
-    
 }

@@ -56,14 +56,25 @@ public class GmFreezeServiceImpl implements GmFreezeService {
     }
 
     @Override
+    public List<GmFreezeDto> getALLgm_freezeDtoByCustomerId(Integer branchId, Integer customerId, IsagUser isagUser) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        params.put("customerId", customerId);
+
+        List<GmFreeze> gmFreezList = dao.findListByQuery("SELECT e FROM GmFreeze e WHERE e.branchId.id = :branchId AND e.customerId.id = :customerId ", params);
+        List<GmFreezeDto> dtoList = new ArrayList<>();
+
+        dtoList = returnListDTOForList(gmFreezList, isagUser);
+        return dtoList;
+    }
+
+    @Override
     public GmFreezeDto findgm_freezeDtoById(GmFreezeDto gm_freezeDto, IsagUser isagUser) {
         GmFreeze gm_freezes = dao.findEntityById(GmFreeze.class, gm_freezeDto.getId());
         GmFreezeDto gm_freezeDtoDto = new GmFreezeDto();
         gm_freezeDtoDto = mapToDTO(gm_freezes, gm_freezeDtoDto, isagUser);
         return gm_freezeDtoDto;
-    } 
-     
-      
+    }
 
     private GmFreezeDto mapToDTO(GmFreeze entity, GmFreezeDto dto, IsagUser isagUser) {
         dto = initData(dto, entity, isagUser);
@@ -150,7 +161,7 @@ public class GmFreezeServiceImpl implements GmFreezeService {
             GmFreeze freeze;
             if (freezeDto != null && (freezeDto.getMsg() == null || freezeDto.getMsg().isEmpty())) {
                 freeze = mapToEntity(freezeDto, isagUser);
-                
+
                 freeze = dao.updateEntity(freeze);
 
             }
@@ -170,33 +181,34 @@ public class GmFreezeServiceImpl implements GmFreezeService {
         }
         return dtosList;
     }
-    
-     @Override
-    public Integer calcTakenDaysByCustomerIdAndSubscribtionId(Integer subscribtionId){
-      
+
+    @Override
+    public Integer calcTakenDaysByCustomerIdAndSubscribtionId(Integer subscribtionId) {
+
         Map<String, Object> params = new HashMap<>();
         params.put("subscribtionId", subscribtionId);
         List<Long> list = dao.findListByQuery("SELECT sum(e.number) FROM  GmFreeze e where e.subscirbtionId.id = :subscribtionId", params);
-        if(list != null && !list.isEmpty() && list.get(0) != null ){
-         Integer i = list.get(0).intValue() ;
-         return i ;
+        if (list != null && !list.isEmpty() && list.get(0) != null) {
+            Integer i = list.get(0).intValue();
+            return i;
         }
-        
-      return 0 ;
+
+        return 0;
     }
-       @Override
-    public boolean calcFreezeStatusBySubscribtionId(Integer subscribtionId){
-      
+
+    @Override
+    public boolean calcFreezeStatusBySubscribtionId(Integer subscribtionId) {
+
         Map<String, Object> params = new HashMap<>();
         params.put("subscribtionId", subscribtionId);
-         params.put("newdate", new Date());
+        params.put("newdate", new Date());
         List<GmFreeze> list = dao.findListByQuery("SELECT e FROM  GmFreeze e where e.subscirbtionId.id = :subscribtionId And :newdate between e.datefrom And e.dateto", params);
-        if(list != null && !list.isEmpty() && list.get(0) != null ){
-         return true ;
-        }else{ 
-         return false;
+        if (list != null && !list.isEmpty() && list.get(0) != null) {
+            return true;
+        } else {
+            return false;
         }
-        
+
     }
 
 }
