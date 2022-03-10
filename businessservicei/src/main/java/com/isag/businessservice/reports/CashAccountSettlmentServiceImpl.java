@@ -2055,6 +2055,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         String dateFrom = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(cashAccountSettlementSearchBean.getDateFrom());
         String dateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(cashAccountSettlementSearchBean.getDateTo());
         query = new StringBuilder();
+        StringBuilder queryNew = new StringBuilder();
         if (cashAccountSettlementSearchBean.getOrderBy() == 0) {
             query.append("SELECT s.`createdBy`,s.`bankId`,s.`paymentType`,s.`date`,s.`serial`,s.`value`,s.`value_local`,s.`remark`,s.`remark2`,s.`name`,"
                     + " s.`code`,s.`currencyName`,s.`currencyCode`, s.`status`,s.`contractSerial`,s.`type_name`, s.`documentSerial` from ( ");
@@ -2063,7 +2064,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
             if ((cashAccountSettlementSearchBean.getTransactionType() == null || cashAccountSettlementSearchBean.getTransactionType() == 0) && cashAccountSettlementSearchBean.getType() == 3
                     && cashAccountSettlementSearchBean.getSerialFrom() == null && cashAccountSettlementSearchBean.getSerialTo() == null) {
 
-                query.append("SELECT \n"
+                queryNew.append("SELECT \n"
                         + "        `i`.`name` AS `createdBy`,\n"
                         + "        `gb`.`id` AS `bankId`,\n"
                         + "        0 AS `paymentType`,\n"
@@ -2090,20 +2091,16 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         + "            AND (`gb`.`openinng_balance` > 0)) \n"
                         + "            AND `gb`.`id` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
                 if (isOpenningBalance) {
-                    query.append("            AND `gb`.`date_openinng_balance` < '").append(dateFrom).append("'");
+                    queryNew.append("            AND `gb`.`date_openinng_balance` < '").append(dateFrom).append("'");
                 } else {
-                    query.append("            AND `gb`.`date_openinng_balance` >= '").append(dateFrom).append("' AND `gb`.`date_openinng_balance` <= '").append(dateTo).append("'");
+                    queryNew.append("            AND `gb`.`date_openinng_balance` >= '").append(dateFrom).append("' AND `gb`.`date_openinng_balance` <= '").append(dateTo).append("'");
                 }
             }
             if (cashAccountSettlementSearchBean.getTransactionType() == null || cashAccountSettlementSearchBean.getTransactionType() == 1 || cashAccountSettlementSearchBean.getTransactionType() == 2) {
-                if (query == null) {
-                    query = new StringBuilder();
-
-                } else {
-                    query.append("    UNION ALL ");
+                if (!queryNew.toString().isEmpty()) {
+                    queryNew.append("    UNION ALL ");
                 }
-
-                query.append(" SELECT \n"
+                queryNew.append(" SELECT \n"
                         + "        `i`.`name` AS `createdBy`,\n"
                         + "        `bt`.`gl_bank_id` AS `bankId`,\n"
                         + "        `bt`.`payment_type` AS `paymentType`,\n"
@@ -2136,90 +2133,82 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         + "            AND (`bt`.`transaction_type` <> 3)) "
                         + "            AND `bt`.`gl_bank_id` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
                 if (isOpenningBalance) {
-                    query.append("            AND `bt`.`date` < '").append(dateFrom).append("'");
+                    queryNew.append("            AND `bt`.`date` < '").append(dateFrom).append("'");
                 } else {
-                    query.append("            AND `bt`.`date` >= '").append(dateFrom).append("' AND `bt`.`date` <= '").append(dateTo).append("'");
+                    queryNew.append("            AND `bt`.`date` >= '").append(dateFrom).append("' AND `bt`.`date` <= '").append(dateTo).append("'");
                 }
                 if (cashAccountSettlementSearchBean.getType() != null && cashAccountSettlementSearchBean.getType() != 3) {
-                    query.append(" AND `bt`.`transaction_type` = ").append(cashAccountSettlementSearchBean.getType());
+                    queryNew.append(" AND `bt`.`transaction_type` = ").append(cashAccountSettlementSearchBean.getType());
                 }
 
                 if (cashAccountSettlementSearchBean.getTransactionType() != null) {
-                    query.append(" AND `bt`.`transaction_type` = ").append(cashAccountSettlementSearchBean.getTransactionType());
+                    queryNew.append(" AND `bt`.`transaction_type` = ").append(cashAccountSettlementSearchBean.getTransactionType());
                 }
 
                 if (cashAccountSettlementSearchBean.getSerialFrom() != null) {
-                    query.append(" AND `bt`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
+                    queryNew.append(" AND `bt`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
                 }
 
                 if (cashAccountSettlementSearchBean.getSerialTo() != null) {
-                    query.append(" AND `bt`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
+                    queryNew.append(" AND `bt`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
                 }
+            }
+        }
 
+        if ((cashAccountSettlementSearchBean.getTransactionType() == null || cashAccountSettlementSearchBean.getTransactionType() == 3)
+                && cashAccountSettlementSearchBean.getType() != null && (cashAccountSettlementSearchBean.getType() == 3 || cashAccountSettlementSearchBean.getType() == 0)) {
+            if (!queryNew.toString().isEmpty()) {
+                queryNew.append("    UNION ALL ");
             }
 
-            if ((cashAccountSettlementSearchBean.getTransactionType() == null || cashAccountSettlementSearchBean.getTransactionType() == 3)
-                    && cashAccountSettlementSearchBean.getType() != null && (cashAccountSettlementSearchBean.getType() == 3 || cashAccountSettlementSearchBean.getType() == 0)) {
-                if (query == null) {
-                    query = new StringBuilder();
+            queryNew.append(" SELECT \n"
+                    + "        `i`.`name` AS `createdBy`,\n"
+                    + "        `btd`.`bank_id_from` AS `bankId`,\n"
+                    + "        `bt`.`payment_type` AS `paymentType`,\n"
+                    + "        `bt`.`date` AS `date`,\n"
+                    + "        `bt`.`serial` AS `serial`,\n"
+                    + "        `btd`.`value` AS `value`,\n"
+                    + "        `btd`.`value_local` AS `value_local`,\n"
+                    + "        `btd`.`remarks` AS `remark`,\n"
+                    + "        `bt`.`remark2` AS `remark2`,\n"
+                    + "        `gb`.`name` AS `name`,\n"
+                    + "        `gb`.`code` AS `code`,\n"
+                    + "        `c`.`name` AS `currencyName`,\n"
+                    + "        `c`.`code` AS `currencyCode`,\n"
+                    + "        0 AS `status`,\n"
+                    + "        '' AS `contractSerial`,\n"
+                    + "        'تحويل صادر' AS `type_name`,\n"
+                    + "        `bt`.`document_serial` AS `documentSerial`\n"
+                    + "    FROM\n"
+                    + "        ((((`isag`.`gl_bank_transaction` `bt`\n"
+                    + "        LEFT JOIN `isag`.`gl_bank_transaction_detail` `btd` ON ((`bt`.`id` = `btd`.`gl_bank_transaction_id`)))\n"
+                    + "        LEFT JOIN `isag`.`gl_bank` `gb` ON ((`gb`.`id` = `btd`.`bank_id_from`)))\n"
+                    + "        LEFT JOIN `isag`.`currency` `c` ON ((`c`.`id` = `gb`.`currency_id`)))\n"
+                    + "        LEFT JOIN `isag`.`isag_user` `i` ON ((`i`.`id` = `bt`.`created_by`)))\n"
+                    + "    WHERE\n"
+                    + "        ((`bt`.`transaction_type` = 2)\n"
+                    + "            AND (`btd`.`bank_id_from` IS NOT NULL))  "
+                    + "            AND `btd`.`bank_id_from` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
+            if (isOpenningBalance) {
+                queryNew.append("            AND `bt`.`date` < '").append(dateFrom).append("'");
+            } else {
+                queryNew.append("            AND `bt`.`date` >= '").append(dateFrom).append("' AND `bt`.`date` <= '").append(dateTo).append("'");
+            }
+            if (cashAccountSettlementSearchBean.getSerialFrom() != null) {
+                queryNew.append(" AND `bt`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
+            }
 
-                } else {
-                    query.append("    UNION ALL ");
-                }
-
-                query.append(" SELECT \n"
-                        + "        `i`.`name` AS `createdBy`,\n"
-                        + "        `btd`.`bank_id_from` AS `bankId`,\n"
-                        + "        `bt`.`payment_type` AS `paymentType`,\n"
-                        + "        `bt`.`date` AS `date`,\n"
-                        + "        `bt`.`serial` AS `serial`,\n"
-                        + "        `btd`.`value` AS `value`,\n"
-                        + "        `btd`.`value_local` AS `value_local`,\n"
-                        + "        `btd`.`remarks` AS `remark`,\n"
-                        + "        `bt`.`remark2` AS `remark2`,\n"
-                        + "        `gb`.`name` AS `name`,\n"
-                        + "        `gb`.`code` AS `code`,\n"
-                        + "        `c`.`name` AS `currencyName`,\n"
-                        + "        `c`.`code` AS `currencyCode`,\n"
-                        + "        0 AS `status`,\n"
-                        + "        '' AS `contractSerial`,\n"
-                        + "        'تحويل صادر' AS `type_name`,\n"
-                        + "        `bt`.`document_serial` AS `documentSerial`\n"
-                        + "    FROM\n"
-                        + "        ((((`isag`.`gl_bank_transaction` `bt`\n"
-                        + "        LEFT JOIN `isag`.`gl_bank_transaction_detail` `btd` ON ((`bt`.`id` = `btd`.`gl_bank_transaction_id`)))\n"
-                        + "        LEFT JOIN `isag`.`gl_bank` `gb` ON ((`gb`.`id` = `btd`.`bank_id_from`)))\n"
-                        + "        LEFT JOIN `isag`.`currency` `c` ON ((`c`.`id` = `gb`.`currency_id`)))\n"
-                        + "        LEFT JOIN `isag`.`isag_user` `i` ON ((`i`.`id` = `bt`.`created_by`)))\n"
-                        + "    WHERE\n"
-                        + "        ((`bt`.`transaction_type` = 2)\n"
-                        + "            AND (`btd`.`bank_id_from` IS NOT NULL))  "
-                        + "            AND `btd`.`bank_id_from` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
-                if (isOpenningBalance) {
-                    query.append("            AND `bt`.`date` < '").append(dateFrom).append("'");
-                } else {
-                    query.append("            AND `bt`.`date` >= '").append(dateFrom).append("' AND `bt`.`date` <= '").append(dateTo).append("'");
-                }
-                if (cashAccountSettlementSearchBean.getSerialFrom() != null) {
-                    query.append(" AND `bt`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
-                }
-
-                if (cashAccountSettlementSearchBean.getSerialTo() != null) {
-                    query.append(" AND `bt`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
-                }
-
+            if (cashAccountSettlementSearchBean.getSerialTo() != null) {
+                queryNew.append(" AND `bt`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
             }
 
             if ((cashAccountSettlementSearchBean.getTransactionType() == null || cashAccountSettlementSearchBean.getTransactionType() == 4)
                     && cashAccountSettlementSearchBean.getType() != null && (cashAccountSettlementSearchBean.getType() == 3 || cashAccountSettlementSearchBean.getType() == 1)) {
-                if (query == null) {
-                    query = new StringBuilder();
-
-                } else {
-                    query.append("    UNION ALL ");
+                if (!queryNew.toString().isEmpty()) {
+                    queryNew.append("    UNION ALL ");
                 }
 
-                query.append(" SELECT \n"
+                queryNew.append(" SELECT \n"
                         + "        `i`.`name` AS `createdBy`,\n"
                         + "        `btd`.`bank_id_to` AS `bankId`,\n"
                         + "        `bt`.`payment_type` AS `paymentType`,\n"
@@ -2248,30 +2237,26 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         + "            AND (`btd`.`bank_id_to` IS NOT NULL))   "
                         + "            AND `btd`.`bank_id_to` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
                 if (isOpenningBalance) {
-                    query.append("            AND `bt`.`date` < '").append(dateFrom).append("'");
+                    queryNew.append("            AND `bt`.`date` < '").append(dateFrom).append("'");
                 } else {
-                    query.append("            AND `bt`.`date` >= '").append(dateFrom).append("' AND `bt`.`date` <= '").append(dateTo).append("'");
+                    queryNew.append("            AND `bt`.`date` >= '").append(dateFrom).append("' AND `bt`.`date` <= '").append(dateTo).append("'");
                 }
                 if (cashAccountSettlementSearchBean.getSerialFrom() != null) {
-                    query.append(" AND `bt`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
+                    queryNew.append(" AND `bt`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
                 }
 
                 if (cashAccountSettlementSearchBean.getSerialTo() != null) {
-                    query.append(" AND `bt`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
+                    queryNew.append(" AND `bt`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
                 }
 
             }
 
             if ((cashAccountSettlementSearchBean.getTransactionType() == null || cashAccountSettlementSearchBean.getTransactionType() == 5)
                     && cashAccountSettlementSearchBean.getType() != null && (cashAccountSettlementSearchBean.getType() == 3 || cashAccountSettlementSearchBean.getType() == 0)) {
-                if (query == null) {
-                    query = new StringBuilder();
-
-                } else {
-                    query.append("    UNION ALL ");
+                if (!queryNew.toString().isEmpty()) {
+                    queryNew.append("    UNION ALL ");
                 }
-
-                query.append(" SELECT \n"
+                queryNew.append(" SELECT \n"
                         + "        `i`.`name` AS `createdBy`,\n"
                         + "        `ipi`.`gl_bank_id` AS `bankId`,\n"
                         + "        `ipi`.`payment_type` AS `paymentType`,\n"
@@ -2309,31 +2294,28 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         + "        (`ipi`.`payment_type` = 0)    "
                         + "            AND `ipi`.`gl_bank_id` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
                 if (isOpenningBalance) {
-                    query.append("            AND `ipi`.`date` < '").append(dateFrom).append("'");
+                    queryNew.append("            AND `ipi`.`date` < '").append(dateFrom).append("'");
                 } else {
-                    query.append("            AND `ipi`.`date` >= '").append(dateFrom).append("' AND `ipi`.`date` <= '").append(dateTo).append("'");
+                    queryNew.append("            AND `ipi`.`date` >= '").append(dateFrom).append("' AND `ipi`.`date` <= '").append(dateTo).append("'");
                 }
                 if (cashAccountSettlementSearchBean.getSerialFrom() != null) {
-                    query.append(" AND `ipi`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
+                    queryNew.append(" AND `ipi`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
                 }
 
                 if (cashAccountSettlementSearchBean.getSerialTo() != null) {
-                    query.append(" AND `ipi`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
+                    queryNew.append(" AND `ipi`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
                 }
 
-                query.append(" AND `ipi`.`type` = 0  group by ipi.id ");
+                queryNew.append(" AND `ipi`.`type` = 0  group by ipi.id ");
             }
 
             if ((cashAccountSettlementSearchBean.getTransactionType() == null || cashAccountSettlementSearchBean.getTransactionType() == 6)
                     && cashAccountSettlementSearchBean.getType() != null && (cashAccountSettlementSearchBean.getType() == 3 || cashAccountSettlementSearchBean.getType() == 1)) {
-                if (query == null) {
-                    query = new StringBuilder();
-
-                } else {
-                    query.append("    UNION ALL ");
+                if (!queryNew.toString().isEmpty()) {
+                    queryNew.append("    UNION ALL ");
                 }
 
-                query.append(" SELECT \n"
+                queryNew.append(" SELECT \n"
                         + "        `i`.`name` AS `createdBy`,\n"
                         + "        `ipi`.`gl_bank_id` AS `bankId`,\n"
                         + "        `ipi`.`payment_type` AS `paymentType`,\n"
@@ -2371,31 +2353,28 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         + "        (`ipi`.`payment_type` = 0)    "
                         + "            AND `ipi`.`gl_bank_id` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
                 if (isOpenningBalance) {
-                    query.append("            AND `ipi`.`date` < '").append(dateFrom).append("'");
+                    queryNew.append("            AND `ipi`.`date` < '").append(dateFrom).append("'");
                 } else {
-                    query.append("            AND `ipi`.`date` >= '").append(dateFrom).append("' AND `ipi`.`date` <= '").append(dateTo).append("'");
+                    queryNew.append("            AND `ipi`.`date` >= '").append(dateFrom).append("' AND `ipi`.`date` <= '").append(dateTo).append("'");
                 }
                 if (cashAccountSettlementSearchBean.getSerialFrom() != null) {
-                    query.append(" AND `ipi`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
+                    queryNew.append(" AND `ipi`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
                 }
 
                 if (cashAccountSettlementSearchBean.getSerialTo() != null) {
-                    query.append(" AND `ipi`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
+                    queryNew.append(" AND `ipi`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
                 }
 
-                query.append(" AND `ipi`.`type` = 1  group by ipi.id ");
+                queryNew.append(" AND `ipi`.`type` = 1  group by ipi.id ");
             }
 
             if ((cashAccountSettlementSearchBean.getTransactionType() == null || cashAccountSettlementSearchBean.getTransactionType() == 7)
                     && cashAccountSettlementSearchBean.getType() != null && (cashAccountSettlementSearchBean.getType() == 3 || cashAccountSettlementSearchBean.getType() == 1)) {
-                if (query == null) {
-                    query = new StringBuilder();
-
-                } else {
-                    query.append("    UNION ALL ");
+                if (!queryNew.toString().isEmpty()) {
+                    queryNew.append("    UNION ALL ");
                 }
 
-                query.append(" SELECT \n"
+                queryNew.append(" SELECT \n"
                         + "        `i`.`name` AS `createdBy`,\n"
                         + "        `ipi`.`gl_bank_id` AS `bankId`,\n"
                         + "        `ipi`.`payment_type` AS `paymentType`,\n"
@@ -2433,31 +2412,28 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         + "        (`ipi`.`payment_type` = 0)    "
                         + "            AND `ipi`.`gl_bank_id` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
                 if (isOpenningBalance) {
-                    query.append("            AND `ipi`.`date` < '").append(dateFrom).append("'");
+                    queryNew.append("            AND `ipi`.`date` < '").append(dateFrom).append("'");
                 } else {
-                    query.append("            AND `ipi`.`date` >= '").append(dateFrom).append("' AND `ipi`.`date` <= '").append(dateTo).append("'");
+                    queryNew.append("            AND `ipi`.`date` >= '").append(dateFrom).append("' AND `ipi`.`date` <= '").append(dateTo).append("'");
                 }
                 if (cashAccountSettlementSearchBean.getSerialFrom() != null) {
-                    query.append(" AND `ipi`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
+                    queryNew.append(" AND `ipi`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
                 }
 
                 if (cashAccountSettlementSearchBean.getSerialTo() != null) {
-                    query.append(" AND `ipi`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
+                    queryNew.append(" AND `ipi`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
                 }
 
-                query.append(" AND `ipi`.`type` = 2  group by ipi.id ");
+                queryNew.append(" AND `ipi`.`type` = 2  group by ipi.id ");
             }
 
             if ((cashAccountSettlementSearchBean.getTransactionType() == null || cashAccountSettlementSearchBean.getTransactionType() == 8)
                     && cashAccountSettlementSearchBean.getType() != null && (cashAccountSettlementSearchBean.getType() == 3 || cashAccountSettlementSearchBean.getType() == 0)) {
-                if (query == null) {
-                    query = new StringBuilder();
-
-                } else {
-                    query.append("    UNION ALL ");
+                if (!queryNew.toString().isEmpty()) {
+                    queryNew.append("    UNION ALL ");
                 }
 
-                query.append(" SELECT \n"
+                queryNew.append(" SELECT \n"
                         + "        `i`.`name` AS `createdBy`,\n"
                         + "        `ipi`.`gl_bank_id` AS `bankId`,\n"
                         + "        `ipi`.`payment_type` AS `paymentType`,\n"
@@ -2495,32 +2471,29 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         + "        (`ipi`.`payment_type` = 0)    "
                         + "            AND `ipi`.`gl_bank_id` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
                 if (isOpenningBalance) {
-                    query.append("            AND `ipi`.`date` < '").append(dateFrom).append("'");
+                    queryNew.append("            AND `ipi`.`date` < '").append(dateFrom).append("'");
                 } else {
-                    query.append("            AND `ipi`.`date` >= '").append(dateFrom).append("' AND `ipi`.`date` <= '").append(dateTo).append("'");
+                    queryNew.append("            AND `ipi`.`date` >= '").append(dateFrom).append("' AND `ipi`.`date` <= '").append(dateTo).append("'");
                 }
                 if (cashAccountSettlementSearchBean.getSerialFrom() != null) {
-                    query.append(" AND `ipi`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
+                    queryNew.append(" AND `ipi`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
                 }
 
                 if (cashAccountSettlementSearchBean.getSerialTo() != null) {
-                    query.append(" AND `ipi`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
+                    queryNew.append(" AND `ipi`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
                 }
 
-                query.append(" AND `ipi`.`type` = 3  group by ipi.id  ");
+                queryNew.append(" AND `ipi`.`type` = 3  group by ipi.id  ");
             }
 
             if ((cashAccountSettlementSearchBean.getTransactionType() == null || cashAccountSettlementSearchBean.getTransactionType() == 9)
                     && cashAccountSettlementSearchBean.getType() != null && (cashAccountSettlementSearchBean.getType() == 3 || cashAccountSettlementSearchBean.getType() == 1)) {
                 Integer status = 1;
-                if (query == null) {
-                    query = new StringBuilder();
-
-                } else {
-                    query.append("    UNION ALL ");
+                if (!queryNew.toString().isEmpty()) {
+                    queryNew.append("    UNION ALL ");
                 }
 
-                query.append(" SELECT \n"
+                queryNew.append(" SELECT \n"
                         + "        `i`.`name` AS `createdBy`,\n"
                         + "        `gs`.`gl_bank_id` AS `bankId`,\n"
                         + "        0 AS `paymentType`,\n"
@@ -2545,26 +2518,26 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         + "        LEFT JOIN `isag`.`isag_user` `i` ON ((`i`.`id` = `gs`.`created_by`))) where  gs.deleted_by IS NULL  "
                         + "            AND `gs`.`gl_bank_id` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
                 if (isOpenningBalance) {
-                    query.append("            AND `gs`.`date` < '").append(dateFrom).append("'");
+                    queryNew.append("            AND `gs`.`date` < '").append(dateFrom).append("'");
                 } else {
-                    query.append("            AND `gs`.`date` >= '").append(dateFrom).append("' AND `gs`.`date` <= '").append(dateTo).append("'");
+                    queryNew.append("            AND `gs`.`date` >= '").append(dateFrom).append("' AND `gs`.`date` <= '").append(dateTo).append("'");
                 }
                 if (cashAccountSettlementSearchBean.getSerialFrom() != null) {
-                    query.append(" AND `gs`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
+                    queryNew.append(" AND `gs`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
                 }
 
                 if (cashAccountSettlementSearchBean.getSerialTo() != null) {
-                    query.append(" AND `gs`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
+                    queryNew.append(" AND `gs`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
                 }
 
-                query.append(" AND `gs`.`type` = 0 ");
+                queryNew.append(" AND `gs`.`type` = 0 ");
             }
         }
-
+        query.append(queryNew);
         if (cashAccountSettlementSearchBean.getOrderBy() == 0) {
             query.append(" ) s order by s.`date` ");
         }
-        return query == null ? null : query.toString();
+        return  query.toString();
     }
 
     public List<CashAccountSettlment> findAllCashAccountSettlmentNew(SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
