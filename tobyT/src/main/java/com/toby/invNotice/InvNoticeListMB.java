@@ -70,10 +70,10 @@ public class InvNoticeListMB extends BaseListBean {
 //            Integer type;
 //            uri = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestURI();
 //
-//            if (uri.contains("supplieraddnotice") || uri.contains("supplierdiscountnotice")) {
+//            if (getUri().contains("supplieraddnotice") || getUri().contains("supplierdiscountnotice")) {
 ////            typeFlow = 2,3;
 //                typeFlow = 2;
-//            } else if (uri.contains("customeraddnotice") || uri.contains("customerdiscountnotice")) {
+//            } else if (getUri().contains("customeraddnotice") || getUri().contains("customerdiscountnotice")) {
 ////            typeFlow = 0,1;
 //                typeFlow = 1;
 //            }
@@ -119,9 +119,9 @@ public class InvNoticeListMB extends BaseListBean {
     public void load() {
         try {
             uri = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestURI();
-            if (uri.contains("supplieraddnotice") || uri.contains("supplierdiscountnotice")) {
+            if (getUri().contains("supplieraddnotice") || getUri().contains("supplierdiscountnotice")) {
                 typeFlow = 2;
-            } else if (uri.contains("customeraddnotice") || uri.contains("customerdiscountnotice")) {
+            } else if (getUri().contains("customeraddnotice") || getUri().contains("customerdiscountnotice")) {
                 typeFlow = 1;
             }
 //            invNoticeEntityList = invNoticeService.getALLInvNoticeByBranchIdAndTypeDTO(getUserData().getUserBranch().getId(), typeFlow);
@@ -161,13 +161,13 @@ public class InvNoticeListMB extends BaseListBean {
         try {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             context.getSessionMap().put("ScreenMode", "Add");
-            if (uri.contains("supplieraddnotice")) {
+            if (getUri().contains("supplieraddnotice")) {
                 exit("../supplieraddnotice/suppliernoticeform.xhtml");
-            } else if (uri.contains("supplierdiscountnotice")) {
+            } else if (getUri().contains("supplierdiscountnotice")) {
                 exit("../supplierdiscountnotice/supplierdiscountnoticeform.xhtml");
-            } else if (uri.contains("customeraddnotice")) {
+            } else if (getUri().contains("customeraddnotice")) {
                 exit("../customeraddnotice/customernoticeform.xhtml");
-            } else if (uri.contains("customerdiscountnotice")) {
+            } else if (getUri().contains("customerdiscountnotice")) {
                 exit("../customerdiscountnotice/customerdiscountnoticeform.xhtml");
             }
         } catch (Exception e) {
@@ -184,13 +184,13 @@ public class InvNoticeListMB extends BaseListBean {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             context.getSessionMap().put("invNoticeEntitySelected", invNoticeEntitySelected.getId());
             context.getSessionMap().put("ScreenMode", "Edit");
-            if (uri.contains("supplieraddnotice")) {
+            if (getUri().contains("supplieraddnotice")) {
                 exit("../supplieraddnotice/suppliernoticeform.xhtml");
-            } else if (uri.contains("supplierdiscountnotice")) {
+            } else if (getUri().contains("supplierdiscountnotice")) {
                 exit("../supplierdiscountnotice/supplierdiscountnoticeform.xhtml");
-            } else if (uri.contains("customeraddnotice")) {
+            } else if (getUri().contains("customeraddnotice")) {
                 exit("../customeraddnotice/customernoticeform.xhtml");
-            } else if (uri.contains("customerdiscountnotice")) {
+            } else if (getUri().contains("customerdiscountnotice")) {
                 exit("../customerdiscountnotice/customerdiscountnoticeform.xhtml");
             }
 

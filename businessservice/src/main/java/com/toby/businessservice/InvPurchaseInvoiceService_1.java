@@ -114,6 +114,8 @@ public interface InvPurchaseInvoiceService_1 {
 //    public BigDecimal remainForInvPurchaseInvoice(Integer invPurchaseInvoiceId);
     
     public BigDecimal returnRemain(InvInvoiceDTO invPurchaseInvoiceDTO);
+    
+    public BigDecimal findPayed(Integer invPurchaseInvoiceId);
 
     public String findInvoiceStatus(Integer invPurchaseInvoiceId);
 

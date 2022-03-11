@@ -23,6 +23,7 @@ import com.toby.views.SalesReportByValueAdedDetails;
 import com.toby.views.SalesStatementForThePeriod;
 import com.toby.views.StatementOfBondsByBranche;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -498,16 +499,16 @@ public class ReportsServiceImpl implements ReportsService {
         dao.executeNativeQuery("select toby.sql_mode_function()");
         List<SalesStatementForThePeriod> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
-        sql.append("select ipi.serial , ipi.date , ios.code , ios.name,\n"
+        sql.append("select ipi.serial , ipi.date , ios.code , ios.name as iosName ,\n"
                 + "IFNULL(SUM(`ipid`.`net_after_discount_head`), 0) as total_net,\n"
-                + "IFNULL(NET(IFNULL(SUM(`ipid`.`net`), 0),   IFNULL(`ipi`.`discount_type`, 0.0), IFNULL(`ipi`.`discount`, 0.0), IFNULL(`ipi`.`tax_flag`, 0.0),  15, IFNULL(`ipi`.`disc_halala`, 0.0)), 0.0) AS `net` ,ipi.id\n"
+                + " ipi.id ,iinv.name as gallaryName \n"
                 + "from inv_purchase_invoice ipi\n"
                 + "left join  inv_purchase_invoice_detail ipid on ipi.id = ipid.inv_purchase_invoice_id\n"
-                + "left join inv_organization_site ios on ios.id = ipi.organization_site_id  \n"
+                + "left join inv_organization_site ios on ios.id = ipi.organization_site_id left join inv_inventory iinv on iinv.id = ipi.galary_Id  \n"
                 + " where ipi.type = 4 ");
         appendGallery5(statementForThePeriod, sql);
         appendDate8(statementForThePeriod, sql);
-        sql.append(" group by ipi.id ");
+        sql.append(" group by ipi.id order by ipi.galary_Id ");
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
         for (Object[] object : res) {
             if (object[0] != null) {
@@ -517,10 +518,11 @@ public class ReportsServiceImpl implements ReportsService {
                 statementForThePeriod.setCode((String) object[2]);
                 statementForThePeriod.setName((String) object[3]);
                 statementForThePeriod.setTotalNet((BigDecimal) object[4]);
-                statementForThePeriod.setNet((BigDecimal) object[5]);
-                statementForThePeriod.setInvoiceId((Integer) object[6]);
+                statementForThePeriod.setNet((statementForThePeriod.getTotalNet().multiply(new BigDecimal(1.15))).setScale(3, RoundingMode.HALF_UP));
+                statementForThePeriod.setInvoiceId((Integer) object[5]);
                 statementForThePeriod.setInvoiceStatus(invPurchaseInvoiceService.findInvoiceStatus(statementForThePeriod.getInvoiceId()));
-//                statementForThePeriod.setRemain(invPurchaseInvoiceService.remainForInvPurchaseInvoice(statementForThePeriod.getInvoiceId()));
+                statementForThePeriod.setPaid(invPurchaseInvoiceService.findPayed(statementForThePeriod.getInvoiceId()));
+                statementForThePeriod.setGalleryName((String) object[6]);
                 list.add(statementForThePeriod);
             }
         }

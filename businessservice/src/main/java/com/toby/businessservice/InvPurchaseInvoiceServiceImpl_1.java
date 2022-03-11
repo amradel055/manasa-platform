@@ -2063,7 +2063,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 //            BigDecimal remain = (total.subtract(payment)).setScale(2, RoundingMode.HALF_UP);
 //            return remain;
 //    }
-    private BigDecimal findPayed(Integer invPurchaseInvoiceId) {
+    @Override
+    public BigDecimal findPayed(Integer invPurchaseInvoiceId) {
         Map<String, Object> params = new HashMap<>();
         params.put("invPurchaseInvoiceId", invPurchaseInvoiceId);
         List<BigDecimal> details = dao.findListByQuery("SELECT  sum(i.value)    FROM GlBankTransaction i WHERE i.invoiceId.id = :invPurchaseInvoiceId Group by i.invoiceId.id", params);

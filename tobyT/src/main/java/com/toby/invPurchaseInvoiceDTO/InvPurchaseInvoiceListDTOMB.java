@@ -49,7 +49,7 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
             setUserData((UserData) context.getSessionMap().get("userLogInData"));
             this.setDataModel(new LazyDataModel<InvInvoiceDTO>() {
                 private static final long serialVersionUID = 1L;
-                 
+
                 @Override
                 public List<InvInvoiceDTO> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
                     Integer type = 0;
@@ -72,6 +72,11 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
                     }
                     Integer invInventorySelectionId = getInventoryDTOSelect() != null ? getInventoryDTOSelect().getId() : null;
                     Integer invGallarySelectionId = getGallaryDTOSelect() != null ? getGallaryDTOSelect().getId() : null;
+                    if (getUri().contains("invpurchaseaddinglist")) {
+                        type = 5;
+                        isGallary = false;
+                        invInventorySelectionId = getInvInventorySelection() != null ? getInvInventorySelection().getId() : null;
+                    }
                     if (isGallary) {
                         setRowCount(invPurchaseInvoiceService.getTotalRegistorsForGallary(type, invGallarySelectionId, getUserData().getUserBranch().getId(), filters, isGallary).intValue());
                         return invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary(type, invGallarySelectionId, first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters, isGallary);

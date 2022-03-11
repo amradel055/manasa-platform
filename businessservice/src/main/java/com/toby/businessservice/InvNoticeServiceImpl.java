@@ -251,7 +251,7 @@ public class InvNoticeServiceImpl implements InvNoticeService {
             if (type == 2 || type == 3) {
                 query.append(" AND e.type = 2 OR e.type = 3");
             } else {
-                query.append(" AND e.type = 0 OR e.type = 1");
+                query.append(" AND e.type = 0 OR e.type = 1 OR e.type = 4");
             }
         }
 
