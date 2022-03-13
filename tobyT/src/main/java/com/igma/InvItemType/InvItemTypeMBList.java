@@ -33,6 +33,17 @@ public class InvItemTypeMBList extends BaseFormBean {
     public void init() {
         load();
     }
+       public String goToAdd() {
+        try {
+            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+            context.getSessionMap().put("ScreenMode", "Add");
+            exit("../InvItemType/invItemTypeForm.xhtml");
+            return "";
+        } catch (Exception e) {
+            saveError(e, "InvItemTypeMBList", "delete");
+            return null;
+        }
+    }
 
     @Override
     public void load() {

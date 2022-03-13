@@ -35,8 +35,11 @@ public class InvItemTypeMB extends BaseFormBean {
 
     @Override
     public void load() {
-        if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editInvItemTyped")) {
-       Integer invInteger =((Integer) getContext().getSessionMap().get("InvItemTypedDTOSelected"));
+        if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("Add")) {
+            invItemTypedDTO = new InvItemTypeDTO();
+        }
+       else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editInvItemTyped")) {
+            Integer invInteger = ((Integer) getContext().getSessionMap().get("InvItemTypedDTOSelected"));
             setInvItemTypedDTO(invItemTypeService.findInvItemTypeDTOById(invInteger));
         }
 

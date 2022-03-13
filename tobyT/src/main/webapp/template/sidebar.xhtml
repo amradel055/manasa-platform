@@ -536,6 +536,9 @@
                                     <p:menuitem id="sr_lnk312" value="#{userData.userDDs['ITEMS_DATA']}" icon="&#xE8D2;" url="/faces/views/itemsdata/itemsdatalist.xhtml" 
                                                 rendered="#{userData.userScreens['itemsdata'].view or userData.isAdmin}"
                                                 />
+                                      <p:menuitem id="sr_lnk3125" value="انواع الثياب" icon="&#xE8D2;" url="/faces/views/InvItemType/invItemTypeList.xhtml" 
+                                                rendered="#{userData.userScreens['itemsdata'].view or userData.isAdmin}"
+                                                />
                                     <p:menuitem id="sr_lnk312001" value="اسعار الاصناف لكل فرع" icon="&#xE8D2;" url="/faces/views/invitemprice/itemspricelist.xhtml" 
                                                 rendered="#{userData.userScreens['invitemprice'].view or userData.isAdmin}"
                                                 />
