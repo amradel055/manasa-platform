@@ -156,7 +156,7 @@ public class PeriodsServiceImpl implements PeriodsService {
         if (dTO.getParent() != null) {
             Periods periods = new Periods();
             periods.setId(dTO.getParent());
-            entity.setParent(periods);
+            entity.setParentPeriod(periods);
         }
 
         if (dTO.getTeacherId() != null) {

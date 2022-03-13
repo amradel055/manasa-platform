@@ -41,7 +41,7 @@ public class LessonRest {
         if (lessonId != null) {
             try {
                 List<LessonDTO> dTOs = lessonService.findAllLessonsByTeacher(lessonId.getBranchId(), lessonId.getCompanyId(),
-                        lessonId.getTeacherId(), lessonId.getMaterialId(),lessonId.getSchoolId() , lessonId.getId());
+                        lessonId.getTeacherId(), lessonId.getMaterialId(),lessonId.getSchoolId() , lessonId.getId(),lessonId.getPeriodId());
                 GenericEntity<List<LessonDTO>> list = new GenericEntity<List<LessonDTO>>(dTOs) {
                 };
                 return Response.ok(list).build();
