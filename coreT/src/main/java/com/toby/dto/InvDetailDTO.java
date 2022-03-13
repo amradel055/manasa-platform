@@ -565,6 +565,9 @@ public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetai
      * @return the isInventoryItem
      */
     public Integer getIsInventoryItem() {
+        if(isInventoryItem == null){
+            isInventoryItem = 0 ;
+        }
         return isInventoryItem;
     }
 

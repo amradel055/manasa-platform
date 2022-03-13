@@ -67,7 +67,7 @@ public class GlAccountBean extends BaseTreeBean {
 
     private List<GlAccount> glAccountList;
     private GlaccountConverter accountConverter;
-    
+
     private List<CostCenter> costCenterList;
     private CostCenterConverter costCenterConverter;
 
@@ -88,22 +88,22 @@ public class GlAccountBean extends BaseTreeBean {
     @Override
     public void init() {
         try {
-        selectedAcc = new GlAccount();
-        glAccountSelected = null;
-        selectedAcc.setAccGroup(AccountGroupEnum.EXPENSES);
-        load();
+            selectedAcc = new GlAccount();
+            glAccountSelected = null;
+            selectedAcc.setAccGroup(AccountGroupEnum.EXPENSES);
+            load();
 
-        allCompanies = companyService.getAllCompanies();
-        if (getUserData().getIsAdmin()) {
-            branchList = branchService.getAllBranchByCompanyId(allCompanies.get(0).getId());
-            currencyList = currencyService.getAllCurrencyByCompanyId(allCompanies.get(0).getId());
-            fillAccountsByCompany();
-        } else {
-            currencyList = currencyService.getAllCurrencyByCompanyId(getUserData().getCompany().getId());
-        }
+            allCompanies = companyService.getAllCompanies();
+            if (getUserData().getIsAdmin()) {
+                branchList = branchService.getAllBranchByCompanyId(allCompanies.get(0).getId());
+                currencyList = currencyService.getAllCurrencyByCompanyId(allCompanies.get(0).getId());
+                fillAccountsByCompany();
+            } else {
+                currencyList = currencyService.getAllCurrencyByCompanyId(getUserData().getCompany().getId());
+            }
 
-        selectedAcc.setLevelAcc(1);
-        action = "";
+            selectedAcc.setLevelAcc(1);
+            action = "";
         } catch (Exception e) {
             saveError(e, "GlAccountBean", "init");
         }
@@ -112,29 +112,29 @@ public class GlAccountBean extends BaseTreeBean {
     @Override
     public void load() {
         try {
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        setUserData((UserData) context.getSessionMap().get("userLogInData"));
-        fetchedAccount = new GlAccount();
+            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+            setUserData((UserData) context.getSessionMap().get("userLogInData"));
+            fetchedAccount = new GlAccount();
 
-        setGlAccountList(accountService.getBranchGLAccountsActiveByBranch(getUserData().getUserBranch().getId()));
-        glAccountLocalList = getGlAccountList();
-        accountConverter = new GlaccountConverter(glAccountLocalList);
-        
-        getCostCenterList();
+            setGlAccountList(accountService.getBranchGLAccountsActiveByBranch(getUserData().getUserBranch().getId()));
+            glAccountLocalList = getGlAccountList();
+            accountConverter = new GlaccountConverter(glAccountLocalList);
 
-        if (getUserData().getIsAdmin()) {
-            accountHierarchy = loadAllCostCenters();
-            fillAccountsByCompany();
-        } else {
-            selectedBranchId = getUserData().getSelectedBranch();
-            selectedCompany = getUserData().getCompany();
-            accountHierarchy = loadAccountForBranch(getUserData().getSelectedBranch());
-            fillAccountsByBranch();
-        }
-        setShowMessage(Boolean.FALSE);
-        visibalitiy = false;
-        validateAccountNumber = true;
-        selectedAcc.setStatus(Boolean.TRUE);
+            getCostCenterList();
+
+            if (getUserData().getIsAdmin()) {
+                accountHierarchy = loadAllCostCenters();
+                fillAccountsByCompany();
+            } else {
+                selectedBranchId = getUserData().getSelectedBranch();
+                selectedCompany = getUserData().getCompany();
+                accountHierarchy = loadAccountForBranch(getUserData().getSelectedBranch());
+                fillAccountsByBranch();
+            }
+            setShowMessage(Boolean.FALSE);
+            visibalitiy = false;
+            validateAccountNumber = true;
+            selectedAcc.setStatus(Boolean.TRUE);
         } catch (Exception e) {
             saveError(e, "GlAccountBean", "load");
         }
@@ -142,11 +142,11 @@ public class GlAccountBean extends BaseTreeBean {
 
     public void fillAccountsByBranch() {
         try {
-        if (selectedAcc != null && selectedAcc.getAccGroup() != null) {
-            allAccounts = accountService.getGLAccountsForBranchForMainAccounts(getUserData().getUserBranch().getId(), selectedAcc.getAccGroup());
-        } else {
-            allAccounts = new ArrayList<>();
-        }
+            if (selectedAcc != null && selectedAcc.getAccGroup() != null) {
+                allAccounts = accountService.getGLAccountsForBranchForMainAccounts(getUserData().getUserBranch().getId(), selectedAcc.getAccGroup());
+            } else {
+                allAccounts = new ArrayList<>();
+            }
         } catch (Exception e) {
             saveError(e, "GlAccountBean", "fillAccountsByBranch");
         }
@@ -154,12 +154,12 @@ public class GlAccountBean extends BaseTreeBean {
 
     public void fillAccountsByCompany() {
         try {
-        if (selectedAcc != null && selectedAcc.getAccGroup() != null) {
-            allAccounts = accountService.getCompanyGLAccountsForMainAccounts(getUserData().getCompany().getId(), selectedAcc.getAccGroup());
-        } else {
-            allAccounts = new ArrayList<>();
-        }
-         } catch (Exception e) {
+            if (selectedAcc != null && selectedAcc.getAccGroup() != null) {
+                allAccounts = accountService.getCompanyGLAccountsForMainAccounts(getUserData().getCompany().getId(), selectedAcc.getAccGroup());
+            } else {
+                allAccounts = new ArrayList<>();
+            }
+        } catch (Exception e) {
             saveError(e, "GlAccountBean", "fillAccountsByCompany");
         }
     }
@@ -167,45 +167,45 @@ public class GlAccountBean extends BaseTreeBean {
     @Override
     public String save() {
         try {
-        setShowMessage(Boolean.TRUE);
-        try {
-            selectedAcc.setCompanyId(selectedCompany);
-            if (selectedCompany == null) {
-                selectedAcc.setCompanyId(companyService.findCompany(selectedCompanyId));
-            }
-            selectedAcc.setBranchId(branchService.findBranch(getUserData().getSelectedBranch()));
-            selectedAcc.setModifiedBy(getUserData().getUser());
-            if (selectedParentId == null) {
-                selectedAcc.setLevelAcc((1));
-            } else {
-                parentAccount = accountService.findGlAccount(selectedParentId);
-                selectedAcc.setLevelAcc((parentAccount.getLevelAcc() == null) ? null : (parentAccount.getLevelAcc() + 1));
-            }
-            if (selectedCurrencyId != null) {
-                selectedAcc.setCurrencyId(currencyService.findCurrencyById(selectedCurrencyId));
-            }
-            selectedAcc.setModificationDate(new Date());
+            setShowMessage(Boolean.TRUE);
+            try {
+                selectedAcc.setCompanyId(selectedCompany);
+                if (selectedCompany == null) {
+                    selectedAcc.setCompanyId(companyService.findCompany(selectedCompanyId));
+                }
+                selectedAcc.setBranchId(branchService.findBranch(getUserData().getSelectedBranch()));
+                selectedAcc.setModifiedBy(getUserData().getUser());
+                if (selectedParentId == null) {
+                    selectedAcc.setLevelAcc((1));
+                } else {
+                    parentAccount = accountService.findGlAccount(selectedParentId);
+                    selectedAcc.setLevelAcc((parentAccount.getLevelAcc() == null) ? null : (parentAccount.getLevelAcc() + 1));
+                }
+                if (selectedCurrencyId != null) {
+                    selectedAcc.setCurrencyId(currencyService.findCurrencyById(selectedCurrencyId));
+                }
+                selectedAcc.setModificationDate(new Date());
 
-            List<GlAccount> glAccounts;
-            if (selectedAcc.getId() == null) {
-                glAccounts = accountService.getAllGlAccountsByBranchIdAndAccNumOrShotCode(getUserData().getUserBranch().getId(), selectedAcc.getAccNumber(), selectedAcc.getShotCode());
-            } else {
-                glAccounts = accountService.getAllGlAccountsByBranchIdAndAccNumOrShotCode(getUserData().getUserBranch().getId(), selectedAcc.getAccNumber(), selectedAcc.getShotCode(), selectedAcc.getId());
+                List<GlAccount> glAccounts;
+                if (selectedAcc.getId() == null) {
+                    glAccounts = accountService.getAllGlAccountsByBranchIdAndAccNumOrShotCode(getUserData().getUserBranch().getId(), selectedAcc.getAccNumber(), selectedAcc.getShotCode());
+                } else {
+                    glAccounts = accountService.getAllGlAccountsByBranchIdAndAccNumOrShotCode(getUserData().getUserBranch().getId(), selectedAcc.getAccNumber(), selectedAcc.getShotCode(), selectedAcc.getId());
+                }
+                if (glAccounts == null || glAccounts.isEmpty()) {
+                    accountService.addGlAccount(selectedAcc);
+                    init();
+                    selectedAcc = new GlAccount();
+                    setShowMessage(Boolean.TRUE);
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), getUserData().getUserDDs().get("GLACCOUNT_SAVED")));
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "رقم الحساب او رقم الحساب المختصر موجود من قبل!"));
+                }
+            } catch (Exception e) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("GLACCOUNT_ERROR")));
+                e.printStackTrace();
             }
-            if (glAccounts == null || glAccounts.isEmpty()) {
-                accountService.addGlAccount(selectedAcc);
-                init();
-                selectedAcc = new GlAccount();
-                setShowMessage(Boolean.TRUE);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), getUserData().getUserDDs().get("GLACCOUNT_SAVED")));
-            } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "رقم الحساب او رقم الحساب المختصر موجود من قبل!"));
-            }
-        } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("GLACCOUNT_ERROR")));
-            e.printStackTrace();
-        }
-        return "";
+            return "";
         } catch (Exception e) {
             saveError(e, "GlAccountBean", "save");
             return null;
@@ -214,34 +214,34 @@ public class GlAccountBean extends BaseTreeBean {
 
     public void edit() {
         try {
-        action = "edit";
-        selectedAcc.setBranchId(selectedBranch);
-        setShowMessage(Boolean.TRUE);
+            action = "edit";
+            selectedAcc.setBranchId(selectedBranch);
+            setShowMessage(Boolean.TRUE);
         } catch (Exception e) {
             saveError(e, "GlAccountBean", "edit");
         }
-        
+
     }
 
     @Override
     public void delete() {
         try {
-        setShowMessage(Boolean.TRUE);
-        try {
-            selectedAcc = (GlAccount) selectedAccount.getData();
-            if (selectedAcc.getChildAccounts() != null && !selectedAcc.getChildAccounts().isEmpty()) {
-                setShowMessage(Boolean.TRUE);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("GLACCOUNT_DELETE_HAS_CHILD")));
-            } else {
-                accountService.deleteGlAccount(selectedAcc);
-                init();
-                setShowMessage(Boolean.TRUE);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), getUserData().getUserDDs().get("GLACCOUNT_DELETED")));
+            setShowMessage(Boolean.TRUE);
+            try {
+                selectedAcc = (GlAccount) selectedAccount.getData();
+                if (selectedAcc.getChildAccounts() != null && !selectedAcc.getChildAccounts().isEmpty()) {
+                    setShowMessage(Boolean.TRUE);
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("GLACCOUNT_DELETE_HAS_CHILD")));
+                } else {
+                    accountService.deleteGlAccount(selectedAcc);
+                    init();
+                    setShowMessage(Boolean.TRUE);
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), getUserData().getUserDDs().get("GLACCOUNT_DELETED")));
+                }
+            } catch (Exception e) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("GLACCOUNT_DELETE_ERROR")));
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("GLACCOUNT_DELETE_ERROR")));
-            e.printStackTrace();
-        }
         } catch (Exception e) {
             saveError(e, "GlAccountBean", "delete");
         }
@@ -251,38 +251,38 @@ public class GlAccountBean extends BaseTreeBean {
     @Override
     public void add() {
         try {
-        if (selectedAcc != null) {
-            parentAccount = selectedAcc;
-            GlAccount newelectedAcc = new GlAccount();
-            newelectedAcc.setBranchId(selectedBranch);
-            newelectedAcc.setParentAcc(parentAccount);
-            newelectedAcc.setAccClass(parentAccount.getAccClass());
-            newelectedAcc.setAccGroup(parentAccount.getAccGroup());
-            newelectedAcc.setAdministrativeUnit(parentAccount.getAdministrativeUnit());
-            newelectedAcc.setCostCenter(parentAccount.getCostCenter());
-            newelectedAcc.setCurrencyId(parentAccount.getCurrencyId());
-            newelectedAcc.setAssistantAcc(parentAccount.getAssistantAcc());
-            newelectedAcc.setStatus(true);
-            selectedParentId = parentAccount.getId();
-            newelectedAcc.setCreatedBy(getUserData().getUser());
-            newelectedAcc.setAccNumber(accountService.findNewAccNumber(parentAccount));
-            if (parentAccount.getId() == null) {
-                newelectedAcc.setLevelAcc((1));
+            if (selectedAcc != null) {
+                parentAccount = selectedAcc;
+                GlAccount newelectedAcc = new GlAccount();
+                newelectedAcc.setBranchId(selectedBranch);
+                newelectedAcc.setParentAcc(parentAccount);
+                newelectedAcc.setAccClass(parentAccount.getAccClass());
+                newelectedAcc.setAccGroup(parentAccount.getAccGroup());
+                newelectedAcc.setAdministrativeUnit(parentAccount.getAdministrativeUnit());
+                newelectedAcc.setCostCenter(parentAccount.getCostCenter());
+                newelectedAcc.setCurrencyId(parentAccount.getCurrencyId());
+                newelectedAcc.setAssistantAcc(parentAccount.getAssistantAcc());
+                newelectedAcc.setStatus(true);
+                selectedParentId = parentAccount.getId();
+                newelectedAcc.setCreatedBy(getUserData().getUser());
+                newelectedAcc.setAccNumber(accountService.findNewAccNumber(parentAccount));
+                if (parentAccount.getId() == null) {
+                    newelectedAcc.setLevelAcc((1));
+                } else {
+                    parentAccount = accountService.findGlAccount(parentAccount.getId());
+                    newelectedAcc.setLevelAcc(parentAccount.getLevelAcc() + 1);
+                }
+                selectedAcc = newelectedAcc;
             } else {
-                parentAccount = accountService.findGlAccount(parentAccount.getId());
-                newelectedAcc.setLevelAcc(parentAccount.getLevelAcc() + 1);
+                selectedAcc = new GlAccount();
+                selectedAcc.setBranchId(selectedBranch);
+                selectedAcc.setCreatedBy(getUserData().getUser());
+                selectedAcc.setLevelAcc((1));
+                selectedAcc.setStatus(true);
             }
-            selectedAcc = newelectedAcc;
-        } else {
-            selectedAcc = new GlAccount();
-            selectedAcc.setBranchId(selectedBranch);
-            selectedAcc.setCreatedBy(getUserData().getUser());
-            selectedAcc.setLevelAcc((1));
-            selectedAcc.setStatus(true);
-        }
-        setShowMessage(Boolean.TRUE);
-        action = "add";
-        visibalitiy = false;
+            setShowMessage(Boolean.TRUE);
+            action = "add";
+            visibalitiy = false;
         } catch (Exception e) {
             saveError(e, "GlAccountBean", "add");
         }
@@ -290,7 +290,7 @@ public class GlAccountBean extends BaseTreeBean {
 
     public void cancel() {
         try {
-        selectedAcc = new GlAccount();
+            selectedAcc = new GlAccount();
         } catch (Exception e) {
             saveError(e, "GlAccountBean", "cancel");
         }
@@ -298,8 +298,8 @@ public class GlAccountBean extends BaseTreeBean {
 
     public void onNodeSelect(NodeSelectEvent event) {
         try {
-        selectedAcc = (GlAccount) event.getTreeNode().getData();
-        fillaccount();
+            selectedAcc = (GlAccount) event.getTreeNode().getData();
+            fillaccount();
         } catch (Exception e) {
             saveError(e, "GlAccountBean", "onNodeSelect");
         }
@@ -307,25 +307,25 @@ public class GlAccountBean extends BaseTreeBean {
 
     public void fillaccount() {
         try {
-        if (selectedAcc != null) {
-            selectedCompanyId = selectedAcc.getCompanyId().getId();
+            if (selectedAcc != null) {
+                selectedCompanyId = selectedAcc.getCompanyId().getId();
 //        branchList = branchService.getAllBranchByCompanyId(selectedCompanyId);
-            selectedBranchId = selectedAcc.getBranchId().getId();
-            currencyList = currencyService.getAllCurrencyByCompanyId(selectedCompanyId);
-            selectedCurrencyId = selectedAcc.getCurrencyId().getId();
-            selectedAcc.setCreditAmount(generalJournalService.getCreditAmountForGlAccount(selectedAcc.getId()));
-            selectedAcc.setDebitAmount(generalJournalService.getDebitAmountForGlAccount(selectedAcc.getId()));
-            if (selectedAcc.getParentAcc() == null) {
-                selectedParentId = null;
+                selectedBranchId = selectedAcc.getBranchId().getId();
+                currencyList = currencyService.getAllCurrencyByCompanyId(selectedCompanyId);
+                selectedCurrencyId = selectedAcc.getCurrencyId().getId();
+                selectedAcc.setCreditAmount(generalJournalService.getCreditAmountForGlAccount(selectedAcc.getId()));
+                selectedAcc.setDebitAmount(generalJournalService.getDebitAmountForGlAccount(selectedAcc.getId()));
+                if (selectedAcc.getParentAcc() == null) {
+                    selectedParentId = null;
+                } else {
+                    selectedParentId = selectedAcc.getParentAcc().getId();
+                }
+                fillAccountsByBranch();
+                visibalitiy = true;
             } else {
-                selectedParentId = selectedAcc.getParentAcc().getId();
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), ("يجب اختيار حساب ")));
+                setShowMessage(true);
             }
-            fillAccountsByBranch();
-            visibalitiy = true;
-        } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), ("يجب اختيار حساب ")));
-            setShowMessage(true);
-        }
         } catch (Exception e) {
             saveError(e, "GlAccountBean", "fillaccount");
         }
@@ -333,27 +333,27 @@ public class GlAccountBean extends BaseTreeBean {
 
     public void selectParent() {
         try {
-        if (selectedParentId != null) {
-            parentAccount = accountService.findGlAccount(selectedParentId);
-            selectedAcc.setAccClass(parentAccount.getAccClass());
-            selectedAcc.setAccGroup(parentAccount.getAccGroup());
-            selectedAcc.setAdministrativeUnit(parentAccount.getAdministrativeUnit());
-            selectedAcc.setCostCenter(parentAccount.getCostCenter());
-            selectedAcc.setCurrencyId(parentAccount.getCurrencyId());
-            selectedAcc.setAssistantAcc(parentAccount.getAssistantAcc());
-            for (GlAccount account : allAccounts) {
-                if (account.getId().equals(selectedParentId)) {
-                    selectedAcc.setParentAcc(account);
-                    if (account.getLevelAcc() != null) {
-                        updateAccountLevels(selectedAcc, account.getLevelAcc());
+            if (selectedParentId != null) {
+                parentAccount = accountService.findGlAccount(selectedParentId);
+                selectedAcc.setAccClass(parentAccount.getAccClass());
+                selectedAcc.setAccGroup(parentAccount.getAccGroup());
+                selectedAcc.setAdministrativeUnit(parentAccount.getAdministrativeUnit());
+                selectedAcc.setCostCenter(parentAccount.getCostCenter());
+                selectedAcc.setCurrencyId(parentAccount.getCurrencyId());
+                selectedAcc.setAssistantAcc(parentAccount.getAssistantAcc());
+                for (GlAccount account : allAccounts) {
+                    if (account.getId().equals(selectedParentId)) {
+                        selectedAcc.setParentAcc(account);
+                        if (account.getLevelAcc() != null) {
+                            updateAccountLevels(selectedAcc, account.getLevelAcc());
+                        }
+                        break;
                     }
-                    break;
                 }
+            } else {
+                selectedAcc.setParentAcc(null);
+                updateAccountLevels(selectedAcc, 0);
             }
-        } else {
-            selectedAcc.setParentAcc(null);
-            updateAccountLevels(selectedAcc, 0);
-        }
         } catch (Exception e) {
             saveError(e, "GlAccountBean", "selectParent");
         }
@@ -361,13 +361,13 @@ public class GlAccountBean extends BaseTreeBean {
 
     private void updateAccountLevels(GlAccount account, Integer level) {
         try {
-        account.setLevelAcc(++level);
-        if (account.getChildAccounts() != null) {
-            for (GlAccount childNode : account.getChildAccounts()) {
-                updateAccountLevels(childNode, level);
+            account.setLevelAcc(++level);
+            if (account.getChildAccounts() != null) {
+                for (GlAccount childNode : account.getChildAccounts()) {
+                    updateAccountLevels(childNode, level);
+                }
             }
-        }
-         } catch (Exception e) {
+        } catch (Exception e) {
             saveError(e, "GlAccountBean", "updateAccountLevels");
         }
     }
@@ -379,39 +379,39 @@ public class GlAccountBean extends BaseTreeBean {
 
     public void selectCompany() {
         try {
-        branchList = branchService.getAllBranchByCompanyId(selectedCompanyId);
-          } catch (Exception e) {
+            branchList = branchService.getAllBranchByCompanyId(selectedCompanyId);
+        } catch (Exception e) {
             saveError(e, "GlAccountBean", "selectCompany");
         }
     }
 
     private TreeNode loadAccountForBranch(Integer id) {
         try {
-        TreeNode companyCostCenter = new DefaultTreeNode(new GlAccount(), null);
-        List<GlAccount> companyAccs = accountService.getBranchAccountRoots(id);
-        if (companyAccs != null && !companyAccs.isEmpty()) {
-            companyCostCenter = new DefaultTreeNode(companyAccs.get(0), null);
-            for (GlAccount acc : companyAccs) {
-                getChildTreeNodesForAccount(acc, companyCostCenter);
+            TreeNode companyCostCenter = new DefaultTreeNode(new GlAccount(), null);
+            List<GlAccount> companyAccs = accountService.getBranchAccountRoots(id);
+            if (companyAccs != null && !companyAccs.isEmpty()) {
+                companyCostCenter = new DefaultTreeNode(companyAccs.get(0), null);
+                for (GlAccount acc : companyAccs) {
+                    getChildTreeNodesForAccount(acc, companyCostCenter);
+                }
             }
-        }
-        return companyCostCenter;
-         } catch (Exception e) {
+            return companyCostCenter;
+        } catch (Exception e) {
             saveError(e, "GlAccountBean", "selectCompany");
             return null;
         }
-        
+
     }
 
     private TreeNode loadAllCostCenters() {
         try {
-        TreeNode root = new DefaultTreeNode(new GlAccount(), null);
-        List<GlAccount> allAccs = accountService.getAllAccountRoots();
-        for (GlAccount acc : allAccs) {
-            getChildTreeNodesForAccount(acc, root);
-        }
-        return root;
-         } catch (Exception e) {
+            TreeNode root = new DefaultTreeNode(new GlAccount(), null);
+            List<GlAccount> allAccs = accountService.getAllAccountRoots();
+            for (GlAccount acc : allAccs) {
+                getChildTreeNodesForAccount(acc, root);
+            }
+            return root;
+        } catch (Exception e) {
             saveError(e, "GlAccountBean", "loadAllCostCenters");
             return null;
         }
@@ -419,49 +419,49 @@ public class GlAccountBean extends BaseTreeBean {
 
     private void getChildTreeNodesForAccount(GlAccount current, TreeNode baseNode) {
         try {
-        TreeNode parentNode = new DefaultTreeNode(current, baseNode);
-        if (current.getChildAccounts() != null && !current.getChildAccounts().isEmpty()) {
-            for (GlAccount childNode : current.getChildAccounts()) {
-                getChildTreeNodesForAccount(childNode, parentNode);
+            TreeNode parentNode = new DefaultTreeNode(current, baseNode);
+            if (current.getChildAccounts() != null && !current.getChildAccounts().isEmpty()) {
+                for (GlAccount childNode : current.getChildAccounts()) {
+                    getChildTreeNodesForAccount(childNode, parentNode);
+                }
             }
-        }
-         } catch (Exception e) {
+        } catch (Exception e) {
             saveError(e, "GlAccountBean", "getChildTreeNodesForAccount");
         }
     }
 
     public List<GlAccount> completeGlAccount(String query) {
         try {
-        List<GlAccount> glaccounts = glAccountLocalList;
-        if (query == null || query.trim().equals("")) {
-            accountConverter = new GlaccountConverter(glaccounts);
-            return glaccounts;
-        }
-        List<GlAccount> filteredGlaccounts = new ArrayList<>();
+            List<GlAccount> glaccounts = glAccountLocalList;
+            if (query == null || query.trim().equals("")) {
+                accountConverter = new GlaccountConverter(glaccounts);
+                return glaccounts;
+            }
+            List<GlAccount> filteredGlaccounts = new ArrayList<>();
 
-        String nameAr;
-        Integer code;
-        GlAccount glaccount;
-        for (int i = 0; i < glAccountLocalList.size(); i++) {
-            glaccount = glaccounts.get(i);
-            nameAr = glaccount.getName();
-            if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase())) {
-                if (!filteredGlaccounts.contains(glaccount)) {
-                    filteredGlaccounts.add(glaccount);
+            String nameAr;
+            Integer code;
+            GlAccount glaccount;
+            for (int i = 0; i < glAccountLocalList.size(); i++) {
+                glaccount = glaccounts.get(i);
+                nameAr = glaccount.getName();
+                if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase())) {
+                    if (!filteredGlaccounts.contains(glaccount)) {
+                        filteredGlaccounts.add(glaccount);
+                    }
+                }
+
+                code = glaccount.getAccNumber();
+                if (code != null && String.valueOf(code).contains(query)) {
+                    if (!filteredGlaccounts.contains(glaccount)) {
+                        filteredGlaccounts.add(glaccount);
+                    }
                 }
             }
 
-            code = glaccount.getAccNumber();
-            if (code != null && String.valueOf(code).contains(query)) {
-                if (!filteredGlaccounts.contains(glaccount)) {
-                    filteredGlaccounts.add(glaccount);
-                }
-            }
-        }
-
-        accountConverter = new GlaccountConverter(filteredGlaccounts);
-        return filteredGlaccounts;
-         } catch (Exception e) {
+            accountConverter = new GlaccountConverter(filteredGlaccounts);
+            return filteredGlaccounts;
+        } catch (Exception e) {
             saveError(e, "GlAccountBean", "completeGlAccount");
             return null;
         }
@@ -473,42 +473,42 @@ public class GlAccountBean extends BaseTreeBean {
 
     public void searchForGlAccount() {
         try {
-        selectedAcc = glAccountSelected;
-        fillaccount();
-         } catch (Exception e) {
+            selectedAcc = glAccountSelected;
+            fillaccount();
+        } catch (Exception e) {
             saveError(e, "GlAccountBean", "searchForGlAccount");
         }
     }
 
     public void validateAccountNumberInputDublication() {
         try {
-        for (GlAccount ga : glAccountList) {
-            if (ga.getAccNumber().equals(selectedAcc.getAccNumber())) {
-                setShowMessage(Boolean.TRUE);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), ("هذا الحساب موجود ")));
-                setValidateAccountNumber(false);
-                fetchedAccount = new GlAccount();
-                glAccountSelected = new GlAccount();
-                fetchedAccount = accountService.findGlAccountbyBranchIdAndAccountNumber(getUserData().getUserBranch().getId(), selectedAcc.getAccNumber());
-                glAccountSelected = fetchedAccount;
-                searchForGlAccount();
-                visibalitiy = true;
+            for (GlAccount ga : glAccountList) {
+                if (ga.getAccNumber().equals(selectedAcc.getAccNumber())) {
+                    setShowMessage(Boolean.TRUE);
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), ("هذا الحساب موجود ")));
+                    setValidateAccountNumber(false);
+                    fetchedAccount = new GlAccount();
+                    glAccountSelected = new GlAccount();
+                    fetchedAccount = accountService.findGlAccountbyBranchIdAndAccountNumber(getUserData().getUserBranch().getId(), selectedAcc.getAccNumber());
+                    glAccountSelected = fetchedAccount;
+                    searchForGlAccount();
+                    visibalitiy = true;
+                }
             }
-        }
-         } catch (Exception e) {
+        } catch (Exception e) {
             saveError(e, "GlAccountBean", "validateAccountNumberInputDublication");
         }
     }
 
     public void reset() {
-        try{
-        selectedAcc = new GlAccount();
-        selectedAcc.setAccGroup(AccountGroupEnum.EXPENSES);
-        selectedAcc.setLevelAcc(1);
+        try {
+            selectedAcc = new GlAccount();
+            selectedAcc.setAccGroup(AccountGroupEnum.EXPENSES);
+            selectedAcc.setLevelAcc(1);
         } catch (Exception e) {
             saveError(e, "GlAccountBean", "reset");
         }
-        
+
     }
 
     public void getSelectedAccountNumber() {
@@ -836,45 +836,46 @@ public class GlAccountBean extends BaseTreeBean {
      * @return the costCenterList
      */
     public List<CostCenter> getCostCenterList() {
-        if(costCenterList == null){
+        if (costCenterList == null) {
             costCenterList = costCenterService.getAllCostCenters(getUserData().getUserBranch().getId());
             costCenterConverter = new CostCenterConverter(costCenterList);
         }
         return costCenterList;
     }
+
     public List<CostCenter> completeCostCenter(String query) {
         try {
-        List<CostCenter> costCenters = getCostCenterList();
-        if (query == null || query.trim().equals("")) {
-            costCenterConverter = new CostCenterConverter(costCenters);
-            return costCenters;
-        }
-        List<CostCenter> filteredCenters = new ArrayList<>();
+            List<CostCenter> costCenters = getCostCenterList();
+            if (query == null || query.trim().equals("")) {
+                costCenterConverter = new CostCenterConverter(costCenters);
+                return costCenters;
+            }
+            List<CostCenter> filteredCenters = new ArrayList<>();
 
-        String nameAr;
-        Integer code;
-        CostCenter costCenter ;
-     
-        for (int i = 0; i < costCenterList.size(); i++) {
-            costCenter = costCenters.get(i);
-            nameAr = costCenter.getName();
-            if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase())) {
-                if (!filteredCenters.contains(costCenter)) {
-                    filteredCenters.add(costCenter);
+            String nameAr;
+            Integer code;
+            CostCenter costCenter;
+
+            for (int i = 0; i < costCenterList.size(); i++) {
+                costCenter = costCenters.get(i);
+                nameAr = costCenter.getName();
+                if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase())) {
+                    if (!filteredCenters.contains(costCenter)) {
+                        filteredCenters.add(costCenter);
+                    }
+                }
+
+                code = costCenter.getCode();
+                if (code != null && String.valueOf(code).contains(query)) {
+                    if (!filteredCenters.contains(costCenter)) {
+                        filteredCenters.add(costCenter);
+                    }
                 }
             }
 
-            code = costCenter.getCode();
-            if (code != null && String.valueOf(code).contains(query)) {
-                if (!filteredCenters.contains(costCenter)) {
-                    filteredCenters.add(costCenter);
-                }
-            }
-        }
-
-        costCenterConverter = new CostCenterConverter(filteredCenters);
-        return filteredCenters;
-         } catch (Exception e) {
+            costCenterConverter = new CostCenterConverter(filteredCenters);
+            return filteredCenters;
+        } catch (Exception e) {
             saveError(e, "GlAccountBean", "completeCostCenter");
             return null;
         }
@@ -905,8 +906,8 @@ public class GlAccountBean extends BaseTreeBean {
      * @return the userData
      */
     public UserData getUserData() {
-        if(userData == null){
-           ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        if (userData == null) {
+            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             userData = (UserData) context.getSessionMap().get("userLogInData");
         }
         return userData;

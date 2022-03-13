@@ -945,6 +945,11 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                         glBankTransactionDetailsUpdatedList.add(bankTransactionDetail);
                         GlBankTransaction bankTransaction;
 
+                        Boolean idCheck = Boolean.TRUE;
+
+                        if (glBankTransaction.getId() != null) {
+                            idCheck = Boolean.FALSE;
+                        }
                         bankTransaction = glBankTransactionService.addGlBankTransaction(glBankTransaction, glBankTransactionDetailsUpdatedList, new ArrayList<>(), companyId, getUserData().getUser());
 
                         if (bankTransaction != null && bankTransaction.getId() != null && printAndSave) {
@@ -954,7 +959,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                         if (bankTransaction != null && bankTransaction.getId() != null) {
                             findnotesReceivablesObject(bankTransaction.getId());
                         }
-                        if (getUri().contains("notesreceivablesForm")) {
+                        if (getUri().contains("notesreceivablesForm") && idCheck) {
                             StringBuilder message = new StringBuilder();
                             message.append("عميلنا العزيز ، شكراً لتسوقك  تمت عملية دفع رقم ");
                             message.append(getGlBankTransactionEntity().getSerial());
@@ -965,11 +970,11 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                             if (getGlBankTransactionEntity().getGlBank().getGallaryId() != null
                                     && getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() != null
                                     && getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() == 0) {
-//                                sendSms(getGlBankTransactionDetailEntity().getInvOrganizationSite().getMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
+                                sendSms(getGlBankTransactionDetailEntity().getInvOrganizationSite().getMobile(), "برنس", message.toString(), "20099319", "0564933202");
                             } else if (getGlBankTransactionEntity().getGlBank().getGallaryId() != null
                                     && getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() != null
                                     && getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() == 1) {
-//                                sendSms(getGlBankTransactionDetailEntity().getInvOrganizationSite().getMobile(), "التوبى العالمى", message.toString(), "20099320", "Royal@e12z");
+                                sendSms(getGlBankTransactionDetailEntity().getInvOrganizationSite().getMobile(), "لي رويال", message.toString(), "20099320", "Royal@e12z");
                             }
                         }
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userDDs.get("INFO"), userDDs.get("SAVED")));
@@ -1520,7 +1525,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
 
     public List<GlBank> getGlBankList() {
         if (glBankList == null || glBankList.isEmpty()) {
-            glBankList = tobyUserBankService.getAllGlBankForUserByTypeAndBranchIdPer(getUserData().getUser().getId(), getBranchId(), null,null);
+            glBankList = tobyUserBankService.getAllGlBankForUserByTypeAndBranchIdPer(getUserData().getUser().getId(), getBranchId(), null, null);
             bankConverter = new GlBankConverter(glBankList);
         }
         return glBankList;

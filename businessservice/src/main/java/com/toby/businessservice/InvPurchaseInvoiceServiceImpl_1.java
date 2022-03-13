@@ -3339,7 +3339,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             List<InvInventoryDTO> invInventoryDTOs, List<ProGroupDTO> proGroupListSelected, Integer invoiceType, Boolean update) {
         dao.executeNativeQuery("select toby.sql_mode_function()");
         if (update) {
-            dao.executeNativeQuery("select toby.net_after_discount_head()");
+//            dao.executeNativeQuery("select toby.net_after_discount_head()");
         }
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);

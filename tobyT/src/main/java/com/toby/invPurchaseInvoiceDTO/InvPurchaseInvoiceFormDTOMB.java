@@ -119,28 +119,30 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
             Integer id = getInvInvoiceDTO().getId();
             getInvInvoiceDTO().setMsg(null);
             checkDetailData();
-            setInvInvoiceDTO(invPurchaseInvoiceService.save(getInvInvoiceDTO(), getUserData().getUser()));
-            invPurchaseInvoiceService.updateDetailInvoiceValues(getInvInvoiceDTO().getId());
-            checkDetailData();
-            setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
-            msgSave(getInvInvoiceDTO().getMsg());
-            findAccountStatement();
-            if (id == null && getUri().contains("proworkorderform")) {
-                StringBuilder message = new StringBuilder();
-                message.append("عميلنا العزيز ، شكراً لتسوقك تمت عملية شراء رقم ");
-                message.append(getInvInvoiceDTO().getSerial());
-                message.append(" المدفوع ");
-                message.append(getInvInvoiceDTO().getPayed());
-                if (getInvInvoiceDTO().getGallaryId().getInvName() != null && getInvInvoiceDTO().getGallaryId().getInvName() == 0) {
-                    message.append("\n");
-                    message.append("نسعد بتلقي تقييمكم عن الخدمة المقدمة لكم من برنس  \n");
-                    message.append(" https://forms.gle/jARVyTyhGMT9MQRi7 ");
-                    sendSms(getInvInvoiceDTO().getOrganizationSiteId().getMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
-                } else if (getInvInvoiceDTO().getGallaryId().getInvName() != null && getInvInvoiceDTO().getGallaryId().getInvName() == 1) {
-                    message.append("\n");
-                    message.append("نسعد بتلقي تقييمكم عن الخدمة المقدمة لكم من لي رويال  \n");
-                    message.append(" https://forms.gle/Jcti3uYixoUX8P9D6 ");
-                    sendSms(getInvInvoiceDTO().getOrganizationSiteId().getMobile(), "التوبى العالمى", message.toString(), "20099320", "Royal@e12z");
+            if (validateInvoiceType()) {
+                setInvInvoiceDTO(invPurchaseInvoiceService.save(getInvInvoiceDTO(), getUserData().getUser()));
+                invPurchaseInvoiceService.updateDetailInvoiceValues(getInvInvoiceDTO().getId());
+                checkDetailData();
+                setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
+                msgSave(getInvInvoiceDTO().getMsg());
+                findAccountStatement();
+                if (id == null && getUri().contains("proworkorderform") && getInvInvoiceDTO().getInvoiceType() == null) {
+                    StringBuilder message = new StringBuilder();
+                    message.append("عميلنا العزيز ، شكراً لتسوقك تمت عملية شراء رقم ");
+                    message.append(getInvInvoiceDTO().getSerial());
+                    message.append(" المدفوع ");
+                    message.append(getInvInvoiceDTO().getPayed());
+                    if (getInvInvoiceDTO().getGallaryId().getInvName() != null && getInvInvoiceDTO().getGallaryId().getInvName() == 0) {
+                        message.append("\n");
+                        message.append("نسعد بتلقي تقييمكم عن الخدمة المقدمة لكم من برنس  \n");
+                        message.append(" https://forms.gle/jARVyTyhGMT9MQRi7 ");
+                        sendSms(getInvInvoiceDTO().getOrganizationSiteId().getMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
+                    } else if (getInvInvoiceDTO().getGallaryId().getInvName() != null && getInvInvoiceDTO().getGallaryId().getInvName() == 1) {
+                        message.append("\n");
+                        message.append("نسعد بتلقي تقييمكم عن الخدمة المقدمة لكم من لي رويال  \n");
+                        message.append(" https://forms.gle/Jcti3uYixoUX8P9D6 ");
+                        sendSms(getInvInvoiceDTO().getOrganizationSiteId().getMobile(), "التوبى العالمى", message.toString(), "20099320", "Royal@e12z");
+                    }
                 }
             }
         } else {
@@ -149,6 +151,24 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
         }
 
         return "";
+    }
+
+    private Boolean validateInvoiceType() {
+
+        if (ScreenNameClassEnum.PROWORKORDER.equals(getInvInvoiceDTO().getScreenName())) {
+            if ( getInvInvoiceDTO().getInvoiceType() != null && getInvInvoiceDTO().getInvoiceType() == 5) {
+                for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
+                    if (detailDTO.getItemsBarcodesDetail() == null || detailDTO.getItemsBarcodesDetail().getBarcode() == null
+                            || !detailDTO.getItemsBarcodesDetail().getBarcode().equals("000012")) {
+                        FacesContext.getCurrentInstance().addMessage(null,
+                                new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يوجد بنود بالفاتورة غير التعديل برجاء حذفها"));
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 
     @Override
