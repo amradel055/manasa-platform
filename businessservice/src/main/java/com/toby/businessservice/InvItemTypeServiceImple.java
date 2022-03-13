@@ -30,7 +30,12 @@ public class InvItemTypeServiceImple implements InvItemTypeService {
 
     @Override
     public InvItemTypeDTO findInvItemTypeDTOById(Integer invItemId) {
-        return dao.findEntityById(InvItemTypeDTO.class, invItemId);
+        InvItemType invItemType = new InvItemType();
+        invItemType = dao.findEntityById(InvItemType.class, invItemId);
+        InvItemTypeDTO invItemTypeDTO = new InvItemTypeDTO();
+        invItemTypeDTO = mapTODTO(invItemType);
+        return invItemTypeDTO;
+
     }
 
     @Override
@@ -55,7 +60,11 @@ public class InvItemTypeServiceImple implements InvItemTypeService {
     public List<InvItemTypeDTO> getALLInvItemTypeDTOByBranchId(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
-        return dao.findListByQuery("SELECT e FROM InvItemType e WHERE e.branchId.id = :branchId ", params);
+        List<InvItemType> invItemTypeList = dao.findListByQuery("SELECT e FROM InvItemType e WHERE e.branchId.id = :branchId ", params);
+        List<InvItemTypeDTO> invItemTypeDTOList = new ArrayList<>();
+        invItemTypeDTOList = returnListDTO(invItemTypeList);
+        return invItemTypeDTOList;
+
     }
 
     @Override
