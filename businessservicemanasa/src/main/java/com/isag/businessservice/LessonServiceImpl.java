@@ -30,7 +30,7 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class LessonServiceImpl implements LessonService {
-    
+
     @EJB
     private GenericDAO dao;
     @EJB
@@ -39,15 +39,18 @@ public class LessonServiceImpl implements LessonService {
     private CommentsService commentsService;
     @EJB
     private LessonImgService lessonImgService;
-    
-    private StringBuilder periodNew ;
-    
+
+    @EJB
+    private StudentPeriodsService studentPeriodsService;
+
+    private StringBuilder periodNew;
+
     @Override
     public List<LessonDTO> findAllLessons() {
         List<Lesson> list = dao.findAll(Lesson.class);
         return returnListDTO(list);
     }
-    
+
     @Override
     public List<LessonDTO> findLessonByPeriod(Integer periodId, Integer branchId, Integer companyId, Integer schoolStagesGuideId, Integer lessonType, Integer id) {
         Map<String, Object> params = new HashMap<>();
@@ -75,7 +78,7 @@ public class LessonServiceImpl implements LessonService {
         List<Lesson> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }
-    
+
     @Override
     public List<LessonDTO> findFreeLesson(Integer branchId, Integer companyId) {
         Map<String, Object> params = new HashMap<>();
@@ -88,37 +91,71 @@ public class LessonServiceImpl implements LessonService {
         returnListDTO(list);
         return dTOList;
     }
-    
+
     @Override
     public List<LessonDTO> findAllLessonsByTeacher(Integer branchId, Integer companyId, Integer teacherId,
-            Integer materialId, Integer schoolStageId, Integer id, Integer periodId) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("branchId", branchId);
-        params.put("companyId", companyId);
-        params.put("teacherId", teacherId);
-        periodNew  = new StringBuilder();
-        StringBuilder builder = new StringBuilder();
-        builder.append("SELECT d FROM Lesson d WHERE d.branchId.id = :branchId AND d.companyId.id = :companyId AND d.teacherId.id = :teacherId ");
-        if (id != null) {
-            params.put("id", id);
-            builder.append(" AND d.id = :id");
-        }
-        if (materialId != null) {
-            params.put("materialId", materialId);
-            builder.append(" AND d.materialId.id = :materialId");
-        }
-        if (schoolStageId != null) {
-            params.put("schoolStageId", schoolStageId);
-            builder.append(" AND d.schoolStagesGuideId.id = :schoolStageId");
-        }
-        periodNew.append(periodId);
-        StringBuilder sb = findAllLessonsPeriod(periodId);
-        builder.append(" AND d.periodId.id in (").append(periodNew.toString()).append(")");
-        List<Lesson> list = dao.findListByQuery(builder.toString(), params);
-        
-        return returnListDTO(list);
+            Integer materialId, Integer schoolStageId, Integer id, Integer periodId, Integer studentId) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("branchId", branchId);
+            params.put("companyId", companyId);
+            params.put("teacherId", teacherId);
+            periodNew = new StringBuilder();
+            StringBuilder builder = new StringBuilder();
+            builder.append("SELECT d FROM Lesson d WHERE d.branchId.id = :branchId AND d.companyId.id = :companyId AND d.teacherId.id = :teacherId ");
+            if (id != null) {
+                params.put("id", id);
+                builder.append(" AND d.id = :id");
+            }
+            if (materialId != null) {
+                params.put("materialId", materialId);
+                builder.append(" AND d.materialId.id = :materialId");
+            }
+            if (schoolStageId != null) {
+                params.put("schoolStageId", schoolStageId);
+                builder.append(" AND d.schoolStagesGuideId.id = :schoolStageId");
+            }
+            List<Lesson> list = dao.findListByQuery(builder.toString(), params);
+
+            return returnListDTO(list);
     }
     
+    
+    @Override
+    public List<LessonDTO> findAllLessonsByStudent(Integer branchId, Integer companyId, Integer teacherId,
+            Integer materialId, Integer schoolStageId, Integer id, Integer periodId, Integer studentId) {
+        if (studentId != null) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("branchId", branchId);
+            params.put("companyId", companyId);
+            params.put("teacherId", teacherId);
+            periodNew = new StringBuilder();
+            StringBuilder builder = new StringBuilder();
+            builder.append("SELECT d FROM Lesson d WHERE d.branchId.id = :branchId AND d.companyId.id = :companyId AND d.teacherId.id = :teacherId ");
+            if (id != null) {
+                params.put("id", id);
+                builder.append(" AND d.id = :id");
+            }
+            if (materialId != null) {
+                params.put("materialId", materialId);
+                builder.append(" AND d.materialId.id = :materialId");
+            }
+            if (schoolStageId != null) {
+                params.put("schoolStageId", schoolStageId);
+                builder.append(" AND d.schoolStagesGuideId.id = :schoolStageId");
+            }
+            periodNew.append(periodId);
+            List<Integer> periodList = studentPeriodsService.findPeriodsByStudentId(studentId);
+            for (Integer period : periodList) {
+                findAllLessonsPeriod(period);
+            }
+            builder.append(" AND d.periodId.id in (").append(periodNew.toString()).append(")");
+            List<Lesson> list = dao.findListByQuery(builder.toString(), params);
+
+            return returnListDTO(list);
+        }
+        return null;
+    }
+
     public StringBuilder findAllLessonsPeriod(Integer parent) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder periadsId = null;
@@ -131,7 +168,7 @@ public class LessonServiceImpl implements LessonService {
         }
         return periadsId;
     }
-    
+
     public StringBuilder findAllLessonsPeriod(List<Periods> listPeriods, StringBuilder builder) {
         if (listPeriods != null) {
             for (Periods periods : listPeriods) {
@@ -141,7 +178,7 @@ public class LessonServiceImpl implements LessonService {
         }
         return builder;
     }
-    
+
     @Override
     public List<LessonDTO> findAllLessonsByBranchId(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
@@ -152,7 +189,7 @@ public class LessonServiceImpl implements LessonService {
         List<Lesson> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }
-    
+
     public Boolean validateLesson(LessonDTO lessonDTO) {
         Map<String, Object> params = new HashMap();
         params.put("lessonName", lessonDTO.getLessonName());
@@ -167,14 +204,14 @@ public class LessonServiceImpl implements LessonService {
         }
         return Boolean.TRUE;
     }
-    
+
     @Override
     public void deleteLesson(LessonDTO lessonDTO) {
         Lesson entity = new Lesson();
         entity.setId(lessonDTO.getId());
         dao.deleteEntity(entity);
     }
-    
+
     @Override
     public void deleteLesson(Integer lessonDTO) {
         Lesson entity = new Lesson();
@@ -184,7 +221,7 @@ public class LessonServiceImpl implements LessonService {
         lessonImgService.deleteLesson(lessonDTO);
         dao.deleteEntity(entity);
     }
-    
+
     @Override
     public LessonDTO save(LessonDTO lessonDTO, IgmaUser isagUser) {
         LessonDTO msg = new LessonDTO();
@@ -224,7 +261,7 @@ public class LessonServiceImpl implements LessonService {
                 msg.setMsg("تم الحفظ بنجاح");
                 msg.setMsgType("success");
             }
-            
+
             return msg;
         } else {
             msg.setMsg("لا يوجد بيانات  ");
@@ -232,7 +269,7 @@ public class LessonServiceImpl implements LessonService {
             return msg;
         }
     }
-    
+
     private List<LessonDTO> returnListDTO(List<Lesson> list) {
         List<LessonDTO> dTOList = new ArrayList<>();
         for (Lesson entity : list) {
@@ -240,17 +277,17 @@ public class LessonServiceImpl implements LessonService {
         }
         return dTOList;
     }
-    
+
     private LessonDTO mapTODTO(Lesson entity) {
         LessonDTO dTO = initMapToDTO(entity);
-        
+
         return dTO;
     }
-    
+
     private LessonDTO initMapToDTO(Lesson entity) {
-        
+
         LessonDTO dTO = new LessonDTO();
-        
+
         dTO.setId(entity.getId());
         dTO.setLessonName(entity.getLessonName());
         dTO.setLessonDescription(entity.getLessonDescription());
@@ -262,10 +299,10 @@ public class LessonServiceImpl implements LessonService {
         dTO.setVimeoLink(entity.getVimeoLink());
         dTO.setThumb(entity.getThumb());
         dTO.setVoiceLink(entity.getVoiceLink());
-        
+
         dTO.setDocuments(documentsService.findDocumentsByLessonIdLinks(entity.getId()));
         dTO.setImages(lessonImgService.findAllLessons(entity.getId()));
-        
+
         if (entity.getSchoolStagesGuideId() != null) {
             SchoolStagesGuideDTO schoolStagesGuideDTO = new SchoolStagesGuideDTO();
             schoolStagesGuideDTO.setId(entity.getSchoolStagesGuideId().getId());
@@ -274,7 +311,7 @@ public class LessonServiceImpl implements LessonService {
             dTO.setSchoolStagesName(entity.getSchoolStagesGuideId().getName());
             dTO.setSchoolStagesGuideId(schoolStagesGuideDTO);
         }
-        
+
         if (entity.getPeriodId() != null) {
             dTO.setPeriodId(entity.getPeriodId().getId());
         }
@@ -284,16 +321,16 @@ public class LessonServiceImpl implements LessonService {
         if (entity.getTeacherId() != null) {
             dTO.setTeacherId(entity.getTeacherId().getId());
         }
-        
+
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy().getId());
         dTO.setBranchId(entity.getBranchId().getId());
         dTO.setCompanyId(entity.getCompanyId().getId());
-        
+
         return dTO;
     }
-    
+
     private Lesson mapToEntity(LessonDTO dTO, IgmaUser isagUser, Lesson entity) {
         if (entity == null) {
             entity = new Lesson();
@@ -308,13 +345,13 @@ public class LessonServiceImpl implements LessonService {
         entity.setVimeoLink(dTO.getVimeoLink());
         entity.setThumb(dTO.getThumb());
         entity.setVoiceLink(dTO.getVoiceLink());
-        
+
         if (dTO.getSchoolId() != null) {
             SchoolStagesGuide schoolStagesGuide = new SchoolStagesGuide();
             schoolStagesGuide.setId(dTO.getSchoolId());
             entity.setSchoolStagesGuideId(schoolStagesGuide);
         }
-        
+
         if (dTO.getPeriodId() != null) {
             Periods periods = new Periods();
             periods.setId(dTO.getPeriodId());
@@ -330,9 +367,9 @@ public class LessonServiceImpl implements LessonService {
             teacher.setId(dTO.getTeacherId());
             entity.setTeacherId(teacher);
         }
-        
+
         if (dTO.getId() == null) {
-            
+
             entity.setCreatedBy(isagUser);
             entity.setBranchId(isagUser.getBranchId());
             entity.setCreationDate(new Date());
@@ -343,10 +380,10 @@ public class LessonServiceImpl implements LessonService {
             documentsService.deleteDocumentsByLesson(dTO.getId());
             lessonImgService.deleteLesson(dTO.getId());
         }
-        
+
         entity.setBranchId(isagUser.getBranchId());
         entity.setCompanyId(isagUser.getCompanyId());
         return entity;
     }
-    
+
 }

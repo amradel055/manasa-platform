@@ -40,8 +40,33 @@ public class LessonRest {
     public Response findLessonList(LessonDTO lessonId) {
         if (lessonId != null) {
             try {
+                List<LessonDTO> dTOs = lessonService.findAllLessonsByStudent(lessonId.getBranchId(), lessonId.getCompanyId(),
+                        lessonId.getTeacherId(), lessonId.getMaterialId(),lessonId.getSchoolId() , lessonId.getId(),lessonId.getPeriodId(),lessonId.getStudentId());
+                GenericEntity<List<LessonDTO>> list = new GenericEntity<List<LessonDTO>>(dTOs) {
+                };
+                return Response.ok(list).build();
+
+            } catch (Exception e) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+        } else {
+            lessonId = new LessonDTO();
+            lessonId.setMsg("No Id is Sent");
+            return Response.ok(lessonId).build();
+        }
+    }
+    
+    @Transactional
+    @Path("/teacherLessonList")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findTeacherLessonList(LessonDTO lessonId) {
+        if (lessonId != null) {
+            try {
                 List<LessonDTO> dTOs = lessonService.findAllLessonsByTeacher(lessonId.getBranchId(), lessonId.getCompanyId(),
-                        lessonId.getTeacherId(), lessonId.getMaterialId(),lessonId.getSchoolId() , lessonId.getId(),lessonId.getPeriodId());
+                        lessonId.getTeacherId(), lessonId.getMaterialId(),lessonId.getSchoolId() , lessonId.getId(),lessonId.getPeriodId(),lessonId.getStudentId());
                 GenericEntity<List<LessonDTO>> list = new GenericEntity<List<LessonDTO>>(dTOs) {
                 };
                 return Response.ok(list).build();
