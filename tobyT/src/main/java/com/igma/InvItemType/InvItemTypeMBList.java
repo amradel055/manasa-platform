@@ -21,8 +21,8 @@ import javax.inject.Named;
 @ViewScoped
 public class InvItemTypeMBList extends BaseFormBean {
 
-    private InvItemType invItemType;
     private InvItemTypeDTO invItemTypedDTOSelected;
+    private Integer invItemTypedDTOSelectedId;
     private List<InvItemTypeDTO> invItemTypeDtoList;
 
     @EJB
@@ -82,23 +82,6 @@ public class InvItemTypeMBList extends BaseFormBean {
     }
 
     /**
-     * @return the invItemType
-     */
-    public InvItemType getInvItemType() {
-        if (invItemType == null) {
-            setInvItemType(new InvItemType());
-        }
-        return invItemType;
-    }
-
-    /**
-     * @param invItemType the invItemType to set
-     */
-    public void setInvItemType(InvItemType invItemType) {
-        this.invItemType = invItemType;
-    }
-
-    /**
      * @return the invItemTypeDtoList
      */
     public List<InvItemTypeDTO> getInvItemTypeDtoList() {
@@ -119,7 +102,7 @@ public class InvItemTypeMBList extends BaseFormBean {
      * @return the invItemTypedDTOSelected
      */
     public InvItemTypeDTO getInvItemTypedDTOSelected() {
-        if (invItemTypedDTOSelected == null) {
+        if(invItemTypedDTOSelected==null){
             invItemTypedDTOSelected = new InvItemTypeDTO();
         }
         return invItemTypedDTOSelected;
@@ -130,6 +113,20 @@ public class InvItemTypeMBList extends BaseFormBean {
      */
     public void setInvItemTypedDTOSelected(InvItemTypeDTO invItemTypedDTOSelected) {
         this.invItemTypedDTOSelected = invItemTypedDTOSelected;
+    }
+
+    /**
+     * @return the invItemTypedDTOSelectedId
+     */
+    public Integer getInvItemTypedDTOSelectedId() {
+        return invItemTypedDTOSelectedId;
+    }
+
+    /**
+     * @param invItemTypedDTOSelectedId the invItemTypedDTOSelectedId to set
+     */
+    public void setInvItemTypedDTOSelectedId(Integer invItemTypedDTOSelectedId) {
+        this.invItemTypedDTOSelectedId = invItemTypedDTOSelectedId;
     }
 
 }
