@@ -27,7 +27,7 @@ public interface StudentPeriodsService {
 
     public List<TeachersByStudentId> findteachersByStudentId(Integer studentId);
 
-    public void deleteStudentPeriodsBy(Integer teacherId, Integer periodId, Integer studentId);
+    public void deleteStudentPeriodsBy(Integer id ,Integer teacherId, Integer periodId, Integer studentId);
 
     public StudentPeriodsDTO save(StudentPeriodsDTO studentPeriodsDTO, IgmaUser isagUser);
 
