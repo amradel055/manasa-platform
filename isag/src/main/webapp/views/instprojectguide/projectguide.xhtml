@@ -1,0 +1,185 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml" >
+    <ui:define name="content">
+
+        <h:head>
+            <title>#{userData.userDDs['PROJ_GUIDE']}</title>
+        </h:head>
+        <style>
+            .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+                border: 1px solid #c5dbec;
+                background:none;
+            }
+
+            .span.ui-treenode-label .ui-corner-all {
+                font-size: 15px;
+            }
+
+        </style>
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form" class='formmargin'>
+            <p:fieldset styleClass="panelColumns" legend="#{userData.userDDs['PROJ_GUIDE']}" >
+                <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true" rendered="true"/>   
+                <div class="ui-g-12 ui-g-nopad" id="firstSegment" >
+                    <div class="ui-g">
+
+                        <div class="ui-g-8 ui-lg-8">
+
+                            <h:panelGroup>
+                                <p:fieldset legend="#{userData.userDDs['PROJ_GUIDE']}" id="projectGuideDetails" >
+                                    <div class="ui-g-12 ui-xl-12">
+
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:selectOneMenu style="width: 100%!important;margin-right: 1%;margin-top: 1%" 
+                                                             id="parentProject" value="#{projectGuideMB.selectedParentId}"               
+                                                             required="false"  filterMatchMode="contains" filter="true" >
+                                                <p:ajax listener="#{projectGuideMB.selectParent}" update="projectCode"  />
+                                                <f:selectItem itemLabel="#{userData.userDDs['ROOT']}" />
+                                                <f:selectItems value="#{projectGuideMB.allProjectGuide}" var="cs" itemLabel="#{cs.name} #{cs.code}" itemValue="#{cs.id}" />
+                                            </p:selectOneMenu>
+                                        </div>
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:outputLabel style="width: 100%;margin-left: 50%;" id="parentAcc" value="#{userData.userDDs['MAIN_PROJ_GUID']}" />  
+
+                                        </div>
+                                    </div>
+                                    <div class="ui-g-12 ui-xl-12">
+
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:inputText style="width: 100%!important"  id="projectCode" a:autofocus="true" value="#{projectGuideMB.selectedCS.code}" required="true" requiredMessage="#{userData.userDDs['REQUIRED']}">
+                                                <p:ajax  event="blur" listener="#{projectGuideMB.validateAccountNumberInputDublication}" update=":form:msgcode"  />
+                                            </p:inputText>
+                                            <p:message id="msgcode" for="projectCode"/>
+                                        </div>
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:outputLabel style="width: 100%;margin-left: 50%;"  value="#{userData.userDDs['CS_COD']}"  />  
+
+                                        </div>
+                                    </div>
+                                    <div class="ui-g-12 ui-xl-12">
+
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:inputText style="width: 100%!important"  id="projectName" value="#{projectGuideMB.selectedCS.name}" required="true" requiredMessage="#{userData.userDDs['REQUIRED']}">
+                                                <p:ajax  event="keyup" update=":form:msgname " />
+                                            </p:inputText>  
+                                            <p:message id="msgname" for="projectName"/>
+                                        </div>
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:outputLabel style="width: 100%;margin-left: 50%;"  value="#{userData.userDDs['NAME']}" />  
+
+                                        </div>
+                                    </div>
+                                    <div class="ui-g-12 ui-xl-12">
+
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:inputText style="width: 100%!important"  id="projectPrice" value="#{projectGuideMB.selectedCS.price}" /> 
+
+                                        </div>
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:outputLabel style="width: 100%;margin-left: 50%;"  value="#{userData.userDDs['PRIC']}" />  
+
+                                        </div>
+                                    </div>
+                                    <div class="ui-g-12 ui-xl-12">
+
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:selectOneMenu style="width: 100%; margin-top: 5px;" 
+                                                             id="console"
+                                                             value ="#{projectGuideMB.selectedCS.symbolSize}" 
+                                                             converter="#{projectGuideMB.symbolConverter}"  >  
+
+                                                <f:selectItems  value="#{projectGuideMB.symbolList}"
+                                                                var="symbol" 
+                                                                itemLabel="#{symbol}" 
+                                                                itemValue="#{symbol}" />
+                                            </p:selectOneMenu> 
+
+                                        </div>
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:outputLabel style="width: 100%;margin-left: 50%;"  value="المقاس"/>  
+
+                                        </div>
+                                    </div>
+
+                                </p:fieldset>
+                                <p:fieldset >
+                                    <div class="centerButtons">
+                                        <h:panelGroup>
+
+                                            <h:panelGrid id="projectGuideDetails2" columns="1"  class="col-md-12">
+
+
+
+                                                <h:panelGroup  class="centerButtons"> 
+
+                                                    <p:commandButton  class="newButton" title="#{userData.userDDs['ADD']}"
+                                                                      value="#{userData.userDDs['ADD']}"
+                                                                      update=":form:projectGuideDetails" 
+                                                                      actionListener="#{projectGuideMB.add()}" 
+                                                                      style=" color: black "  
+                                                                      id="plus"/>
+
+                                                    <p:commandButton  class="saveButton" id="saveB"
+                                                                      value="#{userData.userDDs['SAVE']}" 
+                                                                      title="#{userData.userDDs['SAVE']}"   
+                                                                      style=" color: black " 
+                                                                      action="#{projectGuideMB.save()}" 
+                                                                      update="@form"  
+                                                                      validateClient="true"/>
+
+                                                    <p:blockUI block="form" trigger="saveB plus" animate="true" >
+
+                                                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                                                    </p:blockUI>
+                                                    <p:commandButton  class="deleteButton" 
+                                                                      value="#{userData.userDDs['DELETE']}"  
+                                                                      title="#{userData.userDDs['DELETE']}"  
+                                                                      update="@form"  
+                                                                      action="#{projectGuideMB.delete()}" 
+                                                                      style=" color: black " 
+                                                                      >
+                                                        <p:confirm header="#{userData.userDDs['COFIGRATION']}" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                                                    </p:commandButton>
+                                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                                        <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                                        <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                                    </p:confirmDialog>
+
+                                                </h:panelGroup>
+                                                <p:blockUI block="saveB" trigger="saveB"/>
+                                            </h:panelGrid>
+
+
+                                        </h:panelGroup>
+                                    </div>
+                                </p:fieldset>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-4 ui-xl-4" >
+                            <h:panelGroup style="font-size: 20px;">
+                                <p:tree  value="#{projectGuideMB.projectGuideHierarchy}" var="doc" dir="#{userData.dir}"
+                                         selectionMode="single" selection="#{projectGuideMB.selectedProjectGuide}"
+                                         dynamic="false" id="csTree">
+                                    <p:ajax  event="select" update=":form:projectGuideDetails" listener="#{projectGuideMB.onNodeSelect}" />
+                                    <p:treeNode expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed" >
+                                        <h:outputText value="#{doc.name} #{doc.code}"/>
+                                    </p:treeNode>
+                                </p:tree>  
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

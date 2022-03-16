@@ -1,0 +1,77 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.isag.businessservice;
+
+import com.isag.businessservice.reports.searchBean.SubAccountSummarySearchBean;
+import com.isag.dto.GlBankTransactionDTO;
+import com.isag.dto.InvInvoiceDTO;
+import com.isag.entity.GlBankTransaction;
+import com.isag.entity.GlBankTransactionDetail;
+import com.isag.entity.IsagUser;
+import com.isag.views.CashAccountSettlmentView;
+import com.isag.views.SupplierAccountViewBean;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+import javax.ejb.Remote;
+
+/**
+ *
+ * @author hq002
+ */
+@Remote
+public interface GlBankTransactionService {
+
+    public GlBankTransaction addGlBankTransaction(GlBankTransaction glBankTransaction, List<GlBankTransactionDetail> glBankTransactionDetailList, List<GlBankTransactionDetail> glBankTransactionDetailListDeleted, Integer companyId);
+
+    public GlBankTransaction addGlBankTransactionForInstallment(GlBankTransaction glBankTransaction, List<GlBankTransactionDetail> glBankTransactionDetailList, List<GlBankTransactionDetail> glBankTransactionDetailListDeleted);
+
+    public void deleteGlBankTransaction(GlBankTransaction glBankTransaction);
+
+    public List<GlBankTransaction> getALLGlBankTransactionByCompanyId(Integer companyId);
+
+    public List<GlBankTransaction> getALLGlBankTransactionSettlmentByBranchId(Integer branchId);
+
+    public List<GlBankTransaction> getALLGlBankTransactionRecievableByBranchId(Integer branchId, Integer transactionType);
+
+    public List<GlBankTransaction> getALLGlBankTransactionRecievableNotloadByBranchId(Integer branchId, Integer transactionType);
+
+    public GlBankTransaction findGlBankTransactionById(Integer glBankTransactionId);
+
+    public GlBankTransaction addOneGlBankTransaction(GlBankTransaction glBankTransaction, GlBankTransactionDetail bankTransactionDetail);
+
+    public Integer getMaxSerail(GlBankTransaction glBankTransaction);
+
+    public GlBankTransaction updateGlBankTransaction(GlBankTransaction glBankTransaction);
+
+    public Long getTotalRegistors(Integer transactionType, Integer branchId, Integer UserId, Map<String, Object> filters, Integer selectGlBankId);
+
+    public Long getTotalRegistorsPre(Integer transactionType, Integer branchId, Map<String, Object> filters);
+
+    public List<GlBankTransactionDTO> getALLGlBankTransactionRecievableByBranchId(Integer transactionType, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters, Integer selectGlBankId, Integer UserId);
+
+    public List<GlBankTransactionDTO> getALLGlBankTransactionRecievableNotloadByBranchId(Integer transactionType, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters);
+
+    public List<GlBankTransaction> getALLGlBankTransactionByGeneralJournalId(Integer generalJournalId);
+
+    public Integer getMaxDocumentSerial(IsagUser isagUser, Integer glBankid);
+
+    public Integer closePeriod(List<CashAccountSettlmentView> cashAccountSettlmentViews, IsagUser isagUser);
+
+    public List<GlBankTransactionDTO> getALLGlBankTransactionIsClosedPeriod(SubAccountSummarySearchBean subAccountSummarySearchBean);
+
+    public Boolean checkDocumentSerial(Integer branchId, Integer glBankid);
+
+    public void updatelookAndIsDone(SupplierAccountViewBean supplierAccountViewBean);
+
+    public void updatelookAndIsDone(List<SupplierAccountViewBean> supplierAccountViewBeanList);
+
+    public void addCash(InvInvoiceDTO dTO, IsagUser tobyUser);
+
+    public Map<Integer, Vector<Object>> getAllinstallmentIdAndPayedValue(Integer branchId, List<Integer> installmentIdList);
+
+    public Integer findGlBankTransactionBySerial(Integer serial, Integer branchId, Integer transactionType);
+}

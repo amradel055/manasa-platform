@@ -201,6 +201,10 @@ public class ExamsServiceImpl implements ExamsService {
             params.put("examType", examsDTO.getExamType());
             builder.append(" and d.examType = :examType ");
         }
+        if (examsDTO.getLessonId()!= null) {
+            params.put("lessonId", examsDTO.getExamType());
+            builder.append(" and d.lessonId.id = :lessonId ");
+        }
 
         List<Exams> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list, true);

@@ -1,0 +1,517 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                >
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form  class='formmargin' id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+            <div style=" position: absolute;left: 20px"> 
+
+                    <p:commandButton  style="z-index: 2;
+                                      margin-top: 24%;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;"
+                                      icon="fa fa-fw fa-home"
+                                      title="#{userData.userDDs['HOME']}"
+                                      class="smhomeButton" 
+                                      action="exit" />
+                       
+                </div>
+            <p:fieldset legend="#{userData.userDDs['QUOTATIONS']}" >
+
+                <div>
+                    <p:messages autoUpdate="true"  id="msg2" showDetail="true" closable="true" rendered="true" />
+                </div>
+
+                <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 95px;margin-right: 6%;" value="#{userData.userDDs['QUOTATION_NO']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel id="DiscountOrder" value="#{invQuotationFormMB.invQuotationEntity.serial}" />
+                                </h:panelGroup>      
+
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup> 
+                                    <p:outputLabel style="width: 95px" value="#{userData.userDDs['CUSTOMERS']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:autoComplete  style="width:  40%" 
+                                                     dropdown="true"
+                                                     converter="#{invQuotationFormMB.organizationSiteConverter}"
+                                                     value="#{invQuotationFormMB.invQuotationEntity.organizationSite}"
+                                                     required="true" requiredMessage="يجب اختيار عميل"
+                                                     var="orgSite"
+                                                     itemLabel="#{orgSite}" 
+                                                     itemValue="#{orgSite}" 
+                                                     forceSelection="true" 
+                                                     completeMethod="#{invQuotationFormMB.completeOrganizationSite}" >
+
+                                    </p:autoComplete>
+
+                                </h:panelGroup>   
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 95px;margin-right: 6%;" value="#{userData.userDDs['DATEE']} *"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+
+
+                                    <p:calendar id="dateId"
+                                                style="width:  50%!important" 
+                                                value="#{invQuotationFormMB.invQuotationEntity.date}" 
+                                                required="true"
+                                                requiredMessage="#{userData.userDDs['REQUIRED']}"
+                                                pattern="dd/MM/yyyy">
+                                        <p:ajax event="dateSelect" update="dateMsg"/>
+                                    </p:calendar>
+                                    <p:message id="dateMsg" for="dateId"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup> 
+                                    <p:outputLabel style="width: 95px" value="#{userData.userDDs['SALES_REPRE']}" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:autoComplete style="width: 40%" 
+                                                    dropdown="true"
+                                                    converter="#{invQuotationFormMB.invDelegatorConverter}"
+                                                    value="#{invQuotationFormMB.invQuotationEntity.invDelegator}"
+
+                                                    var="delegator"
+                                                    itemLabel="#{delegator}" 
+                                                    itemValue="#{delegator}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invQuotationFormMB.completeInvDelegator}" >
+
+                                    </p:autoComplete>
+
+                                </h:panelGroup>   
+
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 95px;margin-right: 6%;" value="#{userData.userDDs['OFFER_END_DATE']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:calendar  style="width:  50%!important"  id="ad10" value="#{invQuotationFormMB.invQuotationEntity.endDate}" pattern="dd/MM/yyyy" />
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 90px" value="#{userData.userDDs['NOTE']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 50%" id="ad11" value="#{invQuotationFormMB.invQuotationEntity.remark}" />
+                                </h:panelGroup>
+
+
+                            </h:panelGroup>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </p:fieldset>
+            <p:fieldset id="fieldSetId" legend="#{userData.userDDs['OFFER_DATA']}"  style="margin-bottom:20px">
+                <p:dataTable id="invQuotationTable"
+                             var="invQuotationTable"
+                             rowIndexVar="index" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             editable="true"
+                             editMode="cell"
+                             sortBy="#{1}"
+                             selectionMode="single"
+                             selection="#{invQuotationFormMB.invQuotationdetailsEntitySelection}"
+                             widgetVar="invQuotationTable"
+                             rowKey="#{invQuotationTable}"
+                             value="#{invQuotationFormMB.invQuotationDetailsEntityList}">
+
+                    <f:facet name="header" class="col-md-6">
+                        <p:commandButton id="addnew" icon="fa fa-plus"
+                                         style="float: right"
+                                         class="saddButton"
+                                         title="#{userData.userDDs['ADD']}" 
+                                         actionListener="#{invQuotationFormMB.adddetails}"
+                                         update=":form:fieldSetId"  
+                                         oncomplete="PrimeFaces.focus('form:invQuotationTable:'+#{invQuotationFormMB.invQuotationDetailsEntityList.size()}+':invItemNameIn')"
+                                         ajax="true" 
+                                         />
+                        
+                        
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('invQuotationTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+                        
+                    </f:facet>
+
+                    <p:column id="serail" style="width: 6vh;text-align: right;font-size: 1.8vh;border-radius: 0px" headerText="#">
+                        <h:outputText value="#{invQuotationTable.serial}"  />
+                    </p:column>           
+
+
+                    <p:column style="width: 14vh;text-align: right;font-size: 1.8vh;border-radius: 0px" id="itemName"
+                              headerText="#{userData.userDDs['ITEM_NUMBER']}"
+
+                              filterBy="#{invQuotationTable.itemsBarcodesDetail}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invQuotationTable.itemsBarcodesDetail}"
+                              filterable="false">
+                        <p:autoComplete id="invItemNameIn"  
+
+                                        style="width:100%"
+                                        converter="#{invQuotationFormMB.itemsBarcodesDetailsViewConverter}"
+                                        value="#{invQuotationTable.itemsBarcodesDetail}"
+
+                                        var="item"
+                                        itemLabel="#{item}" 
+                                        itemValue="#{item}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{invQuotationFormMB.completeItemsData}" >
+                            <p:ajax update="unitvalue length paintColor QuantityT costTt discountT netId totalQuantity 
+                                    totalNet :form:disval :form:totaldis "
+                                    event="itemSelect" listener="#{invQuotationFormMB.validateItems(invQuotationTable)}" />
+                            <p:ajax update="unitvalue length paintColor QuantityT costTt discountT netId totalQuantity  
+                                    totalNet :form:disval :form:totaldis "
+                                    event="change" listener="#{invQuotationFormMB.validateItems(invQuotationTable)}" />
+                        </p:autoComplete>    
+                    </p:column>
+
+
+                    <p:column  style="width: 12vh;text-align: -webkit-auto;border-radius: 0px" id="Unit"
+                               headerText="#{userData.userDDs['UNIT_NUMBER']}"
+
+                               filterBy="#{invQuotationTable.quantity}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{invQuotationTable.quantity}"
+                               filterable="false">
+
+                        <p:inputText id="unitvalue"
+                                     disabled="true"
+                                     readonly="true" 
+                                     value="#{invQuotationTable.itemsBarcodesDetail.unitName}"
+                                     style="width: 95%" 
+                                     />                               
+                    </p:column>
+    
+                    <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px" id="tall" headerText="الطول"
+                              filterBy="#{invQuotationTable.itemsBarcodesDetail.length}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invQuotationTable.itemsBarcodesDetail.length}"
+                              filterable="false" >
+                        <p:inputText style="width:99%" 
+                                     disabled="true" 
+                                     id="length" readonly="true"  
+                                     value="#{invQuotationTable.itemsBarcodesDetail.length}"/>
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px" id="color" headerText="اللون"
+                              filterBy="#{invQuotationTable.itemsBarcodesDetail.paintColorName}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invQuotationTable.itemsBarcodesDetail.paintColorName}"
+                              filterable="false" >
+                        <p:inputText style="width:99%" 
+                                     disabled="true" 
+                                     id="paintColor" readonly="true"  
+                                     value="#{invQuotationTable.itemsBarcodesDetail.paintColorName}"/>
+                    </p:column>
+                    <p:column style="width: 14vh;text-align: right;font-size: 1.8vh;border-radius: 0px"
+                              id="Quantity"
+                              headerText="#{userData.userDDs['QUANTITY']}"
+
+                              filterBy="#{invQuotationTable.quantity}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invQuotationTable.quantity}"
+                              filterable="false">
+                        <p:inputText id="QuantityT"  
+                                     value="#{invQuotationTable.quantity}" 
+                                     disabled="#{invQuotationTable.itemsBarcodesDetail == null}"
+                                     style="width:95%">
+                            <p:ajax listener="#{invQuotationFormMB.validateQuantityColum(invQuotationTable)}" 
+                                    update="netId totalQuantity totalNet  :form:disval :form:disper :form:totaldis  "/>
+                        </p:inputText>   
+                    </p:column>
+    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px"
+                              id="Weight"
+                              headerText="#{userData.userDDs['WEIGHT']}"
+                              filterBy="#{invQuotationTable.weight}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invQuotationTable.weight}"
+                              filterable="false">
+
+                        <p:inputNumber id="WeightT" decimalPlaces="3"
+                                       value="#{invQuotationTable.weight}"  
+                                       style="width:100%">
+                            <p:ajax listener="#{invQuotationFormMB.updateSummition()}" update="totalNet totalQuantity discountT netId :form:disval :form:totaldis"/>
+                        </p:inputNumber>
+                    </p:column>
+                    <p:column style="width: 8vh;text-align: right;font-size: 1.8vh;border-radius: 0px" id="Price"
+                              headerText="#{userData.userDDs['PRICE']}"
+
+                              filterBy="#{invQuotationTable.price}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invQuotationTable.price}"
+                              filterable="false">
+                        <p:inputText id="costTt" 
+                                     value="#{invQuotationTable.price}"
+                                     disabled="#{invQuotationTable.itemsBarcodesDetail == null}"
+                                     style="width:95%">
+                            <p:ajax listener="#{invQuotationFormMB.validatePriceColumn(invQuotationTable)}" 
+                                    update="invQuotationTable :form:disval :form:totaldis"/>
+                        </p:inputText>  
+                    </p:column>
+
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px" id="Discount" 
+                              headerText="#{userData.userDDs['DISCOUNT']}"
+
+                              filterBy="#{invQuotationTable.discount}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invQuotationTable.discount}"
+                              filterable="false">
+
+                        <p:inputText id="discountT" 
+                                     value="#{invQuotationTable.discount}" 
+                                     disabled="#{invQuotationTable.itemsBarcodesDetail == null}"
+                                     style="width:80%!important;display: inline!important">
+                            <p:ajax listener="#{invQuotationFormMB.validateDiscountColumn(invQuotationTable)}"
+                                    update="invQuotationTable :form:disval :form:disper :form:totaldis"/>
+                        </p:inputText>  
+                        <p:outputLabel value="%"  style="display: inline!important"  />
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px" id="Total" 
+                              headerText="#{userData.userDDs['TOTAL']}"
+
+                              filterBy="#{invQuotationTable.net}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invQuotationTable.net}"
+                              filterable="false">
+                        <p:outputLabel id="netId" value="#{invQuotationTable.net}"   />
+                    </p:column>
+
+                    <p:summaryRow>
+                        <p:column colspan="3" style="text-align:right">
+                            <h:outputText style="text-align:right" value="#{userData.userDDs['TOTAL']}  :" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="totalQuantity" value="#{invQuotationFormMB.totalQuatity}"/>
+                        </p:column>
+
+                        <p:column />
+                        <p:column />
+<p:column />
+                        <p:column>
+                            <h:outputText id="totalNet" value="#{invQuotationFormMB.totalNet}"/>
+                        </p:column>
+                        <p:column/>
+                        <p:column />
+                        <p:column />
+                    </p:summaryRow>
+
+
+                    <p:column style="width: 10vh;text-align: center;font-size: 1.8vh;border-radius: 0px" 
+                              headerText="#{userData.userDDs['TRANSACTION']}">
+                        
+                        <p:commandButton id="b7" icon="fa fa-plus"
+                                         class="saddbuttonin"
+                                         title="#{userData.userDDs['ADD']}" 
+                                         style="background-color: rgb(42, 163, 218);border-radius: 3px;"
+                                         actionListener="#{invQuotationFormMB.adddetails}"
+                                         oncomplete="PrimeFaces.focus('form:invQuotationTable:'+#{invQuotationFormMB.invQuotationDetailsEntityList.size()}+':invItemNameIn')"
+                                         update=":form:fieldSetId" 
+                                         ajax="true" />
+
+                        <p:commandButton class="sdeleteButton" 
+                                         update="invQuotationTable" 
+                                         style="background-color: red;border-radius: 3px;"
+                                         title="#{userData.userDDs['DELETE']}" 
+                                         action="#{invQuotationFormMB.deleteInvQuotationDetail}" 
+                                         icon="fa fa-remove" >
+                            
+                            <f:setPropertyActionListener value="#{invQuotationTable}" 
+                                                         target="#{invQuotationFormMB.invQuotationdetailsEntitySelection}"/>
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}"
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:blockUI block="form" trigger="b7" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column >
+
+                </p:dataTable>
+
+                <h:panelGroup  class="centerButtons" style="margin-top: 2%">
+                    
+                    <p:commandButton class="saveButtons" 
+                                     id="saveB" 
+                                     title="#{userData.userDDs['SAVE']}" 
+                                     value="#{userData.userDDs['SAVE']}" 
+                                       style="color: #fff!important;background-color: #2196F3;margin-left: 5px;"
+                                     action="#{invQuotationFormMB.save()}" 
+                                     update="@form"/>
+                    
+                    <p:commandButton  class="newButtons" 
+                                      id="newN"
+                                      ajax="false"
+                                      style="color: #fff!important;background-color: #9c27b0d1;margin-left: 5px;"
+                                      value="#{userData.userDDs['NEW']}" 
+                                      title="#{userData.userDDs['NEW']}"
+                                      onclick="form.target = ''" 
+                                      actionListener="#{invQuotationFormMB.reset()}"/>
+                    
+                    <p:commandButton  class="printButtons"
+                                      ajax="false"
+                                      onclick="form.target = '_blank'"  
+                                      style="color: #fff!important;background-color:#0700D4CF;margin-left: 5px;" 
+                                      title="#{userData.userDDs['PRINT']}"
+                                      value="#{userData.userDDs['PRINT']}" 
+                                      actionListener="#{invQuotationFormMB.print}"/>
+
+
+                    <p:commandButton class="closeButtons" 
+                                     id="cancel" 
+                                     title="#{userData.userDDs['CANCEL']}" 
+                                     value="#{userData.userDDs['CANCEL']}" 
+                                     style="color: #fff!important;background-color: #035C70;margin-left: 5px;" 
+                                     action="#{invQuotationFormMB.exit()}" 
+                                     update="@form"/>
+                    
+                    <h:commandLink  style="float:left" class="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="invQuotationTable" 
+                                            fileName="عرض سعر"  preProcessor="#{SalesInvoiceFormMB.preProcessXLS()}"
+                                            postProcessor="#{SalesInvoiceFormMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+                    <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+
+                </h:panelGroup>
+
+
+            </p:fieldset>
+
+
+            <p:fieldset legend="#{userData.userDDs['Totally']}" style="margin-bottom:20px">
+
+                <div class="ui-g-12 ui-md-6">
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 110px" value="#{userData.userDDs['Discount_Value']}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:inputText style="width: 50%" id="disval" value="#{invQuotationFormMB.invQuotationEntity.discount}">
+                                <p:ajax  event="blur" listener="#{invQuotationFormMB.calculatePercentage()}"
+                                     update="disper totaldis" />
+                        </p:inputText> 
+                        </h:panelGroup>
+
+
+                    </h:panelGroup>
+
+                </div>
+                <div class="ui-g-12 ui-md-6">
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 65px;margin-right: 6%;" value="#{userData.userDDs['Discount_Rate']}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                                          <p:selectOneMenu style="width: 50%" id="disper" 
+
+                                                           value="#{invQuotationFormMB.invQuotationEntity.discountType}"  >                                                             
+                                            <f:selectItem itemLabel="#{userData.userDDs['VALUE']}" itemValue="false"   />
+                                            <f:selectItem itemLabel="#{userData.userDDs['RATIO']}"  itemValue="true"/>
+
+                                            <p:ajax  update="disval totaldis"  listener="#{invQuotationFormMB.calculateValue()}" />
+                                            <p:ajax  update="disval totaldis"  listener="#{invQuotationFormMB.calculatePercentage()}" />
+                                        </p:selectOneMenu>  
+                            
+                            
+                                 
+                           
+                        </h:panelGroup>
+
+
+                    </h:panelGroup>
+
+                </div>
+                <div class="ui-g-12 ui-md-6">
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width:115px" value="#{userData.userDDs['Total_After_Discount']}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:inputText style="width: 50%" id="totaldis" readonly="true" value="#{invQuotationFormMB.invQuotationEntity.totalDiscount}" />
+                        </h:panelGroup>
+
+
+                    </h:panelGroup>
+
+                </div>
+
+            </p:fieldset>
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>

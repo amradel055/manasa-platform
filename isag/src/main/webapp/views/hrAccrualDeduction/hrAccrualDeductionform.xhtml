@@ -1,0 +1,162 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form" dir="#{userData.dir}" class='formmargin'>
+
+            <p:fieldset id="AccuralDeduction" legend="الاستحقاقات والاستقطاعات" style="font-size: 17px !important;">
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+                </div>
+                <div class="ui-g-12 ui-g-nopad">
+
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 150px;margin-right: 5%;" value="رقم الاستحقاق/الاستقطاع"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:outputLabel  style="width: 50%" value="#{rscAccrualDeductionFormMB.rscAccrualDeductionDTO.serial}"/>
+                                    </h:panelGroup> 
+
+
+                                </h:panelGroup> 
+                            </h:panelGroup>
+
+                        </div>
+
+
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 66px" value="الكود"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:inputText    style="width: 55%" value="#{rscAccrualDeductionFormMB.rscAccrualDeductionDTO.rscAccrualDeductionCode}"/>
+                                    </h:panelGroup> 
+
+
+                                </h:panelGroup> 
+                            </h:panelGroup>
+
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 150px;margin-right: 5%;" value="الاسم"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:inputText   style="width: 50%" value="#{rscAccrualDeductionFormMB.rscAccrualDeductionDTO.rscAccrualDeductionName}"/>
+                                    </h:panelGroup> 
+
+
+                                </h:panelGroup> 
+                            </h:panelGroup>
+
+                        </div>
+
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="النوع"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:selectOneMenu id="status" value="#{rscAccrualDeductionFormMB.rscAccrualDeductionDTO.rscAccrualDeductionType}" style="width:55%">
+
+                                        <f:selectItem itemLabel="اختر" itemValue="" noSelectionOption="true" /> 
+                                        <f:selectItem itemLabel="استحقاق" itemValue="0" noSelectionOption="true" />
+                                        <f:selectItem itemLabel="استقطاع" itemValue="1" noSelectionOption="true" />
+                                        <f:selectItems  />
+                                    </p:selectOneMenu>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <h:panelGrid class="centerButtons col-md-12" columns="1">
+
+                    <h:panelGroup>
+
+                        <div class="centerButtons" style="margin-top:1%" >
+
+                            <p:commandButton class="saveButton" 
+                                             title="#{userData.userDDs['SAVE']}"
+                                             value="#{userData.userDDs['SAVE']}"
+
+                                             style="color: #ecf0f1!important;border-radius: 5px;
+                                             background-color:#116400 !important;margin-left: 5px;"
+                                             action="#{rscAccrualDeductionFormMB.save()}" update="@form" 
+                                             id="saveB"/>
+
+
+
+                            <p:commandButton class="newButton" 
+                                             value="#{userData.userDDs['NEW']}"
+                                             title="#{userData.userDDs['NEW']}"
+
+                                             style="color: #ecf0f1!important;border-radius: 5px;
+                                             background-color: #175C52!important;margin-left: 5px;"
+                                             action="#{rscAccrualDeductionFormMB.reset}" 
+                                             update="form" id="undo"/>
+
+
+
+                            <p:commandButton class="cancelButton"
+                                             title="#{userData.userDDs['CANCEL']}" 
+                                             immediate="true" 
+                                             style="color: #ecf0f1!important;border-radius: 5px;
+                                             background-color: #b5212c !important;margin-left: 5px;"
+                                             value="#{userData.userDDs['CANCEL']}" 
+
+                                             action="#{rscAccrualDeductionFormMB.exit()}"   />`
+
+                            <p:blockUI block="form" trigger="saveB  undo" animate="true" >
+
+                                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                            </p:blockUI>
+
+                        </div>
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+            </p:fieldset>
+
+
+
+
+        </h:form>
+
+    </ui:define>
+
+
+</ui:composition>

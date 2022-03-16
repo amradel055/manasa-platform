@@ -1,0 +1,454 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:define name="content">
+
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+        <h:form id="form" dir="#{userData.dir}" class='formmargin'>
+
+            <div >
+                <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
+            </div>
+
+            <p:fieldset  legend="استلام امر شغل"> 
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad">
+
+                    <div class="ui-g">
+                        <h:panelGroup id="test">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:calendar id="dateFrom" 
+                                                    value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.date}"
+                                                    pattern="dd/MM/yyyy"
+                                                    style="width:50%!important"/>
+
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 95px; margin-right: 6%;" value="#{userData.userDDs['DATEE']}*"/>
+                                    </div>
+                                </div>
+
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:inputText value="#{proFactoryDeliveryFormDTOMB.dayHijriFrom}" /> يوم
+                                        <p:inputText value="#{proFactoryDeliveryFormDTOMB.monthHijriFrom}" />  شهر
+                                        <p:inputText value="#{proFactoryDeliveryFormDTOMB.yearHijriFrom}" />  سنة
+                                        <p:commandButton     class="saveButton" id="excuteFrom" 
+                                                             value="تنفيذ" 
+                                                             icon="fa fa-fw fa-save"
+                                                             action="#{proFactoryDeliveryFormDTOMB.convertDateFrom()}"
+                                                             update="dateFrom"
+                                                             />
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 50px"  value="من تاريخ هجري" />
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+
+                                        <p:inputText style="width: 37.5%" 
+                                                     id="purchIdVal" readonly="true"
+                                                     value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.serial}" />
+
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+
+                                        <p:outputLabel style="width: 95px;margin-right: 6%;" id="purchId" value="رقم الاستلام" />
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+
+                                        <p:calendar id="timeFrom" 
+
+                                                    value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.time}"
+                                                    pattern="dd/MM/yyyy"
+                                                    style="width:50%!important"/>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+
+                                        <p:outputLabel style="width: 95px; margin-right: 6%;" value="الوقت"/>
+
+
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:inputText style="width: 36.5%" id="invoiceNumber"  value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.loadedSerial}"
+                                                     >
+                                            <p:ajax  event="blur" listener="#{proFactoryDeliveryFormDTOMB.loadInvoice()}"  update="@form" />
+                                        </p:inputText>
+
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+
+                                        <p:outputLabel style="width: 95px; margin-right: 3%;" value="رقم الفاتوره"/>
+
+
+
+                                    </div>
+
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 36.5%" id="invoiceNumber3"  
+                                                       value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.organizationSiteName}"
+                                                       />
+
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+
+                                        <p:outputLabel style="width: 95px; margin-right: 3%;" value=" اسم العميل"/>
+
+
+
+                                    </div>
+
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 36.5%" id="invoiceNumber4"  value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.gallaryName}"
+                                                       />
+
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+
+                                        <p:outputLabel style="width: 95px; margin-right: 3%;" value=" اسم المعرض"/>
+
+
+
+                                    </div>
+
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 36.5%" id="invoiceNumber2"  value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.numberOfToob}"
+                                                       >
+                                            <p:ajax  event="blur" listener="#{proFactoryDeliveryFormDTOMB.loadDlg()}"  update="@form" />
+                                        </p:outputLabel>
+
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+
+                                        <p:outputLabel style="width: 95px; margin-right: 3%;" value=" عدد التياب "/>
+
+
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:inputText style="width:69.5%"  value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.remarks}"
+                                                     />
+
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+
+
+                                        <p:outputLabel style="width: 95px; margin-right: 3%;" value="#{userData.userDDs['NOTE']}"/>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="text-align: center">
+
+
+                                <p:commandButton  id="saveB" 
+                                                  class="saveButtons"
+                                                  title="#{userData.userDDs['SAVE']}"
+                                                  value="#{userData.userDDs['SAVE']}" 
+                                                  action="#{proFactoryDeliveryFormDTOMB.save()}"
+                                                  update="@form"/>
+
+
+                                <p:commandButton 
+                                    id="newN"
+                                    ajax="false"
+
+                                    value="#{userData.userDDs['NEW']}" 
+                                    class="newButtons"
+                                    onclick="form.target = ''" 
+                                    actionListener="#{proFactoryDeliveryFormDTOMB.reset()}"/>
+
+
+                                <p:commandButton  class="deleteButtons" 
+                                                  id="cancel" 
+                                                  title="#{userData.userDDs['CANCEL']}" 
+                                                  value="#{userData.userDDs['CANCEL']}" 
+
+                                                  immediate="true"
+                                                  action="#{proFactoryDeliveryFormDTOMB.exit()}" 
+                                                  update="@form"/>
+
+                                <h:commandLink  class="sdcreenimg">  
+                                    <p:graphicImage name="/img/excel.jpg" width="24" />  
+                                    <p:dataExporter type="xls"
+                                                    target="invPurchaseInvoiceDetailsTable" 
+                                                    fileName="فاتورة استلام بالمشغل"
+                                                    preProcessor="#{proFactoryDeliveryFormDTOMB.preProcessXLS()}"
+                                                    postProcessor="#{proFactoryDeliveryFormDTOMB.postProcessXLS}" />  
+                                </h:commandLink>
+
+                                <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                                </p:blockUI> 
+
+
+
+                            </div>
+
+                        </h:panelGroup>
+                    </div>
+                </div>
+
+            </p:fieldset>
+
+            <p:fieldset id="fieldSetId" legend="بيانات امر الشغل"  style="margin:2% 0">
+
+
+                <p:dataTable id="invPurchaseInvoiceDetailsTable"
+                             widgetVar="invPurchaseInvoiceDetailsTable"
+                             style="margin-bottom:20px"
+                             var="invPurchaseInvoiceDetailsTable"
+                             rowIndexVar="index" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             editable="true"
+                             editMode="cell"
+                             selectionMode="single"
+                             sortBy="#{1}"
+                             rowKey="#{invPurchaseInvoiceDetailsTable.index}"
+                             selection="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.invPurchaseInvoiceDetailsSelected}"
+                             value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.invPurchaseInvoiceDetailList}" >
+
+                    <f:facet name="header" >
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('invPurchaseInvoiceDetailsTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column headerText="#" style="width: 4vh;text-align:center;border-radius: 0px" >
+                        <h:outputText value="#{invPurchaseInvoiceDetailsTable.serial}"  />
+                    </p:column>
+
+                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="#{userData.userDDs['ITEM']}" 
+                              filterBy="#{invPurchaseInvoiceDetailsTable.itemName}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invPurchaseInvoiceDetailsTable.itemName}"
+                              filterable="false">
+                        <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemName}" />          
+                    </p:column>
+
+                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px"
+                              id="Quantity"
+                              headerText="#{userData.userDDs['NUMBER']}"
+                              filterBy="#{invPurchaseInvoiceDetailsTable.number}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invPurchaseInvoiceDetailsTable.number}"
+                              filterable="false">
+
+                        <p:inputNumber id="QuantityT"  
+                                       value="#{invPurchaseInvoiceDetailsTable.number}" 
+                                       style="width:95%"/>
+
+                    </p:column>
+
+                    <p:column 
+                        style="width: 26vh;text-align: center;border-radius: 0px" 
+                        headerText="#{userData.userDDs['TRANSACTION']}">
+                        <p:commandButton  title="#{userData.userDDs['DELETE']}" 
+                                          class="sdeleteButtons" style="color: #fff!important;background-color: red"
+                                          update="invPurchaseInvoiceDetailsTable"
+                                          action="#{proFactoryDeliveryFormDTOMB.deleteInvDetail(invPurchaseInvoiceDetailsTable)}"
+                                          icon="fa fa-remove" >
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                       icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                </p:dataTable>
+
+
+            </p:fieldset>
+
+            <h:panelGrid columns="1" cellpadding="5">
+
+                <h:panelGroup>
+
+
+                    <p:dialog id="loaddlg" header="أوامر الشغل"  
+                              widgetVar="loaddlg" modal="true"
+                              width="auto" height="400PX" >
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+
+                                <p:outputLabel style="width: 95px;margin-right: 6%;" id="loadedSerial1" value="رقم أمر الشغل المطلوب استكماله" />
+                                <p:inputText style="width: 37%" 
+                                             id="loadedSerial" 
+                                             value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.needLoadedSerial}" />
+
+                            </h:panelGroup>
+                        </div>                      
+                        <div>
+                            <p:messages id="loadMsg"
+                                        autoUpdate="true" 
+                                        showDetail="true" 
+                                        closable="true"/>   
+                        </div>
+                        <div style="padding-top: 60px">
+
+                            <p:dataTable id="dlgTable"
+                                         draggableColumns="true" 
+                                         var="dlgTable" 
+                                         widgetVar="dlgTable" 
+                                         rowIndexVar="index" 
+                                         dir="rtl" 
+                                         selection="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.invDailogeDataListSelected}"
+                                         value="#{proFactoryDeliveryFormDTOMB.dataModelInvDailogueData}" 
+                                         rows="100"  
+                                         rowKey="#{dlgTable.index}"
+                                         paginator="true" 
+                                         lazy="true" 
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                                         {PreviousPageLink} {PageLinks} {NextPageLink}
+                                         {LastPageLink} {RowsPerPageDropdown}"
+                                         emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                                         >
+                                <f:facet name="header" >
+                                    <p:outputPanel  >
+                                        <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: small" />
+                                        <p:inputText id="globalFilter" onkeyup="PF('dlgTable').filter()" style="width:150px" />
+                                    </p:outputPanel>
+                                </f:facet>
+                                <p:column selectionMode="multiple" style="width:25px;text-align:center"/>
+                                <p:column headerText="#">
+                                    #{index + 1}
+                                </p:column>
+                                <p:column style="width:15vw;font-size:1vw;text-align: right;border-radius: 0px" 
+                                          filterStyle="display:none"
+                                          filterBy="#{dlgTable.serial}" 
+                                          filterMatchMode="contains"
+                                          headerText="رقم أمر الشغل"
+                                          sortBy="#{dlgTable.serial}"
+                                          >
+                                    <p:outputLabel value="#{dlgTable.serial}" />
+                                </p:column>
+
+                                <p:column style="width:15vw;font-size:1vw;text-align: right;border-radius: 0px"
+                                          filterStyle="display:none"
+                                          filterBy="#{dlgTable.organizationSiteName}"
+                                          filterMatchMode="contains"
+                                          headerText="العميل" 
+                                          sortBy="#{dlgTable.organizationSiteName}" 
+                                          >
+                                    <p:outputLabel value="#{dlgTable.organizationSiteName}" />
+                                </p:column>  
+
+                                <p:column style="width:15vw;font-size:1vw;text-align: right;border-radius: 0px"
+                                          filterStyle="display:none" filterBy="#{dlgTable.remarks}"
+                                          filterMatchMode="contains"
+                                          headerText="#{userData.userDDs['REMARK']}" 
+                                          sortBy="#{dlgTable.remarks}" >
+                                    <p:outputLabel value="#{dlgTable.remarks}" />
+                                </p:column>  
+
+                                <p:column style="width:15vw;font-size:1vw;text-align: right;border-radius: 0px"
+                                          filterStyle="display:none"
+                                          filterBy="#{dlgTable.date}" 
+                                          filterMatchMode="contains" 
+                                          headerText="#{userData.userDDs['DATEE']}" 
+                                          sortBy="#{dlgTable.date}" >
+                                    <p:outputLabel value="#{dlgTable.date}" >
+                                        <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                                    </p:outputLabel>                           
+                                </p:column>
+
+                                <p:column style="width:15vw;font-size:1vw;text-align: right;border-radius: 0px"
+                                          filterStyle="display:none" filterBy="#{dlgTable.inventoryName}"
+                                          filterMatchMode="contains"
+                                          headerText="الفرع" 
+                                          sortBy="#{dlgTable.inventoryName}" >
+                                    <p:outputLabel value="#{dlgTable.inventoryName}" />
+                                </p:column> 
+
+
+                            </p:dataTable> 
+
+
+                        </div>
+                        <div style="text-align: center;size: 200px; padding-top: 20px ;">
+                            <p:commandButton  update="invPurchaseInvoiceDetailsTable test "  
+                                              class="reloadButtons"
+
+
+                                              action="#{proFactoryDeliveryFormDTOMB.loadMultiSelection()}" 
+                                              title="#{userData.userDDs['UPLOAD']}" 
+                                              style=" font-size: 20px;	width: 100px;height: 40px; background-color: orange ;color: white; size: 200px">
+
+                            </p:commandButton>
+                        </div>
+
+                    </p:dialog>
+
+
+                </h:panelGroup>
+
+
+
+            </h:panelGrid>
+
+        </h:form>
+
+        <script>
+
+            document.addEventListener("keydown", function (e) {
+                console.log(e.which);
+                if (e.which === 13) {
+                    e.preventDefault();
+                    return false;
+                }
+                ;
+            });
+
+        </script>
+
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+<f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:body>
+
+            <h:form id="form" dir="RTL" style="margin-right: 20px">
+                <div>
+                    <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>  
+                </div>
+                <p:fieldset  legend="مراحل الانتاج" id="whole"  style="margin-bottom:20px">
+                    <p:dataTable id="table" var="proProductionStages" value="#{proProductionStagesListMB.proProductionStagesDTOList}"
+                                 draggableColumns="true"
+                                 paginator="true"
+                                 widgetVar="proProductionStages" 
+                                 rowIndexVar="index" 
+                                 emptyMessage="EMPTY_TABLE"
+                                 >
+                        <f:facet name="header" class="col-md-12">
+                            <p:commandButton  icon="fa fa-plus" 
+                                              class="saddButton"
+                                              title="Add"
+                                              action="#{proProductionStagesListMB.goToAdd()}"
+
+                                              style="float:right" 
+
+                                              />
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large"/>
+                                <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('proProductionStages').filter()" style="width:150px" />
+                            </p:outputPanel>
+                        </f:facet>
+
+                        <p:column headerText="#" style="width: 5vh;font-size: 1.8vh;text-align: -webkit-auto;">
+                            <h:outputText value="#{proProductionStages.id}" />
+                        </p:column>
+
+                        <p:column filterStyle="display:none" sortBy="#{proProductionStages.name}" style="width: 7vh;font-size: 1.8vh;text-align: -webkit-auto;"
+                                  filterBy="#{proProductionStages.name}"  filterMatchMode="contains" headerText="الاسم">
+                            <h:outputText value="#{proProductionStages.name}" style="font-size: 1.8vh" />
+                        </p:column>
+
+                        <p:column filterStyle="display:none" style="width: 7vh;font-size: 1.8vh;text-align: -webkit-auto;" sortBy="#{proProductionStages.nameEn}"
+                                  filterBy="#{proProductionStages.nameEn}"  filterMatchMode="contains" headerText="الاسم انجليزي" 
+                                  >
+                            <h:outputText value="#{proProductionStages.nameEn}" style="font-size: 1.8vh"/>
+                        </p:column>
+
+                        <p:column headerText="الاسم هندي" style="width: 7vh;font-size: 1.8vh;text-align: -webkit-auto;">
+                            <h:outputText value="#{proProductionStages.nameIn}" />
+                        </p:column>
+                        <p:column headerText="السعر" style="width: 7vh;font-size: 1.8vh;text-align: -webkit-auto;"
+
+                                  >
+                            <h:outputText value="#{proProductionStages.price}" />
+                        </p:column>
+                        <p:column headerText="الحركة" style="width: 5vh;text-align: center!important;font-size: 1.8vh">
+                            <p:commandButton   class="seditButton" update="@form" icon="fa fa-fw fa-edit"
+                                               title="EDIT" action="#{proProductionStagesListMB.goToEdit()}"
+                                               >
+                                <f:setPropertyActionListener value="#{proProductionStages}" 
+                                                             target="#{proProductionStagesListMB.proProductionStagesDTOSelected}" />
+                            </p:commandButton>
+
+                            <p:commandButton class="sdeleteButton"   icon="fa fa-remove" 
+                                             title="DELETE" action="#{proProductionStagesListMB.delete()}"
+                                             update="table"
+                                             >
+                                <f:setPropertyActionListener value="#{proProductionStages}" target="#{proProductionStagesListMB.proProductionStagesDTOSelected}" />
+                                <p:confirm header="Confirmation" message="ARE_YOU_SURE" icon="ui-icon-alert" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton title="YES" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton title="NO" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+                </p:fieldset>
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+

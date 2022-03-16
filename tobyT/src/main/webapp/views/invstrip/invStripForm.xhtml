@@ -1,0 +1,280 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form"  enctype="multipart/form-data"  dir="#{userData.dir}" style="margin-right: 15px">
+            <p:fieldset  legend="#{userData.userDDs['STORE_INVENTORY']}" style="margin-bottom:20px">
+                <div >
+                    <p:messages id="curmsg" 
+                                autoUpdate="true"
+                                showDetail="true" 
+                                rendered="true" closable="true"/>   
+                </div>
+
+
+                <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 45px" value="رقم الحجز"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 48%!important" id="serialNo" value="#{invStripFormMB.invStripDTO.serial}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 45px" value="#{userData.userDDs['DATE']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:calendar  style="width: 48%!important" required="true"
+                                                 requiredMessage="يجب ادخال تاريخ"  value="#{invStripFormMB.invStripDTO.stripDate}" pattern="dd/MM/yyyy" />
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 45px" value="المخزن"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:83%" 
+                                                    dropdown="true"
+                                                    readonly="#{invStripFormMB.invStripDTO.id != null}"
+                                                    converter="#{invStripFormMB.invInventoryDTOConverter}"
+                                                    value="#{invStripFormMB.invStripDTO.inventoryId}"
+                                                    required="true"
+                                                    requiredMessage="يجب اختيار مخزن"
+                                                    var="inventory"
+                                                    itemLabel="#{inventory}" 
+                                                    itemValue="#{inventory}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invStripFormMB.completeInventory}" >
+
+                                              <p:ajax update=":form invStripTable"
+                                                event="itemSelect"
+                                                listener="#{invStripFormMB.fillItemMap()}" />
+                                            
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 45px" value="مستند الجرد"/>
+                                </h:panelGroup>
+                                <h:panelGroup >
+                                    <h:panelGroup>
+                                        <p:inputText style="width: 48%!important"  id="stripDocument" value="#{invStripFormMB.invStripDTO.stripDocument}" />
+                                    </h:panelGroup>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 40px"  value="#{userData.userDDs['NOTE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:inputText style="width: 70%!important"  id="ad11" value="#{invStripFormMB.invStripDTO.remarks}" />
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+
+
+            </p:fieldset>
+            <p:fieldset  style="margin-bottom:20px">
+                <p:dataTable var="invStripTable"
+                             widgetVar="invStripTable"
+                             rowIndexVar="index"
+                             rowKey="#{invStripTable}"
+                             selectionMode="single"
+                             selection="#{invStripFormMB.invStripDetailSelected}"
+                             dir="rtl"
+                             sortBy="#{1}"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             editable="true"
+                             editMode="cell"
+                             value="#{invStripFormMB.invStripDTO.invStripDetailDTOList}"
+                             id="invStripTable">
+
+                    <f:facet name="header" class="col-md-12">
+
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('invStripTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+
+                    <p:column style="width: 8vh;text-align: -webkit-auto;font-size: 1.8vh"   id="serail" 
+                              headerText="#{userData.userDDs['SERIAL']}">
+                        <h:outputText value="#{invStripTable.serial}"  />
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.8vh" 
+                              id="itemNumber" headerText="#{userData.userDDs['ITEM_NUMBER']}"
+
+                              filterBy="#{invStripTable.invItemId.code}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invStripTable.invItemId.code}"
+                              filterable="false">
+                        <h:outputText value="#{invStripTable.invItemId.code}" />
+                    </p:column>
+
+                    <p:column style="width: 28vh;text-align: -webkit-auto;font-size: 1.8vh"  
+                              id="itemName" headerText="#{userData.userDDs['ITEM_NAME']}"
+
+                              filterBy="#{invStripTable.invItemId.name}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invStripTable.invItemId.name}"
+                              filterable="false">
+                        <h:outputText value="#{invStripTable.invItemId.name}" />
+                    </p:column>
+
+                    <p:column  style="width: 12vh;text-align: -webkit-auto;font-size: 1.8vh"
+                               id="Quantity" headerText="جرد فعلى"
+
+                               filterBy="#{invStripTable.actualAmount}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{invStripTable.actualAmount}"
+                               filterable="false">
+
+                        <p:inputText id="QuantityT" value="#{invStripTable.actualAmount}"
+                                     rendered="#{invStripFormMB.invStripDTO.id eq null}"
+                                     style="width:95%">
+                            <p:ajax listener="#{invStripFormMB.updateDifference(invStripTable)}" 
+                                    event="blur"
+                                    update="difference totalQuantity totalNet"/>
+                        </p:inputText>
+
+                        <p:outputLabel value="#{invStripTable.actualAmount}" 
+                                       rendered="#{invStripFormMB.invStripDTO.id != null}" style="width:95%"/>
+
+                    </p:column>
+
+
+                    <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.8vh" id="balance" headerText="رصيد دفترى"
+
+                              filterBy="#{invStripTable.bookBalance}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invStripTable.bookBalance}"
+                              filterable="false">
+                        <p:outputLabel id="balanceT" value="#{invStripTable.bookBalance}"  style="width:95%"/>
+                    </p:column>
+
+                    <p:column style="width: 6vh;text-align: -webkit-auto;font-size: 1.8vh" id="Total" headerText="الفرق"
+
+                              filterBy="#{invStripTable.difference}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invStripTable.difference}"
+                              filterable="false">
+                        <p:outputLabel id="difference" value="#{invStripTable.difference}" />
+                    </p:column>
+
+                    <p:summaryRow>
+                        <p:column colspan="3" style="text-align:right"  >
+                            <h:outputText style="text-align:right" value="#{userData.userDDs['TOTAL']}  :" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="totalQuantity" value="#{invStripFormMB.invStripDTO.totalQuantity}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="totalNet" value="#{invStripFormMB.invStripDTO.totalQuantity}"/>
+                        </p:column>
+
+                        <p:column />
+                        <p:column />
+                    </p:summaryRow>
+
+                    <p:column style="width: 6vh;text-align: -webkit-auto;font-size: 1.8vh" >
+                        <p:commandButton class="sdeleteButton" update="invStripTable" title="#{userData.userDDs['DELETE']}"
+                                         disabled="#{invStripFormMB.invStripDTO.id != null}"
+                                         action="#{invStripFormMB.deleteInvStripDetail}" icon="fa fa-remove" >
+                            <f:setPropertyActionListener value="#{invStripTable}"
+                                                         target="#{invStripFormMB.invStripDetailSelected}"/>
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}"
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                       icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button"
+                                             styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" 
+                                             styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column >
+
+                </p:dataTable>
+
+                <h:panelGroup class="centerButtons"  style="margin-top: 2%">
+
+                    <p:commandButton class="saveButton" id="saveB" 
+                                     title="#{userData.userDDs['SAVE']}"
+                                     disabled="#{invStripFormMB.invStripDTO.id != null}"
+                                     value="#{userData.userDDs['SAVE']}"
+                                     icon="fa fa-fw fa-save" 
+                                     action="#{invStripFormMB.save()}" 
+                                     update="@form"/>
+
+                    <p:commandButton  class="newButton"
+                                      id="newN"
+                                      ajax="false"
+                                      icon="fa fa-fw fa-plus"
+                                      title="#{userData.userDDs['NEW']}"
+                                      value="#{userData.userDDs['NEW']}" 
+                                      onclick="form.target = ''" 
+                                      actionListener="#{invStripFormMB.reset()}"/>
+
+                    <p:commandButton class="cancelButton" 
+                                     id="cancel" 
+                                     title="#{userData.userDDs['CANCEL']}" 
+                                     value="#{userData.userDDs['CANCEL']}"
+                                     icon="fa fa-fw fa-backward" 
+                                     action="#{invStripFormMB.exit()}" 
+                                     update="@form"/>
+                    <h:commandLink style="float: left" class="sdcreenimg">  
+                        <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                        <p:dataExporter type="xls"
+                                        target="invStripTable" 
+                                        fileName="جرد المخازن"
+                                        postProcessor="#{invStripFormMB.postProcessXLS}" />  
+                    </h:commandLink>
+
+                    <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+                </h:panelGroup>
+
+            </p:fieldset>
+
+
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>

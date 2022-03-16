@@ -1,0 +1,255 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
+
+    <ui:define name="content">
+        <h:form id="form" dir="#{userData.dir}" style="margin-right: 1.8vh">
+            <f:event listener="#{userData.authorize}" type="preRenderView" />
+            <p:fieldset legend="مشتريات مندوب حسب مجموعات الاصناف الرئيسية " style="margin-bottom:20px">
+
+
+                <h:panelGrid id="firstSegment" columns="2" cellspacing="10" cellpadding="0" >
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 70px" value="من رقم العميل"/>
+                        </h:panelGroup> 
+
+                        <h:panelGroup>                          
+                            <p:autoComplete style="width:75%!important" 
+
+                                            dropdown="true"
+                                            converter="#{invDelegatorPurchaseByMainItemsGroupMB.invOrgSiteConverter}"
+                                            value="#{invDelegatorPurchaseByMainItemsGroupMB.delegatorSalesByMainItemsGroupSearchBean.invOrganizationSiteFrom}"
+                                            var="p"
+                                            itemLabel="#{p}" 
+                                            itemValue="#{p}" 
+                                            forceSelection="false" 
+                                            completeMethod="#{invDelegatorPurchaseByMainItemsGroupMB.completOrgSite}" >
+                            </p:autoComplete>
+                        </h:panelGroup> 
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 70px" value="إلى  رقم العميل"/>
+                        </h:panelGroup> 
+
+                        <h:panelGroup>
+                            <p:autoComplete style="width:75%!important" 
+
+                                            dropdown="true"
+                                            converter="#{invDelegatorPurchaseByMainItemsGroupMB.invOrgSiteConverter}"
+                                            value="#{invDelegatorPurchaseByMainItemsGroupMB.delegatorSalesByMainItemsGroupSearchBean.invOrganizationSiteTo}"
+                                            var="p"
+                                            itemLabel="#{p}" 
+                                            itemValue="#{p}" 
+                                            forceSelection="false" 
+                                            completeMethod="#{invDelegatorPurchaseByMainItemsGroupMB.completOrgSite}" >
+                            </p:autoComplete>
+                        </h:panelGroup> 
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 70px" value="من مندوب مبيعات"/>
+                        </h:panelGroup> 
+
+                        <h:panelGroup>
+                            <p:autoComplete style="width:75%!important" 
+
+                                            dropdown="true"
+                                            converter="#{invDelegatorPurchaseByMainItemsGroupMB.invDelegatorConverter}"
+                                            value="#{invDelegatorPurchaseByMainItemsGroupMB.delegatorSalesByMainItemsGroupSearchBean.delegateCodeFrom}"
+                                            var="p"
+                                            itemLabel="#{p}" 
+                                            itemValue="#{p}" 
+                                            forceSelection="false" 
+                                            completeMethod="#{invDelegatorPurchaseByMainItemsGroupMB.completeInvDelegator}" >
+                            </p:autoComplete>
+                        </h:panelGroup> 
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 70px" value="إلى  مندوب مبيعات"/>
+                        </h:panelGroup> 
+
+                        <h:panelGroup>
+                            <p:autoComplete style="width:75%!important" 
+
+                                            dropdown="true"
+                                            converter="#{invDelegatorPurchaseByMainItemsGroupMB.invDelegatorConverter}"
+                                            value="#{invDelegatorPurchaseByMainItemsGroupMB.delegatorSalesByMainItemsGroupSearchBean.delegateCodeTo}"
+                                            var="p"
+                                            itemLabel="#{p}" 
+                                            itemValue="#{p}" 
+                                            forceSelection="false" 
+                                            completeMethod="#{invDelegatorPurchaseByMainItemsGroupMB.completeInvDelegator}" >
+                            </p:autoComplete>
+
+                        </h:panelGroup> 
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 70px" value="من  رقم مستودع"/>
+                        </h:panelGroup> 
+
+                        <h:panelGroup>
+                            <p:autoComplete style="width:75%!important" 
+
+                                            dropdown="true"
+                                            converter="#{invDelegatorPurchaseByMainItemsGroupMB.invInventoryConverter}"
+                                            value="#{invDelegatorPurchaseByMainItemsGroupMB.delegatorSalesByMainItemsGroupSearchBean.inventoryIdFrom}"
+                                            var="p"
+                                            itemLabel="#{p}" 
+                                            itemValue="#{p}" 
+                                            forceSelection="false" 
+                                            completeMethod="#{invDelegatorPurchaseByMainItemsGroupMB.completeInventory}" >
+                            </p:autoComplete>
+                        </h:panelGroup> 
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 70px" value="إلى   رقم مستودع"/>
+                        </h:panelGroup> 
+
+                        <h:panelGroup>
+                            <p:autoComplete style="width:75%!important" 
+
+                                            dropdown="true"
+                                            converter="#{invDelegatorPurchaseByMainItemsGroupMB.invInventoryConverter}"
+                                            value="#{invDelegatorPurchaseByMainItemsGroupMB.delegatorSalesByMainItemsGroupSearchBean.inventoryIdTo}"
+                                            var="p"
+                                            itemLabel="#{p}" 
+                                            itemValue="#{p}" 
+                                            forceSelection="false" 
+                                            completeMethod="#{invDelegatorPurchaseByMainItemsGroupMB.completeInventory}" >
+                            </p:autoComplete>
+                        </h:panelGroup> 
+                    </h:panelGroup>
+
+
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 70px" value="من  رقم فاتورة"/>
+                        </h:panelGroup> 
+
+                        <h:panelGroup>
+                            <p:inputNumber  style="width: 56.5%" value="#{invDelegatorPurchaseByMainItemsGroupMB.delegatorSalesByMainItemsGroupSearchBean.invoiceNumberFrom}"/>
+                        </h:panelGroup> 
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 70px" value="إلى رقم فاتورة  "/>
+                        </h:panelGroup> 
+
+                        <h:panelGroup>
+                            <p:inputNumber   style="width: 56.5%"  value="#{invDelegatorPurchaseByMainItemsGroupMB.delegatorSalesByMainItemsGroupSearchBean.invoiceNumberTo}"/>
+                        </h:panelGroup> 
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel  style="width: 70px" value="من تاريخ"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:calendar pattern="dd/MM/yyyy" 
+                                        value="#{invDelegatorPurchaseByMainItemsGroupMB.delegatorSalesByMainItemsGroupSearchBean.dateFrom}"
+                                        style="width: 56.5%">
+
+                            </p:calendar>
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel  style="width: 70px" value="إلى تاريخ"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:calendar pattern="dd/MM/yyyy" 
+                                        value="#{invDelegatorPurchaseByMainItemsGroupMB.delegatorSalesByMainItemsGroupSearchBean.dateTo}"
+                                        style="width: 56.5%">
+
+                            </p:calendar>
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:outputLabel  style="width: 70px" value="انواع الفاتورة"/>
+                            </h:panelGroup>
+
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:selectCheckboxMenu id="menu"   style="width: 56.5%;margin-right: .6%" 
+                                                  value="#{invDelegatorPurchaseByMainItemsGroupMB.selectedInvoiceTypes}"
+                                                  label="انواع الفاتورة"
+                                                  filter="true" filterMatchMode="startsWith" >
+                                <f:selectItems value="#{invDelegatorPurchaseByMainItemsGroupMB.invoiceTypes}" />
+                            </p:selectCheckboxMenu>
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+
+                </h:panelGrid>
+
+
+                <div style="margin-top: 15px!important">
+
+                    <p:commandButton value="#{userData.userDDs['SEARCH']}"  process="@parent" action="#{invDelegatorPurchaseByMainItemsGroupMB.search()}" update="form" oncomplete="PF('generaltable').clearFilters()"/>
+                    <p:commandButton value="#{userData.userDDs['NEW']}" style="margin-left:.3%;margin-bottom: .5%;width: 50px" action="#{invDelegatorPurchaseByMainItemsGroupMB.reset()}" update="form" />
+                    <p:commandButton style="margin-left:.1%;margin-right: .1%;width: 50px;" ajax="false" onclick="form.target = '_blank'"  value="#{userData.userDDs['PRINT']}" actionListener="#{invDelegatorPurchaseByMainItemsGroupMB.exportPDF}"/>
+                   
+                    <h:commandLink>  
+                        <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                        <p:dataExporter type="xls"
+                                        target="table" 
+                                        fileName="مشتريات مندوب حسب مجموعات الاصناف الرئيسية"
+                                        postProcessor="#{invDelegatorPurchaseByMainItemsGroupMB.postProcessXLS}" />  
+                    </h:commandLink>
+
+                </div>
+
+
+
+                <p:fieldset style="margin-bottom:20px" >
+                    <p:dataTable 
+
+                        widgetVar="generaltable" id="table" var="generaltable" style="margin-bottom:20px"  rowIndexVar="index" paginator="true" 
+                        value="#{invDelegatorPurchaseByMainItemsGroupMB.invDelegatorSalesByMainItemsGroupBeanList}" >
+
+                        <p:columns value="#{invDelegatorPurchaseByMainItemsGroupMB.columns}" var="column" columnIndexVar="colIndex" sortBy="#{generaltable[column.property]}">
+                            <f:facet name="header">
+                                <h:outputText value="#{column.header}" />
+                            </f:facet>
+                            <h:outputText value="#{generaltable[column.property]}" />
+                        </p:columns>
+
+
+
+
+                    </p:dataTable>
+                </p:fieldset>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

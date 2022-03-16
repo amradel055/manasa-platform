@@ -5,12 +5,15 @@
  */
 package com.isag.entity;
 
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -39,7 +42,9 @@ public class Periods extends BaseEntity {
     private Branch branchId;
     @JoinColumn(name = "parent", referencedColumnName = "id")
     @ManyToOne
-    private Periods parent;
+    private Periods parentPeriod;
+    @OneToMany(mappedBy = "parentPeriod", fetch = FetchType.EAGER)
+    private List<Periods> childPeriods;
 
     public Periods() {
     }
@@ -110,17 +115,31 @@ public class Periods extends BaseEntity {
     }
 
     /**
-     * @return the parent
+     * @return the parentPeriod
      */
-    public Periods getParent() {
-        return parent;
+    public Periods getParentPeriod() {
+        return parentPeriod;
     }
 
     /**
-     * @param parent the parent to set
+     * @param parentPeriod the parentPeriod to set
      */
-    public void setParent(Periods parent) {
-        this.parent = parent;
+    public void setParentPeriod(Periods parentPeriod) {
+        this.parentPeriod = parentPeriod;
+    }
+
+    /**
+     * @return the childPeriods
+     */
+    public List<Periods> getChildPeriods() {
+        return childPeriods;
+    }
+
+    /**
+     * @param childPeriods the childPeriods to set
+     */
+    public void setChildPeriods(List<Periods> childPeriods) {
+        this.childPeriods = childPeriods;
     }
 
 }

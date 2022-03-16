@@ -16,6 +16,7 @@ import com.isag.entity.IgmaUser;
 import com.isag.entity.Materials;
 import com.isag.entity.Periods;
 import com.isag.entity.SchoolStagesGuide;
+import com.isag.entity.StudentPeriods;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -39,6 +40,11 @@ public class LessonServiceImpl implements LessonService {
     private CommentsService commentsService;
     @EJB
     private LessonImgService lessonImgService;
+
+    @EJB
+    private StudentPeriodsService studentPeriodsService;
+
+    private StringBuilder periodNew;
 
     @Override
     public List<LessonDTO> findAllLessons() {
@@ -88,11 +94,13 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public List<LessonDTO> findAllLessonsByTeacher(Integer branchId, Integer companyId, Integer teacherId, Integer materialId,Integer schoolStageId , Integer id) {
+    public List<LessonDTO> findAllLessonsByTeacher(Integer branchId, Integer companyId, Integer teacherId,
+            Integer materialId, Integer schoolStageId, Integer id, Integer periodId, Integer studentId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         params.put("companyId", companyId);
         params.put("teacherId", teacherId);
+        periodNew = new StringBuilder();
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT d FROM Lesson d WHERE d.branchId.id = :branchId AND d.companyId.id = :companyId AND d.teacherId.id = :teacherId ");
         if (id != null) {
@@ -108,7 +116,97 @@ public class LessonServiceImpl implements LessonService {
             builder.append(" AND d.schoolStagesGuideId.id = :schoolStageId");
         }
         List<Lesson> list = dao.findListByQuery(builder.toString(), params);
+
         return returnListDTO(list);
+    }
+
+    @Override
+    public List<LessonDTO> findAllLessonsByStudent(Integer branchId, Integer companyId, Integer teacherId,
+            Integer materialId, Integer schoolStageId, Integer id, Integer periodId, Integer studentId) {
+        if (studentId != null) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("branchId", branchId);
+            params.put("companyId", companyId);
+            params.put("teacherId", teacherId);
+            params.put("studentId", studentId);
+            periodNew = new StringBuilder();
+            StringBuilder builder = new StringBuilder();
+            builder.append("SELECT d FROM Lesson d WHERE d.branchId.id = :branchId AND d.companyId.id = :companyId AND d.teacherId.id = :teacherId ");
+            if (id != null) {
+                params.put("id", id);
+                builder.append(" AND d.id = :id");
+            }
+            if (materialId != null) {
+                params.put("materialId", materialId);
+                builder.append(" AND d.materialId.id = :materialId");
+            }
+            if (schoolStageId != null) {
+                params.put("schoolStageId", schoolStageId);
+                builder.append(" AND d.schoolStagesGuideId.id = :schoolStageId");
+            }
+
+            List<Integer> periodList = studentPeriodsService.findPeriodsByStudentId(studentId);
+            for (Integer period : periodList) {
+                if (periodNew.toString().isEmpty()) {
+                    periodNew.append(period);
+                } else {
+                    periodNew.append(",").append(period);
+                }
+                findAllLessonsPeriod(period);
+            }
+            builder.append(" AND d.periodId.id in (").append(periodNew.toString()).append(")");
+            builder.append(" AND d.materialId.id in (").append(" SELECT b.materialId.id FROM StudentPeriods b WHERE b.studentId.id = :studentId ").append(")");
+
+            List<Lesson> list = dao.findListByQuery(builder.toString(), params);
+
+//             List<StudentPeriods> periodList = studentPeriodsService.findPeriodsByStudentId(studentId);
+//            for (StudentPeriods period : periodList) {
+//                if (periodString == null) {
+//                    periodString = new StringBuilder();
+//                    periodString.append(period.getPeriodId());
+//                } else {
+//                    periodString.append(" , ");
+//                    periodString.append(period.getPeriodId());
+//                }
+//                
+//                if (materialString == null) {
+//                    materialString = new StringBuilder();
+//                    materialString.append(period.getMaterialId());
+//                } else {
+//                    materialString.append(" , ");
+//                    materialString.append(period.getMaterialId());
+//                }
+//                
+//            }
+//            builder.append(" AND ( d.periodId.id in (").append(periodString.toString()).append(")");
+//            builder.append(" OR d.periodId.parentPeriod.id in (").append(periodString.toString()).append(") )");
+//            builder.append(" AND d.materialId.id in (").append(materialString.toString()).append(")");
+            return returnListDTO(list);
+        }
+        return null;
+    }
+
+    public StringBuilder findAllLessonsPeriod(Integer parent) {
+        Map<String, Object> params = new HashMap<>();
+        StringBuilder periadsId = null;
+        params.put("parent", parent);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT p FROM Periods p WHERE p.parentPeriod.id = :parent");
+        List<Periods> list = dao.findListByQuery(builder.toString(), params);
+        if (list != null && !list.isEmpty()) {
+            periadsId = findAllLessonsPeriod(list, periadsId);
+        }
+        return periadsId;
+    }
+
+    public StringBuilder findAllLessonsPeriod(List<Periods> listPeriods, StringBuilder builder) {
+        if (listPeriods != null) {
+            for (Periods periods : listPeriods) {
+                periodNew.append(" , ").append(periods.getId());
+                findAllLessonsPeriod(periods.getId());
+            }
+        }
+        return builder;
     }
 
     @Override
@@ -166,7 +264,7 @@ public class LessonServiceImpl implements LessonService {
                 && lessonDTO.getLessonType() != null
                 && lessonDTO.getMaterialId() != null
                 && lessonDTO.getTeacherId() != null
-                && lessonDTO.getVoiceLink() != null
+                //                && lessonDTO.getVoiceLink() != null
                 && lessonDTO.getPeriodId() != null) {
             if (isagUser == null) {
                 isagUser = new IgmaUser();
@@ -178,7 +276,7 @@ public class LessonServiceImpl implements LessonService {
                 isagCompany.setId(lessonDTO.getCompanyId());
                 isagUser.setCompanyId(isagCompany);
             }
-            List<String> documents = lessonDTO.getDocuments();            
+            List<String> documents = lessonDTO.getDocuments();
             List<String> lessonImg = lessonDTO.getImages();
             lesson = mapToEntity(lessonDTO, isagUser, lesson);
             lesson = dao.updateEntity(lesson);
@@ -193,7 +291,7 @@ public class LessonServiceImpl implements LessonService {
                 msg.setMsg("تم الحفظ بنجاح");
                 msg.setMsgType("success");
             }
-           
+
             return msg;
         } else {
             msg.setMsg("لا يوجد بيانات  ");

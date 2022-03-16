@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+        <h:body>
+            <h:form id="form" dir="RTL" >
+                <div>
+                    <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="#{createDeliveryFormMB.showGeneralMessage}" closable="true"/>   
+                </div>
+                <p:fieldset  legend="الطيارين"    >
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputNumber id="input1" value="#{createDeliveryFormMB.invOrganizationSiteDTO.mobile}" />
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <h:outputText value="التليفون" />
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputText value="#{createDeliveryFormMB.invOrganizationSiteDTO.email}" />
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <h:outputText value="الايميل" />
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputText value="#{createDeliveryFormMB.invOrganizationSiteDTO.address}" />
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <h:outputText value="العنوان" />
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:selectOneRadio id="typeActive" value="#{createDeliveryFormMB.invOrganizationSiteDTO.active}" >
+                                    <f:selectItem itemLabel="Active" itemValue="#{1}" />
+                                    <f:selectItem itemLabel="not Active" itemValue="#{0}" />
+                                </p:selectOneRadio>
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputText value="#{createDeliveryFormMB.invOrganizationSiteDTO.name}">
+                                    <p:ajax event="blur" listener="#{createDeliveryFormMB.validateName()}"  />
+                                </p:inputText>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <h:outputText value="الاسم" />
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputNumber id="input" value="#{createDeliveryFormMB.invOrganizationSiteDTO.code}">
+                                    <p:ajax event="blur" listener="#{createDeliveryFormMB.validateCode()}"  />
+                                </p:inputNumber>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <h:outputText value="الكود" />
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="ui-g-12 ui-xl-12" style="text-align: center;">
+                        <p:commandButton value="حفظ" action="#{createDeliveryFormMB.save()}" update="@form" />
+
+                    </div> 
+
+                </p:fieldset>
+
+            </h:form>
+        </h:body>
+
+    </ui:define>
+</ui:composition>
+

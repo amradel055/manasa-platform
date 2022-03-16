@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form   class='formmargin' dir="#{userData.dir}">
+            
+            <p:fieldset legend="#{userData.userDDs['SAFES_TRANSFER']}">
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+                </div>
+
+                <p:dataTable id="glBankTransaction"
+                             draggableColumns="true" 
+                             var="glBankTransaction" 
+                             widgetVar="glBankTransaction" 
+                             rowIndexVar="index" 
+                             value="#{glBankTransactionListMB.dataModel}" 
+                             lazy="true"
+                             rows="10"
+                             paginator="true"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                             {PreviousPageLink} {PageLinks} {NextPageLink}
+                             {LastPageLink} {RowsPerPageDropdown}"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"  
+                             >
+
+                    <f:facet name="header" class="col-md-12">
+                        <p:commandButton class="saddButton" icon="fa fa-plus" 
+                                         title="#{userData.userDDs['ADD']}"
+                                         action="#{glBankTransactionListMB.goToAdd()}"
+                                         style="float:right" 
+                                         rendered="#{userData.userScreens['glBankTransaction'].add or userData.isAdmin}"/>
+
+                        <p:outputPanel  >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('glBankTransaction').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column headerText="#"  style="width: 4vh; text-align: right;font-size:1.8vh;border-radius: 0px" >
+                        <p:outputLabel value="#{glBankTransaction.serial}" style="font-size:1.8vh"/>
+                    </p:column>
+
+                    <p:column filterStyle="display:none"
+                              filterBy="#{glBankTransaction.bankFromName}" 
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['FROM_SAVE']}" 
+                              sortBy="#{glBankTransaction.bankFromName}"
+                              style="width: 12.5vh;text-align: right;font-size:1.8vh;border-radius: 0px">
+                        <p:outputLabel value="#{glBankTransaction.bankFromName}"/>
+                    </p:column>
+
+                    <p:column filterStyle="display:none"
+                              filterBy="#{glBankTransaction.bankToName}" 
+                              filterMatchMode="contains" 
+                              headerText=""
+                              sortBy="#{glBankTransaction.bankToName}"
+                              style="width: 12.5vh;text-align: right;font-size:1.8vh;border-radius: 0px">
+                        <f:facet name="filter">
+                            <p:selectOneMenu  label="#{userData.userDDs['TO_SAFE']}" id="toSafe" style="width:100%"
+                                              converter="#{glBankTransactionListMB.bankConverter}"
+                                              value="#{glBankTransactionListMB.selectGlBank}"  > 
+                                <f:selectItem itemLabel="#{userData.userDDs['SAFE']}"  itemValue="" />
+                                <f:selectItems  value="#{glBankTransactionListMB.glBankList}" 
+                                                var="toSafe" itemLabel="#{toSafe}" itemValue="#{toSafe}" />
+
+                                <p:ajax update="glBankTransaction"
+                                        event="change"
+                                        />
+                            </p:selectOneMenu>
+                        </f:facet>
+                        <p:outputLabel value="#{glBankTransaction.bankToName}"/>
+                    </p:column>
+
+                    <p:column filterStyle="display:none"
+                              filterBy="#{glBankTransaction.valueLocal}" 
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['AMOUNT']}"
+                              sortBy="#{glBankTransaction.valueLocal}"
+                              style="width: 10vh;text-align: right;font-size:1.8vh;border-radius: 0px">
+                        <p:outputLabel value="#{glBankTransaction.valueLocal}"/>
+                    </p:column>
+
+                    <p:column filterStyle="display:none" 
+                              filterBy="#{glBankTransaction.date}" 
+                              filterMatchMode="contains"
+                              headerText="#{userData.userDDs['DATEE']}" 
+                              sortBy="#{glBankTransaction.date}" 
+                              style="width: 10vh;text-align: right;font-size:1.8vh;border-radius: 0px">
+                        <p:outputLabel value="#{glBankTransaction.date}" >
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                        </p:outputLabel>
+                    </p:column>
+
+                    <p:column  filterStyle="display:none"
+                               filterBy="#{glBankTransaction.remark}" 
+                               filterMatchMode="contains" 
+                               headerText="#{userData.userDDs['NOTE']}"
+                               sortBy="#{glBankTransaction.remark}"
+                               style="width: 12.5vh;text-align: right;font-size:1.8vh;border-radius: 0px">
+                        <p:outputLabel value="#{glBankTransaction.remark}" />
+                    </p:column>
+
+                    <p:column headerText="#{userData.userDDs['TRANSACTION']}"
+                              style="width: 10vh;text-align: center;font-size:1.8vh;border-radius: 0px">
+                        <p:commandButton class="seditButtons" update="@form" icon="fa fa-fw fa-edit"
+                                         title="#{userData.userDDs['EDIT']}"  
+                                         action="#{glBankTransactionListMB.goToEdit()}" 
+                                         rendered="#{userData.userScreens['glBankTransaction'].edit or userData.isAdmin}">
+                            <f:setPropertyActionListener value="#{glBankTransaction}" 
+                                                         target="#{glBankTransactionListMB.glBankTransactionSelected}" />
+                        </p:commandButton>
+
+                        <p:commandButton class="sdeleteButtons" update="@form" 
+                                         icon="fa fa-remove" 
+                                         title="#{userData.userDDs['DELETE']}" 
+                                         action="#{glBankTransactionListMB.delete}"
+                                         rendered="#{userData.userScreens['glBankTransaction'].delete or userData.isAdmin}"
+                                         disabled="#{glBankTransaction.postFlag == 1}"
+                                         >
+
+                            <f:setPropertyActionListener value="#{glBankTransaction}"
+                                                         target="#{glBankTransactionListMB.glBankTransactionEntitySelected}" />
+                            <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                        </p:commandButton>
+                        <p:commandButton  class="sprintButtons"  ajax="false" onclick="form.target = '_blank'" 
+                                          icon="fa fa-fw fa-print" style="background-color: #035C70 !important;border-radius: 3px;"
+                                          actionListener="#{glBankTransactionListMB.exportPDF}" 
+                                          rendered="#{userData.userScreens['glBankTransaction'].view or userData.isAdmin}"
+                                          >
+                            <f:attribute name="varValue" value="#{glBankTransaction}" />
+
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

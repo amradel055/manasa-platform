@@ -1,0 +1,178 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+
+
+
+        <h:form  dir="#{userData.dir}"  id="form" style="margin-right: 15px">
+            <p:fieldset legend="#{userData.userDDs['BILL_EXCHANG']}" style="margin-bottom:20px">
+
+                <div >
+                    <p:messages id="curmsg" 
+                                autoUpdate="true"
+                                showDetail="true" 
+                                rendered="true" closable="true"/>   
+                </div>
+                <div>
+
+                    <p:dataTable id="invInventoryTransactionlis"
+                                 draggableColumns="true"
+                                 draggableRows="true"
+                                 var="invInventoryTransactionlis" 
+                                 widgetVar="bTable" 
+                                 rowIndexVar="index" 
+                                 selection="#{invInventoryTransactionListMB.invInventoryTransactionDTOSelected}"
+                                 value="#{invInventoryTransactionListMB.invInventoryTransactionDTOList}"
+                                 rows="#{userData.rowListCount}" 
+                                 paginator="true"
+                                 emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" 
+                                 rowKey="#{invInventoryTransactionlis.index}"
+
+                                 sortBy="#{1}"
+                                 >
+
+
+
+                        <f:facet name="header">
+                            <p:commandButton  class="saddButton" icon="fa fa-plus" 
+                                              id="addA"
+                                              title="#{userData.userDDs['ADD']}" 
+                                              action="#{invInventoryTransactionListMB.goToAdd()}"
+                                              style="float:right" 
+                                              />
+
+
+
+
+                            <p:blockUI block="form" trigger="addA" animate="true" >
+
+                                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                            </p:blockUI> 
+
+                            <p:outputPanel  >
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                <p:inputText id="globalFilter" onkeyup="PF('bTable').filter()" style="width:150px" />
+                            </p:outputPanel>
+
+
+
+                        </f:facet>
+
+                        <p:column style="width: 8vh;text-align: -webkit-auto;font-size: 1.4vh" filterStyle="display:none" 
+                                  filterBy="#{invInventoryTransactionlis.serial}" 
+                                  filterMatchMode="contains" 
+                                  headerText="السريال"
+                                  sortBy="#{invInventoryTransactionlis.serial}"
+                                  >
+                            <p:outputLabel value="#{invInventoryTransactionlis.serial}" />
+                        </p:column>
+
+                        <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.4vh" filterStyle="display:none" 
+                                  filterBy="#{invInventoryTransactionlis.date}" 
+                                  filterMatchMode="contains"
+                                  headerText="التاريخ "
+                                  sortBy="#{invInventoryTransactionlis.date}" 
+                                  >
+                            <p:outputLabel value="#{invInventoryTransactionlis.date}" >
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            </p:outputLabel>                           
+                        </p:column>
+
+
+
+
+
+                        <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.6vh" filterStyle="display:none"
+                                  filterBy="#{invInventoryTransactionlis.supplierDate}"
+                                  filterMatchMode="contains" 
+                                  headerText=" تاريخ المورد"
+                                  sortBy="#{invInventoryTransactionlis.supplierDate}" 
+                                  >
+                            <p:outputLabel value="#{invInventoryTransactionlis.supplierDate}" >
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.6vh" filterStyle="display:none"
+                                  filterBy="#{invInventoryTransactionlis.remark}"
+                                  filterMatchMode="contains" 
+                                  headerText=" الملاحظات"
+                                  sortBy="#{invInventoryTransactionlis.remark}" 
+                                  >
+                            <p:outputLabel value="#{invInventoryTransactionlis.remark}" />
+                        </p:column>
+                        <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.6vh" filterStyle="display:none"
+                                  filterBy="#{invInventoryTransactionlis.sumQuantity}"
+                                  filterMatchMode="contains" 
+                                  headerText=" اجمالي الكميه"
+                                  sortBy="#{invInventoryTransactionlis.sumQuantity}" 
+                                  >
+                            <p:outputLabel value="#{invInventoryTransactionlis.sumQuantity}" />
+                        </p:column>
+
+
+                        <p:column style="width: 14vh;text-align: center;font-size: 1.8vh"
+                                  headerText="#{userData.userDDs['TRANSACTION']}" >
+
+
+
+                            <p:commandButton  class="seditButton" update="@form" 
+                                              icon="fa fa-fw fa-edit" 
+                                              title="#{userData.userDDs['EDIT']}" 
+                                              action="#{invInventoryTransactionListMB.goToEdit()}" 
+                                              >
+
+                                <f:setPropertyActionListener value="#{invInventoryTransactionlis.id}" 
+                                                             target="#{invInventoryTransactionListMB.invinventoryidselected}" />
+                            </p:commandButton>
+
+
+                            <p:commandButton  class="sdeleteButton" update="@form" 
+                                              icon="fa fa-remove" 
+                                              title="#{userData.userDDs['DELETE']}" 
+                                              action="#{invInventoryTransactionListMB.delete()}" 
+
+                                              >
+                                <f:setPropertyActionListener value="#{invInventoryTransactionlis}"
+                                                             target="#{invInventoryTransactionListMB.invInventoryTransactionDTOSelected}" />
+                                <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                            </p:commandButton>
+
+                            <p:commandButton   class="sprintButton"
+                                               update="@form"  onclick="form.target = '_blank'"  ajax="false"
+                                               icon="fa fa-fw fa-print" 
+                                               title="print" 
+                                               action="#{SalesInvoiceListMB.printA4()}" 
+                                               >
+
+                                <f:setPropertyActionListener value="#{invInventoryTransactionlis.id}" 
+                                                             target="#{SalesInvoiceListMB.salesInvoiceIdSeclected}" />
+                            </p:commandButton>
+
+
+                        </p:column>
+
+
+
+
+
+                    </p:dataTable> 
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+
+                </div>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

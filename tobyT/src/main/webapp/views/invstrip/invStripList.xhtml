@@ -1,0 +1,80 @@
+﻿<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form   style="margin-right: 20px"  dir="#{userData.dir}"  id="form">
+
+            <p:fieldset   legend="#{userData.userDDs['STORE_INVENTORY']}" style="margin-bottom:20px">
+
+
+                <p:dataTable
+                    draggableColumns="true"
+                    var="invStripTable" widgetVar="bTable"  rowIndexVar="index"
+                    value="#{invStripListMB.invStripEntityList}" rows="#{userData.rowListCount}"
+                    paginator="true" emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                    id="invStripnTable">
+
+                    <f:facet name="header">
+                        <p:commandButton class="saddButton" icon="fa fa-plus" 
+                                         id="addA"
+                                         title="#{userData.userDDs['ADD']}"
+                                         action="#{invStripListMB.goToAdd()}" style="float:right"/>
+                        <p:commandButton class="scloseButton"  icon="fa fa-fw fa-backward"  style="float: left" action="exit" />
+                        <p:blockUI block="form" trigger="addA" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+                        <p:outputPanel  >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('bTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column style="width: 14vh;font-size: 1.8vh;text-align: -webkit-auto" filterStyle="display:none" filterBy="#{invStripTable.serial}"
+                              filterMatchMode="contains" headerText="#{userData.userDDs['TRANSACTION_NO']}" sortBy="#{invStripTable.serial}">
+                        <p:outputLabel value="#{invStripTable.serial}" />
+                    </p:column>
+                    <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto" filterStyle="display:none" filterBy="#{invStripTable.stripDate}"
+                              filterMatchMode="contains" headerText="#{userData.userDDs['DATEE']}" sortBy="#{invStripTable.stripDate}" >
+                        <p:outputLabel value="#{invStripTable.stripDate}" >
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                        </p:outputLabel>
+                    </p:column>
+                    <p:column style="width: 14vh;font-size: 1.8vh;text-align: -webkit-auto" filterStyle="display:none" filterBy="#{invStripTable.stripDocument}"
+                              filterMatchMode="contains" headerText="#{userData.userDDs['INVEN_DOC']}" sortBy="#{invStripTable.stripDocument}" >
+                        <p:outputLabel value="#{invStripTable.stripDocument}"/>
+                    </p:column>
+                    <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto" filterStyle="display:none" filterBy="#{invStripTable.remark}"
+                              filterMatchMode="contains" headerText="#{userData.userDDs['REMARK']}" sortBy="#{invStripTable.remark}" >
+                        <p:outputLabel value="#{invStripTable.remark}" />
+                    </p:column>
+
+                    
+                    <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto" headerText="#{userData.userDDs['TRANSACTION']}" >
+                        <p:commandButton class="seditButton" update="@form" icon="fa fa-fw fa-edit" title="#{userData.userDDs['EDIT']}" action="#{invStripListMB.goToEdit()}">
+                            <f:setPropertyActionListener value="#{invStripTable.id}"  target="#{invStripListMB.invStripSelected}" />
+                        </p:commandButton>
+                        <p:commandButton class="sdeleteButton" update="@form" icon="fa fa-remove" title="#{userData.userDDs['DELETE']}" 
+                                         action="#{invStripListMB.delete}">
+                            <f:setPropertyActionListener value="#{invStripTable.id}" target="#{invStripListMB.invStripSelected}" />
+                            <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

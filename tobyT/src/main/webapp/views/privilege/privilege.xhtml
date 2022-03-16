@@ -1,0 +1,126 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
+    <ui:define name="content">
+        <h:form id="screenActionForm" dir="#{userData.dir}">
+            <div class="col-xs-12">
+                <p:commandButton value="Save" class="col-xs-2" action="#{privilegeListBean.goToEdit()}"></p:commandButton>
+            </div>
+            <div class="col-xs-12">
+                <p:dataTable var="role" value="#{privilegeListBean.roles}" rowIndexVar="index" class="col-xs-6" reflow="true" rows="5" paginator="true" selectionMode="single" selection="#{privilegeListBean.selectedRoleId}" rowKey="#{role.id}">
+                    <p:ajax event="rowSelect" listener="#{privilegeListBean.selectRole}" update="@form" />
+                    <p:ajax event="rowUnselect" listener="#{privilegeListBean.unselectRole}" update="@form" />
+                    <p:column headerText="#{lang.tableIndex}" class="col-xs-1">
+                        <h:outputText value="#{index + 1}"  />
+                    </p:column>
+                    <p:column headerText="اسم الدور" class="col-xs-3">
+                        <h:outputText value="#{role.name}"  />
+                    </p:column>
+                    <p:column headerText="اسم الشركة" class="col-xs-3">
+                        <h:outputText value="#{role.companyId.name}" />
+                    </p:column>
+                    <p:column headerText="كود الشركة" class="col-xs-3">
+                        <h:outputText value="#{role.companyId.code}" />
+                    </p:column>
+
+                    <p:commandButton  update="@form" title="عرض الصلاحيات" action="#{RoleListBean.delete()}" >
+                        <f:setPropertyActionListener value="#{role.id}" target="#{RoleListBean.selectedRole}" />
+                    </p:commandButton>
+                </p:dataTable>
+            </div>
+            <div class="col-xs-12" />
+            <div class="col-xs-12">
+                <p:dataTable var="privilege" value="#{privilegeListBean.privileges}" rowIndexVar="index" 
+                             class="col-xs-12" reflow="true" rows="5" paginator="true" editable="true">
+                    <p:ajax event="rowEdit" listener="#{privilegeListBean.onRowEdit}" update="@this" />
+                    <p:ajax event="rowEditCancel" listener="#{privilegeListBean.onRowCancel}" update="@this"/>
+                    <p:ajax event="cellEdit" listener="#{privilegeListBean.onCellEdit}" update="@this" />
+
+
+
+                    <p:column headerText="مسلسل" class="col-xs-1">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{index + 1}"  />
+                            </f:facet>
+                            <f:facet name="input">
+                                <h:outputText value="#{index + 1}"  />
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="اسم الشاشة" class="col-xs-2">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{privilege.screenId.name}"  />
+                            </f:facet>
+                            <f:facet name="input">
+                                <h:outputText value="#{privilege.screenId.name}"  />
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="عرض" class="col-xs-2">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{privilege.view}" />
+                            </f:facet>
+                            <f:facet name="input">
+                                <h:selectBooleanCheckbox value="#{privilege.view}" />
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="إضافة" class="col-xs-2">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{privilege.add}" />
+                            </f:facet>
+                            <f:facet name="input">
+                                <h:selectBooleanCheckbox value="#{privilege.add}" />
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="تعديل" class="col-xs-2">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{privilege.edit}" />
+                            </f:facet>
+                            <f:facet name="input">
+                                <h:selectBooleanCheckbox value="#{privilege.edit}" />
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="حذف" class="col-xs-2">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{privilege.delete}" />
+                            </f:facet>
+                            <f:facet name="input">
+                                <h:selectBooleanCheckbox value="#{privilege.delete}" />
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column class="col-xs-1">
+                        <p:rowEditor editTitle="تعديل" cancelTitle="إلفاء" saveTitle="حفظ" />
+                    </p:column>
+                </p:dataTable>
+                
+                
+                <p:selectOneMenu value="#{privilege.id}">
+                    <f:selectItem itemLabel="اختر" />
+                    <f:selectItem itemLabel="1" itemValue="1"/>
+                    <f:selectItem itemLabel="2" itemValue="2"/>
+                    <f:selectItem itemLabel="3" itemValue="3"/>
+                    <f:selectItem itemLabel="4" itemValue="4"/>
+                    <f:selectItem itemLabel="5" itemValue="5"/>
+                    
+                </p:selectOneMenu>
+            </div>
+        </h:form>
+    </ui:define>
+
+
+</ui:composition>

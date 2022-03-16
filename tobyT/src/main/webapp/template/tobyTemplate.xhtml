@@ -1,0 +1,217 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="description" content=""/>
+        <meta name="author" content=""/>
+
+
+        <p:idleMonitor timeout="1200000" >
+            <p:ajax event="idle" listener="#{userData.logout}"/>
+        </p:idleMonitor>
+
+        <title>TOBY</title>
+
+
+        <link href="#{request.contextPath}/resources/bootstrap-CSS/bootstrap.css" rel="stylesheet"/>
+
+
+        <!-- Custom CSS -->
+        <link href="#{request.contextPath}/resources/sb-admin-CSS/sb-admin2.css" rel="stylesheet"/>
+
+        <!--Custom CSS -->
+        <link href="#{request.contextPath}/resources/customcss/custom.css" rel="stylesheet"/>
+
+
+        <!-- Custom Fonts -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css"/>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css"/>
+
+        <link rel="shortcut icon" href=""/>
+
+    </h:head>
+
+    <h:body>
+
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0" dir="RTL">
+            <h:form id="formmenue">
+                <div class="navbar-header"> 
+                   
+                    <a class="navbar-brand">
+                        <h:panelGroup>
+                            <p:graphicImage library="img" name="tobylogo22.png" ></p:graphicImage>
+                        </h:panelGroup>
+
+                    </a>
+                </div>
+                <!-- /.navbar-header -->
+
+                <ul class="nav navbar-top-links navbar-right">
+
+                  
+                    <!-- /.dropdown -->
+                    <li class="dropdown">
+
+
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" >
+                            <i style="margin-right:8px" class="fa fa-user fa-fw"></i> <i class=""></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a href="../userprofile/userprofileform.xhtml"><i class="fa fa-user fa-fw"></i>حساب المستخدم</a>
+                            </li>
+                            <li><a style="padding-left:45px" href="#"><i class="fa fa-gear fa-fw" style="margin-left:1px"></i> الإعدادات</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li><i class="fa fa-sign-out fa-fw"></i>
+
+                                <h:panelGroup>
+                                    <p:commandButton  action="#{userData.logout}"
+                                                      id="logout" value="#{userData.userDDs['EXIT']}" ajax="false" />
+                                    <h:outputLabel value=" " style="">                                    
+                                    </h:outputLabel>
+                                </h:panelGroup>
+
+
+                            </li>
+                        </ul>
+
+
+                        <li>
+
+
+                            <h:panelGroup class="TopNavLinks"> 
+                                <h:outputText value="&#160;" />
+                                <p:outputLabel value="#{userData.user.name}" />
+                            </h:panelGroup> 
+                            <h:panelGroup class="TopNavLinks"> 
+                                <p:outputLabel value="#{userData.userDDs['BRANCH']}" />
+                            </h:panelGroup> 
+                            <h:panelGroup class="TopNavLinks">
+                                <p:selectOneMenu id="branchDropDown" value="#{userData.selectedBranch}"  filter="true" filterMatchMode="contains" >
+                                    <f:selectItems value="#{userData.branches}" var="branch" itemLabel="#{branch.nameAr}" itemValue="#{branch.id}"/> 
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                            <h:panelGroup class="TopNavLinks">
+                                <p:commandButton  action="#{userData.selectBranch}"
+                                                  id="go" value="#{userData.userDDs['APPLY']}" update=":formmenue" />
+                            </h:panelGroup>
+
+                            <h:panelGroup class="TopNavLinks">
+
+                                <p:outputLabel value="#{userData.company.name}" />
+
+                            </h:panelGroup>
+
+                            <h:panelGroup class="TopNavLinks" rendered="#{not userData.isAdmin}">
+
+                                <p:graphicImage  style="width: 150px; height: 50px" />
+
+                            </h:panelGroup>
+
+
+
+
+                        </li>
+
+
+
+
+
+
+                    </li>
+                    <!-- /.dropdown -->
+                </ul>
+
+
+
+
+
+
+
+
+
+
+            </h:form>
+        </nav>
+
+
+
+
+
+
+        <div id="content" class="content" dir="#{userData.dir}" style="margin-top: 10px" >  
+            <ui:insert name="content">Content</ui:insert>
+        </div>
+
+
+        <h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
+        <h:outputScript library="primefaces" name="jquery/jquery-plugins.js" target="head" />
+
+
+        <!-- Bootstrap Core JavaScript -->
+        <script src="#{request.contextPath}/resources/bootstrap-JS/bootstrap.js"></script>
+
+        <!-- Metis Menu Plugin JavaScript -->
+        <script src="#{request.contextPath}/resources/metisMenu-JS/metisMenu.js"></script>
+
+        <!-- Morris Charts JavaScript -->
+        <script src="#{request.contextPath}/resources/raphael-JS/raphael.js"></script>
+
+
+        <!-- Custom Theme JavaScript -->
+        <script src="#{request.contextPath}/resources/sb-admin-JS/sb-admin.js"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="#{request.contextPath}/resources/jscustom/custom.js"></script>
+        <script>
+
+                            $(document.ready(function ()
+                            {
+                            $(".panel").css("display", "block");
+                            });
+                            $(function () {
+                                var Accordion = function (el, multiple) {
+                                    this.el = el || {};
+                                    this.multiple = multiple || false;
+
+                                    // Variables privadas
+                                    var links = this.el.find('.link');
+                                    // Evento
+                                    links.on('click', {el: this.el, multiple: this.multiple}, this.dropdown)
+                                }
+
+                                Accordion.prototype.dropdown = function (e) {
+                                    var $el = e.data.el;
+                                    $this = $(this),
+                                            $next = $this.next();
+
+                                    $next.slideToggle();
+                                    $this.parent().toggleClass('open');
+
+                                    if (!e.data.multiple) {
+                                        $el.find('.submenu').not($next).slideUp().parent().removeClass('open');
+                                    }
+                                    ;
+                                }
+
+                                var accordion = new Accordion($('#accordion'), false);
+                            });
+
+
+
+        </script>
+
+
+    </h:body>
+
+</html>

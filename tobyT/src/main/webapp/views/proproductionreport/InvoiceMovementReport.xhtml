@@ -1,0 +1,264 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:body>
+
+            <h:form dir="RTL" style="margin-right: 20px" id="form" >
+
+                <p:fieldset  legend="الشاشة" id="stages"  style=" position: relative">
+                    <p:messages id="messages" showDetail="true" closable="true"/> 
+
+                    <div class="ui-g-6 ui-xl-6">
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:calendar style="width: 50%"  id="dateFrom"
+                                            value="#{invoiceMovementReportMB.printProductionDTO.fromDate}"
+                                            pattern="dd/MM/yyyy"  showButtonPanel="true" >
+
+                                </p:calendar>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px"  value="من تاريخ" />
+
+
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputText value="#{invoiceMovementReportMB.dayHijriFrom}" /> يوم
+                                <p:inputText value="#{invoiceMovementReportMB.monthHijriFrom}" />  شهر
+                                <p:inputText value="#{invoiceMovementReportMB.yearHijriFrom}" />  سنة
+                                <p:commandButton     class="saveButton" id="excuteFrom" 
+                                                     value="تنفيذ" 
+                                                     icon="fa fa-fw fa-save"
+                                                     action="#{invoiceMovementReportMB.convertDateFrom()}"
+                                                     update="dateFrom"
+                                                     />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px"  value="من تاريخ هجري" />
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:calendar style="width: 50%"  id="dateFrom1"
+                                            value="#{invoiceMovementReportMB.printProductionDTO.toDate}"
+                                            pattern="dd/MM/yyyy"  showButtonPanel="true" >
+
+                                </p:calendar>
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px"  value="الى تاريخ" />
+
+
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputText value="#{invoiceMovementReportMB.dayHijriTo}" /> يوم
+                                <p:inputText value="#{invoiceMovementReportMB.monthHijriTo}" />  شهر
+                                <p:inputText value="#{invoiceMovementReportMB.yearHijriTo}" />  سنة
+                                <p:commandButton     class="saveButton" id="excuteTo" 
+                                                     value="تنفيذ" 
+                                                     icon="fa fa-fw fa-save"
+                                                     action="#{invoiceMovementReportMB.convertDateTo()}"
+                                                     update="dateFrom1"
+                                                     />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px"  value="إلى تاريخ هجري" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <h:inputText value="#{invoiceMovementReportMB.printProductionDTO.fromInvInvoice}" />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px;margin-right: 1%" value="من فاتورة"/>
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <h:inputText value="#{invoiceMovementReportMB.printProductionDTO.toInvInvoice}" />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px;margin-right: 1%" value="الي فاتورة"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:selectCheckboxMenu id="gallary_From" value="#{invoiceMovementReportMB.printProductionDTO.gallaryFromList}" 
+                                                      converter="#{invoiceMovementReportMB.gallaryDTOConverters}"
+                                                      label="المعرض" style="width: 15rem"
+                                                      filter="true" filterMatchMode="startsWith" panelStyle="width: 15rem" scrollHeight="250">
+                                    <f:selectItems value="#{invoiceMovementReportMB.gallaryLists}" 
+                                                   var="gallary"
+                                                   itemLabel="#{gallary}"
+                                                   itemValue="#{gallary}"/>
+                                </p:selectCheckboxMenu>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px;margin-right: 1%" value=" معرض"/>
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:selectOneMenu style="width: 100%" id="invoiceType1" 
+                                                 value="#{invoiceMovementReportMB.invoiceType}">                                                             
+                                    <f:selectItem itemLabel="Sales مبيعات"  itemValue=""  />
+                                    <f:selectItem itemLabel="منيكانات الفروع"  itemValue="0"  />
+                                    <f:selectItem itemLabel="منيكانات القماشين"  itemValue="1"  />
+                                    <f:selectItem itemLabel="Relations علاقات عامة"  itemValue="2"  />
+                                    <f:selectItem itemLabel="تفصيل القماشين"  itemValue="3"  />
+                                    <f:selectItem itemLabel="Employees موظفى الفروع"  itemValue="4"  />
+                                    <f:selectItem itemLabel="Modify تعديلات"  itemValue="5"  />
+                                    <f:selectItem itemLabel="Others أخرى"  itemValue="6"  />
+                                </p:selectOneMenu>      
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 70px;" value="نوع الفاتورة"/>
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:selectBooleanCheckbox value="#{invoiceMovementReportMB.invoiceNotComplete}" itemLabel="Basic"/>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 70px;" value="فواتير لم تكتمل"/>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+                </p:fieldset>
+
+                <div class="ui-g-12 ui-xl-12">
+                    <div class="ui-g-6 ui-xl-6">
+
+
+                        <p:commandButton     class="saveButton" id="saveB" 
+                                             value="بحث" 
+                                             icon="fa fa-fw fa-save"
+                                             action="#{invoiceMovementReportMB.search()}"
+                                             update="table messages"
+                                             >
+
+                        </p:commandButton>
+                        <h:commandLink  class="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="table" 
+                                            fileName=" الشاشة"
+                                            postProcessor="#{invoiceMovementReportMB.postProcessXLS}" />  
+                        </h:commandLink> 
+
+
+                    </div>
+                </div>
+                <p:fieldset  legend="البيانات"   style="margin-bottom:20px">
+                    <p:dataTable  id="table"
+                                  var="data"
+                                  value="#{invoiceMovementReportMB.invoiceMovementReportList}"
+                                  draggableColumns="true"
+                                  paginator="true"
+                                  widgetVar="data" 
+                                  rowIndexVar="index" 
+                                  emptyMessage="EMPTY_TABLE"
+                                  rows="20" lazy="true"
+                                  >
+                        <p:column headerText="#" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="الفاتورة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.invoiceSerial}" />
+                        </p:column>
+                        <p:column headerText="الفرع" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.inventoryName}" />
+                        </p:column>
+                        <p:column headerText="اسم العميل" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.clientName}" />
+                        </p:column>
+
+                        <p:column headerText="عدد الثياب بلفاتورة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.numberTobInvoice}" />
+                        </p:column>
+
+                        <p:column headerText="تاريخ التسليم المشغل" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.factoryDate}">
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="عدد الثياب بالمشغل" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.numberToFactory}" />
+                        </p:column>
+
+                        <p:column headerText="تاريخ التسليم للطيار" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.deliveryDate}">
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="عدد الثياب للطيار" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.numberTobExitFactory}" />
+                        </p:column>
+                        <p:column headerText="تاريخ الاستلام بالمعرض" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.galaryDate}">
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="عدد الثياب بالمعرض" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.numberTobgallary}" />
+                        </p:column>
+                        <p:column headerText="تاريخ التسليم للعميل" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.clientDate}">
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
+                            </h:outputText>
+                        </p:column>
+
+
+
+
+                    </p:dataTable>
+                    <div class="ui-g-12 ui-md-6">
+                        <p:commandButton class="printButton"  icon="fa fa-fw fa-print"
+                                         onclick="form.target = '_blank'" ajax="false"
+                                         value="#{userData.userDDs['PRINT']}"
+                                         actionListener="#{invoiceMovementReportMB.exportPDF}"/>
+                    </div>
+
+
+                </p:fieldset>
+
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+

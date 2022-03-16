@@ -1,0 +1,668 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:define name="content">
+
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form" dir="#{userData.dir}" class='formmargin'>
+
+            <p:fieldset legend="#{userData.userDDs['RECEIPT']}" id="whole" >
+
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" showDetail="true" rendered="true" autoUpdate="true" closable="true"/>   
+                </div>
+
+                <div class="ui-g-6 ui-xl-6">
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:calendar id="date" 
+                                        value="#{SettlementDeedFormMB.glBankTransactionEntity.date}"
+                                        pattern="dd/MM/yyyy"
+                                        style="width:50%">
+
+                                <p:ajax event="dateSelect" update="form" listener="#{SettlementDeedFormMB.updateTransactionRate}" />
+                            </p:calendar>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width:80px" value="#{userData.userDDs['DATEE']}"/>
+                        </div>
+                    </div>
+
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:inputText value="#{SettlementDeedFormMB.dayHijriFrom}" /> يوم
+                            <p:inputText value="#{SettlementDeedFormMB.monthHijriFrom}" />  شهر
+                            <p:inputText value="#{SettlementDeedFormMB.yearHijriFrom}" />  سنة
+                            <p:commandButton     class="saveButton" id="excuteFrom" 
+                                                 value="تنفيذ" 
+                                                 icon="fa fa-fw fa-save"
+                                                 action="#{SettlementDeedFormMB.convertDateFrom()}"
+                                                 update="date"
+                                                 />
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 50px"  value="من تاريخ هجري" />
+                        </div>
+                    </div>
+
+
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:inputText style="width: 38%!important" id="notes2"
+                                         value="#{SettlementDeedFormMB.glBankTransactionEntity.remark2}">
+
+                                <p:ajax event="blur" listener="#{SettlementDeedFormMB.catchValues()}" />
+                            </p:inputText>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width:85px" value="#{userData.userDDs['HANDLING']}"/>
+                        </div>
+                    </div>
+
+                    
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:selectOneMenu style="width: 85%" id="running_GlAccount_ID" 
+                                             filter="true" filterMatchMode="contains"   
+                                             value="#{SettlementDeedFormMB.glBankTransactionEntity.costAccount}" 
+                                             converter="#{SettlementDeedFormMB.runningAccountDTOConverter}"   >
+                                <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
+                                <f:selectItems value="#{SettlementDeedFormMB.glAccountList}"  var="account" itemLabel="#{account}" itemValue="#{account}"/>
+                                <p:ajax event="itemSelect" listener="#{SettlementDeedFormMB.updateCostCenter()}" update="costCenter" />
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 65px" value="رقم الحساب الدائن"/>
+
+                        </div>
+                    </div>
+
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:selectOneMenu style="width:55%" id="costCenter" filter="true" filterMatchMode="contains"   
+                                             value="#{SettlementDeedFormMB.glBankTransactionEntity.costCenterDTO}" 
+                                             converter="#{SettlementDeedFormMB.costCenterHeadConverter}"   >
+                                <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
+                                <f:selectItems value="#{SettlementDeedFormMB.costCenterHeadList}"  var="cost" itemLabel="#{cost}" itemValue="#{cost}"/>
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width:64px;" value="مركز التكلفة"/>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-g-6 ui-xl-6">
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel  style="width: 50%" id="settelmentId" value="#{SettlementDeedFormMB.glBankTransactionEntity.serial}"/>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width:65px;margin-right: 6%" value="#{userData.userDDs['SERIAL']}"/>
+                        </div>
+                    </div>
+
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:inputText style="width: 38%!important" id="notes"
+                                         value="#{SettlementDeedFormMB.glBankTransactionEntity.remark}">
+                                <p:ajax event="blur" listener="#{SettlementDeedFormMB.catchValues()}" />
+
+                            </p:inputText>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width:64px;margin-right: 6%;" value="#{userData.userDDs['STATEMENT']}"/>
+                        </div>
+                    </div>
+
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:selectOneMenu id="group" value="#{SettlementDeedFormMB.gallaryDTOSelect}" rendered="#{SettlementDeedFormMB.organizationSiteView}"
+                                             converter="#{SettlementDeedFormMB.gallaryDTOConverters}">
+                                <f:selectItem itemLabel="اختر معرض" itemValue=""/>
+                                <f:selectItems value="#{SettlementDeedFormMB.gallaryLists}" 
+                                               var="gallary"
+                                               itemLabel="#{gallary}"
+                                               itemValue="#{gallary}" />
+                                <p:ajax listener="#{supplierAccountReportMB.hishis()}" />
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 50px;margin-right: 1%" value="المعرض" rendered="#{SettlementDeedFormMB.organizationSiteView}"/>
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <p:fieldset id="radioLinks"  legend="#{userData.userDDs['HAND_HANDLE']}"   >
+                            <p:selectOneRadio id="console" 
+                                              value ="#{SettlementDeedFormMB.glBankTransactionEntity.organizationType}">
+
+                                <f:selectItem itemLabel="#{userData.userDDs['CUSTOMER']}"  itemValue="0" itemDisabled="#{not SettlementDeedFormMB.printButton}" />                            
+                                <f:selectItem itemLabel="#{userData.userDDs['SUPPLIER']}" itemValue="1" itemDisabled="#{not SettlementDeedFormMB.printButton}"/>
+                                <p:ajax event="click" listener="#{SettlementDeedFormMB.showOrHideDialog}" update="form"/> 
+                            </p:selectOneRadio>
+
+                            <p:dialog modal="true"
+                                      position='center,center'
+                                      minHeight="40" minWidth="100"
+                                      header="#{userData.userDDs['WARNING']}" widgetVar="dlg1"  >
+
+                                <p:ajax event="close" listener="#{SettlementDeedFormMB.changeOrganizationSiteCancel()}" update="radioLinks console"/>
+
+                                <h:outputText value="#{userData.userDDs['ARE_YOU_SU_CH_ORG_SI']}"  />
+
+
+                                <p:commandButton id="saveIm"
+                                                 title="#{userData.userDDs['YES']}" 
+                                                 value="#{userData.userDDs['YES']}"
+                                                 action ="#{SettlementDeedFormMB.changeOrganizationSiteOk()}"
+                                                 icon="fa fa-fw fa-save"
+                                                 validateClient="true" 
+                                                 onclick="PF('dlg1').hide();"
+                                                 style="background-color: #0059b3"
+                                                 update="radioLinks glBankTransactionDetailsTable" />
+                                <p:commandButton 
+                                    title="#{userData.userDDs['NO']}" 
+                                    value="#{userData.userDDs['NO']}" 
+                                    action="#{SettlementDeedFormMB.changeOrganizationSiteCancel()}"
+                                    icon="fa fa-fw fa-close" 
+                                    update="radioLinks console"
+                                    onclick="PF('dlg1').hide();"
+                                    style="margin: 10px;background-color: #0059b3"/>
+
+
+                            </p:dialog> 
+
+                        </p:fieldset>
+                    </div>
+                </div>
+
+                <h:panelGrid id="fourthSegment"  rendered="#{SettlementDeedFormMB.checkView}">
+
+
+                    <div   class="ui-g-12 ui-g-nopad">
+                        <div class="ui-g">
+
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 63px;margin-right: 3.5%;" value="#{userData.userDDs['CHECK_NUM']}"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:inputText style="width: 24.5%;" value="#{SettlementDeedFormMB.glBankTransactionEntity.chequeNumber}"/>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6"> 
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 65px;margin-right: 3.3%;" value="#{userData.userDDs['CHECK_DATE']}"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:calendar value="#{SettlementDeedFormMB.glBankTransactionEntity.chequeDate}"
+                                                    pattern="MM/dd/yyyy"
+                                                    style="width:37%">
+
+                                        </p:calendar>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 65px;margin-right: 3.3%;" value="#{userData.userDDs['DUE_DATE']}"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:calendar value="#{SettlementDeedFormMB.glBankTransactionEntity.chequeDueDate}"
+                                                    pattern="MM/dd/yyyy"
+                                                    style="width:50%!important">
+
+                                        </p:calendar>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:fieldset  legend="#{userData.userDDs['CHECK_STATUS']}"  style="width: 99%;" id="radioLinks2">
+                                            <p:selectOneRadio id="console2" 
+                                                              disabled="#{not SettlementDeedFormMB.payed}"
+                                                              value ="#{SettlementDeedFormMB.glBankTransactionEntity.chequeStatus}" >
+
+                                                <f:selectItem itemLabel="#{userData.userDDs['NOT_PAID']}"  itemValue="0"  />                            
+                                                <f:selectItem itemLabel="#{userData.userDDs['PAID']}" itemValue="1" />
+                                                <f:selectItem itemLabel="#{userData.userDDs['CANCELED']}" itemValue="2" />
+                                                <f:selectItem itemLabel="#{userData.userDDs['PARTIAL']}" itemValue="3" />
+
+                                            </p:selectOneRadio>
+                                        </p:fieldset>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                    </div>
+
+                </h:panelGrid>
+
+
+                <h:panelGrid id="fifthSegment"  rendered="#{SettlementDeedFormMB.lineCheckView}">
+
+
+                    <div   class="ui-g-12 ui-g-nopad">
+                        <div class="ui-g">
+
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <p:fieldset id="radioLinks3" legend="#{userData.userDDs['CHECKSTATUS']}" style="margin-bottom:20px;width: 99%">
+                                        <p:selectOneRadio id="console3" 
+                                                          disabled="#{not SettlementDeedFormMB.payed}"
+                                                          value ="#{SettlementDeedFormMB.glBankTransactionEntity.chequeStatus}" >
+
+                                            <f:selectItem itemLabel="#{userData.userDDs['NOT_PAID']}"  itemValue="0"  />                            
+                                            <f:selectItem itemLabel="#{userData.userDDs['PAID']}" itemValue="1" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['CANCELED']}" itemValue="2" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['PARTIAL']}" itemValue="3" />
+
+                                        </p:selectOneRadio>
+                                    </p:fieldset>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                    </div>
+                </h:panelGrid>
+
+
+
+            </p:fieldset>
+
+
+
+            <!-- begin table -->
+            <p:fieldset legend="#{userData.userDDs['RECEIPT_DATA']}"  style="margin:20px 1px">
+
+
+                <div class="col-xs-12">
+                    <p:messages id="curmsg2" showDetail="true" rendered="true" autoUpdate="true" closable="true"/>   
+                </div>
+
+                <p:dataTable id="glBankTransactionDetailsTable"
+
+                             var="glBankTransactionDetailsTable"
+                             rowIndexVar="index" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             sortBy="#{1}"
+                             selectionMode="single"
+                             selection="#{SettlementDeedFormMB.glBankTransactionDetailEntitySelected}"
+                             widgetVar="glBankTransactionDetailsTable"
+                             rowKey="#{glBankTransactionDetailsTable.index}"
+                             value="#{SettlementDeedFormMB.glBankTransactionDetailEntityList}" >
+
+
+                    <f:facet name="header" class="col-md-12">
+                        <p:commandButton id="addnew"
+                                         class="saddButton"
+                                         icon="fa fa-plus"
+                                         title="#{userData.userDDs['ADD']}" 
+                                         actionListener="#{SettlementDeedFormMB.addGlBankTransactionDetail()}" 
+                                         update=":form:curmsg glBankTransactionDetailsTable" 
+                                         disabled="#{SettlementDeedFormMB.glBankTransactionEntity.postFlag == 1}"
+
+                                         ajax="true"
+                                         style="float:right"/>
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('glBankTransactionDetailsTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:ajax  event="rowSelect" 
+                             listener="#{SettlementDeedFormMB.onRowSelectDetails}"                                
+                             update="glBankTransactionDetailsTable"/>
+
+
+                    <p:ajax  event="rowUnselect" listener="#{SettlementDeedFormMB.onRowUnselect}" update="glBankTransactionDetailsTable" />
+
+                    <p:column headerText="#{userData.userDDs['SERIES1']}"  style="width: 8vh;font-size: 1.8vh;text-align: right;border-radius: 0px">
+                        <h:outputText value="#{glBankTransactionDetailsTable.serial}"  />
+                    </p:column>
+                    <p:column  style="width: 17vh;font-size: 1.8vh;text-align: right" headerText="#{userData.userDDs['ORGAN_SIDE_NA']}" rendered="#{SettlementDeedFormMB.organizationSiteView}">
+
+                        <p:autoComplete style="width:95%!important" 
+                                        converter="#{SettlementDeedFormMB.invOrganizationSiteDTOConverter}"
+                                        value="#{glBankTransactionDetailsTable.invOrganizationSite}"
+                                        var="supplier"
+                                        itemLabel="#{supplier}" 
+                                        itemValue="#{supplier}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{SettlementDeedFormMB.completeCustomerFrom}"
+                                        rendered="#{glBankTransactionDetailsTable.markEdit  and SettlementDeedFormMB.glBankTransactionEntity.id eq null}"
+                                        widgetVar="supplier"
+                                        >
+
+                            <p:ajax update="@form"
+                                    event="itemSelect"
+                                    process="@this"
+                                    listener="#{SettlementDeedFormMB.updateDebitAccount}" />
+                        </p:autoComplete>
+                        <h:outputText value="#{glBankTransactionDetailsTable.invOrganizationSite.name}"  rendered="#{not glBankTransactionDetailsTable.markEdit}"/>
+
+                    </p:column>
+
+                    <p:column  style="width: 17vh;font-size: 1.8vh;text-align: right" 
+                               headerText="الفواتير" rendered="#{SettlementDeedFormMB.organizationSiteView}">
+
+                        <p:outputLabel value="#{glBankTransactionDetailsTable.invoiceId}" 
+                                       rendered="#{not glBankTransactionDetailsTable.markEdit}" />
+
+                        <p:selectOneMenu  id="invoice" style="width:100%"  rendered="#{glBankTransactionDetailsTable.markEdit}"
+                                          value="#{glBankTransactionDetailsTable.invoiceId}">
+                            <f:selectItem itemLabel="اختر الفاتوره "/>
+                            <f:selectItems  var="inninvoice"
+                                            value="#{glBankTransactionDetailsTable.glBankTransactionInvoiceViewList}"
+                                            itemLabel="#{inninvoice.serial}"
+                                            itemValue="#{inninvoice.invoiceId}"/>
+                        </p:selectOneMenu>
+
+                    </p:column>
+
+
+                    <p:column style="width: 14vh;font-size: 1.8vh;text-align: right" 
+                              filterBy="#{userData.userDDs['ACCOUNT_NUMBER']}"  filterMatchMode="contains" sortBy="#{userData.userDDs['ACCOUNT_NUMBER']}" filterable="false"
+                              headerText="#{userData.userDDs['ACCOUNT_NUMBER']}"  rendered="#{SettlementDeedFormMB.organizationSiteView}">
+                        <h:outputText value="#{glBankTransactionDetailsTable.invOrganizationSite.accountId.accNumber}"  />
+                    </p:column>
+
+
+                    <p:column style="width: 12vh;font-size: 1.8vh;text-align: right" 
+                              headerText="#{userData.userDDs['ACCOUNT_NAM']}" 
+                              filterBy="#{glBankTransactionDetailsTable.invOrganizationSite.accountId.name}"  
+                              filterMatchMode="contains" sortBy="#{glBankTransactionDetailsTable.invOrganizationSite.accountId.name}" filterable="false"
+                              rendered="#{SettlementDeedFormMB.organizationSiteView}" >
+                        <h:outputText value="#{glBankTransactionDetailsTable.invOrganizationSite.accountId.name}"  />
+                    </p:column>
+
+
+
+
+                    <p:column  style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" 
+                               filterBy="#{glBankTransactionDetailsTable.glAccount.name}"  
+                               filterMatchMode="contains" sortBy="#{glBankTransactionDetailsTable.glAccount.name}" filterable="false"
+                               headerText="#{userData.userDDs['ACCOUNT_NAM']}" rendered="#{SettlementDeedFormMB.accounts}">
+
+                        <p:autoComplete style="width: 200%;font-size: 1.8vh;text-align: right"  id="GlAccount_ID_from" 
+
+                                        converter="#{SettlementDeedFormMB.glAccountConverter}"
+                                        value="#{glBankTransactionDetailsTable.glAccount}"
+                                        var="p"
+                                        itemLabel="#{p}" 
+                                        itemValue="#{p}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{SettlementDeedFormMB.completeGlAccount}" 
+                                        rendered="#{glBankTransactionDetailsTable.markEdit and SettlementDeedFormMB.glBankTransactionEntity.id eq null}"
+                                        widgetVar="p"
+                                        >
+                            <f:attribute name="varValue" value="#{glBankTransactionDetailsTable}" />
+
+                            <p:ajax 
+                                event="itemSelect"
+                                listener="#{SettlementDeedFormMB.notLoseData}" />
+                        </p:autoComplete>  
+                        <h:outputText value="#{glBankTransactionDetailsTable.glAccount.name}"  rendered="#{not glBankTransactionDetailsTable.markEdit or SettlementDeedFormMB.glBankTransactionEntity.id ne null}" style="width: auto"/>
+                    </p:column>
+
+                    <p:column  style="width: 18vh;font-size: 1.8vh;text-align: right;border-radius: 0px" 
+                               id="value"  headerText="#{userData.userDDs['AMOUNT']}">
+
+
+                        <p:inputNumber id="valueT" value="#{glBankTransactionDetailsTable.value}" 
+                                       rendered="#{glBankTransactionDetailsTable.markEdit}" style="width: 25em;">
+                            <p:ajax event="blur" 
+                                    listener="#{SettlementDeedFormMB.updateAllSummations}"
+                                    />
+                        </p:inputNumber>
+                        <h:outputText value="#{glBankTransactionDetailsTable.value}"
+                                      rendered="#{not glBankTransactionDetailsTable.markEdit}"/>
+
+                    </p:column>
+                    <p:column  style="width: 18vh;font-size: 1.8vh;text-align: right;border-radius: 0px" 
+                               id="commition"  headerText="العمولة">
+
+
+                        <p:inputNumber id="commitionT" value="#{glBankTransactionDetailsTable.bankCommition}" 
+                                       rendered="#{glBankTransactionDetailsTable.markEdit}" style="width: 25em;">
+                            <p:ajax event="blur" 
+                                    listener="#{SettlementDeedFormMB.updateAllSummations}"
+                                    />
+                        </p:inputNumber>
+                        <h:outputText value="#{glBankTransactionDetailsTable.bankCommition}"
+                                      rendered="#{not glBankTransactionDetailsTable.markEdit}"/>
+
+                    </p:column>
+                    <p:column  style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px"  id="costCode" 
+                               filterBy="#{glBankTransactionDetailsTable.costCenter.name}"  
+                               filterMatchMode="contains" sortBy="#{glBankTransactionDetailsTable.costCenter.name}" filterable="false"
+                               headerText="#{userData.userDDs['COST_COD']}" >
+
+
+                        <p:autoComplete style="width: 200%;font-size: 1.8vh;text-align: right;border-radius: 0px" id="Cost_Center_From" 
+
+                                        converter="#{SettlementDeedFormMB.costCenterConverter}"
+                                        value="#{glBankTransactionDetailsTable.costCenter}"
+                                        var="cost"
+                                        itemLabel="#{cost}" 
+                                        itemValue="#{cost}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{SettlementDeedFormMB.completeCostCenter}"
+                                        rendered="#{glBankTransactionDetailsTable.markEdit}"
+                                        widgetVar="cost">
+                            <p:ajax 
+                                event="itemSelect"
+                                listener="#{SettlementDeedFormMB.notLoseData}" />
+                        </p:autoComplete>
+                        <h:outputText value="#{glBankTransactionDetailsTable.costCenter.name}"  rendered="#{not glBankTransactionDetailsTable.markEdit}"/>
+
+                    </p:column>
+
+
+
+
+                    <p:column  style="width: 12vh;font-size: 1.8vh;text-align: right;border-radius: 0px"  id="Unit" headerText="#{userData.userDDs['UNIT_CODE']}">
+                        <p:autoComplete style="width: 200%;font-size: 1.8vh;text-align: right"  id="ADMIN_UNIT_FROM" 
+
+                                        converter="#{SettlementDeedFormMB.glAdminUnitConverter}"
+                                        value="#{glBankTransactionDetailsTable.glAdminUnit}"
+
+                                        var="admin"
+                                        itemLabel="#{admin}" 
+                                        itemValue="#{admin}" 
+                                        forceSelection="true" 
+
+                                        completeMethod="#{SettlementDeedFormMB.completeAdminUnit}"
+                                        rendered="#{glBankTransactionDetailsTable.markEdit}"
+                                        widgetVar="admin">
+
+                            <p:ajax 
+                                event="itemSelect"
+                                listener="#{SettlementDeedFormMB.notLoseData}" />
+                        </p:autoComplete>
+                        <h:outputText value="#{glBankTransactionDetailsTable.glAdminUnit.name}"  rendered="#{not glBankTransactionDetailsTable.markEdit}"/>
+
+                    </p:column>
+
+
+                    <p:column  style="width: 14vh;font-size: 1.8vh;text-align: right;border-radius: 0px" id="remarks"  headerText="#{userData.userDDs['STATEMENT']}">
+
+                        <p:inputText id="note" value="#{glBankTransactionDetailsTable.remarks}"
+                                     style="width:100%" rendered="#{glBankTransactionDetailsTable.markEdit}"
+                                     >
+
+                            <p:ajax event="blur" 
+                                    listener="#{SettlementDeedFormMB.notLoseData}"                                      
+                                    />
+                        </p:inputText>
+                        <h:outputText value="#{glBankTransactionDetailsTable.remarks}"
+                                      rendered="#{not glBankTransactionDetailsTable.markEdit}"/>
+
+                    </p:column>
+
+
+
+
+
+                    <p:columnGroup id="footer1" type="footer" >
+                        <p:row >
+                            <p:column colspan="5" style="text-align:right;border-radius: 0px" footerText="#{userData.userDDs['TOTAL']}  :" />
+                            <p:column style="border-radius: 0px" rendered="#{SettlementDeedFormMB.organizationSiteView}"/>
+                            <p:column  style="border-radius: 0px" rendered="#{SettlementDeedFormMB.organizationSiteView}" />
+                            <p:column style="border-radius: 0px" id="valueSummary2" footerText="#{SettlementDeedFormMB.valueSummary}" />
+                            <p:column  style="border-radius: 0px"/>
+
+                        </p:row>
+                    </p:columnGroup>
+
+
+                    <p:column style="width: 10vh;font-size: 1.8vh;text-align: right;border-radius: 0px" 
+                              headerText="#{userData.userDDs['TRANSACTION']}">
+
+                        <p:commandButton 
+                            class="printButtons"
+                            id="b71" value="كشف حساب" 
+                            title="كشف الحساب" onclick="form.target = '_blank'" 
+                            ajax="false"
+                            rendered="#{glBankTransactionDetailsTable.invOrganizationSite ne null}"
+                            actionListener="#{SettlementDeedFormMB.goTOrganizationSiteacoount(glBankTransactionDetailsTable.invOrganizationSite.id)}"  
+                            />
+
+                        <p:commandButton 
+                            class="saddButtons"
+                            id="b7" icon="fa fa-plus"
+                            title="#{userData.userDDs['ADD']}" 
+
+                            actionListener="#{SettlementDeedFormMB.addGlBankTransactionDetail()}"  
+                            update=":form:curmsg glBankTransactionDetailsTable" 
+                            ajax="true" />
+
+                        <p:commandButton  class="sdeleteButtons"
+                                          update="glBankTransactionDetailsTable"
+                                          title="#{userData.userDDs['DELETE']}" 
+                                          style=""
+                                          action="#{SettlementDeedFormMB.deleteGlBankTransactionDetail()}"
+                                          icon="fa fa-remove" >
+
+                            <f:setPropertyActionListener value="#{glBankTransactionDetailsTable}"
+                                                         target="#{SettlementDeedFormMB.glBankTransactionDetailEntitySelected}"/>
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                       icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column >
+                </p:dataTable>
+
+
+                <h:panelGrid columns="1" class="centerButtons">
+
+                    <h:panelGroup>
+
+                        <p:commandButton  class="saveButton" id="saveB" 
+                                          title="#{userData.userDDs['SAVE']}" 
+                                          value="#{userData.userDDs['SAVE']}" 
+                                          update="@form"
+                                          action="#{SettlementDeedFormMB.save()}"
+                                          rendered="#{(userData.userScreens['settlementdeed'].add or userData.userScreens['settlementdeed'].edit) or userData.isAdmin}"
+                                          />
+                        <p:commandButton  class="newButton" title="#{userData.userDDs['RESET']}" 
+                                          immediate="true" update="@form"
+                                          id="newA"
+                                          style=""
+                                          value="#{userData.userDDs['NEW']}"
+                                          actionListener="#{SettlementDeedFormMB.reset()}"   />
+
+
+
+                        <p:commandButton class="printButtons"
+                                         ajax="false" 
+                                         onclick="form.target = '_blank'" 
+                                         title="#{userData.userDDs['PRINT']}"
+                                         value="#{userData.userDDs['PRINT']}" 
+                                         actionListener="#{SettlementDeedFormMB.exportPDFVoutcher}" 
+                                         rendered="#{ SettlementDeedFormMB.glBankTransactionEntity.id gt 0}"/>
+
+
+                        <p:commandButton  class="closeButton" title="#{userData.userDDs['BACK']}" 
+                                          immediate="true"
+                                          value="#{userData.userDDs['BACK']}" 
+                                          style=""
+                                          action="#{SettlementDeedFormMB.exit()}"   />
+                        <br/>
+
+                    </h:panelGroup>
+                </h:panelGrid>
+
+
+
+                <p:blockUI block="form" trigger="saveB newA" animate="true" >
+
+                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                </p:blockUI> 
+            </p:fieldset>
+        </h:form>
+        <script>
+
+            document.addEventListener("keydown", function (e) {
+                console.log(e.which);
+                if (e.which === 13) {
+                    e.preventDefault();
+
+                    //                    var ss = document.getElementById("form:settelmentId2").value;
+                    //                    console.log(ss);
+                    //                    sessionStorage.setItem(ss, ss);
+                    //                    var field = document.getElementById("form:hidden2");
+                    //                    field.value = sessionStorage.getItem(ss);
+                    //console.log(field);
+                    //sessionStorage.clear();
+                    return false;
+                }
+                ;
+            });
+
+            function someFunc() {
+                var ss = document.getElementById("form:settelmentId2").value;
+                console.log(ss);
+                sessionStorage.setItem(ss, ss);
+                var field = document.getElementById("form:hidden2");
+                field.value = sessionStorage.getItem(ss);
+            }
+        </script>
+    </ui:define>
+</ui:composition>

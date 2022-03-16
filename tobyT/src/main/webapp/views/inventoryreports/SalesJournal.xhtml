@@ -1,0 +1,437 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form  id="form" dir="#{userData.dir}"  class='formmargin'>
+
+            <p:fieldset style=" position: relative"  legend="#{userData.userDDs['SALES_JOURNAL']}"> 
+
+
+                <div class="ui-g firstset" id="firstSegment">
+
+                    <div class="ui-g-6 ui-xl-6">
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:calendar pattern="dd/MM/yyyy" 
+                                            value="#{salesJournalReportMB.salesJournalSearchBean.dateFrom}"
+                                            style="width:50%">
+
+                                </p:calendar>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel  style="width: 100px;" value="#{userData.userDDs['FROM_DATE']}"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:calendar pattern="dd/MM/yyyy" 
+                                            value="#{salesJournalReportMB.salesJournalSearchBean.dateTo}"
+                                            style="width:50%">
+
+                                </p:calendar>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel  style="width: 100px" value="#{userData.userDDs['TO_DATE']}"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete style="width:34%!important" 
+
+                                                dropdown="true"
+                                                converter="#{salesJournalReportMB.invDelegatorConverter}"
+                                                value="#{salesJournalReportMB.salesJournalSearchBean.fromDelegator}"
+
+                                                var="fromDelegator"
+                                                itemLabel="#{fromDelegator}" 
+                                                itemValue="#{fromDelegator}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{salesJournalReportMB.completDelegator}" >
+
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px;" value="#{userData.userDDs['FROM_DELE']}"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete style="width:34%!important" 
+
+                                                dropdown="true"
+                                                converter="#{salesJournalReportMB.invDelegatorConverter}"
+                                                value="#{salesJournalReportMB.salesJournalSearchBean.toDelegator}"
+
+                                                var="toDelegator"
+                                                itemLabel="#{toDelegator}" 
+                                                itemValue="#{toDelegator}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{salesJournalReportMB.completDelegator}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_DELE']}"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete id="purchaseIdFrom"
+                                                style="width:34%!important " 
+                                                dropdown="true"
+
+                                                converter="#{salesJournalReportMB.invInvoiceSalesConverter}"
+                                                value="#{salesJournalReportMB.salesJournalSearchBean.fromserial}"
+
+                                                var="purchasePerson"
+                                                itemLabel="#{purchasePerson}" 
+                                                itemValue="#{purchasePerson}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{salesJournalReportMB.completeSalesInvoice}">
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px;" value="#{userData.userDDs['FROM_INVOI_NO']}"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete id="purchaseIdTo"
+                                                style="width:34%!important " 
+                                                dropdown="true"
+
+                                                converter="#{salesJournalReportMB.invInvoiceSalesConverter}"
+                                                value="#{salesJournalReportMB.salesJournalSearchBean.toserial}"
+
+                                                var="purchasePerson"
+                                                itemLabel="#{purchasePerson}" 
+                                                itemValue="#{purchasePerson}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{salesJournalReportMB.completeSalesInvoice}">
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_INVOI_NO']}"/>
+
+                            </div>
+                        </div>
+                          <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:selectBooleanCheckbox value="#{salesJournalReportMB.salesJournalSearchBean.isReturn}">
+                                    <p:ajax update="reportDB" listener="#{salesJournalReportMB.search()}" />
+                                </p:selectBooleanCheckbox>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px;" value="#{userData.userDDs['SHOW_RETURNS']}"/>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ui-g-6 ui-xl-6">
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:selectOneMenu style="width:35%;"  filter="true" filterMatchMode="contains"   value="#{salesJournalReportMB.salesJournalSearchBean.frompaymentType}" >
+
+                                    <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" />
+                                    <f:selectItem itemLabel="#{userData.userDDs['CASH']}"  itemValue="0" />
+                                    <f:selectItem itemLabel="#{userData.userDDs['POSTPONE']}"  itemValue="1" />
+                                    <f:selectItem itemLabel="#{userData.userDDs['CREDIT_DOCUMENT']}"  itemValue="2" />
+                                    <f:selectItem itemLabel="نقطة بيع"  itemValue="3" />
+                                </p:selectOneMenu>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel class="floatLeft" style="width: 105px;" value="#{userData.userDDs['FROM_INVOI_TYP']}"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:selectOneMenu style="width:35%;" filter="true" filterMatchMode="contains"   value="#{salesJournalReportMB.salesJournalSearchBean.topaymentType}"  >
+                                    <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  />
+                                    <f:selectItem itemLabel="#{userData.userDDs['CASH']}"  itemValue="0" />
+                                    <f:selectItem itemLabel="#{userData.userDDs['POSTPONE']}"  itemValue="1" />
+                                    <f:selectItem itemLabel="#{userData.userDDs['CREDIT_DOCUMENT']}"  itemValue="2" />
+                                    <f:selectItem itemLabel="نقطة بيع"  itemValue="3" />
+                                </p:selectOneMenu>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel class="floatLeft" style="width: 105px" value="#{userData.userDDs['TO_INVOI_TYP']}"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete style="width:34%!important" 
+
+                                                dropdown="true"
+                                                converter="#{salesJournalReportMB.invCustomerConverter}"
+                                                value="#{salesJournalReportMB.salesJournalSearchBean.fromCustomer}"
+                                                var="customer"
+                                                itemLabel="#{customer}" 
+                                                itemValue="#{customer}"
+                                                forceSelection="true" 
+                                                completeMethod="#{salesJournalReportMB.completCustomer}">
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px;" value="#{userData.userDDs['FROM_CUSTOM']}"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete style="width:34%!important" 
+
+                                                dropdown="true"
+                                                converter="#{salesJournalReportMB.invCustomerConverter}"
+                                                value="#{salesJournalReportMB.salesJournalSearchBean.toCustomer}"
+                                                var="customer"
+                                                itemLabel="#{customer}" 
+                                                itemValue="#{customer}"
+                                                forceSelection="true" 
+                                                completeMethod="#{salesJournalReportMB.completCustomer}">
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_CUSTOM']}"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete style="width:34%!important"
+                                                dropdown="true"
+                                                converter="#{salesJournalReportMB.invInventoryConverter}"
+                                                value="#{salesJournalReportMB.salesJournalSearchBean.fromInventoryName}"
+                                                var="inventory"
+                                                itemLabel="#{inventory}" 
+                                                itemValue="#{inventory}"
+                                                forceSelection="true" 
+                                                completeMethod="#{salesJournalReportMB.completeInventory}"
+                                                >
+
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px;" value="#{userData.userDDs['FROM_INVENTORY_NO']}"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete style="width:34%!important" 
+
+                                                dropdown="true"
+                                                converter="#{salesJournalReportMB.invInventoryConverter}"
+                                                value="#{salesJournalReportMB.salesJournalSearchBean.toInventoryName}"
+                                                var="inventory"
+                                                itemLabel="#{inventory}" 
+                                                itemValue="#{inventory}"
+                                                forceSelection="true" 
+                                                completeMethod="#{salesJournalReportMB.completeInventory}">
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_INVENTORY_NO']}"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:selectBooleanCheckbox value="#{salesJournalReportMB.salesJournalSearchBean.showReport}">
+                                    <p:ajax update="reportDB" listener="#{salesJournalReportMB.search()}" />
+                                </p:selectBooleanCheckbox>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px;" value="#{userData.userDDs['TOTAL']}"/>
+
+                            </div>
+                        </div>
+                      
+                    </div>
+
+                  
+
+
+                </div>
+
+
+                <div style="text-align: center">
+
+
+                    <p:commandButton   class="searchButtons"
+                                       title="#{userData.userDDs['SEARCH']}"
+                                       action="#{salesJournalReportMB.search()}"
+                                       id="saveB"
+                                       value="#{userData.userDDs['SEARCH']}"
+                                       update="@form" 
+                                       />
+
+                    <p:commandButton  class="newButton"
+                                      id="NewB"
+                                      title="#{userData.userDDs['NEW']}" 
+                                      immediate="true" 
+                                      action="#{salesJournalReportMB.reset()}"
+                                      update="form"
+                                      value="#{userData.userDDs['NEW']}"
+                                      style=""/>
+
+                    <p:commandButton  class="printButtons"
+                                      id="PrintB"
+                                      ajax="false"
+                                      onclick="form.target = '_blank'"  
+                                      value="#{userData.userDDs['PRINT']}" 
+                                      actionListener="#{salesJournalReportMB.exportPDF}"
+                                      title="#{userData.userDDs['PRINT']}"
+                                      immediate="true" />
+
+                    <p:commandButton   class="closeButton"
+                                       id="CloseB"
+                                       style=""  
+                                       title="#{userData.userDDs['BACK']}"
+                                       action="exit"
+                                       value="#{userData.userDDs['BACK']}"/>
+                    <h:commandLink class="sdcreenimg" style="margin-right: 4px;">  
+                        <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                        <p:dataExporter type="xls"
+                                        target="purchaseInvoiceDetail" 
+                                        fileName="تقرير يومية المبيعات"
+                                        postProcessor="#{salesJournalReportMB.postProcessXLS}" />  
+                    </h:commandLink>
+
+                    <p:blockUI block="form" trigger="saveB NewB PrintB CloseB" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+
+
+                </div>
+
+            </p:fieldset>
+
+            <p:fieldset id="reportDB"  style="margin-top: 2%">
+
+
+                <p:dataTable style="margin-top: 2%"
+                             draggableColumns="true" 
+                             var="purchaseInvoiceDetail" 
+                             widgetVar="purchaseInvoiceDetail"  
+                             rowKey="#{purchaseInvoiceDetail}"
+                             rowIndexVar="index" 
+                             value="#{salesJournalReportMB.salesJournalReportBeanList}" 
+                             dir="rtl" 
+                             rows="20"
+                             paginator="true"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             id="purchaseInvoiceDetail">  
+                    <f:facet name="header">
+
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('purchaseInvoiceDetail').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+                    </f:facet>
+
+                    <p:column style="width: 12vh;text-align: center;font-size: 1.8vh;border-radius: 0px;" 
+                              headerText="#{userData.userDDs['DATEE']}"
+
+                              filterBy="#{purchaseInvoiceDetail.date}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{purchaseInvoiceDetail.date}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{purchaseInvoiceDetail.date}">
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                        </p:outputLabel>
+                    </p:column>
+
+                    <p:column rendered="#{salesJournalReportMB.salesJournalSearchBean.showReport eq false}" 
+                              style="width:10vh;font-size: 2vh;text-align: -webkit-auto;border-radius: 0px;"  headerText="#{userData.userDDs['INVOICE_NO']}"
+
+                              filterBy="#{purchaseInvoiceDetail.serialNum}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{purchaseInvoiceDetail.serialNum}"
+                              filterable="false">
+
+                        <h:outputText value="#{purchaseInvoiceDetail.serialNum}" style="font-size: 12px; width: 80%"/>
+                    </p:column>
+
+                    <p:column rendered="#{salesJournalReportMB.salesJournalSearchBean.showReport eq false}" 
+                              style="text-align: center;font-size: 15px; width: 15%;border-radius: 0px;" 
+                              headerText="#{userData.userDDs['CUSTOMERR']}"
+
+                              filterBy="#{purchaseInvoiceDetail.supplierName}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{purchaseInvoiceDetail.supplierName}"
+                              filterable="false">
+
+                        <h:outputText value="#{purchaseInvoiceDetail.supplierName}"  style="text-align: center;"/>
+                    </p:column>
+
+                    <p:column rendered="#{salesJournalReportMB.salesJournalSearchBean.showReport eq false}" 
+                              style="text-align: center;font-size: 15px; width: 15%;border-radius: 0px;" headerText="#{userData.userDDs['DELEGATOR']}"
+
+                              filterBy="#{purchaseInvoiceDetail.delegatorName}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{purchaseInvoiceDetail.delegatorName}"
+                              filterable="false">
+
+
+                        <h:outputText value="#{purchaseInvoiceDetail.delegatorName}"  style="text-align: center;"/>
+                    </p:column>
+
+                    <p:column style="text-align: center;font-size: 15px; width: 10%;border-radius: 0px;" headerText="#{userData.userDDs['DISCOUNT']}"
+
+                              filterBy="#{purchaseInvoiceDetail.discount}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{purchaseInvoiceDetail.discount}"
+                              filterable="false">
+
+                        <h:outputText value="#{purchaseInvoiceDetail.discount}"  style="text-align: center;"/>
+                    </p:column>
+
+                    <p:column style="text-align: center;font-size: 15px; width: 10%;border-radius: 0px;" headerText="#{userData.userDDs['NET']}"
+
+                              filterBy="#{purchaseInvoiceDetail.net}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{purchaseInvoiceDetail.net}"
+                              filterable="false">
+
+                        <h:outputText value="#{purchaseInvoiceDetail.net}"  style="text-align: center;"/>
+                    </p:column>
+                    <p:columnGroup type="footer">
+                        <p:row>
+                            <p:column colspan="2" style="text-align:right;border-radius: 0px;" footerText="#{userData.userDDs['TOTAL']}  :" />
+                            <p:column footerText="" style="font-size: 1.4vh;border-radius: 0px;" />
+                            <p:column footerText="" style="font-size: 1.4vh;border-radius: 0px;" />
+
+                            <p:column footerText="#{salesJournalReportMB.allDiscount}" style="font-size: 1.4vh;border-radius: 0px;" />
+                            <p:column footerText="#{salesJournalReportMB.allNet}"  style="font-size: 1.4vh;border-radius: 0px;"/>
+
+
+                        </p:row>
+                    </p:columnGroup>
+                </p:dataTable>
+
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

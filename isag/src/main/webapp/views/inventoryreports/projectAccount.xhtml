@@ -1,0 +1,345 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" /> 
+        <h:form  id="form" dir="#{userData.dir}"   class='formmargin'>
+
+
+
+            <p:fieldset  id="head"  legend="كشف حساب مشروع"
+
+                         style=" position: relative"> 
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
+
+                    <div class="ui-g">
+
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:autoComplete style="width:34%!important"
+                                                    id="fromSupplier"
+                                                    dropdown="true"
+                                                    converter="#{projectAccountReportMB.instProjectGuideDTOConverter}"
+                                                    value="#{projectAccountReportMB.projectAccountSearchBean.fromInstProjectGuideDTO}"
+                                                    var="project"
+                                                    itemLabel="#{project}" 
+                                                    itemValue="#{project}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{projectAccountReportMB.completeInstProjectFrom}"
+                                                    maxResults="10"
+                                                    >
+
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 75px;" value="من مشروع"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:autoComplete style="width:34%!important" 
+                                                    id="toSupplier"
+                                                    dropdown="true"
+                                                    converter="#{projectAccountReportMB.instProjectGuideDTOConverter}"
+                                                    value="#{projectAccountReportMB.projectAccountSearchBean.toInstProjectGuideDTO}"
+                                                    var="projectTO"
+                                                    itemLabel="#{projectTO}" 
+                                                    itemValue="#{projectTO}"
+                                                    forceSelection="true"
+                                                    completeMethod="#{projectAccountReportMB.completeInstProjectTo}"
+                                                    maxResults="10">
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 75px"
+                                                   value="إلى مشروع"/>
+                                </div>
+                            </div>
+                              <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectBooleanCheckbox value="#{projectAccountReportMB.projectAccountSearchBean.detailed}" >
+                                        <p:ajax update="rscExtractRegisterDTOView"/>
+                                    </p:selectBooleanCheckbox>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 70px;" value="التفصيلي"/>
+
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{projectAccountReportMB.projectAccountSearchBean.dateTo}"
+                                                style="width: 50%"
+                                                id="dateTo">
+
+                                    </p:calendar>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 70px" value="#{userData.userDDs['TO_DATE']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{projectAccountReportMB.projectAccountSearchBean.dateFrom}"
+                                                style="width: 50%"
+                                                id="dateFrom">
+
+                                    </p:calendar>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 70px;" value="#{userData.userDDs['FROM_DATE']}"/>
+
+                                </div>
+                            </div>
+                          
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <h:panelGrid columns="1"  class="col-md-12" >
+
+                    <h:panelGroup class="centerButtons" style="margin-top: 2%">
+
+                        <p:commandButton   class="searchButtons"
+                                           title="#{userData.userDDs['SEARCH']}"
+                                           action="#{projectAccountReportMB.search()}"
+                                           id="search"
+                                           value="#{userData.userDDs['SEARCH']}"
+                                           update="rscExtractRegisterDTOView" 
+                                           />
+
+                        <p:commandButton  class="newButton"
+                                          id="NewB"
+                                          title="#{userData.userDDs['NEW']}" 
+                                          immediate="true" 
+                                          action="#{projectAccountReportMB.reset()}"
+                                          update="rscExtractRegisterDTOView toSupplier fromSupplier"
+                                          value="#{userData.userDDs['NEW']}"
+                                          style=""
+                                          onclick="clearDate();"/>
+
+                        <p:commandButton  class="printButtons" 
+                                          ajax="false"
+                                          id="PrintB"
+                                          onclick="form.target = '_blank'"  
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{projectAccountReportMB.exportPDF}"
+                                          title="#{userData.userDDs['PRINT']}"
+                                          immediate="true" />
+
+                        <p:commandButton  class="closeButton"
+                                          title="#{userData.userDDs['BACK']}"
+                                          id="CloseB"
+                                          action="exit"
+                                          style=""    
+                                          value="#{userData.userDDs['BACK']}"/>
+
+                        <h:commandLink class="sdcreenimg" style="margin-right: 4px;">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="rscExtractRegisterDTOView" 
+                                            fileName=" تقرير كشف حساب مشروع"
+                                            postProcessor="#{projectAccountReportMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+                        <p:blockUI block="form" trigger="NewB search PrintB CloseB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+            </p:fieldset>
+
+            <p:fieldset  style="margin-top: 2%">
+                <p:dataTable style="margin-top: 2%"
+                             draggableColumns="true" 
+                             paginator="true"
+                             rows="20"
+                             var="rscExtractRegisterDTOView" 
+                             widgetVar="rscExtractRegisterDTOView"  
+                             rowKey="#{rscExtractRegisterDTOView}"
+                             rowIndexVar="index" 
+                             value="#{projectAccountReportMB.rscExtractRegisterDTOView}" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             id="rscExtractRegisterDTOView">
+                    <f:facet name="header"> 
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('rscExtractRegisterDTOView').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+                    </f:facet>
+                    <p:column style="width:16px"  rendered="#{projectAccountReportMB.projectAccountSearchBean.detailed}"  headerText="التفصيلي" >
+                        <p:rowToggler rendered="#{rscExtractRegisterDTOView.rowExpansion}"  />
+                    </p:column>
+                    <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh;border-radius: 0px" headerText="رقم المستخلص" 
+
+                                filterBy="#{rscExtractRegisterDTOView.serial}" 
+                                filterMatchMode="contains" 
+                                sortBy="#{rscExtractRegisterDTOView.serial}"
+                                filterable="false">
+
+                        <h:outputText value="#{rscExtractRegisterDTOView.serial}" style="font-size: 1.5vh"/>
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px" 
+                              headerText="#{userData.userDDs['DATEE']}"
+
+                              filterBy="#{rscExtractRegisterDTOView.date}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{rscExtractRegisterDTOView.date}"
+                              filterable="false">
+                        <p:outputLabel value="#{rscExtractRegisterDTOView.date}">
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                        </p:outputLabel>
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px" filterStyle="display:none"
+                              headerText="المشروع" 
+
+                              filterBy="#{rscExtractRegisterDTOView.instProjectGuideDTO.name}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{rscExtractRegisterDTOView.instProjectGuideDTO.name}"
+                              filterable="false"
+                              >
+
+                        <h:outputText value="#{rscExtractRegisterDTOView.instProjectGuideDTO.name}" rendered="#{rscExtractRegisterDTOView.rowExpansion eq false}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px" filterStyle="display:none"
+                              headerText="المقاول"  
+                              filterBy="#{rscExtractRegisterDTOView.siteId.name}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{rscExtractRegisterDTOView.siteId.name}"
+                              filterable="false"> 
+                        <h:outputText value="#{rscExtractRegisterDTOView.siteId.name}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px" filterStyle="display:none"
+                              headerText="البيان"  
+                              filterBy="#{rscExtractRegisterDTOView.remarks}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{rscExtractRegisterDTOView.remarks}"
+                              filterable="false"> 
+                        <h:outputText value="#{rscExtractRegisterDTOView.remarks}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px" 
+                              headerText="التكلفه" 
+
+                              filterBy="#{rscExtractRegisterDTOView.netExtractPrice}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{rscExtractRegisterDTOView.netExtractPrice}"
+                              filterable="false">
+                        <h:outputText  value="#{rscExtractRegisterDTOView.netExtractPrice}" style="font-size: 1.5vh;width: 95%"/>
+
+                    </p:column>
+                    <p:rowExpansion>
+                        <p:dataTable style="margin-top: 2%"
+                                     draggableColumns="true" 
+                                     paginator="true"
+                                     rows="20"
+                                     var="rscExtractRegisterDetialDTOView" 
+                                     widgetVar="rscExtractRegisterDetialDTOView"  
+                                     rowKey="#{rscExtractRegisterDetialDTOView}"
+                                     rowIndexVar="index" 
+                                     value="#{rscExtractRegisterDTOView.rscExtractRegisterDetailDTOList}" 
+                                     dir="rtl" 
+                                     emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                                     id="rscExtractRegisterDTOView">
+                            <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh;border-radius: 0px" headerText="البند" 
+
+                                        filterBy="#{rscExtractRegisterDetialDTOView.guideDTO.name}" 
+                                        filterMatchMode="contains" 
+                                        sortBy="#{rscExtractRegisterDetialDTOView.guideDTO.name}"
+                                        filterable="false">
+
+                                <h:outputText value="#{rscExtractRegisterDetialDTOView.guideDTO.name}" style="font-size: 1.5vh"/>
+                            </p:column>
+                            <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh;border-radius: 0px" headerText="الكميه المنفذه" 
+
+                                        filterBy="#{rscExtractRegisterDetialDTOView.excuteQty}" 
+                                        filterMatchMode="contains" 
+                                        sortBy="#{rscExtractRegisterDetialDTOView.excuteQty}"
+                                        filterable="false">
+
+                                <h:outputText value="#{rscExtractRegisterDetialDTOView.excuteQty}" style="font-size: 1.5vh"/>
+                            </p:column>
+                            <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh;border-radius: 0px" headerText="سعر البيع" 
+
+                                        filterBy="#{rscExtractRegisterDetialDTOView.priceSell}" 
+                                        filterMatchMode="contains" 
+                                        sortBy="#{rscExtractRegisterDetialDTOView.priceSell}"
+                                        filterable="false">
+
+                                <h:outputText value="#{rscExtractRegisterDetialDTOView.priceSell}" style="font-size: 1.5vh"/>
+                            </p:column>
+                            <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh;border-radius: 0px" headerText="خصم قيمه" 
+
+                                        filterBy="#{rscExtractRegisterDetialDTOView.discountValue}" 
+                                        filterMatchMode="contains" 
+                                        sortBy="#{rscExtractRegisterDetialDTOView.discountValue}"
+                                        filterable="false">
+
+                                <h:outputText value="#{rscExtractRegisterDetialDTOView.discountValue}" style="font-size: 1.5vh"/>
+                            </p:column>
+                            <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh;border-radius: 0px" headerText="خصم نسبه" 
+
+                                        filterBy="#{rscExtractRegisterDetialDTOView.discountPercentage}" 
+                                        filterMatchMode="contains" 
+                                        sortBy="#{rscExtractRegisterDetialDTOView.discountPercentage}"
+                                        filterable="false">
+
+                                <h:outputText value="#{rscExtractRegisterDetialDTOView.discountPercentage}" style="font-size: 1.5vh"/>
+                            </p:column>
+                            <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh;border-radius: 0px" headerText="صافي بند المستخلص" 
+
+                                        filterBy="#{rscExtractRegisterDetialDTOView.netCost}" 
+                                        filterMatchMode="contains" 
+                                        sortBy="#{rscExtractRegisterDetialDTOView.netCost}"
+                                        filterable="false">
+
+                                <h:outputText value="#{rscExtractRegisterDetialDTOView.netCost}" style="font-size: 1.5vh"/>
+                            </p:column>
+                        </p:dataTable>
+                    </p:rowExpansion>
+                    <p:columnGroup type="footer">
+                        <p:row>
+                            <p:column colspan="#{projectAccountReportMB.projectAccountSearchBean.detailed eq true ? 6 : 5}" style="text-align:right;border-radius: 0px" footerText="#{userData.userDDs['TOTAL']}  :" />
+                            <p:column footerText="#{projectAccountReportMB.projectAccountSearchBean.totle}"  style="font-size: 1.4vh;border-radius: 0px"/>
+                        </p:row>
+                    </p:columnGroup>
+                </p:dataTable>
+            </p:fieldset>
+            <script>
+                function clearDate() {
+                    document.getElementById("form:dateFrom_input").value = null;
+                    document.getElementById("form:dateTo_input").value = null;
+                }
+            </script>
+        </h:form>
+    </ui:define>
+</ui:composition>

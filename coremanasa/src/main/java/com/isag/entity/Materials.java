@@ -37,8 +37,9 @@ public class Materials extends BaseEntity {
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
     private Branch branchId;
-    @OneToMany(mappedBy = "materialId")
-    private Collection<TeacherMaterials> teacherMaterialsCollection;
+    @JoinColumn(name = "teacher_id", referencedColumnName = "id")
+    @ManyToOne
+    private IgmaUser teacherId;
 
     public Materials() {
     }
@@ -61,15 +62,6 @@ public class Materials extends BaseEntity {
 
     public void setBranchId(Branch branchId) {
         this.branchId = branchId;
-    }
-
-    @XmlTransient
-    public Collection<TeacherMaterials> getTeacherMaterialsCollection() {
-        return teacherMaterialsCollection;
-    }
-
-    public void setTeacherMaterialsCollection(Collection<TeacherMaterials> teacherMaterialsCollection) {
-        this.teacherMaterialsCollection = teacherMaterialsCollection;
     }
 
     @Override
@@ -95,6 +87,20 @@ public class Materials extends BaseEntity {
     @Override
     public String toString() {
         return "com.mycompany.mavenproject1.Materials[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the teacherId
+     */
+    public IgmaUser getTeacherId() {
+        return teacherId;
+    }
+
+    /**
+     * @param teacherId the teacherId to set
+     */
+    public void setTeacherId(IgmaUser teacherId) {
+        this.teacherId = teacherId;
     }
 
 }

@@ -1,0 +1,188 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <h:form id="form"  dir="#{userData.dir}" class='formmargin'>
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 24%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important; 
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />
+            </div>
+            <div class="col-xs-12">
+                <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+            </div>
+
+
+
+
+            <p:dataTable id="invInvoicePurchaseTable"
+                         var="invInvoicePurchaseTable" 
+                         widgetVar="bTable" 
+                         rowIndexVar="index" 
+                         value="#{reportMB.resultList}"
+                         paginator="true"
+                         rows="10" 
+                         lazy="true" 
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                         {PreviousPageLink} {PageLinks} {NextPageLink}
+                         {LastPageLink} {RowsPerPageDropdown}" 
+                         emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" 
+                         >
+                <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
+                           filterBy="#{invInvoicePurchaseTable.serial}" 
+                           filterMatchMode="contains" 
+                           headerText="#{userData.userDDs['INVOICE_NO']}"
+                           sortBy="#{invInvoicePurchaseTable.serial}"
+                           >
+                    <p:outputLabel value="#{invInvoicePurchaseTable.serial}" />
+                </p:column>
+
+
+
+                <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
+                           filterBy="#{invInvoicePurchaseTable.clientName}" 
+                           filterMatchMode="contains" 
+                           headerText="اسم المشترك "
+                           sortBy="#{invInvoicePurchaseTable.clientName}" >
+                    <p:outputLabel value="#{invInvoicePurchaseTable.clientName}" />
+                </p:column>
+                <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
+                           filterBy="#{invInvoicePurchaseTable.phone}" 
+                           filterMatchMode="contains" 
+                           headerText="الهاتف "
+                           sortBy="#{invInvoicePurchaseTable.phone}" >
+                    <p:outputLabel value="#{invInvoicePurchaseTable.phone}" />
+                </p:column>
+                <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
+                           filterBy="#{invInvoicePurchaseTable.creationDate}" 
+                           filterMatchMode="contains" 
+                           headerText=" تاريخ السند "
+                           sortBy="#{invInvoicePurchaseTable.creationDate}" >
+                    <p:outputLabel value="#{invInvoicePurchaseTable.creationDate}" >
+                        <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
+                    </p:outputLabel>
+
+                </p:column>
+                <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
+                           filterBy="#{invInvoicePurchaseTable.value}" 
+                           filterMatchMode="contains" 
+                           headerText=" المدفوع "
+                           sortBy="#{invInvoicePurchaseTable.value}" >
+                    <p:outputLabel value="#{invInvoicePurchaseTable.value}" />
+
+                </p:column>
+                <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
+                           filterBy="#{invInvoicePurchaseTable.deletionDate}" 
+                           filterMatchMode="contains" 
+                           headerText="تاريخ الحذف "
+                           sortBy="#{invInvoicePurchaseTable.deletionDate}" >
+                    <p:outputLabel value="#{invInvoicePurchaseTable.deletionDate}" >
+                        <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
+                    </p:outputLabel>
+
+                </p:column>
+                <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
+                           filterBy="#{invInvoicePurchaseTable.createdBy}" 
+                           filterMatchMode="contains" 
+                           headerText="انشأت بواسطة"
+                           sortBy="#{invInvoicePurchaseTable.createdBy}" >
+                    <p:outputLabel value="#{invInvoicePurchaseTable.createdBy}" />
+
+                </p:column>
+                <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
+                           filterBy="#{invInvoicePurchaseTable.deletedBy}" 
+                           filterMatchMode="contains" 
+                           headerText="خذفت بواسطة"
+                           sortBy="#{invInvoicePurchaseTable.deletedBy}" >
+                    <p:outputLabel value="#{invInvoicePurchaseTable.deletedBy}" />
+
+                </p:column>
+                <p:column  style="width: 12vh;font-size: 1.8vh;text-align:center;border-radius: 0px;" headerText="#{userData.userDDs['TRANSACTION']}" >
+
+                    <p:commandButton update="@form" 
+                                     class="sdeleteButtons"
+                                     icon="fa fa-remove" 
+                                     style="background-color: red;border-radius: 3px;"
+                                     title="#{userData.userDDs['DELETE']}" 
+                                     action="#{reportMB.delete()}" 
+                                     rendered="#{(userData.userScreens['gmdeletedsubscriptionsreport'].delete or userData.isAdmin)}">
+                        <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" target="#{reportMB.resultDtoSelected}" />
+
+
+                    </p:commandButton>
+
+                </p:column>
+
+            </p:dataTable> 
+
+            <div class="ui-g-12 ui-xl-12">
+
+                <div class="ui-g-6 ui-xl-6">
+                    <p:calendar style="width: 35%"  id="dateFrom"
+                                value="#{reportMB.searchdto.dateFrom}"
+                                pattern="dd/MM/yyyy  HH:mm:ss"  showButtonPanel="true" >
+
+                    </p:calendar>
+                </div>
+                <div class="ui-g-6 ui-xl-6">
+                    <p:outputLabel style="width: 75px;margin-right: 6%"  value="#{userData.userDDs['YEAR_FROM']}" />
+
+                </div>
+            </div>
+            <div class="ui-g-12 ui-xl-12">
+
+                <div class="ui-g-6 ui-xl-6">
+                    <p:calendar style="width: 35%"  id="dateTo"
+                                value="#{reportMB.searchdto.dateTo}"
+                                pattern="dd/MM/yyyy  HH:mm:ss"  showButtonPanel="true" >
+
+                    </p:calendar>
+                </div>
+                <div class="ui-g-6 ui-xl-6">
+                    <p:outputLabel style="width: 75px;margin-right: 6%"  value="#{userData.userDDs['TO_DATE']}" />
+
+                </div>
+            </div>
+
+
+            <p:commandButton  class="searchButtons"
+                              value="#{userData.userDDs['SEARCH']}"                                      
+                              action="#{reportMB.searchDeletedSubscribtion()}" 
+                              update="@form"/>
+            <p:commandButton 
+                class="sprintButtons"
+                update="@form" onclick="form.target = '_blank'"  ajax="false"
+                icon="fa fa-fw fa-print" style="background-color: rgb(0, 74, 128);border-radius: 3px;"
+                title="print" 
+                action="#{reportMB.exportPDF(actionEvent)}" >
+
+            </p:commandButton>
+            <h:commandLink  class="sdcreenimg" style="margin-right: 4px;">  
+
+                <p:graphicImage name="/img/excel.jpg" width="24"/>  
+
+                <p:dataExporter type="xls"
+                                target="invInvoicePurchaseTable" 
+                                fileName=" تقرير الاشتراكات المحذوفه"
+                                postProcessor="#{reportMB.postProcessXLS}" />  
+            </h:commandLink>
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

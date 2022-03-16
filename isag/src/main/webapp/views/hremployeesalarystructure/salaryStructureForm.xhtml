@@ -1,0 +1,620 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="ScreenAddEditForm" dir="#{userData.dir}" class='formmargin'>
+            <p:messages autoUpdate="true"  id="messagess" showDetail="true" closable="true"/>  
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 12%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />  
+            </div>
+            <p:fieldset legend="-" style="margin-bottom:20px">
+                <div   class="ui-g-12 ui-g-nopad" style="padding: 0px;">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:96px;margin-right: 5%"  value="الموظف " />
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:autoComplete style="width:34%!important" 
+                                                dropdown="true" 
+                                                value="#{salaryStructureFormMB.salaryStructureDTO.employeeId}" 
+                                                converter="#{salaryStructureFormMB.hremployeeDTOConverter}"
+                                                completeMethod="#{salaryStructureFormMB.completeSalaryStructureEmployee}"
+                                                var="parent"
+                                                itemLabel="#{parent.name}" 
+                                                itemValue="#{parent}" 
+                                                forceSelection="true" 
+                                                >
+                                    <p:ajax update="@form"
+                                            event="change"
+                                            process="@form"  
+                                            listener="#{salaryStructureFormMB.findEmployeeData()}"
+                                            />
+                                    <p:ajax update="@form"
+                                            process="@form"
+                                            event="itemSelect"
+                                            listener="#{salaryStructureFormMB.findEmployeeData()}"
+                                            />
+
+                                </p:autoComplete>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:101px"  value="نشط" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:selectOneMenu id="status" style="width:35%" value="#{salaryStructureFormMB.salaryStructureDTO.active}" >
+                                        <f:selectItem itemLabel="لا" itemValue="fasle" noSelectionOption="true" />
+                                        <f:selectItem itemLabel="نعم" itemValue="true" noSelectionOption="false" />
+
+                                    </p:selectOneMenu>
+
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:90px;margin-right: 5%"  value="اسم الموظف  " />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important" readonly="true" id="name" a:autofocus="true" value="#{salaryStructureFormMB.salaryStructureDTO.employeeId.name}">
+                                    </p:inputText>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:96px"  value="المسمى الوظيفي" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important" readonly="true" id="designation" a:autofocus="true" value="#{salaryStructureFormMB.salaryStructureDTO.employeeId.designation}">
+                                    </p:inputText>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:90px;margin-right: 5%"  value="قسم " />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important" readonly="true" id="department" a:autofocus="true" value="#{salaryStructureFormMB.salaryStructureDTO.employeeId.departmentId}">
+                                    </p:inputText>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:96px"  value="درجة  " />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important" readonly="true" id="jobGrade" a:autofocus="true" value="#{salaryStructureFormMB.salaryStructureDTO.employeeId.jobGrade}">
+                                    </p:inputText>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:90px;margin-right: 5%"  value="  من تاريخ" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar pattern="dd/MM/yyyy" 
+                                                    value="#{salaryStructureFormMB.salaryStructureDTO.dateFrom}"
+                                                    style="width: 50%"
+                                                    id="fromDate">
+
+                                        </p:calendar>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:96px"  value="  إلي تاريخ" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar pattern="dd/MM/yyyy" 
+                                                    value="#{salaryStructureFormMB.salaryStructureDTO.dateTo}"
+                                                    style="width: 50%"
+                                                    id="toDate">
+
+                                        </p:calendar>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:90px;margin-right: 5%"  value="عدد أيام الشهر" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="months" a:autofocus="true" value="#{salaryStructureFormMB.salaryStructureDTO.workDayOfMonth}">
+                                    </p:inputText>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:90px;margin-right: 5%"  value="عدد ساعات اليوم" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="hours" a:autofocus="true" value="#{salaryStructureFormMB.salaryStructureDTO.workHourOfDay}">
+                                    </p:inputText>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+
+            </p:fieldset>
+
+            <p:fieldset legend="1.الاستحقاقات  " style="margin-bottom:20px">
+                <p:dataTable id="accuralTable"
+                             widgetVar="accuralTable"
+                             style="margin-bottom:20px"
+                             var="accuralTable"
+                             rowIndexVar="index" 
+                             dir="#{userData.dir}" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             selectionMode="single"
+                             sortBy="#{1}"
+                             rowKey="#{accuralTable.index}"
+                             value="#{salaryStructureFormMB.salaryStructureDTO.hrEmployeeAccuralDTOList}" >
+                    <p:ajax event="rowToggle"  listener="#{salaryStructureFormMB.accuralselect(accuralTable)}"/>
+                    <f:facet name="header">
+                        <p:commandButton id="b3" 
+                                         class="saddButton"
+
+                                         title="#{userData.userDDs['ADD']}" 
+                                         icon="fa fa-plus"
+                                         actionListener="#{salaryStructureFormMB.addAccuralRow()}" 
+                                         style="float:right;margin: 0" 
+                                         update="ScreenAddEditForm:accuralTable" />
+                        <p:outputPanel >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('accuralTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+                    <p:column headerText="#" style="width: 2vh;font-size: 1.8vh;text-align: right;border-radius: 0px" >
+                        <h:outputText value="#{index + 1}" style="font-size: 1.5vh;"  />
+                    </p:column>
+                    <p:column headerText="" style="width: 2vh;font-size: 1.8vh;text-align: right;border-radius: 0px" ><p:rowToggler/></p:column>
+                    <p:column filterStyle="display:none" 
+                              style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                              sortBy="#{accuralTable.accuralDeductionId}"
+                              filterBy="#{accuralTable.accuralDeductionId}" 
+                              filterMatchMode="contains"
+                              headerText=" نوع ">
+
+
+                        <p:selectOneMenu  disabled="#{accuralTable.salaryText}"
+                                          id="status" 
+                                          style="width:100%"
+                                          value="#{accuralTable.accuralDeductionId}" 
+                                          converter="#{salaryStructureFormMB.acuuralConverter}">
+
+
+                            <f:selectItems value="#{salaryStructureFormMB.accrualDTOList}" 
+                                           var="accural2" 
+                                           itemValue="#{accural2}" 
+                                           itemLabel="#{accural2.rscAccrualDeductionName}" />
+                            <p:ajax update="@form"
+                                    event="change"
+                                    process="@form"  
+                                    listener="#{salaryStructureFormMB.validateAccural()}"
+                                    />
+                            <p:ajax update="@form"
+                                    process="@form"
+                                    event="itemSelect"
+                                    listener="#{salaryStructureFormMB.validateAccural()}"
+                                    />
+                        </p:selectOneMenu>
+
+                    </p:column>
+                    <p:column filterStyle="display:none" 
+                              sortBy="#{accuralTable.value}" 
+                              filterBy="#{accuralTable.value}" 
+                              filterMatchMode="contains"  
+                              style="width: 8vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                              headerText=" ( مبلغ )">
+
+
+
+                        <p:inputText id="SER" 
+                                     value="#{accuralTable.value}"
+                                     style="width:100%">
+                        </p:inputText>
+                        <p:message id="msgSER" for="SER"/>
+                    </p:column>
+
+                    <p:rowExpansion >  
+                        <p:dataTable  
+                            id="hrTable" 
+                            var="hrTable" 
+                            widgetVar="hrTable"
+                            value="#{accuralTable.hrSalaryStructureAccuralEffectType}" 
+                            style="margin-bottom:20px"
+                            rowIndexVar="index" 
+                            dir="#{userData.dir}" 
+                            emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                            selectionMode="single"
+                            sortBy="#{1}"
+                            rowKey="#{hrTable}" 
+                            selection="#{salaryStructureFormMB.hrSalaryStructureAccuralDeductionEffectTypeDTOSelected}"  
+                            > 
+
+                            <f:facet name="header" class="col-md-12"> 
+                                <p:commandButton  class="saddbuttonins" id="add" 
+                                                  icon="fa fa-plus"  
+                                                  title="#{userData.userDDs['ADD']}" 
+                                                  actionListener="#{salaryStructureFormMB.addHrSalaryStructureAccuralEffectTypeRow()}" 
+                                                  update="hrTable"   
+                                                  ajax="true"
+                                                  />
+                                <p:commandButton  class="scloseButtons" update="hrTable"
+                                                  title="#{userData.userDDs['DELETE']}" 
+                                                  action="#{salaryStructureFormMB.deleteHrSalaryStructureAccuralEffectTypeDTOList()}" 
+                                                  icon="fa fa-fw fa-remove" style="background-color: red;border-radius: 3px;"
+                                                  rendered="#{accuralTable.hrSalaryStructureAccuralEffectType.size() > 0  ? true : false}"
+                                                  >
+                                    <f:setPropertyActionListener value="#{hrTable}" 
+                                                                 target="#{salaryStructureFormMB.hrSalaryStructureAccuralDeductionEffectTypeDTOSelected}" />
+                                    <p:confirm header="#{userData.userDDs['COFIGRATION']}" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                                </p:commandButton>
+
+                            </f:facet>
+                            <p:column headerText="#" style="width: 2vh;font-size: 1.8vh;text-align: right;border-radius: 0px" >
+                                <h:outputText value="#{index + 1}" style="font-size: 1.5vh;"  />
+                            </p:column>
+                            <p:column filterStyle="display:none" 
+                                      style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                      headerText="اسم المؤثر">  
+                                <p:autoComplete style="width:40%!important"
+                                                dropdown="true"
+                                                value="#{hrTable.hrSalaryEffectDTO}"
+                                                converter="#{autoComplete.hrSalaryEffectDTOConverter}"
+                                                completeMethod="#{autoComplete.completeHrSalaryEffect}"                
+                                                var="salary"
+                                                itemLabel="#{salary}" 
+                                                itemValue="#{salary}"
+                                                forceSelection="true"  
+                                                />
+                            </p:column>
+                            <p:column filterStyle="display:none" 
+                                      style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                      headerText="حاله المؤثر">   
+                                <p:selectBooleanCheckbox value="#{hrTable.active}" />
+                            </p:column>
+                            <p:column headerText="#{userData.userDDs['TRANSACTION']}" 
+                                      style="width: 10vh;font-size: 1.8vh;text-align: center;border-radius: 0px" > 
+                                <p:commandButton  class="saddbuttonins" id="addnew2"
+                                                  icon="fa fa-plus"  
+                                                  title="#{userData.userDDs['ADD']}" 
+                                                  actionListener="#{salaryStructureFormMB.addHrSalaryStructureAccuralEffectTypeRow()}" 
+                                                  update="hrTable"                                         
+                                                  ajax="true"
+                                                  style="background-color: rgb(42, 163, 218);border-radius: 3px;"/>
+
+                                <p:commandButton  class="scloseButtons" update="hrTable"
+                                                  title="#{userData.userDDs['DELETE']}" 
+                                                  action="#{salaryStructureFormMB.deleteHrSalaryStructureAccuralDeductionEffectTypeDTO()}" 
+                                                  icon="fa fa-fw fa-remove" style="background-color: red;border-radius: 3px;"
+                                                  >
+                                    <f:setPropertyActionListener value="#{hrTable}" 
+                                                                 target="#{salaryStructureFormMB.hrSalaryStructureAccuralDeductionEffectTypeDTOSelected}" />
+                                    <p:confirm header="#{userData.userDDs['COFIGRATION']}" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>  
+                    </p:rowExpansion>
+
+                    <p:column headerText="#{userData.userDDs['TRANSACTION']}" 
+                              style="width: 10vh;font-size: 1.8vh;text-align: center;border-radius: 0px" >
+
+                        <p:commandButton  class="scloseButtons" update="@form"
+                                          title="#{userData.userDDs['DELETE']}" 
+                                          action="#{salaryStructureFormMB.deleteAccural()}" 
+                                          icon="fa fa-fw fa-remove" style="background-color: red;border-radius: 3px;"
+                                          >
+                            <f:setPropertyActionListener value="#{accuralTable}" 
+                                                         target="#{salaryStructureFormMB.accuralDTOSelected}" />
+
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+
+            </p:fieldset>
+
+            <p:fieldset legend="1.اقتطاع   " style="margin-bottom:20px">
+                <p:dataTable 
+                    draggableColumns="true" 
+                    widgetVar="deductionTable"
+                    id="deductionTable" 
+                    var="deductionTable" 
+                    rowIndexVar="index"
+                    editable="true"
+                    editMode="cell"
+                    sortBy="#{1}"
+                    dir="#{userData.dir}" 
+                    selectionMode="single"   
+                    rowKey="#{deductionTable.index}" 
+                    value="#{salaryStructureFormMB.salaryStructureDTO.hrEmployeeDeductionDTOList}" 
+                    paginator="true" 
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+                    <p:ajax event="rowToggle"  listener="#{salaryStructureFormMB.accuralselect(deductionTable)}"/>
+                    <f:facet name="header">
+
+                        <p:commandButton id="b2" 
+                                         class="saddButton"
+
+                                         title="#{userData.userDDs['ADD']}" 
+                                         icon="fa fa-plus"
+                                         actionListener="#{salaryStructureFormMB.addDeductionRow()}" 
+                                         style="float:right;margin: 0" 
+                                         update="@form" />
+                        <p:outputPanel >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('deductionTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+                    <p:column headerText="#" style="width: 2vh;font-size: 1.8vh;text-align: right;border-radius: 0px" >
+                        <h:outputText value="#{index + 1}" style="font-size: 1.5vh;"  />
+                    </p:column>
+                    <p:column headerText="" style="width: 2vh;font-size: 1.8vh;text-align: right;border-radius: 0px" > 
+                        <p:rowToggler/>
+                    </p:column>
+                    <p:column filterStyle="display:none" 
+                              style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                              sortBy="#{deductionTable}"
+                              filterBy="#{deductionTable}" 
+                              filterMatchMode="contains"
+                              headerText=" نوع ">
+                        <h:panelGroup>
+
+                            <p:selectOneMenu id="status" style="width:100%" value="#{deductionTable.accuralDeductionId}" 
+                                             converter="#{salaryStructureFormMB.deductionConverter}">
+
+                                <f:selectItems value="#{salaryStructureFormMB.deductionDTOList}" 
+                                               var="deduction2" itemValue="#{deduction2}" 
+                                               itemLabel="#{deduction2.rscAccrualDeductionName}" />
+                                <p:ajax update="@form"
+                                        event="change"
+                                        process="@form"  
+                                        listener="#{salaryStructureFormMB.validateDeduction()}"
+                                        />
+                                <p:ajax update="@form"
+                                        process="@form"
+                                        event="itemSelect"
+                                        listener="#{salaryStructureFormMB.validateDeduction()}"
+                                        />
+                            </p:selectOneMenu>
+
+                        </h:panelGroup>
+                    </p:column>
+                    <p:column filterStyle="display:none" 
+                              sortBy="#{deductionTable.value}" 
+                              filterBy="#{deductionTable.value}" 
+                              filterMatchMode="contains"  
+                              style="width: 8vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                              headerText=" ( مبلغ )">
+
+
+
+                        <p:inputText id="SER" 
+                                     value="#{deductionTable.value}"
+                                     style="width:100%">
+                        </p:inputText>
+                        <p:message id="msgSER" for="SER"/>
+                    </p:column>
+
+                    <p:rowExpansion > 
+
+                        <p:dataTable  
+                            id="hrDeductionTable" 
+                            var="hrDeductionTable" 
+                            widgetVar="hrDeductionTable"
+                            value="#{deductionTable.hrSalaryStructureDeductionEffectType}" 
+                            style="margin-bottom:20px"
+                            rowIndexVar="index" 
+                            dir="#{userData.dir}" 
+                            emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                            selectionMode="single"
+                            sortBy="#{1}"
+                            rowKey="#{hrDeductionTable}" 
+                            selection="#{salaryStructureFormMB.hrSalaryStructureAccuralDeductionEffectTypeDTOSelected}"  
+                            > 
+
+                            <f:facet name="header" class="col-md-12"> 
+                                <p:commandButton  class="saddbuttonins" id="addnew12" 
+                                                  icon="fa fa-plus"  
+                                                  title="#{userData.userDDs['ADD']}" 
+                                                  actionListener="#{salaryStructureFormMB.addHrSalaryStructureDeductionEffectTypeRow()}" 
+                                                  update="hrDeductionTable"                                         
+
+                                                  />
+                                <p:commandButton  class="scloseButtons" update="hrDeductionTable"
+                                                  title="#{userData.userDDs['DELETE']}" 
+                                                  action="#{salaryStructureFormMB.deleteHrSalaryStructureDeductionEffectTypeDTOList()}" 
+                                                  icon="fa fa-fw fa-remove" style="background-color: red;border-radius: 3px;"
+                                                  rendered="#{deductionTable.hrSalaryStructureDeductionEffectType.size() > 0  ? true : false}"
+                                                  >
+                                    <f:setPropertyActionListener value="#{hrDeductionTable}" 
+                                                                 target="#{salaryStructureFormMB.hrSalaryStructureAccuralDeductionEffectTypeDTOSelected}" />
+                                    <p:confirm header="#{userData.userDDs['COFIGRATION']}" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                                </p:commandButton>
+                            </f:facet>
+                            <p:column headerText="#" style="width: 2vh;font-size: 1.8vh;text-align: right;border-radius: 0px" >
+                                <h:outputText value="#{index + 1}" style="font-size: 1.5vh;"  />
+                            </p:column>
+                            <p:column filterStyle="display:none" 
+                                      style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                      headerText="اسم المؤثر">  
+                                <p:autoComplete style="width:40%!important"
+                                                dropdown="true"
+                                                value="#{hrDeductionTable.hrSalaryEffectDTO}"
+                                                converter="#{autoComplete.hrSalaryEffectDTOConverter}"
+                                                completeMethod="#{autoComplete.completeHrSalaryEffect}" 
+                                                var="salaryEffectType"
+                                                itemLabel="#{salaryEffectType}" 
+                                                itemValue="#{salaryEffectType}"
+                                                forceSelection="true"  
+                                                />
+                            </p:column>
+                            <p:column filterStyle="display:none" 
+                                      style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                      headerText="حاله المؤثر">   
+                                <p:selectBooleanCheckbox value="#{hrDeductionTable.active}" />
+                            </p:column>
+                            <p:column headerText="#{userData.userDDs['TRANSACTION']}" 
+                                      style="width: 10vh;font-size: 1.8vh;text-align: center;border-radius: 0px" > 
+                                <p:commandButton  class="saddbuttonins" id="addnew15"
+                                                  icon="fa fa-plus"  
+                                                  title="#{userData.userDDs['ADD']}" 
+                                                  actionListener="#{salaryStructureFormMB.addHrSalaryStructureDeductionEffectTypeRow()}" 
+                                                  update="hrDeductionTable"                                         
+                                                  ajax="true"
+                                                  style="background-color: rgb(42, 163, 218);border-radius: 3px;"/>
+
+                                <p:commandButton  class="scloseButtons" update="hrDeductionTable"
+                                                  title="#{userData.userDDs['DELETE']}" 
+                                                  action="#{salaryStructureFormMB.deleteHrSalaryStructureAccuralDeductionEffectTypeDTO()}" 
+                                                  icon="fa fa-fw fa-remove" style="background-color: red;border-radius: 3px;"
+                                                  >
+                                    <f:setPropertyActionListener value="#{hrDeductionTable}" 
+                                                                 target="#{salaryStructureFormMB.hrSalaryStructureAccuralDeductionEffectTypeDTOSelected}" />
+                                    <p:confirm header="#{userData.userDDs['COFIGRATION']}" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>  
+                    </p:rowExpansion>
+
+                    <p:column headerText="#{userData.userDDs['TRANSACTION']}" 
+                              style="width: 10vh;font-size: 1.8vh;text-align:center;border-radius: 0px" >
+
+                        <p:commandButton  class="scloseButtons" update="@form"
+                                          title="#{userData.userDDs['DELETE']}" style="background-color: red;border-radius: 3px;"
+                                          action="#{salaryStructureFormMB.deleteDeduction()}" 
+                                          icon="fa fa-fw fa-remove" 
+                                          >
+                            <f:setPropertyActionListener value="#{deductionTable}" 
+                                                         target="#{salaryStructureFormMB.deductionDTOSelected}" />
+
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </p:fieldset>
+
+
+            <h:panelGrid id="pn1"   class="centerButtons col-md-12" columns="1"  style="margin-top: 2%">
+
+
+                <h:panelGroup>
+
+
+                    <p:commandButton   class="saveButton"  
+                                       id="saveB" 
+                                       title="#{userData.userDDs['SAVE']}"
+                                       value="#{userData.userDDs['SAVE']}" 
+                                       style=""
+                                       action="#{salaryStructureFormMB.save()}" 
+                                       update="@form" />
+                    <p:commandButton  class="newButton" 
+                                      id="newS"
+                                      ajax="false"
+                                      style=""
+                                      value="#{userData.userDDs['NEW']}" 
+                                      title="#{userData.userDDs['NEW']}"
+                                      onclick="form.target = ''" 
+                                      actionListener="#{salaryStructureFormMB.reset()}"/>
+
+                    <p:commandButton class="closeButton" 
+                                     title="#{userData.userDDs['BACK']}" 
+                                     immediate="true" 
+                                     value="#{userData.userDDs['BACK']}" 
+                                     style=""
+                                     action="#{salaryStructureFormMB.exit()}"   />
+
+
+
+
+
+                </h:panelGroup>
+            </h:panelGrid>
+
+
+
+
+
+        </h:form>
+    </ui:define>
+
+</ui:composition>

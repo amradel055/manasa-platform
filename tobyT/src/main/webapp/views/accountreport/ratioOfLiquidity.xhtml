@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
+    <link rel="stylesheet" type="text/css" href="./../../resources/css/custom.css" /> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css"/>
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form" dir="#{userData.dir}" style="margin-right: 20px">
+            <p:fieldset legend="#{userData.userDDs['RATIO_LIQ']}"  style="margin-bottom:20px;margin-right: 20px">
+
+
+                <div>
+                    <p:messages autoUpdate="true"  id="cupmsg" showDetail="true" closable="true" rendered="true" />   
+                </div>
+                <div class="ui-g-12 ui-g-nopad back">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width:65px"  value="#{userData.userDDs['FROM_DATE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar  style="width:50%" id="dateFrom" value="#{ratioOfLiquidityMB.dateFrom}" pattern="dd/MM/yyyy">
+                                        <p:ajax listener="#{ratioOfLiquidityMB.checkDate(true)}" event="dateSelect" update="form dateFrom"/>
+                                    </p:calendar>
+                                </h:panelGroup>
+
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width:65px"  value="#{userData.userDDs['TO_DATE']}"/>
+                                </h:panelGroup>
+                                <p:calendar  style="width:50%" id="dateTo" value="#{ratioOfLiquidityMB.dateTo}" pattern="dd/MM/yyyy">
+                                    <p:ajax listener="#{ratioOfLiquidityMB.checkDate(false)}" event="dateSelect" update="form dateTo"/>
+                                </p:calendar>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px;margin-bottom:7%;margin-right: 1%" value="#{userData.userDDs['FINANAC_YEAR']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:selectOneMenu style="width:50%" id="year" filter="true" filterMatchMode="contains"   value="#{ratioOfLiquidityMB.glYearSelection}" converter="#{ratioOfLiquidityMB.glYearConverter}"   >
+                                        <p:ajax update=" dateTo dateFrom" listener="#{ratioOfLiquidityMB.pushGlYearSelection()}" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
+                                        <f:selectItems value="#{ratioOfLiquidityMB.glYearList}"  var="year" itemLabel="#{year.name}" itemValue="#{year}"/>
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+
+  <h:panelGrid columns="2" cellspacing="0" class="col-md-12 back">
+                <h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:outputLabel   style = "width: 65px;font-size: 30px"  value="#{userData.userDDs['TARGETT']}"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:outputLabel    value="#{userData.userDDs['J_M_P_E']}" />
+                    </h:panelGroup>
+
+                </h:panelGroup>
+
+                <h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:outputLabel  style="width: 65px;font-size: 30px"  value="#{userData.userDDs['EQUATION']}"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <h:outputText value="#{userData.userDDs['CURR_ASSET_STO_LAS_PER']} &lt;br /&gt; _____________________________ &lt;br /&gt; #{userData.userDDs['CURR_LIAB']}  " escape="false" />
+                    </h:panelGroup>
+
+                </h:panelGroup>
+
+
+                </h:panelGrid>
+
+                   <div class="ui-g-12">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+                    <h:panelGroup>
+                        <div id="piechartOfliquidity" style="width: 50vh; height: 400px;"></div>
+                    </h:panelGroup>
+                            </div></div>
+                       </div>
+                        
+               
+
+                <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+                <script type="text/javascript">
+                    google.charts.load('current', {'packages': ['corechart']});
+                    google.charts.setOnLoadCallback(drawChart);
+
+                    function drawChart() {
+
+                        var data = google.visualization.arrayToDataTable([
+                            ['', ''],
+                            ['#{userData.userDDs['CURR_ASSET_STO_LAS_PER']}', #{ratioOfLiquidityMB.assetCurrentLastPeriodRatio}],
+                            ['#{userData.userDDs['CURR_LIAB']}', #{ratioOfLiquidityMB.totalOfCurrentDeduction}]
+                        ]);
+
+                        var options = {
+                            title: '#{userData.userDDs['RATIO_LIQ']}' + '\n' + '#{userData.userDDs['RESULT']}:' +#{ratioOfLiquidityMB.totalRatio} + '%',
+                            is3D: true,
+                        };
+
+                        var chart = new google.visualization.PieChart(document.getElementById('piechartOfliquidity'));
+
+                        chart.draw(data, options);
+                    }
+                </script>
+
+                <h:panelGrid columns="2" cellspacing="0" class="col-md-12 back">
+                    <h:panelGroup>
+                        <div id="piechartOfliquidity" style="width: 450px; height: 400px;"></div>
+                    </h:panelGroup>
+                </h:panelGrid>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

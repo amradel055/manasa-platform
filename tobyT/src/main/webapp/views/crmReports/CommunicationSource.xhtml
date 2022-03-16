@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <ui:define name="content">
+        <h:form  id="form" dir="#{userData.dir}"  class='formmargin'>
+            <p:outputLabel for="@next" value="Advanced:" />
+            <p:selectOneMenu id="advanced" value="#{communicationSourceReportMB.communicationSelected}" 
+                             converter="#{symbolConverter}" panelStyle="width:180px"
+                             effect="fade" var="t" style="width:160px" filter="true" filterMatchMode="startsWith">
+                <f:selectItems value="#{communicationSourceReportMB.symboldtoList}" var="theme" 
+                               itemLabel="#{theme.displayName}" itemValue="#{theme}" />
+
+            </p:selectOneMenu>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
