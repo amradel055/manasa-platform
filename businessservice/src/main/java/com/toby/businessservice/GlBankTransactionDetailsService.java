@@ -47,6 +47,9 @@ public interface GlBankTransactionDetailsService {
     
     public Integer tarhilSettlementVoucher(List<GlBankTransactionDetail> list1, GlBankTransaction glBankTransaction, TobyUser tobyUser, Integer specialDocumentsTypes, boolean postFlag);
     
+    public Integer tarhilSettlementVoucherNOSumDetail(List<GlBankTransactionDetail> list1, GlBankTransaction glBankTransaction, TobyUser tobyUser,
+            Integer specialDocumentsTypes, boolean postFlag);
+            
     public List<GeneralJournal> tarhilCashOne(TobyUser tobyUser, Integer type);
 
 }

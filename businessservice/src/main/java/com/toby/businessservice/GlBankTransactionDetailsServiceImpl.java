@@ -666,6 +666,120 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
 
         return journal == null ? null : journal.getId();
     }
+    
+    @Override
+    public Integer tarhilSettlementVoucherNOSumDetail(List<GlBankTransactionDetail> list1, GlBankTransaction glBankTransaction, TobyUser tobyUser, 
+            Integer specialDocumentsTypes, boolean postFlag) {
+        Boolean debit = true ;
+        Boolean credit = false ;
+        if(glBankTransaction.getIsDebit() != null && glBankTransaction.getIsDebit()){
+            debit = false ;
+            credit = true ;
+        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", tobyUser.getBranchId().getId());
+
+        GeneralJournal journal = null;
+
+        StringBuilder remark = new StringBuilder();
+        remark.append(glBankTransaction.getRemark());
+
+        BigDecimal finalValueCurrent = BigDecimal.ZERO;
+        Integer accountId_3 = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"BANK_COMMITION\" AND a.accountId IS NOT NULL", params);
+
+        journal = generaljournalService.addGeneralJournalGlobal(glBankTransaction.getGlYear(), specialDocumentsTypes, glBankTransaction.getSerial(), glBankTransaction.getDate(),
+                glBankTransaction.getRemark(), tobyUser, 0, postFlag,glBankTransaction.getId());
+
+        Map<Integer, List<GlBankTransactionDetail>> map = new HashMap<>();
+        for (GlBankTransactionDetail detail : list1) {
+            List<GlBankTransactionDetail> transactionDetails = new ArrayList<>();
+            if (map.containsKey(detail.getGlAccountCredit().getId())) {
+                transactionDetails = map.get(detail.getGlAccountCredit().getId());
+            }
+            transactionDetails.add(detail);
+            map.put(detail.getGlAccountCredit().getId(), transactionDetails);
+        }
+
+        List<Integer> keyList = new ArrayList<Integer>(map.keySet());
+
+//        ArrayList<Integer> keyList = new ArrayList<Integer>(map.keySet());
+//      ArrayList<String> valueList = new ArrayList<String>(map.values());
+        for (Integer accountId : keyList) {
+
+            List<GlBankTransactionDetail> detailList = map.get(accountId);
+//            Integer currentAccountId = null;
+//            Integer accountId = null;
+//            Integer costCenterIdMain = null;
+//            GlAccount account = dao.findEntityById(GlAccount.class, accountId);
+//            accountId = account.getId();
+            Integer costCenterIdMain = detailList.get(0).getCostCenterCredit().getId();
+            CostCenter costCenter = dao.findEntityById(CostCenter.class, costCenterIdMain);
+            Integer currentAccountId = costCenter.getCurrentaccountId().getId();
+
+            for (GlBankTransactionDetail dto : detailList) {
+
+                if (dto.getOrganizationSiteId() != null) {
+                    remark.append(" عميل رقم ").append(dto.getOrganizationSiteId().getCode()).append(" ").append(dto.getOrganizationSiteId().getName());
+                }
+                if (dto.getInvoiceId() != null) {
+                    remark.append(" فاتورة رقم ");
+                    remark.append(dto.getInvoiceId().getSerial());
+                }
+
+                Integer costCeterDetailId = dto.getCostCenterId().getId();
+
+                if (dto.getCostCenterId() != null
+                        && dto.getCostCenterId().getId() != null) {
+                    generaljournalDetailsService.addGenDetalil(debit, dto.getValue(), journal.getId(), dto.getAccountDebitId().getId(),
+                            costCeterDetailId,
+                            dto.getRemarks(), tobyUser);
+                }
+
+                if (dto.getBankCommition().compareTo(BigDecimal.ZERO) == 1) {
+                    // كيفية ادخال عمولة البنك
+                    generaljournalDetailsService.addGenDetalil(credit, dto.getBankCommition(), journal.getId(), accountId,
+                            costCenterIdMain,
+                            glBankTransaction.getRemark() + remark.toString(), tobyUser);
+                    generaljournalDetailsService.addGenDetalil(debit, dto.getBankCommition(), journal.getId(), accountId_3,
+                            costCeterDetailId,
+                            " عمولة البنك " + dto.getRemarks(), tobyUser);
+                }
+
+                if (!costCeterDetailId.equals(costCenterIdMain)) {
+                    finalValueCurrent = finalValueCurrent.add(dto.getValue());
+                    generaljournalDetailsService.addGenDetalil(debit, dto.getValue(), journal.getId(), dto.getCostCenterId().getCurrentaccountId().getId(),
+                            //                        dto.getCostCenterId().getId(),
+                            costCenterIdMain,
+                            dto.getRemarks(), tobyUser);
+                    generaljournalDetailsService.addGenDetalil(credit,
+                            dto.getValue(),
+                            journal.getId(),
+                            currentAccountId,
+                            dto.getCostCenterId().getId(),
+                            dto.getRemarks(), tobyUser);
+                    if (dto.getBankCommition().compareTo(BigDecimal.ZERO) == 1) {
+                        generaljournalDetailsService.addGenDetalil(debit, dto.getBankCommition(),
+                                journal.getId(),
+                                dto.getCostCenterId().getCurrentaccountId().getId(),
+                                //                        dto.getCostCenterId().getId(),
+                                costCenterIdMain,
+                                dto.getRemarks(), tobyUser);
+                        generaljournalDetailsService.addGenDetalil(credit,
+                                dto.getBankCommition(),
+                                journal.getId(),
+                                currentAccountId,
+                                dto.getCostCenterId().getId(),
+                                dto.getRemarks(), tobyUser);
+                    }
+                }
+                generaljournalDetailsService.addGenDetalil(credit, dto.getValue(), journal.getId(), accountId,
+                        costCenterIdMain,
+                        dto.getRemarks(), tobyUser);
+            }
+        }
+
+        return journal == null ? null : journal.getId();
+    }
 
     @Override
     public Integer tarhilSettlementVoucher(List<GlBankTransactionDetail> list1, GlBankTransaction glBankTransaction, TobyUser tobyUser,
