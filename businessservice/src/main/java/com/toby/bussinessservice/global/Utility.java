@@ -15,8 +15,8 @@ import java.util.regex.Pattern;
  * @author amr
  */
 public class Utility {
-    
-    public static Boolean checkContainString(String code){
+
+    public static Boolean checkContainString(String code) {
 
         final Pattern standaloneNumber = Pattern.compile("[0-9]");
         Matcher matcher = standaloneNumber.matcher(code);
@@ -27,19 +27,28 @@ public class Utility {
             pos = matcher.end();
             count2++;
         }
-        
+
         Integer diff = code.length() - count2;
-        if(diff == 0){
+        if (diff == 0) {
             return true;
         }
         return false;
     }
-    
-    public static Date sumDateAndNumer(Date date , Integer number) {
+
+    public static Date sumDateAndNumer(Date date, Integer number) {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         c.add(Calendar.DAY_OF_MONTH, number);
-        date = c.getTime() ;
-         return date ;
+        date = c.getTime();
+        return date;
+    }
+
+    public static Date subDateAndNumer(Date date, Integer number) {
+        Integer numberNew = number * -1;
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.DAY_OF_MONTH, numberNew);
+        date = c.getTime();
+        return date;
     }
 }
