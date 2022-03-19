@@ -8,7 +8,6 @@ package com.toby.businessservice;
 import com.toby.entity.TobyUser;
 import com.toby.core.GenericDAO;
 import com.toby.core.storedProcedureParameter;
-import com.toby.define.CompanyActivityClassEnum;
 import com.toby.define.ModuleClassEnum;
 import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.InvDetailDTO;
