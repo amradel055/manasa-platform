@@ -12,7 +12,7 @@ import com.toby.define.ModuleClassEnum;
 import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInventoryDTO;
-import com.toby.dto.InvInvoiceDTO;
+import com.toby.dto.InvInvoiceDTO; 
 import com.toby.dto.InvItemDTO;
 import com.toby.dto.SymbolDTO;
 import com.toby.entity.GlYear;
