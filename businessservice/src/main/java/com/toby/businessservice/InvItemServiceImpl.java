@@ -5,15 +5,20 @@
  */
 package com.toby.businessservice;
 
+import com.toby.apiServices.AttributeService;
+import com.toby.apiServices.VariationProductService;
 import com.toby.businessservice.reports.searchBean.ItemMainDataByGroupSearchBean;
 import com.toby.core.GenericDAO;
 import com.toby.define.ScreenNameClassEnum;
+import com.toby.dto.AttributeDTO;
 import com.toby.dto.CurrencyDTO;
 import com.toby.dto.InvGroupDTO;
 import com.toby.dto.InvItemDTO;
+import com.toby.dto.InvItemDTOApi;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.ProGroupDTO;
 import com.toby.dto.SymbolDTO;
+import com.toby.dto.VariationDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.InvBarcode;
 import com.toby.entity.InvGroup;
@@ -48,6 +53,12 @@ public class InvItemServiceImpl implements InvItemService {
     private CurrencyServiceDTO currencyServiceDTO;
     @EJB
     private InvOpeningBalanceItemDetailService invOpeningBalanceItemDetailService;
+
+    @EJB
+    private AttributeService attributeService;
+
+    @EJB
+    private VariationProductService variationProductService;
 
     StringBuilder appendQuery;
 
@@ -284,6 +295,15 @@ public class InvItemServiceImpl implements InvItemService {
             symbolDTO.setName(invItem.getUnitId().getName());
             invItemDTO.setUnitId(symbolDTO);
         }
+        AttributeDTO attributeDTO = new AttributeDTO();
+        attributeDTO.setItemId(invItem.getId());
+        invItemDTO.setAtrributesList(attributeService.getAllAttributesByBranchIdAndItemId(attributeDTO));
+
+        VariationDTO variationDTO = new VariationDTO();
+        variationDTO.setBranchId(invItemDTO.getBranchId());
+        variationDTO.setCompanyId(invItemDTO.getCompanyId());
+        variationDTO.setItemId(invItem.getId());
+        invItemDTO.setVariationsList(variationProductService.getAllVariationByCompanyIdAndBranchId(variationDTO));
 
         return invItemDTO;
     }
@@ -291,7 +311,7 @@ public class InvItemServiceImpl implements InvItemService {
     private InvItemDTO mapToDTOSmall(InvItemDTO invItemDTO, InvItem invItem) {
         invItemDTO.setId(invItem.getId());
         invItemDTO.setCode(invItem.getCode());
-        invItemDTO.setType(invItem.getType());
+        invItemDTO.setTypeItem(invItem.getType());
         invItemDTO.setDiscountvalue(invItem.getDiscountvalue());
         invItemDTO.setDiscountrate(invItem.getDiscountrate());
         invItemDTO.setPriceType(invItem.getPriceType());
@@ -471,20 +491,56 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public InvItem findInvItem(Integer invItemById
-    ) {
+    public InvItem findInvItem(Integer invItemById) {
         InvItem invItem = new InvItem();
         invItem = dao.findEntityById(InvItem.class, invItemById);
         return invItem;
     }
 
     @Override
-    public InvItemDTO findInvItemDTO(Integer invItemById
-    ) {
+    public InvItemDTO findInvItemDTO(Integer invItemById) {
         InvItem invItem = dao.findEntityById(InvItem.class, invItemById);
         InvItemDTO invItemDTO = new InvItemDTO();
         invItemDTO = mapToDTOSmall(invItemDTO, invItem);
         return invItemDTO;
+    }
+
+    @Override
+    public InvItemDTOApi findInvItemDTOForWebSite(Integer invItemById) {
+        InvItem invItem = dao.findEntityById(InvItem.class, invItemById);
+//        InvItemDTO invItemDTO = mapToDTO(invItem, null);
+
+        return mapToDTOAPI(invItem);
+    }
+
+    public InvItemDTOApi mapToDTOAPI(InvItem invItem) {
+        InvItemDTOApi api = new InvItemDTOApi();
+        api.setId(invItem.getId());
+        api.setName(invItem.getName());
+        if (invItem.getBranchId() != null) {
+            api.setBranchId(invItem.getBranchId().getId());
+        }
+        if (invItem.getCompanyId() != null) {
+            api.setCompanyId(invItem.getCompanyId().getId());
+        }
+
+        if (invItem.getGroupId() != null) {
+            api.setGroupId(invItem.getGroupId().getId());
+        }
+        api.setPrice(invItem.getSellPrice());
+        api.setCode(invItem.getCode());
+        api.setImage(invItem.getImage());
+        api.setRemarks(invItem.getRemarks());
+        AttributeDTO attributeDTO = new AttributeDTO();
+        attributeDTO.setItemId(invItem.getId());
+        api.setAtrributesList(attributeService.getAllAttributesByBranchIdAndItemId(attributeDTO));
+
+        VariationDTO variationDTO = new VariationDTO();
+        variationDTO.setBranchId(api.getBranchId());
+        variationDTO.setCompanyId(api.getCompanyId());
+        variationDTO.setItemId(invItem.getId());
+        api.setVariationsList(variationProductService.getAllVariationByCompanyIdAndBranchId(variationDTO));
+        return api;
     }
 
     @Override

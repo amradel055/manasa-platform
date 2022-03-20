@@ -23,6 +23,8 @@ public interface AttributeService {
     public void deleteAttribute(AttributeDTO attribute);
 
     public AttributeDTO findAttribute(AttributeDTO attributeDTO);
+    
+    public List<AttributeDTO> getAllAttributesByBranchIdAndItemId(AttributeDTO attributeDTO);
 
     public List<AttributeDTO> getAllAttributesByCompanyId(AttributeDTO attributeDTO);
 

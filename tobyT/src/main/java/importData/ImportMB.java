@@ -424,12 +424,12 @@ public class ImportMB extends Basic implements Serializable {
                 if (type1 != null && !type1.isEmpty()) {
                     invItem = new InvItemDTO();
                     invItem.setCode(code);
-                    invItem.setType(Integer.parseInt(type1));
+                    invItem.setTypeItem(Integer.parseInt(type1));
                     invItemDTOList1.add(invItem);
                 } else if (type2 != null && !type2.isEmpty()) {
                     invItem = new InvItemDTO();
                     invItem.setCode(code);
-                    invItem.setType(Integer.parseInt(type2));
+                    invItem.setTypeItem(Integer.parseInt(type2));
                     invItemDTOList2.add(invItem);
                 }
 

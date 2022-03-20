@@ -5,9 +5,11 @@
  */
 package com.toby.general;
 
+import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.TobyUserService;
 import com.toby.dto.APIDataDTO;
 import com.toby.dto.ApiLoginDTO;
+import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.TobyUser;
 import com.toby.root.LoginRoot;
 import io.jsonwebtoken.Claims;
@@ -34,7 +36,9 @@ public class GeneralImp implements GeneralService {
 
     @EJB
     TobyUserService tobyUserService;
-
+    
+    @EJB 
+    OrganizationSiteService organizationSiteService ;
     @Override
     public ApiLoginDTO authAdmin(LoginRoot loginRoot) {
         String userName = loginRoot.userName;
@@ -48,6 +52,37 @@ public class GeneralImp implements GeneralService {
             return getUserData(Boolean.FALSE, "اسم المستخدم او كلمة المرور خاطئة", null);
 
         }
+    }
+    
+      @Override
+    public ApiLoginDTO authCustomer(LoginRoot loginRoot) {
+         
+          InvOrganizationSite invOrganizationSite= new InvOrganizationSite();
+          invOrganizationSite.setMobile(loginRoot.mobile);
+          
+        invOrganizationSite   = organizationSiteService.findOrganizationSiteByMobile(invOrganizationSite);
+
+        if (invOrganizationSite != null) {
+            return getUserDataForCustomer(Boolean.TRUE, null, invOrganizationSite);
+        } else {
+            return getUserDataForCustomer(Boolean.FALSE, "تاكد من رقم الموبايل", null);
+
+        }
+    }
+    
+     private ApiLoginDTO getUserDataForCustomer(Boolean success, String msg, InvOrganizationSite invOrganizationSite) {
+        ApiLoginDTO apiLoginDTO = new ApiLoginDTO();
+        apiLoginDTO.setSuccess(success);
+        apiLoginDTO.setMsg(msg);
+        if (success.equals(Boolean.TRUE)) {
+            APIDataDTO aPIDataDTO = new APIDataDTO();
+            aPIDataDTO.setName(invOrganizationSite.getName());
+            aPIDataDTO.setId(invOrganizationSite.getId());
+            aPIDataDTO.setMobile(invOrganizationSite.getMobile());
+            apiLoginDTO.setData(aPIDataDTO);
+        }
+
+        return apiLoginDTO;
     }
 
     private ApiLoginDTO getUserData(Boolean success, String msg, TobyUser tobyUser) {

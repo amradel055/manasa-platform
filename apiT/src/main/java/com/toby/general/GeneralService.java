@@ -19,6 +19,8 @@ public interface GeneralService {
 
     public ApiLoginDTO authAdmin(LoginRoot loginRoot);
 
+    public ApiLoginDTO authCustomer(LoginRoot loginRoot);
+
     public Boolean verifyToken(String token);
 
     public String DecodeJWT(String token) throws UnsupportedEncodingException;

@@ -11,6 +11,7 @@ import com.toby.core.storedProcedureParameter;
 import com.toby.define.ModuleClassEnum;
 import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.InvDetailDTO;
+import com.toby.dto.InvDetailsDTOAPI;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.entity.GlYear;
 import com.toby.entity.InvAddingorderDetail;
@@ -258,6 +259,36 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
         return invDetailDTOList;
     }
 
+    @Override
+    public List<InvDetailsDTOAPI> getAllInvPurchaseInvoiceDetailListWebSite(InvInvoiceDTO dto) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("invPurchaseInvoiceId", dto.getId());
+        List<InvPurchaseInvoiceDetail> details = dao.findListByQuery("SELECT e FROM InvPurchaseInvoiceDetail e WHERE e.invPurchaseInvoiceId.id = :invPurchaseInvoiceId", params);
+        return mapToDTOAPIList(details);
+    }
+
+    public List<InvDetailsDTOAPI> mapToDTOAPIList(List<InvPurchaseInvoiceDetail> detail) {
+        List<InvDetailsDTOAPI> aPIs = new ArrayList<>();
+        for (InvPurchaseInvoiceDetail dTO : detail) {
+            InvDetailsDTOAPI detailsDTOAPI = mapToDTOAPI(dTO);
+            aPIs.add(detailsDTOAPI);
+        }
+        return aPIs;
+    }
+
+    public InvDetailsDTOAPI mapToDTOAPI(InvPurchaseInvoiceDetail detail) {
+        InvDetailsDTOAPI api = new InvDetailsDTOAPI();
+        api.setId(detail.getItemId().getId());
+        api.setCode(detail.getItemId().getCode());
+        api.setName(detail.getItemId().getName());
+        api.setPrice(detail.getCost());
+        api.setImage(detail.getItemId().getImage());
+        if (detail.getItemId().getGroupId() != null) {
+            api.setGroupId(detail.getItemId().getGroupId().getId());
+        }
+        return api;
+    }
+
     private <T> List<InvDetailDTO> returnListDTO(List<T> list, InvInvoiceDTO invInvoiceDTO) {
         List<InvDetailDTO> dTOList = new ArrayList<>();
         Map<String, ItemsBarcodesDetailsView> itemsBarcodeMap = new HashMap<>();
@@ -336,7 +367,7 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
                         entity.getInvItemParentId() == null ? null : entity.getInvItemParentId().getId(),
                         entity.getInvItemParentId() == null ? null : entity.getInvItemParentId().getCode(),
                         entity.getInvItemParentId() == null ? null : entity.getInvItemParentId().getName(),
-                        invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(),entity.getCostAvarage());
+                        invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), entity.getCostAvarage());
             } else if (Entity.getClass().equals(InvoiceNotLoadedYetProFactoeyProcedure.class)) {
                 InvoiceNotLoadedYetProFactoeyProcedure entity = (InvoiceNotLoadedYetProFactoeyProcedure) Entity;
 
@@ -350,7 +381,7 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
                         entity.getItemBarcode(), null, entity.getItemId(), null,
                         null, null, null, null,
                         entity.getNumber(), null, null, null,
-                        invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), entity.getDetailId(),BigDecimal.ZERO);
+                        invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), entity.getDetailId(), BigDecimal.ZERO);
 
             }
         } else {
@@ -367,7 +398,7 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
                         entity.getUnitId().getId(), entity.getUnitId().getSerial(), entity.getUnitId().getName(),
                         entity.getItemId().getIsInventoryItem(),
                         entity.getNumber(), entity.getQuantityOfOneUnit(), entity.getInvInventoryId(), entity.getItemId(),
-                        invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), null,entity.getCostAvarage());
+                        invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), null, entity.getCostAvarage());
 //                dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true,false);
 //                dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
                 dTO.setDiscountValue(entity.getDiscountValue());
@@ -386,9 +417,9 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
                         entity.getItemBarcode(), entity.getScrewing(), entity.getItemId(), entity.getWeight(),
                         entity.getUnitId(), entity.getUnitSerial(), entity.getUnitName(), entity.getIsInventoryItem(),
                         null, null, null, null,
-                        invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), null,entity.getCostAvarage());
+                        invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), null, entity.getCostAvarage());
 
-                dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true,false);
+                dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true, false);
                 dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
             }
         }
@@ -527,7 +558,7 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
     @Override
     public List<InvDetailDTO> addInvPurchaseInvoiceDetailsDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList, InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) {
         String error = null;
-        List<InvDetailDTO> list = new  ArrayList<>();
+        List<InvDetailDTO> list = new ArrayList<>();
         if (invPurchaseInvoiceDetailList != null && !invPurchaseInvoiceDetailList.isEmpty()) {
             error = invGlobalService.validateSave(invPurchaseInvoiceDetailList, invInvoiceDTO.getInvInventoryId().getId(),
                     invInvoiceDTO.getScreenName(), invInvoiceDTO.getInventorySetupDTO().getNegativeSell(),

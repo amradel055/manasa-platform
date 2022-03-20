@@ -24,6 +24,7 @@ import com.toby.dto.GlYearDTO;
 import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
+import com.toby.dto.InvInvoiceDTOApi;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.InventoryDelegatorDTO;
 import com.toby.dto.PrintProductionDTO;
@@ -1768,6 +1769,40 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     @Override
+    public List<InvInvoiceDTOApi> getALLInvPurchaseInvoiceDTOBYCustomerForWebSite(Integer type, String mobile) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("type", type);
+        params.put("customerMobile", mobile);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT s FROM InvPurchaseInvoice s WHERE  s.type =:type AND s.organizationSiteId.mobile = :customerMobile  order by s.serial DESC");
+        List<InvPurchaseInvoice> details = dao.findListByQuery(builder.toString(), params);
+        return mapToDTOAPIList(details);
+    }
+    
+    public List<InvInvoiceDTOApi> mapToDTOAPIList ( List<InvPurchaseInvoice> details){
+       List<InvInvoiceDTOApi> list = new ArrayList<>();
+       for(InvPurchaseInvoice  invoice : details ){
+          InvInvoiceDTOApi api =  mapToDTOAPI(invoice);
+          list.add(api);
+       }
+       
+       return list ;
+    }
+
+    public InvInvoiceDTOApi mapToDTOAPI(InvPurchaseInvoice invoice) {
+        InvInvoiceDTOApi api = new InvInvoiceDTOApi();
+        api.setId(invoice.getId());
+        api.setInvoiceDate(invoice.getDate());
+        api.setCustomerName(invoice.getOrganizationSiteId().getName());
+        api.setStatus(invPurchaseInvoiceService.findInvoiceStatus(invoice.getId()));
+        api.setTakeDate(invoice.getDueDate());
+        api.setGallaryName(invoice.getInvInventoryId().getName());
+        api.setInvoiceNumber(invoice.getSerial().toString());
+        api.setRemarks(invoice.getRemarks());
+        return  api ;
+    }
+
+    @Override
     public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByStatus(PrintProductionDTO printProductionDTO, Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("type", printProductionDTO.getInvoiceStatus());
@@ -1805,12 +1840,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 + " left join inv_inventory invi on invi.id = s.galary_Id "
                 + " left join inv_organization_site ios on ios.id = s.organization_site_id "
                 + " WHERE s.branch_id = ").append(branchId).append(
-                " AND  s.type = ").append(printProductionDTO.getInvoiceStatus()).append(
-                " AND s.id not in (SELECT p.inv_purchase_invoice_id from pro_factory_delivery p )  \n"
-                + " AND  s.galary_Id IN (").append(gallarySelected).append(" )  AND   s.date >= '"
-                + formatDateFrom.format(printProductionDTO.getFromDate()) + "'"
-                + " AND   s.date <= '" + formatDateTo.format(printProductionDTO.getToDate()) + "'"
-                + " order by s.serial");
+                        " AND  s.type = ").append(printProductionDTO.getInvoiceStatus()).append(
+                        " AND s.id not in (SELECT p.inv_purchase_invoice_id from pro_factory_delivery p )  \n"
+                        + " AND  s.galary_Id IN (").append(gallarySelected).append(" )  AND   s.date >= '"
+                        + formatDateFrom.format(printProductionDTO.getFromDate()) + "'"
+                        + " AND   s.date <= '" + formatDateTo.format(printProductionDTO.getToDate()) + "'"
+                        + " order by s.serial");
 
         List<Object[]> res = dao.executeNativeQuery(builder.toString());
 
@@ -2621,7 +2656,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
             generaljournalDetailsService.addGenDetalil(true, dto.getTotalNetAfterDiscount(), journal.getId(), storeAccountNumber,
                     835,
-                    "فاتورة المورد " + ( dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getName() ) + " رقم " + dto.getSupplierInvoiceNumber(), tobyUser);
+                    "فاتورة المورد " + (dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getName()) + " رقم " + dto.getSupplierInvoiceNumber(), tobyUser);
             generaljournalDetailsService.addGenDetalil(false, dto.getFinalNet(), journal.getId(),
                     (dto.getOrganizationSiteId() == null || dto.getOrganizationSiteId().getAccountId() == null || dto.getOrganizationSiteId().getAccountId().getId() == null) ? null : dto.getOrganizationSiteId().getAccountId().getId(),
                     835,
@@ -2630,7 +2665,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             generaljournalDetailsService.addGenDetalil(true, dto.getTaxvalue(), journal.getId(), purchseTaxAccount,
                     835,
                     //                    (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
-                    "فاتورة " +( dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getName() ) + " رقم " + dto.getSupplierInvoiceNumber() + "رقم ضريبى " + ( dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getPostBox() ), tobyUser);
+                    "فاتورة " + (dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getName()) + " رقم " + dto.getSupplierInvoiceNumber() + "رقم ضريبى " + (dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getPostBox()), tobyUser);
 
         } else if (dto.getScreenName().equals(ScreenNameClassEnum.INVRETURNPURCHASEFORM)) {
             journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1016, dto.getSerial(), dto.getDate(), "مردود مشتريات", tobyUser, 0, true);
@@ -3215,7 +3250,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         return false;
     }
-    
+
     @Override
     public void updateDetailInvoiceValues(Integer invPurchaseInvoiceId) {
         Map<String, Object> params = new HashMap<>();

@@ -977,9 +977,9 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                     //                    && detailDTO.getItemId().getId() != 22656
                     //                    && detailDTO.getItemId().getId() != 22657
 
-                    && detailDTO.getItemId().getType() != null
-                    && (detailDTO.getItemId().getType() == 1
-                    || detailDTO.getItemId().getType() == 2)) {
+                    && detailDTO.getItemId().getTypeItem() != null
+                    && (detailDTO.getItemId().getTypeItem() == 1
+                    || detailDTO.getItemId().getTypeItem() == 2)) {
                 detailDTO.setDiscount(new BigDecimal(number));
             }
         }
