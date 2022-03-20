@@ -17,6 +17,7 @@ import com.toby.businessservice.GlBankService;
 import com.toby.businessservice.GlBankTransactionDetailsService;
 import com.toby.businessservice.GlBankTransactionService;
 import com.toby.businessservice.InvDelegatorService;
+import com.toby.businessservice.InvInventoryService;
 import com.toby.businessservice.InvItemService;
 import com.toby.businessservice.InvNoticeService;
 import com.toby.businessservice.InvOpeningBalanceItemDetailService;
@@ -44,6 +45,7 @@ import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvItemDTO;
+import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.InvPurchaseInvoiceDTO;
 import com.toby.dto.OfferCompanyDTO;
 import com.toby.dto.SymbolDTO;
@@ -203,6 +205,8 @@ public class ImportMB extends Basic implements Serializable {
     private GlAccountServiceDTO glAccountServiceDTO;
     @EJB
     private InvNoticeService invNoticeService;
+    @EJB
+    private InvInventoryService invInventoryService;
 
     public void tarhilInvoiceOne() throws CloneNotSupportedException {
         List<GeneralJournalDTO> list = invPurchaseInvoiceService_1.tarhilOne(getUserData().getUser());
@@ -426,14 +430,14 @@ public class ImportMB extends Basic implements Serializable {
         List<InvDetailDTO> list = new ArrayList<>();
         Boolean check = Boolean.TRUE;
         for (int i = 1; i < sheet.getRows(); i++) {
-            if (!sheet.getCell(0, i).getContents().isEmpty() && sheet.getCell(8, i).getContents().isEmpty() && check) {
+            if (!sheet.getCell(1, i).getContents().isEmpty() && sheet.getCell(8, i).getContents().isEmpty() && check) {
                 invoiceDTO = saveHead(sheet, i);
                 if (check) {
                     check = Boolean.FALSE;
                 } else {
                     check = Boolean.TRUE;
                 }
-            } else if (!sheet.getCell(0, i).getContents().isEmpty() && sheet.getCell(8, i).getContents().isEmpty() && !check) {
+            } else if (!sheet.getCell(1, i).getContents().isEmpty() && sheet.getCell(8, i).getContents().isEmpty() && !check) {
                 if (check) {
                     check = Boolean.FALSE;
                 } else {
@@ -456,13 +460,27 @@ public class ImportMB extends Basic implements Serializable {
 
     public InvInvoiceDTO saveHead(Sheet sheet, int i) throws NumberFormatException {
         InvInvoiceDTO invoiceDTO;
+        Cell customerName = sheet.getCell(1, i);
         Cell code = sheet.getCell(2, i);
         Cell date = sheet.getCell(3, i);
         Cell gallaryID = sheet.getCell(9, i);
         Cell inventoryID = sheet.getCell(10, i);
         invoiceDTO = new InvInvoiceDTO();
         if (code != null && !code.getContents().trim().isEmpty()) {
+            invoiceDTO.setExcel(1);
             invoiceDTO.setOrganizationSiteId(organizationSiteService.getIDByCode(code.getContents(), getUserData().getUser(), Integer.valueOf(gallaryID.getContents())));
+            if (invoiceDTO.getOrganizationSiteId() == null) {
+                InvOrganizationSiteDTO siteDTO = new InvOrganizationSiteDTO();
+                siteDTO.setMobile("0000000000");
+                siteDTO.setName(customerName.getContents());
+                InvInventoryDTO inventory = invInventoryService.findInventory(Integer.valueOf(gallaryID.getContents()));
+                InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
+                invInventoryDTO.setId(Integer.valueOf(gallaryID.getContents()));
+                siteDTO.setGallaryIdDTO(invInventoryDTO); 
+                InvOrganizationSiteDTO customer = organizationSiteService.addNewCustomer(siteDTO, new ArrayList<InvOrganizationSiteDTO>(), getUserData().getUser(), inventory.getCustomerAccount().getId());
+                invoiceDTO.setOrganizationSiteId(customer);
+
+            }
             invoiceDTO.setDate(findDateFromHijriFrom(1442, 10, 5));
             CurrencyDTO currency = new CurrencyDTO();
             currency.setId(110);

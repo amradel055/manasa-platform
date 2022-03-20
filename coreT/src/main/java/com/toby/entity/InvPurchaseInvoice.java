@@ -226,6 +226,8 @@ public class InvPurchaseInvoice extends BaseEntity {
     private Integer sendCloth;
     @Column(name = "offer_copoun")
     private String offerCopoun;
+    @Column(name = "excel")
+    private Integer excel;
 
     public InvPurchaseInvoice() {
     }
@@ -923,5 +925,19 @@ public class InvPurchaseInvoice extends BaseEntity {
      */
     public void setOfferCopoun(String offerCopoun) {
         this.offerCopoun = offerCopoun;
+    }
+
+    /**
+     * @return the excel
+     */
+    public Integer getExcel() {
+        return excel;
+    }
+
+    /**
+     * @param excel the excel to set
+     */
+    public void setExcel(Integer excel) {
+        this.excel = excel;
     }
 }

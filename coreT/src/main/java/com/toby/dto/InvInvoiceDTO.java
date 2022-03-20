@@ -163,6 +163,8 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private String offerCopoun;
     
     private Integer generalJournalId;
+    
+    private Integer excel;
 
     public InvInvoiceDTO() {
     }
@@ -1844,6 +1846,20 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setOfferCopoun(String offerCopoun) {
         this.offerCopoun = offerCopoun;
+    }
+
+    /**
+     * @return the excel
+     */
+    public Integer getExcel() {
+        return excel;
+    }
+
+    /**
+     * @param excel the excel to set
+     */
+    public void setExcel(Integer excel) {
+        this.excel = excel;
     }
 
 }
