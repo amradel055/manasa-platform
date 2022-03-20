@@ -111,4 +111,6 @@ public interface InvItemService {
     public List<Integer> getInvItemListByBranchIdNotInInvPurchaseInvoice(Integer branchId);
     
     public InvItemDTO mapToDTO(InvItem invItem, TobyUser tobyUser);
+    
+    public InvItem findItemByCode(String code) ;
 }

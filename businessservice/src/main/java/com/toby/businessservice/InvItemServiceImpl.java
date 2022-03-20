@@ -1202,5 +1202,29 @@ public class InvItemServiceImpl implements InvItemService {
         List<Integer> detailses = dao.findListByQuery("SELECT i.id FROM InvItem i WHERE i.branchId.id = :branchId  ORDER BY i.code", params);
         return detailses;
     }
+    
+       @Override
+    public InvItem findItemByCode(String code) {
+        Map<String, Object> params = new HashMap<>();
+        StringBuilder query = new StringBuilder();
+
+        params.put("code", code);
+        params.put("branchId", 182);
+
+        query.append("SELECT i FROM InvItem i WHERE i.branchId.id = :branchId AND i.code = :code ");
+
+        query.append("  ORDER BY i.code");
+
+        String q = query.toString();
+
+        List<InvItem> invItems = dao.findListByQuery(q, params);
+
+        if (invItems == null || invItems.isEmpty()) {
+            return null;
+        }
+
+        return invItems.get(0);
+
+    }
 
 }

@@ -157,5 +157,9 @@ public interface InvPurchaseInvoiceService_1 {
     public List<GeneralJournalDTO> testTarhil(TobyUser tobyUser) throws CloneNotSupportedException;
     
     public void updateTarhil(Integer invoiceId, Integer tarhilId);
+    
+    public InvInvoiceDTO completeTarhilInvoiceAfterSave(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) throws CloneNotSupportedException;
+    
+    public InvInvoiceDTO saveNew(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser);
 
 }

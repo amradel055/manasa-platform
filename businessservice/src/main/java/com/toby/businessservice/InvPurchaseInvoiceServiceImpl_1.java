@@ -1402,25 +1402,26 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                         generaljournalService.deleteGeneralJournal(tarhilIdOld);
                     }
                 } else {
-                    // فى حالة ان الفاتورة جديدة بروح اجيب السيريال الاول 
-                    Integer serial = genericService.getMaxSerialForInvoice(InvPurchaseInvoice.class, invPurchaseInvoice.getBranchId().getId(), null, invPurchaseInvoice.getType());
-                    if (serial == null) {
-                        invInvoiceDTO.setMsg("من فضلك اعد حفظ الفاتورة");
-                        dao.rollbackQuery();
-                        return invInvoiceDTO;
-                    }
-                    invPurchaseInvoice.setSerial(serial);
-                    // بجيب السيريال الخاص بالفواتير الضريبية
-                    if (invPurchaseInvoice.getTaxflag()) {
-                        if (invPurchaseInvoice.getType() != null && (invPurchaseInvoice.getType() == 0 || invPurchaseInvoice.getType() == 2 || invPurchaseInvoice.getType() == 5)) {
-                            Integer serialTax = getMaxSerialTaxForInvoice(invPurchaseInvoice.getBranchId().getId(), null, invPurchaseInvoice.getType(), false);
-                        } else {
-                            Integer serialTax = getMaxSerialTaxForInvoice(invPurchaseInvoice.getBranchId().getId(), invPurchaseInvoice.getGalaryId().getId(), invPurchaseInvoice.getType(), invPurchaseInvoice.getTaxFlagFinal() == null ? Boolean.FALSE : invPurchaseInvoice.getTaxFlagFinal());
-                            invPurchaseInvoice.setSerialTax(serialTax);
-                        }
-                    }
+//                    // فى حالة ان الفاتورة جديدة بروح اجيب السيريال الاول 
+//                    Integer serial = genericService.getMaxSerialForInvoice(InvPurchaseInvoice.class, invPurchaseInvoice.getBranchId().getId(), null, invPurchaseInvoice.getType());
+//                    if (serial == null) {
+//                        invInvoiceDTO.setMsg("من فضلك اعد حفظ الفاتورة");
+//                        dao.rollbackQuery();
+//                        return invInvoiceDTO;
+//                    }
+//                    invPurchaseInvoice.setSerial(serial);
+//                    // بجيب السيريال الخاص بالفواتير الضريبية
+//                    if (invPurchaseInvoice.getTaxflag()) {
+//                        if (invPurchaseInvoice.getType() != null && (invPurchaseInvoice.getType() == 0 || invPurchaseInvoice.getType() == 2 || invPurchaseInvoice.getType() == 5)) {
+//                            Integer serialTax = getMaxSerialTaxForInvoice(invPurchaseInvoice.getBranchId().getId(), null, invPurchaseInvoice.getType(), false);
+//                        } else {
+//                            Integer serialTax = getMaxSerialTaxForInvoice(invPurchaseInvoice.getBranchId().getId(), invPurchaseInvoice.getGalaryId().getId(), invPurchaseInvoice.getType(), invPurchaseInvoice.getTaxFlagFinal() == null ? Boolean.FALSE : invPurchaseInvoice.getTaxFlagFinal());
+//                            invPurchaseInvoice.setSerialTax(serialTax);
+//                        }
+//                    }
 
                     invPurchaseInvoice = dao.updateEntity(invPurchaseInvoice);
+                    
                     invInvoiceDTO.setId(invPurchaseInvoice.getId());
                     if (invInvoiceDTO.getPayed() != null && invInvoiceDTO.getPayed().compareTo(BigDecimal.ZERO) == 1 && invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
                         glBankTransactionService.addCash(invInvoiceDTO, tobyUser);
@@ -1447,13 +1448,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 //                    invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO,false);
                 }
 
-                ///   الترحيل
-                GeneralJournal generalJournal = tarhil(invInvoiceDTO, tobyUser);
-                if (generalJournal != null) {
-                    invPurchaseInvoice.setPostFlag(1);
-                    invPurchaseInvoice.setGeneralJournalId(generalJournal);
-                    dao.updateEntity(invPurchaseInvoice);
-                }
+//                tarhilInvoice(invInvoiceDTO, tobyUser, invPurchaseInvoice);
             }
         } catch (Exception e) {
             invInvoiceDTO.setMsg(e.toString());
@@ -1462,6 +1457,37 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
         return invInvoiceDTO;
     }
+
+    @Override
+    public InvInvoiceDTO completeTarhilInvoiceAfterSave(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) throws CloneNotSupportedException {
+        ///   الترحيل
+        if (invInvoiceDTO.getId() != null) {
+            GeneralJournal generalJournal = tarhil(invInvoiceDTO, tobyUser);
+            if (generalJournal != null) {
+                InvPurchaseInvoice invPurchaseInvoice = dao.findEntityById(InvPurchaseInvoice.class, invInvoiceDTO.getId());
+                invPurchaseInvoice.setPostFlag(1);
+                invPurchaseInvoice.setGeneralJournalId(generalJournal);
+                dao.updateEntity(invPurchaseInvoice);
+                invInvoiceDTO.setSerial(invPurchaseInvoice.getSerial());
+                invInvoiceDTO.setSerialTax(invPurchaseInvoice.getSerialTax());
+            }
+        }
+        
+        return invInvoiceDTO;
+    }
+    
+//    private void tarhilInvoice(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser, InvPurchaseInvoice invPurchaseInvoice) throws CloneNotSupportedException {
+//        ///   الترحيل
+//        if (invInvoiceDTO.getId() != null) {
+//            GeneralJournal generalJournal = tarhil(invInvoiceDTO, tobyUser);
+//            if (generalJournal != null) {
+//                invPurchaseInvoice = dao.findEntityById(InvPurchaseInvoice.class, invPurchaseInvoice.getId());
+//                invPurchaseInvoice.setPostFlag(1);
+//                invPurchaseInvoice.setGeneralJournalId(generalJournal);
+//                dao.updateEntity(invPurchaseInvoice);
+//            }
+//        }
+//    }
 
 //    @Override
 //    public InvInvoiceDTO convertInvPurchaseInvoiceToPurchaseInvoice(InvInvoiceDTO invPurchaseInvoiceDTO) {
@@ -3625,6 +3651,25 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         dto.setInvName(entity.getInvName());
         dto.setName(entity.getName());
         return dto;
+    }
+
+    @Override
+    public InvInvoiceDTO saveNew(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) {
+        try {
+            invInvoiceDTO = validateSave(invInvoiceDTO);
+
+            InvPurchaseInvoice invPurchaseInvoice;
+            if (invInvoiceDTO != null && (invInvoiceDTO.getMsg() == null || invInvoiceDTO.getMsg().isEmpty())) {
+                invPurchaseInvoice = mapToEntity(invInvoiceDTO, tobyUser);
+                invPurchaseInvoice = dao.updateEntity(invPurchaseInvoice);
+                invInvoiceDTO.setId(invPurchaseInvoice.getId());
+            }
+        } catch (Exception e) {
+            invInvoiceDTO.setMsg(e.toString());
+            dao.rollbackQuery();
+        }
+
+        return invInvoiceDTO;
     }
 
 }

@@ -12,6 +12,8 @@ import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.toby.InventoryBasicDataForm;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -120,29 +122,34 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
             getInvInvoiceDTO().setMsg(null);
             checkDetailData();
             if (validateInvoiceType()) {
-                setInvInvoiceDTO(invPurchaseInvoiceService.save(getInvInvoiceDTO(), getUserData().getUser()));
-                invPurchaseInvoiceService.updateDetailInvoiceValues(getInvInvoiceDTO().getId());
-                checkDetailData();
-                setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
-                msgSave(getInvInvoiceDTO().getMsg());
-                findAccountStatement();
-                if (id == null && getUri().contains("proworkorderform") && getInvInvoiceDTO().getInvoiceType() == null) {
-                    StringBuilder message = new StringBuilder();
-                    message.append("عميلنا العزيز ، شكراً لتسوقك تمت عملية شراء رقم ");
-                    message.append(getInvInvoiceDTO().getSerial());
-                    message.append(" المدفوع ");
-                    message.append(getInvInvoiceDTO().getPayed());
-                    if (getInvInvoiceDTO().getGallaryId().getInvName() != null && getInvInvoiceDTO().getGallaryId().getInvName() == 0) {
-                        message.append("\n");
-                        message.append("نسعد بتلقي تقييمكم عن الخدمة المقدمة لكم من برنس  \n");
-                        message.append(" https://forms.gle/jARVyTyhGMT9MQRi7 ");
-                        sendSms(getInvInvoiceDTO().getOrganizationSiteId().getMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
-                    } else if (getInvInvoiceDTO().getGallaryId().getInvName() != null && getInvInvoiceDTO().getGallaryId().getInvName() == 1) {
-                        message.append("\n");
-                        message.append("نسعد بتلقي تقييمكم عن الخدمة المقدمة لكم من لي رويال  \n");
-                        message.append(" https://forms.gle/Jcti3uYixoUX8P9D6 ");
-                        sendSms(getInvInvoiceDTO().getOrganizationSiteId().getMobile(), "التوبى العالمى", message.toString(), "20099320", "Royal@e12z");
+                try {
+                    setInvInvoiceDTO(invPurchaseInvoiceService.save(getInvInvoiceDTO(), getUserData().getUser()));
+                    setInvInvoiceDTO(invPurchaseInvoiceService.completeTarhilInvoiceAfterSave(getInvInvoiceDTO(), getUserData().getUser()));
+                    invPurchaseInvoiceService.updateDetailInvoiceValues(getInvInvoiceDTO().getId());
+                    checkDetailData();
+                    setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
+                    msgSave(getInvInvoiceDTO().getMsg());
+                    findAccountStatement();
+                    if (id == null && getUri().contains("proworkorderform") && getInvInvoiceDTO().getInvoiceType() == null) {
+                        StringBuilder message = new StringBuilder();
+                        message.append("عميلنا العزيز ، شكراً لتسوقك تمت عملية شراء رقم ");
+                        message.append(getInvInvoiceDTO().getSerial());
+                        message.append(" المدفوع ");
+                        message.append(getInvInvoiceDTO().getPayed());
+                        if (getInvInvoiceDTO().getGallaryId().getInvName() != null && getInvInvoiceDTO().getGallaryId().getInvName() == 0) {
+                            message.append("\n");
+                            message.append("نسعد بتلقي تقييمكم عن الخدمة المقدمة لكم من برنس  \n");
+                            message.append(" https://forms.gle/jARVyTyhGMT9MQRi7 ");
+                            sendSms(getInvInvoiceDTO().getOrganizationSiteId().getMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
+                        } else if (getInvInvoiceDTO().getGallaryId().getInvName() != null && getInvInvoiceDTO().getGallaryId().getInvName() == 1) {
+                            message.append("\n");
+                            message.append("نسعد بتلقي تقييمكم عن الخدمة المقدمة لكم من لي رويال  \n");
+                            message.append(" https://forms.gle/Jcti3uYixoUX8P9D6 ");
+                            sendSms(getInvInvoiceDTO().getOrganizationSiteId().getMobile(), "التوبى العالمى", message.toString(), "20099320", "Royal@e12z");
+                        }
                     }
+                } catch (CloneNotSupportedException ex) {
+                    Logger.getLogger(InvPurchaseInvoiceFormDTOMB.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         } else {

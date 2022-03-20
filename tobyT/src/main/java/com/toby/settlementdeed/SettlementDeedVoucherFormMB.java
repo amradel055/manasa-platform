@@ -854,11 +854,11 @@ public class SettlementDeedVoucherFormMB extends GlBankBasicDataForm {
 
                     if (saveValidation != false) {
                         GeneralJournal generalJournal = new GeneralJournal();
-                        if (getUri().contains("settlementdeedVoucher")) {
-                            generalJournal.setId(glBankTransactionDetailsService.tarhilSettlementVoucher(glBankTransactionDetailsUpdatedList, glBankTransaction, getUserData().getUser(), 3, false));
-                        } else if (getUri().contains("settlementdeedVoucherNOSumDetail")) {
+                         if (getUri().contains("settlementdeedVoucherNOSumDetail")) {
                             generalJournal.setId(glBankTransactionDetailsService.tarhilSettlementVoucherNOSumDetail(glBankTransactionDetailsUpdatedList, glBankTransaction, getUserData().getUser(), 3, false));
-                        }
+                        }else if (getUri().contains("settlementdeedVoucher")) {
+                            generalJournal.setId(glBankTransactionDetailsService.tarhilSettlementVoucher(glBankTransactionDetailsUpdatedList, glBankTransaction, getUserData().getUser(), 3, false));
+                        } 
                         generalJournal = dao.findEntityById(GeneralJournal.class, generalJournal.getId());
                         glBankTransactionEntity.setSerial(generalJournal.getSerial());
                         glBankTransaction.setId(generalJournal.getId());

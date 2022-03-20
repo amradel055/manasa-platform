@@ -14,7 +14,6 @@ import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.TobyUser;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Remote;
@@ -217,5 +216,7 @@ public interface OrganizationSiteService {
     public InvOrganizationSiteDTO saveSmallLead(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser);
     
     public void saveOpenningBalance(BigDecimal value, String customerCode, String gallaryCode);
+    
+    public InvOrganizationSiteDTO getIDByCode(String code , TobyUser tobyUser , Integer gallaryId);
 
 }

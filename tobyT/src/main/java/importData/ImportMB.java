@@ -34,10 +34,17 @@ import com.toby.converter.BranchConverter;
 import com.toby.define.AccountClassEnum;
 import com.toby.define.AdminUnitDependantEnum;
 import com.toby.define.AssisstantAccountDependantEnum;
+import com.toby.define.CompanyActivityClassEnum;
 import com.toby.define.CostCenterDependantEnum;
+import com.toby.define.ScreenNameClassEnum;
+import com.toby.dto.CurrencyDTO;
 import com.toby.dto.GeneralJournalDTO;
 import com.toby.dto.GlYearDTO;
+import com.toby.dto.InvDetailDTO;
+import com.toby.dto.InvInventoryDTO;
+import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvItemDTO;
+import com.toby.dto.InvPurchaseInvoiceDTO;
 import com.toby.dto.OfferCompanyDTO;
 import com.toby.dto.SymbolDTO;
 import com.toby.entity.Branch;
@@ -47,22 +54,31 @@ import com.toby.entity.GeneralJournal;
 import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlAccount;
 import com.toby.entity.GlYear;
+import com.toby.entity.InvInventory;
 import com.toby.entity.InvItem;
 import com.toby.entity.InvNotice;
 import com.toby.entity.InvOpenningBalanceItem;
 import com.toby.entity.InvOpenningBalanceItemDetail;
 import com.toby.entity.InvOrganizationSite;
+import com.toby.entity.InvPurchaseInvoice;
+import com.toby.entity.InvPurchaseInvoiceDetail;
 import com.toby.entity.InventoryDelegator;
 import com.toby.entity.Symbol;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
 import com.toby.toby.Basic;
 import com.toby.toby.UserData;
+import com.toby.views.ItemsBarcodesDetailsView;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.chrono.HijrahChronology;
+import java.time.chrono.HijrahDate;
+import java.time.chrono.IsoChronology;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -249,15 +265,10 @@ public class ImportMB extends Basic implements Serializable {
 //    }
     public void tarhilExitOne() {
         List<GeneralJournalDTO> list = bankTransactionDetailsService.tarhilOne(getUserData().getUser(), 0);
-//        Integer idDtail = 600000;
-        Integer serial = generaljournalServiceDTO.findMaxSerialExit();
-        if (serial == null) {
-            serial = 1;
-        }
+        Integer idDtail = 600000;
         for (GeneralJournalDTO dto : list) {
-            ++serial;
-            generaljournalServiceDTO.addGeneralJournalDTOWithDetail(dto, getUserData().getUser(), serial);
-//            idDtail = idDtail + 5;
+            generaljournalServiceDTO.addGeneralJournalDTOWithDetail(dto, getUserData().getUser(), dto.getSerial());
+            idDtail = idDtail + 5;
         }
     }
 
@@ -269,16 +280,7 @@ public class ImportMB extends Basic implements Serializable {
 
     public void tarhilInvNoticeOne() {
         try {
-            Integer serial = generaljournalServiceDTO.findMaxSerialExit();
-            if (serial == null) {
-                serial = 1;
-            }
-            List<GeneralJournalDTO> list = invNoticeService.getALLInvNoticeForToby2(getUserData().getUser());
-
-            for (GeneralJournalDTO dto : list) {
-                ++serial;
-                generaljournalServiceDTO.addGeneralJournalDTOWithDetail(dto, getUserData().getUser(), serial);
-            }
+            invNoticeService.getALLInvNoticeForToby(getUserData().getUser());
         } catch (CloneNotSupportedException ex) {
             Logger.getLogger(ImportMB.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -395,7 +397,169 @@ public class ImportMB extends Basic implements Serializable {
         System.out.println("تم الحفظ بنجاح");
     }
 
-    // Update InvItem 
+    public Date findDateFromHijriFrom(Integer HijrahYear, Integer HijrahMonth, Integer HijrahDate) {
+        if (HijrahYear != null && HijrahMonth != null && HijrahDate != null) {
+            HijrahDate date = HijrahChronology.INSTANCE.date(HijrahYear, HijrahMonth, HijrahDate);
+            LocalDate dateFrom = IsoChronology.INSTANCE.date(date);
+            return java.sql.Date.valueOf(dateFrom);
+        }
+        return null;
+    }
+
+    public void UpdateProworkOrder() throws BiffException, IOException, Exception {
+        setInputStreamUploadInvItem(getInvItemFile().getInputstream());
+        Workbook workbook = null;
+        try {
+            workbook = Workbook.getWorkbook(getInputStreamUploadInvItem());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (BiffException e) {
+            e.printStackTrace();
+        }
+        Sheet sheet = workbook.getSheet(0);
+        importUpdateProworkOrder(sheet);
+        workbook.close();
+    }
+
+    public void importUpdateProworkOrder(Sheet sheet) throws NumberFormatException {
+        InvInvoiceDTO invoiceDTO = null;
+        List<InvDetailDTO> list = new ArrayList<>();
+        Boolean check = Boolean.TRUE;
+        for (int i = 1; i < sheet.getRows(); i++) {
+            if (!sheet.getCell(0, i).getContents().isEmpty() && sheet.getCell(8, i).getContents().isEmpty() && check) {
+                invoiceDTO = saveHead(sheet, i);
+                if (check) {
+                    check = Boolean.FALSE;
+                } else {
+                    check = Boolean.TRUE;
+                }
+            } else if (!sheet.getCell(0, i).getContents().isEmpty() && sheet.getCell(8, i).getContents().isEmpty() && !check) {
+                if (check) {
+                    check = Boolean.FALSE;
+                } else {
+                    check = Boolean.TRUE;
+                }
+            }
+
+            if (!sheet.getCell(0, i).getContents().isEmpty() && !sheet.getCell(8, i).getContents().isEmpty()) {
+                list = new ArrayList<>();
+                list.add(saveDetil(sheet, i));
+                invPurchaseInvoiceDetailsService.addInvPurchaseInvoiceDetailsDTOOne(list, invoiceDTO.getId(), getUserData().getUser());
+            }
+        }
+
+//
+        OpenDlg("sucesses");
+        System.out.println("تم الحفظ بنجاح");
+    }
+//     Update InvItem 
+
+    public InvInvoiceDTO saveHead(Sheet sheet, int i) throws NumberFormatException {
+        InvInvoiceDTO invoiceDTO;
+        Cell code = sheet.getCell(2, i);
+        Cell date = sheet.getCell(3, i);
+        Cell gallaryID = sheet.getCell(9, i);
+        Cell inventoryID = sheet.getCell(10, i);
+        invoiceDTO = new InvInvoiceDTO();
+        if (code != null && !code.getContents().trim().isEmpty()) {
+            invoiceDTO.setOrganizationSiteId(organizationSiteService.getIDByCode(code.getContents(), getUserData().getUser(), Integer.valueOf(gallaryID.getContents())));
+            invoiceDTO.setDate(findDateFromHijriFrom(1442, 10, 5));
+            CurrencyDTO currency = new CurrencyDTO();
+            currency.setId(110);
+            invoiceDTO.setCurrencyId(currency);
+            invoiceDTO.setRate(BigDecimal.ONE);
+            invoiceDTO.setPaymentType(1);
+            invoiceDTO.setAmountInvSupplier(null);
+            invoiceDTO.setDueDate(findDateFromHijriFrom(1442, 10, 5));
+            invoiceDTO.setSupplierInvoiceNumber(null);
+            invoiceDTO.setDiscount(BigDecimal.ZERO);
+            invoiceDTO.setDiscountType(0);
+            invoiceDTO.setCostCenterId(null);
+            invoiceDTO.setAdminUnitId(null);
+            invoiceDTO.setPostFlag(0);
+            invoiceDTO.setBranchId(182);
+            invoiceDTO.setCompanyId(125);
+            invoiceDTO.setCreatedBy(165);
+            invoiceDTO.setType(4);
+            invoiceDTO.setAccountId(null);
+            invoiceDTO.setRemarks(null);
+            invoiceDTO.setInvDelegatorId(null);
+            InvInventoryDTO invInventory = new InvInventoryDTO();
+            invInventory.setId(Integer.valueOf(inventoryID.getContents()));
+            invoiceDTO.setInvInventoryId(invInventory);
+            invoiceDTO.setGlBankId(null);
+            invoiceDTO.setExtraCost(BigDecimal.ZERO);
+            invoiceDTO.setDocumentTypeId(null);
+            invoiceDTO.setSerial(null);
+            invoiceDTO.setTaxflag(true);
+            invoiceDTO.setSupplierInvoiceDate(findDateFromHijriFrom(1442, 10, 5));
+            invoiceDTO.setSerialTax(null);
+            invoiceDTO.setTaxFlagFinal(false);
+            invoiceDTO.setGeneralJournalId(null);
+            invoiceDTO.setStatus(null);
+            invoiceDTO.setTaxdiscflag(null);
+            invoiceDTO.setTaxdiscvalue(null);
+            invoiceDTO.setDueperiod(null);
+            invoiceDTO.setProof(null);
+            invoiceDTO.setPricetype(null);
+            InvInventoryDTO gallary = new InvInventoryDTO();
+            gallary.setId(Integer.valueOf(gallaryID.getContents()));
+            invoiceDTO.setGallaryId(gallary);
+            invoiceDTO.setInvPurchaseOrderId(null);
+            invoiceDTO.setInvAddingOrderId(null);
+            invoiceDTO.setParent(null);
+            invoiceDTO.setInvQotationId(null);
+            invoiceDTO.setProFactoryDeliveryId(null);
+            invoiceDTO.setOfferCompanyId(null);
+            invoiceDTO.setDiscHalala(BigDecimal.ZERO);
+            invoiceDTO.setDateHegry(null);
+            invoiceDTO.setRaghiCode(null);
+            invoiceDTO.setInvoiceType(null);
+            invoiceDTO.setSendCloth(null);
+            invoiceDTO.setOfferCopoun(null);
+            invoiceDTO.setCompanyActivity(CompanyActivityClassEnum.RetailSaleForClothFactory);
+            invoiceDTO.setScreenName(ScreenNameClassEnum.PROWORKORDER);
+            invoiceDTO = invPurchaseInvoiceService_1.saveNew(invoiceDTO, getUserData().getUser());
+            return invoiceDTO;
+        }
+        return null;
+    }
+
+    public InvDetailDTO saveDetil(Sheet sheet, int i) throws NumberFormatException {
+        InvDetailDTO invDetailDTO;
+        Cell itemCode = sheet.getCell(8, i);
+        Cell number = sheet.getCell(6, i);
+        Cell price = sheet.getCell(5, i);
+        Cell net = sheet.getCell(3, i);
+        invDetailDTO = new InvDetailDTO();
+
+        if (itemCode != null && !itemCode.getContents().trim().isEmpty()) {
+            InvItem item = invItemService.findItemByCode(itemCode.getContents());
+//            invDetailDTO.setAvailableQuantityRow(new BigDecimal(100));
+            invDetailDTO.setBarCode(item.getCode());
+            invDetailDTO.setCost(new BigDecimal(price.getContents()));
+            invDetailDTO.setNet(new BigDecimal(net.getContents()));
+            invDetailDTO.setCostAvarage(item.getCostAverage());
+            InvInventoryDTO inventoryDTO = new InvInventoryDTO();
+            inventoryDTO.setId(45);
+            invDetailDTO.setInventoryDTO(inventoryDTO);
+            InvItemDTO itemDTO = new InvItemDTO();
+            itemDTO.setId(item.getId());
+            invDetailDTO.setItemId(itemDTO);
+            ItemsBarcodesDetailsView barcodesDetailsView = new ItemsBarcodesDetailsView();
+            barcodesDetailsView.setBarcode(item.getCode());
+            barcodesDetailsView.setCostAverage(item.getCostAverage());
+            barcodesDetailsView.setItemId(item.getId());
+            barcodesDetailsView.setMaxPriceMen(new BigDecimal(price.getContents()));
+            barcodesDetailsView.setProGroupId(item.getProGroupId().getId());
+            barcodesDetailsView.setUnitId(item.getUnitId().getId());
+            invDetailDTO.setItemsBarcodesDetail(barcodesDetailsView);
+            invDetailDTO.setNumber(new BigDecimal(number.getContents()));
+            invDetailDTO.setQuantity(item.getNumbermetersmen());
+        }
+        return invDetailDTO;
+    }
+
     public void updateInvItem3() throws BiffException, IOException, Exception {
         setInputStreamUploadInvItem(getInvItemFile().getInputstream());
         Workbook workbook = null;
@@ -509,7 +673,8 @@ public class ImportMB extends Basic implements Serializable {
             e.printStackTrace();
         }
         Sheet sheet = workbook.getSheet(0);
-        importInvItem(sheet);
+//        importInvItem(sheet);
+        importUpdateProworkOrder(sheet);
         workbook.close();
     }
 
@@ -1562,6 +1727,10 @@ public class ImportMB extends Basic implements Serializable {
         }
         OpenDlg("sucesses");
         System.out.println("تم الحفظ بنجاح");
+    }
+
+    private Date DateFormat(String contents) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

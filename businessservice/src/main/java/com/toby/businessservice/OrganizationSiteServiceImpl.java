@@ -2727,4 +2727,14 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
 
     }
+    
+     @Override
+    public InvOrganizationSiteDTO getIDByCode(String code , TobyUser tobyUser , Integer gallaryId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("code", code);
+        params.put("gallaryId", gallaryId);
+        InvOrganizationSite detailses = dao.findEntityByQuery("SELECT e FROM InvOrganizationSite e WHERE e.code = :code AND e.gallaryId.id = :gallaryId  ", params);
+        return mapToDTO(detailses, tobyUser);
+    }
+
 }
