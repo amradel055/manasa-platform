@@ -49,11 +49,15 @@ public interface GeneraljournalServiceDTO {
     
     public void addGeneralJournalDTOWithDetail(List<GeneralJournalDTO> list, TobyUser tobyUser);
     
-    public void addGeneralJournalDTOWithDetail(GeneralJournalDTO dto, TobyUser tobyUser,Integer serial ,Integer idHead , Integer idDetail) ;
+    public void addGeneralJournalDTOWithDetail(GeneralJournalDTO dto, TobyUser tobyUser,Integer serial ) ;
     
     public void addGeneralJournalDTOWithDetail(GeneralJournalDTO dto, TobyUser tobyUser) ;
     
     public List<JournalDocumentArrangedReportBean> printVoutcher(Integer generalJournalId) ;
+    
+     public Integer findMaxSerial() ;
+     
+     public Integer findMaxSerialExit();
     
     
 }

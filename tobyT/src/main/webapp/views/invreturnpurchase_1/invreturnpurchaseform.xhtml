@@ -87,19 +87,14 @@
                                                     dropdown="true"
                                                     converter="#{invPurchaseInvoiceFormDTOMB.organizationSiteDTOConvertor}"
                                                     value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.organizationSiteId}"
-                                                    disabled="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial  ne null}"
+                                                    rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial  eq null}" 
                                                     var="supplier"
                                                     itemLabel="#{supplier}" 
                                                     itemValue="#{supplier}" 
                                                     forceSelection="true" 
-                                                    completeMethod="#{invPurchaseInvoiceFormDTOMB.completeSuppllier}" 
-                                                    >
+                                                    completeMethod="#{invPurchaseInvoiceFormDTOMB.completeSupplier}" 
+                                                    disabled="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id != null and invPurchaseInvoiceFormDTOMB.invInvoiceDTO.checkData }">
 
-
-                                        <p:ajax update="@form"
-                                                event="change"
-                                                process="@form"
-                                                listener="#{invPurchaseInvoiceFormDTOMB.putCurrency()}" />
                                         <p:ajax update="@form"
                                                 process="@form"
                                                 event="itemSelect"
@@ -107,6 +102,8 @@
 
 
                                     </p:autoComplete>
+
+
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:outputLabel style="width: 100px;" value="#{userData.userDDs['SUPPLIER']}"/>
@@ -350,7 +347,7 @@
                         <h:outputText value="#{index + 1}"  />
                     </p:column>
 
-                   <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="#{userData.userDDs['ITEM']}" 
+                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="#{userData.userDDs['ITEM']}" 
                               filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
                               filterMatchMode="contains" 
                               sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
@@ -358,18 +355,18 @@
                         <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
                                        rendered="#{invPurchaseInvoiceDetailsTable.isEdit}" />
                         <p:autoComplete id="invItemNameIn"  
-                                            style="width:100%"
-                                            rendered="#{not invPurchaseInvoiceDetailsTable.isEdit}"
-                                            converter="#{autoComplete.itemsBarcodesDetailsViewConverter}"
-                                            value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
-                                            maxResults="30"
+                                        style="width:100%"
+                                        rendered="#{not invPurchaseInvoiceDetailsTable.isEdit}"
+                                        converter="#{autoComplete.itemsBarcodesDetailsViewConverter}"
+                                        value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
+                                        maxResults="30"
 
-                                            var="item"
-                                            itemLabel="#{item}" 
-                                            itemValue="#{item}" 
-                                            forceSelection="true" 
-                                            completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" 
-                                            >
+                                        var="item"
+                                        itemLabel="#{item}" 
+                                        itemValue="#{item}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" 
+                                        >
                             <p:ajax update=" unitvalue length paintColor QuantityT WeightT costTt discountT netId totalQuantity totalWeight  totalNet  form:totalActualWeight form:totalNetAfterDiscount   form:totalWithTaxValue form:taxvalue"
                                     event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
 
@@ -411,8 +408,8 @@
                                        id="paintColor"  
                                        value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.paintColorName}"/>
                     </p:column>
-                    
-                    
+
+
                     <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px"
                               id="QuantityInch"
                               headerText="#{userData.userDDs['NUMBER']} يارده"
@@ -430,7 +427,7 @@
                         </p:inputText>        
 
                     </p:column>
-                    
+
 
 
                     <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px"
@@ -716,7 +713,7 @@
                             rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id == null}"
                             action="#{invPurchaseInvoiceFormDTOMB.loadDailogue()}"
                             update="loaddlg"/>
-                        
+
                         <p:commandButton  class="printButtons"
                                           ajax="false"
                                           onclick="form.target = '_blank'"  

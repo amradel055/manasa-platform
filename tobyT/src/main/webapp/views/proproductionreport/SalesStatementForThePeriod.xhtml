@@ -106,7 +106,7 @@
                             </div>
                         </div>
 
-
+                        <p:selectBooleanCheckbox value="#{salesStatementForThePeriodMB.notZeroValue}" itemLabel="اختيار الفواتير التى لها باقى فقط"/>
                     </div>
 
                 </p:fieldset>
@@ -141,6 +141,9 @@
                                   emptyMessage="EMPTY_TABLE"
                                   >
 
+                        <p:column headerText="المعرض" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.galleryName}" />
+                        </p:column>
                         <p:column headerText=" ف رقم" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                             <h:outputText value="#{data.serial}" />
                         </p:column>

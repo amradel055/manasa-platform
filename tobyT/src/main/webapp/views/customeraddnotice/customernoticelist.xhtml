@@ -9,12 +9,36 @@
     <ui:define name="content">
         <f:event listener="#{userData.authorize}" type="preRenderView" />
         <h:form  class='formmargin' id="form" dir="#{userData.dir}">
-          
+
+            <div class="ui-g-12 ui-xl-12">
+                <div class="ui-g-6 ui-xl-6">
+                    <p:inputText  style="width:35%!important"  value="#{invNoticeListMB.invNoticeEntity.serial}" />
+
+                </div>
+                <p:autoComplete style="width:35%!important" 
+                                dropdown="true"
+                                converter="#{autoComplete.organizationSiteDTOConvertor}"
+                                value="#{invNoticeListMB.invNoticeEntity.organizationSiteId}"
+                                var="supplier"
+                                itemLabel="#{supplier}" 
+                                itemValue="#{supplier}" 
+                                forceSelection="true" 
+                                completeMethod="#{autoComplete.completeCustomerFrom}">
+                </p:autoComplete>
+                <p:commandButton  
+                    update="@form" 
+                    class="smsearchButtons"
+                    icon="fa fa-fw fa-search-plus"  style="background-color: rgba(63, 81, 181, 0.88);border-radius: 3px;"
+                    title="#{userData.userDDs['VIEW']}" 
+                    action="#{invNoticeListMB.search()}" >
+                </p:commandButton>
+            </div>
+
+
             <p:fieldset legend="#{userData.userDDs['ADD/DISC_NOTIFI']}" id="whole">
                 <div>
                     <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
                 </div>
-
                 <p:dataTable id="invNotice"
                              draggableColumns="true" 
                              var="invNotice" 
@@ -26,13 +50,13 @@
 
                     <f:facet name="header" >
                         <p:commandButton  class="saddButton" icon="fa fa-plus" 
-                                         id="addA"
-                                         title="#{userData.userDDs['ADD']}"
-                                         action="#{invNoticeListMB.goToAdd()}"
-                                         style="float:right" 
-                                         rendered="#{userData.userScreens['customeraddnotice'].add or userData.isAdmin}"
-                                         />
-                        
+                                          id="addA"
+                                          title="#{userData.userDDs['ADD']}"
+                                          action="#{invNoticeListMB.goToAdd()}"
+                                          style="float:right" 
+                                          rendered="#{userData.userScreens['customeraddnotice'].add or userData.isAdmin}"
+                                          />
+
                         <p:blockUI block="form" trigger="addA" animate="true" >
 
                             <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
@@ -77,7 +101,7 @@
                               >
                         <p:outputLabel value="#{invNotice.value}" />
                     </p:column>
-                    
+
                     <p:column style="width: 14vh;text-align: right;font-size: 1.8vh;border-radius: 0px" filterStyle="display:none"
                               filterBy="#{invNotice.typeName}" 
                               filterMatchMode="contains" 
@@ -99,20 +123,20 @@
 
                     <p:column style="width: 10vh;text-align: center;font-size: 1.8vh;border-radius: 0px" headerText="#{userData.userDDs['TRANSACTION']}">
                         <p:commandButton  class="seditButtons" update="@form" icon="fa fa-fw fa-edit"
-                                         title="#{userData.userDDs['EDIT']}" style="background-color: #6a6967;border-radius: 3px;"
-                                         action="#{invNoticeListMB.goToEdit()}" 
-                                         rendered="#{userData.userScreens['customeraddnotice'].edit or userData.isAdmin}"
-                                         >
+                                          title="#{userData.userDDs['EDIT']}" style="background-color: #6a6967;border-radius: 3px;"
+                                          action="#{invNoticeListMB.goToEdit()}" 
+                                          rendered="#{userData.userScreens['customeraddnotice'].edit or userData.isAdmin}"
+                                          >
                             <f:setPropertyActionListener value="#{invNotice}" 
                                                          target="#{invNoticeListMB.invNoticeEntitySelected}" />
                         </p:commandButton>
 
                         <p:commandButton  class="sdeleteButtons" update="form" 
-                                         icon="fa fa-remove" style="background-color: red;border-radius: 3px;"
-                                         title="#{userData.userDDs['DELETE']}" 
-                                         action="#{invNoticeListMB.delete}"
-                                         rendered="#{userData.userScreens['customeraddnotice'].delete or userData.isAdmin}"
-                                         >
+                                          icon="fa fa-remove" style="background-color: red;border-radius: 3px;"
+                                          title="#{userData.userDDs['DELETE']}" 
+                                          action="#{invNoticeListMB.delete}"
+                                          rendered="#{userData.userScreens['customeraddnotice'].delete or userData.isAdmin}"
+                                          >
 
                             <f:setPropertyActionListener value="#{invNotice}"
                                                          target="#{invNoticeListMB.invNoticeEntitySelected}" />

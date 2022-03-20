@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.bussinessservice.global.Utility;
 import com.toby.core.GenericDAO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.OfferCompanyDTO;
@@ -13,6 +14,8 @@ import com.toby.entity.ProProductionItemsTransaction;
 import com.toby.views.ClientsByInvInventory;
 import com.toby.views.CompanyInvoicesWithoutSewing;
 import com.toby.views.CustomerBalances;
+import com.toby.views.CustomerBalancesDebtAge;
+import com.toby.views.CustomerBalancesDebtAgeSearch;
 import com.toby.views.CustomersHaveNoMovementFromTheDate;
 import com.toby.views.InvoicesIssuedWithinAperiod;
 import com.toby.views.InvoicesRegisteredMoreThanOnce;
@@ -23,6 +26,7 @@ import com.toby.views.SalesReportByValueAdedDetails;
 import com.toby.views.SalesStatementForThePeriod;
 import com.toby.views.StatementOfBondsByBranche;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,7 +57,7 @@ public class ReportsServiceImpl implements ReportsService {
         List<SalesReportByValueAded> salesReportByValueAdeds = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("select sum(s.net) , sum(s.netBeforTax) , s.gallary_name  from ( ");
-        
+
         daribaSql(sql, branchId, salesReportByValueAded);
 
         sql.append(" ) as s group by s.gallary_name ");
@@ -113,7 +117,7 @@ public class ReportsServiceImpl implements ReportsService {
         appendGallery(salesReportByValueAded, sql);
         appendDate(salesReportByValueAded, sql);
         sql.append(" GROUP BY `ip`.`id` ");
-        
+
         return sql;
     }
 
@@ -162,6 +166,108 @@ public class ReportsServiceImpl implements ReportsService {
             customerBalanceses.add(customerBalances1);
         }
         return customerBalanceses;
+    }
+
+    @Override
+    public List<CustomerBalancesDebtAge> getCustomerBalancesDebtAge(CustomerBalancesDebtAgeSearch customerBalancesDebtAge) {
+        if (customerBalancesDebtAge.getGallary() != null && customerBalancesDebtAge.getGallary().getId() != null && customerBalancesDebtAge.getDateToSearch() != null) {
+            dao.executeNativeQuery("select toby.sql_mode_function()");
+            customerBalancesDebtAge.setDatefromTotal(customerBalancesDebtAge.getDateToSearch());
+            for (int i = 1; i <= 12; i++) {
+                switch (i) {
+                    case 1:
+                        customerBalancesDebtAge.setDateto1(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), ((i - 1) * 30)));
+                        customerBalancesDebtAge.setDatefrom1(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), (i * 30)));
+                        break;
+                    case 2:
+                        customerBalancesDebtAge.setDateto2(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), ((i - 1) * 30)));
+                        customerBalancesDebtAge.setDatefrom2(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), (i * 30)));
+                        break;
+                    case 3:
+                        customerBalancesDebtAge.setDateto3(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), ((i - 1) * 30)));
+                        customerBalancesDebtAge.setDatefrom3(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), (i * 30)));
+                        break;
+                    case 4:
+                        customerBalancesDebtAge.setDateto4(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), ((i - 1) * 30)));
+                        customerBalancesDebtAge.setDatefrom4(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), (i * 30)));
+                        break;
+                    case 5:
+                        customerBalancesDebtAge.setDateto5(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), ((i - 1) * 30)));
+                        customerBalancesDebtAge.setDatefrom5(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), (i * 30)));
+                        break;
+                    case 6:
+                        customerBalancesDebtAge.setDateto6(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), ((i - 1) * 30)));
+                        customerBalancesDebtAge.setDatefrom6(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), (i * 30)));
+                        break;
+                    case 7:
+                        customerBalancesDebtAge.setDateto7(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), ((i - 1) * 30)));
+                        customerBalancesDebtAge.setDatefrom7(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), (i * 30)));
+                        break;
+                    case 8:
+                        customerBalancesDebtAge.setDateto8(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), ((i - 1) * 30)));
+                        customerBalancesDebtAge.setDatefrom8(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), (i * 30)));
+                        break;
+                    case 9:
+                        customerBalancesDebtAge.setDateto9(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), ((i - 1) * 30)));
+                        customerBalancesDebtAge.setDatefrom9(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), (i * 30)));
+                        break;
+                    case 10:
+                        customerBalancesDebtAge.setDateto10(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), ((i - 1) * 30)));
+                        customerBalancesDebtAge.setDatefrom10(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), (i * 30)));
+                        break;
+                    case 11:
+                        customerBalancesDebtAge.setDateto11(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), ((i - 1) * 30)));
+                        customerBalancesDebtAge.setDatefrom11(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), (i * 30)));
+                        break;
+                    case 12:
+                        customerBalancesDebtAge.setDateto12(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), ((i - 1) * 30)));
+                        customerBalancesDebtAge.setDatefrom12(Utility.subDateAndNumer(customerBalancesDebtAge.getDateToSearch(), (i * 30)));
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
+            
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");            
+            
+            customerBalancesDebtAge.setDatefromBefore(Utility.subDateAndNumer(customerBalancesDebtAge.getDatefrom12(), 1));
+            List<CustomerBalancesDebtAge> customerBalancesDebtAgeList = new ArrayList<>();
+            StringBuilder sql = new StringBuilder();
+            sql.append(" select ios.code , ios.name \n"
+                    + " , balance_customer_date(ios.id ,'").append(dateFormat.format(customerBalancesDebtAge.getDatefromTotal())).append("' ) as balanceTotal , balance_customer_date(ios.id ,'").append(dateFormat.format(customerBalancesDebtAge.getDatefromBefore())).append("' ) as balanceBefore \n"
+                    + " , balance_customer(ios.id ,'").append(dateFormat.format(customerBalancesDebtAge.getDatefrom1())).append("','").append(dateFormat.format(customerBalancesDebtAge.getDateto1())).append("' ) as m1 , balance_customer(ios.id ,'").append(dateFormat.format(customerBalancesDebtAge.getDatefrom2())).append("','").append(dateFormat.format(customerBalancesDebtAge.getDateto2())).append("' ) as m2 , balance_customer(ios.id ,'").append(dateFormat.format(customerBalancesDebtAge.getDatefrom3())).append("','").append(dateFormat.format(customerBalancesDebtAge.getDateto3())).append("' ) as m3\n"
+                    + " , balance_customer(ios.id ,'").append(dateFormat.format(customerBalancesDebtAge.getDatefrom4())).append("','").append(dateFormat.format(customerBalancesDebtAge.getDateto4())).append("' ) as m4 , balance_customer(ios.id ,'").append(dateFormat.format(customerBalancesDebtAge.getDatefrom5())).append("','").append(dateFormat.format(customerBalancesDebtAge.getDateto5())).append("' ) as m5 , balance_customer(ios.id ,'").append(dateFormat.format(customerBalancesDebtAge.getDatefrom6())).append("','").append(dateFormat.format(customerBalancesDebtAge.getDateto6())).append("' ) as m6\n"
+                    + " , balance_customer(ios.id ,'").append(dateFormat.format(customerBalancesDebtAge.getDatefrom7())).append("','").append(dateFormat.format(customerBalancesDebtAge.getDateto7())).append("' ) as m7 , balance_customer(ios.id ,'").append(dateFormat.format(customerBalancesDebtAge.getDatefrom8())).append("','").append(dateFormat.format(customerBalancesDebtAge.getDateto8())).append("' ) as m8 , balance_customer(ios.id ,'").append(dateFormat.format(customerBalancesDebtAge.getDatefrom9())).append("','").append(dateFormat.format(customerBalancesDebtAge.getDateto9())).append("' ) as m9\n"
+                    + " , balance_customer(ios.id ,'").append(dateFormat.format(customerBalancesDebtAge.getDatefrom10())).append("','").append(dateFormat.format(customerBalancesDebtAge.getDateto10())).append("' ) as m10, balance_customer(ios.id ,'").append(dateFormat.format(customerBalancesDebtAge.getDatefrom11())).append("','").append(dateFormat.format(customerBalancesDebtAge.getDateto11())).append("' ) as m11, balance_customer(ios.id ,'").append(dateFormat.format(customerBalancesDebtAge.getDatefrom12())).append("','").append(dateFormat.format(customerBalancesDebtAge.getDateto12())).append("' ) as m12\n"
+                    + " from inv_organization_site ios where ios.id in (select distinct(ipi.organization_site_id) from inv_purchase_invoice ipi where ipi.branch_id = 182 ");
+            sql.append(" and ipi.galary_Id = ").append(customerBalancesDebtAge.getGallary().getId());
+            sql.append(" )");
+            List<Object[]> res = dao.executeNativeQuery(sql.toString());
+            for (Object[] object : res) {
+                CustomerBalancesDebtAge customerBalances1 = new CustomerBalancesDebtAge();
+                customerBalances1.setCode((String) object[0]);
+                customerBalances1.setName((String) object[1]);
+                customerBalances1.setBalanceTotal((BigDecimal) object[2]);
+                customerBalances1.setBalanceBefore((BigDecimal) object[3]);
+                customerBalances1.setM1((BigDecimal) object[4]);
+                customerBalances1.setM2((BigDecimal) object[5]);
+                customerBalances1.setM3((BigDecimal) object[6]);
+                customerBalances1.setM4((BigDecimal) object[7]);
+                customerBalances1.setM5((BigDecimal) object[8]);
+                customerBalances1.setM6((BigDecimal) object[9]);
+                customerBalances1.setM7((BigDecimal) object[10]);
+                customerBalances1.setM8((BigDecimal) object[11]);
+                customerBalances1.setM9((BigDecimal) object[12]);
+                customerBalances1.setM10((BigDecimal) object[13]);
+                customerBalances1.setM11((BigDecimal) object[14]);
+                customerBalances1.setM12((BigDecimal) object[15]);
+                customerBalancesDebtAgeList.add(customerBalances1);
+            }
+
+            return customerBalancesDebtAgeList;
+        }
+        return null;
     }
 
     @Override
@@ -498,16 +604,16 @@ public class ReportsServiceImpl implements ReportsService {
         dao.executeNativeQuery("select toby.sql_mode_function()");
         List<SalesStatementForThePeriod> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
-        sql.append("select ipi.serial , ipi.date , ios.code , ios.name,\n"
+        sql.append("select ipi.serial , ipi.date , ios.code , ios.name as iosName ,\n"
                 + "IFNULL(SUM(`ipid`.`net_after_discount_head`), 0) as total_net,\n"
-                + "IFNULL(NET(IFNULL(SUM(`ipid`.`net`), 0),   IFNULL(`ipi`.`discount_type`, 0.0), IFNULL(`ipi`.`discount`, 0.0), IFNULL(`ipi`.`tax_flag`, 0.0),  15, IFNULL(`ipi`.`disc_halala`, 0.0)), 0.0) AS `net` ,ipi.id\n"
+                + " ipi.id ,iinv.name as gallaryName \n"
                 + "from inv_purchase_invoice ipi\n"
                 + "left join  inv_purchase_invoice_detail ipid on ipi.id = ipid.inv_purchase_invoice_id\n"
-                + "left join inv_organization_site ios on ios.id = ipi.organization_site_id  \n"
+                + "left join inv_organization_site ios on ios.id = ipi.organization_site_id left join inv_inventory iinv on iinv.id = ipi.galary_Id  \n"
                 + " where ipi.type = 4 ");
         appendGallery5(statementForThePeriod, sql);
         appendDate8(statementForThePeriod, sql);
-        sql.append(" group by ipi.id ");
+        sql.append(" group by ipi.id order by ipi.galary_Id ");
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
         for (Object[] object : res) {
             if (object[0] != null) {
@@ -517,10 +623,11 @@ public class ReportsServiceImpl implements ReportsService {
                 statementForThePeriod.setCode((String) object[2]);
                 statementForThePeriod.setName((String) object[3]);
                 statementForThePeriod.setTotalNet((BigDecimal) object[4]);
-                statementForThePeriod.setNet((BigDecimal) object[5]);
-                statementForThePeriod.setInvoiceId((Integer) object[6]);
+                statementForThePeriod.setNet((statementForThePeriod.getTotalNet().multiply(new BigDecimal(1.15))).setScale(3, RoundingMode.HALF_UP));
+                statementForThePeriod.setInvoiceId((Integer) object[5]);
                 statementForThePeriod.setInvoiceStatus(invPurchaseInvoiceService.findInvoiceStatus(statementForThePeriod.getInvoiceId()));
-//                statementForThePeriod.setRemain(invPurchaseInvoiceService.remainForInvPurchaseInvoice(statementForThePeriod.getInvoiceId()));
+                statementForThePeriod.setPaid(invPurchaseInvoiceService.findPayed(statementForThePeriod.getInvoiceId()));
+                statementForThePeriod.setGalleryName((String) object[6]);
                 list.add(statementForThePeriod);
             }
         }
@@ -616,8 +723,8 @@ public class ReportsServiceImpl implements ReportsService {
         List<ClientsByInvInventory> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT ios.name,ios.code,ios.mobile FROM toby.inv_organization_site ios\n"
-//                + "left join inv_inventory ii on ii.id = ios.gallary_id\n"
-//                + "left join offer_company oc on oc.id = ios.offer_company_id\n"
+                //                + "left join inv_inventory ii on ii.id = ios.gallary_id\n"
+                //                + "left join offer_company oc on oc.id = ios.offer_company_id\n"
                 + " where ios.branch_id = ").append(branchId);
 
         StringBuilder gallaryIds = null;
@@ -824,7 +931,7 @@ public class ReportsServiceImpl implements ReportsService {
     private void appendOfferCompany(StringBuilder offerCompanyId, StringBuilder sql) {
         if (offerCompanyId != null) {
             sql.append("  and ios.offer_company_id in ( ").append(offerCompanyId.toString()).append(" )");
-        }else{
+        } else {
             sql.append("  and ios.offer_company_id IS NULL");
         }
     }

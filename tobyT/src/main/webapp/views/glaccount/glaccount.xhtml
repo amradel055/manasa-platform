@@ -242,7 +242,7 @@
                                                     <p:selectOneMenu id="accgrp55" style="width: 50%!important;"  
                                                                      converter="#{glAccountBean.costCenterConverter}"
                                                                      value="#{glAccountBean.selectedAcc.costCenterId}"  
-                                                                     required="true" requiredMessage="#{userData.userDDs['REQUIRED']}" >
+                                                                      >
                                                         <f:selectItem itemLabel="اختر" itemValue="" />
                                                         <f:selectItems value="#{glAccountBean.costCenterList}" 
                                                                        var="grp" itemLabel="#{grp}" 

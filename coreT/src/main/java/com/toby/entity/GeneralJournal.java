@@ -45,6 +45,9 @@ public class GeneralJournal extends BaseEntity {
 
     @Column(name = "serial")
     private Integer serial;
+    
+    @Column(name = "documentId")
+    private Integer documentId;
 
     @JoinColumn(name = "gl_year", referencedColumnName = "id")
     @ManyToOne()
@@ -283,6 +286,20 @@ public class GeneralJournal extends BaseEntity {
      */
     public void setGeneralJournalDetails(GeneralJournalDetails generalJournalDetails) {
         this.generalJournalDetails = generalJournalDetails;
+    }
+
+    /**
+     * @return the documentId
+     */
+    public Integer getDocumentId() {
+        return documentId;
+    }
+
+    /**
+     * @param documentId the documentId to set
+     */
+    public void setDocumentId(Integer documentId) {
+        this.documentId = documentId;
     }
 
 }

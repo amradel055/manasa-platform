@@ -131,7 +131,7 @@
                                         <p:selectCheckboxMenu id="menu"  converter="#{CashAccountSettlementMB.glBankConverter}"
                                                               value="#{CashAccountSettlementMB.cashAccountSettlementSearchBean.glBankDTOListSelected}" label="الخزائن"
                                                               style="width: 15rem"
-                                                              filter="true" filterMatchMode="startsWith" panelStyle="width: 15rem" scrollHeight="250">
+                                                              filter="true" filterMatchMode="contains" panelStyle="width: 15rem" scrollHeight="250">
                                             <f:selectItems value="#{CashAccountSettlementMB.glBankList}"
                                                            var="bank"
                                                            itemLabel="#{bank}"

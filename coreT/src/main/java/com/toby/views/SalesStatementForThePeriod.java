@@ -31,6 +31,10 @@ public class SalesStatementForThePeriod {
     private int invoiceId;
     private BigDecimal remain;
     private BigDecimal paid;
+    private BigDecimal totalBeforeTax;
+    private BigDecimal totalAfterTax;
+    private BigDecimal tax;
+    private String galleryName;
 
     /**
      * @return the serial
@@ -214,7 +218,7 @@ public class SalesStatementForThePeriod {
      */
     public BigDecimal getRemain() {
         if (remain == null) {
-            remain = BigDecimal.ZERO;
+            remain = getNet().subtract(getPaid());
         }
         return remain;
     }
@@ -230,8 +234,8 @@ public class SalesStatementForThePeriod {
      * @return the paid
      */
     public BigDecimal getPaid() {
-        if(paid == null){
-            paid = totalNet.subtract(remain);
+        if (paid == null) {
+            paid = BigDecimal.ZERO;
         }
         return paid;
     }
@@ -241,6 +245,71 @@ public class SalesStatementForThePeriod {
      */
     public void setPaid(BigDecimal paid) {
         this.paid = paid;
+    }
+
+    /**
+     * @return the galleryName
+     */
+    public String getGalleryName() {
+        return galleryName;
+    }
+
+    /**
+     * @param galleryName the galleryName to set
+     */
+    public void setGalleryName(String galleryName) {
+        this.galleryName = galleryName;
+    }
+
+    /**
+     * @return the totalBeforeTax
+     */
+    public BigDecimal getTotalBeforeTax() {
+        if (totalBeforeTax == null) {
+            totalBeforeTax = getTotalNet();
+        }
+        return totalBeforeTax;
+    }
+
+    /**
+     * @param totalBeforeTax the totalBeforeTax to set
+     */
+    public void setTotalBeforeTax(BigDecimal totalBeforeTax) {
+        this.totalBeforeTax = totalBeforeTax;
+    }
+
+    /**
+     * @return the totalAfterTax
+     */
+    public BigDecimal getTotalAfterTax() {
+        if (totalAfterTax == null) {
+            totalAfterTax = getNet();
+        }
+        return totalAfterTax;
+    }
+
+    /**
+     * @param totalAfterTax the totalAfterTax to set
+     */
+    public void setTotalAfterTax(BigDecimal totalAfterTax) {
+        this.totalAfterTax = totalAfterTax;
+    }
+
+    /**
+     * @return the tax
+     */
+    public BigDecimal getTax() {
+        if (tax == null) {
+            tax = getTotalAfterTax().subtract(getTotalBeforeTax());
+        }
+        return tax;
+    }
+
+    /**
+     * @param tax the tax to set
+     */
+    public void setTax(BigDecimal tax) {
+        this.tax = tax;
     }
 
 }

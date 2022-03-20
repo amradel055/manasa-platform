@@ -60,4 +60,6 @@ public interface InvPurchaseInvoiceDetailsService {
     public <T> List<ItemsBarcodesDetailsView> findItemBarcodeDetails(List<T> list, Integer branchId);
     
     public BigDecimal findLastCost(Integer itemId);
+    
+     public List<InvDetailDTO> addInvPurchaseInvoiceDetailsDTOOne(List<InvDetailDTO> invPurchaseInvoiceDetailList,Integer headId , TobyUser tobyUser);
 }

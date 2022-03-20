@@ -117,6 +117,8 @@ public interface InvPurchaseInvoiceService_1 {
 //    public BigDecimal remainForInvPurchaseInvoice(Integer invPurchaseInvoiceId);
     
     public BigDecimal returnRemain(InvInvoiceDTO invPurchaseInvoiceDTO);
+    
+    public BigDecimal findPayed(Integer invPurchaseInvoiceId);
 
     public String findInvoiceStatus(Integer invPurchaseInvoiceId);
 
@@ -146,5 +148,21 @@ public interface InvPurchaseInvoiceService_1 {
     public Boolean chechIfinvoiceIsReturn(Integer serial);
     
     public void updateDetailInvoiceValues(Integer invPurchaseInvoiceId);
+    
+    public GeneralJournalDTO tarhilOneMoshtrayat(TobyUser tobyUser, Integer invPurchaseInvoiceId,
+            Integer salesTaxAccount, Integer salesAccountNumber,
+            Integer managerCostAccount, Integer costOfSoldGoods, Integer storeAccountNumber) throws CloneNotSupportedException ;
+    
+    public Integer excuteQuery(String query);
+    
+    public List<Integer> findInvoiceIdList();
+    
+    public List<GeneralJournalDTO> testTarhil(TobyUser tobyUser) throws CloneNotSupportedException;
+    
+    public void updateTarhil(Integer invoiceId, Integer tarhilId);
+    
+    public InvInvoiceDTO completeTarhilInvoiceAfterSave(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) throws CloneNotSupportedException;
+    
+    public InvInvoiceDTO saveNew(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser);
 
 }

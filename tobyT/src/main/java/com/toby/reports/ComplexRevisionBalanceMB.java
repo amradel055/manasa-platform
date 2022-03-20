@@ -178,7 +178,7 @@ public class ComplexRevisionBalanceMB extends BaseGlAccountReportBean {
         complexRevisionBalanceSearchBeanA.setBranchId(getUserData().getUserBranch().getId());
         complexRevisionBalanceSearchBeanA.setPostFlag(uri.contains("financialCenterItemsMenuReport"));
         glAccountRootList = glAccountService.getBranchAccountRoots(getUserData().getUserBranch().getId());
-        Integer levelSearch = complexRevisionBalanceSearchBeanA.getLevelFrom() != null ? complexRevisionBalanceSearchBeanA.getLevelFrom() : 4;
+        Integer levelSearch = complexRevisionBalanceSearchBeanA.getLevelFrom() != null ? complexRevisionBalanceSearchBeanA.getLevelFrom() : 5;
 
         if (uri.contains("costCenter")) {
             zeroAmount = true;
@@ -314,6 +314,11 @@ public class ComplexRevisionBalanceMB extends BaseGlAccountReportBean {
             incomeMenuBean.setGeneralBudgetGuideCreditId(glAccount.getGeneralBudgetIdCredit() != null ? glAccount.getGeneralBudgetIdCredit().getId() : null);
 
             IncomeMenuBeanMap.put(glAccount.getId(), incomeMenuBean);
+//            System.out.println("------------------>    " + glAccount.getAccNumber());
+//            if(glAccount.getAccNumber() == 20000000){
+//                System.out.println("------------------>    " + glAccount.getAccNumber() +"   <--------------------");
+//            }
+            
             getChildTreeNodesForAccount(glAccount);
         }
     }
@@ -353,6 +358,9 @@ public class ComplexRevisionBalanceMB extends BaseGlAccountReportBean {
                 incomeMenuBean.setGeneralBudgetGuideCreditId(childAcc.getGeneralBudgetIdCredit() != null ? childAcc.getGeneralBudgetIdCredit().getId() : null);
 
                 if (childAcc.getType() != null && childAcc.getType() == 1) {
+//                    if(childAcc.getAccNumber() == 21010001){
+//                        System.out.println("com.toby.reports.ComplexRevisionBalanceMB.getChildTreeNodesForAccount()");
+//                    }
                     ComplexRevisionBalanceBean balanceBean = complexRevisionBalanceMap.get(childAcc.getAccNumber());
 
                     incomeMenuBean.setDebit((balanceBean != null && balanceBean.getDebit() != null) ? balanceBean.getDebit() : BigDecimal.ZERO);
@@ -383,6 +391,10 @@ public class ComplexRevisionBalanceMB extends BaseGlAccountReportBean {
                 }
                 //  incomeMenuBean.setValue(total);
                 IncomeMenuBeanMap.put(childAcc.getId(), incomeMenuBean);
+//                System.out.println(childAcc.getAccNumber());
+//                if(childAcc.getAccNumber() == 20000000){
+//                    System.out.println(childAcc.getAccNumber());
+//                }
                 getChildTreeNodesForAccount(childAcc);
             }
         }

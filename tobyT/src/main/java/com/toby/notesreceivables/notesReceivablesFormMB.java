@@ -173,8 +173,8 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
     private Boolean isPreviosBalance;
 
     private Integer serialSelected;
-    
-    private InvOrganizationSiteDTO invOrganizationSiteDTOSelected ;
+
+    private InvOrganizationSiteDTO invOrganizationSiteDTOSelected;
 
     @EJB
     private GlBankTransactionInvoiceViewService bankTransactionInvoiceViewService;
@@ -261,9 +261,9 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
             String sessionId = getSession().getId();
             getSession().setAttribute(sessionId, getGlBankTransactionId());
 
-            fillLists();
+            fillLists(); /// here karsha
 
-            viewPaymentFields();
+            viewPaymentFields();  /// here karsha
             updateTransactionRate();
 
             if (glBankList == null) {
@@ -325,12 +325,12 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
     public void check() {
         if (glBankTransactionDetailEntity.getInvOrganizationSite() != null
                 && glBankTransactionDetailEntity.getInvOrganizationSite().getId() != null) {
-            glBankTransactionInvoiceViewList = bankTransactionInvoiceViewService.getGlBankTransactionInvoiceViewList(glBankTransactionDetailEntity.getInvOrganizationSite().getId(), getUserData().getUser());
+            glBankTransactionInvoiceViewList = bankTransactionInvoiceViewService.getGlBankTransactionInvoiceViewListNew(glBankTransactionDetailEntity.getInvOrganizationSite().getId(), getUserData().getUser());
             glBankTransactionEntity.setAccountStatement(supplierAccountService.getAccountForOrganizationSite(glBankTransactionDetailEntity.getInvOrganizationSite().getId()));
         }
     }
-    
-     public void editCustomer() {
+
+    public void editCustomer() {
         if (invOrganizationSiteDTOSelected != null) {
             glBankTransactionDetailEntity.setInvOrganizationSite(getInvOrganizationSiteDTOSelected());
             glBankTransactionInvoiceViewList = bankTransactionInvoiceViewService.getGlBankTransactionInvoiceViewList(glBankTransactionDetailEntity.getInvOrganizationSite().getId(), getUserData().getUser());
@@ -437,13 +437,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
 
     private void fillGlBanks() {
         try {
-            if (glBankTransactionEntity.getPaymentType() != 1) {
-                glBankList = tobyUserBankService.getAllGlBankForUserByTypeAndBranchId(getUserData().getUser().getId(), getBranchId(), 0);
-            } else {
-                glBankList = tobyUserBankService.getAllGlBankForUserByTypeAndBranchId(getUserData().getUser().getId(), getBranchId(), 1);
-            }
-            
-            bankConverter = new GlBankConverter(glBankList);
+            getGlBankList();
         } catch (Exception e) {
             saveError(e, "notesReceivablesFormMB", "fillGlBanks");
         }
@@ -851,7 +845,6 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
 
 //                    glBankTransaction.setChequeDueDate(glBankTransactionEntity.getChequeDueDate() != null ? glBankTransactionEntity.getChequeDueDate() : new Date());
 //                    glBankTransaction.setChequeStatus(glBankTransactionEntity.getChequeStatus() != null ? glBankTransactionEntity.getChequeStatus() : 0);
-
                     if (glBankTransactionEntity.getGlBank() != null) {
                         glBankTransaction.setGlBankId(glBankTransactionEntity.getGlBank());
                     }
@@ -951,17 +944,22 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                     try {
                         glBankTransactionDetailsUpdatedList.add(bankTransactionDetail);
                         GlBankTransaction bankTransaction;
-                        
-                            bankTransaction = glBankTransactionService.addGlBankTransaction(glBankTransaction, glBankTransactionDetailsUpdatedList, new ArrayList<>(), companyId,getUserData().getUser());
 
-                            if (bankTransaction != null && bankTransaction.getId() != null && printAndSave) {
+                        Boolean idCheck = Boolean.TRUE;
+
+                        if (glBankTransaction.getId() != null) {
+                            idCheck = Boolean.FALSE;
+                        }
+                        bankTransaction = glBankTransactionService.addGlBankTransaction(glBankTransaction, glBankTransactionDetailsUpdatedList, new ArrayList<>(), companyId, getUserData().getUser());
+
+                        if (bankTransaction != null && bankTransaction.getId() != null && printAndSave) {
                             exportPDF(null);
                             printAndSave = false;
                         }
                         if (bankTransaction != null && bankTransaction.getId() != null) {
                             findnotesReceivablesObject(bankTransaction.getId());
                         }
-                        if (getUri().contains("notesreceivablesForm")) {
+                        if (getUri().contains("notesreceivablesForm") && idCheck) {
                             StringBuilder message = new StringBuilder();
                             message.append("عميلنا العزيز ، شكراً لتسوقك  تمت عملية دفع رقم ");
                             message.append(getGlBankTransactionEntity().getSerial());
@@ -969,14 +967,14 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                             message.append(getGlBankTransactionEntity().getValue());
 //                            message.append(" المتبقي ");
 //                            message.append(getGlBankTransactionEntity().getRemainInvoice());
-                            if (getGlBankTransactionEntity().getGlBank().getGallaryId() != null && 
-                                    getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() != null && 
-                                    getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() == 0) {
-//                                sendSms(getGlBankTransactionDetailEntity().getInvOrganizationSite().getMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
-                            } else if (getGlBankTransactionEntity().getGlBank().getGallaryId() != null && 
-                                    getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() != null && 
-                                    getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() == 1) {
-//                                sendSms(getGlBankTransactionDetailEntity().getInvOrganizationSite().getMobile(), "التوبى العالمى", message.toString(), "20099320", "Royal@e12z");
+                            if (getGlBankTransactionEntity().getGlBank().getGallaryId() != null
+                                    && getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() != null
+                                    && getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() == 0) {
+                                sendSms(getGlBankTransactionDetailEntity().getInvOrganizationSite().getMobile(), "برنس", message.toString(), "20099319", "0564933202");
+                            } else if (getGlBankTransactionEntity().getGlBank().getGallaryId() != null
+                                    && getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() != null
+                                    && getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() == 1) {
+                                sendSms(getGlBankTransactionDetailEntity().getInvOrganizationSite().getMobile(), "لي رويال", message.toString(), "20099320", "Royal@e12z");
                             }
                         }
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userDDs.get("INFO"), userDDs.get("SAVED")));
@@ -1526,6 +1524,10 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
     }
 
     public List<GlBank> getGlBankList() {
+        if (glBankList == null || glBankList.isEmpty()) {
+            glBankList = tobyUserBankService.getAllGlBankForUserByTypeAndBranchIdPer(getUserData().getUser().getId(), getBranchId(), null, null);
+            bankConverter = new GlBankConverter(glBankList);
+        }
         return glBankList;
     }
 
@@ -2156,7 +2158,8 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
     }
 
     /**
-     * @param invOrganizationSiteDTOSelected the invOrganizationSiteDTOSelected to set
+     * @param invOrganizationSiteDTOSelected the invOrganizationSiteDTOSelected
+     * to set
      */
     public void setInvOrganizationSiteDTOSelected(InvOrganizationSiteDTO invOrganizationSiteDTOSelected) {
         this.invOrganizationSiteDTOSelected = invOrganizationSiteDTOSelected;

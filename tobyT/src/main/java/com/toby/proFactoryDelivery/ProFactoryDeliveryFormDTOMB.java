@@ -39,6 +39,11 @@ public class ProFactoryDeliveryFormDTOMB extends ProductionBasicDataForm {
         }
     }
 
+    public void loadInvoiceSerial() {
+        loadDlg();
+        findAccountStatement();
+    }
+
     @Override
     public void load() {
         try {

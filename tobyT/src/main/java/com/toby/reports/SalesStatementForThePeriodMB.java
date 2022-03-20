@@ -5,6 +5,7 @@ import com.toby.dto.InvInventoryDTO;
 import com.toby.toby.Basic;
 import com.toby.views.SalesStatementForThePeriod;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +28,7 @@ public class SalesStatementForThePeriodMB extends Basic {
 
     private List<SalesStatementForThePeriod> list;
     private SalesStatementForThePeriod statementForThePeriod;
+    private Boolean notZeroValue ;
 
     @EJB
     private ReportsService reportsService;
@@ -42,6 +44,15 @@ public class SalesStatementForThePeriodMB extends Basic {
             for (InvInventoryDTO invInventoryDTO : getStatementForThePeriod().getGallaryListSelected()) {
                 getStatementForThePeriod().setGallerySelected(invInventoryDTO);
                 getList().addAll(reportsService.getSalesStatementForThePeriod(getStatementForThePeriod()));
+            }
+            if(getNotZeroValue()){
+                List<SalesStatementForThePeriod> listBak = new ArrayList<>();
+                for( SalesStatementForThePeriod period : getList()){
+                    if(period.getRemain().compareTo(BigDecimal.ZERO) == 1){
+                        listBak.add(period);
+                    }
+                }
+                setList(listBak);
             }
         }
     }
@@ -136,6 +147,20 @@ public class SalesStatementForThePeriodMB extends Basic {
      */
     public void setStatementForThePeriod(SalesStatementForThePeriod statementForThePeriod) {
         this.statementForThePeriod = statementForThePeriod;
+    }
+
+    /**
+     * @return the notZeroValue
+     */
+    public Boolean getNotZeroValue() {
+        return notZeroValue;
+    }
+
+    /**
+     * @param notZeroValue the notZeroValue to set
+     */
+    public void setNotZeroValue(Boolean notZeroValue) {
+        this.notZeroValue = notZeroValue;
     }
 
 }

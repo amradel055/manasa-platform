@@ -283,6 +283,9 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         StringBuilder builder = new StringBuilder();
         filters.put("transactionType", transactionType);
         builder.append("SELECT count(s) FROM GlBankTransaction s WHERE s.branchId.id = :branchId AND s.transactionType =:transactionType ");
+        if (transactionType != null && transactionType == 0) {
+            builder.append(" OR (s.transactionType = 0 AND s.glBankId IS NULL ) ");
+        }
         appendFilter(filters, branchId, userId, builder, selectGlBankId, transactionType);
         Long details = dao.findEntityByQuery(builder.toString(), filters);
 

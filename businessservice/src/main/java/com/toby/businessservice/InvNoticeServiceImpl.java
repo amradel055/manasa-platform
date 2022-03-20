@@ -8,8 +8,15 @@ package com.toby.businessservice;
 import com.toby.core.GenericDAO;
 import com.toby.dto.GeneralJournalDTO;
 import com.toby.dto.GlAccountDTO;
+import com.toby.dto.GlYearDTO;
 import com.toby.dto.InvNoticeDTO;
+import com.toby.dto.InvOrganizationSiteDTO;
+import com.toby.dto.SymbolDTO;
+import com.toby.entity.CostCenter;
+import com.toby.entity.Currency;
 import com.toby.entity.GeneralJournal;
+import com.toby.entity.GeneralJournalDetails;
+import com.toby.entity.GlAccount;
 import com.toby.entity.InvNotice;
 import com.toby.entity.TobyUser;
 import java.math.BigDecimal;
@@ -93,6 +100,39 @@ public class InvNoticeServiceImpl implements InvNoticeService {
 //            params.put("type", type);
         }
 
+        List<InvNotice> invNoticeList = dao.findListByQuery(query.toString(), params);
+
+        return returnDTOList(invNoticeList);
+    }
+
+    @Override
+    public List<InvNoticeDTO> getALLInvNoticeByBranchIdAndTypeAndSerialAndOrgan_idDTO(Integer Id, Integer type, InvOrganizationSiteDTO organizationSiteId, Integer serial) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", Id);
+
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT i FROM InvNotice i WHERE i.branchId.id = :branchId ");
+
+        if (type != null) {
+            if (type == 2) {
+                query.append(" AND i.type in (2,3,5)");
+            } else {
+                query.append(" AND i.type in (0,1,4)");
+            }
+            if (serial != null) {
+                params.put("serial", serial);
+                query.append(" AND i.serial = :serial");
+            }
+            if (organizationSiteId != null) {
+                params.put("organizationSiteId", organizationSiteId.getId());
+                query.append(" AND i.organizationSiteId.id = :organizationSiteId");
+            }
+            query.append(" order by i.id desc ");
+//            params.put("type", type);
+            {
+
+            }
+        }
         List<InvNotice> invNoticeList = dao.findListByQuery(query.toString(), params);
 
         return returnDTOList(invNoticeList);
@@ -211,7 +251,7 @@ public class InvNoticeServiceImpl implements InvNoticeService {
             if (type == 2 || type == 3) {
                 query.append(" AND e.type = 2 OR e.type = 3");
             } else {
-                query.append(" AND e.type = 0 OR e.type = 1");
+                query.append(" AND e.type = 0 OR e.type = 1 OR e.type = 4");
             }
         }
 
@@ -271,33 +311,52 @@ public class InvNoticeServiceImpl implements InvNoticeService {
 
     @Override
     public GeneralJournal tarhil(InvNotice dto, TobyUser tobyUser, Integer yearSelection) throws CloneNotSupportedException {
-        dao.executeNativeQuery("select toby.sql_mode_function()");
+
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", tobyUser.getBranchId().getId());
         GeneralJournal journal = null;
         StringBuilder remark = new StringBuilder();
-        remark.append("اشعار الخصم");
+        remark.append("اشعار الخصم ");
         remark.append(dto.getOrganizationSiteId().getName());
+        BigDecimal mainValue = dto.getValue().divide(new BigDecimal(1.15));
+        BigDecimal taxValue = dto.getValue().subtract(mainValue);
         if (dto.getInvInventory() != null && dto.getInvInventory().getCostCenterId() != null && dto.getInvInventory().getCostCenterId().getId() != null) {
-            // ادخال مردود المبيعات
-            journal = generaljournalService.addGeneralJournalGlobal(yearSelection, 1031, dto.getSerial(), dto.getDate(), remark.toString(), tobyUser, 0, true);
+
+            journal = generaljournalService.addGeneralJournalGlobal(yearSelection, 1031, dto.getSerial(), dto.getDate(), remark.toString(), tobyUser, 0, true, dto.getId());
+
+            Integer salesTaxAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"SALES_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
+            Integer DISCOUNT_TAX_ACCOUNT = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"DISCOUNT_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
+
+            generaljournalDetailsService.addGenDetalil(false, dto.getValue(), journal.getId(),
+                    (dto.getOrganizationSiteId() == null || dto.getOrganizationSiteId().getAccountId() == null || dto.getOrganizationSiteId().getAccountId().getId() == null) ? null : dto.getOrganizationSiteId().getAccountId().getId(),
+                    (dto.getInvInventory() == null || dto.getInvInventory().getCostCenterId() == null || dto.getInvInventory().getCostCenterId().getId() == null) ? null : dto.getInvInventory().getCostCenterId().getId(),
+                    remark.toString(), tobyUser);
+
+            generaljournalDetailsService.addGenDetalil(true, mainValue, journal.getId(), DISCOUNT_TAX_ACCOUNT,
+                    (dto.getInvInventory() == null || dto.getInvInventory().getCostCenterId() == null || dto.getInvInventory().getCostCenterId().getId() == null) ? null : dto.getInvInventory().getCostCenterId().getId(),
+                    remark.toString(), tobyUser);
+            generaljournalDetailsService.addGenDetalil(true, taxValue, journal.getId(), salesTaxAccount,
+                    (dto.getInvInventory() == null || dto.getInvInventory().getCostCenterId() == null || dto.getInvInventory().getCostCenterId().getId() == null) ? null : dto.getInvInventory().getCostCenterId().getId(),
+                    remark.toString(), tobyUser);
+
+        } else if (dto.getOrganizationSiteId() != null && dto.getOrganizationSiteId().getGallaryId() != null && dto.getOrganizationSiteId().getGallaryId().getCostCenterId() != null && dto.getOrganizationSiteId().getGallaryId().getCostCenterId().getId() != null) {
+
+            journal = generaljournalService.addGeneralJournalGlobal(yearSelection, 1031, dto.getSerial(), dto.getDate(), remark.toString(), tobyUser, 0, true, dto.getId());
 
             Integer salesTaxAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"SALES_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
             Integer DISCOUNT_TAX_ACCOUNT = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"DISCOUNT_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
             // حساب القيمة المضافة 
             generaljournalDetailsService.addGenDetalil(false, dto.getValue(), journal.getId(),
                     (dto.getOrganizationSiteId() == null || dto.getOrganizationSiteId().getAccountId() == null || dto.getOrganizationSiteId().getAccountId().getId() == null) ? null : dto.getOrganizationSiteId().getAccountId().getId(),
-                    (dto.getInvInventory() == null || dto.getInvInventory().getCostCenterId() == null || dto.getInvInventory().getCostCenterId().getId() == null) ? null : dto.getInvInventory().getCostCenterId().getId(),
-                    remark.toString(), tobyUser);
-//  حساب المبيعات
-//            Integer salesAccountNumber = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"SALES_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
-            generaljournalDetailsService.addGenDetalil(true, dto.getValue().multiply(new BigDecimal(0.85)), journal.getId(), DISCOUNT_TAX_ACCOUNT,
-                    (dto.getInvInventory() == null || dto.getInvInventory().getCostCenterId() == null || dto.getInvInventory().getCostCenterId().getId() == null) ? null : dto.getInvInventory().getCostCenterId().getId(),
-                    remark.toString(), tobyUser);
-            generaljournalDetailsService.addGenDetalil(true, dto.getValue().multiply(new BigDecimal(0.15)), journal.getId(), salesTaxAccount,
-                    (dto.getInvInventory() == null || dto.getInvInventory().getCostCenterId() == null || dto.getInvInventory().getCostCenterId().getId() == null) ? null : dto.getInvInventory().getCostCenterId().getId(),
+                    dto.getOrganizationSiteId().getGallaryId().getCostCenterId().getId(),
                     remark.toString(), tobyUser);
 
+            generaljournalDetailsService.addGenDetalil(true, mainValue, journal.getId(), DISCOUNT_TAX_ACCOUNT,
+                    dto.getOrganizationSiteId().getGallaryId().getCostCenterId().getId(),
+                    remark.toString(), tobyUser);
+            generaljournalDetailsService.addGenDetalil(true, taxValue, journal.getId(), salesTaxAccount,
+                    dto.getOrganizationSiteId().getGallaryId().getCostCenterId().getId(),
+                    remark.toString(), tobyUser);
         }
         return journal == null ? null : journal;
     }
@@ -311,10 +370,159 @@ public class InvNoticeServiceImpl implements InvNoticeService {
 
         query.append(" AND i.type in (1,4) ");
 
-        List<InvNotice> invNoticeList = dao.findListByQuery(query.toString(), params);int i = 0 ;
-        for (InvNotice dto : invNoticeList) { System.err.println(i++);
+        List<InvNotice> invNoticeList = dao.findListByQuery(query.toString(), params);
+        int i = 0;
+        for (InvNotice dto : invNoticeList) {
+            System.err.println(i++);
             tarhil(dto, tobyUser, 73);
         }
+    }
+
+    @Override
+    public List<GeneralJournalDTO> getALLInvNoticeForToby2(TobyUser tobyUser) throws CloneNotSupportedException {
+        List<GeneralJournalDTO> list = new ArrayList<>();
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", 182);
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT i FROM InvNotice i WHERE i.branchId.id = :branchId ");
+
+        query.append(" AND i.type in (1,4) ");
+
+        List<InvNotice> invNoticeList = dao.findListByQuery(query.toString(), params);
+        int i = 0;
+        for (InvNotice dto : invNoticeList) {
+            System.err.println(i++);
+            list.add(tarhilOne(dto, tobyUser, 73));
+        }
+        return list;
+    }
+
+    public GeneralJournalDTO tarhilOne(InvNotice dto, TobyUser tobyUser, Integer yearSelection) throws CloneNotSupportedException {
+//        dao.executeNativeQuery("select toby.sql_mode_function()");
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", tobyUser.getBranchId().getId());
+        GeneralJournalDTO journal = null;
+        StringBuilder remark = new StringBuilder();
+        remark.append("اشعار الخصم ");
+        remark.append(dto.getOrganizationSiteId().getName());
+        BigDecimal mainValue = dto.getValue().divide(new BigDecimal(1.15));
+        BigDecimal taxValue = dto.getValue().subtract(mainValue);
+
+        if (dto.getInvInventory() != null && dto.getInvInventory().getCostCenterId() != null && dto.getInvInventory().getCostCenterId().getId() != null) {
+
+            journal = addGeneralJournalGlobal(yearSelection, 1031, dto.getSerial(), dto.getDate(), remark.toString(), tobyUser, null);
+
+            journal.setDocumentId(dto.getId());
+
+            Integer salesTaxAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"SALES_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
+            Integer DISCOUNT_TAX_ACCOUNT = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"DISCOUNT_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
+
+            journal.getDetailList().add(addGenDetalil(false, dto.getValue(), journal.getId(),
+                    (dto.getOrganizationSiteId() == null || dto.getOrganizationSiteId().getAccountId() == null || dto.getOrganizationSiteId().getAccountId().getId() == null) ? null : dto.getOrganizationSiteId().getAccountId().getId(),
+                    (dto.getInvInventory() == null || dto.getInvInventory().getCostCenterId() == null || dto.getInvInventory().getCostCenterId().getId() == null) ? null : dto.getInvInventory().getCostCenterId().getId(),
+                    remark.toString(), tobyUser, null, null));
+
+            journal.getDetailList().add(addGenDetalil(true, mainValue, journal.getId(), DISCOUNT_TAX_ACCOUNT,
+                    (dto.getInvInventory() == null || dto.getInvInventory().getCostCenterId() == null || dto.getInvInventory().getCostCenterId().getId() == null) ? null : dto.getInvInventory().getCostCenterId().getId(),
+                    remark.toString(), tobyUser, null, null));
+            journal.getDetailList().add(addGenDetalil(true, taxValue, journal.getId(), salesTaxAccount,
+                    (dto.getInvInventory() == null || dto.getInvInventory().getCostCenterId() == null || dto.getInvInventory().getCostCenterId().getId() == null) ? null : dto.getInvInventory().getCostCenterId().getId(),
+                    remark.toString(), tobyUser, null, null));
+
+        } else if (dto.getOrganizationSiteId() != null && dto.getOrganizationSiteId().getGallaryId() != null && dto.getOrganizationSiteId().getGallaryId().getCostCenterId() != null && dto.getOrganizationSiteId().getGallaryId().getCostCenterId().getId() != null) {
+            journal = addGeneralJournalGlobal(yearSelection, 1031, dto.getSerial(), dto.getDate(), remark.toString(), tobyUser, null);
+
+            journal.setDocumentId(dto.getId());
+
+            Integer salesTaxAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"SALES_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
+            Integer DISCOUNT_TAX_ACCOUNT = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"DISCOUNT_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
+
+            journal.getDetailList().add(addGenDetalil(false, dto.getValue(), journal.getId(),
+                    (dto.getOrganizationSiteId() == null || dto.getOrganizationSiteId().getAccountId() == null || dto.getOrganizationSiteId().getAccountId().getId() == null) ? null : dto.getOrganizationSiteId().getAccountId().getId(),
+                    dto.getOrganizationSiteId().getGallaryId().getCostCenterId().getId(),
+                    remark.toString(), tobyUser, null, null));
+
+            journal.getDetailList().add(addGenDetalil(true, mainValue, journal.getId(), DISCOUNT_TAX_ACCOUNT,
+                    dto.getOrganizationSiteId().getGallaryId().getCostCenterId().getId(),
+                    remark.toString(), tobyUser, null, null));
+            journal.getDetailList().add(addGenDetalil(true, taxValue, journal.getId(), salesTaxAccount,
+                    dto.getOrganizationSiteId().getGallaryId().getCostCenterId().getId(),
+                    remark.toString(), tobyUser, null, null));
+        }
+        return journal == null ? null : journal;
+    }
+
+    public GeneralJournalDTO addGeneralJournalGlobal(Integer yearSelectionId, Integer specialDocumentsTypes,
+            Integer serial, Date date, String remark, TobyUser tobyUser, Integer id) {
+
+        GeneralJournalDTO generalJournal = new GeneralJournalDTO();
+        generalJournal.setGeneralStatement(remark);
+        generalJournal.setGeneralData(date);
+        generalJournal.setGeneralDecument(serial);
+        generalJournal.setSerial(serial);
+
+        generalJournal.setPost_flag(true);
+        generalJournal.setId(id);
+//        Symbol symbol = symbolService.getSpecialDocumentsTypes(specialDocumentsTypes);
+        GlYearDTO glYear = new GlYearDTO();
+        glYear.setId(73);
+        generalJournal.setGlYear(glYear);
+        SymbolDTO symbol = new SymbolDTO();
+        symbol.setId(611);
+        generalJournal.setGeneralType(symbol != null ? symbol : null);
+
+        generalJournal.setBranchId(tobyUser.getBranchId().getId());
+        generalJournal.setCompanyId(tobyUser.getCompanyId().getId());
+        generalJournal.setCreatedBy(tobyUser.getId());
+        generalJournal.setCreatedDate(new Date());
+        Map<String, Object> params = new HashMap<>();
+        params.put("glYear", yearSelectionId == null ? null : yearSelectionId);
+
+        return generalJournal;
+    }
+
+    public GeneralJournalDetails addGenDetalil(Boolean isDebit, BigDecimal value, Integer generalJournalId, Integer accountId,
+            Integer costCenterId, String remark, TobyUser tobyUser, Integer serial, Integer id) {
+
+        GeneralJournalDetails generalJournalDetail = new GeneralJournalDetails();
+
+        if (generalJournalId != null) {
+            GeneralJournal journal = new GeneralJournal();
+            journal.setId(generalJournalId);
+            generalJournalDetail.setGeneralJournalId(journal);
+        }
+        if (isDebit) {
+            generalJournalDetail.setDebitAmount(value);
+            generalJournalDetail.setDebitAmountLocal(value);
+        } else {
+            generalJournalDetail.setCreditamount(value);
+            generalJournalDetail.setCreditamountLocal(value);
+        }
+
+        if (accountId != null) {
+            GlAccount glAccount = new GlAccount();
+            glAccount.setId(accountId);
+            generalJournalDetail.setGlACCOUNTId(glAccount);
+        }
+        generalJournalDetail.setDiscribtion(remark);
+        generalJournalDetail.setRate(BigDecimal.ONE);
+        Currency currency = new Currency();
+        currency.setId(110);
+        generalJournalDetail.setCurrencyId(currency);
+
+        if (costCenterId != null) {
+            CostCenter costCenter = new CostCenter();
+            costCenter.setId(costCenterId);
+            generalJournalDetail.setCostCenterId(costCenter);
+        }
+        generalJournalDetail.setBranchId(tobyUser.getBranchId());
+        generalJournalDetail.setCompanyId(tobyUser.getCompanyId());
+        generalJournalDetail.setCreatedBy(tobyUser);
+        generalJournalDetail.setCreationDate(new Date());
+        generalJournalDetail.setSerial(serial);
+        generalJournalDetail.setId(id);
+
+        return generalJournalDetail;
     }
 
 }

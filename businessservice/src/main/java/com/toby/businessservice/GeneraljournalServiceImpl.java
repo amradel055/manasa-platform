@@ -52,7 +52,7 @@ public class GeneraljournalServiceImpl implements GeneraljournalService {
 
     @Override
     public synchronized GeneralJournal addGeneralJournalGlobal(Integer yearSelectionId, Integer specialDocumentsTypes,
-            Integer serial, Date date, String remark, TobyUser tobyUser, Integer type,boolean postFlag) {
+            Integer serial, Date date, String remark, TobyUser tobyUser, Integer type,boolean postFlag,Integer documentId) {
 
         GeneralJournal generalJournal = new GeneralJournal();
         generalJournal.setGeneralStatement(remark);

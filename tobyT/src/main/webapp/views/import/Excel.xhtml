@@ -9,7 +9,7 @@
     <ui:define name="content">
         <h:form id="form" enctype="multipart/form-data" dir="#{userData.dir}" style="margin-right: 20px">
 
-            <p:commandButton id="btninvitem5999"  actionListener="#{importMB.tarhilInvoiceOne()}" ajax="false" value="ترحيل الفواتير">
+            <p:commandButton id="btninvitem5999"  actionListener="#{importMB.tarhilInvoiceOneMoshtaryat()}" ajax="false" value="ترحيل الفواتير">
                 <f:ajax execute="@all" render="@form"/>
                 <p:ajax/>
             </p:commandButton>
@@ -17,7 +17,7 @@
             <p:commandButton id="btninvitem58888"  actionListener="#{importMB.tarhilCashOne()}" ajax="false" value="ترحيل سندات القبض">
                 <f:ajax execute="@all" render="@form"/>
                 <p:ajax/>
-            </p:commandButton>
+            </p:commandButton> 
             <p:commandButton id="btninvitem588888"  actionListener="#{importMB.tarhilExitOne()}" ajax="false" value="ترحيل سندات الصرف">
                 <f:ajax execute="@all" render="@form"/>
                 <p:ajax/>
@@ -188,7 +188,7 @@
 
 
 
-            <p:blockUI block="form" trigger=" " animate="true" >
+            <p:blockUI block="form" trigger=" btninvitem5999 btninvitem58888 btninvitem588888 btninvitem58888899 btninvitem58888555 " animate="true" >
 
                 <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
             </p:blockUI>

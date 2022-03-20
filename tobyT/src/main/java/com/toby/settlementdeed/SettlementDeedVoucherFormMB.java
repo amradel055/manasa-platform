@@ -165,7 +165,7 @@ public class SettlementDeedVoucherFormMB extends GlBankBasicDataForm {
 
     private List<GlAccountDTO> glRunningAccountDTOList;
     private GlAccountDTOConverter runningAccountDTOConverter;
-    
+
     private Boolean isDebit;
 
     @EJB
@@ -854,7 +854,11 @@ public class SettlementDeedVoucherFormMB extends GlBankBasicDataForm {
 
                     if (saveValidation != false) {
                         GeneralJournal generalJournal = new GeneralJournal();
-                        generalJournal.setId(glBankTransactionDetailsService.tarhilSettlementVoucher(glBankTransactionDetailsUpdatedList, glBankTransaction, getUserData().getUser(), 3, false));
+                         if (getUri().contains("settlementdeedVoucherNOSumDetail")) {
+                            generalJournal.setId(glBankTransactionDetailsService.tarhilSettlementVoucherNOSumDetail(glBankTransactionDetailsUpdatedList, glBankTransaction, getUserData().getUser(), 3, false));
+                        }else if (getUri().contains("settlementdeedVoucher")) {
+                            generalJournal.setId(glBankTransactionDetailsService.tarhilSettlementVoucher(glBankTransactionDetailsUpdatedList, glBankTransaction, getUserData().getUser(), 3, false));
+                        } 
                         generalJournal = dao.findEntityById(GeneralJournal.class, generalJournal.getId());
                         glBankTransactionEntity.setSerial(generalJournal.getSerial());
                         glBankTransaction.setId(generalJournal.getId());
@@ -2361,12 +2365,11 @@ public class SettlementDeedVoucherFormMB extends GlBankBasicDataForm {
                 hashMap.put("param2", prepareReport());
                 hashMap.put("report1path", getUserData().getReportPath() + "generalJournalReportTotal.jasper");
                 hashMap.put("report2path", getUserData().getReportPath() + "settlementdeed.jasper");
-                if(getUri().contains("settlementdeedVoucherForm")){
+                if (getUri().contains("settlementdeedVoucherForm")) {
                     fillReport(hashMap, getUserData().getReportPath() + "constraintWithsettlementdone.jasper", listAll, "pdf");
-                }else{
+                } else {
                     fillReport(hashMap, getUserData().getReportPath() + "constraintWithsettlementd.jasper", listAll, "pdf");
                 }
-                
 
             }
         } else {
@@ -2485,8 +2488,7 @@ public class SettlementDeedVoucherFormMB extends GlBankBasicDataForm {
     public void setIsDebit(Boolean isDebit) {
         this.isDebit = isDebit;
     }
-    
-    
+
     public void updateCostCenter() {
         if (getGlBankTransactionEntity().getCostAccount() != null && getGlBankTransactionEntity().getCostAccount().getCostCenterId() != null) {
             CostCenterDTO costCenterDTO = new CostCenterDTO();

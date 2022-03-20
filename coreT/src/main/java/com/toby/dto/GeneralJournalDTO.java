@@ -31,6 +31,7 @@ public class GeneralJournalDTO extends BaseEntityDTO {
     private Integer modifiedBy;
     private Date modificationDate;
     private TobyUserDTO created_by;
+    private Integer documentId;
     private List<GeneralJournalDetails> detailList;
 
     /**
@@ -267,6 +268,20 @@ public class GeneralJournalDTO extends BaseEntityDTO {
      */
     public void setDetailList(List<GeneralJournalDetails> detailList) {
         this.detailList = detailList;
+    }
+
+    /**
+     * @return the documentId
+     */
+    public Integer getDocumentId() {
+        return documentId;
+    }
+
+    /**
+     * @param documentId the documentId to set
+     */
+    public void setDocumentId(Integer documentId) {
+        this.documentId = documentId;
     }
 
 }

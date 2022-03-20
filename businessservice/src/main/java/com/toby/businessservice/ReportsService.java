@@ -8,6 +8,8 @@ package com.toby.businessservice;
 import com.toby.views.ClientsByInvInventory;
 import com.toby.views.CompanyInvoicesWithoutSewing;
 import com.toby.views.CustomerBalances;
+import com.toby.views.CustomerBalancesDebtAge;
+import com.toby.views.CustomerBalancesDebtAgeSearch;
 import com.toby.views.CustomersHaveNoMovementFromTheDate;
 import com.toby.views.InvoicesIssuedWithinAperiod;
 import com.toby.views.InvoicesRegisteredMoreThanOnce;
@@ -54,4 +56,6 @@ public interface ReportsService {
     public List<CustomersHaveNoMovementFromTheDate> getCustomersHaveNoMovementFromTheDate(CustomersHaveNoMovementFromTheDate noMovementFromTheDate, Integer branchId);
 
     public List<ClientsByInvInventory> getClientsByInvInventory(ClientsByInvInventory invInventory, Integer branchId);
+    
+    public List<CustomerBalancesDebtAge> getCustomerBalancesDebtAge(CustomerBalancesDebtAgeSearch customerBalancesDebtAge);
 }
