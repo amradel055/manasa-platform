@@ -6,6 +6,7 @@ import com.toby.rest.AttributeRest;
 import com.toby.rest.ItemsRest;
 import com.toby.rest.OffersDetailsRest;
 import com.toby.rest.OffersRest;
+import com.toby.rest.PayRest;
 import com.toby.rest.VariationsDetailsRest;
 import com.toby.rest.VariationsRest;
 import java.util.HashSet;
@@ -29,6 +30,7 @@ public class MyApplication extends Application {
         resources.add(VariationsRest.class);
         resources.add(VariationsDetailsRest.class);
         resources.add(ItemsRest.class);
+        resources.add(PayRest.class);
         return resources;
     }
 

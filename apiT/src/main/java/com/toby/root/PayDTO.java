@@ -26,4 +26,6 @@ public class PayDTO {
     public String currency;
     @XmlElement
     public String paymentType;
+    @XmlElement
+    public String paymentId;
 }
