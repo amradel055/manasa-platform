@@ -2743,6 +2743,9 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         params.put("code", code);
         params.put("gallaryId", gallaryId);
         InvOrganizationSite detailses = dao.findEntityByQuery("SELECT e FROM InvOrganizationSite e WHERE e.code = :code AND e.gallaryId.id = :gallaryId  ", params);
+        if(detailses == null){
+            return null ;
+        }
         return mapToDTO(detailses, tobyUser);
     }
 
