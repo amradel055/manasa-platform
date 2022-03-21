@@ -472,6 +472,7 @@ public class ImportMB extends Basic implements Serializable {
             if (invoiceDTO.getOrganizationSiteId() == null) {
                 InvOrganizationSiteDTO siteDTO = new InvOrganizationSiteDTO();
                 siteDTO.setMobile("0000000000");
+                siteDTO.setCode(code.getContents());
                 siteDTO.setName(customerName.getContents());
                 InvInventoryDTO inventory = invInventoryService.findInventory(Integer.valueOf(gallaryID.getContents()));
                 InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
