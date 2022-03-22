@@ -346,7 +346,7 @@ public class LessonServiceImpl implements LessonService {
             dTO.setPeriodId(entity.getPeriodId().getId());
         }
         if (entity.getMaterialId() != null) {
-            dTO.setPeriodId(entity.getMaterialId().getId());
+            dTO.setMaterialId(entity.getMaterialId().getId());
         }
         if (entity.getTeacherId() != null) {
             dTO.setTeacherId(entity.getTeacherId().getId());
