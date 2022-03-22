@@ -11,11 +11,11 @@ import com.isag.dto.StudentDTO;
 import com.isag.dto.StudentPeriodsDTO;
 import com.isag.dto.TeachersDTO;
 import com.isag.entity.Branch;
-import com.isag.entity.IgmaCompany;
 import com.isag.entity.StudentPeriods;
-import com.isag.entity.IgmaUser;
 import com.isag.entity.Materials;
 import com.isag.entity.Periods;
+import com.isag.entity.IgmaCompany;
+import com.isag.entity.IgmaUser;
 import com.isag.entity.Student;
 import com.isag.views.TeachersByStudentId;
 import java.util.ArrayList;
@@ -129,10 +129,11 @@ public class StudentPeriodsServiceImpl implements StudentPeriodsService {
     }
 
     @Override
-    public void deleteStudentPeriodsBy(Integer teacherId, Integer periodId, Integer studentId) {
+    public void deleteStudentPeriodsBy(Integer id ,Integer teacherId, Integer periodId, Integer studentId) {
         if (teacherId != null && periodId != null && studentId != null) {
-            String sql = " delete from StudentPeriods s where s.teacherId.id = " + teacherId
-                    + " AND s.periodId.id = " + periodId + " AND s.studentId.id = " + studentId;
+            String sql = " delete from StudentPeriods s  where s.id = " + id ;
+//            +  " AND s.teacherId.id = " + teacherId
+//                    + " AND s.periodId.id = " + periodId + " AND s.studentId.id = " + studentId;
             dao.executeDeleteQuery(sql);
         }
     }
