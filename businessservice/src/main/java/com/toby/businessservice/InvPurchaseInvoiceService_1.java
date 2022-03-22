@@ -164,5 +164,7 @@ public interface InvPurchaseInvoiceService_1 {
     public InvInvoiceDTO completeTarhilInvoiceAfterSave(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) throws CloneNotSupportedException;
     
     public InvInvoiceDTO saveNew(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser);
+    
+    public void tarhilExcel (TobyUser tobyUser) throws CloneNotSupportedException;
 
 }

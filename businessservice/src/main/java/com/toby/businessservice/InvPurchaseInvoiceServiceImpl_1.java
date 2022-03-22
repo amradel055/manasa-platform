@@ -42,6 +42,7 @@ import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlAccount;
 import com.toby.entity.GlAdminUnit;
 import com.toby.entity.GlBank;
+import com.toby.entity.GlYear;
 import com.toby.entity.InvAddingorder;
 import com.toby.entity.InvAddingorderDetail;
 import com.toby.entity.InvInventory;
@@ -1475,6 +1476,21 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         
         return invInvoiceDTO;
+    }
+    
+    @Override
+    public void tarhilExcel (TobyUser tobyUser) throws CloneNotSupportedException{
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", 182);
+        List<Integer> details = dao.findListByQuery("SELECT e.id FROM InvPurchaseInvoice e WHERE e.branchId.id = :branchId AND e.excel = 1", params);
+        for(Integer invoice : details){
+            InvInvoiceDTO invoiceDTO = findInvPurchaseInvoiceById(invoice);
+             invoiceDTO.setScreenName(ScreenNameClassEnum.PROWORKORDER);
+             GlYear glYear = new GlYear();
+             glYear.setId(73);
+             invoiceDTO.setGlYearSelection(glYear);
+            completeTarhilInvoiceAfterSave(invoiceDTO, tobyUser);
+        }
     }
 
 //    private void tarhilInvoice(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser, InvPurchaseInvoice invPurchaseInvoice) throws CloneNotSupportedException {
