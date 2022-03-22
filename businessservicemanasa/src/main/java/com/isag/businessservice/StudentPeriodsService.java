@@ -23,7 +23,7 @@ public interface StudentPeriodsService {
     
     public List<TeachersDTO> findteachersByStudentIdLogin(Integer studentId);
 
-    public List<Integer> findPeriodsByStudentId(Integer studentId);
+    public List<Integer> findPeriodsByStudentId(Integer studentId, Integer materialId);
 
     public List<TeachersByStudentId> findteachersByStudentId(Integer studentId);
 

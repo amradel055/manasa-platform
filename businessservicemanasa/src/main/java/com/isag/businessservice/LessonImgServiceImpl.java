@@ -66,6 +66,7 @@ public class LessonImgServiceImpl implements LessonImgService {
     @Override
     public LessonImgDTO saveList(List<String> LessonImgDTOist, Integer lessonId, Integer branchId, Integer companyId) {
         LessonImgDTO msg = new LessonImgDTO();
+        if(LessonImgDTOist != null && !LessonImgDTOist.isEmpty()){
         for (String lessonImg : LessonImgDTOist) {
             if (lessonImg != null && lessonId != null && branchId != null && companyId != null
                     && lessonImg != null) {
@@ -93,7 +94,7 @@ public class LessonImgServiceImpl implements LessonImgService {
             } else {
                 msg.setMsg("لا يوجد بيانات  ");
             }
-        }
+        } }
         return msg;
     }
 

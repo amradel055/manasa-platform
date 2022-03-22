@@ -128,7 +128,6 @@ public class LessonServiceImpl implements LessonService {
             params.put("branchId", branchId);
             params.put("companyId", companyId);
             params.put("teacherId", teacherId);
-            params.put("studentId", studentId);
             periodNew = new StringBuilder();
             StringBuilder builder = new StringBuilder();
             builder.append("SELECT d FROM Lesson d WHERE d.branchId.id = :branchId AND d.companyId.id = :companyId AND d.teacherId.id = :teacherId ");
@@ -145,7 +144,7 @@ public class LessonServiceImpl implements LessonService {
                 builder.append(" AND d.schoolStagesGuideId.id = :schoolStageId");
             }
 
-            List<Integer> periodList = studentPeriodsService.findPeriodsByStudentId(studentId);
+            List<Integer> periodList = studentPeriodsService.findPeriodsByStudentId(studentId , materialId);
             for (Integer period : periodList) {
                 if (periodNew.toString().isEmpty()) {
                     periodNew.append(period);
@@ -155,7 +154,7 @@ public class LessonServiceImpl implements LessonService {
                 findAllLessonsPeriod(period);
             }
             builder.append(" AND d.periodId.id in (").append(periodNew.toString()).append(")");
-            builder.append(" AND d.materialId.id in (").append(" SELECT b.materialId.id FROM StudentPeriods b WHERE b.studentId.id = :studentId ").append(")");
+//            builder.append(" AND d.materialId.id in (").append(" SELECT b.materialId.id FROM StudentPeriods b WHERE b.studentId.id = :studentId ").append(")");
 
             List<Lesson> list = dao.findListByQuery(builder.toString(), params);
 
