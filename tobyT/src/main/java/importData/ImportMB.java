@@ -281,6 +281,14 @@ public class ImportMB extends Basic implements Serializable {
         tarhilInvoiceOne();
         tarhilExitOne();
     }
+    
+    public void tarhilAllInvoice() {
+        try {
+            invPurchaseInvoiceService_1.tarhilExcel(getUserData().getUser());
+        } catch (CloneNotSupportedException ex) {
+            Logger.getLogger(ImportMB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     public void tarhilInvNoticeOne() {
         try {
