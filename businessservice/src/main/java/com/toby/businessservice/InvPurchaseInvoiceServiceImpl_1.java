@@ -3501,9 +3501,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         builder.append("SELECT s FROM InvPurchaseInvoice s WHERE   s.branchId.id = 182 AND s.type = 3 AND s.parent is not null AND s.parent.serial = :serial ");
         List<InvPurchaseInvoice> details = dao.findListByQuery(builder.toString(), filters);
         if (details != null && !details.isEmpty()) {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
     
     @Override
