@@ -154,6 +154,17 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     }
 
     @Override
+    public InvOrganizationSite findOrganizationSiteByMobile(InvOrganizationSite invOrganizationSite) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", 182);
+        params.put("mobile", invOrganizationSite.getMobile());
+//        List<InvOrganizationSite> detailsesMobile = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.mobile = :mobile ORDER BY e.code", params);
+        InvOrganizationSite detailsesCode = dao.findEntityByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.mobile = :mobile ORDER BY e.code", params);
+
+        return detailsesCode;
+    }
+
+    @Override
     public InvOrganizationSite addOrganizationSite(InvOrganizationSite invOrganizationSite) {
         return dao.updateEntity(invOrganizationSite);
     }
@@ -1595,8 +1606,6 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         return mobileMap;
     }
 
-    
-
     @Override
     public String saveOpenningBalance(List<InvOrganizationSiteDTO> invOrganizationSiteDTOList) {
         String error = null;
@@ -1676,12 +1685,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             gallary.setId(invOrganizationSite.getGallaryId().getId());
             gallary.setName(invOrganizationSite.getGallaryId().getName());
             gallary.setCode(invOrganizationSite.getGallaryId().getCode());
-            if(invOrganizationSite.getGallaryId().getCostCenterId() != null){
+            if (invOrganizationSite.getGallaryId().getCostCenterId() != null) {
                 CostCenterDTO costCenterDTO = new CostCenterDTO();
                 costCenterDTO.setId(invOrganizationSite.getGallaryId().getCostCenterId().getId());
                 gallary.setCostCenterId(costCenterDTO);
             }
-            
+
             invOrganizationSiteDTO.setGallaryIdDTO(gallary);
         }
 

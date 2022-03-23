@@ -77,29 +77,18 @@ public class InvItemDTO extends BaseEntityDTO {
     private Integer isOfferItem;
     private BigDecimal quantity;
     private ProGroupDTO proGroupId;
-    private Integer type;
+    private Integer typeItem;
     private Integer priceType;
     
     
     //barcode    
     private List<InvBarcodeDTO> invBarcodeEntity;
     private List<InvBarcodeDTO> invBarcodeDeletedList;
+    private List<AttributeDTO> atrributesList ;
+    private List<VariationDTO> variationsList ;
 
 
-
-    /**
-     * @return the id
-     */
-    public Integer getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
+  
 
     /**
      * @return the msg
@@ -1015,17 +1004,17 @@ public class InvItemDTO extends BaseEntityDTO {
     }
 
     /**
-     * @return the type
+     * @return the typeItem
      */
-    public Integer getType() {
-        return type;
+    public Integer getTypeItem() {
+        return typeItem;
     }
 
     /**
-     * @param type the type to set
+     * @param typeItem the typeItem to set
      */
-    public void setType(Integer type) {
-        this.type = type;
+    public void setTypeItem(Integer typeItem) {
+        this.typeItem = typeItem;
     }
 
     /**
@@ -1054,6 +1043,34 @@ public class InvItemDTO extends BaseEntityDTO {
      */
     public void setIsOfferItem(Integer isOfferItem) {
         this.isOfferItem = isOfferItem;
+    }
+
+    /**
+     * @return the atrributesList
+     */
+    public List<AttributeDTO> getAtrributesList() {
+        return atrributesList;
+    }
+
+    /**
+     * @param atrributesList the atrributesList to set
+     */
+    public void setAtrributesList(List<AttributeDTO> atrributesList) {
+        this.atrributesList = atrributesList;
+    }
+
+    /**
+     * @return the variationsList
+     */
+    public List<VariationDTO> getVariationsList() {
+        return variationsList;
+    }
+
+    /**
+     * @param variationsList the variationsList to set
+     */
+    public void setVariationsList(List<VariationDTO> variationsList) {
+        this.variationsList = variationsList;
     }
 
    

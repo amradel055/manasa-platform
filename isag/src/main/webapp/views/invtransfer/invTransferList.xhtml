@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    
+    
+    
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+        <h:form  dir="#{userData.dir}" class='formmargin' id="form">
+           
+            <p:fieldset   legend="#{userData.userDDs['TRANS_REQ_STORE']}">
+
+
+                <p:dataTable draggableColumns="true" 
+                             var="invTransferTable"
+                             widgetVar="bTable" 
+                             rowIndexVar="index"
+                             value="#{invTransferListMB.invTransferEntityList}" 
+                             rows="#{userData.rowListCount}"
+                             paginator="true"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             id="invTransfernTable">
+
+                    <f:facet name="header" class="col-md-12">
+                        <p:commandButton  class="saddButton" icon="fa fa-plus" title="#{userData.userDDs['ADD']}"
+                                         id="addA"
+                                         action="#{invTransferListMB.goToAdd()}" style="float:right"
+                                         rendered="#{userData.userScreens['invtransfer'].add or userData.isAdmin}"/>
+                        <p:blockUI block="form" trigger="addA" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+                        <p:outputPanel  >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('bTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column  style="width: 5vh;font-size: 1.9vh;text-align: -webkit-auto;border-radius: 0px" 
+                               headerText="#" >
+                        <p:outputLabel value="#{index +1}" />
+                    </p:column>
+
+                    <p:column style="width: 10vh;font-size: 1.9vh;text-align: -webkit-auto;border-radius: 0px" 
+                              filterStyle="display:none" filterBy="#{invTransferTable.serialNo}"
+                              filterMatchMode="contains" headerText="#{userData.userDDs['CONVE_NO']}" sortBy="#{invTransferTable.serialNo}">
+                        <p:outputLabel value="#{invTransferTable.serialNo}" />
+                    </p:column>
+                    <p:column style="width: 15vh;font-size: 1.9vh;text-align: -webkit-auto;border-radius: 0px" filterStyle="display:none" filterBy="#{invTransferTable.transferDate}"
+                              filterMatchMode="contains" headerText="#{userData.userDDs['CONVE_DATE']}" sortBy="#{invTransferTable.transferDate}">
+                        <p:outputLabel value="#{invTransferTable.transferDate}" >
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                        </p:outputLabel>
+                    </p:column>
+                    <p:column style="width: 15vh;font-size: 1.9vh;text-align: -webkit-auto;border-radius: 0px" filterStyle="display:none" filterBy="#{invTransferTable.invFrom}"
+                              filterMatchMode="contains" headerText="#{userData.userDDs['FROM_REPOS']}" sortBy="#{invTransferTable.invFrom}">
+                        <p:outputLabel value="#{invTransferTable.invFrom}"/>
+                    </p:column>  
+                    <p:column style="width: 15vh;font-size: 1.9vh;text-align: -webkit-auto;border-radius: 0px" filterStyle="display:none" filterBy="#{invTransferTable.invTo}"
+                              filterMatchMode="contains" headerText="#{userData.userDDs['TO_REPOS']}" sortBy="#{invTransferTable.invTo}">
+                        <p:outputLabel value="#{invTransferTable.invTo}"/>
+                    </p:column>
+                    <p:column style="width: 15vh;font-size: 1.9vh;text-align: -webkit-auto;border-radius: 0px" filterStyle="display:none" filterBy="#{invTransferTable.remark}"
+                              filterMatchMode="contains" headerText="#{userData.userDDs['NOTE']}" sortBy="#{invTransferTable.remark}">
+                        <p:outputLabel value="#{invTransferTable.remark}" />
+                    </p:column>
+
+                    <p:column style="width: 12vh;font-size: 1.9vh;text-align: center;border-radius: 0px" headerText="#{userData.userDDs['TRANSACTION']}">
+                        
+                        <p:commandButton  class="seditButton" update="@form" style="background-color: #6a6967;border-radius: 3px;" 
+                                          icon="fa fa-fw fa-edit" title="#{userData.userDDs['EDIT']}" action="#{invTransferListMB.goToEdit()}"
+                                          rendered="#{userData.userScreens['invtransfer'].edit or userData.isAdmin}">
+                            <f:setPropertyActionListener value="#{invTransferTable.id}"  target="#{invTransferListMB.invTransferSelected}" />
+                        </p:commandButton>
+                        
+                        <p:commandButton class="sdeleteButton" update="@form" icon="fa fa-remove" style="background-color: red;border-radius: 3px;"
+                                         title="#{userData.userDDs['DELETE']}"  action="#{invTransferListMB.delete}"
+                                         rendered="#{userData.userScreens['invtransfer'].delete or userData.isAdmin}">
+                            <f:setPropertyActionListener value="#{invTransferTable}" target="#{invTransferListMB.invTransferEntity}" />
+                            <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable> 
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

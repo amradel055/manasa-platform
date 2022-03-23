@@ -56,7 +56,6 @@ public class AttributeServiceImpl implements AttributeService {
 
     @Override
     public AttributeDTO findAttribute(AttributeDTO dTO) {
-
         Attribute entity = dao.findEntityById(Attribute.class, dTO.getId());
         return mapToDTO(entity , dTO);
     }
@@ -76,6 +75,16 @@ public class AttributeServiceImpl implements AttributeService {
         params.put("companyId", attributeDTO.getCompanyId());
         params.put("branchId", attributeDTO.getBranchId());
         List<Attribute> entityList = dao.findListByQuery("SELECT a FROM Attribute a WHERE a.companyId.id =:companyId AND a.branchId.id =:branchId", params);
+        List<AttributeDTO> list = mapToDTOList(entityList , attributeDTO);
+        return list;
+    }
+    
+     @Override
+    public List<AttributeDTO> getAllAttributesByBranchIdAndItemId(AttributeDTO attributeDTO) {
+        Map<String, Object> params = new HashMap();
+        params.put("itemId", attributeDTO.getItemId());
+        List<Attribute> entityList = dao.findListByQuery("SELECT ad.headId FROM  AttributeDetails ad WHERE ad.itemId.id = :itemId AND ad.itemId is not null GROUP BY ad.headId  ", params);
+        
         List<AttributeDTO> list = mapToDTOList(entityList , attributeDTO);
         return list;
     }

@@ -36,6 +36,8 @@ public class StudentPeriods extends BaseEntity {
     private BigDecimal value;
     @Column(name = "confirm")
     private Integer confirm;
+    @Column(name = "remark")
+    private String remark;
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
     private Branch branchId;
@@ -150,6 +152,20 @@ public class StudentPeriods extends BaseEntity {
      */
     public void setMaterialId(Materials materialId) {
         this.materialId = materialId;
+    }
+
+    /**
+     * @return the remark
+     */
+    public String getRemark() {
+        return remark;
+    }
+
+    /**
+     * @param remark the remark to set
+     */
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
 }

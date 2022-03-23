@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml" >
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form" dir="rtl" style="margin-right: 15px">
+            <p:fieldset legend="مجموعة الاصناف">
+                <div>
+                    <p:messages autoUpdate="true"  id="msg" showDetail="true" closable="true" rendered="#{ChangePricelBean.showMessageGeneral}" />
+                </div>
+                <div >
+                    <p:commandButton style="float: left;padding: 6px" icon="fa fa-fw fa-close" action="exit"  immediate="true"/>
+                </div>
+
+                <p:remoteCommand name="onCellEdit" update="form changePriceListId" />
+
+                <p:dataTable id="changePriceListId" 
+                             draggableColumns="true" 
+                             widgetVar="changePriceTable" 
+                             rows="#{userData.rowListMasterDetails}"  
+                             style="margin-bottom:20px"  
+                             var="changePriceVar" 
+                             rowIndexVar="index"
+                             dir="#{userData.dir}" 
+                             selection="#{ChangePricelBean.changePriceViewEntitySelected}" 
+                             selectionMode="single"   
+                             rowKey="#{changePriceVar}" 
+                             value="#{ChangePricelBean.changePriceViewEntityList}"    
+                             editable="true"
+                             editMode="cell"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+
+
+
+
+                    <p:ajax  event="rowSelect" process="@form"  listener="#{ChangePricelBean.onRowSelect}"  update=":form:ItemsDetail"/>
+
+
+                    <f:facet name="header" class="col-md-12">
+
+                        <p:outputPanel >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large"/>
+                            <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('changePriceTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:ajax event="cellEdit" process="@form" listener="#{ChangePricelBean.onCellEdit}" oncomplete="onCellEdit()"  />
+
+
+                    <p:column headerText="#" style="width: 5vh;text-align: -webkit-auto" >
+                        <h:outputText value="#{index + 1}"  />
+                    </p:column>
+
+                    <p:column headerText="المجموعة" style="width: 7vh;font-size: 1.4vh;text-align: -webkit-auto">
+                        <h:outputText style="font-size: 1.2vh" value="#{changePriceVar.groupCode}" />
+                    </p:column>
+
+                    <p:column headerText="اسم المجموعة" style="width: 7vh;font-size: 1.4vh;text-align: -webkit-auto">
+                        <h:outputText style="font-size: 1.2vh" value="#{changePriceVar.groupName}" />
+                    </p:column>
+
+                    <p:column headerText="عدد الأصناف" style="width: 7vh;font-size: 1.4vh;text-align: -webkit-auto">
+                        <h:outputText style="font-size: 1.2vh" value="#{changePriceVar.itemSum}" />
+                    </p:column>
+
+                    <p:column headerText="متوسط السعر" style="width: 7vh;font-size: 1.4vh;text-align: -webkit-auto">
+                        <h:outputText style="font-size: 1.2vh" value="#{changePriceVar.costAverage}" />
+                    </p:column>
+
+                    <p:column headerText="السعر الجديد" style="width: 7vh;font-size: 1.4vh;text-align: -webkit-auto">
+
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{changePriceVar.newCost}"  />
+                            </f:facet>
+
+                            <f:facet name="input">
+                                <p:inputText id="costT"
+                                             value="#{changePriceVar.newCost}"
+                                             style="width:90%!important"/>
+
+                            </f:facet>
+                        </p:cellEditor> 
+                    </p:column>
+
+
+                    <p:column style="width: 10vh;font-size: 1.4vh;text-align: -webkit-auto" headerText="#{userData.userDDs['TRANSACTION']}">
+                        <p:commandButton   update="@form" title="تحميل الاسعار"
+                                           id="uploadU"
+                                           action="#{ChangePricelBean.loadPrices()}" icon="fa fa-fw fa-save" >
+                            <f:setPropertyActionListener value="#{changePriceVar}" target="#{ChangePricelBean.changePriceViewEntitySelected}" />
+                        </p:commandButton>
+
+                        <p:blockUI block="form" trigger="uploadU" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+                    </p:column>
+
+                </p:dataTable>
+            </p:fieldset>
+
+            <p:fieldset id="ItemsDetailFeildSet" legend="تفاصيل المجموعة">
+                <div class="col-xs-12">
+                    <p:messages autoUpdate="true"  id="msg2" showDetail="true" closable="true" rendered="#{ChangePricelBean.showMessageDetail}" />
+                </div>
+
+                <p:remoteCommand name="onCellEdit" update="form ItemsDetail" />
+
+                <p:dataTable id="ItemsDetail" 
+                             draggableColumns="true" 
+                             widgetVar="ItemsDetailTable"      
+                                                
+                             style="margin-bottom:20px" 
+                             rowIndexVar="index"
+                             var="itemVar" 
+                             dir="rtl" 
+                             selection="#{ChangePricelBean.itemDataEntitySelected}"
+                             selectionMode="single"   
+                             rowKey="#{itemVar}" 
+                             value="#{ChangePricelBean.itemDataEntityList}" 
+                             editable="true"
+                             editMode="cell"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}">
+
+                    <f:facet name="header" class="col-md-12">
+                        <p:outputPanel >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large"/>
+                            <p:inputText id="globalFilter"
+                                         a:autofocus="true" 
+                                         onkeyup="PF('ItemsDetail').filter()" style="width:150px" />
+
+                            <p:commandButton id="saveAll"
+                                             icon="fa fa-save"
+                                             title="تحديث الكل" 
+                                             actionListener="#{ChangePricelBean.save()}" 
+                                             update="form" 
+                                             ajax="true"
+                                             style="float:left"/>
+                            <p:blockUI block="form" trigger="saveAll" animate="true" >
+
+                                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                            </p:blockUI> 
+
+                        </p:outputPanel>
+                    </f:facet>
+
+
+                    <p:ajax event="cellEdit" process="@form" listener="#{ChangePricelBean.onCellEditDetail}" oncomplete="onCellEdit()"  />
+
+                    <p:column headerText="#" style="width: 5vh;text-align: -webkit-auto" >
+                        <h:outputText value="#{index + 1}"  />
+                    </p:column>
+
+                    <p:column style="width: 12vh;font-size: 1.4vh;text-align: -webkit-auto"
+                              headerText="التاريخ" >
+                        <h:outputText style="font-size: 1.2vh;width:100px !important" 
+                                      id="datee" value="#{itemVar.dateCreateCat}" > 
+                            <f:convertDateTime   id="datee"  pattern="yyyy-MM-dd" /> 
+                        </h:outputText>                        
+                    </p:column>
+
+
+                    <p:column headerText="الكود" style="width: 7vh;font-size: 1.4vh;text-align: -webkit-auto">
+                        <h:outputText style="font-size: 1.2vh" value="#{itemVar.code}" />
+                    </p:column>
+
+                    <p:column headerText="اسم الصنف" style="width: 7vh;font-size: 1.4vh;text-align: -webkit-auto">
+                        <h:outputText style="font-size: 1.2vh" value="#{itemVar.name}" />
+                    </p:column>
+
+                    <p:column headerText="الوحدة" style="width: 7vh;font-size: 1.4vh;text-align: -webkit-auto">
+                        <h:outputText style="font-size: 1.2vh" value="#{itemVar.unitName}" />
+                    </p:column>
+
+                    <p:column headerText="سعر قديم" style="width: 7vh;font-size: 1.4vh;text-align: -webkit-auto">
+                        <h:outputText style="font-size: 1.2vh" value="#{itemVar.costAverage}" />
+                    </p:column>
+
+                    <p:column headerText="السعر الجديد" style="width: 7vh;font-size: 1.4vh;text-align: -webkit-auto">
+
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{itemVar.lastCost}"  />
+                            </f:facet>
+
+                            <f:facet name="input">
+                                <p:inputText
+                                    value="#{itemVar.lastCost}"
+                                    style="width:100%"/>
+
+                            </f:facet>
+                        </p:cellEditor> 
+                    </p:column>
+
+                    <p:column style="width: 10vh;font-size: 1.4vh;text-align: -webkit-auto" headerText="#{userData.userDDs['TRANSACTION']}">
+                        <p:commandButton   update="@form" title="تحديث الاسعار"
+                                           action="#{ChangePricelBean.saveItem(itemVar)}"
+                                           id="uploadUU"
+                                           icon="fa fa-fw fa-save" >
+                            <f:setPropertyActionListener value="#{itemVar}" target="#{ChangePricelBean.itemDataEntitySelected}" />
+                        </p:commandButton>
+
+                        <p:blockUI block="form" trigger="uploadUU" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+                    </p:column>
+
+                </p:dataTable>
+
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

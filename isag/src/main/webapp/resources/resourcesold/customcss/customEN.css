@@ -1,0 +1,907 @@
+*{
+    box-sizing: border-box!important;
+}
+body{
+    height: auto!important;
+    overflow-x: hidden;
+    overflow-y:auto!important
+
+}
+
+/********************************Custom EN******************/
+
+.sidenavEN {
+
+    height: 750px!important;
+    position: absolute ;
+    z-index: 1;
+    top: 74px;
+    left: 0;  
+    overflow-x: hidden;
+    overflow-y: auto;
+    transition: 0.5s;
+}
+
+@media (min-width: 768px){
+.navbar-rightEN {
+    float: left !important;
+   
+}
+
+.navbar-headerEN{
+    float:right;
+}
+
+}
+
+@media screen and (max-width: 768px) {
+    .navbar-rightEN{
+        display: none;
+        position: absolute;
+        padding: 15px 0;
+        background-color: #0064bc;
+        width: 100%;
+        height: auto;
+        z-index: 999;
+        top: 68px;
+    }
+
+    .dropdown-menu {
+        position: fixed;
+        top:15%;
+        left: 0;
+        z-index: 1000;
+        display: none;
+        float: left;
+        min-width: 160px;
+    }
+
+}
+
+
+.leftMarg{
+    
+    margin-left: 15px
+}
+
+.dropdown-userEN{
+    
+    left: 0;
+}
+.navbar-top-links li{
+    
+    float: left;
+}
+
+.direction-en{
+    direction: ltr;
+    padding-left: 20px;
+}
+/********************************************/
+
+.nav {
+    margin-top: 1%;
+}
+.navbar-brand {
+    margin-top: 8%;}
+
+/****************************/
+.navbar-top-links li:last-child {
+
+    margin-top: inherit!important;
+}
+/***************************/
+.navbar-default {
+    background-color: #0064bc;
+    color: #fff;
+    min-height: 75px;}
+/**************************/
+
+
+
+label {
+
+    font-weight: 100 !important;
+    font-size: larger !important;
+}
+
+@media screen and (max-width: 569px) {
+    
+    
+    .ui-selectonemenu .ui-selectonemenu-label {
+    padding-top: 0;
+    background-color: transparent;}
+    .ui-inputfield, .ui-widget-content 
+    .ui-inputfield, .ui-widget-header .ui-inputfield {
+   background-color: transparent!important;}
+
+}
+
+/**************************/
+.fa-tasks:before , .navbar-top-links li a {color:#fff}
+/**********************************/
+.dropdown-toggle{ display: contents !important;
+}
+.dropdown-user a:hover {
+    color: #fff;
+}
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+    color: #ffffff;
+    background-color: #0064bc;
+}
+/*********************************/
+.ui-fileupload-content .ui-progressbar {
+    display: none;
+    width: 0;}
+/****************************************/
+
+/****************************************/
+.ui-selectonemenu {
+
+    vertical-align: middle;
+}
+
+.TopNavLinks{
+    margin-top: 10px;
+    margin-left: 15px;
+}
+/************************************/
+.ui-selectonemenu .ui-selectonemenu-label {
+    display: contents;}
+/******************************************/
+/*************************************/
+.open > .dropdown-menu {
+    display: inline-grid !important;
+    background-color: #0064bc;
+}
+/**************************/
+.navbar-brand {
+    height: 60px;     
+    padding: 0px 15px !important;}
+
+/*********************************/
+
+.dropdown-menu {
+
+    text-align: -webkit-center !important;}
+/***************************************/
+#openbtn2{visibility: hidden !important}
+/*******************************/
+.nav {
+    padding-right: 0;
+    padding-right: 10px;
+}
+/********toggle sidebar *********/
+
+
+.sidenav a:hover {
+    color: orangered;
+}
+
+
+
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+
+}
+
+@media screen and (max-width: 859px) and (min-width: 698px){
+.sidenav {
+        position: absolute !important;
+        overflow-x: hidden;
+        right: 0;     
+        transition: 0.5s;
+    }}
+
+@media screen and (max-width: 727px) and (min-width: 697px){
+    .sidenav {
+        position: absolute !important;
+        overflow-x: hidden;
+        right: 0;     
+        transition: 0.5s;}}
+@media screen and (max-width: 726px) and (min-width: 503px){
+    .sidenav {
+        position: absolute !important;
+        overflow-x: hidden;
+        right: 0;     
+        transition: 0.5s;}}
+@media screen and (max-width: 502px){
+    .sidenav {
+        position: absolute !important;
+        overflow-x: hidden;
+        right: 0;     
+        transition: 0.5s;}}
+
+@media screen and (max-width: 767px) {
+   
+    .btnhide{
+        display: none !important;
+    }
+    .navbar-brand {
+        margin: 3px;}
+
+    .show-btn{display: none;}
+    .navbar-top-links li {
+        display: contents;
+    }
+}
+
+@media screen and (max-width: 685px) {
+    img {
+        display: block !important;
+        margin:2px auto !important;}
+
+}
+
+/*********************** GENERAL CUSTOMZING ****************************/
+.ui-fieldset .ui-fieldset-legend {
+    padding: 0px 10px;
+
+    font-size: 1.8vh;
+    width: auto!important ;
+
+}
+.ui-paginator.ui-paginator-top {
+    display: none;
+}
+.ui-datatable tbody td {
+    padding: 1px 5px !important;
+    height: 25px !important;
+}
+/***************الخط اللى فى جدول الفروع*********/
+.ui-widget {
+    font-size: 11px !important;
+}
+.ui-state-default col-xs-3{
+    width: inherit;
+
+}
+/*************************************************/
+.ui-datatable .ui-sortable-column {
+    text-align: center !important;
+}
+/**********************************************/
+@media (max-width: 640px){
+    .ui-datatable-reflow .ui-datatable-data td[role="gridcell"] {
+        text-align: -webkit-auto !important;
+        display: contents !important;}}
+/***********************************************/
+@media (max-width: 640px){
+    .ui-datatable-reflow .ui-datatable-data tr.ui-widget-content {
+        display: flex;
+        text-align: -webkit-auto;}}
+/************************************************/
+.ui-datatable-scrollable table, .ui-datatable-sticky table {
+
+}
+@media (max-width: 640px){
+    .ui-datatable-reflow .ui-datatable-data tr.ui-widget-content {
+        display: flex !important;
+        text-align: -webkit-auto !important;}}
+
+/****************************************************/
+.ui-selectonemenu .ui-selectonemenu-trigger {
+
+    border-radius: unset !important;
+    width: 2.4em !important;
+    height: 100%;
+    padding: 0px 8px !important;}
+.ui-selectonemenu .ui-selectonemenu-trigger .ui-icon {
+    margin-top: 1px !important;
+    margin-right: -2px !important;
+}
+
+/***************************************************/
+.ui-datatable .ui-column-filter {
+    display: -webkit-inline-box;
+
+}
+/************************************************/
+.ui-inputfield, .ui-widget-content .ui-inputfield, .ui-widget-header .ui-inputfield {
+    height: 22px !important;
+    background: #ffffff;
+    -moz-box-shadow: inset 0 2px 2px #8f8f8f;
+    -webkit-box-shadow:none  !important; 
+    box-shadow: none !important;
+    margin: 4px !important ;
+    
+}
+/********************************************/
+.ui-tree .ui-tree-selectable .ui-treenode-label, .ui-tree .ui-tree-selectable .ui-treenode-icon {
+    font-size: 13px !important;
+}
+/*************************************************/
+/****************************************/
+.ui-fileupload-row>div {
+    display: table-cell;
+    padding: 0 5px;
+}
+.ui-fileupload-content {
+    padding: .2em .4em;
+    width: 100% !important;
+
+
+}
+/*****************Auto Complete**********************/
+.ui-autocomplete-input .ui-autocomplete-dd-input{
+    padding-right: 35px !important;
+}
+/****************************************/
+.ui-datatable .ui-datatable-header{
+    padding: 2px 0px !important; 
+
+}
+.ui-datatable-rtl.ui-datatable thead th, .ui-datatable-rtl.ui-datatable tfoot td {
+    font-size: 15px !important;
+}
+/************************************************/
+
+table {
+    width:-webkit-fill-available !important;}
+
+/******************My Library*******************************/
+.ui-selectonemenu.ui-widget.ui-state-default.ui-corner-all{
+    height: 22px !important;
+    padding-top: .3% !important;
+    padding-right: 30px !important;
+    vertical-align: middle !important;
+}
+.top-btn{
+    padding: 6px !important;
+}
+.drop-height{
+    height: 22px !important;
+}
+.btn-margin{
+    margin:1.5% 0
+}
+.active-margin{
+    margin:1.7% 8% !important;
+}
+.inputwidth{
+    width:50% !important;
+}
+.calendar-width{
+    width: 450px !important;
+}
+/**********************************************************/
+.ui-selectcheckboxmenu-multiple-container.ui-inputfield{
+    padding: 0;
+}
+
+/********************************************************/
+
+.ui-autocomplete-input.ui-autocomplete-dd-input {
+    padding-right: 30px !important;
+   }
+
+/***************************************************************/
+
+.colored {                
+    background: #87b6d9;
+    color: #fff ;
+}
+
+/***********************************/
+
+/**************************Table Direction******************************/
+/*.ui-datatable .ui-datatable-scrollable-body {
+    min-height: 10px;
+    direction: ltr !important;}*/
+/*************************المخازن********************************/
+
+.inventoryLabelWidth{
+    width: 45px;
+}
+/*****************************************************/
+.colored {                
+    background: #666666 ;
+    color: #000000 ;
+}
+/******************************************************/
+
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
+    color: #fff !important;
+    font-size: 14px !important;
+    background-color: #0168c1 !important;
+}
+
+/******************************************************/
+#content {
+    transition: 0.5s;
+    margin: 0px 0%;
+    margin-top: 10px; 
+    float: right !important; 
+   
+}
+
+.fontcolor3{color:#0064bc !important;font-size: 10px !important;background-color: #fff !important }
+.ui-panelmenu .ui-menuitem-link {
+    color: #0064bc;
+    background-color: #e2f0fb;
+    font-size: 13px;
+}
+
+.ui-autocomplete-panel .ui-autocomplete-list {
+    height: 300px !important;}
+
+/*********************************************************************************************/
+.whbbackgroun{
+    background-color: #fff!important
+}
+/*************************************************شاشات حركة الحسابات **********************************************/
+table td[class*="col-"],
+table th[class*="col-"] {
+
+    float: right !important;
+}
+
+/*************************************************************************************************************************/
+.ui-accordion .ui-accordion-content {
+    padding: 0!important;}
+
+/************************************************************************************************************************/
+* {
+    margin: 0;
+    padding: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body {
+
+    font-family: 'Open Sans', Arial, Helvetica, Sans-serif, Verdana, Tahoma;
+}
+
+ul { list-style-type: none; }
+
+a {
+    color: #b63b4d;
+    text-decoration: none;
+}
+
+/** =======================
+ * Contenedor Principal
+ ===========================*/
+
+
+h1 {
+    color: #FFF;
+    font-size: 24px;
+    font-weight: 400;
+    text-align: center;
+    margin-top: 80px;
+}
+
+h1 a {
+    color: #c12c42;
+    font-size: 16px;
+}
+
+.accordion {
+    width: 100%;
+    max-width: 360px;
+    margin: 30px auto 20px;
+    background: #FFF;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.accordion .link {
+    cursor: pointer;
+    display: block;
+    padding: 15px 15px 15px 42px;
+    color: #4D4D4D;
+    font-size: 14px;
+    font-weight: 700;
+    border-bottom: 1px solid #CCC;
+    position: relative;
+    -webkit-transition: all 0.4s ease;
+    -o-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+}
+
+.accordion li:last-child .link { border-bottom: 0; }
+
+.accordion li i {
+    position: absolute;
+    top: 16px;
+    left: 12px;
+    font-size: 18px;
+    color: #595959;
+    -webkit-transition: all 0.4s ease;
+    -o-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+}
+
+.accordion li i.fa-chevron-down {
+    right: 12px;
+    left: auto;
+    font-size: 16px;
+}
+
+.accordion li.open .link { color: #b63b4d; }
+
+.accordion li.open i { color: #b63b4d; }
+
+.accordion li.open i.fa-chevron-down {
+    -webkit-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+/**
+ * Submenu
+ -----------------------------*/
+
+
+.submenu {
+    display: none;
+    background: #444359;
+    font-size: 14px;
+}
+
+.submenu li { border-bottom: 1px solid #4b4a5e; }
+
+.submenu a {
+    display: block;
+    text-decoration: none;
+    color: #d9d9d9;
+    padding: 12px;
+    padding-left: 42px;
+    -webkit-transition: all 0.25s ease;
+    -o-transition: all 0.25s ease;
+    transition: all 0.25s ease;
+}
+
+.submenu a:hover {
+    background: #b63b4d;
+    color: #FFF;
+}
+/***************************************************************************************/
+
+.fa-caret-down:after {
+    position: relative !important;
+    left: 100px!important;
+    top: 15px!important;
+    
+    
+}
+
+
+/*****************************************************************************************/
+.panel {
+   
+    width: 250px!important;
+    margin-bottom: 0px!important}
+
+.ui-autocomplete-itemtip {
+    -moz-box-sizing: content-box!important;
+    -webkit-box-sizing: content-box!important;
+    box-sizing: content-box!important;
+}
+
+/*******************************************************القوائم الختامية**********************************************************/
+.colored {                
+    background: #0064bc!important  ;
+    color: #fff!important ;
+    font-size: 12px;
+}
+
+.lossColored {                
+    background: #A20404!important ;
+    color: #fff!important ;
+    font-size: 12px!important;
+
+
+}
+
+.profitColor{                
+    background: #61F645!important  ;
+    color: #000000!important ;
+    font-size: 12px!important;}
+
+
+/****************************************************************** شاشة المراقبة **********************************************************/
+
+.customclass{
+
+    width: -webkit-fill-available !important;
+    height: auto!important;
+    left: 0!important;
+    top: 44%!important;
+  
+
+}
+
+/****************************************************************جرد المستودع********************************************/
+.colored{
+    background-color: #0064bc!important;
+    color: #fff!important;
+}
+
+/***********************************************************************************************************************/
+.ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    border: 1px solid #c5dbec;
+    background:#fff;
+    }
+    /**********************************Header of Table*******************************************/
+  /* .ui-datatable .ui-datatable-header{
+    color: #0064bc;
+    background-image: none;
+    border: 1px solid #4297d7;
+    background-color: #fff;   
+}
+  */
+
+    /******************pagintor of table***************************/
+   
+    /*.ui-datatable .ui-paginator, .ui-datatable .ui-paginator {
+   
+    background-image: none;
+    background-color:  #fff;
+    border: none;
+}*/
+.ui-icon {
+    color: #fff!important;}
+
+
+/***************************************************************************************/
+
+@media screen and (max-width: 685px){
+.sdcreenimg img {
+    display: inline-block !important;
+    margin: 0!important;
+}}
+
+/************************buttons colors and vackground*************************************/
+.saveButton{
+    
+    background-color: #69c475!important;
+    color:#fff!important;
+    width: 65px;
+    height: 25px;
+    font-size: 13px!important;
+    
+   
+}
+.saveallButton{
+    
+    background-color: #69c475!important;
+    color:#fff!important;
+    width: 85px;
+    height: 25px;
+    font-size: 13px!important;
+  
+}
+.cancelButton{
+    
+    background-color: #f55e4b!important;
+    color:#fff!important;
+    width: 65px;
+    height: 25px;
+    font-size: 13px!important;
+   
+}
+
+.closeButton{
+    background-color: #df230b!important;
+    color:#fff!important;
+    width: 65px;
+    height: 25px;
+    font-size: 13px!important;
+   
+}
+
+.deleteButton{
+    background-color: #df230b!important;
+    color:#fff!important;
+    width: 65px;
+    height: 25px;
+    font-size: 13px!important;
+  
+}
+.searchButton{
+    
+     background-color: #148dc2!important;
+    color:#fff!important;
+    width: 65px;
+    height: 25px;
+    font-size: 13px!important;
+  
+}
+.newButton{
+    
+     background-color: #f6b444!important;
+    color:#fff!important;
+    width: 65px;
+    height: 25px;
+    font-size: 13px!important;
+  
+}
+.addButton{
+    
+      background-color: #f6b444!important;
+    color:#fff!important;
+    width: 65px;
+    height: 25px;
+    font-size: 13px!important;
+    
+}
+.printButton{
+    
+     background-color: #2692ed!important;
+    color:#fff!important;
+    width: 65px;
+    height: 25px;
+    font-size: 13px!important;
+  
+}
+.reloadButton{
+    background-color: #0064bc!important;
+    color:#fff!important;
+    width: 65px;
+    height: 25px;
+    font-size: 13px!important;
+   
+}
+.midrateallButtons{
+     background-color: #69c475!important;
+    color:#fff!important;
+    width: 100px;
+    height: 25px;
+    font-size: 13px!important;
+   
+}
+.cancellmidrateButtons{
+   
+    background-color: #f55e4b!important;
+    color:#fff!important;
+    width: 100px;
+    height: 25px;
+    font-size: 13px!important;
+   
+
+}
+
+.editButton{
+    background-color: #fbb850!important;
+    color:#fff!important;
+    width: 65px;
+    height: 25px;
+    font-size: 13px!important;
+   
+}
+.sureButton{
+    background-color: #0064bc!important;
+    color:#fff!important;
+    width: 65px;
+    height: 25px;
+    font-size: 13px!important;
+   
+}
+/*******************small buttons in tables*************************/
+.saddButton{
+    background-color: #69c475!important;
+    color:#fff!important;
+    width: 30px;
+    height: 20px;
+    font-size: 13px!important;
+}
+.scloseButton{
+    background-color: #df230b!important;
+    color:#fff!important;
+    width: 30px;
+    height: 20px;
+    font-size: 13px!important;
+   
+}
+.seditButton{
+    background-color: #fbb850!important;
+    color:#fff!important;
+    width: 30px;
+    height: 20px;
+    font-size: 13px!important;
+   
+}
+
+
+.sdeleteButton{
+    background-color: #df230b!important;
+    color:#fff!important;
+    width: 30px;
+    height: 20px;
+    font-size: 13px!important;
+   
+}
+.scancelButton{
+    
+    background-color: #f55e4b!important;
+    color:#fff!important;
+    width: 30px;
+    height: 20px;
+    font-size: 13px!important;
+   
+}
+.ssaveButton{
+    background-color: #69c475!important;
+    color:#fff!important;
+    width: 30px;
+    height: 20px;
+    font-size: 13px!important;
+   
+}
+.sreloadButton{
+    background-color: #0064bc!important;
+    color:#fff!important;
+    width: 30px;
+    height: 20px;
+    font-size: 13px!important;
+    
+}
+.scobyButton{
+     background-color: #0064bc!important;
+    color:#fff!important;
+    width: 30px;
+    height: 20px;
+    font-size: 13px!important;
+  
+}
+
+.sprintButton{
+    
+     background-color: #2692ed!important;
+    color:#fff!important;
+    width: 30px;
+    height: 20px;
+    font-size: 13px!important;
+  
+}
+.smsearchButton{
+    
+     background-color: #148dc2!important;
+    color:#fff!important;
+    width: 30px;
+    height: 20px;
+    font-size: 13px!important;
+  
+}
+/******************center buttons************************************/
+.centerButtons{
+    display: flex!important; 
+    justify-content: center!important;
+}
+
+/*.ui-paginator .ui-paginator-page{
+    
+    color:#fff!important;
+}*/
+
+.ui-button-text-icon-left .ui-button-text {
+    color: #fff!important;}
+
+/****************************Mostafa*********************************/
+#div#form:j_idt693{
+    
+    position: absolute;
+    left: 50% !important;
+    bottom: 50% !important;
+    z-index: 1001 !important;
+    display: inline-block !important;}
+
+.ui-dialog {
+    position: absolute !important;
+    left: 11%!important;
+    top: 9%!important;
+    z-index: 9999;}
+/*******************************AutoComplete*********************************************/
+.ui-autocomplete .ui-autocomplete-dropdown {
+    top: 4px;}
+.ui-autocomplete .ui-autocomplete-dropdown {
+    height: 22px !important}
+.ui-autocomplete {
+   
+    border-radius: 0px!important}

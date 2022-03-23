@@ -1,0 +1,285 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+        <style >
+            .colored {                
+                background: #0064bc ;
+                color: #fff ;
+                font-size: 12px;
+            }
+            .ui-dialog {
+
+                top: 0!important;
+                left: 0px!important;
+
+            }
+        </style>
+
+        <h:form  class='formmargin' dir="#{userData.dir}"  id="form">
+
+           
+
+            <p:fieldset  legend="تقرير معدل الشكوى"
+
+                         style=" position: relative"> 
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
+
+                    <div class="ui-g">
+
+                        <div class="ui-g-6 ui-xl-6">
+                           
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectCheckboxMenu id="workunit" value="#{completionRateReportMB.rscContractExtractionWorkunitSearchBean.workUnitList}" label="بحث"
+                                                          converter="#{completionRateReportMB.rscWorkUnitDTOConverter}"
+                                                          filter="true" filterMatchMode="startsWith" style="width:62%!important;height: 28px">
+                                        <f:selectItems value="#{completionRateReportMB.rscWorkUnitsGuideDTOList}" var="workunit" itemLabel="#{workunit.name}" itemValue="#{workunit}" />
+                                    </p:selectCheckboxMenu>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 70px" value="البند"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectCheckboxMenu id="siteid"  value="#{completionRateReportMB.rscContractExtractionWorkunitSearchBean.siteList}"  label="مقاول"
+                                                          converter="#{completionRateReportMB.invOrgSiteDTOConverter}"
+                                                          filter="true" filterMatchMode="startsWith" style="width:62%!important;height: 28px">
+                                        <f:selectItems value="#{completionRateReportMB.invOrganizationSiteDTOList}" var="site" itemLabel="#{site.name}" itemValue="#{site}"/>
+                                    </p:selectCheckboxMenu>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 70px" value="المقاول"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:autoComplete style="width:50%!important"
+                                                    id="project"
+                                                    dropdown="true"
+                                                    converter="#{completionRateReportMB.contractRegisterDTOConverter}"
+                                                    value="#{completionRateReportMB.rscContractExtractionWorkunitSearchBean.contract}"
+                                                    var="contractSerial"
+                                                    itemLabel="#{contractSerial.serial}" 
+                                                    itemValue="#{contractSerial}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{completionRateReportMB.completeContractRegisterProjectByOwner}"
+                                                    >
+                                        <p:ajax update="@form "
+                                                event="change" 
+                                                listener="#{completionRateReportMB.projectWorkUnitsGuide}" />
+                                        <p:ajax update="@form "
+                                                listener="#{completionRateReportMB.projectWorkUnitsGuide}"
+                                                event="itemSelect"/>
+
+
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 70px" value="العقد"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:autoComplete style="width:50%!important"
+                                                    id="owner"
+                                                    dropdown="true"
+                                                    converter="#{completionRateReportMB.invOrgSiteDTOConverter}"
+                                                    value="#{completionRateReportMB.rscContractExtractionWorkunitSearchBean.owner}"
+                                                    var="ownerId"
+                                                    itemLabel="#{ownerId.name}" 
+                                                    itemValue="#{ownerId}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{completionRateReportMB.completInvOrgSiteAsOwner}"
+                                                    >
+                                        <p:ajax update="@form "
+                                                event="change" 
+                                                listener="#{completionRateReportMB.ownerProjectView()}" />
+                                        <p:ajax update="@form "
+                                                listener="#{completionRateReportMB.ownerProjectView()}"
+                                                event="itemSelect"/>
+
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 70px" value="المالك"/>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+                    </div>
+                </div>
+
+                <paneGrid class="col-md-12 centerButtons" columns="1" >
+
+                    <h:panelGroup   style="margin-top: 2%">
+
+
+                        <p:commandButton    class="searchButton"
+                                            title="#{userData.userDDs['SEARCH']}"
+                                            action="#{completionRateReportMB.search()}"
+                                            id="saveB"
+                                            value="#{userData.userDDs['SEARCH']}"
+                                            update="@form" />
+
+                        <p:commandButton  class="newButton"
+                                          id="NewB"
+                                          title="#{userData.userDDs['NEW']}" 
+                                          immediate="true" 
+                                          action="#{completionRateReportMB.reset()}"
+                                          update="@form"
+                                          value="#{userData.userDDs['NEW']}"
+                                          process="@form"
+                                          style="color: #ecf0f1!important;border-radius: 5px;
+                                          margin-left: 5px;"/>
+
+                        <p:commandButton  class="PrintButton"
+                                          id="PrintB"
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          style="color: #ecf0f1!important;border-radius: 5px;
+                                          margin-left: 5px;"
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{completionRateReportMB.exportPDF}"
+                                          title="#{userData.userDDs['PRINT']}"
+                                          immediate="true" />
+
+                        <p:commandButton  class="closeButton"
+                                          id="CloseB"
+                                          style="color: #ecf0f1!important;border-radius: 5px;
+                                          margin-left: 5px;"
+
+                                          title="#{userData.userDDs['BACK']}"
+                                          action="exit"
+                                          value="#{userData.userDDs['BACK']}"/>
+                        <h:commandLink>  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="detailViewTable" 
+                                            fileName="Complention Rate Report"
+                                            postProcessor="#{rscExtractReportMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+                        <p:blockUI block="form" trigger="saveB NewB PrintB CloseB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+
+                    </h:panelGroup>
+                </paneGrid>
+            </p:fieldset>
+
+
+            <p:fieldset id="reportDB">
+
+                <p:dataTable 
+                    paginator="true"
+                    rows="20"
+                    draggableColumns="true" 
+                    var="detail" 
+                    rowIndexVar="index" 
+                    value="#{completionRateReportMB.completionRateReportEntityList}" 
+                    dir="rtl" 
+                    id="detailViewTable"
+                    >
+                    <f:facet name="header">
+
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('detailViewTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+                    </f:facet>
+                    <p:column   style="width: 10vh;text-align: right;font-size: 2.2vh;border-radius: 0px" headerText="اسم المقاول" 
+
+                                filterBy="#{detail.siteName}" 
+                                filterMatchMode="contains" 
+                                sortBy="#{detail.siteName}"
+                                filterable="false">
+
+                        <p:outputLabel value="#{detail.siteName}" />
+                    </p:column>
+
+                    <p:column   style="width: 10vh;text-align: right;font-size: 2.2vh;border-radius: 0px" headerText="اسم البند" 
+
+                                filterBy="#{detail.workUnitName}" 
+                                filterMatchMode="contains" 
+                                sortBy="#{detail.workUnitName}"
+                                filterable="false">
+
+                        <p:outputLabel value="#{detail.workUnitName}" />
+                    </p:column>
+
+                    <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh;border-radius: 0px" headerText="مبلغ التعاقد" 
+
+                                filterBy="#{detail.contractQty}" 
+                                filterMatchMode="contains" 
+                                sortBy="#{detail.contractQty}"
+                                filterable="false">
+
+                        <p:outputLabel value="#{detail.contractQty}" />
+                    </p:column>
+
+
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px" filterStyle="display:none"
+                              headerText="اجمالي المستخلصات"
+
+                              filterBy="#{detail.currentQty}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{detail.currentQty}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{detail.currentQty}" />
+                    </p:column>
+                    <p:column  style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px" filterStyle="display:none"
+
+                               headerText="نسبة الانجاز"
+
+
+                               filterBy="#{detail.completionRate}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{detail.completionRate}"
+                               filterable="false"
+
+                               >
+                        <p:outputLabel value="#{detail.completionRate}" />
+                    </p:column>
+
+                </p:dataTable>
+
+
+            </p:fieldset>
+
+
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>

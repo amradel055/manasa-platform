@@ -1,0 +1,200 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <h:form id="ScreenAddEditForm" dir="#{userData.dir}" class='formmargin'>
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 12%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />  
+            </div>
+
+            <p:fieldset legend="1. المعلومات الأساسية للموظف" style="margin-bottom:20px">
+                <div   class="ui-g-12 ui-g-nopad" style="padding: 0px;">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <p:outputLabel style="width: 111px;margin-right: 5%;" value="اسم المؤسسة"/>
+                            </h:panelGroup> 
+
+                            <h:panelGroup>
+                                <p:autoComplete style="width:36%!important"
+                                                dropdown="true" maxResults="10"
+                                                converter="#{autoComplete.remCompanyDTOConverter}"
+                                                value="#{employeeFormMB.employeeDTO.remCompany}"
+                                                var="remCompany"
+                                                itemLabel="#{remCompany}" 
+                                                itemValue="#{remCompany}"
+                                                forceSelection="true" 
+                                                completeMethod="#{autoComplete.completeRemCompany}"
+                                                >
+
+                                </p:autoComplete>
+                            </h:panelGroup> 
+                        </div>
+                        
+                        
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:95px;margin-right: 5%"  value="الإسم بالعربية " />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="employeeName" a:autofocus="true" value="#{employeeFormMB.employeeDTO.name}">
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:outputLabel style="width:95px"  value="الإسم بالإنجليزية" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="employeeNameEn" value="#{employeeFormMB.employeeDTO.nameEn}">
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <p:outputLabel style="width:101px;margin-right: 5%"  value="الجنس" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+
+                                <p:autoComplete style="width:34%!important" 
+                                                dropdown="true" 
+                                                value="#{employeeFormMB.employeeDTO.gender}" 
+                                                converter="#{employeeFormMB.genderDTOConverter}"
+                                                completeMethod="#{employeeFormMB.completeGender}"
+                                                var="gender"
+                                                itemLabel="#{gender.name}"
+                                                itemValue="#{gender}" 
+                                                forceSelection="true" 
+                                                >
+
+                                </p:autoComplete>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:outputLabel style="width:95px;margin-right: 5%"  value="البريد الإلكتروني" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="employeeEmail" value="#{employeeFormMB.employeeDTO.email}" >
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <p:outputLabel style="width:95px;margin-right: 5%"  value="كود الموظف" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:inputText  style="width: 35%!important"  id="employeeCode" value="#{employeeFormMB.employeeDTO.code}">
+                                </p:inputText>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <p:outputLabel style="width:95px;margin-right: 5%"  value="موبايل الموظف" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:inputText  style="width: 35%!important"  id="employeeMobile" value="#{employeeFormMB.employeeDTO.mobile}">
+                                </p:inputText>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <p:outputLabel style="width:95px;margin-right: 5%"  value=" اسم الموظف" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:inputText  style="width: 35%!important"  id="userName" value="#{employeeFormMB.employeeDTO.userName}">
+                                </p:inputText>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <p:outputLabel style="width:95px;margin-right: 5%"  value="الباسورد" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:inputText  style="width: 35%!important"  id="userName"  value="#{employeeFormMB.employeeDTO.password}">
+                                </p:inputText>
+                            </h:panelGroup>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </p:fieldset>
+
+
+
+            <h:panelGrid id="pn1"   class="centerButtons col-md-12" columns="1"  style="margin-top: 2%">
+
+
+                <h:panelGroup>
+
+
+                    <p:commandButton   class="saveButton"  
+                                       id="saveB" 
+                                       title="#{userData.userDDs['SAVE']}"
+                                       value="#{userData.userDDs['SAVE']}" 
+                                       style="color: #fff;"
+                                       action="#{employeeFormMB.save()}" 
+                                       update="@form" />
+                    <p:commandButton  class="newButton" 
+                                      id="newN"
+                                      ajax="false"
+                                      style="color: #fff;"
+                                      value="#{userData.userDDs['NEW']}" 
+                                      title="#{userData.userDDs['NEW']}"
+                                      onclick="form.target = ''" 
+                                      actionListener="#{employeeFormMB.reset()}"/>
+
+                    <p:commandButton class="closeButton" 
+                                     title="#{userData.userDDs['BACK']}" 
+                                     immediate="true" 
+                                     value="#{userData.userDDs['BACK']}" 
+                                     style=""
+                                     action="#{employeeFormMB.exit()}"   />
+
+
+
+
+                </h:panelGroup>
+            </h:panelGrid>
+            <p:blockUI block="ScreenAddEditForm" trigger="saveB " animate="true" >
+
+                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+            </p:blockUI>
+
+
+        </h:form>
+    </ui:define>
+
+</ui:composition>

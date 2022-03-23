@@ -1,0 +1,262 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        
+        <h:form  id="form" dir="#{userData.dir}"  class='formmargin'>
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 12%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 9%!important;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;" 
+                                  class="viewButton sminimize"
+                                  icon="fa fa-window-minimize"
+                                  title="إظهار/إخفاء"/>  
+            </div>
+            <p:fieldset  legend="تقرير المهام والاحداث"
+
+                         style=" position: relative">
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 75px;margin-right: 6%;" value="من موظف"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:selectOneMenu id="EVENTFrom" style="width: 35%;" value="#{isagSupportReportMB.isagSupportSearchBean.empFrom}" converter="#{isagSupportReportMB.employeeDTOConverterFrom}">
+                                        <f:selectItem itemLabel="اختر" itemValue="" />
+                                        <f:selectItems value="#{isagSupportReportMB.empFrom}" var="leads" itemValue="#{leads}" itemLabel="#{leads}" />
+                                    </p:selectOneMenu>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 75px" value="الى موظف"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:selectOneMenu id="eventTo" style="width: 35%;" value="#{isagSupportReportMB.isagSupportSearchBean.empTo}" converter="#{isagSupportReportMB.employeeDTOConverterTo}">
+                                        <f:selectItem itemLabel="اختر" itemValue="" />
+                                        <f:selectItems value="#{isagSupportReportMB.empTo}" var="leadsd" itemValue="#{leadsd}" itemLabel="#{leadsd}" />
+                                    </p:selectOneMenu>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        
+                        
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 70px;margin-right: 6%; margin-top: 4%;" value="#{userData.userDDs['FROM_DATE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{isagSupportReportMB.isagSupportSearchBean.dateFrom}"
+                                                style="width: 50%"
+                                                id="dateFromCRM">
+
+                                    </p:calendar>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 70px; margin-top: 4%;" value="#{userData.userDDs['TO_DATE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{isagSupportReportMB.isagSupportSearchBean.dateTo}"
+                                                style="width: 50%"
+                                                id="dateToCRM">
+
+                                    </p:calendar>
+                                </h:panelGroup>
+                            </h:panelGroup>
+
+                        </div>
+                        
+                      
+                        
+                    </div>
+                </div>
+                <h:panelGrid  columns="1"  class="col-md-12">
+
+                    <h:panelGroup  class="centerButtons"  style="margin-top: 2%">
+
+
+                        <p:commandButton     class="searchButtons"
+                                             title="#{userData.userDDs['SEARCH']}"
+                                             action="#{isagSupportReportMB.search()}"
+                                             id="saveB"
+                                             value="#{userData.userDDs['SEARCH']}"
+                                             update="CustomerDataViewupdateTable" 
+                                             style="color: #fff!important;background-color: #2196F3;margin-left: 5px;"   />
+
+                        <p:commandButton   class="newButtons"
+                                           id="NewB"
+                                           title="#{userData.userDDs['NEW']}" 
+                                           immediate="true" 
+                                           action="#{isagSupportReportMB.reset()}"
+                                           update="form"
+                                           value="#{userData.userDDs['NEW']}"
+                                           style="color: #fff!important;background-color: #9c27b0d1;margin-left: 5px;"/>
+
+
+
+                        <p:commandButton class="closeButtons"
+                                         id="CloseB"
+                                         style="color: #fff!important;background-color: #035C70;margin-left: 5px;"  
+                                         value="#{userData.userDDs['BACK']}" 
+                                         title="#{userData.userDDs['BACK']}"
+                                         action="exit"/>
+
+
+                      
+
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+            </p:fieldset>
+
+            <p:fieldset  style="margin-top: 2%">
+                <p:dataTable 
+                    rows="20"
+                    paginator="true"
+                    draggableColumns="true" 
+                    var="CustomerDataViewTable" 
+                    widgetVar="CustomerDataViewTable"  
+                    rowKey="#{CustomerDataViewTable}"
+                    rowIndexVar="index" 
+                    value="#{isagSupportReportMB.supportreturn}" 
+                    dir="rtl" 
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                    id="CustomerDataViewTable">
+
+                    <f:facet name="header">
+
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('CustomerDataViewTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+                    </f:facet>
+
+                    <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" headerText="مسلسل" 
+
+                                filterBy="#{CustomerDataViewTable.serial}" 
+                                filterMatchMode="contains" 
+                                sortBy="#{CustomerDataViewTable.serial}"
+                                filterable="false">
+
+                        <h:outputText value="#{CustomerDataViewTable.serial}" style="font-size: 1.5vh"/>
+                    </p:column>
+
+
+
+
+                    
+
+                    <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" headerText="الموظف" 
+
+                                filterBy="#{CustomerDataViewTable.assignTo.name}" 
+                                filterMatchMode="contains" 
+                                sortBy="#{CustomerDataViewTable.assignTo.name}"
+                                filterable="false">
+
+                        <h:outputText value="#{CustomerDataViewTable.assignTo.name}" style="font-size: 1.5vh"/>
+                    </p:column>
+
+                    
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" 
+                              headerText="اسم العميل" 
+
+                              filterBy="#{CustomerDataViewTable.createdByName}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{CustomerDataViewTable.createdByName}"
+                              filterable="false">
+
+                        <h:outputText value="#{CustomerDataViewTable.createdByName}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" 
+                              headerText="الحاله" 
+
+                              filterBy="#{CustomerDataViewTable.status}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{CustomerDataViewTable.status}"
+                              filterable="false">
+
+                        <h:outputText value="#{CustomerDataViewTable.status}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+                    
+                         <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" 
+                              headerText="التاريخ" 
+
+                              filterBy="#{CustomerDataViewTable.date}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{CustomerDataViewTable.date}"
+                              filterable="false">
+
+                        <h:outputText value="#{CustomerDataViewTable.date}" style="font-size: 1.5vh;width: 95%"/>
+                        </p:column>
+                     <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" 
+                              headerText="عنوان المشكله" 
+
+                              filterBy="#{CustomerDataViewTable.title}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{CustomerDataViewTable.title}"
+                              filterable="false">
+
+                        <h:outputText value="#{CustomerDataViewTable.title}" style="font-size: 1.5vh;width: 95%"/>
+                        </p:column>
+                     <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" 
+                              headerText="تفاصيل المشكله" 
+
+                              filterBy="#{CustomerDataViewTable.description}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{CustomerDataViewTable.description}"
+                              filterable="false">
+
+                        <h:outputText value="#{CustomerDataViewTable.description}" style="font-size: 1.5vh;width: 95%"/>
+                        </p:column>
+                     
+                </p:dataTable>
+            </p:fieldset>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

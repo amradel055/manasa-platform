@@ -1,0 +1,214 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form class='formmargin' id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 24%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />
+
+            </div>
+            <p:fieldset legend="#{userData.userDDs['Assets_Groups']}" style="margin-bottom:20px">
+
+                <p:messages autoUpdate="true" id="messages" showDetail="true" closable="true"/> 
+                <div class="row">
+
+                    <div class="col-sm-6">
+                        <h:panelGrid id="pnl" columns="2" cellspacing="20" cellpadding="0" >
+
+                            <h:panelGroup>
+                                <h:panelGroup> 
+                                    <p:outputLabel style="width: 92px;margin-right: 4%;" value="#{userData.userDDs['GROP_COD']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText required="true" requiredMessage="#{userData.userDDs['CO_MUST_BE_ADD']}" style="width: 35%" id="id" value="#{invGroupFormBean.invGroupEntity.code}" />
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <h:panelGrid> 
+                            <h:panelGroup> 
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:95px;margin-right: 4%;" value="#{userData.userDDs['Name']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText   style="width: 35%!important" id="name" a:autofocus="true" value="#{invGroupFormBean.invGroupEntity.name}" />
+                                </h:panelGroup>
+                            </h:panelGroup> 
+                        </h:panelGrid>
+                    </div>
+                    
+                    <div class="col-sm-6">
+                        <h:panelGrid> 
+                            <h:panelGroup> 
+                                <h:panelGroup> 
+                                    <p:outputLabel  style="width:108px;margin-right: 2%;" value="#{userData.userDDs['Asset_Account']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:34%" id="Cost_Center_From2" 
+                                                    dropdown="true"
+                                                    converter="#{invGroupFormBean.invGroupConverter}"
+                                                    value="#{invGroupFormBean.invGroupEntity.invGroupParentId}"
+
+                                                    var="group"
+                                                    itemLabel="#{group}" 
+                                                    itemValue="#{group}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invGroupFormBean.completeInvGroups}" >
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </div>
+                    
+                    <div class="col-sm-6">
+                        <h:panelGrid> 
+                            <h:panelGroup> 
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:95px;margin-right: 4%;" value="#{userData.userDDs['Depreciation_Rate']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText   style="width: 35%!important" id="name2" a:autofocus="true" value="#{invGroupFormBean.invGroupEntity.name}" />
+                                </h:panelGroup>
+                            </h:panelGroup> 
+                        </h:panelGrid>
+                    </div>
+                    
+                    
+
+                    <div class="col-sm-6">
+                        <h:panelGrid> 
+                            <h:panelGroup> 
+                                <h:panelGroup> 
+                                    <p:outputLabel  style="width:108px;margin-right: 2%;" value="#{userData.userDDs['Totally_Account']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:34%" id="Cost_Center_From3" 
+                                                    dropdown="true"
+                                                    converter="#{invGroupFormBean.invGroupConverter}"
+                                                    value="#{invGroupFormBean.invGroupEntity.invGroupParentId}"
+
+                                                    var="group"
+                                                    itemLabel="#{group}" 
+                                                    itemValue="#{group}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invGroupFormBean.completeInvGroups}" >
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <h:panelGrid> 
+                            <h:panelGroup> 
+                                <h:panelGroup> 
+                                    <p:outputLabel  style="width:108px;margin-right: 2%;" value="#{userData.userDDs['Expense_Account']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:34%" id="Cost_Center_From" 
+                                                    dropdown="true"
+                                                    converter="#{invGroupFormBean.invGroupConverter}"
+                                                    value="#{invGroupFormBean.invGroupEntity.invGroupParentId}"
+
+                                                    var="group"
+                                                    itemLabel="#{group}" 
+                                                    itemValue="#{group}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invGroupFormBean.completeInvGroups}" >
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </div>
+                    
+                    <div class="col-sm-6">
+                        <h:panelGrid> 
+                            <h:panelGroup> 
+                                <h:panelGroup> 
+                                    <p:outputLabel  style="width:108px;margin-right: 2%;" value="#{userData.userDDs['Assets_Selling_Account']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:34%" id="Cost_Center_From4" 
+                                                    dropdown="true"
+                                                    converter="#{invGroupFormBean.invGroupConverter}"
+                                                    value="#{invGroupFormBean.invGroupEntity.invGroupParentId}"
+
+                                                    var="group"
+                                                    itemLabel="#{group}" 
+                                                    itemValue="#{group}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invGroupFormBean.completeInvGroups}" >
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </div>
+                
+                </div>
+
+
+                <h:panelGrid  class="centerButtons col-md-12"  columns="1" >
+
+                    <h:panelGroup > 
+                        <p:commandButton   class="saveButton" 
+                                           id="saveB" 
+                                           title="#{userData.userDDs['SAVE']}"
+                                           value="#{userData.userDDs['SAVE']}" 
+                                           style=""
+                                           action="#{invGroupFormBean.save()}" 
+                                           update="@form"/>
+
+                        <p:commandButton  class="newButton" 
+                                          id="newN"
+                                          ajax="false"
+                                          style=""
+                                          value="#{userData.userDDs['NEW']}" 
+                                          title="#{userData.userDDs['NEW']}" 
+                                          onclick="form.target = ''" 
+                                          actionListener="#{invGroupFormBean.reset()}"/>
+
+
+                        <p:commandButton  class="closeButton"
+                                          title="#{userData.userDDs['BACK']}" 
+                                          immediate="true"
+                                          value="#{userData.userDDs['BACK']}"
+                                          style=""
+                                          action="#{invGroupFormBean.exit()}"   />
+
+                    </h:panelGroup> 
+
+                    <p:blockUI block="pnl" trigger="saveB" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+
+                </h:panelGrid>
+
+
+
+
+            </p:fieldset>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

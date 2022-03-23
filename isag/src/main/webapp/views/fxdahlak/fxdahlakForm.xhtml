@@ -1,0 +1,336 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form class='formmargin' id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 24%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />
+
+            </div>
+            <p:fieldset legend="Assets Depreciation Movement" style="margin-bottom:20px">
+
+                <p:messages autoUpdate="true" id="messages" showDetail="true" closable="true"/> 
+                <div class="row">
+                    
+                    <div class="col-sm-6">
+                        <h:panelGrid id="pnl" columns="2" cellspacing="20" cellpadding="0" >
+
+                            <h:panelGroup>
+                                <h:panelGroup> 
+                                    <p:outputLabel style="width: 92px;margin-right: 4%;" value="Accounting entry number"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <h:outputLabel style="width: 48%" id="id" value="" />
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </div>
+                    
+                    <div class="col-sm-6">
+                        <h:panelGrid id="pnl12" columns="2" cellspacing="20" cellpadding="0" >
+
+                            <h:panelGroup>
+                                <h:panelGroup> 
+                                    <p:outputLabel style="width: 92px;margin-right: 4%;" value="Movement Number"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <h:outputLabel style="width: 48%" id="id12" value="" />
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </div>
+                    
+                    <div class="ui-g-12 ui-md-12">
+                                    <h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel  style="width: 89px;margin-right: 4%;" value="To Date"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:calendar id="dateFrom" 
+                                                        value="#{subAccountSummaryReportMB.subAccountSummarySearchBean.dateFrom}" 
+                                                        pattern="dd/MM/yyyy" 
+                                                        style="width:50%" 
+                                                        showButtonPanel="true"
+                                                        >
+                                            </p:calendar>
+                                        </h:panelGroup>
+                                    </h:panelGroup>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <h:panelGrid> 
+                            <h:panelGroup> 
+                                <h:panelGroup> 
+                                    <p:outputLabel  style="width:108px;margin-right: 2%;" value="From Original"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:38%" id="Cost_Center_From22" 
+                                                    dropdown="true"
+                                                    converter="#{invGroupFormBean.invGroupConverter}"
+                                                    value="#{invGroupFormBean.invGroupEntity.invGroupParentId}"
+
+                                                    var="group"
+                                                    itemLabel="#{group}" 
+                                                    itemValue="#{group}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invGroupFormBean.completeInvGroups}" >
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </div>
+                    
+                    <div class="col-sm-12">
+                        <h:panelGrid> 
+                            <h:panelGroup> 
+                                <h:panelGroup> 
+                                    <p:outputLabel  style="width:108px;margin-right: 2%;" value="To Original"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:38%" id="Cost_Center_From222" 
+                                                    dropdown="true"
+                                                    converter="#{invGroupFormBean.invGroupConverter}"
+                                                    value="#{invGroupFormBean.invGroupEntity.invGroupParentId}"
+
+                                                    var="group"
+                                                    itemLabel="#{group}" 
+                                                    itemValue="#{group}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invGroupFormBean.completeInvGroups}" >
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </div>
+                    
+                    <div class="col-sm-12">
+                        <h:panelGrid> 
+                            <h:panelGroup> 
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:95px;margin-right: 4%;" value="Record"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText   style="width: 48%!important" id="name" a:autofocus="true" value="#{invGroupFormBean.invGroupEntity.name}" />
+                                </h:panelGroup>
+                            </h:panelGroup> 
+                        </h:panelGrid>
+                    </div>
+                    
+                    <p:fieldset legend="" style="margin-bottom:20px">
+
+
+                    <p:dataTable 
+                        draggableColumns="true" 
+                        widgetVar="sub" 
+                        id="subaccc"                   
+                        var="subaccReport" 
+                        dir="#{userData.dir}" 
+                        rowKey="#{subaccReport}" 
+                        value="#{subAccountSummaryReportMB.subAccountSummaryReports}" 
+                        rows="20"
+                        paginator="true" 
+                        emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+                        <f:facet name="header" class="col-md-12">
+
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
+                                <p:inputText   id="globalFilter"   onkeyup="PF('sub').filter()" style="width:30%!important;" />
+                            </p:outputPanel>
+                        </f:facet>
+                        <p:column style="width:15vh ;text-align: -webkit-auto;font-size:1.8vh;border-radius: 0px" headerText="Asset Number">
+                            <h:outputText value="#{subaccReport.generalStatement}" style="font-size: 12px"/>
+                        </p:column>
+                        
+                        <p:column style="width:30vh ;text-align: -webkit-auto;font-size:1.8vh;border-radius: 0px"
+                                  filterBy="#{subaccReport.date}"  filterMatchMode="contains" sortBy="#{subaccReport.date}" filterable="false"
+                                  headerText="">
+                            <p:autoComplete style="width:15vh" id="Cost_Center_From22" 
+                                                    dropdown="true"
+                                                    converter="#{invGroupFormBean.invGroupConverter}"
+                                                    value="#{invGroupFormBean.invGroupEntity.invGroupParentId}"
+
+                                                    var="group"
+                                                    itemLabel="#{group}" 
+                                                    itemValue="#{group}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invGroupFormBean.completeInvGroups}" >
+                                    </p:autoComplete>
+                        </p:column>
+
+                        <p:column style="width:20vh ;text-align: -webkit-auto;font-size:1.8vh;border-radius: 0px"  
+                                  headerText="From Date"
+                                  filterBy="#{subaccReport.serial}"  filterMatchMode="contains" sortBy="#{subaccReport.serial}" filterable="false">
+                            <p:autoComplete style="width:25vh" id="Cost_Center_From21" 
+                                                    dropdown="true"
+                                                    converter="#{invGroupFormBean.invGroupConverter}"
+                                                    value="#{invGroupFormBean.invGroupEntity.invGroupParentId}"
+
+                                                    var="group"
+                                                    itemLabel="#{group}" 
+                                                    itemValue="#{group}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invGroupFormBean.completeInvGroups}" >
+                                    </p:autoComplete>
+                        </p:column>
+
+                        <p:column style="width:20vh ;text-align: -webkit-auto;font-size:1.8vh;border-radius: 0px"  
+                                  headerText="To Date"
+                                  filterBy="#{subaccReport.generalDecument}"  filterMatchMode="contains" sortBy="#{subaccReport.generalDecument}" filterable="false">
+                            <h:outputText value="#{subaccReport.generalDecument}" style="font-size: 12px"/>
+                        </p:column>
+
+                        <p:column style="width:25vh ;text-align: -webkit-auto;font-size:1.8vh;border-radius: 0px"
+                                  headerText="Depreciation Value"
+                                  filterBy="#{subaccReport.symbolName}"  filterMatchMode="contains" sortBy="#{subaccReport.symbolName}" filterable="false">
+                            <p:inputNumber   style="width: 48%!important" id="name51" a:autofocus="true" value="#{invGroupFormBean.invGroupEntity.name}" />
+                        </p:column>
+
+                        <p:columnGroup type="footer">
+                            <p:row>
+                                <p:column colspan="5" style="border-radius: 0px"  footerText="#{userData.userDDs['TOTAL']}" /> 
+                                <p:column style="border-radius: 0px" footerText="#{subAccountSummaryReportMB.totalDebitString}" /> 
+                                <p:column style="border-radius: 0px" footerText="#{subAccountSummaryReportMB.totalCreditString}" /> 
+                                <p:column style="border-radius: 0px" footerText="" /> 
+                            </p:row>
+
+                        </p:columnGroup>
+                    </p:dataTable>
+
+                </p:fieldset>
+                
+                <div class="col-sm-6">
+                        <h:panelGrid id="pnl1234" columns="2" cellspacing="20" cellpadding="0" >
+
+                            <h:panelGroup>
+                                <h:panelGroup> 
+                                    <p:outputLabel style="width: 92px;margin-right: 4%;" value="Depreciation Total"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputNumber style="width: 48%" id="id11234" value="" />
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </div>
+                 
+                <div class="col-sm-6">
+                        <h:panelGrid id="pnl123" columns="2" cellspacing="20" cellpadding="0" >
+
+                            <h:panelGroup>
+                                <h:panelGroup> 
+                                    <p:outputLabel style="width: 92px;margin-right: 4%;" value="Asset Cost"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputNumber style="width: 48%" id="id1123" value="" />
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </div>
+                    
+                    <div class="ui-g-12 ui-md-6">
+                                    <h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel  style="width: 89px;margin-right: 4%;" value="Service Start"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:calendar id="dateFrom9" 
+                                                        value="#{subAccountSummaryReportMB.subAccountSummarySearchBean.dateFrom}" 
+                                                        pattern="dd/MM/yyyy" 
+                                                        style="width:50%" 
+                                                        showButtonPanel="true"
+                                                        >
+                                            </p:calendar>
+                                        </h:panelGroup>
+                                    </h:panelGroup>
+                    </div>
+                    
+                    <div class="ui-g-12 ui-md-6">
+                                    <h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel  style="width: 89px;margin-right: 4%;" value="Final Depreciation"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:calendar id="dateFrom119" 
+                                                        value="#{subAccountSummaryReportMB.subAccountSummarySearchBean.dateFrom}" 
+                                                        pattern="dd/MM/yyyy" 
+                                                        style="width:50%" 
+                                                        showButtonPanel="true"
+                                                        >
+                                            </p:calendar>
+                                        </h:panelGroup>
+                                    </h:panelGroup>
+                    </div>
+                   
+                  
+                    
+                </div>
+
+
+                <h:panelGrid  class="centerButtons col-md-12"  columns="1" >
+
+                    <h:panelGroup > 
+                        <p:commandButton   class="saveButtons" 
+                                           id="saveB" 
+                                           title="#{userData.userDDs['SAVE']}"
+                                           value="#{userData.userDDs['SAVE']}" 
+                                           style="color: #fff!important;background-color: #2196F3!important;margin-left: 5px"
+                                           action="#{invGroupFormBean.save()}" 
+                                           update="@form"/>
+
+                        <p:commandButton  class="newButtons" 
+                                          id="newN"
+                                          ajax="false"
+                                          style="color: #fff!important;background-color: #9c27b0d1!important;margin-left: 5px"
+                                          value="#{userData.userDDs['NEW']}" 
+                                          title="#{userData.userDDs['NEW']}" 
+                                          onclick="form.target = ''" 
+                                          actionListener="#{invGroupFormBean.reset()}"/>
+
+
+                        <p:commandButton  class="closeButtons"
+                                          title="#{userData.userDDs['CANCEL']}" 
+                                          immediate="true"
+                                          value="#{userData.userDDs['CANCEL']}"
+                                          style="color: #fff!important;background-color: #035C70!important;margin-left: 5px"
+                                          action="#{invGroupFormBean.exit()}"   />
+                        
+                        <p:commandButton   class="printButtons"  style=" background-color: #030570de !important;color: #fff!important;margin-left: 5px"
+                                               ajax="false" 
+                                               onclick="form.target = '_blank'" 
+                                               value="#{userData.userDDs['PRINT']}"
+                                               actionListener="#{subAccountSummaryReportMB.exportPDF}"/>
+
+                    </h:panelGroup> 
+
+                    <p:blockUI block="pnl" trigger="saveB" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+
+                </h:panelGrid>
+
+
+
+
+            </p:fieldset>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

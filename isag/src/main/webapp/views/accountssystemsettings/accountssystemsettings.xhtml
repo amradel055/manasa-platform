@@ -1,0 +1,153 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml" >
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:body>
+            <h:form id="form" class='formmargin'>
+
+                <p:fieldset legend="#{userData.userDDs['ACCOUNT_SYSTEM_SETTINGS']}"  style="text-align: right">
+
+                    <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true"/>
+                    <div class="ui-g" id="firstSegment" style="text-align: right">
+
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <div class="ui-g-12 ui-xl-12">
+
+
+
+                                <p:fieldset legend="#{userData.userDDs['JOURNALS_DAILY_BALANCED']}" 
+                                            style="margin-bottom:20px;width: 100%;">
+                                    <p:selectOneRadio  value="#{accountsSystemSettingsBean.accountsSystemSettings.journalsDailyBalanced}">
+                                        <div  class="ui-g-6 ui-xl-6">
+                                            <f:selectItem  itemLabel="#{userData.userDDs['CHECK_WEIGHT_JOURNAL']}" itemValue="CHECK_WEIGHT_JOURNAL" />
+
+                                        </div>
+                                        <div  class="ui-g-6 ui-xl-6">
+                                            <f:selectItem itemLabel="#{userData.userDDs['NO_WEIGHT_JOURNAL']}" itemValue="NO_WEIGHT_JOURNAL" />
+
+                                        </div>
+                                    </p:selectOneRadio>
+
+                                </p:fieldset>
+                            </div>
+                        </div>
+
+
+                        <div class="ui-g-12 ui-md-6">
+                            <p:fieldset legend="#{userData.userDDs['JOURNALS_EDIT']}" 
+                                        style="margin-bottom:20px;width: 100%">
+
+                                <p:selectOneRadio  value="#{accountsSystemSettingsBean.accountsSystemSettings.journalsEdit}">
+                                    <f:selectItem itemLabel="#{userData.userDDs['ALL_USERS']}" itemValue="ALL_USERS" />
+                                    <f:selectItem itemLabel="#{userData.userDDs['JOURNAL_ENTRY_ENOUGH']}" itemValue="JOURNAL_ENTRY_ENOUGH" />
+                                </p:selectOneRadio>
+                            </p:fieldset>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <p:fieldset legend="#{userData.userDDs['ACCOUNT_STATMENT_APPEARANCE']}" 
+                                        style="margin-bottom:20px">
+                                <p:selectOneRadio  value="#{accountsSystemSettingsBean.accountsSystemSettings.accountStatementAppearance}">
+                                    <f:selectItem itemLabel="#{userData.userDDs['APPEARANCE_BEFOR_REVISION']}" itemValue="APPEARANCE_BEFOR_REVISION" />
+                                    <f:selectItem itemLabel="#{userData.userDDs['APPEARANCE_AFTER_REVISION']}" itemValue="APPEARANCE_AFTER_REVISION" />
+                                </p:selectOneRadio>
+                            </p:fieldset>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <p:fieldset legend="#{userData.userDDs['ALLOW_SUB_DATA']}" 
+                                        style="margin-bottom:20px;">
+                                <p:selectOneRadio  value="#{accountsSystemSettingsBean.accountsSystemSettings.allowSubsequentCacheAdministration}">
+                                    <f:selectItem itemLabel="#{userData.userDDs['NOT_ALLOW']}" itemValue="NOT_ALLOW_AFTER_DATE" />
+                                    <f:selectItem itemLabel="#{userData.userDDs['ALLOW']}" itemValue="ALLOW_AFTER_DATE" />
+                                </p:selectOneRadio>
+                            </p:fieldset>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <p:fieldset legend="#{userData.userDDs['Working_with_General_Accounts']}" 
+                                        style="margin-bottom:20px">
+                                <p:selectOneRadio  value="#{accountsSystemSettingsBean.accountsSystemSettings.workWithAccounts}">
+                                    <f:selectItem itemLabel="#{userData.userDDs['Working_with_General_Accounts_System']}" itemValue="ALLOW_ACCOUNT" />
+                                    <f:selectItem itemLabel="#{userData.userDDs['Working_with_Items_System']}" itemValue="NOT_ALLOW_ACCOUNT" />
+                                </p:selectOneRadio>
+                            </p:fieldset>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <p:fieldset legend="شاشه القبض" 
+                                        style="margin-bottom:20px">
+                                <p:selectOneRadio  value="#{accountsSystemSettingsBean.accountsSystemSettings.noteSreceivablesType}">
+                                    <f:selectItem itemLabel="#{userData.userDDs['Working_with_Multiple_Items_System']}" itemValue="ALLOW_DETAIL" />
+                                    <f:selectItem itemLabel="#{userData.userDDs['Working_with_Single_Item_System']}" itemValue="NOT_ALLOW_DETAIL" />
+                                </p:selectOneRadio>
+                            </p:fieldset>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <p:fieldset legend="طباعة قيد اليومية" 
+                                        style="margin-bottom:20px">
+                                <p:selectOneRadio  value="#{accountsSystemSettingsBean.accountsSystemSettings.accountPrinting}">
+                                    <f:selectItem itemLabel="#{userData.userDDs['Horizontal']}" itemValue="HORIZONTAL" />
+                                    <f:selectItem itemLabel="#{userData.userDDs['Vertical']}" itemValue="VERTICAL" />
+                                </p:selectOneRadio>
+                            </p:fieldset>
+                        </div>
+                         <div class="ui-g-12 ui-md-6">
+                            <p:fieldset legend='طباعة سندات الصرف' 
+                                        style="margin-bottom:20px">
+                                <p:selectOneRadio  value="#{accountsSystemSettingsBean.accountsSystemSettings.settlementdeedPrinting}">
+                                    <f:selectItem itemLabel="#{userData.userDDs['Original_only']}" itemValue="NOT_ALLOW_COPY" />
+                                    <f:selectItem itemLabel="#{userData.userDDs['Original_and_Copy']}" itemValue="ALLOW_COPY" />
+                                </p:selectOneRadio>
+                            </p:fieldset>
+                        </div>
+                         <div class="ui-g-12 ui-md-6">
+                            <p:fieldset legend="تسلسل القبض و الصرف" 
+                                        style="margin-bottom:20px">
+                                <p:selectOneRadio  value="#{accountsSystemSettingsBean.accountsSystemSettings.bankSerial}">
+                                    <f:selectItem itemLabel="#{userData.userDDs['Receipt_and_Exchange_System']}" itemValue="NOT_ALLOW_SERIAL" />
+                                    <f:selectItem itemLabel="#{userData.userDDs['Bank_System']}" itemValue="ALLOW_SERIAL" />
+                                </p:selectOneRadio>
+                            </p:fieldset>
+                        </div>
+
+                    </div>
+
+                    <h:panelGrid class="centerButtons col-md-12" columns="1" >
+
+
+                        <h:panelGroup > 
+                            <p:commandButton class="saveButton" 
+                                             id="saveB" 
+                                             title="#{userData.userDDs['SAVE']}"
+                                             value="#{userData.userDDs['SAVE']}" 
+                                             style=" "
+                                             rendered="#{userData.userScreens['accountssystemsettings'].edit or userData.isAdmin}"
+                                             action="#{accountsSystemSettingsBean.save}"
+                                             update="@form" />
+
+                            <p:commandButton class="closeButton" 
+                                             title="#{userData.userDDs['BACK']}" 
+                                             immediate="true" 
+                                             value="#{userData.userDDs['BACK']}" 
+                                             style=""
+                                             action="exit"   />
+                        </h:panelGroup>
+                    </h:panelGrid>
+
+
+                </p:fieldset>
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+
+

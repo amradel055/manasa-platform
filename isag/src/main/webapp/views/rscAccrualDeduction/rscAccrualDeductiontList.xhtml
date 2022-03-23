@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+     
+      <h:form  class='formmargin' dir="#{userData.dir}" id="form">
+           
+       
+
+  
+            <p:fieldset   legend="الاستحقاقات والاستقطاعات" style="margin-bottom:20px; font-size: 17px !important;">
+ <div class="col-xs-12">
+                    <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+                </div>
+
+                <p:dataTable 
+                             var="rscAccrualTable"
+                             widgetVar="rscAccrualTable" 
+                             rowIndexVar="index"
+                             value="#{rscAccrualDeductionListMB.rscAccrualDeductionDTOList}" 
+                             rows="#{userData.rowListCount}"
+                             paginator="true"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             id="rscAccrualTable">
+
+                    <f:facet name="header" class="col-md-12">
+                        <p:commandButton  class="saddButton" icon="fa fa-plus" title="#{userData.userDDs['ADD']}"
+                                         id="addA"
+                                         action="#{rscAccrualDeductionListMB.goToAdd()}" style="float:right"/>
+                        <p:blockUI block="form" trigger="addA" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+ 
+                        <p:outputPanel  >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('rscAccrualTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column  style="width: 5vh;font-size: 1.9vh;text-align: right;border-radius: 0px" 
+                               headerText="#" >
+                        <p:outputLabel value="#{index +1}" />
+                    </p:column>
+
+                    <p:column style="width: 8vh;font-size: 1.9vh;text-align: -webkit-auto;border-radius: 0px" 
+                              filterStyle="display:none" filterBy="#{rscAccrualTable.serial}"
+                              filterMatchMode="contains" headerText="#{userData.userDDs['NUMB']}" sortBy="#{rscAccrualTable.serial}">
+                        <p:outputLabel value="#{rscAccrualTable.serial}" />
+                    </p:column>
+                    <p:column style="width: 12vh;font-size: 1.9vh;text-align: -webkit-auto;border-radius: 0px" filterStyle="display:none" filterBy="#{rscAccrualTable.rscAccrualDeductionCode}"
+                              filterMatchMode="contains" headerText="#{userData.userDDs['CODE']}" sortBy="#{rscAccrualTable.rscAccrualDeductionCode}">
+                        <p:outputLabel value="#{rscAccrualTable.rscAccrualDeductionCode}"/>
+                    </p:column>  
+                    <p:column style="width: 12vh;font-size: 1.9vh;text-align: -webkit-auto;border-radius: 0px" filterStyle="display:none" filterBy="#{rscAccrualTable.rscAccrualDeductionName}"
+                              filterMatchMode="contains" headerText="#{userData.userDDs['NAME']}" sortBy="#{rscAccrualTable.rscAccrualDeductionName}">
+                        <p:outputLabel value="#{rscAccrualTable.rscAccrualDeductionName}" >
+                           
+                        </p:outputLabel>
+                    </p:column>
+                  
+                  
+                    <p:column style="width: 15vh;font-size: 1.9vh;text-align: -webkit-auto;border-radius: 0px" filterStyle="display:none" filterBy="#{rscAccrualTable.rscAccrualDeductionType}"
+                              filterMatchMode="contains" headerText="النوع" sortBy="#{rscAccrualTable.rscAccrualDeductionType}">
+                        <p:outputLabel value="#{rscAccrualTable.rscAccrualDeductionType eq 2 ? 'استحقاق' : 'استقطاع'}" />
+                    </p:column>
+
+                    <p:column style="width: 8vh;font-size: 1.9vh;text-align: center;border-radius: 0px"
+                              headerText="#{userData.userDDs['TRANSACTION']}">
+                        
+                        <p:commandButton  class="seditButtons" 
+                                          icon="fa fa-fw fa-edit" style="background-color: #6a6967;border-radius: 3px;"
+                                          title="#{userData.userDDs['EDIT']}" 
+                                          action="#{rscAccrualDeductionListMB.goToEdit()}">
+                            <f:setPropertyActionListener value="#{rscAccrualTable}"  
+                                                         target="#{rscAccrualDeductionListMB.rscAccrualDeductionDTOSelected}" />
+                        </p:commandButton>
+                        
+                        <p:commandButton class="sdeleteButtons" update="@form" icon="fa fa-remove" style="background-color: red;border-radius: 3px;"
+                                         title="#{userData.userDDs['DELETE']}"  action="#{rscAccrualDeductionListMB.delete}">
+                            <f:setPropertyActionListener value="#{rscAccrualTable}" target="#{rscAccrualDeductionListMB.rscAccrualDeductionDTOSelected}" />
+                            <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable> 
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

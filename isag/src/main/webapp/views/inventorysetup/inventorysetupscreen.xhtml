@@ -1,0 +1,165 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml" >
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+        <h:form class='formmargin' id="form" >
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 24%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />
+
+            </div>
+            <p:fieldset legend="#{userData.userDDs['INVENTORY_SETUP']}" style="margin-bottom:10px;margin-right: 15px" >
+                <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true"/>
+
+                <h:panelGrid id="pnl" columns="2" class="col-md-12" >
+
+                    <p:fieldset legend="#{userData.userDDs['INV_SYS_CON_CYC']}" >
+                        <p:selectOneRadio  style="font-size:1.2vh" id="rep_sys"  value="#{inventorySetupBean.inventorySetup.invSystem}">
+                            <f:selectItem itemLabel="#{userData.userDDs['PROCUREMENT_SYSTEM']}"  itemValue="true"/>                            
+                            <f:selectItem itemLabel="#{userData.userDDs['COST_OF_GOOD_SOLD_SYSTEM']}" itemValue="false" />
+                        </p:selectOneRadio>
+                    </p:fieldset>
+
+                    <p:fieldset legend="#{userData.userDDs['NEGATIVE_SELL']}"    style='margin-top: 3%;' >
+                        <p:selectOneRadio id="neg_sel"  value="#{inventorySetupBean.inventorySetup.negativeSell}" >
+                            <f:selectItem  itemLabel="#{userData.userDDs['YES']}"  itemValue="true"  />                            
+                            <f:selectItem itemLabel="#{userData.userDDs['NO']}" itemValue="false" />
+                        </p:selectOneRadio>
+                    </p:fieldset>
+
+                    <p:fieldset  legend="#{userData.userDDs['BUYING_AND_SELLING_SYSTEM']}">
+                        <p:selectOneRadio id="field4"  value="#{inventorySetupBean.inventorySetup.sellBuy}" >
+                            <f:selectItem itemLabel="#{userData.userDDs['BUYING_AND_SELLING_SYSTEM']}"  itemValue="false"  />                            
+                            <f:selectItem itemLabel="#{userData.userDDs['DELIVERING_AND_RECEIVING_SYSTEM']}" itemValue="true" />
+                        </p:selectOneRadio>
+                    </p:fieldset>
+
+                    <p:fieldset legend="#{userData.userDDs['CONVERSION_BET_STORE']}"  style='margin-top: 3%;'>
+                        <p:selectOneRadio id="field5" value="#{inventorySetupBean.inventorySetup.transfer}" >
+                            <f:selectItem itemLabel="#{userData.userDDs['EXECUTE_TRANSFER_DIRECTLY']}"  itemValue="true"  />                            
+                            <f:selectItem itemLabel="#{userData.userDDs['ORDERING_TRANSFER_BEFORE_EXECUTION']}" itemValue="false" />
+                        </p:selectOneRadio>
+                    </p:fieldset>
+
+                    <p:fieldset   legend="#{userData.userDDs['SELL_LES_TH_CO_PRI']}">
+                        <p:selectOneRadio id="field6" value="#{inventorySetupBean.inventorySetup.sellAllow}" >
+                            <f:selectItem itemLabel="#{userData.userDDs['ALLOWING_SELLING_LESS_THAN_COST_PRICE']}"  itemValue="true"  />                            
+                            <f:selectItem itemLabel="#{userData.userDDs['NOT_ALLOWING_SELLING_LESS_THAN_COST_PRICE']}" itemValue="false" />
+                        </p:selectOneRadio>
+                    </p:fieldset>
+
+                    <p:fieldset   legend="#{userData.userDDs['SALES_TAX_VALUE']}">
+                        <p:inputText style="width:50%"  value="#{inventorySetupBean.inventorySetup.taxValue}"/>
+                    </p:fieldset>
+
+                    <p:fieldset legend="#{userData.userDDs['METH_OF_COD']}"  style='margin-top: 3%;'>
+                        <p:selectOneMenu style="width: 48%!important "
+                                         id="field7" 
+                                         value ="#{inventorySetupBean.inventorySetup.itemCoding}">                                                             
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"/>
+                            <f:selectItem itemLabel="#{userData.userDDs['CODING_BY_SUPPLIER']}"  itemValue="0"  />                            
+                            <f:selectItem itemLabel="#{userData.userDDs['CODING_BY_GROUP']}" itemValue="1" />
+
+                        </p:selectOneMenu> 
+                    </p:fieldset>
+                    <p:fieldset legend="#{userData.userDDs['SALES_TAX_HYPO']}" >
+                        <p:selectBooleanCheckbox value="#{inventorySetupBean.inventorySetup.defaultSalesTax}">
+
+                        </p:selectBooleanCheckbox>
+                    </p:fieldset>
+
+                    <p:fieldset legend="#{userData.userDDs['RESET_AVERAGE_COST']}" >
+                        <p:commandButton   class="saveButton"
+                                           id="excute" title="اعادة ضبط متوسط التكلفة"  
+                                           value="#{userData.userDDs['APPLY']}"
+                                           style="color: #035c70!important;" action="#{inventorySetupBean.reCalcCostAvarage()}"/>
+                    </p:fieldset>
+                    <p:fieldset legend="ربط المتجر الالكتروني" >
+                        <h:panelGroup>
+                            <h:panelGroup>
+                                <p:outputLabel style="width: 120px;font-size: 16px!important;font-family: bold!important;margin-right: 15px;" value="رابط الموقع"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:inputText style="width:50%" autocomplete="off"  value="#{inventorySetupBean.inventorySetup.shopLink}"/>
+                            </h:panelGroup>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <h:panelGroup>
+                                <p:outputLabel style="width: 120px;font-size: 16px!important;font-family: bold!important;margin-right: 15px;" value="اسم المستخدم"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:password style="width:50%" autocomplete="off" value="#{inventorySetupBean.inventorySetup.apiShopUserName}"/>
+                            </h:panelGroup>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <h:panelGroup>
+                                <p:outputLabel style="width: 120px;font-size: 16px!important;font-family: bold!important;margin-right: 15px;" value="كلمه المرور"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:password   style="width:50%" autocomplete="off" value="#{inventorySetupBean.inventorySetup.apiShopPassword}"/>
+                            </h:panelGroup>
+                        </h:panelGroup>
+                    </p:fieldset> 
+                    <p:fieldset legend="نظام الطباعة"  style='margin-top: 3%;'>
+                        <p:selectOneMenu style="width: 48%!important " id="field78" value ="#{inventorySetupBean.inventorySetup.printType}">                                                             
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"/>
+                            <f:selectItem itemLabel="طباعة الكل"  itemValue="0"  />                            
+                            <f:selectItem itemLabel="طباعة حسب المجموعات" itemValue="1" />
+                        </p:selectOneMenu> 
+                    </p:fieldset>
+                </h:panelGrid>
+
+                <h:panelGrid class="col-md-12 centerButtons" columns="1">
+
+                    <h:panelGroup>
+
+                        <p:commandButton   class="saveButton"
+                                           id="saveB" title="#{userData.userDDs['SAVE']}" 
+                                           value="#{userData.userDDs['SAVE']}"
+                                           action="#{inventorySetupBean.save()}"
+                                           update="@form"  style=""
+                                           rendered="#{userData.userScreens['inventorysetup'].add or userData.userScreens['inventorysetup'].edit or userData.isAdmin}"
+                                           />
+
+                        <p:commandButton class="closeButton" 
+                                         title="#{userData.userDDs['BACK']}" 
+                                         immediate="true" 
+                                         value="#{userData.userDDs['BACK']}" 
+                                         style=""
+                                         action="exit"   />
+
+                        <p:blockUI block="form" trigger="saveB excute" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+
+            </p:fieldset>
+        </h:form>
+
+
+    </ui:define>
+</ui:composition>
+
+

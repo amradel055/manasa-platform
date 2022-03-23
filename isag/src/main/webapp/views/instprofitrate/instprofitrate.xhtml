@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml" >
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form" dir="#{userData.dir}}"   class='formmargin'>
+              <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                      margin-top: 12%;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;"
+                                      icon="fa fa-fw fa-home"
+                                      title="#{userData.userDDs['HOME']}"
+                                      class="smhomeButton" 
+                                      action="exit" />  
+            </div>
+            <p:fieldset legend="نسبة الأرباح " style="margin-bottom:20px">
+                <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true"/>  
+                
+
+                
+                <div>
+                    <p:dataTable 
+                        draggableColumns="true" 
+                        widgetVar="profitrate"
+                        var="profitrate" 
+                        value="#{instProfitRateMB.profitRateDTOList}"
+                        rowIndexVar="index" 
+                        paginator="true" rows="15"
+                        emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" style="padding: 0px 5px">
+                        <f:facet name="header" >
+                            <p:commandButton title="#{userData.userDDs['ADD']}"   class="saddButton" 
+                                             id="b2" icon="fa fa-fw fa-plus"
+                                             update="@form"
+
+                                             action="#{instProfitRateMB.addNewRow()}"
+                                             style="float:right;margin: 0;" rendered="#{userData.userScreens['role'].add or userData.isAdmin}"  />
+                            <p:commandButton class="saveButtons" id="save" value="#{userData.userDDs['SAVE']}"
+                                             
+                                             action="#{instProfitRateMB.save()}"
+                                             style="float:left;border-color:#ffffff87;margin-left: 10px;" 
+                                             update="@form"
+                                             rendered="#{userData.userScreens['privilege'].add or userData.isAdmin and not instProfitRateMB.chBoolean }"/>
+
+                            <p:outputPanel  >
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('roletable').filter()" style="width:150px" />
+                            </p:outputPanel>
+
+                        </f:facet>
+
+                        <p:column filterStyle="display:none" 
+                                  style="width: 20vh;font-size: 1.8vh;text-align:right;border-radius: 0px"
+                                  sortBy="#{profitrate.monthNumber}" 
+                                  filterBy="#{profitrate}" 
+                                  filterMatchMode="contains"
+                                  headerText="عدد الشهور  " >
+
+                            <h:outputText value="#{profitrate.monthNumber}" 
+                                          rendered="#{profitrate.chBoolean}"  
+                                          style="font-size: 1.5vh;" />
+
+                            <h:inputText value="#{profitrate.monthNumber}" 
+                                         style="font-size: 1.5vh;"
+                                         rendered="#{not profitrate.chBoolean}" />
+                        </p:column>
+                        <p:column filterStyle="display:none" 
+                                  style="width: 20vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px" 
+                                  sortBy="#{profitrate.rate}" 
+                                  filterBy="#{profitrate}" 
+                                  filterMatchMode="contains" 
+                                  headerText="النسبة   " >
+                            <h:outputText value="#{profitrate.rate}" 
+                                          rendered="#{profitrate.chBoolean}"  style="font-size: 1.5vh;" />
+                            <h:inputText value="#{profitrate.rate}" 
+                                         style="font-size: 1.5vh;"   
+                                         rendered="#{not profitrate.chBoolean}"  />
+                        </p:column>
+
+                        <p:column headerText="#{userData.userDDs['TRANSACTION']}"
+                                  style="width: 10vh;font-size: 1.8vh;text-align: center;border-radius: 0px" >
+
+                            <p:commandButton  class="seditButtons" update="@form" 
+                                              title="#{userData.userDDs['EDIT']}" 
+                                              action="#{instProfitRateMB.edit()}" 
+                                              icon="fa fa-fw fa-edit" style="background-color: #6a6967;border-radius: 3px;"
+                                              rendered="#{(userData.userScreens['role'].edit or userData.isAdmin)}">
+                                <f:setPropertyActionListener value="#{profitrate}" 
+                                                             target="#{instProfitRateMB.profitRateDTOSelected}" />
+
+                            </p:commandButton>
+
+                            <p:commandButton  class="scloseButtons" update="@form"
+                                              title="#{userData.userDDs['DELETE']}" 
+                                              action="#{instProfitRateMB.delete()}" 
+                                              icon="fa fa-fw fa-remove"  style="background-color: red;border-radius: 3px;"
+                                              rendered="#{userData.userScreens['role'].delete or userData.isAdmin}">
+                                <f:setPropertyActionListener 
+                                    value="#{profitrate}" 
+                                    target="#{instProfitRateMB.profitRateDTOSelected}" />
+                                <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
+                                           message="#{userData.userDDs['ARE_YOU_SURE']}" 
+                                           icon="ui-icon-alert" />
+                            </p:commandButton>
+
+
+
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </p:fieldset>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

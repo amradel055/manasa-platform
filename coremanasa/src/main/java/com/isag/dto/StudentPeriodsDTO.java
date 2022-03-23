@@ -27,6 +27,7 @@ public class StudentPeriodsDTO extends BaseEntityDTO {
     private String teacherName;
     private String periodName;
     private Integer materialId;
+    private String remark;
 
     public StudentPeriodsDTO() {
     }
@@ -242,6 +243,20 @@ public class StudentPeriodsDTO extends BaseEntityDTO {
      */
     public void setMaterialId(Integer materialId) {
         this.materialId = materialId;
+    }
+
+    /**
+     * @return the remark
+     */
+    public String getRemark() {
+        return remark;
+    }
+
+    /**
+     * @param remark the remark to set
+     */
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
 }

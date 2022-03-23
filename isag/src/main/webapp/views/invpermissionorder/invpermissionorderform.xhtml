@@ -1,0 +1,413 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <h:form  class='formmargin' id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+            <div style=" position: absolute;left: 20px"> 
+
+                    <p:commandButton  style="z-index: 2;
+                                      margin-top: 24%;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;"
+                                      icon="fa fa-fw fa-home"
+                                      title="#{userData.userDDs['HOME']}"
+                                      class="smhomeButton" 
+                                      action="exit" />
+                       
+                </div>
+            <p:fieldset legend="#{userData.userDDs['PERMISS_CHAN_GOOD']}" >     
+
+                <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 95px;margin-right: 6%;"
+                                                   value="#{userData.userDDs['SERIAL']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:inputText style="width: 50%" readonly="true"
+                                                   value="#{invAddingOrderFormMB.invAddingOrderEntity.serial}"/>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>                         
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px" value="#{userData.userDDs['DEPOSITORY']}"/>
+                                </h:panelGroup>
+                              <h:panelGroup rendered="#{invAddingOrderFormMB.invPurchaseInvoiceList eq null}">
+                                    <p:outputLabel  
+                                                    style="width: 70px" value="#{invAddingOrderFormMB.invAddingOrderEntity.invInventory}"/>
+
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{invAddingOrderFormMB.invPurchaseInvoiceList ne null}">
+                                  <p:autoComplete style="width:40%" 
+                                                    dropdown="true"
+                                                    converter="#{invAddingOrderFormMB.invInventoryConverter}"
+                                                    value="#{invAddingOrderFormMB.invAddingOrderEntity.invInventory}"
+                                                    required="true"
+                                                    requiredMessage="#{userData.userDDs['STORE_MU_SELE']}"
+                                                    var="inventory"
+                                                    itemLabel="#{inventory}" 
+                                                    itemValue="#{inventory}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invAddingOrderFormMB.completInventory}" >
+                                        <p:ajax update="form"
+                                                event="change"
+                                                listener="#{invAddingOrderFormMB.fillItemMap()}" />
+                                        <p:ajax update="form"
+                                                event="itemSelect"
+                                                listener="#{invAddingOrderFormMB.fillItemMap()}" />
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 95px;margin-right: 6%;"  value="#{userData.userDDs['CUSTO_INVOICE']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{invAddingOrderFormMB.invPurchaseInvoiceList eq null}">
+                                    <p:outputLabel  
+                                                    style="width: 95px;margin-right: 6%;" value="#{invAddingOrderFormMB.invAddingOrderEntity.supplierInvoice}"/>
+
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{invAddingOrderFormMB.invPurchaseInvoiceList ne null}">
+                                    <p:inputText style="width:50%" id="supplierBill"
+                                                 value="#{invAddingOrderFormMB.invAddingOrderEntity.supplierInvoice}" >
+                                        <p:ajax listener="#{invAddingOrderFormMB.loadInvSalesInvoice}" update="form"/>
+                                    </p:inputText>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px" value="#{userData.userDDs['CUSTOMERR']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{invAddingOrderFormMB.invPurchaseInvoiceList eq null}">
+                                    <p:outputLabel  
+                                                    style="width: 70px" value="#{invAddingOrderFormMB.invAddingOrderEntity.supplierId}"/>
+
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{invAddingOrderFormMB.invPurchaseInvoiceList ne null}">
+                                    <p:autoComplete style="width:40%!important" 
+                                                    dropdown="true"
+                                                    required="true"
+                                                    converter="#{invAddingOrderFormMB.supplierConvertor}"
+                                                    value="#{invAddingOrderFormMB.invAddingOrderEntity.supplierId}"
+
+                                                    var="supplier"
+                                                    itemLabel="#{supplier}" 
+                                                    itemValue="#{supplier}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invAddingOrderFormMB.completeSuppllier}" >
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 95px;margin-right: 6%;" value="#{userData.userDDs['DATEE']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:calendar    style="width:50%"
+                                                   id="dateFrom" 
+                                                   value="#{invAddingOrderFormMB.invAddingOrderEntity.date}"
+                                                   pattern="MM/dd/yyyy"
+                                                   required="true" />
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                       
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup rendered="#{!invAddingOrderFormMB.invSetup.sellBuy}">
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px" value="#{userData.userDDs['SALES_INVOI_NO']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+
+                                    <p:selectCheckboxMenu style="width: 50%; height: 20px" id="menu" 
+                                                          value="#{invAddingOrderFormMB.invPurchaseInvoiceSelectedList}"  
+                                                          converter="#{invAddingOrderFormMB.invPurchaseInvoiceConverter}"
+                                                          label="#{userData.userDDs['CHOOSE']}"
+                                                          filter="true" filterMatchMode="contains" panelStyle="width:250px">
+                                        <f:selectItems value="#{invAddingOrderFormMB.invPurchaseInvoiceList}" var="invoice" itemLabel="#{invoice}" itemValue="#{invoice}" />
+                                        <p:ajax update="@form"
+
+                                            listener="#{invAddingOrderFormMB.loadInvSalesInvoice()}" />
+                                    </p:selectCheckboxMenu>
+
+                                </h:panelGroup>   
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 99px;margin-right: 5%;" value="#{userData.userDDs['CUSTO_INVOI_DAT']}"/>
+                                </h:panelGroup>
+                                 <h:panelGroup rendered="#{invAddingOrderFormMB.invPurchaseInvoiceList eq null}">
+                                    <p:outputLabel  
+                                                    style="width: 95px;margin-right: 6%;" value="#{invAddingOrderFormMB.invAddingOrderEntity.supplierDate}"/>
+
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{invAddingOrderFormMB.invPurchaseInvoiceList ne null}">
+                        
+                                    <p:calendar  style="width:50%"  
+                                                 id="billDateFrom" value="#{invAddingOrderFormMB.invAddingOrderEntity.supplierDate}"
+                                                 pattern="MM/dd/yyyy"/>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                          <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px"  value="#{userData.userDDs['NOTE']}"/>
+                                </h:panelGroup>
+                                  <h:panelGroup rendered="#{invAddingOrderFormMB.invPurchaseInvoiceList eq null}">
+                                    <p:outputLabel  
+                                                    style="width: 60px" value="#{invAddingOrderFormMB.invAddingOrderEntity.remark}"/>
+
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{invAddingOrderFormMB.invPurchaseInvoiceList ne null}">
+                        
+                                    <p:inputText style="width:50%" id="remarks"
+                                                 value="#{invAddingOrderFormMB.invAddingOrderEntity.remark}" />
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div> 
+
+
+
+            </p:fieldset>
+
+
+
+            <!-- begin table -->
+            <p:fieldset legend="#{userData.userDDs['DET_PERM_EXCH_GO']}" id="fieldSetId" style="margin-bottom:20px">
+                <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+
+
+
+                <p:dataTable id="invAddingOrderDetailsTable"
+                             widgetVar="invAddingOrderDetailsTable"
+                             var="invAddingOrderDetailsTable"
+                             rowIndexVar="index" 
+                             dir="rtl" 
+                             selection="#{invAddingOrderFormMB.invAddingOrderDetailsEntitySelected}"
+                             sortBy="#{1}"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             editable="true"
+                             editMode="cell"
+                             value="#{invAddingOrderFormMB.invAddingOrderDetailsEntityList}" >
+
+                    <f:facet name="header" >
+                        <p:commandButton  id="addnew"
+                                          class="saddButton"
+                                          style="float: right"
+                                          icon="fa fa-plus"
+                                          title="#{userData.userDDs['ADD']}"    
+                                          oncomplete="PrimeFaces.focus('form:invAddingOrderDetailsTable:'+#{invAddingOrderFormMB.invAddingOrderDetailsEntityList.size()}+':invItemNameIn')"
+                                          actionListener="#{invAddingOrderFormMB.addDetails}" 
+                                          update=":form:fieldSetId" 
+                                          ajax="true" />
+                        
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('invAddingOrderDetailsTable').filter()" style="width:175px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+
+                    <p:column style="width:5vh;font-size:1.6vh;text-align: -webkit-auto;border-radius: 0px" headerText="#" >
+                        <h:outputText value="#{invAddingOrderDetailsTable.serial}" style="font-size: 12px"  />
+                    </p:column>
+
+                    <p:column style="width: 15vh;text-align: -webkit-auto;border-radius: 0px" 
+                              id="itemName"
+                              headerText="#{userData.userDDs['ITEM_NUMBER']}"
+
+                              filterBy="#{invAddingOrderDetailsTable.itemsBarcodesDetail}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invAddingOrderDetailsTable.itemsBarcodesDetail}"
+                              filterable="false">
+                        <p:autoComplete id="invItemNameIn"  
+
+                                        style="width:100%"
+                                        converter="#{invAddingOrderFormMB.itemsBarcodesDetailsViewConverter}"
+                                        value="#{invAddingOrderDetailsTable.itemsBarcodesDetail}"
+
+                                        var="item"
+                                        itemLabel="#{item}" 
+                                        itemValue="#{item}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{invAddingOrderFormMB.completeItemsData}" >
+
+                            <p:ajax update="unitvalue QuantityT"
+                                    event="itemSelect"
+                                    listener="#{invAddingOrderFormMB.validateItems(invAddingOrderDetailsTable)}" />
+                            <p:ajax update="unitvalue QuantityT"
+                                    event="change"   
+                                    listener="#{invAddingOrderFormMB.validateItems(invAddingOrderDetailsTable)}" />
+                        </p:autoComplete>            
+                    </p:column>
+
+
+                    <p:column style="width:16vh;font-size:1.6vh;text-align: -webkit-auto;border-radius: 0px" id="unitName" 
+                              headerText="#{userData.userDDs['UNIT_NUMBER']}"
+
+                              filterBy="#{invAddingOrderDetailsTable.itemsBarcodesDetail.unitName}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invAddingOrderDetailsTable.itemsBarcodesDetail.unitName}"
+                              filterable="false">
+
+                        <p:inputText id="unitvalue"  
+                                     readonly="true" 
+                                     disabled="true"
+                                     value="#{invAddingOrderDetailsTable.itemsBarcodesDetail.unitName}" 
+                                     style="width: 95%" />     
+                    </p:column>
+
+                    <p:column style="width:15vh;font-size:1.6vh;text-align: -webkit-auto;border-radius: 0px"
+                              id="Quantity"
+                              headerText="#{userData.userDDs['QUANTITY']}"
+
+                              filterBy="#{invAddingOrderDetailsTable.quantity}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invAddingOrderDetailsTable.quantity}"
+                              filterable="false">
+
+                        <p:inputText id="QuantityT"  
+                                     value="#{invAddingOrderDetailsTable.quantity}" 
+                                     disabled="#{invAddingOrderDetailsTable.itemsBarcodesDetail == null}"
+                                     style="width:95%">
+                            <p:ajax listener="#{invAddingOrderFormMB.validateQuantityColum(invAddingOrderDetailsTable)}" 
+                                    update="invAddingOrderDetailsTable"/>
+
+                        </p:inputText>  
+                    </p:column>
+
+
+                    <p:summaryRow>
+                        <p:column colspan="3" style="text-align:right;border-radius: 0px">
+                            <h:outputText style="text-align:right" value="#{userData.userDDs['TOTAL']}  :" />
+                        </p:column>
+
+                        <p:column>
+                            <h:outputText id="totalQuantity" value="#{invAddingOrderFormMB.totalQuatity}"/>
+                        </p:column>
+                        <p:column />
+                    </p:summaryRow>
+
+
+                    <p:column style="width:5vh;font-size:1.6vh;text-align: center;border-radius: 0px" headerText="#{userData.userDDs['TRANSACTION']}">
+
+                        <p:commandButton class="saddbuttonins" id="b7" icon="fa fa-plus"
+                                         title="#{userData.userDDs['ADD']}"
+                                         style="background-color: rgb(42, 163, 218);border-radius: 3px;"
+                                         oncomplete="PrimeFaces.focus('form:invAddingOrderDetailsTable:'+#{invAddingOrderFormMB.invAddingOrderDetailsEntityList.size()}+':invItemNameIn')"
+                                         actionListener="#{invAddingOrderFormMB.addDetails}" 
+                                         update="form"
+                                         ajax="true" />
+
+                        <p:commandButton class="sdeleteButtons" update=":form:fieldSetId"
+                                         title="#{userData.userDDs['DELETE']}"
+                                         style="background-color: red;border-radius: 3px;"
+                                         action="#{invAddingOrderFormMB.deleteInvOrderDetail()}"
+                                         icon="fa fa-remove" >
+
+                            <f:setPropertyActionListener value="#{invAddingOrderDetailsTable}"
+                                                         target="#{invAddingOrderFormMB.invAddingOrderDetailsEntitySelected}"/>
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                       icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column >
+                </p:dataTable>
+
+                <h:panelGroup class="centerButtons" style="margin-top: 2%">
+                    
+                    <p:commandButton class="saveButtons" id="saveB" 
+                                     title="#{userData.userDDs['SAVE']}"
+                                     value="#{userData.userDDs['SAVE']}" 
+                                   style="color: #fff!important;background-color: #2196F3;margin-left: 5px;"
+                                     action="#{invAddingOrderFormMB.save()}"
+                                     update="@form"/>
+                    
+                    <p:commandButton  class="newButtons" 
+                                      id="newN"
+                                      ajax="false"
+                                     style="color: #fff!important;background-color: #9c27b0d1;margin-left: 5px;"
+                                      value="#{userData.userDDs['NEW']}" 
+                                      title="#{userData.userDDs['NEW']}"
+                                      onclick="form.target = ''" 
+                                      actionListener="#{invAddingOrderFormMB.reset()}"/>
+
+                      <p:commandButton  class="printButtons"
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          style="color: #fff!important;background-color: rgb(1, 76, 134);margin-left: 5px;"
+                                          rendered="#{invAddingOrderFormMB.invAddingOrderEntity.id != null}"
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          title="#{userData.userDDs['PRINT']}"
+                                          actionListener="#{invAddingOrderFormMB.print}"/>
+                     
+                    <p:commandButton class="closeButtons" 
+                                     id="cancel" 
+                                     title="#{userData.userDDs['BACK']}" 
+                                     value="#{userData.userDDs['BACK']}" 
+                                     style="color: #fff!important;background-color: #035C70;margin-left: 5px;"
+                                     action="#{invAddingOrderFormMB.exit()}" 
+                                     update="@form"/> 
+                    <h:commandLink  style="float:left;margin-right: 4px;" class="sdcreenimg">  
+                        <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                        <p:dataExporter type="xls"
+                                        target="invAddingOrderDetailsTable" 
+                                        fileName=" مردودات المبيعات"
+                                        postProcessor="#{invAddingOrderFormMB.postProcessXLS}" /> 
+                    </h:commandLink>
+
+                    <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+
+
+
+                </h:panelGroup>
+
+            </p:fieldset> 
+
+
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>

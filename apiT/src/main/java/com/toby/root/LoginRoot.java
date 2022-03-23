@@ -20,6 +20,8 @@ public class LoginRoot {
     @XmlElement
     public String password;
     @XmlElement
+    public String mobile;
+    @XmlElement
     public Integer branchId;
     @XmlElement
     public Integer companyId;

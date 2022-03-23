@@ -1,0 +1,222 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form" dir="#{userData.dir}" class='formmargin'>
+            <p:fieldset legend="#{userData.userDDs['USER']}">
+
+
+                <div class="ui-g-6 ui-xl-6">
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-4 ui-xl-4">
+                            <div class="ui-g-12 ui-xl-12">
+                                <p:message id="msgpass" for="pass"/>
+                            </div>
+                        </div>
+                        <div class="ui-g-4 ui-xl-4">
+                            <div class="ui-g-12 ui-xl-12">
+                                <p:password id="pass"  feedback="true" inline="true" redisplay="true" 
+                                            style="width: 50%!important"
+                                            value="#{userFormBean.userPassword}" >
+                                    <p:ajax event="keyup" update="msgpass" />
+                                </p:password>
+                            </div>
+                        </div>
+                        <div class="ui-g-4 ui-xl-4">
+                            <div class="ui-g-12 ui-xl-12">
+                                <p:outputLabel style="width: 120px;margin-right: 25px;" value=" #{userData.userDDs['PASSWORD']} *"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-4 ui-xl-4">
+                            <div class="ui-g-12 ui-xl-12">
+                                <p:message id="msguserName" for="user"/>
+                            </div>
+
+                        </div>
+                        <div class="ui-g-4 ui-xl-4">
+                            <div class="ui-g-12 ui-xl-12">
+                                <p:inputText style="width: 50%!important" id="user" a:autofocus="true" 
+                                             value="#{userFormBean.userName}" >
+                                    <p:ajax event="keyup" update="msguserName" />
+                                </p:inputText>
+                            </div>
+                        </div>
+                        <div class="ui-g-4 ui-xl-4">
+                            <div class="ui-g-12 ui-xl-12">
+                                <p:outputLabel style="width: 120px;margin-right: 25px;" value="#{userData.userDDs['USER_NAME']}*"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-4 ui-xl-4">
+                            <div class="ui-g-12 ui-xl-12">
+                                <p:message  id="msglang" for="lan"/>
+                            </div>
+
+                        </div>
+                        <div class="ui-g-4 ui-xl-4">
+                            <div class="ui-g-12 ui-xl-12">
+                                <p:selectOneMenu style="width: 50%!important;margin-right: 1%;margin-bottom: 5px;" id="lan" value="#{userFormBean.selectedLangId}"
+                                                 >
+                                    <p:ajax listener="#{userFormBean.onLanguageListChange()}" update="msglang" />
+                                    <f:selectItems value="#{userFormBean.languages}" var="language" itemLabel="#{language.name}" itemValue="#{language.id}"/> 
+                                </p:selectOneMenu>
+                            </div>
+
+
+                        </div>
+                        <div class="ui-g-4 ui-xl-4">
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <p:outputLabel style="margin-right: 25px;margin-right: 25px;" class="outputlabelwidth" value="#{userData.userDDs['USER_LANGUAGE']}* "/>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+
+
+
+
+
+
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-4 ui-xl-4">
+                            <div class="ui-g-12 ui-xl-12">
+                                <p:message id="msgcode" for="usercode"/>
+                            </div>
+
+                        </div>
+                        <div class="ui-g-4 ui-xl-4">
+                            <div class="ui-g-12 ui-xl-12">
+                                <p:inputText style="width: 50%!important" id="usercode" value="#{userFormBean.userCode}"  maxlength="3" 
+                                             >
+                                    <p:ajax event="keyup" update="msgcode" />
+                                </p:inputText>
+                            </div>
+
+
+                        </div>
+                        <div class="ui-g-4 ui-xl-4">
+                            <div class="ui-g-12 ui-xl-12">
+                                <p:outputLabel style="width: 120px;margin-right: 25px;" value="#{userData.userDDs['USER_CODE']}*"/>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui-g-6 ui-xl-6">
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-4 ui-xl-4">
+
+                        </div>
+                        <div class="ui-g-4 ui-xl-4"> <div class="ui-g-12 ui-xl-12">
+                                <p:selectOneMenu style="width: 50%!important;margin-right: 1%;margin-bottom: 5px;" id="emp" value="#{userFormBean.employeeSelected}"
+                                                 converter="#{userFormBean.employeeConverter}"     >
+                                    <div class="ui-g-12 ui-xl-12">
+
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="" noSelectionOption="true" />
+                                    </div>
+                                    <div class="ui-g-12 ui-xl-12">
+
+                                        <f:selectItems value="#{userFormBean.employeeList}" var="emp" itemLabel="#{emp.name}" itemValue="#{emp}"/> 
+                                    </div>
+                                </p:selectOneMenu>
+                            </div></div>
+                        <div class="ui-g-4 ui-xl-4">
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <p:outputLabel style="margin-right: 25px;margin-right: 25px;" class="outputlabelwidth" value=" الموظف"/>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-4 ui-xl-4">
+
+                        </div>
+                        <div class="ui-g-4 ui-xl-4">
+                            <div class="ui-g-12 ui-xl-12">
+                                <p:selectOneMenu  style="width: 50%!important;margin-right: 1%;margin-bottom: 5px;" id="master" value="#{userFormBean.master}" >
+                                    <f:selectItem   itemLabel="مستخدم" itemValue="0"/>
+                                    <f:selectItem   itemLabel="مدير" itemValue="1"/>                                  
+                                </p:selectOneMenu>
+                            </div>
+
+                        </div>
+                        <div class="ui-g-4 ui-xl-4">
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <p:outputLabel style="margin-right: 25px;margin-right: 25px;" class="outputlabelwidth" value="صلاحيات عامة "/>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+
+
+
+
+
+
+                <div class="ui-g-12 ui-xl-12 asmaa">
+                    <p:commandButton class="saveButton" 
+
+                                     id="saveB" 
+                                     title="#{userData.userDDs['SAVE']}"
+                                     value="#{userData.userDDs['SAVE']}" 
+                                     action="#{userFormBean.save}"
+                                     update="@form"
+                                     rendered="#{userData.userScreens['user'].add or userData.userScreens['user'].edit  or userData.isAdmin}"
+                                     />
+                    <p:commandButton class="newButton" 
+
+                                     title="#{userData.userDDs['NEW']}" 
+                                     immediate="true"
+                                     value="#{userData.userDDs['NEW']}" 
+                                     id="newA"
+                                     update="@form"
+                                     actionListener="#"  
+                                     rendered="#{userData.userScreens['user'].add  or userData.isAdmin}"/>
+                    <p:commandButton class="closeButton" 
+
+                                     title="#{userData.userDDs['CANCEL']}" 
+                                     immediate="true" 
+                                     value="#{userData.userDDs['CANCEL']}"
+                                     action="#{userFormBean.cancel}"   />
+                </div>
+
+                <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+                </p:blockUI>
+
+
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

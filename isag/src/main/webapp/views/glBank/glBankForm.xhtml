@@ -1,0 +1,206 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+        <h:form class='formmargin' id="form" dir="#{userData.dir}">
+
+
+            <p:fieldset id="whole" legend="#{userData.userDDs['EST_SAF_BANK']}" style="margin-bottom:20px">
+
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+                </div>
+
+                <div class="ui-g-6 ui-xl-6">
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:inputText style="width: 41%!important" value="#{glBankFromMB.glBankEntity.code}">
+                                <p:ajax event="blur" listener="#{glBankFromMB.validateSave()}" update="curmsg" />
+                            </p:inputText>
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:outputLabel style="width: 115px;" value="#{userData.userDDs['CODE']}"/>
+
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:autoComplete id="Currency_ID" 
+                                        style="width: 40%;" 
+                                        dropdown="true"
+                                        converter="#{glBankFromMB.currencyConverter}"
+                                        value="#{glBankFromMB.glBankEntity.currencyId}"
+
+                                        var="p"
+                                        itemLabel="#{p}" 
+                                        itemValue="#{p}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{glBankFromMB.completeCurrency}">
+
+                            <p:ajax update="@form"
+                                    event="itemSelect"
+                                    listener="#{glBankFromMB.updateGlAccounts}" />
+                            <p:ajax update="@form"
+                                    event="change"
+                                    listener="#{glBankFromMB.updateGlAccounts}" />
+
+
+                        </p:autoComplete>	
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:outputLabel style="width: 78px;"
+                                       value="#{userData.userDDs['CURRENCY']}"
+                                       for="Currency_ID"/>
+                    </div>
+                </div>
+               
+                <div class="ui-g-12 ui-xl-12">
+
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:autoComplete id="GlAccount_ID" 
+                                        style="width: 34%" 
+                                        dropdown="true"
+                                        converter="#{glBankFromMB.accountConverter}"
+                                        value="#{glBankFromMB.glBankEntity.accountId}"
+                                        disabled="#{glBankFromMB.glBankEntity.bankHavetransaction}"
+                                        var="p"
+                                        itemLabel="#{p}" 
+                                        itemValue="#{p}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{glBankFromMB.completeGlAccount}" >
+
+
+                        </p:autoComplete>
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:outputLabel style="width: 115px;"
+                                       value="#{userData.userDDs['ACCOUNT_NAME']}"
+                                       for="GlAccount_ID"/>
+                    </div>
+                </div>
+                <div class="ui-g-12 ui-xl-12">
+
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:calendar   value="#{glBankFromMB.glBankEntity.openingBalanceDate}" 
+                                      pattern="dd/MM/yyyy" class="date-box">
+
+                        </p:calendar>
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+
+                        <p:outputLabel style="width: 115px;" value="#{userData.userDDs['INIT_BALA_DATE']}"/>
+
+                    </div>
+                </div>
+            
+            </div>
+
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:inputText style="width: 41%!important" value="#{glBankFromMB.glBankEntity.name}"/>
+
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:outputLabel style="width: 73px;" value="#{userData.userDDs['NAME']}"/>
+
+                    </div>
+                </div>
+                <div class="ui-g-12 ui-xl-12">
+
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:inputText style="width: 41%!important" value="#{glBankFromMB.glBankEntity.openingBalance}">
+                            <p:ajax event="blur" listener="#{glBankFromMB.validateSave()}" update="curmsg" />
+                        </p:inputText>	
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:outputLabel style="width: 73px;" value="#{userData.userDDs['INITIAL_BALAN']}"/>
+
+                    </div>
+                </div>
+                           <div>
+                               
+                                               <p:selectOneMenu style="width:45%" id="MACUCode" 
+                                                     filter="true" 
+                                                     filterMatchMode="contains"
+                                                     converter="#{glBankFromMB.glBankConverter}"
+                                                     value="#{glBankFromMB.glBankEntity.closedglbankId}"> 
+                                        <f:selectItems value="#{glBankFromMB.glBankList}"  
+                                                       var="bank"
+                                                       itemLabel="#{bank}"
+                                                       itemValue="#{bank}"/>
+                                    </p:selectOneMenu>  
+                                 <div class="ui-g-6 ui-xl-6">
+
+                        <p:outputLabel style="width: 115px;" value="خزنه تقفيل"/>
+
+                    </div>
+                                </div>
+             
+                <div class="ui-g-12 ui-xl-12">
+                    <p:fieldset style="width: 80%; "
+                                legend="#{userData.userDDs['TYPE']}">
+                        <p:selectOneRadio id="paymentType" 
+                                          value="#{glBankFromMB.glBankEntity.type}"  >                                                             
+                            <f:selectItem  itemValue="0" itemLabel="#{userData.userDDs['SAFE']}"/>
+                            <f:selectItem itemValue="1" itemLabel="#{userData.userDDs['BANK']}" />
+                            <f:selectItem itemValue="2" itemLabel="#{userData.userDDs['CHECK_WRITTEN']}"/>
+                        </p:selectOneRadio>
+                    </p:fieldset> 
+                </div>
+                    
+                    
+                    
+                    </div>
+
+
+
+
+
+
+
+        </p:fieldset>
+
+
+        <div class="asmaa">
+
+            <p:commandButton  class="saveButton" id="saveB" 
+                              title="#{userData.userDDs['SAVE']}" 
+                              value="#{userData.userDDs['SAVE']}" 
+                              action="#{glBankFromMB.save()}" 
+                              disabled="#{glBankFromMB.disableSave}"
+                              update="@form"
+                              rendered="#{userData.userScreens['glBank'].edit or  userData.userScreens['glBank'].add
+                                          or userData.isAdmin}"
+                              />
+            <p:commandButton  class="closeButton" id="cancelC" 
+                              title="#{userData.userDDs['CANCEL']}" 
+                              value="#{userData.userDDs['CANCEL']}" 
+                              action="#{glBankFromMB.exit()}" 
+                              update="@form"/>
+
+            <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+            </p:blockUI> 
+
+        </div>
+
+    </h:form>
+</ui:define>
+</ui:composition>

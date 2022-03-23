@@ -1,0 +1,499 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http:addInvDetail//xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <style>
+
+            body .ui-datatable tbody tr.ui-state-highlight .ui-inputfield {
+                width: 100%;
+            }
+
+            body .ui-widget, body .ui-widget .ui-widget {
+
+            }
+            body .ui-datatable thead th:last-child {
+                border-right: 1px solid #d8d8d8;
+                display: inline-block;
+            }
+            body .ui-datatable tbody tr.ui-widget-content {
+                border: 1px solid #d8d8d8;
+                display: inline-block;
+                width: 10%;
+                padding: 5px;
+                height: 60px;
+                margin-top: 1%;
+                margin-right: 1%    
+            }
+            
+        </style>
+
+        <h:form id="form" dir="#{userData.dir}" class='formmargin'>
+
+            <div >
+                <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
+            </div>
+
+          
+
+            <p:fieldset id="test5" legend="نقل الاشتراك" style="margin: 0;"> 
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad salesInvoiceFirst">
+
+                    <div class="ui-g">
+                        
+                        <div class="ui-g-4 ui-xl-4">
+
+                            <div class="ui-g-6 ui-xl-6">
+                            
+                                <div class="p-field p-col-12 p-md-4">
+                                    <p:selectOneMenu id="group" value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.glBankId}" converter="#{gmSubscriptionsFormDTOMB.glBankConverter}">
+                                        <f:selectItems value="#{gmSubscriptionsFormDTOMB.glBankList}" var="bank" itemValue="#{bank}" itemLabel="#{bank}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                            </div>
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 100px;" 
+                                               id="glbank1name"
+                                               value="#{userData.userDDs['TREASURY']}"/>
+                            </div>
+
+                        </div>
+
+                        <div class="ui-g-4 ui-xl-4">
+
+
+
+
+
+                            <div class="ui-g-12 ui-xl-12" >
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 100px;" value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.organizationSiteId}"
+                                                   rendered="#{ not gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.showCustomerDate}"
+                                                   />
+                                    <p:autoComplete style="width:37%!important"  rendered="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.showCustomerDate}"
+                                                    dropdown="true"
+                                                    converter="#{gmSubscriptionsFormDTOMB.organizationSiteDTOConvertor}"
+                                                    value="#{gmSubscriptionsFormDTOMB.gmMovement.customerIdFrom}"
+                                                    var="supplier"
+                                                    itemLabel="#{supplier}" 
+                                                    itemValue="#{supplier}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{gmSubscriptionsFormDTOMB.completeCustomerFrom}"
+                                                    
+                                                    >
+
+                                    </p:autoComplete>
+
+                                   
+                                     <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 100px;" value="#{userData.userDDs['CUSTOMER']} من "/>
+                                </div>
+                                </div>
+                                 <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 100px;" value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.organizationSiteId}"
+                                                   rendered="#{ not gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.showCustomerDate}"
+                                                   />
+                                    <p:autoComplete style="width:37%!important"  rendered="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.showCustomerDate}"
+                                                    dropdown="true"
+                                                    converter="#{gmSubscriptionsFormDTOMB.organizationSiteDTOConvertor}"
+                                                    value="#{gmSubscriptionsFormDTOMB.gmMovement.customerIdTo}"
+                                                    var="supplier1"
+                                                    itemLabel="#{supplier1}" 
+                                                    itemValue="#{supplier1}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{gmSubscriptionsFormDTOMB.completeCustomerFrom}"
+                                                    
+                                                    >
+                                    </p:autoComplete>
+                                    <p:commandButton style="margin-right: 40%"  value="إضافة" type="button" onclick="PF('dlg3').show()" rendered="#{ gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.showCustomerDate}"> 
+
+                                    </p:commandButton>
+                                 
+                                </div>
+                                
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 100px;" value="#{userData.userDDs['CUSTOMER']} الي "/>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6"/>
+                                <div class="ui-g-6 ui-xl-6">
+
+                                    <p:dialog header="إضافة عميل جديد" widgetVar="dlg3" showEffect="explode" hideEffect="bounce" height="90%" width="90%">
+
+
+                                        <p:fieldset legend="انشاءعميل جديد"  style="margin-bottom:5px">
+
+                                            <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                                                <div class="ui-g">
+
+                                                    <p:outputPanel id="photo">
+                                                        <button  id="start-camera" type="button">Start Camera</button>
+                                                        <video id="video"  width="220" height="150" autoplay="true"></video>
+                                                        <button  id="click-photo" type="button">Click Photo</button>
+                                                        <canvas id="canvas" width="220" height="150" ></canvas>
+
+                                                    </p:outputPanel>
+                                                    <script>
+                                                                let camera_button = document.querySelector("#start-camera");
+                                                                let video = document.querySelector("#video");
+                                                                let click_button = document.querySelector("#click-photo");
+                                                                let canvas = document.querySelector("#canvas");
+                                                                camera_button.addEventListener('click', async function () {
+                                                                let stream = await navigator.mediaDevices.getUserMedia({video: true, audio: false});
+                                                                        video.srcObject = stream;
+                                                                });
+                                                                click_button.addEventListener('click', function () {
+                                                                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                                                                        let image_data_url = canvas.toDataURL('image/jpeg');
+                                                                        // data url of the image
+                                                                        document.getElementById("form:img").value = image_data_url;
+                                                                        console.log(image_data_url);
+                                                                });                                                </script>
+                                                    <p:inputText type="hidden" style="display: none"  id="img" value="#{gmSubscriptionsFormDTOMB.file}">
+                                                        <p:ajax process="@this" />
+                                                    </p:inputText>
+
+                                                </div>
+
+
+
+                                                <div class="ui-g-12 ui-xl-12">
+
+                                                    <div class="ui-g-6 ui-xl-6">
+                                                        <p:graphicImage url="#{gmSubscriptionsFormDTOMB.host.concat(gmSubscriptionsFormDTOMB.invOrganizationSiteDTOSelected.clientImage)}" library="demo"  style="max-width:80%;max-height:80%;object-fit: cover !important;"/>
+                                                    </div>
+
+                                                    <div class="ui-g-6 ui-xl-6">
+                                                        <p:outputLabel style="width: 65px" value="صورة العميل"/>
+                                                    </div>  
+                                                </div>
+                                            </div>
+
+
+                                            <panelGrid class="centerButtons col-md-12" style='display: block; text-align: center;'>
+
+                                                <h:panelGroup>
+                                                    <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                                                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+                                                    </p:blockUI> 
+                                                </h:panelGroup>
+                                            </panelGrid>
+
+                                            <div class="col-xs-12">
+                                                <p:messages autoUpdate="true"  id="msgopp1" showDetail="true" closable="true" />
+                                            </div>
+                                            <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                                                <div class="ui-g">
+
+                                                    <div class="ui-g-6 ui-xl-6">
+                                                        <div class="ui-g-12 ui-xl-12">
+
+                                                            <div class="ui-g-6 ui-xl-6">
+                                                                <p:inputText style="width: 35%!important" id="ad012"  value="#{gmSubscriptionsFormDTOMB.invOrganizationSiteDTOSelected.code}"/>
+                                                            </div>
+                                                            <div class="ui-g-6 ui-xl-6">
+                                                                <p:outputLabel style="width: 85px;margin-right: 3%;" value="رقم العميل"/>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="ui-g-12 ui-xl-12">
+
+                                                            <div class="ui-g-6 ui-xl-6">
+                                                                <p:inputText style="width: 35%!important" id="ad112" value="#{gmSubscriptionsFormDTOMB.invOrganizationSiteDTOSelected.name}"/>
+                                                            </div>
+                                                            <div class="ui-g-6 ui-xl-6">
+                                                                <p:outputLabel style="width: 85px;margin-right: 3%;" value="الاسم"/>
+
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="ui-g-12 ui-xl-12">
+
+                                                            <div class="ui-g-6 ui-xl-6">
+                                                                <p:inputText style="width: 35%!important" id="ad212" value="#{gmSubscriptionsFormDTOMB.invOrganizationSiteDTOSelected.mobile}"/>
+
+                                                            </div>
+                                                            <div class="ui-g-6 ui-xl-6">
+                                                                <p:outputLabel style="width: 85px;" value="الجوال"/>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="ui-g-12 ui-xl-12">
+
+                                                            <div class="ui-g-6 ui-xl-6">
+                                                                <p:inputText style="width: 35%!important" id="ad312" value="#{gmSubscriptionsFormDTOMB.invOrganizationSiteDTOSelected.mobile}"/>
+
+                                                            </div>
+                                                            <div class="ui-g-6 ui-xl-6">
+                                                                <p:outputLabel style="width: 85px;" value="الجوال"/>
+
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="ui-g-12 ui-xl-12">
+
+                                                            <div class="ui-g-6 ui-xl-6">
+                                                                <p:inputText style="width: 35%!important" id="ad812"  value="#{gmSubscriptionsFormDTOMB.invOrganizationSiteDTOSelected.nationId}"/>
+
+                                                            </div>
+                                                            <div class="ui-g-6 ui-xl-6">
+                                                                <p:outputLabel style="width: 85px;" value="رقم الهوية "/>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="ui-g-12 ui-xl-12">
+                                                            <div class="ui-g-12 ui-xl-12">
+
+                                                                <div class="ui-g-6 ui-xl-6">
+                                                                    <p:inputText style="width: 35%!important" id="ad512" value="#{gmSubscriptionsFormDTOMB.invOrganizationSiteDTOSelected.nationIdSerial}"/>
+
+                                                                </div>
+                                                                <div class="ui-g-6 ui-xl-6">
+                                                                    <p:outputLabel style="width: 85px;" value="طبعة الهوية"/>
+
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="ui-g-6 ui-xl-6">
+                                                                <p:calendar id="dateFrom12" 
+                                                                            value="#{gmSubscriptionsFormDTOMB.invOrganizationSiteDTOSelected.birthdate}"
+                                                                            pattern="dd/MM/yyyy"
+                                                                            style="width:50%!important"/>
+                                                            </div>
+                                                            <div class="ui-g-6 ui-xl-6">
+                                                                <p:outputLabel style="width: 95px; ;" value="تاريخ الميلاد"/>
+
+                                                            </div>
+                                                        </div>
+
+                                                    </div>                        
+                                                </div>
+                                            </div>
+
+                                        </p:fieldset>
+
+                                        <h:panelGroup>
+                                            <p:commandButton     class="saveButton"  
+                                                                 title="#{userData.userDDs['SAVE']}"
+                                                                 value="#{userData.userDDs['SAVE']}" 
+                                                                 icon="fa fa-fw fa-save" 
+                                                                 action="#{gmSubscriptionsFormDTOMB.addNewCustomer2()}"
+                                                                 update="@form"
+                                                                 >
+                                            </p:commandButton>
+                                        </h:panelGroup>
+
+                                    </p:dialog>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="ui-g-4 ui-xl-4">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel id="dateFrom1" 
+                                               value="#{gmSubscriptionsFormDTOMB.gmMovement.date}"
+                                               style="width:50%!important" >
+
+                                    <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
+                                </p:outputLabel> 
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 95px; ;" value="#{userData.userDDs['DATEE']} من*"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-4 ui-xl-4">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel id="dateFrom2" 
+                                               value="#{gmSubscriptionsFormDTOMB.gmMovement.stratDate}"
+                                               style="width:50%!important" >
+
+                                    <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
+                                </p:outputLabel> 
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 95px; ;" value="#{userData.userDDs['DATEE']} الي*"/>
+
+                            </div>
+                        </div>
+                               <div class="ui-g-4 ui-xl-4">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width:69%"  value="#{gmSubscriptionsFormDTOMB.gmMovement.days}" id="days"
+                                             />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 95px; " value="عدد الايام المتبقية"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-4 ui-xl-4">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputText style="width:69%"  value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.remarks}"
+                                             />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 95px; " value="#{userData.userDDs['NOTE']}"/>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+
+
+
+
+                </div>
+
+            </p:fieldset>
+
+            <p:fieldset id="fieldSetId" legend="#{userData.userDDs['DET_SALE_INVO']}"   style="margin:0;">
+                <div >
+                    <p:messages id="curmsg2" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
+                </div>
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad">
+                    <h:panelGroup id="test2">
+                        <div class="ui-g">
+
+                            
+
+                            <div class="ui-g-3 ui-xl-3">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 35%!important" id="ad412"  value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.value}"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px;" value="القيمه "/>
+
+                                </div>
+                            </div>
+
+                            <div class="ui-g-3 ui-xl-3">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <h:outputText id="taxvalue" 
+                                                  style="text-align:right" 
+                                                  value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.taxvalue}" />
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 105px" value="#{userData.userDDs['TAX_VALUE']}"/>
+
+                                </div>
+                            </div>
+
+                            <div class="ui-g-3 ui-xl-3">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <h:outputText id="finalNet" 
+                                                  style="text-align:right" 
+                                                  value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.finalNet}" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 155px;" value="#{userData.userDDs['TOTAL']}"/>
+
+                                </div>
+                            </div> 
+
+                        </div>
+                    </h:panelGroup>
+                </div>
+
+                <div>
+
+                    <h:panelGrid  class="col-md-12" columns="1"  style="margin-right: 45%;; display: inline-block;">
+
+                        <h:panelGroup  class="centerButtons">
+
+                            <p:commandButton  id="saveB" 
+                                              class="saveButton"
+                                              title="#{userData.userDDs['SAVE']}"
+                                              value="#{userData.userDDs['SAVE']}" 
+                                              action="#{gmSubscriptionsFormDTOMB.saveMovment()}"
+                                              rendered="#{not gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.revision}"
+                                              update="@form"/>
+                            <p:commandButton 
+                                id="newN"
+                                ajax="false"
+                                value="#{userData.userDDs['NEW']}" 
+                                class="newButton"
+                                onclick="form.target = ''" 
+                                actionListener="#{gmSubscriptionsFormDTOMB.reset()}"/>
+
+                            <p:commandButton  class="closeButton" 
+                                              id="cancel" 
+                                              title="#{userData.userDDs['BACK']}" 
+                                              value="#{userData.userDDs['BACK']}" 
+                                              immediate="true"
+                                              action="#{gmSubscriptionsFormDTOMB.exit()}" 
+                                              update="@form"/>
+
+                            <p:commandButton  class="printButtons"                                              
+                                              ajax="false"
+                                              onclick="form.target = '_blank'"  
+                                              value="#{userData.userDDs['PRINT']}" 
+                                              title="#{userData.userDDs['PRINT']}" 
+                                              actionListener="#{gmSubscriptionsFormDTOMB.print()}"                                
+                                              update="@form"/>
+
+                            <h:commandLink  style="float:left" class="sdcreenimg" rendered="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.id ne null}">  
+                                <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
+                                <p:dataExporter type="xls"
+                                                target="invPurchaseInvoiceDetailsTable" 
+                                                fileName="فاتورة الاشتراكات"
+                                                preProcessor="#{gmSubscriptionsFormDTOMB.preProcessXLS()}"
+                                                postProcessor="#{gmSubscriptionsFormDTOMB.postProcessXLS}" />  
+                            </h:commandLink>
+
+                            <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                            </p:blockUI> 
+
+
+                        </h:panelGroup>
+
+                    </h:panelGrid>
+
+                </div>
+
+            </p:fieldset>
+
+
+        </h:form>
+
+
+        <script>
+
+                    document.addEventListener("keydown", function (e) {
+                    console.log(e.which);
+                            if (e.which === 13) {
+                    e.preventDefault();
+                            return false;
+                    }
+                    ;
+                    });
+
+        </script>
+    </ui:define>
+</ui:composition>
+

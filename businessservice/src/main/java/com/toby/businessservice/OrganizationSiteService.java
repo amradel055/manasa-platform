@@ -50,6 +50,8 @@ public interface OrganizationSiteService {
     public InvOrganizationSite findOrganizationSiteById(Integer invOrganizationSiteId);
 
     public InvOrganizationSiteDTO findOrganizationSiteById(Integer invOrganizationSiteId, TobyUser tobyUser);
+    
+    public InvOrganizationSite findOrganizationSiteByMobile(InvOrganizationSite invOrganizationSite);
 
     public List<InvOrganizationSite> getInvOrganizationSiteByCompanyId(Integer companyId);
 

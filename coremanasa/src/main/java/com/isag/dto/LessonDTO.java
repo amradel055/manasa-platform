@@ -29,6 +29,7 @@ public class LessonDTO extends BaseEntityDTO {
     private List<String> documents;
     private Integer materialId;
     private Integer teacherId;
+    private Integer studentId;
     private String voiceLink;
     private List<String> images;
 
@@ -287,6 +288,20 @@ public class LessonDTO extends BaseEntityDTO {
      */
     public void setImages(List<String> images) {
         this.images = images;
+    }
+
+    /**
+     * @return the studentId
+     */
+    public Integer getStudentId() {
+        return studentId;
+    }
+
+    /**
+     * @param studentId the studentId to set
+     */
+    public void setStudentId(Integer studentId) {
+        this.studentId = studentId;
     }
 
 }

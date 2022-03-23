@@ -1,0 +1,617 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form class='formmargin' id="form" dir="#{userData.dir}">
+            <div style=" position: absolute;left: 20px"> 
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 21%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />
+                <p:commandButton style="display: none;" 
+                                 actionListener="#{invPurchaseInvoiceFormDTOMB.detailBlur(null)}" 
+                                 update="form:payed form:remain form:invPurchaseInvoiceDetailsTable form:totalWithTaxValue form:payNet
+
+                                 "
+                                 id="check" />
+
+
+            </div>
+            <div >
+                <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
+            </div>
+
+            <!--            <p:hotkey  bind="F6" update="invPurchaseInvoiceDetailsTable" action="#/{invPurchaseInvoiceFormDTOMB.addInvDetail()}"/>--> 
+            <p:hotkey  bind="F7" update="invPurchaseInvoiceDetailsTable" action="#{invPurchaseInvoiceFormDTOMB.deleteInvDetailPOS}"/>
+
+            <p:fieldset id="whole" legend="ادارة نقاط البيع" style="margin-bottom:20px">
+                <div  id="firstLine" class="ui-g-12 ui-g-nopad" style="margin-top: -2%;">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 95px;margin-right: 6%;" value="التاريخ"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:calendar   value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.date}" 
+                                                  pattern="dd/MM/yyyy" class="date-box">
+
+                                    </p:calendar>
+                                </h:panelGroup> 
+
+                            </h:panelGroup>
+
+
+
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 73px;margin-right: 4%;" value="رقم الفاتورة"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:inputText style="width: 35%!important" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.serial}"/>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 100px;margin-right: 6%;" value="#{userData.userDDs['CUSTOMER']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:34%!important" 
+                                                    dropdown="true"
+                                                    converter="#{autoComplete.organizationSiteDTOConvertor}"
+                                                    value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.organizationSiteId}"
+                                                    disabled="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial ne null}"
+                                                    var="supplier"
+                                                    itemLabel="#{supplier}" 
+                                                    itemValue="#{supplier}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{autoComplete.completeCustomerFrom}" 
+                                                    >
+
+
+                                        <p:ajax update="@form"
+                                                event="change"
+                                                process="@form"
+                                                listener="#{invPurchaseInvoiceFormDTOMB.putCurrency()}" />
+                                        <p:ajax update="@form"
+                                                process="@form"
+                                                event="itemSelect"
+                                                listener="#{invPurchaseInvoiceFormDTOMB.putCurrency()}" />
+
+
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 73px;margin-right: 4%;" value="الخصم"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputNumber id="discount" 
+                                                   style="width: 35%!important" 
+                                                   value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.discount}" >
+                                        <p:ajax event="blur" listener="#{invPurchaseInvoiceFormDTOMB.Discount()}" update="payed remain" />
+                                    </p:inputNumber>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+
+
+
+                <div  id="firstLine1" class="ui-g-12 ui-g-nopad" style="margin-top: 1%">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-2" >
+                            <div class="pos" style="background-color: #028a38;">
+                                <h:panelGroup>
+                                    <h:outputText id="totalWithTaxValue" class="totalWithTaxValue"
+                                                  style="text-align:right" 
+                                                  value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.totalNet}" />
+                                    <h:outputLabel  class="labelText" value="المطلوب" />
+                                </h:panelGroup>
+                            </div>
+                            <div class="pos" style="background-color: #028a38;">
+                                <h:panelGroup>
+                                    <p:inputNumber id="payNet" 
+                                                   style="text-align:right" 
+                                                   value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.payNet}" >
+                                        <p:ajax event="blur" listener="#{invPurchaseInvoiceFormDTOMB.PayNet()}" update="payed remain" />
+                                    </p:inputNumber>
+                                    <h:outputLabel  class="labelText" value="بطاقات" />
+                                </h:panelGroup>
+                            </div>
+                            <div class="pos" style="background-color: #028a38;">
+                                <h:panelGroup>
+                                    <p:inputNumber id="payed"  
+                                                   style="width:50%;text-align:right"
+                                                   value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.payed}" >
+                                        <p:ajax  listener="#{invPurchaseInvoiceFormDTOMB.RemainValue()}" update="remain" />
+                                    </p:inputNumber>
+                                    <h:outputLabel class="labelText" value="نقدا" />
+                                </h:panelGroup>
+                            </div>
+                            <div class="pos1" style="background-color: #028a38;">
+                                <h:panelGroup>
+                                    <h:outputText id="remain" class="totalWithTaxValue"
+                                                  style="text-align:right" 
+                                                  value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.remain}" />
+                                    <h:outputLabel class="labelText" value="الباقي" />
+                                </h:panelGroup>
+                            </div>
+                        </div>  
+                        <div class="ui-g-12 ui-md-10" >
+
+                            <p:dataTable id="invPurchaseInvoiceDetailsTable" 
+                                         widgetVar="invPurchaseInvoiceDetailsTable"
+                                         style="margin-bottom:20px"
+                                         var="invPurchaseInvoiceDetailsTable"
+                                         rowIndexVar="index" 
+                                         dir="rtl" 
+                                         emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                                         editable="true"
+                                         editMode="cell"
+                                         selectionMode="single"
+                                         sortBy="#{1}"
+                                         rowKey="#{invPurchaseInvoiceDetailsTable.index}"
+                                         selection="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.invPurchaseInvoiceDetailsSelected}"
+                                         value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.invPurchaseInvoiceDetailList}" >
+
+
+                                <f:facet name="header" >
+                                    <p:commandButton  id="addnew"
+                                                      class="saddButton"
+                                                      icon="fa fa-plus"
+                                                      title="#{userData.userDDs['ADD']}" 
+                                                      rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial eq null}"
+                                                      actionListener="#{invPurchaseInvoiceFormDTOMB.addInvDetail()}" 
+                                                      update=":form:invPurchaseInvoiceDetailsTable"  
+                                                      oncomplete="PrimeFaces.focus('form:invPurchaseInvoiceDetailsTable:'+#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.invPurchaseInvoiceDetailList.size()}+':invItemNameIn')"
+                                                      immediate="true"
+                                                      ajax="true"
+                                                      style="float:right"
+                                                      onclick=" addIndexRow(indexRow++);"/>
+                                    <p:commandButton  id="saveB" 
+                                                      class="saveButtons"
+                                                      title="#{userData.userDDs['SAVE']}"
+                                                      value="#{userData.userDDs['SAVE']}" 
+                                                      style="color: #fff!important;background-color: #2196F3;margin-left: 5px; float: left; margin-top: 0.5%;" 
+                                                      action="#{invPurchaseInvoiceFormDTOMB.calcAfterPayCash()}"
+                                                      update="@form"/>
+                                     <p:commandButton  class="printButtons"
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          style="color: #fff!important;background-color: blue;margin-left: 5px" 
+                                          rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id != null}"
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          title="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{invPurchaseInvoiceFormDTOMB.print}"
+                                          id="print"/>
+                                    <p:outputPanel>
+                                        <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                        <p:inputText id="globalFilter" onkeyup="PF('invPurchaseInvoiceDetailsTable').filter()" style="width:150px" />
+                                    </p:outputPanel>
+                                </f:facet>
+
+                                <p:column headerText="#" style="width: 4vh;text-align:center;border-radius: 0px" >
+                                    <h:outputText value="#{invPurchaseInvoiceDetailsTable.serial}"  />
+                                </p:column>
+
+                                <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="#{userData.userDDs['ITEM_NAME']}" 
+                                          filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
+                                          filterMatchMode="contains" 
+                                          sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
+                                          filterable="false">
+                                    <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
+                                                   rendered="#{invPurchaseInvoiceDetailsTable.isEdit}" />
+
+                                    <p:autoComplete id="invItemNameIn"  
+                                                    style="width:100%"
+                                                    rendered="#{not invPurchaseInvoiceDetailsTable.isEdit}"
+                                                    converter="#{invPurchaseInvoiceFormDTOMB.itemsBarcodesDetailsViewConverter}"
+                                                    value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
+                                                    maxResults="10"
+                                                    var="item" 
+
+                                                    itemLabel="#{item}" 
+                                                    itemValue="#{item}" 
+                                                    forceSelection="true"  
+                                                    completeMethod="#{invPurchaseInvoiceFormDTOMB.completeItemsDatas}"
+                                                    
+                                                    >
+
+                                        <p:ajax 
+                                            event="itemSelect" 
+                                            listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" 
+                                            oncomplete="PrimeFaces.focus('form:invPurchaseInvoiceDetailsTable:'+#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.invPurchaseInvoiceDetailList.size()}+':invItemNameIn')" 
+                                            update=" unitvalue 
+                                            length paintColor QuantityT  
+                                            WeightT costTt discountT netId 
+                                            totalQuantity totalWeight  totalNet  
+                                            form:totalWithTaxValue  
+                                            form:payNet 
+                                            availableQuantityRowValue
+
+                                            invPurchaseInvoiceDetailsTable"
+                                            />
+
+                                    </p:autoComplete> 
+                                    
+
+
+                                    <!--
+                                                                                <p:inputText id="invItemNameIn"  
+                                                                                        style="width:100%"
+                                                                                        rendered="#/{not invPurchaseInvoiceDetailsTable.isEdit  }"
+                                                                                        value="#/{invPurchaseInvoiceDetailsTable.barCode}"  
+                                                                                      >
+                                                                                 <p:ajax 
+                                                                                event="blur" 
+                                                                                listener="#/{invPurchaseInvoiceFormDTOMB.validateItems()}" 
+                                                                                oncomplete="PrimeFaces.focus('form:invPurchaseInvoiceDetailsTable:'+#/{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.invPurchaseInvoiceDetailList.size()}+':invItemNameIn')" 
+                                                                                update=" unitvalue 
+                                                                                length paintColor QuantityT  
+                                                                                WeightT costTt discountT netId 
+                                                                                totalQuantity totalWeight  totalNet  
+                                                                                form:totalWithTaxValue  
+                                                                                form:payNet 
+                                                                                availableQuantityRowValue
+                                                                              
+                                                                                invPurchaseInvoiceDetailsTable
+                                                                                invItemNameIn2
+                                                                                "
+                                                                                />
+                                                                        
+                                    
+                                                                        </p:inputText>   -->
+
+
+                                </p:column>
+
+                                <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="Unit"
+
+                                           filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.unitName}" 
+                                           filterMatchMode="contains" 
+                                           sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.unitName}"
+                                           filterable="false"
+                                           headerText="#{userData.userDDs['UNIT_NUMBER']}">
+                                    <p:inputText id="unitvalue" readonly="true" 
+                                                 disabled="true"
+                                                 value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.unitName}" style="width: 95%" />  
+
+                                </p:column>
+                                <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="availableQuantityRow"
+
+                                           filterBy="#{invPurchaseInvoiceDetailsTable.availableQuantityRow}" 
+                                           filterMatchMode="contains" 
+                                           sortBy="#{invPurchaseInvoiceDetailsTable.availableQuantityRow}"
+                                           filterable="false"
+                                           headerText="المتاح">
+                                    <p:inputText id="availableQuantityRowValue" readonly="true" 
+                                                 disabled="true"
+                                                 value="#{invPurchaseInvoiceDetailsTable.availableQuantityRow}" style="width: 95%" />  
+
+                                </p:column>
+
+                                <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px" id="tall" headerText="الطول"
+                                          rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.companyActivity eq 'Alumetal'}"
+                                          filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.length}" 
+                                          filterMatchMode="contains" 
+                                          sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.length}"
+                                          filterable="false" >
+                                    <p:inputText style="width:99%" 
+                                                 disabled="true" 
+                                                 id="length" readonly="true"  
+                                                 value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.length}"/>
+                                </p:column>
+
+                                <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px" id="color" headerText="اللون"
+                                          rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.companyActivity eq 'Alumetal'}"
+                                          filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.paintColorName}" 
+                                          filterMatchMode="contains" 
+                                          sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.paintColorName}"
+                                          filterable="false" >
+                                    <p:inputText style="width:99%" 
+                                                 disabled="true" 
+                                                 id="paintColor" readonly="true"  
+                                                 value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.paintColorName}"/>
+                                </p:column>
+
+
+                                <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px"
+                                          id="Quantity"
+                                          headerText="#{userData.userDDs['NUMBER']}"
+                                          filterBy="#{invPurchaseInvoiceDetailsTable.quantity}" 
+                                          filterMatchMode="contains" 
+                                          sortBy="#{invPurchaseInvoiceDetailsTable.quantity}"
+                                          filterable="false">
+
+                                    <p:inputText id="QuantityT"  
+                                                 value="#{invPurchaseInvoiceDetailsTable.quantity}" 
+
+                                                 style="width:95%"/>
+
+                                </p:column>
+
+
+                                <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.companyActivity eq 'Alumetal'}"
+                                          id="Weight"
+                                          headerText="#{userData.userDDs['WEIGHT']}"
+                                          filterBy="#{invPurchaseInvoiceDetailsTable.weight}" 
+                                          filterMatchMode="contains" 
+                                          sortBy="#{invPurchaseInvoiceDetailsTable.weight}"
+                                          filterable="false">
+
+                                    <p:inputNumber id="WeightT" decimalPlaces="3"
+                                                   value="#{invPurchaseInvoiceDetailsTable.weight}"  
+                                                   style="width:100%">
+                                        <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.updateSummition()}" update="netId totalQuantity  totalWeight totalNet    form:totalWithTaxValue"/>
+                                    </p:inputNumber>
+                                </p:column> 
+                                <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="sellPrice"
+
+                                           filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.sellPrice}" 
+                                           filterMatchMode="contains" 
+                                           sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.sellPrice}"
+                                           filterable="false"
+                                           headerText="#{userData.userDDs['SELLING_PRICE']}">
+                                    <p:inputText id="sellPriceValue" readonly="true" 
+                                                 disabled="true"
+                                                 value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.sellPrice}" style="width: 95%" />  
+
+                                </p:column>
+                                <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px" id="COST" headerText="#{userData.userDDs['PRICE']}"
+                                          filterBy="#{invPurchaseInvoiceDetailsTable.cost}" 
+                                          filterMatchMode="contains" 
+                                          sortBy="#{invPurchaseInvoiceDetailsTable.cost}"
+                                          filterable="false">
+                                    <p:inputText id="costTt" 
+                                                 value="#{invPurchaseInvoiceDetailsTable.cost}"
+
+                                                 style="width:95%">
+                                        <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validatePriceColumn(invPurchaseInvoiceDetailsTable)}" 
+                                                update="netId totalQuantity  totalWeight totalNet   form:totalWithTaxValue  QuantityT"/>
+                                    </p:inputText>       
+                                </p:column>
+
+                                <p:column style="width: 14vh;text-align: -webkit-auto;border-radius: 0px" id="DISCOUNT" headerText="#{userData.userDDs['DISCOUNT']}">
+                                    <p:inputText id="discountT" 
+                                                 value="#{invPurchaseInvoiceDetailsTable.discount}" 
+                                                 disabled="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail == null}"
+                                                 style="width:70%!important;display: inline!important">
+                                        <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateDiscountColumn(invPurchaseInvoiceDetailsTable)}"
+                                                update="discountT netId totalQuantity totalWeight totalNet     form:totalWithTaxValue  "/>
+                                    </p:inputText>  
+                                    <p:outputLabel value="%"  style="display: inline!important"  />
+                                </p:column>
+
+
+                                <p:column style="width: 11vh;text-align: -webkit-auto;border-radius: 0px" id="net" headerText="#{userData.userDDs['TOTAL']}" 
+                                          filterBy="#{invPurchaseInvoiceDetailsTable.net}" 
+                                          filterMatchMode="contains" 
+                                          sortBy="#{invPurchaseInvoiceDetailsTable.net}"
+                                          filterable="false">
+                                    <p:outputLabel id="netId" value="#{invPurchaseInvoiceDetailsTable.net}"   />
+                                </p:column>
+                                <p:column 
+                                    rendered="#{invPurchaseInvoiceFormDTOMB.columnRender}"
+                                    style="width: 8vh;text-align: center;border-radius: 0px" 
+                                    headerText="#{userData.userDDs['TRANSACTION']}">
+                                    <p:commandButton 
+                                        id="delete"
+                                        title="#{userData.userDDs['DELETE']}" 
+                                        class="sdeleteButtons" style="color: #fff!important;background-color: red"
+                                        update="invPurchaseInvoiceDetailsTable"
+                                        action="#{invPurchaseInvoiceFormDTOMB.deleteInvDetailPOS()}"
+                                        icon="fa fa-remove" >
+                                        <f:setPropertyActionListener value="#{invPurchaseInvoiceDetailsTable}"  target="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.invPurchaseInvoiceDetailsSelected}" />
+
+                                        <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
+                                                   message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                                   icon="ui-icon-alert" />
+                                    </p:commandButton>
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                        <p:commandButton title="#{userData.userDDs['YES']}" onclick="addIndexRow(indexRow);" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                        <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                    </p:confirmDialog>
+                                </p:column>
+
+
+                                <p:summaryRow>
+                                    <p:column colspan="3" style="text-align:right">
+                                        <h:outputText style="text-align:right" value="#{userData.userDDs['TOTAL']}  :" />
+                                    </p:column>
+                                    <p:column />
+                                    <p:column>
+                                        <h:outputText id="totalQuantity" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.totalQuatity}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText id="totalWeight" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.totalWeight}"/>
+                                    </p:column>
+                                    <p:column />
+                                    <p:column />
+
+                                    <p:column rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.companyActivity eq 'Alumetal'}" />
+                                    <p:column rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.companyActivity eq 'Alumetal'}" />
+                                    <p:column rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.companyActivity eq 'Alumetal'}" />
+                                    <p:column>
+                                        <h:outputText id="totalNet" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.totalNet}"/>
+                                    </p:column>
+                                    <p:column />
+                                </p:summaryRow>
+                            </p:dataTable>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!--                <div  id="firstLine2" class="ui-g-12 ui-g-nopad" style="margin-top: 0;">
+                                    <div class="ui-g">
+                                        <div class="ui-g-12 ui-md-4">
+                                            <div class="posButtons" style="background-color: #028a38;">
+                                                <h:panelGroup>
+                                                    <h:outputLabel id="itemsNumber" class="labelNumber"  value="#/{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.itemsNumber}" />
+                                                    <h:outputLabel  value="عدد الأصناف"  />
+                                                </h:panelGroup>
+                                            </div>
+                                        </div>
+                                        <div class="ui-g-12 ui-md-4">
+                                            <div class="posButtons" style="background-color: #028a38;">
+                                                <h:panelGroup>
+                                                    <h:outputLabel id="totalDiscountValue" class="labelNumber"  value="#/{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.totalDiscountValue}" />
+                                                    <h:outputLabel  value="الخصم" />
+                                                </h:panelGroup>
+                                            </div>
+                                        </div>
+                                        <div class="ui-g-12 ui-md-4">
+                                            <div class="posButtons" style="background-color: #028a38;">
+                                                <h:panelGroup>
+                                                    <h:outputLabel id="finalNet" class="labelNumber"  value="#/{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.finalNet}" />
+                                                    <h:outputLabel  value="الصافي" />
+                                                </h:panelGroup>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>-->
+            </p:fieldset>
+
+            <h:panelGrid columns="1" cellpadding="5">
+
+                <h:panelGroup>
+
+
+                    <p:dialog id="remainconfirm" class="confirmCharge" header="تأكيــد الباقـي" 
+                              widgetVar="remainconfirm" modal="true">
+                        <div class="ui-g-12 ui-md-12 topDialogue">
+                            <h:panelGroup>
+
+                                <p:outputLabel style="width: 100%" id="remainconfirm1" value="المتبقــي" />
+                                <p:outputLabel style="width: 100%" 
+                                               id="remainn" class="totalCharge"
+                                               value="#{invPurchaseInvoiceFormDTOMB.remain}" />
+
+                            </h:panelGroup>
+                        </div> 
+                        <div class="ui-g-12 ui-md-12 chargeButtons">
+                          <p:commandButton  class="printButtons"
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          style="color: #fff!important;background-color: #34945a;margin-left: 5px;width: 30%;" 
+                                          rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id != null}"
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          title="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{invPurchaseInvoiceFormDTOMB.print}"
+                                          />
+                            <p:commandButton  update="whole"  id="sure"  
+                                          class="reloadButtons"
+                                          style="color: #fff!important;background-color: #22323a;width: 30%;height: 26px;border-radius: 7px;font-family: inherit;"  
+                                           actionListener="#{invPurchaseInvoiceFormDTOMB.closePOS()}" 
+                                           title="جديد" 
+                                             >
+
+                            </p:commandButton>
+                        </div>
+ 
+                    </p:dialog>
+
+
+                </h:panelGroup>
+
+
+
+            </h:panelGrid>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="scripts">
+        <script>
+
+            var index = 0;
+            var indexRow = 1;
+            document.addEventListener("keydown", function (e) {
+            console.log(e.which);
+            var elementId = document.activeElement.id;
+            var tagId = "form:payed_input";
+            if (e.which === 13 &amp;&amp; elementId != tagId) {
+               
+                setTimeout(delay, 1800);
+                 
+//            index++;
+//            document.getElementById("form:check").click();
+//            return false;
+            }
+            function delay(){
+                  var item =  document.getElementById("form:invPurchaseInvoiceDetailsTable:"+index+":invItemNameIn_input").value;
+                    var id = document.getElementById("form:invPurchaseInvoiceDetailsTable:"+index+":invItemNameIn_panel");
+                 
+               if(item === ""){
+            document.getElementById("form:check").click();
+              }else{
+         //  var ent = $.Event("keypress", { which: 13 } );
+                 // document.getElementById("form:invPurchaseInvoiceDetailsTable:"+index+":invItemNameIn_input").dispatchEvent(simulatedEvent);
+     
+         //alert(  id.getElementsByTagName('ul')[0].getElementsByTagName('li')[0]);
+         id.getElementsByTagName('ul')[0].getElementsByTagName('li')[0].click();
+   
+       
+        }
+            index++;
+            return false;
+            }
+            if (e.which === 13 &amp;&amp; elementId == tagId) {
+            document.getElementById("form:invPurchaseInvoiceDetailsTable:saveB").click();
+            return false;
+            };
+            if (e.which === 117) {
+            document.getElementById("form:invPurchaseInvoiceDetailsTable:addnew").click();
+            return false;
+            };
+//                  if (e.which === 118 ) { 
+//                      
+//                    document.getElementById("form:invPurchaseInvoiceDetailsTable:"+indexRow+":delete").click();
+//                    
+//                   alert(indexRow);
+//                  
+//            return false;
+//                };
+            if (elementId.includes("invItemNameIn_input")){
+            addIndexRow(elementId.substring(36, 37));
+            }
+
+            });
+            function addIndexRow(index){
+            indexRow = index;
+            }
+        </script> 
+    </ui:define>
+</ui:composition>

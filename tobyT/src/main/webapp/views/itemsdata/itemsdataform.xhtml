@@ -258,8 +258,7 @@
                     </div>
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
-                            <p:selectOneMenu value="#{itemDataFormMB.itemDataEntity.type}" 
-                                             converter="#{itemDataFormMB.invItemTypeDTOConverter}">
+                            <p:selectOneMenu value="#{itemDataFormMB.itemDataEntity.typeItem}" >
                                 <f:selectItem itemLabel="اختر" itemValue="" />
                                 <f:selectItems value="#{itemDataFormMB.invItemType}"  
                                                var="InvItemType" 

@@ -17,7 +17,7 @@ public class APIDataDTO {
     private Integer id;
     private Integer branchSelected;
     private Integer companySelected;
-
+    private String mobile ;
     private List<APIBranchDTO> branchList;
 
     /**
@@ -88,6 +88,20 @@ public class APIDataDTO {
      */
     public void setCompanySelected(Integer companySelected) {
         this.companySelected = companySelected;
+    }
+
+    /**
+     * @return the mobile
+     */
+    public String getMobile() {
+        return mobile;
+    }
+
+    /**
+     * @param mobile the mobile to set
+     */
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
 }

@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.InvDetailsDTOAPI;
 import com.toby.entity.TobyUser;
 import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInvoiceDTO;
@@ -49,6 +50,8 @@ public interface InvPurchaseInvoiceDetailsService {
     public List<InvDetailDTO> getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(InvInvoiceDTO dto);
 
     public List<InvDetailDTO> getAllInvPurchaseInvoiceDetailList(InvInvoiceDTO dto);
+    
+    public List<InvDetailsDTOAPI> getAllInvPurchaseInvoiceDetailListWebSite(InvInvoiceDTO dto);
 
     public void deleteInvPurchaseInvoiceDetailListDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList);
 

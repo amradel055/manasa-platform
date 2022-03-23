@@ -8,6 +8,7 @@ package com.toby.businessservice;
 import com.toby.businessservice.reports.searchBean.ItemMainDataByGroupSearchBean;
 import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.InvItemDTO;
+import com.toby.dto.InvItemDTOApi;
 import com.toby.entity.InvBarcode;
 import com.toby.entity.InvGroup;
 import com.toby.entity.InvItem;
@@ -26,7 +27,7 @@ public interface InvItemService {
 
     public List<InvItemDTO> findInvItemDTOList(TobyUser tobyUser);
 
-    public List<InvItemDTO> invItemsReport( InvItemDTO invItemDTO ,Integer branchId);
+    public List<InvItemDTO> invItemsReport(InvItemDTO invItemDTO, Integer branchId);
 
     public Map<String, String> findInvItemDTOMap(Integer branchId);
 
@@ -35,7 +36,7 @@ public interface InvItemService {
     public InvItem addInvItem(InvItem invItem, List<InvBarcode> invBarcodeList, List<InvBarcode> invBarcodeDeletedList);
 
     public InvItem updateInvItem(InvItem invItem);
-    
+
     public InvItem updateInvItemWebSite(InvItem invItem);
 
     public void deleteInvItem(InvItem invItem);
@@ -43,20 +44,22 @@ public interface InvItemService {
     public void deleteInvItemDTO(InvItemDTO invItem);
 
     public InvItem findInvItem(Integer invItemById);
-    
+
     public InvItemDTO findInvItemDTO(Integer invItemById);
 
     public List<InvItem> getInvItemByCompanyId(Integer companyId);
 
     public List<InvItemDTO> getInvItemListByBranchId(Integer branchId, ScreenNameClassEnum screenNameClassEnum);
 
+    public InvItemDTOApi findInvItemDTOForWebSite(Integer invItemById);
+
     public List<InvItem> getInvItemByBranchId(Integer branchId);
 
     public List<InvItem> getInvItemByBranchIdForInvItemMainDataByGroupReportMB(Integer branchId);
 
     public List<InvItem> getInvItemByBranchIdAndGroupId(Integer branchId, Integer groupId);
-    
-     public List<InvItemDTO> getInvItemByBranchIdAndGroupIdDTO(Integer branchId, Integer groupId);
+
+    public List<InvItemDTO> getInvItemByBranchIdAndGroupIdDTO(Integer branchId, Integer groupId);
 
     public List<InvItem> getImageByCompanyId(String imageName, Integer companyId);
 
@@ -101,15 +104,15 @@ public interface InvItemService {
     public void updateInvItem2(Map<String, InvItem> invItemMap, TobyUser tobyUser);
 
     public void findInvItemMap(Integer branchId, List<InvItemDTO> invItemDTOList);
-    
-    public void updateInvItemType(Integer branchId, List<InvItemDTO> invItemDTOList,Integer type);
+
+    public void updateInvItemType(Integer branchId, List<InvItemDTO> invItemDTOList, Integer type);
 
     public void getInvItemListByBranchId(Integer branchId);
 
     public void updateInvItemCostAverageToZero(Integer branchId);
 
     public List<Integer> getInvItemListByBranchIdNotInInvPurchaseInvoice(Integer branchId);
-    
+
     public InvItemDTO mapToDTO(InvItem invItem, TobyUser tobyUser);
     
     public InvItem findItemByCode(String code) ;

@@ -35,4 +35,18 @@ public class LoginRest {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
+    
+     @Transactional
+    @Path("/loginCustomer")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response loginCustomer(LoginRoot loginRoot) {
+        try {
+            ApiLoginDTO apiLoginDTO = generalService.authCustomer(loginRoot);
+            return Response.ok().entity(apiLoginDTO).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
 }

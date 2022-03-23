@@ -1,0 +1,292 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <h:form  id="form" dir="#{userData.dir}"  class='formmargin'>
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 12%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 9%!important;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;" 
+                                  class="viewButton sminimize"
+                                  icon="fa fa-window-minimize"
+                                  title="إظهار/إخفاء"/>  
+            </div>
+
+            <p:fieldset  legend="#{userData.userDDs['NOTIFICATIONS_REPORTS']}"
+
+                         style=" position: relative">
+
+
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 75px;margin-right: 6%;" 
+                                                   value="#{userData.userDDs['FROM_NOTIFICATION_NO']}"/>
+                                </h:panelGroup>  
+                                <h:panelGroup>
+                                    <p:inputText style="width: 37%;margin-right: 6%;" value="#{invNoticeReportMB.noticeFrom}"/>
+                                </h:panelGroup>  
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 75px" value="#{userData.userDDs['TO_NOTIFICATION_NO']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:inputText style="width: 37%;margin-right: 6%;" value="#{invNoticeReportMB.noticeTo}"/>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                        <h:panelGroup>
+                            <h:panelGroup>
+                                <p:outputLabel  style="width: 75px; margin-right: 6%;" value="#{userData.userDDs['FROM_DATE']}"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:calendar pattern="dd/MM/yyyy" 
+                                            id="dateFrom"
+                                            value="#{invNoticeReportMB.dateFrom}"
+                                            style="width: 50%">
+                                </p:calendar>
+                            </h:panelGroup>
+                        </h:panelGroup>
+
+                    </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                        <h:panelGroup>
+                            <h:panelGroup>
+                                <p:outputLabel  style="width: 75px;" value="#{userData.userDDs['UNTIL_DATE']}"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:calendar pattern="dd/MM/yyyy" 
+                                            id="dateTo"
+                                            value="#{invNoticeReportMB.dateTo}"
+                                            style="width: 50%">
+                                </p:calendar>
+                            </h:panelGroup>
+                        </h:panelGroup>
+
+                    </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <p:outputLabel class="floatLeft" style="margin-right: 6%; width: 80px;" for="@next" value="#{userData.userDDs['NOTIFICATION_TYPE']}" />
+                                <p:selectOneMenu id="console" value="#{invNoticeReportMB.type}" style="width:37%">
+                                    <f:selectItem itemLabel="#{userData.userDDs['ADD_CUSTOMER_NOTIFICATION']}" itemValue="0" />
+                                    <f:selectItem itemLabel="#{userData.userDDs['DISCOUNT_CUSTOMER_NOTIFICATION']}" itemValue="1" />
+                                    <f:selectItem itemLabel="#{userData.userDDs['SUPPLIER_ADD_NOTIFICATION']}" itemValue="2" />
+                                    <f:selectItem itemLabel="#{userData.userDDs['SUPPLIER_DISCOUNT_NOTIFICATION']}" itemValue="3" />
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+
+                        </div>
+                    </div>
+                </div>
+
+                <h:panelGrid class="col-md-12" columns="">
+
+                    <h:panelGroup  class="centerButtons"  style="margin-top: 2%">
+
+                        <p:commandButton   class="searchButtons"
+                                           id="saveB"
+                                           title="#{userData.userDDs['SEARCH']}"
+                                           action="#{invNoticeReportMB.search()}"
+                                           value="#{userData.userDDs['SEARCH']}"
+                                           update="SalesDataViewTable" 
+                                           style="color: #fff!important;background-color: #2196F3;margin-left: 5px;"  />
+
+                        <p:commandButton   class="newButton"
+                                           id="NewB"
+                                           title="#{userData.userDDs['NEW']}" 
+                                           immediate="true" 
+                                           action="#{invNoticeReportMB.reset()}"
+                                           update="form"
+                                           value="#{userData.userDDs['NEW']}"
+                                           style=""/>
+
+                        <p:commandButton     class="printButtons"
+                                             id="PrintB"
+                                             ajax="false"
+                                             onclick="form.target = '_blank'"  
+                                             style="color: #fff!important;background-color: grey;margin-left: 5px;"
+                                             value="#{userData.userDDs['PRINT']}" 
+                                             actionListener="#{invNoticeReportMB.exportPDF}"
+                                             title="#{userData.userDDs['PRINT']}"
+                                             immediate="true" />
+
+                        <p:commandButton    class="closeButton"
+                                            id="CloseB"
+                                            style=""  
+                                            value="#{userData.userDDs['BACK']}" 
+                                            title="#{userData.userDDs['BACK']}"
+                                            action="exit"/>
+
+                        <h:commandLink  class="sdcreenimg"  style="margin-right: 4px;">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="SalesDataViewTable" 
+                                            fileName=" تقريرالاشعارات"
+                                            postProcessor="#{invNoticeReportMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+                        <p:blockUI block="form" trigger="saveB NewB PrintB CloseB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+            </p:fieldset>
+
+            <p:fieldset  style="margin-top: 2%">
+
+                <p:dataTable 
+                    draggableColumns="true" 
+                    var="SalesDataViewTable" 
+                    widgetVar="SalesDataViewTable"  
+                    rowKey="#{SalesDataViewTable}"
+                    rowIndexVar="index" 
+                    value="#{invNoticeReportMB.noticeList}" 
+                    dir="rtl" 
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                    id="SalesDataViewTable">
+                    <f:facet name="header">
+
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('SalesDataViewTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+                    </f:facet>
+
+                    <p:column   style="width: 8vh;text-align: center!important;font-size: 1.8vh;border-radius: 0px;" 
+                                headerText="#{userData.userDDs['CS_COD']}" 
+
+                                filterBy="#{SalesDataViewTable.serial}" 
+                                filterMatchMode="contains" 
+                                sortBy="#{SalesDataViewTable.serial}"
+                                filterable="false">
+
+                        <h:outputText value="#{SalesDataViewTable.serial}" style="font-size: 1.5vh"/>
+                    </p:column>
+
+                    <p:column   style="width: 8vh;text-align: center!important;font-size: 1.8vh;border-radius: 0px;" 
+                                headerText="#{userData.userDDs['CS_COD']}" 
+
+                                filterBy="#{SalesDataViewTable.instContractSerial}" 
+                                filterMatchMode="contains" 
+                                sortBy="#{SalesDataViewTable.instContractSerial}"
+                                filterable="false">
+
+                        <h:outputText value="#{SalesDataViewTable.instContractSerial}" style="font-size: 1.5vh"/>
+                    </p:column>
+
+
+                    <p:column style="width: 12vh;text-align: center!important;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              headerText="#{userData.userDDs['ACCOUNT_NUMBER']}" 
+
+                              filterBy="#{SalesDataViewTable.contrastAccountId.accNumber}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{SalesDataViewTable.contrastAccountId.accNumber}"
+                              filterable="false">
+
+                        <h:outputText value="#{SalesDataViewTable.contrastAccountId.accNumber}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+                    <p:column style="width: 12vh;text-align: center!important;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              headerText="#{userData.userDDs['CORRES_CUSTO']}" 
+
+                              filterBy="#{SalesDataViewTable.organizationSiteId.name}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{SalesDataViewTable.organizationSiteId.name}"
+                              filterable="false">
+
+                        <h:outputText value="#{SalesDataViewTable.organizationSiteId.name}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: center!important;font-size: 1.8vh;border-radius: 0px;" 
+                              headerText="#{userData.userDDs['DATEE']}" 
+
+                              filterBy="#{SalesDataViewTable.date}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{SalesDataViewTable.date}"
+                              filterable="false">
+
+                        <h:outputText value="#{SalesDataViewTable.date}" style="font-size: 1.5vh;width: 95%">
+                            <f:convertDateTime pattern="dd-MM-yyyy" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column style="width: 10vh;text-align: center!important;font-size: 1.8vh;border-radius: 0px;" 
+                              headerText="#{userData.userDDs['AMOUNT']}" 
+
+                              filterBy="#{SalesDataViewTable.value}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{SalesDataViewTable.value}"
+                              filterable="false">
+
+                        <h:outputText value="#{SalesDataViewTable.value}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+                    <p:column style="width: 10vh;text-align: center!important;font-size: 1.8vh;border-radius: 0px;" 
+                              headerText="#{userData.userDDs['NOTICE_NAMEING']}" 
+
+                              filterBy="#{SalesDataViewTable.noticeNaming.name}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{SalesDataViewTable.noticeNaming.name}"
+                              filterable="false">
+
+                        <h:outputText value="#{SalesDataViewTable.noticeNaming.name}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+                    <p:column style="width: 10vh;text-align: center!important;font-size: 1.8vh;border-radius: 0px;" 
+                              headerText="#{userData.userDDs['NOTE']}" 
+
+                              filterBy="#{SalesDataViewTable.remark}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{SalesDataViewTable.remark}"
+                              filterable="false">
+
+                        <h:outputText value="#{SalesDataViewTable.remark}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+
+                </p:dataTable>
+
+            </p:fieldset>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

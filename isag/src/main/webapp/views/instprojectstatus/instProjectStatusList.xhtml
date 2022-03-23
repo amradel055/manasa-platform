@@ -1,0 +1,159 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+ 
+            <f:event listener="#{userData.authorize}" type="preRenderView" /> 
+            <h:form  class='formmargin' dir="#{userData.dir}"  id="form">
+               
+            <p:fieldset legend="#{userData.userDDs['STATUS_OF_UNITS']}">
+
+                <div class="ui-g-12 ui-g-nopad">
+
+                    <div class="ui-g">
+                        
+                        
+                         <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 105px;margin-right: 6%;" value="#{userData.userDDs['MAIN_PROJ_GUIDE']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+
+                                    <p:autoComplete style="width:40%!important"
+                                                    dropdown="true"
+                                                    converter="#{instProjectStatusListMB.projectListConverter}"
+                                                    value="#{instProjectStatusListMB.parent}"
+                                                    var="projectLevel"
+                                                    itemLabel="#{projectLevel}" 
+                                                    itemValue="#{projectLevel}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{instProjectStatusListMB.completeGuide}"
+                                                    >
+                                        <p:ajax update="form "
+                                                event="change" 
+                                                listener="#{instProjectStatusListMB.projectGuideParent}" />
+                                        <p:ajax update="form "
+                                                listener="#{instProjectStatusListMB.projectGuideParent}"
+                                                event="itemSelect"/>
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 105px" value="#{userData.userDDs['PROJ_GUIDE']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:40%!important"
+                                                    dropdown="true"
+                                                    converter="#{instProjectStatusListMB.projectGuideConverter}"
+                                                    value="#{instProjectStatusListMB.level}"
+                                                    var="project"
+                                                    itemLabel="#{project}" 
+                                                    itemValue="#{project}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{instProjectStatusListMB.completeProject}"
+                                                    >
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+
+                       
+                    </div>
+                </div>
+
+
+
+
+
+
+                <div class="ui-g-12 ui-g-nopad">
+
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGrid columns="2" >
+                                <h:panelGroup >
+                                    <p:outputLabel  for="status" value="#{userData.userDDs['PROJ_STATUS']}" style="margin-right:6%!important;"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:selectOneRadio id="status"
+                                                      value="#{instProjectStatusListMB.status}" >
+                                        <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['AVAILABLE']}" itemValue="0" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['SOLD']}" itemValue="1" />
+                                    </p:selectOneRadio>
+                                </h:panelGroup>
+                            </h:panelGrid>
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <panelGrid class="col-md-12 centerButtons" columns="1" >
+                    <h:panelGroup   style="margin-top: 2%">
+                        <p:commandButton    class="searchButtons"
+                                            title="#{userData.userDDs['SEARCH']}"
+                                            action="#{instProjectStatusListMB.search()}"
+                                            id="saveB"
+                                            value="#{userData.userDDs['SEARCH']}"
+                                            update="@form" 
+                                             style="color: #fff!important;background-color: #2196F3;margin-left: 5px;"  />
+                         <p:commandButton 
+                                class="printButtons"
+                                update="@form" onclick="form.target = '_blank'"  ajax="false"
+                                 style="color: #fff!important;background-color: rgb(1, 76, 134);margin-left: 5px;" 
+                                title="#{userData.userDDs['PRINT']}"
+                                value="#{userData.userDDs['PRINT']}"
+                                action="#{instProjectStatusListMB.print()}" />
+
+
+                    </h:panelGroup>
+
+
+                </panelGrid>
+
+
+            </p:fieldset>
+
+
+            <p:fieldset id="head" legend="#{userData.userDDs['STATUS_OF_UNITS']}" 
+                        style="margin:20px 1px">
+                <p:dataGrid style="" var="monitor" 
+                            value="#{instProjectStatusListMB.projectStatusEntityList}" 
+                            columns="4" layout="grid"
+                            id="cars"   >
+
+                    <p:panel header=" #{monitor.projectCode} - #{monitor.projectName}  
+                             " style="#{monitor.status eq 0 ? 'background-color: #066706' : 'background-color: #a70404' } ;text-align:center;height:50px;align:center "
+
+                             toggleable="false"  collapsed="false">
+                    </p:panel>
+
+                </p:dataGrid>
+
+
+            </p:fieldset>
+        </h:form>
+
+
+    </ui:define>
+
+
+</ui:composition>

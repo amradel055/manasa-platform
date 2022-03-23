@@ -28,7 +28,7 @@ public class PayRest {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public String request(PayDTO payDTO) throws IOException {
-        URL url = new URL("https://test.oppwa.com/v1/checkouts");
+        URL url = new URL("https://oppwa.com/v1/checkouts");
 
         HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
@@ -57,5 +57,31 @@ public class PayRest {
 
         return IOUtils.toString(is);
     }
+    
+    @Transactional
+    @Path("/requestStatue")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String showRequest(PayDTO payDTO) throws IOException {
+	URL url = new URL("https://oppwa.com/v1/checkouts/" + payDTO.paymentId + "/payment?entityId=8ac9a4ca7115c13301714ac530584652");
+
+	HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+	conn.setRequestMethod("GET");
+        conn.setRequestProperty("Authorization", "Bearer " + payDTO.token);
+
+
+	int responseCode = conn.getResponseCode();
+	InputStream is;
+
+	if (responseCode >= 400) is = conn.getErrorStream();
+	else is = conn.getInputStream();
+
+	return IOUtils.toString(is);
+}
+    
+
+    
+    
 
 }

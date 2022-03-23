@@ -5,6 +5,8 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.InvInvoiceDTOApi;
+import com.toby.API.ResponseApi;
 import com.toby.entity.TobyUser;
 import com.toby.bussinessservice.global.InvPurchaseReturnSave;
 import com.toby.core.UserDataDTO;
@@ -102,6 +104,8 @@ public interface InvPurchaseInvoiceService_1 {
     public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByTypeAndBranchId(Integer type, Integer inventoryId, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters);
 
     public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(Integer type, Integer galaryId, Integer customerId);
+    
+     public List<InvInvoiceDTOApi> getALLInvPurchaseInvoiceDTOBYCustomerForWebSite(Integer type, String mobile);
 
     public InvInvoiceDTO getInvPurchaseInvoiceDTOBySerial(Integer serial, Integer branchId);
 
@@ -161,5 +165,9 @@ public interface InvPurchaseInvoiceService_1 {
     public InvInvoiceDTO completeTarhilInvoiceAfterSave(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) throws CloneNotSupportedException;
     
     public InvInvoiceDTO saveNew(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser);
+    
+    public void tarhilExcel (TobyUser tobyUser) throws CloneNotSupportedException;
+    
+    public ResponseApi SaveApi(InvInvoiceDTOApi invInvoiceDTOApi);
 
 }
