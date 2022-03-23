@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.toby.dto;
+package com.toby.API;
 
+import com.toby.dto.*;
 import java.math.BigDecimal;
-import java.util.List;
 
 /**
  *
@@ -19,6 +19,11 @@ public class InvDetailsDTOAPI  extends BaseEntityDTO{
     private BigDecimal price ;
     private String image ;
     private Integer groupId ;
+    
+    private Integer itemId;
+    private BigDecimal net;
+    private BigDecimal quantity;
+    private BigDecimal number;
     /**
      * @return the name
      */
@@ -87,6 +92,62 @@ public class InvDetailsDTOAPI  extends BaseEntityDTO{
      */
     public void setGroupId(Integer groupId) {
         this.groupId = groupId;
+    }
+
+    /**
+     * @return the itemId
+     */
+    public Integer getItemId() {
+        return itemId;
+    }
+
+    /**
+     * @param itemId the itemId to set
+     */
+    public void setItemId(Integer itemId) {
+        this.itemId = itemId;
+    }
+
+    /**
+     * @return the net
+     */
+    public BigDecimal getNet() {
+        return net;
+    }
+
+    /**
+     * @param net the net to set
+     */
+    public void setNet(BigDecimal net) {
+        this.net = net;
+    }
+
+    /**
+     * @return the quantity
+     */
+    public BigDecimal getQuantity() {
+        return quantity;
+    }
+
+    /**
+     * @param quantity the quantity to set
+     */
+    public void setQuantity(BigDecimal quantity) {
+        this.quantity = quantity;
+    }
+
+    /**
+     * @return the number
+     */
+    public BigDecimal getNumber() {
+        return number;
+    }
+
+    /**
+     * @param number the number to set
+     */
+    public void setNumber(BigDecimal number) {
+        this.number = number;
     }
 
 
