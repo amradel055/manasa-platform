@@ -30,11 +30,13 @@ public class MaterialsServiceImpl implements MaterialsService {
     private GenericDAO dao;
 
     @Override
-    public List<MaterialsDTO> findMaterials(Integer branchId) {
+    public List<MaterialsDTO> findMaterials(Integer branchId , Integer teacherId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
+        params.put("teacherId", teacherId);
+
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT d FROM Materials d WHERE d.branchId.id = :branchId  ");
+        builder.append("SELECT d FROM Materials d WHERE d.branchId.id = :branchId And d.teacherId.id = :teacherId ");
         List<Materials> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }

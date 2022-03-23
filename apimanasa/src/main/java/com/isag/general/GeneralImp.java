@@ -174,7 +174,7 @@ public class GeneralImp implements GeneralService {
             data.setMobile(studentDTO.getMobile());
             data.setSchoolStagesId(studentDTO.getSchoolStagesId().getId());
             data.setImagePath(studentDTO.getImagePath());
-            List<Integer> periodList = periodsService.findPeriodsByStudentId(studentDTO.getId());
+            List<Integer> periodList = periodsService.findPeriodsByStudentId(studentDTO.getId() , null);
             List<TeachersByStudentId> teachersList = periodsService.findteachersByStudentId(studentDTO.getId());
             data.setPeriodList(periodList);
             data.setTeacherList(teachersList);

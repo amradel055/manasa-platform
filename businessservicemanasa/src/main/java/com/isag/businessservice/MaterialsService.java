@@ -17,7 +17,7 @@ import javax.ejb.Remote;
 @Remote
 public interface MaterialsService {
 
-    public List<MaterialsDTO> findMaterials(Integer branchId);
+    public List<MaterialsDTO> findMaterials(Integer branchId , Integer teacherId);
 
     public MaterialsDTO save(MaterialsDTO materialsDTO, IgmaUser isagUser);
 
