@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.toby.dto;
+package com.toby.API;
 
+import com.toby.dto.*;
 import java.util.Date;
+import java.util.List;
 
 public class InvInvoiceDTOApi extends BaseEntityDTO {
 
@@ -17,6 +19,8 @@ public class InvInvoiceDTOApi extends BaseEntityDTO {
     private String status;
     private String invoiceNumber;
     private String remarks;
+    private Integer customerId;
+    private List<InvDetailsDTOAPI> invoiceDetailApiList;
 
     /**
      * @return the customerName
@@ -128,5 +132,33 @@ public class InvInvoiceDTOApi extends BaseEntityDTO {
      */
     public void setCustomerMobile(String customerMobile) {
         this.customerMobile = customerMobile;
+    }
+
+    /**
+     * @return the customerId
+     */
+    public Integer getCustomerId() {
+        return customerId;
+    }
+
+    /**
+     * @param customerId the customerId to set
+     */
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
+    }
+
+    /**
+     * @return the invoiceDetailApiList
+     */
+    public List<InvDetailsDTOAPI> getInvoiceDetailApiList() {
+        return invoiceDetailApiList;
+    }
+
+    /**
+     * @param invoiceDetailApiList the invoiceDetailApiList to set
+     */
+    public void setInvoiceDetailApiList(List<InvDetailsDTOAPI> invoiceDetailApiList) {
+        this.invoiceDetailApiList = invoiceDetailApiList;
     }
 }

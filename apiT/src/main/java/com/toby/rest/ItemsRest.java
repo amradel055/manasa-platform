@@ -5,12 +5,12 @@
  */
 package com.toby.rest;
 
+import com.toby.API.InvDetailsDTOAPI;
+import com.toby.API.InvInvoiceDTOApi;
 import com.toby.businessservice.InvItemService;
 import com.toby.businessservice.InvPurchaseInvoiceDetailsService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
-import com.toby.dto.InvDetailsDTOAPI;
 import com.toby.dto.InvInvoiceDTO;
-import com.toby.dto.InvInvoiceDTOApi;
 import com.toby.dto.InvItemDTO;
 import com.toby.dto.InvItemDTOApi;
 import com.toby.entity.InvItem;

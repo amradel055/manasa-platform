@@ -5,6 +5,8 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.InvInvoiceDTOApi;
+import com.toby.API.ResponseApi;
 import com.toby.entity.TobyUser;
 import com.toby.bussinessservice.global.InvPurchaseReturnSave;
 import com.toby.core.UserDataDTO;
@@ -12,7 +14,6 @@ import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.GeneralJournalDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
-import com.toby.dto.InvInvoiceDTOApi;
 import com.toby.dto.PrintProductionDTO;
 import com.toby.dto.ProGroupDTO;
 import com.toby.entity.InvPurchaseInvoice;
@@ -166,5 +167,7 @@ public interface InvPurchaseInvoiceService_1 {
     public InvInvoiceDTO saveNew(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser);
     
     public void tarhilExcel (TobyUser tobyUser) throws CloneNotSupportedException;
+    
+    public ResponseApi SaveApi(InvInvoiceDTOApi invInvoiceDTOApi);
 
 }

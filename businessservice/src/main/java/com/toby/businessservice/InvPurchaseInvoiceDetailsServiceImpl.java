@@ -5,13 +5,13 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.InvDetailsDTOAPI;
 import com.toby.entity.TobyUser;
 import com.toby.core.GenericDAO;
 import com.toby.core.storedProcedureParameter;
 import com.toby.define.ModuleClassEnum;
 import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.InvDetailDTO;
-import com.toby.dto.InvDetailsDTOAPI;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.entity.GlYear;
 import com.toby.entity.InvAddingorderDetail;
