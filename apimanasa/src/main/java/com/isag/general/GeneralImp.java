@@ -104,6 +104,21 @@ public class GeneralImp implements GeneralService {
             return jsonTokenManasa(null, Boolean.FALSE, "عفوا اسم المستخدم او كلمه المرور غير صحيحه", loggedInUser);
         }
     }
+    
+    @Override
+    public IgmaUser changePasswordManasa(LoginRoot loginRoot) {
+         String oldPassword = loginRoot.oldPassword;
+         String newPassword = loginRoot.password;
+         Integer userId = loginRoot.userId;
+         IgmaUser igmaUser = userService.updateUserPassword(userId , oldPassword , newPassword);
+        if (igmaUser != null || igmaUser.getMsg() == null) {
+            System.out.println("changed password");
+            return igmaUser;
+        } else {
+            igmaUser.setMsg(" كلمه المرور غير صحيحه");
+            return igmaUser;
+        }
+    }
 
     public APIloginDTO issueTokenStudent() {
         try {
