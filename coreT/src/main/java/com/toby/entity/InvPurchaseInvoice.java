@@ -68,7 +68,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "InvPurchaseInvoice.findByRecieveDate", query = "SELECT i FROM InvPurchaseInvoice i WHERE i.recievedate = :recievedate")})
 public class InvPurchaseInvoice extends BaseEntity {
 
-
     @Basic(optional = false)
     @NotNull
     @Column(name = "date")
@@ -228,7 +227,9 @@ public class InvPurchaseInvoice extends BaseEntity {
     private String offerCopoun;
     @Column(name = "excel")
     private Integer excel;
-
+    @ManyToOne
+    @JoinColumn(name = "delivery_place", referencedColumnName = "id")
+    private InvInventory deliveryPlace;
     public InvPurchaseInvoice() {
     }
 
@@ -881,7 +882,6 @@ public class InvPurchaseInvoice extends BaseEntity {
         this.invoiceType = invoiceType;
     }
 
-    
     /**
      * @return the paymentType
      */
@@ -900,8 +900,8 @@ public class InvPurchaseInvoice extends BaseEntity {
      * @return the sendCloth
      */
     public Integer getSendCloth() {
-        if(sendCloth == null){
-            sendCloth = 0 ;
+        if (sendCloth == null) {
+            sendCloth = 0;
         }
         return sendCloth;
     }
@@ -939,5 +939,19 @@ public class InvPurchaseInvoice extends BaseEntity {
      */
     public void setExcel(Integer excel) {
         this.excel = excel;
+    }
+
+    /**
+     * @return the deliveryPlace
+     */
+    public InvInventory getDeliveryPlace() {
+        return deliveryPlace;
+    }
+
+    /**
+     * @param deliveryPlace the deliveryPlace to set
+     */
+    public void setDeliveryPlace(InvInventory deliveryPlace) {
+        this.deliveryPlace = deliveryPlace;
     }
 }

@@ -338,6 +338,16 @@ public class InvInventoryImpl implements InvInventoryService {
 
         return dao.findListByQuery("SELECT i FROM InvInventory i where i.branchId.id = :branchId and i.code = :code  ORDER BY i.code", params);
     }
+    
+        @Override
+    public List<InvInventoryDTO> findInventoryByBranch(Integer branchId ,TobyUser tobyUser ) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+       List<InvInventory>inventoryList = dao.findListByQuery("SELECT i FROM InvInventory i where i.branchId.id = :branchId AND i.invType = 2 ", params);
+         List<InvInventoryDTO>inventoryListdDTOList =mapToDTOList(inventoryList, tobyUser);
+         return inventoryListdDTOList;
+        
+    }
 
     @Override
     public List<InvInventory> getAllInventories() {

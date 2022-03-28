@@ -152,6 +152,9 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
             } else if (getUri().contains("proworkorderlist")) {
                 exit("../proworkorder/proworkorderform.xhtml");
             }
+             else if (getUri().contains("deliveryPlaceList")) {
+                exit("../deliveryPlace/deliveryPlaceForm.xhtml");
+            }
 
             return "";
         } catch (Exception e) {
@@ -194,6 +197,9 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
                 } else if (getUri().contains("proworkorderlist")) {
                     exit("../proworkorder/proworkorderform.xhtml");
                 }
+                 else if (getUri().contains("deliveryPlaceList")) {
+                exit("../deliveryPlace/deliveryPlaceForm.xhtml");
+            }
                 return "";
             } else {
                 return "";
