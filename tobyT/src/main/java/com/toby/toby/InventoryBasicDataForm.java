@@ -27,6 +27,7 @@ import com.toby.businessservice.OfferCompanyService;
 import com.toby.businessservice.OfferCopounService;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.ProDetailTypeService;
+import com.toby.businessservice.ProFactoryDeliveryDetailService;
 import com.toby.businessservice.QuantityItemsStoreService;
 import com.toby.businessservice.ReportManagementService;
 import com.toby.businessservice.SymbolService;
@@ -223,6 +224,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     SupplierAccountService supplierAccountService;
     @EJB
     OfferCopounService offerCopounService;
+    @EJB
+    ProFactoryDeliveryDetailService proFactoryDeliveryDetailService;
 
     @Override
     public abstract String save();
@@ -535,6 +538,23 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 //                invPurchaseInvoiceDetailsValidate = invGlobalService.validateQuantityColum(invPurchaseInvoiceDetailsValidate, (getInvInvoiceDTO().getLoadedSerial() != null), getInvInvoiceDTO().getScreenName(), getInvInvoiceDTO().getInventorySetupDTO().getNegativeSell(), getInvInvoiceDTO().getCompanyActivity());
 //                afterValidation(invPurchaseInvoiceDetailsValidate, false);
                 afterUpdate(invPurchaseInvoiceDetailsValidate);
+            }
+        } catch (Exception e) {
+            saveError(e, "InvPurchaseInvoiceFormMB", "validateQuantityColum");
+        }
+    }
+
+    public void validateNumberColum(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
+        try {
+            if (checkdetail(invPurchaseInvoiceDetailsValidate)) {
+                BigDecimal allowQuantity = proFactoryDeliveryDetailService.findquantityAllow(getInvInvoiceDTO().getSearchBySerial(), invPurchaseInvoiceDetailsValidate.getItemsBarcodesDetail().getBarcode());
+                if (invPurchaseInvoiceDetailsValidate.getNumber().compareTo(allowQuantity) != 1) {
+                    errorMessage("غير مسموح بهذا العدد");
+                    return;
+                }
+
+                invPurchaseInvoiceDetailsValidate.setMsg(null);
+                afterValidation(invPurchaseInvoiceDetailsValidate, false);
             }
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "validateQuantityColum");
@@ -923,7 +943,9 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     }
 
     public void checkDetailData() {
+
         for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
+            
             if (detailDTO.getItemsBarcodesDetailTrans() != null) {
                 detailDTO.setItemsBarcodesDetail(detailDTO.getItemsBarcodesDetailTrans());
                 detailDTO.setCost(detailDTO.getCostBak());
@@ -1220,14 +1242,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     private Boolean checkdetail(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
         if (invPurchaseInvoiceDetailsValidate.getItemsBarcodesDetail() != null && !invPurchaseInvoiceDetailsValidate.getItemsBarcodesDetail().getBarcode().isEmpty()) {
-//            for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
-//                if (detailDTO.getItemsBarcodesDetail() != null && detailDTO.getItemsBarcodesDetail().getBarcode().equals(invPurchaseInvoiceDetailsValidate.getItemsBarcodesDetail().getBarcode()) && !detailDTO.getIndex().equals(invPurchaseInvoiceDetailsValidate.getIndex())) {
-//                    invPurchaseInvoiceDetailsValidate.setItemsBarcodesDetail(null);
-//                    replacedetail(invPurchaseInvoiceDetailsValidate);
-//                    errorMessage("تم ادخال الصنف من قبل");
-//                    return false;
-//                }
-//            }
+
             for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailsDeletedList()) {
                 if (detailDTO.getItemsBarcodesDetail() != null && detailDTO.getItemsBarcodesDetail().equals(invPurchaseInvoiceDetailsValidate.getItemsBarcodesDetail()) && !detailDTO.getIndex().equals(invPurchaseInvoiceDetailsValidate.getIndex())) {
                     invPurchaseInvoiceDetailsValidate.setItemsBarcodesDetail(null);

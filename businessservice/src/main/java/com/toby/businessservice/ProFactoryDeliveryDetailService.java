@@ -8,6 +8,7 @@ package com.toby.businessservice;
 import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.entity.TobyUser;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -31,5 +32,7 @@ public interface ProFactoryDeliveryDetailService {
     public void deleteInvDetail(InvDetailDTO detailDTO);
 
     public void deleteProFactoryDeliveryDetailListDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList);
+    
+    public BigDecimal findquantityAllow(Integer serial ,String item_barcode);
 
 }

@@ -34,7 +34,7 @@ public class PeriodsServiceImpl implements PeriodsService {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT d FROM Periods d WHERE d.branchId.id = :branchId  ");
+        builder.append("SELECT d FROM Periods d WHERE d.branchId.id = :branchId And d.teacherId is null ");
         List<Periods> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }
@@ -46,6 +46,9 @@ public class PeriodsServiceImpl implements PeriodsService {
         StringBuilder builder = new StringBuilder();
         builder.append(" SELECT d FROM Periods d WHERE d.teacherId.id = :teacherId ");
         List<Periods> list = dao.findListByQuery(builder.toString(), params);
+//        if(list == null || list.isEmpty()){
+//            return findPeriods(branchId);
+//        }
         return returnListDTO(list);
     }
 

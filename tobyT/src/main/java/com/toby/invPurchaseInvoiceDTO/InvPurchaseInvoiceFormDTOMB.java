@@ -7,6 +7,7 @@ package com.toby.invPurchaseInvoiceDTO;
 
 import com.toby.businessservice.InvGlobalService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
+import com.toby.businessservice.ProFactoryDeliveryDetailService;
 import com.toby.businessservice.ProFactoryDeliveryService;
 import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.InvDetailDTO;
@@ -46,6 +47,8 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
     @EJB
     ProFactoryDeliveryService proFactoryDeliveryService;
+    @EJB
+    ProFactoryDeliveryDetailService proFactoryDeliveryDetailService;
 
     @Override
     @PostConstruct
@@ -162,8 +165,18 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
 
     private Boolean validateInvoiceType() {
 
+        for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
+            if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVRETURNSALESFORM)) {
+                if (detailDTO.getNumber().compareTo(detailDTO.getAvailableQuantityRow()) == 1) {
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "العدد أكبر من المسموح"));
+                    return false;
+                }
+            }
+        }
+
         if (ScreenNameClassEnum.PROWORKORDER.equals(getInvInvoiceDTO().getScreenName())) {
-            if ( getInvInvoiceDTO().getInvoiceType() != null && getInvInvoiceDTO().getInvoiceType() == 5) {
+            if (getInvInvoiceDTO().getInvoiceType() != null && getInvInvoiceDTO().getInvoiceType() == 5) {
                 for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
                     if (detailDTO.getItemsBarcodesDetail() == null || detailDTO.getItemsBarcodesDetail().getBarcode() == null
                             || !detailDTO.getItemsBarcodesDetail().getBarcode().equals("000012")) {
@@ -318,12 +331,21 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                 Integer invoiceId = invPurchaseInvoiceService_1.getInvoiceBySerial(getInvInvoiceDTO().getSearchBySerial());
                 if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
                     findinvoice(invoiceId);
-                } else if (!proFactoryDeliveryService.chechIfSalesInFactory(invoiceId)) {
+                } else if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVRETURNSALESFORM)) {
                     findinvoice(invoiceId);
-                } else {
-                    FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "تم استلامها بالمشغل"));
+                    for (InvDetailDTO invDetailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
+                        invDetailDTO.setNumber(proFactoryDeliveryDetailService.findquantityAllow(invoiceId, invDetailDTO.getItemsBarcodesDetail().getBarcode()));
+                        invDetailDTO.setAvailableQuantityRow(invDetailDTO.getNumber());
+                    }
                 }
+
+//                else if (!proFactoryDeliveryService.chechIfSalesInFactory(invoiceId)) {
+//                    findinvoice(invoiceId);
+//                } 
+//                else {
+//                    FacesContext.getCurrentInstance().addMessage(null,
+//                            new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "تم استلامها بالمشغل"));
+//                }
             }
         } catch (Exception e) {
             saveError(e, "invPurchaseInvoiceFormDTOMB", "searchInvoiceBySerial");

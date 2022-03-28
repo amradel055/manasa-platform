@@ -378,6 +378,8 @@ public class InvGroupServiceImpl implements InvGroupService {
         List<InvGroup> details = dao.findListByQuery("SELECT e FROM InvGroup e where e.branchId.id =:branchId and ( e.isDeleted != 1 or e.isDeleted is NULL )", params);
         return mapToDTOList(details, tobyUser);
     }
+    
+    
 
     @Override
     public InvGroupDTO saveInvGroupDTO(InvGroupDTO invGroupDTO, TobyUser tobyUser) {

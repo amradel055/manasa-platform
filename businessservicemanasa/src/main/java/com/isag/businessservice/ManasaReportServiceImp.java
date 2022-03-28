@@ -41,6 +41,7 @@ public class ManasaReportServiceImp implements ManasaReportService {
     public Integer findExamStudentNumber(Integer examId) {
 
         Map<String, Object> params = new HashMap<>();
+    
         params.put("parent", examId);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT count(e.id) from Exams e where e.parent.id = :parent group by e.parent.id  ");
@@ -50,6 +51,7 @@ public class ManasaReportServiceImp implements ManasaReportService {
             Long x = list.get(0);
             number = x.intValue();
         }
+    
         return number;
     }
 

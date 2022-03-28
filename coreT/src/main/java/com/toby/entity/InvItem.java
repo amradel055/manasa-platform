@@ -682,6 +682,9 @@ public class InvItem extends BaseEntity {
      * @return the numbermetersmen
      */
     public BigDecimal getNumbermetersmen() {
+        if(numbermetersmen == null){
+            numbermetersmen = BigDecimal.ZERO;
+        }
         return numbermetersmen;
     }
 

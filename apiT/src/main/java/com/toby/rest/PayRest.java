@@ -40,7 +40,7 @@ public class PayRest {
                 + "entityId=" + payDTO.entityId
                 + "&amount=" + payDTO.amount
                 + "&currency=" + payDTO.currency
-                + "&paymentType=" + payDTO.paymentType;
+                + "&paymentType=" + payDTO.paymentType ;
 
         DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
         wr.writeBytes(data);
@@ -64,7 +64,7 @@ public class PayRest {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public String showRequest(PayDTO payDTO) throws IOException {
-	URL url = new URL("https://oppwa.com/v1/checkouts/" + payDTO.paymentId + "/payment?entityId=8ac9a4ca7115c13301714ac530584652");
+	URL url = new URL("https://oppwa.com/v1/checkouts/" + payDTO.paymentId + "/payment?entityId=" + payDTO.entityId);
 
 	HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
 	conn.setRequestMethod("GET");

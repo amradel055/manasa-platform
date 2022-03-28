@@ -1434,11 +1434,11 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invoiceDTO.setGallaryId(gallary);
         invoiceDTO.setCompanyActivity(CompanyActivityClassEnum.RetailSaleForClothFactory);
         invoiceDTO.setScreenName(ScreenNameClassEnum.PROWORKORDER);
-
+        invoiceDTO.setCreatedDate(new Date());
         GlYear glYear = new GlYear();
         glYear.setId(73);
         invoiceDTO.setGlYearSelection(glYear);
-
+        invoiceDTO.setInventorySetupDTO(inventorySetupService.getInventoryByBranchIdDTO(182));
         if (invInvoiceDTOApi.getInvoiceDetailApiList() != null && !invInvoiceDTOApi.getInvoiceDetailApiList().isEmpty()) {
             for (InvDetailsDTOAPI detailsDTOAPI : invInvoiceDTOApi.getInvoiceDetailApiList()) {
                 InvDetailDTO invDetailDTO = mapToDTOAPIDetail(detailsDTOAPI);
@@ -1471,7 +1471,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         barcodesDetailsView.setUnitId(item.getUnitId().getId());
         invDetailDTO.setItemsBarcodesDetail(barcodesDetailsView);
         invDetailDTO.setNumber(detailsDTOAPI.getNumber());
-        invDetailDTO.setQuantity(item.getNumbermetersmen());
+        invDetailDTO.setQuantity(item.getNumbermetersmen().multiply(detailsDTOAPI.getNumber()));
+        invDetailDTO.setQuantityOfOneUnit(item.getNumbermetersmen());
         return invDetailDTO;
     }
 
@@ -1488,7 +1489,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         branch.setId(182);
         tobyUser.setBranchId(branch);
         invInvoiceDTO = save(invInvoiceDTO, tobyUser);
-        if (invInvoiceDTO.getMsg() == null && invInvoiceDTO.getMsg().isEmpty()) {
+        if (invInvoiceDTO.getMsg() == null || invInvoiceDTO.getMsg().isEmpty()) {
             responseApi.setStatus(1000);
             responseApi.setResposeId(7000);
             responseApi.setMsg("تم طلب الفاتورة بنجاح");
@@ -3672,9 +3673,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         builder.append("SELECT s FROM InvPurchaseInvoice s WHERE   s.branchId.id = 182 AND s.type = 3 AND s.parent is not null AND s.parent.serial = :serial ");
         List<InvPurchaseInvoice> details = dao.findListByQuery(builder.toString(), filters);
         if (details != null && !details.isEmpty()) {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     @Override

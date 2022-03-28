@@ -99,9 +99,9 @@ public class StudentPeriodsRest {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deleteStudentPeriodsBy(StudentPeriodsDTO studentPeriodsDTO) {
         StudentPeriodsDTO msg = new StudentPeriodsDTO();
-        if (studentPeriodsDTO.getTeacherId() != null && studentPeriodsDTO.getPeriodId() != null && studentPeriodsDTO.getStudentId() != null) {
+        if (studentPeriodsDTO.getId() != null && studentPeriodsDTO.getTeacherId() != null && studentPeriodsDTO.getPeriodId() != null && studentPeriodsDTO.getStudentId() != null) {
             try {
-                studentPeriodsService.deleteStudentPeriodsBy(studentPeriodsDTO.getTeacherId(), studentPeriodsDTO.getPeriodId(), studentPeriodsDTO.getStudentId());
+                studentPeriodsService.deleteStudentPeriodsBy(studentPeriodsDTO.getId() , studentPeriodsDTO.getTeacherId(), studentPeriodsDTO.getPeriodId(), studentPeriodsDTO.getStudentId());
                 msg.setMsg("تم الحذف بنجاح");
                 msg.setMsgType("success");
                 return Response.ok(msg).build();

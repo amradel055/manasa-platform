@@ -146,7 +146,7 @@ public class LockupRest {
     public Response findMaterials(TeacherMaterialsDTO materialsDTO) {
         if (materialsDTO != null) {
             try {
-                List<MaterialsDTO> dTOs = materialsService.findMaterials(materialsDTO.getBranchId());
+                List<MaterialsDTO> dTOs = materialsService.findMaterials(materialsDTO.getBranchId() , materialsDTO.getTeacherId());
                 GenericEntity<List<MaterialsDTO>> list = new GenericEntity<List<MaterialsDTO>>(dTOs) {
                 };
                 return Response.ok(list).build();
