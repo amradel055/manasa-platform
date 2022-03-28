@@ -213,7 +213,7 @@ public class InvNoticeServiceImpl implements InvNoticeService {
         try {
             if (invNotice.getId() == null) {
                 invNotice.setSerial(getMaxGenericSerialByType(InvNotice.class, invNotice.getBranchId().getId(), invNotice.getType()));
-
+                invNotice = dao.updateEntity(invNotice);
             } else {
                 Integer tarhilIdOld = invNotice.getGeneralJournalId() == null ? null : invNotice.getGeneralJournalId().getId();
                 invNotice.setPostFlag(0);

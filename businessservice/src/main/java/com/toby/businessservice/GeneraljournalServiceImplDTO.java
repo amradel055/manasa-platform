@@ -182,7 +182,7 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
         Integer max = 0;
         synchronized (max) {
             try {
-                max = dao.findEntityByQuery("SELECT MAX(g.serial) FROM GeneralJournal g  WHERE g.branchId.id =:branchId AND g.companyId.id =:companyId and g.glYear.id =:glYear  ", params);
+                max = dao.findEntityByQuery("SELECT MAX(g.serial) FROM GeneralJournal g  WHERE g.branchId.id =:branchId AND g.companyId.id =:companyId and g.glYear.id =:glYear and g.serial < 100000  ", params);
             } catch (Exception e) {
                 e.printStackTrace();
             }

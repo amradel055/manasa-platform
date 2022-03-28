@@ -36,6 +36,8 @@ public interface AutoCompleteService {
     public List<InvItemDTO> autoCompleteInvItem(Integer branchId, String qeury);
 
     public List<InvOrganizationSiteDTO> autoCompleteOrganizationSiteDTO(Integer branchId, boolean active, Integer type, String qeury, Integer gallaryId);
+    
+    public List<InvOrganizationSiteDTO> autoCompleteOrganizationSiteDTOAnotherBranchAnotherGallary(Integer branchId, String qeury, Integer gallaryId);
 
     public List<InvOrganizationSite> autoCompleteOrganizationSite(Integer branchId, boolean active, Integer type, String qeury, Integer gallaryId);
 
