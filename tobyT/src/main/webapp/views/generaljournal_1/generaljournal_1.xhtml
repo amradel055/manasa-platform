@@ -327,12 +327,12 @@
                     <p:column id="com2" filterStyle="display:none" 
                               style="width: 5vh;font-size: 1.4vh;text-align: center"
 
-                              filterBy="#{gendetails.costCenterId.code}"
+                              filterBy="#{gendetails.costCenterId}"
                               filterMatchMode="contains" 
                               headerText="#{userData.userDDs['SINGLE_COST_CENTER']}">
 
                         <h:outputText
-                            value="#{gendetails.costCenterId.code}"
+                            value="#{gendetails.costCenterId}"
                             rendered="#{not gendetails.markEdit}"/>
 
                         <p:selectOneMenu style="width:70px; float:right"
@@ -348,7 +348,7 @@
                                           itemValue="#{-1}" noSelectionOption="true" />
 
                             <f:selectItems value="#{generalJournalBean_new.costCenterList}" 
-                                           var="cost" itemLabel="#{cost.name}"
+                                           var="cost" itemLabel="#{cost}"
                                            itemValue="#{cost.id}"/>
                         </p:selectOneMenu>
                     </p:column>

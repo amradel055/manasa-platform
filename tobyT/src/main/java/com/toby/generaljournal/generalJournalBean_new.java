@@ -507,14 +507,11 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
             generalReviewList = new ArrayList<>();
             stickyHeader = false;
             modifyJournalAbility = false;
-//            reviewByDate = false;
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             setUserData((UserData) context.getSessionMap().get("userLogInData"));
-//            accountsSystemSettings = accountsSystemSettingsService.getInventoryByCompanyId(getUserData().getCompany().getId());
             accountsSystemSettings = accountsSystemSettingsServiceDTO.getInventoryByCompanyId(getUserData().getCompany().getId());
             if (getUserData().getCompany() != null && getUserData().getCompany().getId() != null && getUserData().getUserBranch() != null) {
 
-//                glYearList = tobyUserYearService.findYearByUserId(getUserData().getUser().getId(), getUserData().getUserBranch());
                 glYearDTOList = tobyUserYearService.findYearDTOByUserId(getUserData().getUser().getId(), getUserData().getUserBranch());
 
                 if (glYearDTOList != null && !glYearDTOList.isEmpty()) {
@@ -541,22 +538,13 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
                     }
                 }
                 glAccountLoad = 1;
-//            generalList = generaljournalService.getALLGeneralJournalByBranchId(getUserData().getSelectedBranch());
-//            generalList = generaljournalService.getALLGeneralJournalByCompanyId(getUserData().getCompany().getId());
                 selectedCompany = getUserData().getCompany().getId();
-                // glAccounts = accountService.getBranchGLAccountsActive(getUserData().getUserBranch().getId());
-//                glAccounts = accountService.getBranchGLAccountsActiveWithException(getUserData().getUserBranch().getId());
-//                glAccounts = accountServiceDTO.getBranchGLAccountsActiveWithException(getUserData().getUserBranch().getId());
                 glAccounts = accountServiceDTO.getBranchGLAccountsActive(getUserData().getUserBranch().getId());
-//                costCenterList = costCenterService.getAllSubCostCenterByBranchIdActive(getUserData().getUserBranch().getId());
                 costCenterList = costCenterServiceDTO.getAllSubCostCenterByBranchIdActive(getUserData().getUserBranch().getId());
-//                glAdminunitlist = adminUnitService.getAllSubAdminUnitByBranchIdActive(getUserData().getUserBranch().getId());
                 glAdminunitlist = adminUnitServiceDTO.getAllSubAdminUnitByBranchIdActive(getUserData().getUserBranch().getId());
-//                currencylist = currencyService.getAllCurrenciesHavingRatesByCompanyId(getUserData().getCompany().getId());
                 currencylist = currencyServiceDTO.getAllCurrenciesHavingRatesByCompanyId(getUserData().getCompany().getId());
 
                 documentsTypes = symbolService.getDocumentsTypesDTO(selectedCompany);
-                //  branchService.getAllBranchByCompanyId(selectedCompany);
             } else {
                 companies = new ArrayList<>();
                 companies = companyService.getAllCompaniesDTO();
@@ -1132,10 +1120,17 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
                     detailsnew.setGeneralJournalId(selectedGeneralJournal);
                     detailsnew.setBranchId(getUserData().getUserBranch().getId());
                     detailsnew.setCreatedBy(getUserData().getUser().getId());
-                    detailsnew.setDiscribtion(selectedGeneralJournal.getGeneralStatement());
+                    if(detailsList != null && detailsList.size() > 0){
+                        detailsnew.setDiscribtion(detailsList.get(detailsList.size() - 1).getDiscribtion());
+                        detailsnew.setCostCenterId(detailsList.get(detailsList.size() - 1).getCostCenterId());
+                    }else{
+                        detailsnew.setDiscribtion(selectedGeneralJournal.getGeneralStatement());
+                        detailsnew.setCostCenterId(new CostCenterDTO());
+                    }
+//                    detailsnew.setDiscribtion(selectedGeneralJournal.getGeneralStatement());
                     // To copy generalstatment from head to discription detail
                     detailsnew.setGlACCOUNTId(new GlAccountDTO());
-                    detailsnew.setCostCenterId(new CostCenterDTO());
+                    
                     detailsnew.setAdminUnitId(new GlAdminUnitDTO());
 
                     detailsnew.setGlAssistantAccount(new GlAccountDTO());
@@ -1239,8 +1234,8 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
                     }
                     generalDTOList.add(0, journalnew);
                     if (generalDTOList.size() == 1) {
-                     setRowCount(2);
-                       
+                        setRowCount(2);
+
                     }
                 }
                 if (isupdate) {
@@ -1416,7 +1411,7 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
              y++;
              }*/
 
- /*if (account.getAssistantAcc().toString().equalsIgnoreCase("ASSACC_MANDATORY") && detail.getGlAssistantAccount() == null) {
+            /*if (account.getAssistantAcc().toString().equalsIgnoreCase("ASSACC_MANDATORY") && detail.getGlAssistantAccount() == null) {
              if (x > 0) {
              errorMessageBuilder.append("و ");
              }

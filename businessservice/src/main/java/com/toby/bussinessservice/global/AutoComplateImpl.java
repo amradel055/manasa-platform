@@ -228,7 +228,7 @@ public class AutoComplateImpl implements AutoCompleteService {
     }
 
     @Override
-    public List<InvOrganizationSiteDTO> autoCompleteOrganizationSiteDTOAnotherBranch(Integer branchId, String qeury, Integer gallaryId) {
+    public List<InvOrganizationSiteDTO> autoCompleteOrganizationSiteDTOAnotherBranchAnotherGallary(Integer branchId, String qeury, Integer gallaryId) {
         if (gallaryId != null) {
             List<InvOrganizationSiteDTO> list = null;
             Map<String, Object> params = new HashMap<>();
@@ -605,5 +605,6 @@ public class AutoComplateImpl implements AutoCompleteService {
         }
         sql.append(" ORDER BY e.code");
     }
+
 
 }
