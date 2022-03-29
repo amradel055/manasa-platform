@@ -106,18 +106,14 @@ public class GeneralImp implements GeneralService {
     }
     
     @Override
-    public IgmaUser changePasswordManasa(LoginRoot loginRoot) {
+    public String changePasswordManasa(LoginRoot loginRoot) {
          String oldPassword = loginRoot.oldPassword;
          String newPassword = loginRoot.password;
          Integer userId = loginRoot.userId;
-         IgmaUser igmaUser = userService.updateUserPassword(userId , oldPassword , newPassword);
-        if (igmaUser != null || igmaUser.getMsg() == null) {
-            System.out.println("changed password");
+         String igmaUser = userService.updateUserPassword(userId , oldPassword , newPassword);
+     
             return igmaUser;
-        } else {
-            igmaUser.setMsg(" كلمه المرور غير صحيحه");
-            return igmaUser;
-        }
+        
     }
 
     public APIloginDTO issueTokenStudent() {

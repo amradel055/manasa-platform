@@ -52,9 +52,11 @@ public class LoginManasa {
     public Response updatePassword(LoginRoot loginRoot) {
         try {
             // Issue a token for the user
-            IgmaUser token = generalService.changePasswordManasa(loginRoot);
+            String token = generalService.changePasswordManasa(loginRoot);
             // Return the token on the response
-            return Response.ok().entity(token).build();
+            APIloginDTO  dTO= new APIloginDTO();
+            dTO.setMsg(token);
+            return Response.ok().entity(dTO).build();
         } catch (Exception e) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }

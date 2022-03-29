@@ -59,5 +59,5 @@ public interface IgmaUserService {
 
     public List<Employee> getEmployeesByUserAndBranch(Integer userId, Integer branchId);
     
-    public IgmaUser updateUserPassword(Integer userId , String oldPassword , String newPassword);
+    public String updateUserPassword(Integer userId , String oldPassword , String newPassword);
 }

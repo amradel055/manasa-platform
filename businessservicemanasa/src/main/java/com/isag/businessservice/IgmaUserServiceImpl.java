@@ -244,14 +244,14 @@ public class IgmaUserServiceImpl implements IgmaUserService {
     }
     
     @Override
-    public IgmaUser updateUserPassword(Integer userId , String oldPassword , String newPassword) {
+    public String updateUserPassword(Integer userId , String oldPassword , String newPassword) {
         IgmaUser eUser = dao.findEntityById(IgmaUser.class, userId);
-        if(eUser.getPassword() == oldPassword){
+        if(eUser.getPassword().equals(oldPassword)){
         eUser.setPassword(newPassword);
-        return dao.updateEntity(eUser);
+         dao.updateEntity(eUser);
+         return "تم تغير كلمة السر" ;
         }else {
-         eUser.setMsg("كلمة السر خاطئه");
-         return eUser ;
+         return "كلمة السر خاطئه" ;
         }
       
     }
