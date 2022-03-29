@@ -61,16 +61,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
             List<GlBankTransactionDetail> glBankTransactionDetailListDeleted, Integer companyId, TobyUser tobyUser) {
 
         glBankTransaction = addingForGlBank(glBankTransaction, glBankTransactionDetailListDeleted, glBankTransactionDetailList, tobyUser);
-//        if (glBankTransaction.getTransactionType() != null && glBankTransaction.getTransactionType() == 1) {
-//
-//            AccountsSystemSettings accountsSystemSettings = new AccountsSystemSettings();
-//            accountsSystemSettings = accountsSystemSettingsService.getInventoryByCompanyId(companyId);
-//
-//            if (accountsSystemSettings != null && accountsSystemSettings.getWorkWithAccounts() != null
-//                    && accountsSystemSettings.getNoteSreceivablesType().equals("NOT_ALLOW_DETAIL")) {
-//                checkDuplicateDetails(glBankTransaction);
-//            }
-//        }
+
         return glBankTransaction;
     }
 
