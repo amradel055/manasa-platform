@@ -405,6 +405,9 @@
                                     <p:menuitem id="sr_lnk621" value="#{userData.userDDs['RECEIPTS']}" icon="&#xE8D2;" url="/faces/views/notesreceivables/notesreceivablesList.xhtml" 
                                                 rendered="#{userData.userScreens['notesreceivables'].view or userData.isAdmin}"
                                                 />
+                                    <p:menuitem id="sr_lnk62122" value="السداد لفرع أخر" icon="&#xE8D2;" url="/faces/views/notesreceivablesAnotherBranch/notesreceivablesForm.xhtml" 
+                                                rendered="#{userData.userScreens['notesreceivables'].view or userData.isAdmin}"
+                                                />
                                     <p:menuitem id="sr_lnk622" value="#{userData.userDDs['PAYMENTS']}" icon="&#xE8D2;" url="/faces/views/settlementdeed/settlementdeedList.xhtml"
                                                 rendered="#{userData.userScreens['settlementdeed'].view or userData.isAdmin}"
                                                 />
