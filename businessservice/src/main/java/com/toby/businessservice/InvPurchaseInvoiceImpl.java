@@ -13,7 +13,9 @@ import com.toby.dto.GlBankDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInventoryTransactionDTO;
 import com.toby.dto.InvInventoryTransactionDetailDTO;
+import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
+import com.toby.dto.InvPurchaseInvoiceDTO;
 import com.toby.dto.InvPurchaseInvoiceDTO1;
 import com.toby.dto.InvPurchaseInvoiceDetailDTO;
 import com.toby.dto.InventoryDelegatorDTO;
@@ -382,7 +384,7 @@ public class InvPurchaseInvoiceImpl implements InvPurchaseInvoiceService {
         }
         return invPurchaseInvoiceDTO;
     }
-    
+
     public InvPurchaseInvoiceDTO1 mapToDTOForProFactoryDelivery(InvPurchaseInvoice invPurchaseInvoice, TobyUser tobyUser) {
 
         InvPurchaseInvoiceDTO1 invPurchaseInvoiceDTO = new InvPurchaseInvoiceDTO1();
@@ -958,7 +960,7 @@ public class InvPurchaseInvoiceImpl implements InvPurchaseInvoiceService {
         List<InvPurchaseInvoice> list = retriveInvPurchaseInvoiceDate(invPurchaseInvoiceList);
         return list;
     }
-    
+
     @Override
     public BigDecimal findQuantityItemByDateWithOutInventory(InvPurchaseInvoice invPurchaseInvoice, Boolean sellBuy, InvPurchaseInvoiceDetail invPurchaseInvoiceDetail) {
         BigDecimal quantityItemsStoreByDate;
@@ -1239,6 +1241,6 @@ public class InvPurchaseInvoiceImpl implements InvPurchaseInvoiceService {
         return (itemsStores != null && itemsStores.size() > 0) ? itemsStores.get(0) : null;
     }
 
-    
+
 
 }

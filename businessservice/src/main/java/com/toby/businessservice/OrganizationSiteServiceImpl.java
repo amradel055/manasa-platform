@@ -95,6 +95,8 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             }
             entity.setMobile(organizationSiteDTO.getMobile());
             entity.setName(organizationSiteDTO.getName());
+            entity.setOpenBalanceDebit(organizationSiteDTO.getOpenBalanceDebit());
+            entity.setOpenBalanceCredit(organizationSiteDTO.getOpenBalanceCredit());
             dao.updateEntity(entity);
         }
     }

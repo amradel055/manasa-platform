@@ -20,6 +20,7 @@ import com.toby.entity.GlAccount;
 import com.toby.entity.InvNotice;
 import com.toby.entity.TobyUser;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -318,7 +319,7 @@ public class InvNoticeServiceImpl implements InvNoticeService {
         StringBuilder remark = new StringBuilder();
         remark.append("اشعار الخصم ");
         remark.append(dto.getOrganizationSiteId().getName());
-        BigDecimal mainValue = dto.getValue().divide(new BigDecimal(1.15));
+        BigDecimal mainValue = dto.getValue().divide(new BigDecimal(1.15), 2, RoundingMode.HALF_UP);
         BigDecimal taxValue = dto.getValue().subtract(mainValue);
         if (dto.getInvInventory() != null && dto.getInvInventory().getCostCenterId() != null && dto.getInvInventory().getCostCenterId().getId() != null) {
 

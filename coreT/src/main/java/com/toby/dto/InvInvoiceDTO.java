@@ -80,6 +80,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private BigDecimal payed;
     private BigDecimal remain;
     private BigDecimal accountStatement;
+    private InvInventoryDTO deliveryPlace ;
 
     private InventorySetupDTO inventorySetupDTO;
 
@@ -1860,6 +1861,20 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setExcel(Integer excel) {
         this.excel = excel;
+    }
+
+    /**
+     * @return the deliveryPlace
+     */
+    public InvInventoryDTO getDeliveryPlace() {
+        return deliveryPlace;
+    }
+
+    /**
+     * @param deliveryPlace the deliveryPlace to set
+     */
+    public void setDeliveryPlace(InvInventoryDTO deliveryPlace) {
+        this.deliveryPlace = deliveryPlace;
     }
 
 }

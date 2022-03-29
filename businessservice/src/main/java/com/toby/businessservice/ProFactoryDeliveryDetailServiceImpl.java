@@ -55,15 +55,15 @@ public class ProFactoryDeliveryDetailServiceImpl implements ProFactoryDeliveryDe
 
         return invDetailDTOList;
     }
-    
+
     @Override
     public List<InvDetailDTO> getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(InvInvoiceDTO dto, Integer typeto, Integer typefrom) {
         List<InvDetailDTO> invDetailDTOList = null;
         if (dto.getNeedLoadedSerial() != null && dto.getNeedLoadedSerial() != 0) {
 //            invDetailDTOList = getAllProFactoryDeliveryDetailListNotLoaded(dto);
-                invoiceNotLoadedYetProFactoeyProcedure(dto.getInvPurchaseInvoiceId(),  typeto,  typefrom);
-                List<FactoryNotLoadedYetProFactoeyProcedure> list = dao.findListByQuery("SELECT t FROM FactoryNotLoadedYetProFactoeyProcedure t");
-                invDetailDTOList = returnListDTO(list, dto);
+            invoiceNotLoadedYetProFactoeyProcedure(dto.getInvPurchaseInvoiceId(), typeto, typefrom);
+            List<FactoryNotLoadedYetProFactoeyProcedure> list = dao.findListByQuery("SELECT t FROM FactoryNotLoadedYetProFactoeyProcedure t");
+            invDetailDTOList = returnListDTO(list, dto);
         } else {
             invDetailDTOList = getAllProFactoryDeliveryDetailList(dto);
         }
@@ -83,6 +83,20 @@ public class ProFactoryDeliveryDetailServiceImpl implements ProFactoryDeliveryDe
     }
 
     @Override
+    public BigDecimal findquantityAllow(Integer serial ,String item_barcode) {
+        List<BigDecimal> details;
+        details = dao.executeNativeQuery("SELECT  (sum(ipid.number) - sum(pfdd.number)) as diffrent FROM toby.pro_factory_delivery_detail pfdd \n"
+                + "left join pro_factory_delivery pfd on pfd.id = pfdd.pro_factory_delivery_id\n"
+                + "left join inv_purchase_invoice ipi on ipi.id = pfd.inv_purchase_invoice_id\n"
+                + "left join inv_purchase_invoice_detail ipid on ipi.id = ipid.inv_purchase_invoice_id\n"
+                + "where ipi.id  = "+serial+" and pfdd.item_barcode = "+item_barcode+" and pfd.type = 0");
+        if(details != null && details.size() > 0){
+            return details.get(0);
+        }
+        return BigDecimal.ZERO;
+    }
+
+    @Override
     public List<InvDetailDTO> getAllProFactoryDeliveryDetailListNotLoaded(InvInvoiceDTO dto) {
         List<ProFactoryDeliveryDetail> details;
         List<InvDetailDTO> invDetailDTOList;
@@ -93,8 +107,8 @@ public class ProFactoryDeliveryDetailServiceImpl implements ProFactoryDeliveryDe
         invDetailDTOList = returnListDTO(details, dto);
         return invDetailDTOList;
     }
-    
-        private void invoiceNotLoadedYetProFactoeyProcedure(Integer inv_purchase_order_id1, Integer typeto, Integer typefrom) {
+
+    private void invoiceNotLoadedYetProFactoeyProcedure(Integer inv_purchase_order_id1, Integer typeto, Integer typefrom) {
         List<storedProcedureParameter> procedureParameter = new ArrayList<>();
         procedureParameter.add(new storedProcedureParameter("inv_purchase_invoice_id1", Integer.class, 'i'));
         procedureParameter.add(new storedProcedureParameter("typeto", Integer.class, 'i'));
@@ -105,7 +119,6 @@ public class ProFactoryDeliveryDetailServiceImpl implements ProFactoryDeliveryDe
         params2.put("typefrom", typefrom);
         dao.StoredProcedure("factory_not_loaded_yet_Pro_Factoey_procedure", procedureParameter, params2);
     }
-
 
     private <T> List<InvDetailDTO> returnListDTO(List<T> list, InvInvoiceDTO dto) {
         List<InvDetailDTO> dTOList = new ArrayList<>();
@@ -125,9 +138,9 @@ public class ProFactoryDeliveryDetailServiceImpl implements ProFactoryDeliveryDe
         InvDetailDTO dTO = new InvDetailDTO();
         if (Entity.getClass().equals(ProFactoryDeliveryDetail.class)) {
             ProFactoryDeliveryDetail entity = (ProFactoryDeliveryDetail) Entity;
-            dTO = proGlobalService.fillItemDetail(invInvoiceDTO.getIsOld(),dTO,
+            dTO = proGlobalService.fillItemDetail(invInvoiceDTO.getIsOld(), dTO,
                     entity.getId(),
-                    entity.getInvPurchaseInvoiceDetailId() != null ? entity.getInvPurchaseInvoiceDetailId().getId() : null , entity.getSerial(), (entity.getBranchId() != null ? entity.getBranchId().getId() : null),
+                    entity.getInvPurchaseInvoiceDetailId() != null ? entity.getInvPurchaseInvoiceDetailId().getId() : null, entity.getSerial(), (entity.getBranchId() != null ? entity.getBranchId().getId() : null),
                     (entity.getProFactoryDeliveryId() != null ? entity.getProFactoryDeliveryId().getId() : null),
                     entity.getId(), entity.getCreationDate(), entity.getCreatedBy().getId(),
                     entity.getItemId().getId(), entity.getItemId().getCode(), entity.getItemId().getName(), entity.getClothNumber(),
@@ -135,16 +148,16 @@ public class ProFactoryDeliveryDetailServiceImpl implements ProFactoryDeliveryDe
                     entity.getNumber(), entity.getItemId() == null ? null : entity.getItemId().getId(),
                     entity.getInvItemParentId() == null ? null : entity.getInvItemParentId().getCode(),
                     entity.getInvItemParentId() == null ? null : entity.getInvItemParentId().getName(),
-                    invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(),BigDecimal.ZERO);
-            dTO = invPurchaseInvoiceDetailDetailService.findDetailDetail(dTO,invInvoiceDTO.getScreenName());
-            if(proProductionTransactionService.checkFinish(invInvoiceDTO.getInvPurchaseInvoiceId(),invInvoiceDTO.getId(),dTO.getClothNumber())){
+                    invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), BigDecimal.ZERO);
+            dTO = invPurchaseInvoiceDetailDetailService.findDetailDetail(dTO, invInvoiceDTO.getScreenName());
+            if (proProductionTransactionService.checkFinish(invInvoiceDTO.getInvPurchaseInvoiceId(), invInvoiceDTO.getId(), dTO.getClothNumber())) {
                 dTO.setStatusName("تم التشيك");
             }
         } else if (Entity.getClass().equals(InvPurchaseInvoiceDetail.class)) {
             InvPurchaseInvoiceDetail entity = (InvPurchaseInvoiceDetail) Entity;
 
-            dTO = proGlobalService.fillItemDetail(false,dTO,
-                    entity.getId(), 
+            dTO = proGlobalService.fillItemDetail(false, dTO,
+                    entity.getId(),
                     entity.getId() != null ? entity.getId() : null,
                     entity.getSerial(), null,
                     null,
@@ -154,24 +167,24 @@ public class ProFactoryDeliveryDetailServiceImpl implements ProFactoryDeliveryDe
                     entity.getNumber(), entity.getItemId() == null ? null : entity.getItemId().getId(),
                     entity.getInvItemParentId() == null ? null : entity.getInvItemParentId().getCode(),
                     entity.getInvItemParentId() == null ? null : entity.getInvItemParentId().getName(),
-                    invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(),entity.getCostAvarage());
+                    invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), entity.getCostAvarage());
         } else if (Entity.getClass().equals(FactoryNotLoadedYetProFactoeyProcedure.class)) {
-                FactoryNotLoadedYetProFactoeyProcedure entity = (FactoryNotLoadedYetProFactoeyProcedure) Entity;
+            FactoryNotLoadedYetProFactoeyProcedure entity = (FactoryNotLoadedYetProFactoeyProcedure) Entity;
 
-                dTO = proGlobalService.fillItemDetail(false,dTO,
-                    null, 
+            dTO = proGlobalService.fillItemDetail(false, dTO,
+                    null,
                     null,
                     null, null,
                     null,
                     entity.getItemId(), null, null,
-                    entity.getItemId(), entity.getItemBarcode(), entity.getItemName(),null,
+                    entity.getItemId(), entity.getItemBarcode(), entity.getItemName(), null,
                     null, null,
                     entity.getNumber(), null,
                     null,
                     null,
-                    invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(),BigDecimal.ZERO);
+                    invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), BigDecimal.ZERO);
 
-            } 
+        }
         return dTO;
     }
 
@@ -250,7 +263,7 @@ public class ProFactoryDeliveryDetailServiceImpl implements ProFactoryDeliveryDe
         entity.setBranchId(tobyUser.getBranchId());
         return entity;
     }
-    
+
     @Override
     public void deleteInvDetail(InvDetailDTO detailDTO) {
         if (detailDTO.getId() != null) {
@@ -259,7 +272,6 @@ public class ProFactoryDeliveryDetailServiceImpl implements ProFactoryDeliveryDe
             dao.deleteEntity(proFactoryDeliveryDetail);
         }
     }
-
 
     @Override
     public void deleteProFactoryDeliveryDetailListDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList) {

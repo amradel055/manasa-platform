@@ -119,6 +119,24 @@
                                   >
                             <p:inputText value="#{organizationSiteTable.mobile}" />
                         </p:column>
+                        <p:column style="width:15vh;font-size: 1.8vh;text-align: right;border-radius: 0px "
+                                  filterStyle="display:none" 
+                                  filterBy="#{organizationSiteTable.openBalanceDebit}"
+                                  filterMatchMode="contains" 
+                                  headerText="مدين"
+                                  sortBy="#{organizationSiteTable.openBalanceDebit}" 
+                                  >
+                            <p:inputText value="#{organizationSiteTable.openBalanceDebit}" />
+                        </p:column>
+                        <p:column style="width:15vh;font-size: 1.8vh;text-align: right;border-radius: 0px "
+                                  filterStyle="display:none" 
+                                  filterBy="#{organizationSiteTable.openBalanceCredit}"
+                                  filterMatchMode="contains" 
+                                  headerText="دائن"
+                                  sortBy="#{organizationSiteTable.openBalanceCredit}" 
+                                  >
+                            <p:inputText value="#{organizationSiteTable.openBalanceCredit}" />
+                        </p:column>
                         <p:column style="width:30vh;font-size: 2.5vh;text-align: center;border-radius: 0px " headerText="الشركة التابع لها">
                             <p:selectOneMenu  id="offerCompanyDTO" filter="true" filterMatchMode="contains"
                                               value="#{organizationSiteTable.offerCompanyDTO}"

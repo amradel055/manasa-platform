@@ -1144,7 +1144,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
     private InvDetailDTO checkQuantityFromLoaded(Boolean isload, InvDetailDTO detailDTO,
             CompanyActivityClassEnum companyActivityClassEnum, ScreenNameClassEnum screenNameClassEnum) {
         if (isload) {
-            if (((detailDTO.getQuantity()).multiply(detailDTO.getScrewing())).compareTo(detailDTO.getRealQuantity()) > 0) {
+            if (!screenNameClassEnum.equals(ScreenNameClassEnum.INVRETURNSALESFORM) && ((detailDTO.getQuantity()).multiply(detailDTO.getScrewing())).compareTo(detailDTO.getRealQuantity()) > 0) {
                 detailDTO.setMsg("الكميه اكبر من الكميه الموجوده في الفاتورة ");
                 setDefaultQuantity(detailDTO, companyActivityClassEnum, screenNameClassEnum);
             }

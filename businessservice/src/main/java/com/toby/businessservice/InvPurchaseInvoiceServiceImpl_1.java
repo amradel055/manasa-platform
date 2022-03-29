@@ -1328,6 +1328,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invPurchaseInvoice.setCompanyId(tobyUser.getCompanyId());
             invPurchaseInvoice.setBranchId(tobyUser.getBranchId());
         }
+        if (invInvoiceDTO.getDeliveryPlace() != null) {
+            InvInventory invInventory = new InvInventory();
+            invInventory.setId(invInvoiceDTO.getDeliveryPlace().getId());
+            invInventory.setName(invInvoiceDTO.getDeliveryPlace().getName());
+            invPurchaseInvoice.setDeliveryPlace(invInventory);
+        }
         return invPurchaseInvoice;
     }
 
@@ -1394,7 +1400,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
     public InvInvoiceDTO mapToDTOApi(InvInvoiceDTOApi invInvoiceDTOApi) {
         InvInvoiceDTO invoiceDTO = new InvInvoiceDTO();
-        InvOrganizationSiteDTO invOrganizationSiteDTO = new  InvOrganizationSiteDTO();
+        InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
         invOrganizationSiteDTO.setId(invInvoiceDTOApi.getCustomerId());
         invoiceDTO.setOrganizationSiteId(invOrganizationSiteDTO);
 
@@ -1808,6 +1814,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             glBankDTO.setName(entity.getGlBankId().getName());
             glBankDTO.setCode(entity.getGlBankId().getCode());
             dto.setGlBankId(glBankDTO);
+        }
+        if (entity.getDeliveryPlace() != null) {
+            InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
+            invInventoryDTO.setId(entity.getDeliveryPlace().getId());
+            invInventoryDTO.setName(entity.getDeliveryPlace().getName());
+            dto.setDeliveryPlace(invInventoryDTO);
         }
         dto.setTaxflag(entity.getTaxflag());
 
@@ -3661,9 +3673,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         builder.append("SELECT s FROM InvPurchaseInvoice s WHERE   s.branchId.id = 182 AND s.type = 3 AND s.parent is not null AND s.parent.serial = :serial ");
         List<InvPurchaseInvoice> details = dao.findListByQuery(builder.toString(), filters);
         if (details != null && !details.isEmpty()) {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -3829,6 +3841,41 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
 
         return invInvoiceDTO;
+    }
+
+    @Override
+    public InvInvoiceDTO getInvoiceBySerial(Integer branchId, Integer serial) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT e FROM InvPurchaseInvoice e WHERE e.branchId.id = :branchId ");
+        if (serial != null) {
+            params.put("serial", serial);
+            query.append(" AND e.serial = :serial AND e.type = 4 ");
+        }
+        InvPurchaseInvoice invPurchaseInvoice = dao.findEntityByQuery(query.toString(), params);
+
+        InvInvoiceDTO invPurchaseInvoiceDto = new InvInvoiceDTO();
+
+        invPurchaseInvoiceDto.setId(invPurchaseInvoice.getId());
+        invPurchaseInvoiceDto.setSerial(invPurchaseInvoice.getSerial());
+        invPurchaseInvoiceDto.setDate(invPurchaseInvoice.getDate());
+        invPurchaseInvoiceDto.setOrganizationSiteName(invPurchaseInvoice.getOrganizationSiteId().getName());
+        if (invPurchaseInvoice.getDeliveryPlace() != null) {
+            InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
+            invInventoryDTO.setId(invPurchaseInvoice.getDeliveryPlace().getId());
+            invPurchaseInvoiceDto.setDeliveryPlace(invInventoryDTO);
+        }
+        return invPurchaseInvoiceDto;
+    }
+
+    @Override
+    public void saveDeliveryPlace(Integer invoiceId, Integer deliverPlaceId) {
+        InvPurchaseInvoice invPurchaseInvoice = dao.findEntityById(InvPurchaseInvoice.class, invoiceId);
+        InvInventory invInventory = new InvInventory();
+        invInventory.setId(deliverPlaceId);
+        invPurchaseInvoice.setDeliveryPlace(invInventory);
+        dao.updateEntity(invPurchaseInvoice);
     }
 
 }
