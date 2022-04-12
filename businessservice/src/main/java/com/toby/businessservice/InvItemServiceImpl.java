@@ -607,6 +607,15 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
+    public List<InvItemDTO> getInvItemByBranchIdAndProGroupIdDTO(StringBuilder list) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("list", list.toString());
+        List<InvItem> details = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.proGroupId.id in( "+list+" ) ORDER BY e.code");
+        List<InvItemDTO> detailsReturn = retriveItemDTOData(details, ScreenNameClassEnum.ITEMCARDREPORT);
+        return detailsReturn;
+    }
+
+    @Override
     public List<InvItem> getImageByCompanyId(String imageName, Integer companyId
     ) {
         Map<String, Object> params = new HashMap<>();
@@ -1258,8 +1267,8 @@ public class InvItemServiceImpl implements InvItemService {
         List<Integer> detailses = dao.findListByQuery("SELECT i.id FROM InvItem i WHERE i.branchId.id = :branchId  ORDER BY i.code", params);
         return detailses;
     }
-    
-       @Override
+
+    @Override
     public InvItem findItemByCode(String code) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder query = new StringBuilder();

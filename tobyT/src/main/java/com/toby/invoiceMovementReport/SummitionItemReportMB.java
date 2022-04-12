@@ -56,6 +56,8 @@ public class SummitionItemReportMB extends Basic {
     private BigDecimal sumAllAvarageCost;
     private Map<String, String> userDDs;
 
+    private Boolean summution;
+
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
     @EJB
@@ -63,96 +65,94 @@ public class SummitionItemReportMB extends Basic {
 
     @PostConstruct
     public void init() {
-    setUserDDs(getUserData().getUserDDs());
-
+        setUserDDs(getUserData().getUserDDs());
 
     }
-    public boolean validateSearch(){
-    if(getGallaryListSelected().isEmpty()){
-      FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار المعرض "));
-    }
-      else if(getProGroupListSelected().isEmpty()){
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار الفئة "));     
-      }
-       else if(getDateFrom()==null){
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار التاريخ من  "));     
-      }
-        else if(getDateTo()==null){
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار التاريخ الي  "));     
-      }
-             else{
-                   return true ;
-                   }
-    return false;
+
+    public boolean validateSearch() {
+        if (getGallaryListSelected().isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار المعرض "));
+        } else if (getProGroupListSelected().isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار الفئة "));
+        } else if (getDateFrom() == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار التاريخ من  "));
+        } else if (getDateTo() == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار التاريخ الي  "));
+        } else {
+            return true;
+        }
+        return false;
     }
 
     public void search() {
-        if(validateSearch()==true){
+        if (validateSearch() == true) {
 //        List<SummitionItemsView> itemsViewForGallary = null;
-        if (getGallaryListSelected() != null && !getGallaryListSelected().isEmpty()) {
-            if (getProGroupListSelected() != null && !getProGroupListSelected().isEmpty()) {
-                itemsViewList = new ArrayList<>();
-                sumFactoryNumberTotal = BigDecimal.ZERO;
-                sumSendNumberTotal = BigDecimal.ZERO;
-                sumDeliveryNumberTotal = BigDecimal.ZERO;
-                sumCustomerNumberTotal = BigDecimal.ZERO;
-                sumDifferentTotal = BigDecimal.ZERO;
-                setSumNumberTotal(BigDecimal.ZERO);
-                setSumAllCostTotal(BigDecimal.ZERO);
-                setSumAllAvarageCost(BigDecimal.ZERO);
-                List<SummitionItemsView> itemsViewForGallaryinner = new ArrayList<>();
-                List<SummitionItemsView> itemsViewForGallaryinnerForAll = new ArrayList<>();
-                SummitionItemsView summitionItemsView = null;
-                HashMap<Integer, Test> map = new HashMap();
-                for (InvInventoryDTO invInventoryDTO : getGallaryListSelected()) {
+            if (getGallaryListSelected() != null && !getGallaryListSelected().isEmpty()) {
+                if (getProGroupListSelected() != null && !getProGroupListSelected().isEmpty()) {
+                    itemsViewList = new ArrayList<>();
+                    sumFactoryNumberTotal = BigDecimal.ZERO;
+                    sumSendNumberTotal = BigDecimal.ZERO;
+                    sumDeliveryNumberTotal = BigDecimal.ZERO;
+                    sumCustomerNumberTotal = BigDecimal.ZERO;
+                    sumDifferentTotal = BigDecimal.ZERO;
+                    setSumNumberTotal(BigDecimal.ZERO);
+                    setSumAllCostTotal(BigDecimal.ZERO);
+                    setSumAllAvarageCost(BigDecimal.ZERO);
+                    List<SummitionItemsView> itemsViewForGallaryinner = new ArrayList<>();
+                    List<SummitionItemsView> itemsViewForGallaryinnerForAll = new ArrayList<>();
+                    SummitionItemsView summitionItemsView = null;
+                    HashMap<Integer, Test> map = new HashMap();
+                    if (!summution) {
+                        for (InvInventoryDTO invInventoryDTO : getGallaryListSelected()) {
 
-                    summitionItemsView = new SummitionItemsView();
+                            summitionItemsView = new SummitionItemsView();
 
-                    summitionItemsView.setName(invInventoryDTO.getName());
-                    summitionItemsView.setRowType(1);
+                            summitionItemsView.setName(invInventoryDTO.getName());
+                            summitionItemsView.setRowType(1);
+
+                            if (getUri().contains("summitionItemReportPro")) {
+                                itemsViewForGallaryinner = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(invInventoryDTO.getId(), getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), null, getProGroupListSelected());
+                            } else {
+                                itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantity(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), null, getProGroupListSelected(), getInvoiceType());
+                            }
+                            if (itemsViewForGallaryinner != null && !itemsViewForGallaryinner.isEmpty()) {
+                                for (SummitionItemsView view : itemsViewForGallaryinner) {
+                                    if (view.getCode() == 1 || view.getCode() == 2) {
+                                        setValueForGallary(summitionItemsView, view);
+                                    }
+                                    distributeDate(invInventoryDTO, map, view);
+                                }
+                                getItemsViewList().add(summitionItemsView);
+                                getItemsViewList().addAll(itemsViewForGallaryinner);
+                                setFinalTotals(summitionItemsView);
+                            }
+
+                        }
+                    }
 
                     if (getUri().contains("summitionItemReportPro")) {
-                        itemsViewForGallaryinner = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(invInventoryDTO.getId(), getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), null, getProGroupListSelected());
+                        itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(null, getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), getGallaryListSelected(), getProGroupListSelected());
                     } else {
-                        itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantity(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), null, getProGroupListSelected(),getInvoiceType());
+                        itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.findSummitionQuantity(null, getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getGallaryListSelected(), getProGroupListSelected(), getInvoiceType());
                     }
-                    if (itemsViewForGallaryinner != null && !itemsViewForGallaryinner.isEmpty()) {
-                        for (SummitionItemsView view : itemsViewForGallaryinner) {
+                    if (itemsViewForGallaryinnerForAll != null && !itemsViewForGallaryinnerForAll.isEmpty()) {
+                        summitionItemsView = new SummitionItemsView();
+                        summitionItemsView.setName("إجماليات المعارض");
+                        summitionItemsView.setRowType(1);
+                        for (SummitionItemsView view : itemsViewForGallaryinnerForAll) {
                             if (view.getCode() == 1 || view.getCode() == 2) {
                                 setValueForGallary(summitionItemsView, view);
                             }
-                            distributeDate(invInventoryDTO, map, view);
                         }
                         getItemsViewList().add(summitionItemsView);
-                        getItemsViewList().addAll(itemsViewForGallaryinner);
-                        setFinalTotals(summitionItemsView);
+                        getItemsViewList().addAll(itemsViewForGallaryinnerForAll);
+
                     }
-
+                    setList(new ArrayList<Test>(map.values()));
                 }
-
-                if (getUri().contains("summitionItemReportPro")) {
-                    itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(null, getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), getGallaryListSelected(), getProGroupListSelected());
-                } else {
-                    itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.findSummitionQuantity(null, getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getGallaryListSelected(), getProGroupListSelected(),getInvoiceType());
-                }
-                if (itemsViewForGallaryinnerForAll != null && !itemsViewForGallaryinnerForAll.isEmpty()) {
-                    summitionItemsView = new SummitionItemsView();
-                    summitionItemsView.setName("إجماليات المعارض");
-                    summitionItemsView.setRowType(1);
-                    for (SummitionItemsView view : itemsViewForGallaryinnerForAll) {
-                        if (view.getCode() == 1 || view.getCode() == 2) {
-                            setValueForGallary(summitionItemsView, view);
-                        }
-                    }
-                    getItemsViewList().add(summitionItemsView);
-                    getItemsViewList().addAll(itemsViewForGallaryinnerForAll);
-
-                }
-                setList(new ArrayList<Test>(map.values()));
             }
         }
     }
-        }
 
     private void distributeDate(InvInventoryDTO invInventoryDTO, HashMap<Integer, Test> map, SummitionItemsView view) {
         Test test;
@@ -491,8 +491,8 @@ public class SummitionItemReportMB extends Basic {
      * @return the dateFrom
      */
     public Date getDateFrom() {
-        if(dateFrom == null){
-        dateFrom = new Date();
+        if (dateFrom == null) {
+            dateFrom = new Date();
         }
         return dateFrom;
     }
@@ -508,8 +508,8 @@ public class SummitionItemReportMB extends Basic {
      * @return the dateTo
      */
     public Date getDateTo() {
-         if(dateTo == null){
-        dateTo = new Date();
+        if (dateTo == null) {
+            dateTo = new Date();
         }
         return dateTo;
     }
@@ -768,6 +768,23 @@ public class SummitionItemReportMB extends Basic {
      */
     public void setUserDDs(Map<String, String> userDDs) {
         this.userDDs = userDDs;
+    }
+
+    /**
+     * @return the summution
+     */
+    public Boolean getSummution() {
+        if(summution == null){
+            summution = Boolean.FALSE;
+        }
+        return summution;
+    }
+
+    /**
+     * @param summution the summution to set
+     */
+    public void setSummution(Boolean summution) {
+        this.summution = summution;
     }
 
 }

@@ -51,4 +51,26 @@ public class Utility {
         date = c.getTime();
         return date;
     }
+
+    public static Date addHoursToJavaUtilDate(Date date, int hours) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.HOUR_OF_DAY, hours);
+        return calendar.getTime();
+    }
+
+    public static Date dicreaseHoursToJavaUtilDate(Date date, int hours) {
+        Integer hoursNew = hours * -1;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.HOUR_OF_DAY, hoursNew);
+        return calendar.getTime();
+    }
+    public static Date hourNow() {
+        Integer hoursNew = 7 * -1;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.HOUR_OF_DAY, hoursNew);
+        return calendar.getTime();
+    }
 }

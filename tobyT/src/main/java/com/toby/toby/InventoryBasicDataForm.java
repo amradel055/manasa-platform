@@ -21,6 +21,7 @@ import com.toby.businessservice.InvPurchaseOrderService;
 import com.toby.businessservice.InvQuotationService;
 import com.toby.businessservice.InvReservationService;
 import com.toby.businessservice.InvTransferService;
+import com.toby.businessservice.InvUpdateService;
 import com.toby.businessservice.InventorySetupService;
 import com.toby.businessservice.ItemsBarcodesDetailsViewService;
 import com.toby.businessservice.OfferCompanyService;
@@ -33,6 +34,7 @@ import com.toby.businessservice.ReportManagementService;
 import com.toby.businessservice.SymbolService;
 import com.toby.businessservice.report.SupplierAccountService;
 import com.toby.bussinessservice.global.AutoCompleteService;
+import com.toby.bussinessservice.global.Utility;
 import com.toby.converter.CostCenterDTOConverter;
 import com.toby.converter.CurrencyDTOConverter;
 import com.toby.converter.GlAdminUnitDTOConverter;
@@ -186,6 +188,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     private SymbolService symbolService;
     @EJB
     private InvTransferService invTransferService;
+    @EJB
+    private InvUpdateService invUpdateService;
     @EJB
     private InvOpeningBalanceItemService invOpeningBalanceItemService;
     @EJB
@@ -482,7 +486,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         }
     }
 
-    private void afterValidation(InvDetailDTO invPurchaseInvoiceDetailsValidate, Boolean findCost) {
+    public void afterValidation(InvDetailDTO invPurchaseInvoiceDetailsValidate, Boolean findCost) {
         replacedetail(invPurchaseInvoiceDetailsValidate);
         checkProof(invPurchaseInvoiceDetailsValidate);
 //        updateSummition(findCost);
@@ -528,6 +532,19 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         InvDetailDTO detailDTONew = invGlobalService.calcRowAfterCalcTotal(invGlobalService.calcRowTotal(getInvInvoiceDTO().getScreenName(), detailDTO.getNumber(), detailDTO.getCost(), detailDTO.getQuantity()), detailDTO.getDiscount(), detailDTO);
         replacedetail(detailDTONew);
         updateSummitionSmall();
+    }
+    
+    public void validateActulQuantityColum(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
+        try {
+            if (checkdetail(invPurchaseInvoiceDetailsValidate)) {
+                invPurchaseInvoiceDetailsValidate.setMsg(null);
+                invPurchaseInvoiceDetailsValidate = invGlobalService.validateActualQuantityColumn(invPurchaseInvoiceDetailsValidate);
+//                afterValidation(invPurchaseInvoiceDetailsValidate);
+                afterUpdate(invPurchaseInvoiceDetailsValidate);
+            }
+        } catch (Exception e) {
+            saveError(e, "InvPurchaseInvoiceFormMB", "validateQuantityColum");
+        }
     }
 
     public void validateQuantityInchColum(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
@@ -1279,7 +1296,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         invInvoiceDTOConverter = new InvInvoiceDTOConverter(invInvoiceList);
     }
 
-    private void replacedetail(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
+    public void replacedetail(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
         for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
             if (detailDTO.getIndex().equals(invPurchaseInvoiceDetailsValidate.getIndex())) {
                 int itemIndex = getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().indexOf(detailDTO);
@@ -2234,7 +2251,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         findScreenName();
 
         if (invInvoiceDTO.getId() == null) {
-            invInvoiceDTO.setDate(new Date());
+            invInvoiceDTO.setDate(Utility.hourNow());
         }
 
         invInvoiceDTO.setInventorySetupDTO(inventorySetupService.getInventoryByBranchIdDTO(getUserData().getUserBranch().getId()));
@@ -2301,8 +2318,10 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
         } else if (getUri().contains("invopeningbalanceitem")) {
             getInvInvoiceDTO().setScreenName(ScreenNameClassEnum.INVOPENINGBALANCEITEMFORM);
-        } else if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVOPENINGBALANCEITEMFORM)) {
-            getInvInvoiceDTO().setInvInventoryId(getInvInventoryDTOList().get(0));
+        } else if (getUri().contains("invupdate")) {
+            getInvInvoiceDTO().setScreenName(ScreenNameClassEnum.INVUPDATE);
+        } else if (getUri().contains("invopeningbalanceitem")) {
+            getInvInvoiceDTO().setScreenName(ScreenNameClassEnum.INVOPENINGBALANCEITEMFORM);
         }
 
     }
@@ -2312,6 +2331,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         setInvInvoiceDTO(settingInventory(getInvInvoiceDTO()));
         fillLists();
         if (!ScreenNameClassEnum.INVTRANSFER.equals(getInvInvoiceDTO().getScreenName())
+                && !ScreenNameClassEnum.INVUPDATE.equals(getInvInvoiceDTO().getScreenName())
                 && !ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(getInvInvoiceDTO().getScreenName())) {
             putCurrency();
         }
@@ -2352,7 +2372,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 //            setInvInvoiceDTO(invStripService.findInvStripById(getInvInvoiceDTO()));
         } else if (getUri().contains("invupdate")) {
             getInvInvoiceDTO().setId((Integer) getContext().getSessionMap().get("invUpdateSelected"));
-//            setInvInvoiceDTO(invUpdateService.findInvUpdateById(getInvInvoiceDTO()));
+            setInvInvoiceDTO(invUpdateService.findInvUpdateById(getInvInvoiceDTO()));
         } else if (getUri().contains("invopeningbalanceitem")) {
             getInvInvoiceDTO().setId((Integer) getContext().getSessionMap().get("invOpenningBalanceItemSelected"));
             setInvInvoiceDTO(invOpeningBalanceItemService.findOpeningBalanceById(getInvInvoiceDTO()));

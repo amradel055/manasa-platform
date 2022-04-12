@@ -1534,6 +1534,9 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             invOrganizationSiteDTO.setCode(code.toString());
 
             invOrganizationSiteDTO = addOrganizationSiteDTO(invOrganizationSiteDTO, tobyUser);
+            if (invOrganizationSiteDTOList == null) {
+                invOrganizationSiteDTOList = new ArrayList<>();
+            }
             invOrganizationSiteDTOList.add(0, invOrganizationSiteDTO);
         }
         return invOrganizationSiteDTO;
@@ -2738,15 +2741,15 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
 
     }
-    
-     @Override
-    public InvOrganizationSiteDTO getIDByCode(String code , TobyUser tobyUser , Integer gallaryId) {
+
+    @Override
+    public InvOrganizationSiteDTO getIDByCode(String code, TobyUser tobyUser, Integer gallaryId) {
         Map<String, Object> params = new HashMap<>();
         params.put("code", code);
         params.put("gallaryId", gallaryId);
         InvOrganizationSite detailses = dao.findEntityByQuery("SELECT e FROM InvOrganizationSite e WHERE e.code = :code AND e.gallaryId.id = :gallaryId  ", params);
-        if(detailses == null){
-            return null ;
+        if (detailses == null) {
+            return null;
         }
         return mapToDTO(detailses, tobyUser);
     }

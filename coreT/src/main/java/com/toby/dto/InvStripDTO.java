@@ -7,6 +7,7 @@ package com.toby.dto;
 
 import com.toby.entity.InvStripDetail;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -16,10 +17,8 @@ import javax.xml.bind.annotation.XmlTransient;
  *
  * @author omar nezam
  */
-public class InvStripDTO extends BaseEntityDTO{
-   
-   
-   
+public class InvStripDTO extends BaseEntityDTO {
+
     private String remarks;
     private String stripDocument;
     private Date stripDate;
@@ -27,13 +26,9 @@ public class InvStripDTO extends BaseEntityDTO{
     private InvInventoryDTO inventoryId;
     private Integer type;
     private List<InvStripDetailDTO> invStripDetailDTOList;
-     
-    private BigDecimal totalQuantity ;
-    private BigDecimal totalBalance ;
-   
 
-   
-   
+    private BigDecimal totalQuantity;
+    private BigDecimal totalBalance;
 
     public String getRemarks() {
         return remarks;
@@ -52,6 +47,9 @@ public class InvStripDTO extends BaseEntityDTO{
     }
 
     public Date getStripDate() {
+        if(stripDate == null){
+            stripDate = new Date();
+        }
         return stripDate;
     }
 
@@ -109,8 +107,10 @@ public class InvStripDTO extends BaseEntityDTO{
         this.type = type;
     }
 
- 
     public List<InvStripDetailDTO> getInvStripDetailDTOList() {
+        if (invStripDetailDTOList == null) {
+            invStripDetailDTOList = new ArrayList<>();
+        }
         return invStripDetailDTOList;
     }
 
@@ -125,6 +125,9 @@ public class InvStripDTO extends BaseEntityDTO{
      * @return the totalQuantity
      */
     public BigDecimal getTotalQuantity() {
+        if (totalQuantity == null) {
+            totalQuantity = BigDecimal.ZERO;
+        }
         return totalQuantity;
     }
 
@@ -139,6 +142,9 @@ public class InvStripDTO extends BaseEntityDTO{
      * @return the totalBalance
      */
     public BigDecimal getTotalBalance() {
+        if (totalBalance == null) {
+            totalBalance = BigDecimal.ZERO;
+        }
         return totalBalance;
     }
 

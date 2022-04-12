@@ -561,6 +561,11 @@ public class ReportsServiceImpl implements ReportsService {
         if (invoiceType != null) {
             sql.append(" and ipi.invoice_type =  ").append(invoiceType);
         }
+        
+        if (profitOfItemsSold.getItemCode() != null && !profitOfItemsSold.getItemCode().isEmpty()) {
+            sql.append(" and ii.code =  ").append(profitOfItemsSold.getItemCode());
+        }
+        
         appendDate7(profitOfItemsSold, sql);
         StringBuilder gallaryIds = null;
         StringBuilder groupId = null;

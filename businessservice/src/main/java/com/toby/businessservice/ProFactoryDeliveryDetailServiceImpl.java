@@ -83,14 +83,23 @@ public class ProFactoryDeliveryDetailServiceImpl implements ProFactoryDeliveryDe
     }
 
     @Override
-    public BigDecimal findquantityAllow(Integer serial ,String item_barcode) {
+    public BigDecimal findquantityAllow(Integer serial, String item_barcode) {
         List<BigDecimal> details;
-        details = dao.executeNativeQuery("SELECT  (sum(ipid.number) - sum(pfdd.number)) as diffrent FROM toby.pro_factory_delivery_detail pfdd \n"
-                + "left join pro_factory_delivery pfd on pfd.id = pfdd.pro_factory_delivery_id\n"
-                + "left join inv_purchase_invoice ipi on ipi.id = pfd.inv_purchase_invoice_id\n"
-                + "left join inv_purchase_invoice_detail ipid on ipi.id = ipid.inv_purchase_invoice_id\n"
-                + "where ipi.id  = "+serial+" and pfdd.item_barcode = "+item_barcode+" and pfd.type = 0");
-        if(details != null && details.size() > 0){
+//        details = dao.executeNativeQuery("SELECT  (sum(ipid.number) - sum(pfdd.number)) as diffrent FROM toby.pro_factory_delivery_detail pfdd \n"
+//                + "left join pro_factory_delivery pfd on pfd.id = pfdd.pro_factory_delivery_id\n"
+//                + "left join inv_purchase_invoice ipi on ipi.id = pfd.inv_purchase_invoice_id\n"
+//                + "left join inv_purchase_invoice_detail ipid on ipi.id = ipid.inv_purchase_invoice_id\n"
+//                + "where ipi.id  = " + serial + " and pfdd.item_barcode = " + item_barcode + " and pfd.type = 0");
+        details = dao.executeNativeQuery("SELECT (sum(s.diffrent))  from  (\n"
+                + "SELECT  (sum(ipid.number)) as diffrent FROM  inv_purchase_invoice ipi \n"
+                + "                left join inv_purchase_invoice_detail ipid on ipi.id = ipid.inv_purchase_invoice_id\n"
+                + "                where ipi.id  = " + serial + " and ipid.item_barcode = " + item_barcode + "\n"
+                + "union all \n"
+                + "SELECT  (sum(pfdd.number) * -1) as diffrent FROM  toby.pro_factory_delivery_detail pfdd \n"
+                + "                left join pro_factory_delivery pfd on pfd.id = pfdd.pro_factory_delivery_id\n"
+                + "                where pfd.inv_purchase_invoice_id  = " + serial + " and pfdd.item_barcode = " + item_barcode + " and  pfd.type = 0\n"
+                + ") s ;");
+        if (details != null && details.size() > 0) {
             return details.get(0);
         }
         return BigDecimal.ZERO;

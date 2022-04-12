@@ -637,8 +637,6 @@
                                     <p:menuitem id="sr_lnk354" value="فسح" icon="&#xE8D2;" url="/faces/views/invpermissionorder_1/invpermissionorderlist.xhtml"
                                                 rendered="#{userData.userScreens['invpermissionorder_1'].view or userData.isAdmin}"
                                                 />
-                                     <p:menuitem id="sr_lnk35555" value="تحديد مكان استلام الفاتورة " icon="&#xE8D2;" url="/faces/views/deliveryPlace/deliveryPlaceForm.xhtml"
-                                                />
                                 </p:submenu>
                                 <p:submenu id="sr_sm999932" label="#{userData.userDDs['STORE_TRANSACTION']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['invopeningbalanceitem'].view 
@@ -650,6 +648,14 @@
                                            >
                                     <p:menuitem id="sr_lnk9999321" value="#{userData.userDDs['CONVERSION_BET_STORE']}" icon="&#xE8D2;" url="/faces/views/invtransferInventory/invTransferInventoryList.xhtml" 
                                                 rendered="#{userData.userScreens['invtransferInventory'].view or userData.isAdmin}"
+                                                />
+                                    
+                                     <p:menuitem id="sr_lnk9999322" value="جرد المخزون" icon="&#xE8D2;" url="/faces/views/invstripNew/invStripList.xhtml" 
+                                                rendered="#{userData.userScreens['invstrip'].view or userData.isAdmin}"
+                                                />
+                                     
+                                    <p:menuitem id="sr_lnk9999323" value="ضبط المخزون" icon="&#xE8D2;" url="/faces/views/invupdate/invUpdateList.xhtml" 
+                                                rendered="#{userData.userScreens['invupdate'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
                             </p:submenu>

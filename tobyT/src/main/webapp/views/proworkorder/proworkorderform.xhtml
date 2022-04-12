@@ -222,24 +222,29 @@
                                                 >
                                     <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.hishis()}" event="itemSelect" />
                                 </p:autoComplete>
-
                             </div>
                             <div class="ui-g-4 ui-xl-4">
-
                                 <p:outputLabel style="width: 100px;" value="#{userData.userDDs['TREASURY']}"/>
-
-
-
                             </div>
                         </div>
-
-
-
-
-
-
-
-
+                        <div class="ui-g-12 ui-xl-12 section-edit1">
+                            <div class="ui-g-8 ui-xl-8">
+                                <p:selectOneMenu style="width: 70%" id="groupid111" 
+                                                 filter="true" filterMatchMode="contains"   
+                                                 value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.deliveryPlace}" 
+                                                 converter="#{invPurchaseInvoiceDeliveryPalace.invInventoryDTOConverter}"   >
+                                    <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.hishis()}" event="itemSelect" />
+                                    <f:selectItem itemLabel="معرضي"  itemValue="" />
+                                    <f:selectItems value="#{invPurchaseInvoiceDeliveryPalace.invInventoryDTOList}"  
+                                                   var="invoice" 
+                                                   itemLabel="#{invoice}" 
+                                                   itemValue="#{invoice}"/>
+                                </p:selectOneMenu>
+                            </div>
+                            <div class="ui-g-4 ui-xl-4">
+                                <p:outputLabel style="width: 100px;" value="مكان الإستلام"/>
+                            </div>
+                        </div>
                     </div>
                     <div class="ui-g-12 ui-xl-12"  >
                         <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
@@ -778,12 +783,6 @@
 
 
                         </h:panelGroup>
-
-
-
-
-
-
                     </div>
 
                     <div class="ui-g-4 ui-xl-4" style="margin-top: -2%;" >

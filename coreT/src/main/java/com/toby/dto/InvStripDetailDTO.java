@@ -11,25 +11,23 @@ import java.math.BigDecimal;
  *
  * @author omar nezam
  */
-public class InvStripDetailDTO extends BaseEntityDTO{
-    
+public class InvStripDetailDTO extends BaseEntityDTO {
+
    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-
     private BigDecimal actualAmount;
-    
+
     private BigDecimal bookBalance;
-   
+
     private BigDecimal difference;
-   
+
     private InvItemDTO invItemId;
-   
+
     private InvStripDTO invStripId;
-   
 
-
-   
     public BigDecimal getActualAmount() {
-        
+        if (actualAmount == null) {
+            actualAmount = BigDecimal.ZERO;
+        }
         return actualAmount;
     }
 
@@ -38,6 +36,9 @@ public class InvStripDetailDTO extends BaseEntityDTO{
     }
 
     public BigDecimal getBookBalance() {
+        if (bookBalance == null) {
+            bookBalance = BigDecimal.ZERO;
+        }
         return bookBalance;
     }
 
@@ -46,6 +47,7 @@ public class InvStripDetailDTO extends BaseEntityDTO{
     }
 
     public BigDecimal getDifference() {
+        difference = getActualAmount().subtract(getBookBalance());
         return difference;
     }
 
@@ -94,7 +96,4 @@ public class InvStripDetailDTO extends BaseEntityDTO{
         return "com.toby.entity.InvStripDetail[ id=" + id + " ]";
     }
 
-   
-
 }
-

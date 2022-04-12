@@ -142,7 +142,7 @@ public interface InvPurchaseInvoiceService_1 {
     public BigDecimal findPersentageNotice(Integer gallaryId, Integer branchId, Date dateFrom, Date dateTo, List<InvInventoryDTO> invInventoryDTOs);
 
     public List<SummitionItemsView> findSummitionQuantityNew(Integer gallaryId, Integer branchId, Date dateFrom, Date dateTo,
-            List<InvInventoryDTO> invInventoryDTOs, List<ProGroupDTO> proGroupListSelected, Integer invoiceType, Boolean update);
+            List<InvInventoryDTO> invInventoryDTOs, List<ProGroupDTO> proGroupListSelected, Integer invoiceType, Boolean detail);
 
     public Boolean chechIfinvoiceIsReturn(Integer serial);
 

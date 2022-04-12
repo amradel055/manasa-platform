@@ -1,8 +1,11 @@
 package com.toby.reports;
 
+import com.toby.businessservice.InvItemService;
 import com.toby.businessservice.ProGroupService;
 import com.toby.businessservice.ReportsService;
+import com.toby.converter.ItemDTOConverter;
 import com.toby.converter.ProGroupDTOConverter;
+import com.toby.dto.InvItemDTO;
 import com.toby.dto.ProGroupDTO;
 import com.toby.toby.Basic;
 import com.toby.views.ProfitOfItemsSold;
@@ -26,71 +29,75 @@ import org.apache.poi.hssf.util.HSSFColor;
 @Named(value = "profitOfItemsSoldReport")
 @ViewScoped
 public class ProfitOfItemsSoldReport extends Basic {
-
+    
     private List<ProfitOfItemsSold> profitOfItemsSoldList;
     private ProfitOfItemsSold profitOfItemsSold;
     private Integer type;
     private List<ProGroupDTO> groupDTOList;
     private ProGroupDTOConverter proGroupDTOConverter;
+    private List<InvItemDTO> itemDTOList;
+    private ItemDTOConverter itemDTOConverter;
     private Integer invoiceType;
-
+    
     @EJB
     private ReportsService reportsService;
     @EJB
     ProGroupService proGroupService;
-
+    @EJB
+    InvItemService invItemService;
+    
     @PostConstruct
     public void init() {
         getProfitOfItemsSold().getGallarySelected().addAll(getGallaryLists());
         getProfitOfItemsSold().getGroupDTOSelected().addAll(getGroupDTOList());
     }
-
+    
     public void search() {
         profitOfItemsSoldList = new ArrayList<>();
-        getProfitOfItemsSoldList().addAll(reportsService.getProfitOfItemsSold(getProfitOfItemsSold(), getUserData().getUserBranch().getId(), type,getInvoiceType()));
+        getProfitOfItemsSoldList().addAll(reportsService.getProfitOfItemsSold(getProfitOfItemsSold(), getUserData().getUserBranch().getId(), type, getInvoiceType()));
     }
-
+    
     public void convertDateFrom() {
         getProfitOfItemsSold().setDateFrom(findDateFromHijriFrom());
     }
-
+    
     public void convertDateTo() {
         getProfitOfItemsSold().setDateTo(findDateFromHijriTo());
     }
-
+    
     public void postProcessXLS(Object document) {
         HSSFWorkbook wb = (HSSFWorkbook) document;
         HSSFSheet sheet = wb.getSheetAt(0);
         HSSFRow header = sheet.getRow(0);
-
+        
         HSSFCellStyle cellStyle = wb.createCellStyle();
         cellStyle.setFillForegroundColor(HSSFColor.GREEN.index);
         cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-
+        
         for (int i = 0; i < header.getPhysicalNumberOfCells(); i++) {
             HSSFCell cell = header.getCell(i);
-
+            
             cell.setCellStyle(cellStyle);
         }
     }
-
+    
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
         String reportName = "ProfitOfItemsSoldReport.jasper";
         fillReport(prepareReport(), getUserData().getReportPath() + reportName, getProfitOfItemsSoldList(), "pdf");
     }
-
+    
     public HashMap prepareReport() {
         HashMap hashMap = new HashMap();
-
+        
         hashMap.put("PrintedBy", getUserData().getUser().getName());
         hashMap.put("branchName", getUserData().getUserBranch().getNameAr());
-
+        
         if (isFileExist(getUserData().getImageReportPath())) {
             hashMap.put("companyImage", getUserData().getImageReportPath());
         } else {
             hashMap.put("companyImage", null);
         }
-
+        
         hashMap.put("gallarySelectedText", " المعرض");
         hashMap.put("gallarySelectedValue", getProfitOfItemsSold() == null ? null : getProfitOfItemsSold().getGallaryFrom().getName());
         hashMap.put("typeText", " الحالة");
@@ -105,7 +112,7 @@ public class ProfitOfItemsSoldReport extends Basic {
         hashMap.put("totallSellText", " اجمالى المبيعات");
         hashMap.put("totallDiscountText", " الخصم الكلى");
         hashMap.put("totallNetText", " اجمالى سعر البيع");
-
+        
         return hashMap;
     }
 
@@ -142,7 +149,7 @@ public class ProfitOfItemsSoldReport extends Basic {
     public void setProfitOfItemsSold(ProfitOfItemsSold profitOfItemsSold) {
         this.profitOfItemsSold = profitOfItemsSold;
     }
-
+    
     public Integer getType() {
         return type;
     }
@@ -198,6 +205,47 @@ public class ProfitOfItemsSoldReport extends Basic {
      */
     public void setInvoiceType(Integer invoiceType) {
         this.invoiceType = invoiceType;
+    }
+
+    /**
+     * @return the itemDTOList
+     */
+    public List<InvItemDTO> getItemDTOList() {
+        if (groupDTOList != null && !groupDTOList.isEmpty()) {
+            StringBuilder list = null;
+            for (ProGroupDTO dTO : groupDTOList) {
+                if (list == null) {
+                    list = new StringBuilder();
+                    list.append(dTO.getId());
+                } else {
+                    list.append(",").append(dTO.getId());
+                }
+            }
+            itemDTOList = invItemService.getInvItemByBranchIdAndProGroupIdDTO(list);
+            setItemDTOConverter(new ItemDTOConverter(itemDTOList));
+        }
+        return itemDTOList;
+    }
+
+    /**
+     * @param itemDTOList the itemDTOList to set
+     */
+    public void setItemDTOList(List<InvItemDTO> itemDTOList) {
+        this.itemDTOList = itemDTOList;
+    }
+
+    /**
+     * @return the itemDTOConverter
+     */
+    public ItemDTOConverter getItemDTOConverter() {
+        return itemDTOConverter;
+    }
+
+    /**
+     * @param itemDTOConverter the itemDTOConverter to set
+     */
+    public void setItemDTOConverter(ItemDTOConverter itemDTOConverter) {
+        this.itemDTOConverter = itemDTOConverter;
     }
 
     /**

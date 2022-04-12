@@ -71,7 +71,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         total = calcRowTotal(invInvoiceDTO.getScreenName(), number, cost, quantity);
 
         calcRowAfterCalcTotal(total, discount, detailEntity);
-        if (isNeeadQuantity && invInvoiceDTO.getInventorySetupDTO() != null && !invInvoiceDTO.getInventorySetupDTO().getNegativeSell()) {
+        if ((isNeeadQuantity && invInvoiceDTO.getInventorySetupDTO() != null && !invInvoiceDTO.getInventorySetupDTO().getNegativeSell()) || invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVUPDATE)) {
             detailEntity = updateAvailableQuantityRow(invInvoiceDTO.getScreenName(), detailEntity, invInvoiceDTO.getInvInventoryId() != null ? invInvoiceDTO.getInvInventoryId().getId() : null, invInvoiceDTO.getInventorySetupDTO().getSellBuy(), invInvoiceDTO.getInventorySetupDTO().getNegativeSell(), invInvoiceDTO.getIsEdit());
         }
         if (detailEntity.getItemId() != null
@@ -146,9 +146,9 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         }
         return detailEntity.getDiscount() != null ? detailEntity.getDiscount() : BigDecimal.ZERO;
     }
-    
+
     @Override
-    public BigDecimal calcDiscount(InvDetailDTO detailEntity, InvOrganizationSiteDTO invOrganizationSiteDTO,ScreenNameClassEnum screenNameClassEnum) {
+    public BigDecimal calcDiscount(InvDetailDTO detailEntity, InvOrganizationSiteDTO invOrganizationSiteDTO, ScreenNameClassEnum screenNameClassEnum) {
 //        if (invInventoryId == 70) {
         if (!ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)) {
 //            if (invInvoiceDTO.getOfferType() == null) {
@@ -188,10 +188,11 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             return discountCompany;
         }
     }
+
     private BigDecimal calaDiscountCustomerCompany(InvOrganizationSiteDTO invOrganizationSiteDTO) {
         BigDecimal discountCustomer = BigDecimal.ZERO;
         BigDecimal discountCompany = BigDecimal.ZERO;
-        if (invOrganizationSiteDTO!= null) {
+        if (invOrganizationSiteDTO != null) {
             discountCustomer = invOrganizationSiteDTO.getDiscount();
         }
         // هنا يرقد خصم الشركات بسلام 
@@ -221,7 +222,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         BigDecimal cost = BigDecimal.ZERO;
         if (invInvoiceDTO.getCompanyActivity().equals(CompanyActivityClassEnum.RetailSaleForClothFactory)
                 && (ScreenNameClassEnum.PROWORKORDER.equals(invInvoiceDTO.getScreenName()))
-                && (invInvoiceDTO.getId() == null || detailEntity.getCost().compareTo(BigDecimal.ZERO) == 0 )//                && findCost
+                && (invInvoiceDTO.getId() == null || detailEntity.getCost().compareTo(BigDecimal.ZERO) == 0)//                && findCost
                 ) {
             if (detailEntity.getItemsBarcodesDetail().getProGroupId() != null && detailEntity.getItemsBarcodesDetail().getProGroupId() == 22) {
                 cost = zorarAndHarot2(invInvoiceDTO, detailEntity, cost);
@@ -531,7 +532,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
     @Override
     public InvInvoiceDTO updateSummitionSmall(InvInvoiceDTO invPurchaseInvoiceDTO) {
         try {
-            
+
             invPurchaseInvoiceDTO = recalcHeadValuesSmall(invPurchaseInvoiceDTO);
             invPurchaseInvoiceDTO = recalcHeadValues(invPurchaseInvoiceDTO);
         } catch (Exception e) {
@@ -576,7 +577,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         invPurchaseInvoiceDTO.setTaxdiscvalue(BigDecimal.ZERO);
         invPurchaseInvoiceDTO.setTaxvalue(BigDecimal.ZERO);
         invPurchaseInvoiceDTO.setDiscountValue(BigDecimal.ZERO);
-        
+
         invPurchaseInvoiceDTO.setTotalNetAfterDiscount(BigDecimal.ZERO);
         invPurchaseInvoiceDTO.setFinalNet(BigDecimal.ZERO);
     }
@@ -699,13 +700,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             Boolean negativeSell, Boolean isload, Boolean sellBuy, CompanyActivityClassEnum companyActivityClassEnum) {
         StringBuilder error = new StringBuilder();
 
-        if (invDetailDTO.getItemsBarcodesDetail() == null && invDetailDTO.getItemsBarcodesDetailTrans() != null) {
-            invDetailDTO.setItemsBarcodesDetail(invDetailDTO.getItemsBarcodesDetailTrans());
-        } else if (invDetailDTO.getItemsBarcodesDetail() != null && invDetailDTO.getItemsBarcodesDetailTrans() == null) {
-            invDetailDTO.setItemsBarcodesDetailTrans(invDetailDTO.getItemsBarcodesDetail());
-        } else if (invDetailDTO.getItemsBarcodesDetail() == null && invDetailDTO.getItemsBarcodesDetailTrans() == null) {
-            error.append("\n يجب ادخال الصنف");
-        }
+        validateSelectItem(invDetailDTO, error);
 
         if (invDetailDTO.getDiscount() != null) {
             if (!Validation.isDiscountValid(invDetailDTO.getDiscount())) {
@@ -718,30 +713,33 @@ public class InvGlobalServiceImpl implements InvGlobalService {
 
         }
 
-        if (!validateQuantity(invDetailDTO, companyActivityClassEnum, screenNameClassEnum)) {
-            error.append("\n يجب ادخال كمية للصنف");
-        }
+        if (!ScreenNameClassEnum.INVUPDATE.equals(screenNameClassEnum)) {
 
-        if (invDetailDTO.getQuantity() != null) {
             if (!validateQuantity(invDetailDTO, companyActivityClassEnum, screenNameClassEnum)) {
-                error.append("\n يجب اختيار الكميه ");
-            } else {
-                if ((ScreenNameClassEnum.INVSALESINVOICEFORM.equals(screenNameClassEnum)
-                        || ScreenNameClassEnum.INVPERMISSIONORDERFORM.equals(screenNameClassEnum)
-                        || ScreenNameClassEnum.PROWORKORDER.equals(screenNameClassEnum)
-                        || ScreenNameClassEnum.INVRESERVATIONFORM.equals(screenNameClassEnum)
-                        || ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)
-                        || ScreenNameClassEnum.INVRETURNPURCHASEFORM.equals(screenNameClassEnum))) {
+                error.append("\n يجب ادخال كمية للصنف");
+            }
+
+            if (invDetailDTO.getQuantity() != null) {
+                if (!validateQuantity(invDetailDTO, companyActivityClassEnum, screenNameClassEnum)) {
+                    error.append("\n يجب اختيار الكميه ");
+                } else {
+                    if ((ScreenNameClassEnum.INVSALESINVOICEFORM.equals(screenNameClassEnum)
+                            || ScreenNameClassEnum.INVPERMISSIONORDERFORM.equals(screenNameClassEnum)
+                            || ScreenNameClassEnum.PROWORKORDER.equals(screenNameClassEnum)
+                            || ScreenNameClassEnum.INVRESERVATIONFORM.equals(screenNameClassEnum)
+                            || ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)
+                            || ScreenNameClassEnum.INVRETURNPURCHASEFORM.equals(screenNameClassEnum))) {
 //                    if (!negativeSell && (invDetailDTO.getIsInventoryItem() == 1)) {
 //                        StringBuilder ee = validateQuantityWhenSave(invDetailDTO, inventoryId, screenNameClassEnum, isload, sellBuy, companyActivityClassEnum);
 //                        if (!ee.toString().isEmpty()) {
 //                            error.append(ee);
 //                        }
 //                    }
-                    if (!negativeSell && (invDetailDTO.getIsInventoryItem() == 1)) {
-                        invDetailDTO = validateQuantityWhenSave(invDetailDTO, inventoryId, screenNameClassEnum, isload, sellBuy, companyActivityClassEnum);
-                        if (invDetailDTO.getMsg() != null && !invDetailDTO.getMsg().isEmpty()) {
-                            error.append(invDetailDTO.getMsg());
+                        if (!negativeSell && (invDetailDTO.getIsInventoryItem() == 1)) {
+                            invDetailDTO = validateQuantityWhenSave(invDetailDTO, inventoryId, screenNameClassEnum, isload, sellBuy, companyActivityClassEnum);
+                            if (invDetailDTO.getMsg() != null && !invDetailDTO.getMsg().isEmpty()) {
+                                error.append(invDetailDTO.getMsg());
+                            }
                         }
                     }
                 }
@@ -750,6 +748,21 @@ public class InvGlobalServiceImpl implements InvGlobalService {
 
         invDetailDTO.setMsg(error.toString());
         return invDetailDTO;
+    }
+
+    @Override
+    public StringBuilder validateSelectItem(InvDetailDTO invDetailDTO, StringBuilder error) {
+        if (invDetailDTO.getItemsBarcodesDetail() == null && invDetailDTO.getItemsBarcodesDetailTrans() != null) {
+            invDetailDTO.setItemsBarcodesDetail(invDetailDTO.getItemsBarcodesDetailTrans());
+        } else if (invDetailDTO.getItemsBarcodesDetail() != null && invDetailDTO.getItemsBarcodesDetailTrans() == null) {
+            invDetailDTO.setItemsBarcodesDetailTrans(invDetailDTO.getItemsBarcodesDetail());
+        } else if (invDetailDTO.getItemsBarcodesDetail() == null && invDetailDTO.getItemsBarcodesDetailTrans() == null) {
+            if (error == null) {
+                error = new StringBuilder();
+            }
+            error.append("\n يجب ادخال الصنف");
+        }
+        return error;
     }
 
     @Override
@@ -774,7 +787,8 @@ public class InvGlobalServiceImpl implements InvGlobalService {
 
     @Override
     public Boolean validateQuantity(InvDetailDTO detailDTO, CompanyActivityClassEnum companyActivityClassEnum, ScreenNameClassEnum screenNameClassEnum) {
-        if (companyActivityClassEnum.equals(CompanyActivityClassEnum.RetailSaleForClothFactory) && (ScreenNameClassEnum.INVSALESINVOICEFORM.equals(screenNameClassEnum) || ScreenNameClassEnum.PROWORKORDER.equals(screenNameClassEnum))) {
+        if (companyActivityClassEnum.equals(CompanyActivityClassEnum.RetailSaleForClothFactory)
+                && (ScreenNameClassEnum.INVSALESINVOICEFORM.equals(screenNameClassEnum) || ScreenNameClassEnum.PROWORKORDER.equals(screenNameClassEnum))) {
             return detailDTO != null && detailDTO.getItemsBarcodesDetail() != null
                     && (detailDTO.getQuantityOfOneUnit().multiply(detailDTO.getNumber())) != null
                     && (detailDTO.getQuantityOfOneUnit().multiply(detailDTO.getNumber())).compareTo(BigDecimal.ZERO) == 1;
@@ -872,7 +886,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                     detailDTO.setIsInventoryItem(detailDTO.getItemsBarcodesDetail().getIsInventoryItem());
                     detailDTO = findDataForItem(detailDTO, invInvoiceDTO, null, findCost);
                     detailDTO.setCostBak(detailDTO.getCost());
-                    if (!invInvoiceDTO.getInventorySetupDTO().getNegativeSell()) {
+                    if (!invInvoiceDTO.getInventorySetupDTO().getNegativeSell() || ScreenNameClassEnum.INVUPDATE.equals(invInvoiceDTO.getScreenName())) {
                         detailDTO = updateAvailableQuantityRow(invInvoiceDTO.getScreenName(), detailDTO, invInvoiceDTO.getInvInventoryId() == null ? null : invInvoiceDTO.getInvInventoryId().getId(), invInvoiceDTO.getInventorySetupDTO().getSellBuy(), invInvoiceDTO.getInventorySetupDTO().getNegativeSell(), invInvoiceDTO.getIsEdit());
                     }
                 } else {
@@ -1028,6 +1042,23 @@ public class InvGlobalServiceImpl implements InvGlobalService {
     }
 
     @Override
+    public InvDetailDTO validateActualQuantityColumn(InvDetailDTO detailDTO) {
+        try {
+            if (!validateActualQuantity(detailDTO)) {
+                if (detailDTO.getItemsBarcodesDetail() != null) {
+                    detailDTO.setMsg("يجب ان يكون السعر أكبر من او يساوي الصفر");
+                } else {
+                    detailDTO.setMsg("يجب اختيار صنف اولا");
+                }
+                detailDTO.setActualQuantity(BigDecimal.ZERO);
+            }
+        } catch (Exception e) {
+            detailDTO.setMsg(e.toString());
+        }
+        return detailDTO;
+    }
+
+    @Override
     public InvDetailDTO updateAvailableQuantityRow(ScreenNameClassEnum screenNameClassEnum, InvDetailDTO detailDTO, Integer inventoryId, Boolean sellBuy, Boolean sellNegative, Boolean isEdit) {
         if (ScreenNameClassEnum.INVSALESINVOICEFORM.equals(screenNameClassEnum)
                 || ScreenNameClassEnum.INVPERMISSIONORDERFORM.equals(screenNameClassEnum)
@@ -1043,11 +1074,23 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 detailDTO.setQuantity(BigDecimal.ZERO);
                 detailDTO.setCost(BigDecimal.ZERO);
                 detailDTO.setMsg("الصنف لا يوجد به كمية بالمخزن");
-            } else if (ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)) {
-                detailDTO.setAvailableQuantityRow(quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), sellBuy, null));
             }
+        } else if (ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)
+                || ScreenNameClassEnum.INVUPDATE.equals(screenNameClassEnum)) {
+            detailDTO.setAvailableQuantityRow(quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), sellBuy, null));
+            detailDTO.setOldQuantity(detailDTO.getAvailableQuantityRow());
+            detailDTO.setOldQuantityBak(detailDTO.getAvailableQuantityRow());
+
         }
         return detailDTO;
+    }
+
+    @Override
+    public Boolean validateActualQuantity(InvDetailDTO detailDTO) {
+        return detailDTO != null
+                && detailDTO.getItemsBarcodesDetail() != null
+                && detailDTO.getCost() != null
+                && detailDTO.getCost().compareTo(BigDecimal.ZERO) >= 0;
     }
 
     @Override
@@ -1186,7 +1229,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             String itemBarcode, BigDecimal screwing, Integer itemId, BigDecimal weight, Integer unitId,
             Integer unitSerial, String unitName, Integer inventoryItem, BigDecimal number,
             BigDecimal quantityOfOneUnit, InvInventory invInventory, InvItem invItem,
-            CompanyActivityClassEnum companyActivityClassEnum, ScreenNameClassEnum screenNameClassEnum, 
+            CompanyActivityClassEnum companyActivityClassEnum, ScreenNameClassEnum screenNameClassEnum,
             Integer detailId, BigDecimal costAvarage) {
 
 //        if (companyActivityClassEnum.equals(CompanyActivityClassEnum.RetailSaleForClothFactory)

@@ -1,8 +1,17 @@
 package com.toby.businessservice;
 
 import com.toby.core.GenericDAO;
+import com.toby.dto.InvDetailDTO;
+import com.toby.dto.InvInventoryDTO;
+import com.toby.dto.InvInvoiceDTO;
+import com.toby.entity.Branch;
+import com.toby.entity.InvInventory;
 import com.toby.entity.InvUpdate;
 import com.toby.entity.InvUpdateDetail;
+import com.toby.entity.TobyCompany;
+import com.toby.entity.TobyUser;
+import java.util.ArrayList;
+import java.util.Date;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -22,6 +31,10 @@ public class InvUpdateServiceImp implements InvUpdateService {
     private GenericService genericService;
     @EJB
     private InvUpdateDetailService invUpdateDetailService;
+    @EJB
+    private InvGlobalService invGlobalService;
+    @EJB
+    private InvInventoryService invInventoryService;
 
     @Override
     public InvUpdate addInvUpdate(InvUpdate invUpdate, List<InvUpdateDetail> invUpdateDetailList, List<InvUpdateDetail> UpdateDetailDeleted) {
@@ -102,5 +115,213 @@ public class InvUpdateServiceImp implements InvUpdateService {
             serial = serial + 1;
             return serial;
         }
+    }
+
+    @Override
+    public InvInvoiceDTO findInvUpdateById(InvInvoiceDTO invInvoiceDTO) {
+        InvUpdate invUpdate = dao.findEntityById(InvUpdate.class, invInvoiceDTO.getId());
+        InvInvoiceDTO invPurchaseInvoiceDTO = mapToDTO(invUpdate, invInvoiceDTO);
+        invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO, false);
+        return invPurchaseInvoiceDTO;
+    }
+
+    @Override
+    public InvInvoiceDTO save(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) {
+        try {
+            invInvoiceDTO = validateSave(invInvoiceDTO);
+
+            InvUpdate invUpdate;
+            if (invInvoiceDTO != null && (invInvoiceDTO.getMsg() == null || invInvoiceDTO.getMsg().isEmpty())) {
+                invUpdate = mapToEntity(invInvoiceDTO, tobyUser);
+                if (invUpdate.getId() != null) {
+                    //بعمل حفظ فى حالة التعديل
+                    invUpdate = dao.updateEntity(invUpdate);
+                } else {
+                    // فى حالة ان الفاتورة جديدة بروح اجيب السيريال الاول 
+                    Integer serial = genericService.getMaxGenericSerialByType(InvUpdate.class, invUpdate.getBranchId().getId(), null);
+                    invUpdate.setSerial(serial);
+
+                    invUpdate = dao.updateEntity(invUpdate);
+                    invInvoiceDTO.setId(invUpdate.getId());
+                }
+
+                invUpdateDetailService.deleteInvUpdateDetailListDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailsDeletedList());
+                String error;
+                error = invUpdateDetailService.addInvUpdateDetailsDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailList(), invInvoiceDTO, invInvoiceDTO.getScreenName(), tobyUser);
+                if (error != null && !error.isEmpty()) {
+                    invInvoiceDTO.setMsg(error);
+                    dao.rollbackQuery();
+                } else {
+                    invInvoiceDTO = mapToDTO(invUpdate, invInvoiceDTO);
+                    invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO, false);
+                }
+
+            }
+        } catch (Exception e) {
+            invInvoiceDTO.setMsg(e.toString());
+            dao.rollbackQuery();
+        }
+
+        return invInvoiceDTO;
+    }
+
+    public InvInvoiceDTO validateSave(InvInvoiceDTO invPurchaseInvoiceDTO) {
+        StringBuilder error = new StringBuilder();
+
+        if (invPurchaseInvoiceDTO.getInvInventoryId() == null) {
+            error.append("\n يجب اختيار مخزن");
+        }
+
+        if (!error.toString().isEmpty()) {
+            invPurchaseInvoiceDTO.setMsg(error.toString());
+        }
+        return invPurchaseInvoiceDTO;
+    }
+
+    //mapToEntity
+    private InvUpdate mapToEntity(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) {
+
+        InvUpdate invUpdate = new InvUpdate();
+
+        if (invInvoiceDTO.getInvInventoryId() != null) {
+            InvInventory invInventory = new InvInventory();
+            invInventory.setId(invInvoiceDTO.getInvInventoryId().getId());
+            invUpdate.setInventoryId(invInventory);
+        }
+
+        invUpdate.setId(invInvoiceDTO.getId());
+
+        invUpdate.setDate(invInvoiceDTO.getDate());
+        invUpdate.setRemarks(invInvoiceDTO.getRemarks());
+        invUpdate.setDocument(invInvoiceDTO.getSupplierInvoiceNumber());
+
+        if (invInvoiceDTO.getCreatedBy() != null) {
+            invUpdate.setSerial(invInvoiceDTO.getSerial());
+            TobyUser user = new TobyUser();
+            user.setId(invInvoiceDTO.getCreatedBy());
+            invUpdate.setCreatedBy(user);
+            invUpdate.setCreationDate(invInvoiceDTO.getCreatedDate());
+            invUpdate.setModifiedBy(tobyUser);
+            invUpdate.setModificationDate(new Date());
+            if (invInvoiceDTO.getCompanyId() != null) {
+                TobyCompany company = new TobyCompany();
+                company.setId(invInvoiceDTO.getCompanyId());
+                invUpdate.setCompanyId(company);
+            }
+
+            if (invInvoiceDTO.getBranchId() != null) {
+                Branch branch = new Branch();
+                branch.setId(invInvoiceDTO.getBranchId());
+                invUpdate.setBranchId(branch);
+            }
+        } else {
+            invUpdate.setCreatedBy(tobyUser);
+            invUpdate.setCreationDate(new Date());
+            invUpdate.setCompanyId(tobyUser.getCompanyId());
+            invUpdate.setBranchId(tobyUser.getBranchId());
+        }
+
+        return invUpdate;
+    }
+
+    private InvInvoiceDTO initData(InvInvoiceDTO dto, InvUpdate entity) {
+        dto.setId(entity.getId());
+        dto.setSerial(entity.getSerial());
+        dto.setCompanyActivity(entity.getBranchId().getCompanyActivity());
+        dto.setBranchId(entity.getBranchId() != null ? entity.getBranchId().getId() : null);
+        dto.setDate(entity.getDate());
+        dto.setRemarks(entity.getRemarks());
+        dto.setSupplierInvoiceNumber(entity.getDocument());
+
+        if (entity.getInventoryId() != null) {
+            InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
+            invInventoryDTO.setId(entity.getInventoryId().getId());
+            invInventoryDTO.setName(entity.getInventoryId().getName());
+            invInventoryDTO.setCode(entity.getInventoryId().getCode());
+            dto.setInvInventoryId(invInventoryDTO);
+        }
+
+        dto.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
+        dto.setCreatedDate(entity.getCreationDate());
+        dto.setIndex(entity.getId());
+        dto.setCompanyId(entity.getCompanyId().getId() != null ? entity.getCompanyId().getId() : null);
+        dto.setCreatedByName(entity.getCreatedBy() != null ? entity.getCreatedBy().getName() : null);
+
+        List<InvDetailDTO> invPurchaseInvoiceDetailsListDTO = invUpdateDetailService.getAllInvTransferDetailsByInvPurchaseInvoiceIdDTO(dto, entity.getBranchId().getId());
+
+        dto.setInvPurchaseInvoiceDetailList(invPurchaseInvoiceDetailsListDTO);
+        dto.setInvPurchaseInvoiceDetailsDeletedList(new ArrayList<InvDetailDTO>());
+
+        dto = invGlobalService.updateSummition(dto, false);
+        return dto;
+    }
+
+    private InvInvoiceDTO mapToDTO(InvUpdate entity, InvInvoiceDTO invInvoiceDTO) {
+
+        invInvoiceDTO = initData(invInvoiceDTO, entity);
+
+        return invInvoiceDTO;
+    }
+
+    @Override
+    public InvInvoiceDTO saveNewAll(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) {
+        invInvoiceDTO = saveNew(invInvoiceDTO, tobyUser);
+        invInvoiceDTO.setInvPurchaseInvoiceDetailList(invUpdateDetailService.addInvUpdateDetailsDTONewList(invInvoiceDTO.getInvPurchaseInvoiceDetailList(), invInvoiceDTO.getId(), tobyUser));
+        return invInvoiceDTO;
+    }
+
+    @Override
+    public InvInvoiceDTO saveNew(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) {
+        try {
+            invInvoiceDTO = validateSaveNew(invInvoiceDTO);
+
+            InvUpdate invUpdate;
+            if (invInvoiceDTO != null && (invInvoiceDTO.getMsg() == null || invInvoiceDTO.getMsg().isEmpty())) {
+                invUpdate = mapToEntity(invInvoiceDTO, tobyUser);
+                if (invUpdate.getId() != null) {
+                    //بعمل حفظ فى حالة التعديل
+                    invUpdate = dao.updateEntity(invUpdate);
+                } else {
+                    // فى حالة ان الفاتورة جديدة بروح اجيب السيريال الاول 
+                    Integer serial = genericService.getMaxGenericSerialByType(InvUpdate.class, invUpdate.getBranchId().getId(), null);
+                    invUpdate.setSerial(serial);
+
+                    invUpdate = dao.updateEntity(invUpdate);
+                    invInvoiceDTO.setId(invUpdate.getId());
+                    invInvoiceDTO.setSerial(serial);
+                }
+            }
+        } catch (Exception e) {
+            invInvoiceDTO.setMsg(e.toString());
+            dao.rollbackQuery();
+        }
+
+        return invInvoiceDTO;
+    }
+
+    public InvInvoiceDTO validateSaveNew(InvInvoiceDTO invPurchaseInvoiceDTO) {
+        StringBuilder error = new StringBuilder();
+
+        if (invPurchaseInvoiceDTO.getInvInventoryId() == null) {
+            error.append("\n يجب اختيار مخزن");
+        }
+
+        if (invPurchaseInvoiceDTO.getDate() == null) {
+            error.append("\n يجب اختيار تاريخ");
+        }
+
+        if (!error.toString().isEmpty()) {
+            invPurchaseInvoiceDTO.setMsg(error.toString());
+        }
+        return invPurchaseInvoiceDTO;
+    }
+
+    @Override
+    public InvInventoryDTO findinvinventoryDTO(Integer stripSerial, Integer branchId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        params.put("stripSerial", stripSerial);
+        List<InvInventory> invStripList = dao.findListByQuery("SELECT e.inventoryId FROM InvStrip e WHERE e.branchId.id = :branchId AND e.serial= :stripSerial", params);
+        return invInventoryService.maptoDTOSmall(null, invStripList.get(0));
     }
 }

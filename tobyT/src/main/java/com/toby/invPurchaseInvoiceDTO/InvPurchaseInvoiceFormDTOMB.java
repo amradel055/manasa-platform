@@ -327,15 +327,16 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
 
     public void searchReturnInvoiceBySerial() {
         try {
-            if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getSearchBySerial() > 0) {
+            if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getSearchBySerial() != null && getInvInvoiceDTO().getSearchBySerial() > 0) {
                 Integer invoiceId = invPurchaseInvoiceService_1.getInvoiceBySerial(getInvInvoiceDTO().getSearchBySerial());
                 if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
                     findinvoice(invoiceId);
                 } else if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVRETURNSALESFORM)) {
                     findinvoice(invoiceId);
                     for (InvDetailDTO invDetailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
-                        invDetailDTO.setNumber(proFactoryDeliveryDetailService.findquantityAllow(invoiceId, invDetailDTO.getItemsBarcodesDetail().getBarcode()));
+                        invDetailDTO.setNumber(proFactoryDeliveryDetailService.findquantityAllow(invoiceId, invDetailDTO.getItemsBarcodesDetailTrans().getBarcode()));
                         invDetailDTO.setAvailableQuantityRow(invDetailDTO.getNumber());
+                        afterValidation(invDetailDTO, true);
                     }
                 }
 

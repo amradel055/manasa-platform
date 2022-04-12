@@ -88,7 +88,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static sun.management.snmp.util.JvmContextFactory.getUserData;
 
 /**
  *
@@ -1160,181 +1159,187 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     //mapToEntity
-    private InvPurchaseInvoice mapToEntity(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) {
+    private InvPurchaseInvoice mapToEntity(InvInvoiceDTO dto, TobyUser tobyUser) {
 
-        InvPurchaseInvoice invPurchaseInvoice = new InvPurchaseInvoice();
+        InvPurchaseInvoice entity = new InvPurchaseInvoice();
 
-        if (invInvoiceDTO.getInvInventoryId() != null) {
+        if (dto.getInvInventoryId() != null) {
             InvInventory inventory = new InvInventory();
-            inventory.setId(invInvoiceDTO.getInvInventoryId().getId());
-            invPurchaseInvoice.setInvInventoryId(inventory);
+            inventory.setId(dto.getInvInventoryId().getId());
+            entity.setInvInventoryId(inventory);
         }
 
-        if (invInvoiceDTO.getGeneralJournalId() != null) {
+        if (dto.getGeneralJournalId() != null) {
             GeneralJournal generalJournal = new GeneralJournal();
-            generalJournal.setId(invInvoiceDTO.getGeneralJournalId());
-            invPurchaseInvoice.setGeneralJournalId(generalJournal);
+            generalJournal.setId(dto.getGeneralJournalId());
+            entity.setGeneralJournalId(generalJournal);
         }
 
-        if ((invInvoiceDTO.getType() != 0 || invInvoiceDTO.getType() != 2 || invInvoiceDTO.getType() != 5) && invInvoiceDTO.getGallaryId() != null) {
+        if ((dto.getType() != 0 || dto.getType() != 2 || dto.getType() != 5) && dto.getGallaryId() != null) {
             InvInventory inventory = new InvInventory();
-            inventory.setId(invInvoiceDTO.getGallaryId().getId());
-            invPurchaseInvoice.setGalaryId(inventory);
+            inventory.setId(dto.getGallaryId().getId());
+            entity.setGalaryId(inventory);
         }
 
-        if (invInvoiceDTO.getAdminUnitId() != null) {
+        if (dto.getAdminUnitId() != null) {
             GlAdminUnit glAdminUnit = new GlAdminUnit();
-            glAdminUnit.setId(invInvoiceDTO.getAdminUnitId().getId());
-            invPurchaseInvoice.setAdminUnitId(glAdminUnit);
+            glAdminUnit.setId(dto.getAdminUnitId().getId());
+            entity.setAdminUnitId(glAdminUnit);
         }
-        if (invInvoiceDTO.getCostCenterId() != null) {
+        if (dto.getCostCenterId() != null) {
             CostCenter costCenter = new CostCenter();
-            costCenter.setId(invInvoiceDTO.getCostCenterId().getId());
-            invPurchaseInvoice.setCostCenterId(costCenter);
+            costCenter.setId(dto.getCostCenterId().getId());
+            entity.setCostCenterId(costCenter);
         }
-        if (invInvoiceDTO.getCurrencyId() != null) {
+        if (dto.getCurrencyId() != null) {
             Currency currency = new Currency();
-            currency.setId(invInvoiceDTO.getCurrencyId().getId());
-            invPurchaseInvoice.setCurrencyId(currency);
+            currency.setId(dto.getCurrencyId().getId());
+            entity.setCurrencyId(currency);
         }
 
-        if (invInvoiceDTO.getOrganizationSiteId() != null) {
+        if (dto.getOrganizationSiteId() != null) {
             InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
-            invOrganizationSite.setId(invInvoiceDTO.getOrganizationSiteId().getId());
-            invOrganizationSite.setName(invInvoiceDTO.getOrganizationSiteId().getName());
-            invPurchaseInvoice.setOrganizationSiteId(invOrganizationSite);
+            invOrganizationSite.setId(dto.getOrganizationSiteId().getId());
+            invOrganizationSite.setName(dto.getOrganizationSiteId().getName());
+            entity.setOrganizationSiteId(invOrganizationSite);
         }
 
-        if (invInvoiceDTO.getAccountId() != null) {
+        if (dto.getAccountId() != null) {
             GlAccount glAccount = new GlAccount();
-            glAccount.setId(invInvoiceDTO.getAccountId());
-            invPurchaseInvoice.setAccountId(glAccount);
+            glAccount.setId(dto.getAccountId());
+            entity.setAccountId(glAccount);
         }
 
-        if (invInvoiceDTO.getGlBankId() != null) {
+        if (dto.getGlBankId() != null) {
             GlBank glBank = new GlBank();
-            glBank.setId(invInvoiceDTO.getGlBankId().getId());
-            invPurchaseInvoice.setGlBankId(glBank);
+            glBank.setId(dto.getGlBankId().getId());
+            entity.setGlBankId(glBank);
         }
-        if (invInvoiceDTO.getInvDelegatorId() != null) {
+        if (dto.getInvDelegatorId() != null) {
             InventoryDelegator inventoryDelegator = new InventoryDelegator();
-            inventoryDelegator.setId(invInvoiceDTO.getInvDelegatorId().getId());
-            invPurchaseInvoice.setInvDelegatorId(inventoryDelegator);
+            inventoryDelegator.setId(dto.getInvDelegatorId().getId());
+            entity.setInvDelegatorId(inventoryDelegator);
         }
 
-        if (invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVPURCHASEINVOICEFORM)) {
-            invPurchaseInvoice.setType(0);
-            invPurchaseInvoice.setGalaryId(null);
-            if (invInvoiceDTO.getInvAddingOrderId() != null) {
+        if (dto.getScreenName().equals(ScreenNameClassEnum.INVPURCHASEINVOICEFORM)) {
+            entity.setType(0);
+            entity.setGalaryId(null);
+            if (dto.getInvAddingOrderId() != null) {
                 InvAddingorder invAddingorder = new InvAddingorder();
-                invAddingorder.setId(invInvoiceDTO.getInvAddingOrderId());
-                invPurchaseInvoice.setInvAddingOrderId(invAddingorder);
-            } else if (invInvoiceDTO.getInvPurchaseOrderId() != null) {
+                invAddingorder.setId(dto.getInvAddingOrderId());
+                entity.setInvAddingOrderId(invAddingorder);
+            } else if (dto.getInvPurchaseOrderId() != null) {
                 InvPurchaseOrder invPurchaseOrder = new InvPurchaseOrder();
-                invPurchaseOrder.setId(invInvoiceDTO.getInvPurchaseOrderId());
-                invPurchaseInvoice.setInvPurchaseOrderId(invPurchaseOrder);
+                invPurchaseOrder.setId(dto.getInvPurchaseOrderId());
+                entity.setInvPurchaseOrderId(invPurchaseOrder);
             }
-        } else if (invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVSALESINVOICEFORM)) {
-            invPurchaseInvoice.setType(1);
+        } else if (dto.getScreenName().equals(ScreenNameClassEnum.INVSALESINVOICEFORM)) {
+            entity.setType(1);
 
-            if (invInvoiceDTO.getInvPurchaseInvoiceId() != null) {
+            if (dto.getInvPurchaseInvoiceId() != null) {
                 InvPurchaseInvoice purchaseInvoice = new InvPurchaseInvoice();
-                purchaseInvoice.setId(invInvoiceDTO.getInvPurchaseInvoiceId());
-                invPurchaseInvoice.setParent(purchaseInvoice);
+                purchaseInvoice.setId(dto.getInvPurchaseInvoiceId());
+                entity.setParent(purchaseInvoice);
             }
 
-            if (invInvoiceDTO.getProFactoryDeliveryId() != null) {
+            if (dto.getProFactoryDeliveryId() != null) {
                 ProFactoryDelivery proFactoryDelivery = new ProFactoryDelivery();
-                proFactoryDelivery.setId(invInvoiceDTO.getProFactoryDeliveryId());
-                invPurchaseInvoice.setProFactoryDeliveryId(proFactoryDelivery);
+                proFactoryDelivery.setId(dto.getProFactoryDeliveryId());
+                entity.setProFactoryDeliveryId(proFactoryDelivery);
             }
-        } else if (invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
-            invPurchaseInvoice.setType(4);
-            if (invInvoiceDTO.getInvQotationId() != null) {
+        } else if (dto.getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
+            entity.setType(4);
+            if (dto.getInvQotationId() != null) {
                 InvQotation invQotation = new InvQotation();
-                invQotation.setId(invInvoiceDTO.getInvQotationId());
-                invPurchaseInvoice.setInvQotationId(invQotation);
+                invQotation.setId(dto.getInvQotationId());
+                entity.setInvQotationId(invQotation);
             }
-        } else if (invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVRETURNPURCHASEFORM)) {
-            invPurchaseInvoice.setType(2);
-            invPurchaseInvoice.setGalaryId(null);
-            if (invInvoiceDTO.getInvPurchaseInvoiceId() != null) {
+        } else if (dto.getScreenName().equals(ScreenNameClassEnum.INVRETURNPURCHASEFORM)) {
+            entity.setType(2);
+            entity.setGalaryId(null);
+            if (dto.getInvPurchaseInvoiceId() != null) {
                 InvPurchaseInvoice purchaseInvoice = new InvPurchaseInvoice();
-                purchaseInvoice.setId(invInvoiceDTO.getInvPurchaseInvoiceId());
-                invPurchaseInvoice.setParent(purchaseInvoice);
+                purchaseInvoice.setId(dto.getInvPurchaseInvoiceId());
+                entity.setParent(purchaseInvoice);
             }
-        } else if (invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVRETURNSALESFORM)) {
-            invPurchaseInvoice.setType(3);
-            if (invInvoiceDTO.getInvPurchaseInvoiceId() != null) {
+        } else if (dto.getScreenName().equals(ScreenNameClassEnum.INVRETURNSALESFORM)) {
+            entity.setType(3);
+            if (dto.getInvPurchaseInvoiceId() != null) {
                 InvPurchaseInvoice purchaseInvoice = new InvPurchaseInvoice();
-                purchaseInvoice.setId(invInvoiceDTO.getInvPurchaseInvoiceId());
-                invPurchaseInvoice.setParent(purchaseInvoice);
+                purchaseInvoice.setId(dto.getInvPurchaseInvoiceId());
+                entity.setParent(purchaseInvoice);
             }
-        } else if (invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVPURCHASEADDING)) {
-            invPurchaseInvoice.setType(5);
-            invPurchaseInvoice.setGalaryId(null);
+        } else if (dto.getScreenName().equals(ScreenNameClassEnum.INVPURCHASEADDING)) {
+            entity.setType(5);
+            entity.setGalaryId(null);
         }
-        invPurchaseInvoice.setExcel(invInvoiceDTO.getExcel());
-        invPurchaseInvoice.setId(invInvoiceDTO.getId());
-        invPurchaseInvoice.setSerial(invInvoiceDTO.getSerial());
-        invPurchaseInvoice.setSerialTax(invInvoiceDTO.getSerialTax());
-        invPurchaseInvoice.setDate(invInvoiceDTO.getDate());
-        invPurchaseInvoice.setDiscount(invInvoiceDTO.getDiscount());
-        invPurchaseInvoice.setDiscountType(invInvoiceDTO.getDiscountType());
-        invPurchaseInvoice.setDiscHalala(invInvoiceDTO.getDiscHalala());
-        invPurchaseInvoice.setDueDate(invInvoiceDTO.getDueDate());
-        invPurchaseInvoice.setRemarks(invInvoiceDTO.getRemarks());
-        invPurchaseInvoice.setPostFlag(0);
-        invPurchaseInvoice.setPaymentType(invInvoiceDTO.getPaymentType() > 0 ? invInvoiceDTO.getPaymentType() : 0);
-        invPurchaseInvoice.setOfferCopoun(invInvoiceDTO.getOfferCopoun());
-        if (invInvoiceDTO.getPaymentType() == 1) {
-            invPurchaseInvoice.setGlBankId(null);
+        entity.setExcel(dto.getExcel());
+        entity.setId(dto.getId());
+        entity.setSerial(dto.getSerial());
+        entity.setSerialTax(dto.getSerialTax());
+        entity.setDate(dto.getDate());
+        entity.setDiscount(dto.getDiscount());
+        entity.setDiscountType(dto.getDiscountType());
+        entity.setDiscHalala(dto.getDiscHalala());
+        entity.setDueDate(dto.getDueDate());
+        entity.setRemarks(dto.getRemarks());
+        entity.setPostFlag(0);
+        entity.setPaymentType(dto.getPaymentType() > 0 ? dto.getPaymentType() : 0);
+        entity.setOfferCopoun(dto.getOfferCopoun());
+        if (dto.getPaymentType() == 1) {
+            entity.setGlBankId(null);
         }
-        invPurchaseInvoice.setTaxflag(invInvoiceDTO.getTaxflag());
-        invPurchaseInvoice.setRate(invInvoiceDTO.getRate() != null ? invInvoiceDTO.getRate() : null);
-        invPurchaseInvoice.setSupplierInvoiceNumber(invInvoiceDTO.getSupplierInvoiceNumber());
-        invPurchaseInvoice.setSupplierInvoiceDate(invInvoiceDTO.getSupplierInvoiceDate());
-        invPurchaseInvoice.setExtraCost(invInvoiceDTO.getExtraCost() != null ? invInvoiceDTO.getExtraCost() : BigDecimal.ZERO);
-        invPurchaseInvoice.setTaxdiscflag(invInvoiceDTO.getTaxdiscflag());
-        invPurchaseInvoice.setTaxdiscvalue(invInvoiceDTO.getTaxdiscvalue());
-        invPurchaseInvoice.setTaxFlagFinal(invInvoiceDTO.getTaxFlagFinal());
-        invPurchaseInvoice.setPricetype(invInvoiceDTO.getPricetype());
-        invPurchaseInvoice.setDueperiod(invInvoiceDTO.getDueperiod());
-        invPurchaseInvoice.setInvoiceType(invInvoiceDTO.getInvoiceType());
-        invPurchaseInvoice.setProof(invInvoiceDTO.getProof() ? 1 : 0);
-        invPurchaseInvoice.setSendCloth(invInvoiceDTO.getSendCloth() ? 1 : 0);
+        entity.setTaxflag(dto.getTaxflag());
+        entity.setRate(dto.getRate() != null ? dto.getRate() : null);
+        entity.setSupplierInvoiceNumber(dto.getSupplierInvoiceNumber());
+        entity.setSupplierInvoiceDate(dto.getSupplierInvoiceDate());
+        entity.setExtraCost(dto.getExtraCost() != null ? dto.getExtraCost() : BigDecimal.ZERO);
+        entity.setTaxdiscflag(dto.getTaxdiscflag());
+        entity.setTaxdiscvalue(dto.getTaxdiscvalue());
+        entity.setTaxFlagFinal(dto.getTaxFlagFinal());
+        entity.setPricetype(dto.getPricetype());
+        entity.setDueperiod(dto.getDueperiod());
+        entity.setInvoiceType(dto.getInvoiceType());
+        entity.setProof(dto.getProof() ? 1 : 0);
+        entity.setSendCloth(dto.getSendCloth() ? 1 : 0);
 
-        if (invInvoiceDTO.getCreatedBy() != null) {
+        if (dto.getDeliveryPlace() != null) {
+            InvInventory deliveryPlace = new InvInventory();
+            deliveryPlace.setId(dto.getDeliveryPlace().getId());
+            entity.setDeliveryPlace(deliveryPlace);
+        }
+
+        if (dto.getCreatedBy() != null) {
             TobyUser user = new TobyUser();
-            user.setId(invInvoiceDTO.getCreatedBy());
-            invPurchaseInvoice.setCreatedBy(user);
-            invPurchaseInvoice.setCreationDate(invInvoiceDTO.getCreatedDate());
-            invPurchaseInvoice.setModifiedBy(tobyUser);
-            invPurchaseInvoice.setModificationDate(new Date());
-            if (invInvoiceDTO.getCompanyId() != null) {
+            user.setId(dto.getCreatedBy());
+            entity.setCreatedBy(user);
+            entity.setCreationDate(dto.getCreatedDate());
+            entity.setModifiedBy(tobyUser);
+            entity.setModificationDate(new Date());
+            if (dto.getCompanyId() != null) {
                 TobyCompany company = new TobyCompany();
-                company.setId(invInvoiceDTO.getCompanyId());
-                invPurchaseInvoice.setCompanyId(company);
+                company.setId(dto.getCompanyId());
+                entity.setCompanyId(company);
             }
 
-            if (invInvoiceDTO.getBranchId() != null) {
+            if (dto.getBranchId() != null) {
                 Branch branch = new Branch();
-                branch.setId(invInvoiceDTO.getBranchId());
-                invPurchaseInvoice.setBranchId(branch);
+                branch.setId(dto.getBranchId());
+                entity.setBranchId(branch);
             }
         } else {
-            invPurchaseInvoice.setCreatedBy(tobyUser);
-            invPurchaseInvoice.setCreationDate(new Date());
-            invPurchaseInvoice.setCompanyId(tobyUser.getCompanyId());
-            invPurchaseInvoice.setBranchId(tobyUser.getBranchId());
+            entity.setCreatedBy(tobyUser);
+            entity.setCreationDate(new Date());
+            entity.setCompanyId(tobyUser.getCompanyId());
+            entity.setBranchId(tobyUser.getBranchId());
         }
-        if (invInvoiceDTO.getDeliveryPlace() != null) {
+        if (dto.getDeliveryPlace() != null) {
             InvInventory invInventory = new InvInventory();
-            invInventory.setId(invInvoiceDTO.getDeliveryPlace().getId());
-            invInventory.setName(invInvoiceDTO.getDeliveryPlace().getName());
-            invPurchaseInvoice.setDeliveryPlace(invInventory);
+            invInventory.setId(dto.getDeliveryPlace().getId());
+            invInventory.setName(dto.getDeliveryPlace().getName());
+            entity.setDeliveryPlace(invInventory);
         }
-        return invPurchaseInvoice;
+        return entity;
     }
 
     public InvInvoiceDTO validateSave(InvInvoiceDTO invInvoiceDTO) {
@@ -1749,6 +1754,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         dto.setProof(entity.getProof() == 1);
         dto.setOfferCopoun(entity.getOfferCopoun());
 
+        if (entity.getDeliveryPlace() != null) {
+            InvInventoryDTO deliveryPlace = new InvInventoryDTO();
+            deliveryPlace.setId(entity.getDeliveryPlace().getId());
+            dto.setDeliveryPlace(deliveryPlace);
+        }
+
         if (entity.getOrganizationSiteId() != null) {
             dto.setOrganizationSiteId(mapToDTOSmallOrganizationSite(entity.getOrganizationSiteId()));// here kartha
         }
@@ -2007,12 +2018,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 + " left join inv_inventory invi on invi.id = s.galary_Id "
                 + " left join inv_organization_site ios on ios.id = s.organization_site_id "
                 + " WHERE s.branch_id = ").append(branchId).append(
-                " AND  s.type = ").append(printProductionDTO.getInvoiceStatus()).append(
-                " AND s.id not in (SELECT p.inv_purchase_invoice_id from pro_factory_delivery p )  \n"
-                + " AND  s.galary_Id IN (").append(gallarySelected).append(" )  AND   s.date >= '"
-                + formatDateFrom.format(printProductionDTO.getFromDate()) + "'"
-                + " AND   s.date <= '" + formatDateTo.format(printProductionDTO.getToDate()) + "'"
-                + " order by s.serial");
+                        " AND  s.type = ").append(printProductionDTO.getInvoiceStatus()).append(
+                        " AND s.id not in (SELECT p.inv_purchase_invoice_id from pro_factory_delivery p )  \n"
+                        + " AND  s.galary_Id IN (").append(gallarySelected).append(" )  AND   s.date >= '"
+                        + formatDateFrom.format(printProductionDTO.getFromDate()) + "'"
+                        + " AND   s.date <= '" + formatDateTo.format(printProductionDTO.getToDate()) + "'"
+                        + " order by s.serial");
 
         List<Object[]> res = dao.executeNativeQuery(builder.toString());
 
@@ -3533,11 +3544,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
     @Override // إجماليات الفئات الجديد 
     public List<SummitionItemsView> findSummitionQuantityNew(Integer gallaryId, Integer branchId, Date dateFrom, Date dateTo,
-            List<InvInventoryDTO> invInventoryDTOs, List<ProGroupDTO> proGroupListSelected, Integer invoiceType, Boolean update) {
+            List<InvInventoryDTO> invInventoryDTOs, List<ProGroupDTO> proGroupListSelected, Integer invoiceType, Boolean detail) {
         dao.executeNativeQuery("select toby.sql_mode_function()");
-        if (update) {
-//            dao.executeNativeQuery("select toby.net_after_discount_head()");
-        }
+
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
@@ -3546,7 +3555,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         builder.append(" ) s group by s.groupId order by s.code ");
         List<Object[]> res = dao.executeNativeQuery(builder.toString());
 
-        return getTheListBasedOnAccClassNew(res, null, dateFrom, dateTo, invInventoryDTOs, proGroupListSelected);
+        return getTheListBasedOnAccClassNew(res, null, dateFrom, dateTo, invInventoryDTOs, proGroupListSelected, detail);
     }
 
     private StringBuilder createSql(Integer gallaryId, StringBuilder sql, Integer branchId, Date dateFrom, Date dateTo, List<InvInventoryDTO> invInventoryDTOs, List<ProGroupDTO> proGroupListSelected, Integer invoiceType) {
@@ -3630,7 +3639,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
     }
 
-    public List<SummitionItemsView> getTheListBasedOnAccClassNew(List<Object[]> res, Integer gallaryId, Date dateFrom, Date dateTo, List<InvInventoryDTO> invInventoryDTOs, List<ProGroupDTO> proGroupListSelected) {
+    public List<SummitionItemsView> getTheListBasedOnAccClassNew(List<Object[]> res, Integer gallaryId, Date dateFrom,
+            Date dateTo, List<InvInventoryDTO> invInventoryDTOs, List<ProGroupDTO> proGroupListSelected, Boolean detail) {
 
         List<SummitionItemsView> summitionItemsViews = new ArrayList<>();
 
@@ -3652,9 +3662,11 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             Integer groupId = (Integer) line[3];
             summitionItemsView.setCode(Integer.parseInt((String) line[4]));
             summitionItemsView.setName((String) line[5]);
-            summitionItemsView.setFactoryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 0, invInventoryDTOs, proGroupListSelected));
-            summitionItemsView.setSendNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 1, invInventoryDTOs, proGroupListSelected));
-            summitionItemsView.setDeliveryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 2, invInventoryDTOs, proGroupListSelected));
+            if (detail) {
+                summitionItemsView.setFactoryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 0, invInventoryDTOs, proGroupListSelected));
+                summitionItemsView.setSendNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 1, invInventoryDTOs, proGroupListSelected));
+                summitionItemsView.setDeliveryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 2, invInventoryDTOs, proGroupListSelected));
+            }
             summitionItemsViews.add(summitionItemsView);
         }
         TreeMap<Integer, SummitionItemsView> params = new TreeMap<>();

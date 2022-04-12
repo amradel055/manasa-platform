@@ -2,6 +2,7 @@ package com.toby.reports;
 
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.ProFactoryDeliveryService;
+import com.toby.bussinessservice.global.Utility;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.PrintProductionDTO;
@@ -45,8 +46,8 @@ public class ProInvoiceStatusReportMB extends Basic {
     @PostConstruct
     public void init() {
         getPrintProductionDTO().getGallaryListSelected().addAll(getGallaryLists());
-        getPrintProductionDTO().setFromDate(new Date());
-        getPrintProductionDTO().setToDate(new Date());
+        getPrintProductionDTO().setFromDate(Utility.hourNow());
+        getPrintProductionDTO().setToDate(Utility.hourNow());
     }
     
     public boolean validateSearch(){

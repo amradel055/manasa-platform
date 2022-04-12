@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author amr
  */
-public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetailDTO >{
+public class InvDetailDTO extends BaseEntityDTO implements Comparable< InvDetailDTO> {
 
     private Integer discountType;
     private Integer transferFrom;
@@ -42,6 +42,7 @@ public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetai
     private BigDecimal totalQuantityWithScrewing;
     private BigDecimal realQuantity;
     private BigDecimal originQuantity;
+    private BigDecimal bookBalance;
 
     private BigDecimal quantity;
     private BigDecimal quantityInch;
@@ -60,6 +61,14 @@ public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetai
     private String barCode;
     private BigDecimal costComparable;
 
+    private BigDecimal oldQuantity;
+    private BigDecimal oldQuantityBak;
+    private BigDecimal actualQuantity;
+    private BigDecimal differanceQuantity;
+    private BigDecimal totalQuantityCost;
+    private BigDecimal wasalate;
+    private Integer itemNatural;
+
     //////Coth ////////
     private Boolean showPrice;
     private Boolean showDiscount;
@@ -72,14 +81,16 @@ public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetai
     private Integer invPurchaseInvoiceDetailId;
     private Boolean proof;
     private String statusName;
-    
+
     private BigDecimal costBefor;
     private BigDecimal costAfter;
     private Integer indexSerial;
     private BigDecimal costAfterDiscount;
-    private List<ProDetailTypeDTO> proDetailTypeDTOList ;
-    
+    private List<ProDetailTypeDTO> proDetailTypeDTOList;
+
     private List<InvPurchaseInvoiceDetailDetailDTO> invPurchaseInvoiceDetailDetailDTOList;
+    
+    private String supplierName;
 
     public InvDetailDTO() {
     }
@@ -565,8 +576,8 @@ public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetai
      * @return the isInventoryItem
      */
     public Integer getIsInventoryItem() {
-        if(isInventoryItem == null){
-            isInventoryItem = 0 ;
+        if (isInventoryItem == null) {
+            isInventoryItem = 0;
         }
         return isInventoryItem;
     }
@@ -675,10 +686,10 @@ public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetai
      * @return the quantityOfOneUnit
      */
     public BigDecimal getQuantityOfOneUnit() {
-        if(quantityOfOneUnit==null){
-       quantityOfOneUnit=BigDecimal.ZERO;      
+        if (quantityOfOneUnit == null) {
+            quantityOfOneUnit = BigDecimal.ZERO;
         }
-        return quantityOfOneUnit;     
+        return quantityOfOneUnit;
     }
 
     /**
@@ -737,7 +748,7 @@ public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetai
      * @return the proDetailTypeDTOList
      */
     public List<ProDetailTypeDTO> getProDetailTypeDTOList() {
-        if(proDetailTypeDTOList == null){
+        if (proDetailTypeDTOList == null) {
             proDetailTypeDTOList = new ArrayList<>();
         }
         return proDetailTypeDTOList;
@@ -758,7 +769,8 @@ public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetai
     }
 
     /**
-     * @param invPurchaseInvoiceDetailDetailDTOList the invPurchaseInvoiceDetailDetailDTOList to set
+     * @param invPurchaseInvoiceDetailDetailDTOList the
+     * invPurchaseInvoiceDetailDetailDTOList to set
      */
     public void setInvPurchaseInvoiceDetailDetailDTOList(List<InvPurchaseInvoiceDetailDetailDTO> invPurchaseInvoiceDetailDetailDTOList) {
         this.invPurchaseInvoiceDetailDetailDTOList = invPurchaseInvoiceDetailDetailDTOList;
@@ -871,7 +883,7 @@ public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetai
      * @return the quantityInch
      */
     public BigDecimal getQuantityInch() {
-        if(quantityInch == null){
+        if (quantityInch == null) {
             quantityInch = BigDecimal.ZERO;
         }
         return quantityInch;
@@ -927,6 +939,143 @@ public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetai
      */
     public void setCostBak(BigDecimal costBak) {
         this.costBak = costBak;
+    }
+
+    /**
+     * @return the oldQuantity
+     */
+    public BigDecimal getOldQuantity() {
+        if(oldQuantity == null){
+            oldQuantity = BigDecimal.ZERO;
+        }
+        return oldQuantity;
+    }
+
+    /**
+     * @param oldQuantity the oldQuantity to set
+     */
+    public void setOldQuantity(BigDecimal oldQuantity) {
+        this.oldQuantity = oldQuantity;
+    }
+
+    /**
+     * @return the oldQuantityBak
+     */
+    public BigDecimal getOldQuantityBak() {
+        return oldQuantityBak;
+    }
+
+    /**
+     * @param oldQuantityBak the oldQuantityBak to set
+     */
+    public void setOldQuantityBak(BigDecimal oldQuantityBak) {
+        this.oldQuantityBak = oldQuantityBak;
+    }
+
+    /**
+     * @return the actualQuantity
+     */
+    public BigDecimal getActualQuantity() {
+        if (actualQuantity == null) {
+            actualQuantity = BigDecimal.ZERO;
+        }
+        return actualQuantity;
+    }
+
+    /**
+     * @param actualQuantity the actualQuantity to set
+     */
+    public void setActualQuantity(BigDecimal actualQuantity) {
+        this.actualQuantity = actualQuantity;
+    }
+
+    /**
+     * @return the differanceQuantity
+     */
+    public BigDecimal getDifferanceQuantity() {
+        differanceQuantity = getActualQuantity().subtract(getOldQuantity());
+        return differanceQuantity;
+    }
+
+    /**
+     * @param differanceQuantity the differanceQuantity to set
+     */
+    public void setDifferanceQuantity(BigDecimal differanceQuantity) {
+        this.differanceQuantity = differanceQuantity;
+    }
+
+    /**
+     * @return the totalQuantityCost
+     */
+    public BigDecimal getTotalQuantityCost() {
+        return totalQuantityCost;
+    }
+
+    /**
+     * @param totalQuantityCost the totalQuantityCost to set
+     */
+    public void setTotalQuantityCost(BigDecimal totalQuantityCost) {
+        totalQuantityCost = getDifferanceQuantity().multiply(getCostAvarage());
+        this.totalQuantityCost = totalQuantityCost;
+    }
+
+    /**
+     * @return the bookBalance
+     */
+    public BigDecimal getBookBalance() {
+        if(bookBalance == null){
+            bookBalance = BigDecimal.ZERO;
+        }
+        return bookBalance;
+    }
+
+    /**
+     * @param bookBalance the bookBalance to set
+     */
+    public void setBookBalance(BigDecimal bookBalance) {
+        this.bookBalance = bookBalance;
+    }
+
+    /**
+     * @return the wasalate
+     */
+    public BigDecimal getWasalate() {
+        return wasalate;
+    }
+
+    /**
+     * @param wasalate the wasalate to set
+     */
+    public void setWasalate(BigDecimal wasalate) {
+        this.wasalate = wasalate;
+    }
+
+    /**
+     * @return the itemNatural
+     */
+    public Integer getItemNatural() {
+        return itemNatural;
+    }
+
+    /**
+     * @param itemNatural the itemNatural to set
+     */
+    public void setItemNatural(Integer itemNatural) {
+        this.itemNatural = itemNatural;
+    }
+
+    /**
+     * @return the supplierName
+     */
+    public String getSupplierName() {
+        return supplierName;
+    }
+
+    /**
+     * @param supplierName the supplierName to set
+     */
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName;
     }
 
 }

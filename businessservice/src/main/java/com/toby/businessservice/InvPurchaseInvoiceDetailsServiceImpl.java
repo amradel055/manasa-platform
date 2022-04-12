@@ -19,6 +19,10 @@ import com.toby.entity.InvInventory;
 import com.toby.entity.InvItem;
 import com.toby.entity.InvPurchaseInvoice;
 import com.toby.entity.InvPurchaseInvoiceDetail;
+import com.toby.entity.InvStripDetail;
+import com.toby.entity.InvTransferDetail;
+import com.toby.entity.InvUpdate;
+import com.toby.entity.InvUpdateDetail;
 import com.toby.entity.InventorySetup;
 import com.toby.entity.ItemOfferDetail;
 import com.toby.entity.ProFactoryDelivery;
@@ -532,7 +536,7 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
         }
 
     }
-
+    
     @Override
     public <T> List<ItemsBarcodesDetailsView> findItemBarcodeDetails(List<T> list, Integer branchId) {
         List<String> barcodeList = new ArrayList<>();
@@ -549,7 +553,17 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
             } else if (Entity.getClass().equals(InvAddingorderDetail.class)) {
                 InvAddingorderDetail entity = (InvAddingorderDetail) Entity;
                 barcodeList.add(entity.getItemBarcode());
+            }else if (Entity.getClass().equals(InvTransferDetail.class)) {
+                InvTransferDetail entity = (InvTransferDetail) Entity;
+                barcodeList.add(entity.getItemBarcode());
+            }else if (Entity.getClass().equals(InvUpdateDetail.class)) {
+                InvUpdateDetail entity = (InvUpdateDetail) Entity;
+                barcodeList.add(entity.getItemBarcode());
+            }else if (Entity.getClass().equals(InvStripDetail.class)) {
+                InvStripDetail entity = (InvStripDetail) Entity;
+                barcodeList.add(entity.getItemBarcode());
             }
+            
         }
         List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewList = itemsBarcodesDetailsViewService.findItemsBarcodesDetailsViewBranchIdByBarcode(branchId, barcodeList);
         return itemsBarcodesDetailsViewList;
@@ -662,5 +676,7 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
     public List<InvDetailDTO> addInvPurchaseInvoiceDetailsDTOOne(List<InvDetailDTO> invPurchaseInvoiceDetailList, Integer headId, TobyUser tobyUser) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    
 
 }

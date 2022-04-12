@@ -6,6 +6,7 @@
 package com.toby.views;
 
 import com.toby.dto.InvInventoryDTO;
+import com.toby.dto.InvItemDTO;
 import com.toby.dto.ProGroupDTO;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -29,8 +30,10 @@ public class ProfitOfItemsSold {
     private Date dateTo;
     private List<InvInventoryDTO> gallarySelected;
     private List<ProGroupDTO> groupDTOSelected;
+    private List<InvItemDTO> itemDTOSelected;
     private InvInventoryDTO gallaryFrom;
     private ProGroupDTO proGroupId;
+    private String itemCode;
 
     /**
      * @return the code
@@ -236,6 +239,34 @@ public class ProfitOfItemsSold {
      */
     public void setGroupDTOSelected(List<ProGroupDTO> groupDTOSelected) {
         this.groupDTOSelected = groupDTOSelected;
+    }
+
+    /**
+     * @return the itemDTOSelected
+     */
+    public List<InvItemDTO> getItemDTOSelected() {
+        return itemDTOSelected;
+    }
+
+    /**
+     * @param itemDTOSelected the itemDTOSelected to set
+     */
+    public void setItemDTOSelected(List<InvItemDTO> itemDTOSelected) {
+        this.itemDTOSelected = itemDTOSelected;
+    }
+
+    /**
+     * @return the itemCode
+     */
+    public String getItemCode() {
+        return itemCode;
+    }
+
+    /**
+     * @param itemCode the itemCode to set
+     */
+    public void setItemCode(String itemCode) {
+        this.itemCode = itemCode;
     }
 
 

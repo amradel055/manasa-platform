@@ -56,6 +56,16 @@
                                 <p:outputLabel style="width: 50px;margin-right: 1%" value="الفئة"/>
                             </div>
                         </div>
+                        
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:selectBooleanCheckbox value="#{summitionItemReportMB.summution}" itemLabel=" إجمالى المخزون بالمستودعات"/>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px;margin-right: 1%" value="إجمالى المخزون بالمستودعات"/>
+                            </div>
+
+                        </div>
 
                     </div>
 
@@ -187,7 +197,7 @@
                         </p:column>
 
 
-                        <p:summaryRow>
+                        <p:summaryRow rendered="#{not summitionItemReportMB.summution}">
                             <p:column colspan="2" style="text-align:right">
                                 <h:outputText value="Total "/>
                             </p:column>
@@ -209,13 +219,12 @@
                         </p:summaryRow>
 
 
-                        <p:columnGroup type="footer">
+                        <p:columnGroup type="footer" rendered="#{not summitionItemReportMB.summution}">
                             <p:row>
                                 <p:column colspan="2" style="text-align:right;border-radius: 0px" footerText="#{userData.userDDs['TOTAL']}  :" />
                                 <p:column  >
                                     <f:facet name="footer">
-                                        <p:inputNumber
-                                            value="#{summitionItemReportMB.sumFactoryNumberTotal}" />
+                                        <p:inputNumber  value="#{summitionItemReportMB.sumFactoryNumberTotal}" />
                                     </f:facet>
                                 </p:column>
 

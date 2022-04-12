@@ -12,6 +12,7 @@ import com.toby.businessservice.ProFactoryDeliveryService;
 import com.toby.businessservice.ReportManagementService;
 import com.toby.businessservice.report.SupplierAccountService;
 import com.toby.bussinessservice.global.AutoCompleteService;
+import com.toby.bussinessservice.global.Utility;
 import com.toby.define.ModuleClassEnum;
 import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.InvDailogueData;
@@ -183,6 +184,8 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
         }
         if (getInvInvoiceDTO().getInvDailogeDataSelected() != null || getInvInvoiceDTO().getNeedLoadedSerial() != null) {
             setInvInvoiceDTO(invDialogueService.loadDlg(getInvInvoiceDTO()));
+             invInvoiceDTO.setDate(Utility.hourNow());
+        invInvoiceDTO.setTime(Utility.hourNow());
             fillLists();
             CloseDlg("loaddlg");
             errorMsg(getInvInvoiceDTO().getMsg());
@@ -281,7 +284,8 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
         
         findScreenName();
         
-        invInvoiceDTO.setDate(new Date());
+        invInvoiceDTO.setDate(Utility.hourNow());
+        invInvoiceDTO.setTime(Utility.hourNow());
         
         invInvoiceDTO.setReportManagement(reportManagementService.reportManagementByBranch(getUserData().getUserBranch().getId()));
         
