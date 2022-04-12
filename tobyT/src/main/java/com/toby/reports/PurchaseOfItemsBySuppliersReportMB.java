@@ -9,6 +9,7 @@ import com.toby.businessservice.report.PurchaseOfItemsBySuppliersReportService;
 import com.toby.businessservice.InvItemService;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.reports.searchBean.PurchaseOfItemsBySuppliersSearchBean;
+import com.toby.bussinessservice.global.Utility;
 import com.toby.entity.InvOrganizationSite;
 import com.toby.report.entity.PurchaseOfItemsBySuppliersViewBean;
 import com.toby.toby.BaseInventoryReportBean;
@@ -92,8 +93,8 @@ public class PurchaseOfItemsBySuppliersReportMB extends BaseInventoryReportBean 
         fillLists();
         getPurchaseOfItemsBySuppliersSearchBean().setFromInventoryName(getInvInventoryList().get(0));
         getPurchaseOfItemsBySuppliersSearchBean().setToInventoryName(getInvInventoryList().get(0));
-        getPurchaseOfItemsBySuppliersSearchBean().setDateTo(new Date());
-        getPurchaseOfItemsBySuppliersSearchBean().setDateFrom(new Date());
+        getPurchaseOfItemsBySuppliersSearchBean().setDateTo(Utility.hourNow());
+        getPurchaseOfItemsBySuppliersSearchBean().setDateFrom(Utility.hourNow());
         setOrganizationSiteRootList(new ArrayList<>());
 //        if (isSales) {
 //            setOrganizationSiteRootList(organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(),true,0));

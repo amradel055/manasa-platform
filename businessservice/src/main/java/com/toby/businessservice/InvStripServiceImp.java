@@ -3,11 +3,9 @@ package com.toby.businessservice;
 import com.toby.bussinessservice.global.InvPurchaseReturnSave;
 import com.toby.core.GenericDAO;
 import com.toby.dto.InvInventoryDTO;
-import com.toby.dto.InvInventoryTransactionDTO;
 import com.toby.dto.InvStripDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.InvInventory;
-import com.toby.entity.InvInventoryTransaction;
 import com.toby.entity.InvStrip;
 import com.toby.entity.InvStripDetail;
 import com.toby.entity.TobyCompany;
@@ -32,6 +30,7 @@ public class InvStripServiceImp implements InvStripService {
     private GenericService genericService;
     @EJB
     private InvStripDetailService invStripDetailService;
+
     InvPurchaseReturnSave invPurchaseReturnSave;
 
     @Override
@@ -66,10 +65,8 @@ public class InvStripServiceImp implements InvStripService {
     }
 
     @Override
-    public void deleteInvStrip(InvStrip invStrip, Integer invStripIdToPass) {
-        if (invStripIdToPass != null && invStripIdToPass > 0) {
-            dao.executeDeleteQuery("delete from InvStripDetail e WHERE e.id > 0 AND e.invStripId.id = " + invStripIdToPass);
-        }
+    public void deleteInvStrip(InvStrip invStrip) {
+        dao.executeDeleteQuery("delete from InvStripDetail e WHERE e.id > 0 AND e.invStripId.id = " + invStrip.getId());
         dao.deleteEntity(invStrip);
     }
 
@@ -186,7 +183,56 @@ public class InvStripServiceImp implements InvStripService {
     }
 
     @Override
-    public InvStripDTO findInvStripByInvStripIdDTO(Integer invStripId , TobyUser tobyUser) {
+    public InvStripDTO findInvStripByInvStripIdDTO(Integer invStripId, TobyUser tobyUser) {
         return mapToDTO(dao.findEntityById(InvStrip.class, invStripId), tobyUser);
     }
-}
+
+    @Override
+    public InvStripDTO saveNew(InvStripDTO invStripDTO, TobyUser tobyUser) {
+        try {
+            invStripDTO = validateSaveNew(invStripDTO);
+
+            InvStrip invStrip;
+            if (invStripDTO != null && (invStripDTO.getMsg() == null || invStripDTO.getMsg().isEmpty())) {
+                invStrip = mapToEntity(invStripDTO, tobyUser);
+                if (invStrip.getId() != null) {
+                    //بعمل حفظ فى حالة التعديل
+                    invStrip = dao.updateEntity(invStrip);
+                } else {
+                    // فى حالة ان الفاتورة جديدة بروح اجيب السيريال الاول 
+                    Integer serial = genericService.getMaxGenericSerialByType(InvStrip.class, invStrip.getBranchId().getId(), null);
+                    invStrip.setSerial(serial);
+
+                    invStrip = dao.updateEntity(invStrip);
+                    invStripDTO.setId(invStrip.getId());
+                    invStripDTO.setSerial(serial);
+                }
+            }
+        } catch (Exception e) {
+            invStripDTO.setMsg(e.toString());
+            dao.rollbackQuery();
+        }
+
+        return invStripDTO;
+    }
+
+    public InvStripDTO validateSaveNew(InvStripDTO invStripDTO) {
+        StringBuilder error = new StringBuilder();
+
+        if (invStripDTO.getInventoryId() == null) {
+            error.append("\n يجب اختيار مخزن");
+        }
+
+        if (invStripDTO.getStripDate() == null) {
+            error.append("\n يجب اختيار تاريخ");
+        }
+
+        if (!error.toString().isEmpty()) {
+            invStripDTO.setMsg(error.toString());
+        }
+        return invStripDTO;
+    }
+
+    
+    }
+

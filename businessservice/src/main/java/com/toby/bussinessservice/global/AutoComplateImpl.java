@@ -227,6 +227,27 @@ public class AutoComplateImpl implements AutoCompleteService {
         return list;
     }
 
+    @Override
+    public List<InvOrganizationSiteDTO> autoCompleteOrganizationSiteDTOAnotherBranchAnotherGallary(Integer branchId, String qeury, Integer gallaryId) {
+        if (gallaryId != null) {
+            List<InvOrganizationSiteDTO> list = null;
+            Map<String, Object> params = new HashMap<>();
+            StringBuilder sql = new StringBuilder();
+            params.put("branchId", branchId);
+            params.put("qeury", qeury);
+            params.put("gallaryId", gallaryId);
+
+            sql.append("SELECT e FROM InvOrganizationSite e WHERE e.id in (select i.organizationSiteId.id from InvPurchaseInvoice i where i.deliveryPlace.id = :gallaryId) AND e.branchId.id = :branchId AND ((:qeury is null OR e.name  like CONCAT('%',:qeury ,'%')) OR (:qeury is null OR e.code  like CONCAT('%',:qeury ,'%') )  OR (:qeury is null OR e.mobile  like CONCAT('%',:qeury ,'%') ) )");
+
+            sql.append(" ORDER BY e.code");
+
+            List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params, 0, 10);
+            list = returnListDTO2(detailses);
+            return list;
+        }
+        return null;
+    }
+
     private List<InvOrganizationSiteDTO> returnListDTO2(List<InvOrganizationSite> list) {
         List<InvOrganizationSiteDTO> DTOlist = new ArrayList();
         for (InvOrganizationSite e : list) {
@@ -329,19 +350,20 @@ public class AutoComplateImpl implements AutoCompleteService {
     }
 
     private void appendOrganizationTypeAndActive(Map<String, Object> params, Integer type, StringBuilder sql, boolean active, Integer gallaryId) {
-        
+
         sql.append("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND ((:qeury is null OR e.name  like CONCAT('%',:qeury ,'%')) OR (:qeury is null OR e.code  like CONCAT('%',:qeury ,'%') )  OR (:qeury is null OR e.mobile  like CONCAT('%',:qeury ,'%') ) )");
-        
-        if(type != null){
-             params.put("type", type);
-        if (type == 0 || type == 1) {
-           
-            sql.append(" AND (e.type = :type OR e.type = 2) ");
-        } else{
-            
-            sql.append(" AND e.type = :type  ");
-        }}
-        
+
+        if (type != null) {
+            params.put("type", type);
+            if (type == 0 || type == 1) {
+
+                sql.append(" AND (e.type = :type OR e.type = 2) ");
+            } else {
+
+                sql.append(" AND e.type = :type  ");
+            }
+        }
+
         if (gallaryId != null) {
             params.put("gallaryId", gallaryId);
             sql.append(" AND e.gallaryId.id = :gallaryId ");
@@ -583,5 +605,6 @@ public class AutoComplateImpl implements AutoCompleteService {
         }
         sql.append(" ORDER BY e.code");
     }
+
 
 }

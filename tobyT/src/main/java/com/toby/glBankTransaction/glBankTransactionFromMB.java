@@ -13,6 +13,7 @@ import com.toby.businessservice.GlBankTransactionDetailsService;
 import com.toby.businessservice.GlBankTransactionService;
 import com.toby.businessservice.TobyUserBankService;
 import com.toby.businessservice.report.BankBalanceViewService;
+import com.toby.bussinessservice.global.Utility;
 import com.toby.converter.GlBankConverter;
 import com.toby.dto.GlBankDTO;
 import com.toby.entity.Currency;
@@ -155,7 +156,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
         try {
             
             fillGlBanks();
-            glBankTransactionEntity.setDate(new Date());
+            glBankTransactionEntity.setDate(Utility.hourNow());
             
             updateRate();
         } catch (Exception e) {

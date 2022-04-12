@@ -405,6 +405,9 @@
                                     <p:menuitem id="sr_lnk621" value="#{userData.userDDs['RECEIPTS']}" icon="&#xE8D2;" url="/faces/views/notesreceivables/notesreceivablesList.xhtml" 
                                                 rendered="#{userData.userScreens['notesreceivables'].view or userData.isAdmin}"
                                                 />
+                                    <p:menuitem id="sr_lnk62122" value="السداد لفرع أخر" icon="&#xE8D2;" url="/faces/views/notesreceivablesAnotherBranch/notesreceivablesForm.xhtml" 
+                                                rendered="#{userData.userScreens['notesreceivables'].view or userData.isAdmin}"
+                                                />
                                     <p:menuitem id="sr_lnk622" value="#{userData.userDDs['PAYMENTS']}" icon="&#xE8D2;" url="/faces/views/settlementdeed/settlementdeedList.xhtml"
                                                 rendered="#{userData.userScreens['settlementdeed'].view or userData.isAdmin}"
                                                 />
@@ -634,8 +637,6 @@
                                     <p:menuitem id="sr_lnk354" value="فسح" icon="&#xE8D2;" url="/faces/views/invpermissionorder_1/invpermissionorderlist.xhtml"
                                                 rendered="#{userData.userScreens['invpermissionorder_1'].view or userData.isAdmin}"
                                                 />
-                                     <p:menuitem id="sr_lnk35555" value="تحديد مكان استلام الفاتورة " icon="&#xE8D2;" url="/faces/views/deliveryPlace/deliveryPlaceForm.xhtml"
-                                                />
                                 </p:submenu>
                                 <p:submenu id="sr_sm999932" label="#{userData.userDDs['STORE_TRANSACTION']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['invopeningbalanceitem'].view 
@@ -647,6 +648,14 @@
                                            >
                                     <p:menuitem id="sr_lnk9999321" value="#{userData.userDDs['CONVERSION_BET_STORE']}" icon="&#xE8D2;" url="/faces/views/invtransferInventory/invTransferInventoryList.xhtml" 
                                                 rendered="#{userData.userScreens['invtransferInventory'].view or userData.isAdmin}"
+                                                />
+                                    
+                                     <p:menuitem id="sr_lnk9999322" value="جرد المخزون" icon="&#xE8D2;" url="/faces/views/invstripNew/invStripList.xhtml" 
+                                                rendered="#{userData.userScreens['invstrip'].view or userData.isAdmin}"
+                                                />
+                                     
+                                    <p:menuitem id="sr_lnk9999323" value="ضبط المخزون" icon="&#xE8D2;" url="/faces/views/invupdate/invUpdateList.xhtml" 
+                                                rendered="#{userData.userScreens['invupdate'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
                             </p:submenu>

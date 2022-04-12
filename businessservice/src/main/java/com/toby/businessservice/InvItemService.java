@@ -60,6 +60,8 @@ public interface InvItemService {
     public List<InvItem> getInvItemByBranchIdAndGroupId(Integer branchId, Integer groupId);
 
     public List<InvItemDTO> getInvItemByBranchIdAndGroupIdDTO(Integer branchId, Integer groupId);
+    
+    public List<InvItemDTO> getInvItemByBranchIdAndProGroupIdDTO(StringBuilder list);
 
     public List<InvItem> getImageByCompanyId(String imageName, Integer companyId);
 

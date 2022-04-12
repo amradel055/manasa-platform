@@ -47,6 +47,8 @@ public class InvUpdateDetail extends BaseEntity {
     private BigDecimal oldAmount;
     @Column(name = "difference")
     private BigDecimal difference;
+    @Column(name = "wasalate")
+    private BigDecimal wasalate;
     @Column(name = "value")
     private BigDecimal value;
     @Size(max = 450)
@@ -108,6 +110,9 @@ public class InvUpdateDetail extends BaseEntity {
     }
 
     public BigDecimal getScrewing() {
+        if(screwing == null){
+            screwing = BigDecimal.ONE;
+        }
         return screwing;
     }
 
@@ -176,6 +181,20 @@ public class InvUpdateDetail extends BaseEntity {
      */
     public void setSerial(Integer serial) {
         this.serial = serial;
+    }
+
+    /**
+     * @return the wasalate
+     */
+    public BigDecimal getWasalate() {
+        return wasalate;
+    }
+
+    /**
+     * @param wasalate the wasalate to set
+     */
+    public void setWasalate(BigDecimal wasalate) {
+        this.wasalate = wasalate;
     }
     
 }

@@ -35,6 +35,8 @@ public interface InvGlobalService {
     public InvInvoiceDTO recalcHeadValues(InvInvoiceDTO invPurchaseInvoiceDTO);
 
     public InvInvoiceDTO addInvPurchaseInvoiceDetail(InvInvoiceDTO invPurchaseInvoiceDTO, Integer index);
+    
+    public StringBuilder validateSelectItem(InvDetailDTO invDetailDTO, StringBuilder error);
 
     public String validateSave(List<InvDetailDTO> invPurchaseInvoiceDetailDTOList, Integer invtentortId, ScreenNameClassEnum screenNameClassEnum,
             Boolean negativeSell, Boolean isload, Boolean sellBuy, CompanyActivityClassEnum companyActivityClassEnum);
@@ -49,6 +51,8 @@ public interface InvGlobalService {
 
     public InvDetailDTO updateAvailableQuantityRow(ScreenNameClassEnum screenNameClassEnum, InvDetailDTO detailDTO, Integer inventoryId, Boolean sellBuy, Boolean sellNegative, Boolean isEdit);
 
+    public Boolean validateActualQuantity(InvDetailDTO detailDTO);
+            
     public InvDetailDTO validatePriceColumn(InvDetailDTO detailDTO);
 
     public InvDetailDTO validateQuantityOfUnitColum(InvDetailDTO detailDTO, InvInvoiceDTO invInvoiceDTO,Boolean findCost);
@@ -73,4 +77,6 @@ public interface InvGlobalService {
     public Integer subtractDatefromDueDate(Date date, Date dueDate, Integer duePeroid);
     
     public BigDecimal calcDiscount(InvDetailDTO detailEntity, InvOrganizationSiteDTO invOrganizationSiteDTO,ScreenNameClassEnum screenNameClassEnum);
+    
+    public InvDetailDTO validateActualQuantityColumn(InvDetailDTO detailDTO);
 }

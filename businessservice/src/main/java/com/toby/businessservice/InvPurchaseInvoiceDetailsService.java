@@ -62,4 +62,6 @@ public interface InvPurchaseInvoiceDetailsService {
     public BigDecimal findLastCost(Integer itemId);
     
      public List<InvDetailDTO> addInvPurchaseInvoiceDetailsDTOOne(List<InvDetailDTO> invPurchaseInvoiceDetailList,Integer headId , TobyUser tobyUser);
+     
+     
 }

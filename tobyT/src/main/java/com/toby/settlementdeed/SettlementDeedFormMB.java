@@ -16,6 +16,7 @@ import com.toby.businessservice.GlBankTransactionInvoiceViewService;
 import com.toby.businessservice.GlBankTransactionService;
 import com.toby.businessservice.TobyUserBankService;
 import com.toby.businessservice.SymbolService;
+import com.toby.bussinessservice.global.Utility;
 import com.toby.converter.CostCenterDTOConverter;
 import com.toby.converter.GlAccountDTOConverter;
 import com.toby.converter.GlAdminUnitConverter;
@@ -330,7 +331,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
 //            glBankTransactionEntity.setValueLocal(glBankTransactionEntity.getValueLocal() != null ? glBankTransactionEntity.getValueLocal().setScale(2, BigDecimal.ROUND_UP) : null);
 //            glBankTransactionEntity.setValueLocal(glBankTransactionEntity.getValue() != null ? glBankTransactionEntity.getValue().setScale(2, BigDecimal.ROUND_UP) : null);
 //            glBankTransactionEntity.setRate(glBankTransactionEntity.getRate() != null ? glBankTransactionEntity.getRate().setScale(2, BigDecimal.ROUND_UP) : null);
-            glBankTransactionEntity.setDate(new Date());
+            glBankTransactionEntity.setDate(Utility.hourNow());
             
             glBankTransaction = new GlBankTransaction();
             glBankTransactionDetailEntity = new GlBankTransactionDetailFromEntity();
@@ -630,7 +631,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
             
             glBankTransactionEntityMapper.setId(bankTransaction.getId());
             glBankTransactionEntityMapper.setSerial(bankTransaction.getSerial());
-            glBankTransactionEntityMapper.setDate(bankTransaction.getDate() != null ? bankTransaction.getDate() : new Date());
+            glBankTransactionEntityMapper.setDate(bankTransaction.getDate() != null ? bankTransaction.getDate() : Utility.hourNow());
             glBankTransactionEntityMapper.setPaymentType(bankTransaction.getPaymentType() != null ? bankTransaction.getPaymentType() : 0);
             
             if (bankTransaction.getPaymentType() == 1) {

@@ -33,6 +33,8 @@ public class InvStripDetail extends BaseEntity {
     private BigDecimal bookBalance;
     @Column(name = "difference")
     private BigDecimal difference;
+    @Column(name = "wasalate")
+    private BigDecimal wasalate;
     @JoinColumn(name = "inv_item_id", referencedColumnName = "id")
     @ManyToOne
     private InvItem invItemId;
@@ -41,6 +43,11 @@ public class InvStripDetail extends BaseEntity {
     private InvStrip invStripId;
     @Column(name = "serial")
     private Integer serial;
+    @Column(name = "item_barcode")
+    private String itemBarcode;    
+    @JoinColumn(name = "unit_id", referencedColumnName = "id")
+    @ManyToOne
+    private Symbol unitId;
 
     public InvStripDetail() {
     }
@@ -120,6 +127,48 @@ public class InvStripDetail extends BaseEntity {
 
     public void setSerial(Integer serial) {
         this.serial = serial;
+    }
+
+    /**
+     * @return the itemBarcode
+     */
+    public String getItemBarcode() {
+        return itemBarcode;
+    }
+
+    /**
+     * @param itemBarcode the itemBarcode to set
+     */
+    public void setItemBarcode(String itemBarcode) {
+        this.itemBarcode = itemBarcode;
+    }
+
+    /**
+     * @return the unitId
+     */
+    public Symbol getUnitId() {
+        return unitId;
+    }
+
+    /**
+     * @param unitId the unitId to set
+     */
+    public void setUnitId(Symbol unitId) {
+        this.unitId = unitId;
+    }
+
+    /**
+     * @return the wasalate
+     */
+    public BigDecimal getWasalate() {
+        return wasalate;
+    }
+
+    /**
+     * @param wasalate the wasalate to set
+     */
+    public void setWasalate(BigDecimal wasalate) {
+        this.wasalate = wasalate;
     }
 
 }

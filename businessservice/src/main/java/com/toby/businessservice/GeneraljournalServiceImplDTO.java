@@ -155,7 +155,7 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT e FROM GeneralJournal e WHERE e.branchId.id = :branchId AND e.generalData >= :dateFrom AND e.generalData <= :dateTo  ");
         appendFilter2(filters, branchId, builder);
-        builder.append(" order by e.serial DESC");
+        builder.append(" order by e.creationDate DESC");
         List<GeneralJournal> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
         return returnListDTO(details);
     }
@@ -182,7 +182,7 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
         Integer max = 0;
         synchronized (max) {
             try {
-                max = dao.findEntityByQuery("SELECT MAX(g.serial) FROM GeneralJournal g  WHERE g.branchId.id =:branchId AND g.companyId.id =:companyId and g.glYear.id =:glYear  ", params);
+                max = dao.findEntityByQuery("SELECT MAX(g.serial) FROM GeneralJournal g  WHERE g.branchId.id =:branchId AND g.companyId.id =:companyId and g.glYear.id =:glYear and g.serial < 100000  ", params);
             } catch (Exception e) {
                 e.printStackTrace();
             }

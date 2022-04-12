@@ -15,11 +15,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class LoginRoot {
-    
+    @XmlElement
+    public Integer userId;
     @XmlElement
     public String userName;
     @XmlElement
     public String password;
+    @XmlElement
+    public String oldPassword;
     @XmlElement
     public Integer branchId;
     @XmlElement

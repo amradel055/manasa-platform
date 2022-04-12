@@ -6,6 +6,7 @@
 package com.isag.rest;
 
 import com.isag.dto.APIloginDTO;
+import com.isag.entity.IgmaUser;
 import com.isag.general.GeneralService;
 import com.isag.root.LoginRoot;
 import javax.ejb.EJB;
@@ -38,6 +39,24 @@ public class LoginManasa {
             APIloginDTO token = generalService.authenticateManasa(loginRoot);
             // Return the token on the response
             return Response.ok().entity(token).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
+    
+    @Transactional
+    @Path("/updatePassword")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updatePassword(LoginRoot loginRoot) {
+        try {
+            // Issue a token for the user
+            String token = generalService.changePasswordManasa(loginRoot);
+            // Return the token on the response
+            APIloginDTO  dTO= new APIloginDTO();
+            dTO.setMsg(token);
+            return Response.ok().entity(dTO).build();
         } catch (Exception e) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }

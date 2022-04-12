@@ -103,6 +103,7 @@ public abstract class GlBankBasicDataForm extends BaseFormBean {
 
     public abstract void calculateLocalValue();
 
+    @Override
     public <T> void fillReport(HashMap hashMap, String reportPath, List<T> listBean, String exportType) throws JRException, IOException {
         JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(listBean);
         JasperPrint jasperPrint = JasperFillManager.fillReport(reportPath, hashMap, beanCollectionDataSource);
@@ -119,14 +120,16 @@ public abstract class GlBankBasicDataForm extends BaseFormBean {
         httpServletResponse.getOutputStream().close();
     }
 
-//    public List<InvOrganizationSite> completeCustomerFrom(String query) {
-//        organizationList = autoCompleteService.autoCompleteOrganizationSite(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query);
-//        invOrganizationSiteConverter = new InvOrganizationSiteConverter(organizationList);
-//        return organizationList;
-//
-//    }
+    
     public List<InvOrganizationSiteDTO> completeCustomerFrom(String query) {
         organizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query,(getGallaryDTOSelect() != null ? getGallaryDTOSelect().getId() : null));
+        invOrganizationSiteDTOConverter = new InvOrganizationSiteDTOConverter(organizationSiteDTOList);
+        return organizationSiteDTOList;
+
+    }
+    
+    public List<InvOrganizationSiteDTO> completeCustomerFromAnotherBranch(String query) {
+        organizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTOAnotherBranchAnotherGallary(getUserData().getUserBranch().getId(), query,(getGallaryDTOSelect()!= null ? getGallaryDTOSelect().getId() : null));
         invOrganizationSiteDTOConverter = new InvOrganizationSiteDTOConverter(organizationSiteDTOList);
         return organizationSiteDTOList;
 

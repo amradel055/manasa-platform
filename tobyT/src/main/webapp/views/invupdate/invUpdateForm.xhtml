@@ -1,14 +1,26 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../../template/newTemplate.xhtml"
+                template="./../../template/template.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns="http://www.w3.org/1999/xhtml">
     <ui:define name="content">
         <f:event listener="#{userData.authorize}" type="preRenderView" />
-        <h:form id="form"  enctype="multipart/form-data"  dir="#{userData.dir}" style="margin-right: 15px">
+        <h:form id="form"  enctype="multipart/form-data"  dir="#{userData.dir}" class='formmargin'>
+            <div style=" position: absolute;left: 20px"> 
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 24%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />                       
+            </div>
             <p:fieldset legend="#{userData.userDDs['ADJUST_INV']}" style="margin-bottom:20px">
                 <div >
                     <p:messages id="curmsg" 
@@ -20,218 +32,256 @@
                 <h:panelGrid id="firstLine" columns="2" cellspacing="10" cellpadding="0" >
                     <h:panelGroup>
                         <h:panelGroup>
-                            <p:outputLabel  style="width: 45px" value="#{userData.userDDs['RESERVA_NO']}"/>
+                            <p:outputLabel  style="width: 70px;margin-right: 6%;" value="#{userData.userDDs['TRANSACTION_NO']}"/>
                         </h:panelGroup>
                         <h:panelGroup>
-                            <p:outputLabel  style="width: 50%!important" id="serialNo" value="#{invUpdateFormMB.invUpdateEntity.serial}"/>
-                        </h:panelGroup>
-
-                    </h:panelGroup>
-
-                    <h:panelGroup>
-
-                        <h:panelGroup>
-                            <p:outputLabel  style="width: 45px" value="#{userData.userDDs['DATEE']}"/>
-                        </h:panelGroup>
-                        <h:panelGroup>
-                            <p:calendar  style="width: 50%!important"  value="#{invUpdateFormMB.invUpdateEntity.updateDate}" pattern="dd/MM/yyyy" />
+                            <p:inputText  style="width: 35%!important" readonly="true" id="serialNo" value="#{invUpdateFormMB.invInvoiceDTO.serial}"/>
                         </h:panelGroup>
 
                     </h:panelGroup>
 
                     <h:panelGroup>
+
                         <h:panelGroup>
-                            <p:outputLabel style="width: 45px" value="#{userData.userDDs['INVENTORY']}"/>
+                            <p:outputLabel  style="width: 75px" value="#{userData.userDDs['DATEE']}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:calendar  style="width: 50%!important"  value="#{invUpdateFormMB.invInvoiceDTO.date}" pattern="dd/MM/yyyy" />
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 76px;margin-right: 6%;" value="#{userData.userDDs['DEPOSITORY']}"/>
                         </h:panelGroup>
 
                         <h:panelGroup>
-                            <p:autoComplete style="width:80%" 
+                            <p:autoComplete style="width:34%"  id="inventoryDTO" widgetVar="inventoryDTO"
                                             dropdown="true"
-                                            readonly="#{invUpdateFormMB.invUpdateEntity.id != null}"
-                                            converter="#{invUpdateFormMB.invInventoryConverter}"
-                                            value="#{invUpdateFormMB.invUpdateEntity.invInventory}"
-                                            required="true"
-                                            requiredMessage="#{userData.userDDs['STORE_MU_SELE']}"
-                                            var="inventory"
-                                            itemLabel="#{inventory}" 
-                                            itemValue="#{inventory}" 
+                                            converter="#{invUpdateFormMB.invInventoryDTOConverter}"
+                                            value="#{invUpdateFormMB.invInvoiceDTO.invInventoryId}"
+                                            var="inventoryDTO" 
+                                            itemLabel="#{inventoryDTO}" 
+                                            itemValue="#{inventoryDTO}" 
                                             forceSelection="true" 
-                                            completeMethod="#{invUpdateFormMB.completInventory}" >
-
-                                <p:ajax update="form curmsg"
-                                        event="change"
-                                        listener="#{invUpdateFormMB.fillItemMap()}" />
-                                <p:ajax update="form curmsg"
-                                        event="itemSelect"
-                                        listener="#{invUpdateFormMB.fillItemMap()}" />
+                                            completeMethod="#{invUpdateFormMB.completeInventory}" >
+                                <p:ajax 
+                                    event="itemSelect" listener="#{invUpdateFormMB.calculateRemainValue()}"  />
 
                             </p:autoComplete>
                         </h:panelGroup>
                     </h:panelGroup>
 
+
                     <h:panelGroup>
 
                         <h:panelGroup>
-                            <p:outputLabel style="width: 45px" value="#{userData.userDDs['INVEN_DOC']}"/>
+                            <p:outputLabel style="width: 75px" value="#{userData.userDDs['INVEN_DOC']}"/>
                         </h:panelGroup>
                         <h:panelGroup >
                             <h:panelGroup>
-                                <p:inputText style="width: 50%!important"  id="stripDocument" value="#{invUpdateFormMB.invUpdateEntity.updateDocument}" />
+                                <p:inputText style="width: 37%!important"  id="stripDocument" value="#{invUpdateFormMB.invInvoiceDTO.supplierInvoiceNumber}" />
                             </h:panelGroup>
                         </h:panelGroup>
 
                     </h:panelGroup>
-
-                    <h:panelGroup>
-                        <h:panelGroup>
-                            <p:outputLabel  style="width: 40px"  value="#{userData.userDDs['NOTE']}"/>
-                        </h:panelGroup>
-
-                        <h:panelGroup>
-                            <p:inputText style="width: 65%!important"  id="ad11" value="#{invUpdateFormMB.invUpdateEntity.remark}" />
-                        </h:panelGroup>
-                    </h:panelGroup>
                 </h:panelGrid>
+                <h:panelGroup>
+                    <div class="note">
+                        <h:panelGroup>
+                            <p:outputLabel  style="width: 71px;margin-right: 3%;"  value="#{userData.userDDs['NOTE']}"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:inputText style="width: 67.5%!important"  id="ad11" value="#{invUpdateFormMB.invInvoiceDTO.remarks}" />
+                        </h:panelGroup>
+                    </div>
+                </h:panelGroup>
 
 
             </p:fieldset>
+            <div style="text-align: center!important;margin-top: 2%;margin-bottom: 2%;">
+                <p:commandButton class="saveButton"
+                                 id="saveB" 
+                                 title="#{userData.userDDs['SAVE']}"
+                                 disabled="#{invUpdateFormMB.invInvoiceDTO.id != null}"
+                                 value="#{userData.userDDs['SAVE']}"
+                                 style=""
+                                 action="#{invUpdateFormMB.saveNew()}" 
+                                 update="@form"/>
+
+
+
+            </div>
             <p:fieldset  style="margin-bottom:20px">
-                <p:dataTable var="invUpdateTable"
-                             widgetVar="invUpdateTable"
-                             rowIndexVar="index"
-                             rowKey="#{invUpdateTable}"
-                             selectionMode="single"
-                             selection="#{invUpdateFormMB.invUpdateDetailEntitySelection}"
-                             dir="rtl"
-                             sortBy="#{1}"
+
+                <p:dataTable id="invPurchaseInvoiceDetailsTable"
+                             widgetVar="invPurchaseInvoiceDetailsTable"
+                             style="margin-bottom:20px"
+                             var="invPurchaseInvoiceDetailsTable"
+                             rowIndexVar="index" 
+                             dir="rtl"  rows="15"
                              emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             paginator="true" 
                              editable="true"
                              editMode="cell"
-                             value="#{invUpdateFormMB.invUpdateDetailEntityList}"
-                             id="invUpdateTable">
+                             selectionMode="single"
+                             sortBy="#{1}"
+                             rowKey="#{invPurchaseInvoiceDetailsTable.index}"
+                             selection="#{invUpdateFormMB.invInvoiceDTO.invPurchaseInvoiceDetailsSelected}"
+                             value="#{invUpdateFormMB.invInvoiceDTO.invPurchaseInvoiceDetailList}" >
 
-                   
-                    <f:facet name="header" class="col-md-12">
+                    <f:facet name="header" >
+                        <p:commandButton  id="addnew"
+                                          class="saddButton"
+                                          icon="fa fa-plus"
+                                          title="#{userData.userDDs['ADD']}" 
 
-                        <h:commandLink  style="float: left" class="sdcreenimg">  
-                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
-                            <p:dataExporter type="xls"
-                                target="invUpdateTable" 
-                                fileName="فاتورة المبيعات"  preProcessor="#{invUpdateFormMB.preProcessXLS()}"
-                                postProcessor="#{invUpdateFormMB.postProcessXLS}" />  
-                        </h:commandLink>
+                                          actionListener="#{invUpdateFormMB.addInvDetail()}" 
+                                          update="invPurchaseInvoiceDetailsTable"  
+                                          oncomplete="PrimeFaces.focus('form:invPurchaseInvoiceDetailsTable:'+#{invUpdateFormMB.invInvoiceDTO.invPurchaseInvoiceDetailList.size()}+':invItemNameIn')"
+                                          immediate="true"
+                                          ajax="true"
+                                          style="float:right"/>
 
                         <p:outputPanel>
                             <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
-                            <p:inputText id="globalFilter" onkeyup="PF('invUpdateTable').filter()" style="width:150px" />
+                            <p:inputText id="globalFilter" onkeyup="PF('invPurchaseInvoiceDetailsTable').filter()" style="width:150px" />
                         </p:outputPanel>
+
                     </f:facet>
 
-
-                    <p:column style="width: 8vh;text-align: -webkit-auto;font-size: 1.8vh"   id="serail" 
-                              headerText="#{userData.userDDs['SERIAL']}">
-                        <h:outputText value="#{invUpdateTable.serial}"  />
+                    <p:column headerText="#" style="width: 4vh;text-align:center;border-radius: 0px" >
+                        <h:outputText value="#{invPurchaseInvoiceDetailsTable.serial}"  />
                     </p:column>
 
-                    <p:column style="width: 12vh;text-align: -webkit-auto;font-size: 1.8vh" 
-                              id="itemNumber" headerText="#{userData.userDDs['ITEM_NUMBER']}">
-                        <h:outputText value="#{invUpdateTable.invItemId.code}" />
+                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="#{userData.userDDs['ITEM']}" 
+                              filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
+                              filterable="false">
+                        <h:outputText 
+                            rendered="#{not invUpdateFormMB.columnRender}"
+                            value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.name}"  />
+                        <p:autoComplete id="invItemNameIn"  
+                                        style="width:100%"
+                                        converter="#{autoComplete.itemsBarcodesDetailsViewConverter}"
+                                        value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
+                                        maxResults="20"
+                                        var="item"
+                                        itemLabel="#{item}" 
+                                        itemValue="#{item}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" >
+                            <p:ajax 
+                                event="itemSelect" listener="#{invUpdateFormMB.validateItems(invPurchaseInvoiceDetailsTable)}"  update="dafterValue" />
+
+                        </p:autoComplete>            
                     </p:column>
-                    
-                     <p:column style="width: 12vh;text-align: -webkit-auto;font-size: 1.8vh" 
-                              id="itemName" headerText="اسم الصنف">
-                         <h:outputText value="#{invUpdateTable.invItemId.name}" />
-                    </p:column>
 
 
+                    <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="dafterQuantity"
 
-                    <p:column  style="width: 12vh;text-align: -webkit-auto;font-size: 1.8vh"
-                               id="Quantity" headerText="#{userData.userDDs['ACTUAL_INVE']}">
-                        <p:inputText id="QuantityT" value="#{invUpdateTable.oldAmount}"
-                                     rendered="#{invUpdateFormMB.invUpdateEntity.id eq null}"
-                                     style="width:95%">
-                            <p:ajax listener="#{invUpdateFormMB.updateDifference(invUpdateTable)}" 
-                                    event="blur"
-                                    update="difference totalQuantity totalNet"/>
+                               filterBy="#{invPurchaseInvoiceDetailsTable.oldQuantity}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{invPurchaseInvoiceDetailsTable.oldQuantity}"
+                               filterable="false"
+                               headerText="الدفترى">
+                        <p:inputText id="dafterValue" readonly="true" disabled="true"
+                                     value="#{invPurchaseInvoiceDetailsTable.oldQuantity}" style="width: 95%" >
+
                         </p:inputText>
 
-                        <p:outputLabel value="#{invUpdateTable.oldAmount}" 
-                                       rendered="#{invUpdateFormMB.invUpdateEntity.id != null}" style="width:95%"/>
+                    </p:column>
+
+
+                    <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="actualQuantity"
+
+                               filterBy="#{invPurchaseInvoiceDetailsTable.actualQuantity}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{invPurchaseInvoiceDetailsTable.actualQuantity}"
+                               filterable="false"
+                               headerText="الفعلى">
+                        <p:inputText id="actualValue"
+                                     value="#{invPurchaseInvoiceDetailsTable.actualQuantity}" style="width: 95%" >
+                            <p:ajax listener="#{invUpdateFormMB.validateActulQuantityColumNew(invPurchaseInvoiceDetailsTable)}" update="invPurchaseInvoiceDetailsTable" />
+
+                        </p:inputText>
 
                     </p:column>
 
 
-                    <p:column style="width: 12vh;text-align: -webkit-auto;font-size: 1.8vh" id="balance" headerText="#{userData.userDDs['DOC_BALA']}">
-                        <p:outputLabel id="balanceT" value="#{invUpdateTable.newAmount}"  style="width:95%"/>
+                    <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="differanceQuantity"
+
+                               filterBy="#{invPurchaseInvoiceDetailsTable.differanceQuantity}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{invPurchaseInvoiceDetailsTable.differanceQuantity}"
+                               filterable="false"
+                               headerText="الفرق">
+                        <p:inputText id="differanceQuantityValue"
+                                     value="#{invPurchaseInvoiceDetailsTable.differanceQuantity}" style="width: 95%" >
+
+                        </p:inputText>
+
                     </p:column>
 
-                    <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.8vh" id="Total" headerText="#{userData.userDDs['DIFFERENCE']}">
-                        <p:outputLabel id="difference" value="#{invUpdateTable.difference}" />
-                    </p:column>
-                    <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.8vh" id="valueto" headerText="#{userData.userDDs['VALUE']}">
-                        <p:outputLabel id="valuet" value="#{invUpdateTable.value}" />
-                    </p:column>
                     <p:summaryRow>
-                        <p:column colspan="3" style="text-align:right">
-                            <h:outputText style="text-align:right" value="#{userData.userDDs['TOTAL']}  :" />
-                        </p:column>
-                        <p:column>
-                            <h:outputText id="totalQuantity" value="#{invUpdateFormMB.totalQuantity}"/>
-                        </p:column>
-                        <p:column>
-                            <h:outputText id="totalNet" value="#{invUpdateFormMB.totalBalance}"/>
-                        </p:column>
-
-
+                        <p:column />
+                        <p:column />
+                        <p:column />
+                        <p:column />
+                        <p:column />
+                        <p:column />
                     </p:summaryRow>
 
-                    <p:column style="width: 8vh;text-align: -webkit-auto;font-size: 1.8vh" headerText="#{userData.userDDs['TRANSACTION']}" >
-                        <p:commandButton class="sdeleteButton" update="invUpdateTable" title="#{userData.userDDs['DELETE']}"
-                                         disabled="#{invUpdateFormMB.invUpdateEntity.id != null}"
-                                         action="#{invUpdateFormMB.deleteInvUpdateDetail}" icon="fa fa-remove" >
-                            <f:setPropertyActionListener value="#{invUpdateTable}"
-                                                         target="#{invUpdateFormMB.invUpdateDetailEntitySelection}"/>
-                            <p:confirm header="#{userData.userDDs['COFIGRATION']}"
+                    <p:column 
+                        style="width: 13vh;text-align: center;border-radius: 0px" 
+                        headerText="#{userData.userDDs['TRANSACTION']}"
+                        rendered="#{invUpdateFormMB.columnRender}"
+                        >
+
+
+
+                        <p:commandButton  id="b7" icon="fa fa-plus" 
+                                          class="saddbuttonins" style="color: #fff!important;background-color: #00BCD4"
+                                          title="#{userData.userDDs['ADD']}" 
+
+                                          actionListener="#{invUpdateFormMB.addInvDetail()}" 
+                                          update="invPurchaseInvoiceDetailsTable"  
+                                          immediate="true"
+                                          oncomplete="PrimeFaces.focus('form:invPurchaseInvoiceDetailsTable:'+#{invUpdateFormMB.invInvoiceDTO.invPurchaseInvoiceDetailList.size()}+':invItemNameIn')"
+                                          ajax="true" />
+
+                        <p:commandButton  update="invPurchaseInvoiceDetailsTable"
+                                          title="#{userData.userDDs['DELETE']}" 
+                                          class="sdeleteButtons" 
+                                          style="color: #fff!important;background-color: red; width: 10px; height: 20px; border-radius: 3px; margin-right: 2px;"
+                                          action="#{invUpdateFormMB.deleteInvDetailNew(invPurchaseInvoiceDetailsTable)}"
+                                          icon="fa fa-remove" >
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
                                        message="#{userData.userDDs['ARE_YOU_SURE']}"
                                        icon="ui-icon-alert" />
                         </p:commandButton>
 
+
+
                         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-                            <p:commandButton title="#{userData.userDDs['YES']}" type="button"
-                                             styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" 
-                                             styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                         </p:confirmDialog>
                     </p:column >
 
                 </p:dataTable>
-                
-                <p:commandButton class="saveButton"
-                             style="margin-right: 45%" id="saveB" 
-                             title="#{userData.userDDs['SAVE']}"
-                             disabled="#{invUpdateFormMB.invUpdateEntity.id != null}"
-                             value="#{userData.userDDs['SAVE']}"
-                             icon="fa fa-fw fa-save" 
-                             action="#{invUpdateFormMB.save()}" 
-                             update="@form"/>
 
-            <p:commandButton class="cancelButton"
-                             id="cancel" 
-                             title="#{userData.userDDs['CANCEL']}" 
-                             value="#{userData.userDDs['CANCEL']}"
-                             icon="fa fa-fw fa-backward" 
-                             action="#{invUpdateFormMB.exit()}" 
-                             update="@form"/>
-            
-            
-            <p:blockUI block="form" trigger="saveB" animate="true" >
 
-                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+                <p:blockUI block="form" trigger="saveB" animate="true" >
 
-            </p:blockUI> 
+                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                </p:blockUI> 
             </p:fieldset>
-            
-
         </h:form>
     </ui:define>
 </ui:composition>

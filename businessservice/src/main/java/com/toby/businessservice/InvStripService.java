@@ -1,6 +1,7 @@
 package com.toby.businessservice;
 
 import com.toby.bussinessservice.global.InvPurchaseReturnSave;
+import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvStripDTO;
 import com.toby.entity.InvStrip;
 import com.toby.entity.InvStripDetail;
@@ -14,9 +15,10 @@ import java.util.List;
  */
 @Remote
 public interface InvStripService {
+
     InvPurchaseReturnSave addInvStrip(InvStrip invStrip, List<InvStripDetail> invStripDetailDetailList, List<InvStripDetail> StripDetailDeleted);
 
-    void deleteInvStrip(InvStrip invStrip, Integer invStripIdToPass);
+    void deleteInvStrip(InvStrip invStrip);
 
     List<InvStrip> getALLInvStrip();
 
@@ -29,6 +31,9 @@ public interface InvStripService {
     InvStrip findInvStripByInvStripId(Integer invStripId);
 
     Integer getMaxSerialForInvoiceDetail(InvStrip invStrip);
-    
+
     public InvStripDTO findInvStripByInvStripIdDTO(Integer invStripId, TobyUser tobyUser);
+
+    public InvStripDTO saveNew(InvStripDTO invStripDTO, TobyUser tobyUser);
+
 }

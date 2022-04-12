@@ -20,6 +20,8 @@ public interface GeneralService {
 
 
     public APIloginDTO authenticateManasa(LoginRoot loginRoot);
+    
+    public String changePasswordManasa(LoginRoot loginRoot) ;
 
     public APIloginDTO authenticateStudent(LoginRoot loginRoot);
 

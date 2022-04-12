@@ -9,6 +9,7 @@ import com.toby.businessservice.ProProductionItemsTransactionService;
 import com.toby.businessservice.ProProductionStagesService;
 import com.toby.businessservice.ProductionTransactionOfUserService;
 import com.toby.businessservice.TobyUserService;
+import com.toby.bussinessservice.global.Utility;
 import com.toby.converter.ProProductionStagesDTOConverter;
 import com.toby.converter.TobyUserDTOConverter;
 import com.toby.dto.PrintProductionDTO;
@@ -236,8 +237,8 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
         getProProductionStagesDTOList();
         getTobyUserDTOList();
         setUserDDs(getUserData().getUserDDs());
-        getPrintProductionDTO().setFromDate(new Date());
-        getPrintProductionDTO().setToDate(new Date());
+        getPrintProductionDTO().setFromDate(Utility.hourNow());
+        getPrintProductionDTO().setToDate(Utility.hourNow());
     }
 
     @Override

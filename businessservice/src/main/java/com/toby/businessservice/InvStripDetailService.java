@@ -1,5 +1,6 @@
 package com.toby.businessservice;
 
+import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvStripDTO;
 import com.toby.dto.InvStripDetailDTO;
 import com.toby.dto.QuantityItemsStoreDTO;
@@ -14,6 +15,7 @@ import java.util.List;
  */
 @Remote
 public interface InvStripDetailService {
+
     void addInvStripDetails(InvStripDetail details);
 
     void deleteInvStripDetails(InvStripDetail details);
@@ -23,11 +25,16 @@ public interface InvStripDetailService {
     List<InvStripDetail> getAllInvStripDetails();
 
     List<InvStripDetail> getAllInvStripDetails(Integer id);
-   
+
+    List<InvStripDetailDTO> getAllInvStripDetailsDTO(Integer id, TobyUser tobyUser);
+
+    public List<InvStripDetailDTO> mapToDTOList1(List<QuantityItemsStoreDTO> quantityItemsStoreList, InvStripDTO invStrip, TobyUser tobyUser);
+
+    public InvStripDTO updateSummition(InvStripDetailDTO detailEntity, InvStripDTO invStrip);
+
+    public InvDetailDTO addInvStripDetailsDTONew(InvDetailDTO invDetailDTO, Integer InvStripDetailId, TobyUser tobyUser);
     
-    List<InvStripDetailDTO> getAllInvStripDetailsDTO(Integer id ,TobyUser tobyUser);
+    public void deleteInvStripDetailDTO(InvDetailDTO invDetailDTO);
     
-       public List<InvStripDetailDTO> mapToDTOList1(List<QuantityItemsStoreDTO> quantityItemsStoreList,  InvStripDTO invStrip, TobyUser tobyUser);
-      
-      public InvStripDTO updateSummition(InvStripDetailDTO detailEntity,InvStripDTO invStrip);
+    public List<InvDetailDTO> getAllInvStripDetailsDTOASINVDEtail(Integer id, TobyUser tobyUser);
 }

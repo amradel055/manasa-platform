@@ -13,6 +13,7 @@ import com.toby.businessservice.GlYearService;
 import com.toby.businessservice.TobyUserRoleService;
 import com.toby.businessservice.report.CashAccountSettlmentService;
 import com.toby.businessservice.reports.searchBean.SubAccountSummarySearchBean;
+import com.toby.bussinessservice.global.Utility;
 import com.toby.comparatorsVars.CashAccountSettlmentViewComparator;
 import com.toby.converter.GlBankDTOConverter;
 import com.toby.converter.TobyUserConverter;
@@ -492,13 +493,13 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
     @Override
     public void resetDateFrom() {
 //        cashAccountSettlementSearchBean.setDateFrom(getGlYearSelection() != null ? getGlYearSelection().getDateFrom() : null);
-        cashAccountSettlementSearchBean.setDateFrom(new Date());
+        cashAccountSettlementSearchBean.setDateFrom(Utility.hourNow());
 
     }
 
     @Override
     public void resetDateTo() {
-        cashAccountSettlementSearchBean.setDateTo(new Date());
+        cashAccountSettlementSearchBean.setDateTo(Utility.hourNow());
 //        cashAccountSettlementSearchBean.setDateTo(getGlYearSelection() != null ? getGlYearSelection().getDateTo() : null);
 
     }

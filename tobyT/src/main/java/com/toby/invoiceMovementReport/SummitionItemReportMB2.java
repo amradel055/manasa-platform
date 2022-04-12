@@ -171,7 +171,7 @@ public class SummitionItemReportMB2 extends Basic {
             List<Test> listTest = new ArrayList<>();
             Boolean update = Boolean.TRUE;
             for (InvInventoryDTO invInventoryDTO : getGallaryListSelected()) {
-                System.out.println(invInventoryDTO.getName());
+                System.out.println(invInventoryDTO.getCode()+"   " + new Date());
                 listTest = new ArrayList<>();
 
                 summitionItemsView = new SummitionItemsView();
@@ -187,7 +187,11 @@ public class SummitionItemReportMB2 extends Basic {
                     itemsViewForGallaryinner = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(invInventoryDTO.getId(), getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), null, getProGroupListSelected());
 
                 } else {
-                    itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantityNew(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), null, getProGroupListSelected(), getInvoiceType(), update);
+                    if (getUri().contains("proproductionreport/summitionItemReport.xhtml")) {
+                        itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantityNew(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), null, getProGroupListSelected(), getInvoiceType(), false);
+                    } else {
+                        itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantityNew(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), null, getProGroupListSelected(), getInvoiceType(), true);
+                    }
                     update = Boolean.FALSE;
                     totalNotice = invPurchaseInvoiceService_1.findNotice(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), dateFrom, dateTo, getGallaryListSelected());
                     totalPersentageNotice = invPurchaseInvoiceService_1.findPersentageNotice(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), dateFrom, dateTo, getGallaryListSelected());

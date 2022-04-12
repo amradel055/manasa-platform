@@ -640,6 +640,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
             glBankTransactionEntityMapper.setDate(bankTransaction.getDate() != null ? bankTransaction.getDate() : new Date());
             glBankTransactionEntityMapper.setPaymentType(bankTransaction.getPaymentType() != null ? bankTransaction.getPaymentType() : 0);
             glBankTransactionEntityMapper.setPostFlag(bankTransaction.getPostFlag());
+            glBankTransactionEntityMapper.setMovementType(bankTransaction.getMovementType());
             if (bankTransaction.getPaymentType() == 1) {
                 glBankTransactionEntityMapper.setChequeDate(bankTransaction.getChequeDate() != null ? bankTransaction.getChequeDate() : new Date());
                 glBankTransactionEntityMapper.setChequeDueDate(bankTransaction.getChequeDueDate() != null ? bankTransaction.getChequeDueDate() : new Date());
@@ -831,6 +832,10 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                     } else {
                         glBankTransaction.setTransactionType(3);
                     }
+                    
+                     if(getUri().contains("notesreceivablesAnotherBranch")){
+                        glBankTransaction.setMovementType(1);
+                    }
 
                     glBankTransaction.setValue(glBankTransactionEntity.getValue() != null ? glBankTransactionEntity.getValue() : BigDecimal.ZERO);
 //                    glBankTransaction.setValueLocal(glBankTransactionEntity.getValueLocal() != null ? glBankTransactionEntity.getValueLocal() : BigDecimal.ZERO);
@@ -940,7 +945,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                     bankTransactionDetail.setValueLocal(bankTransactionDetail.getValue());
 //                    bankTransactionDetail.setValueLocal(glBankTransactionEntity.getValueLocal() != null ? glBankTransactionEntity.getValueLocal() : BigDecimal.ZERO);
                     bankTransactionDetail.setSymbolId(glBankTransactionDetailEntity.getGlItems());
-//            bankTransactionDetail.set
+                   
                     try {
                         glBankTransactionDetailsUpdatedList.add(bankTransactionDetail);
                         GlBankTransaction bankTransaction;

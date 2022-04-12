@@ -1,0 +1,242 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <h:form id="form"  enctype="multipart/form-data"  dir="#{userData.dir}" class='formmargin'>
+            <div style=" position: absolute;left: 20px"> 
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 24%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />                       
+            </div>
+            <p:fieldset legend="#{userData.userDDs['ADJUST_INV']}" style="margin-bottom:20px">
+                <div >
+                    <p:messages id="curmsg" 
+                                autoUpdate="true"
+                                showDetail="true" 
+                                rendered="true" closable="true"/>   
+                </div>
+
+                <h:panelGrid id="firstLine" columns="2" cellspacing="10" cellpadding="0" >
+
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:inputText id="searchBySerial"  style="width:100%" value="#{invUpdateFormUploadedMB.invInvoiceDTO.searchBySerial}" >
+                                <p:ajax event="blur" update="@form"  listener="#{invUpdateFormUploadedMB.loadInvStrip()}"  />
+                            </p:inputText>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel for="searchBySerial" style="width: 95px;"  value="بحث برقم الفاتورة" />
+                        </div>
+                    </div>
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel  style="width: 70px;margin-right: 6%;" value="#{userData.userDDs['TRANSACTION_NO']}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:inputText  style="width: 35%!important" readonly="true" id="serialNo" value="#{invUpdateFormUploadedMB.invInvoiceDTO.serial}"/>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel  style="width: 75px" value="#{userData.userDDs['DATEE']}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:calendar  style="width: 50%!important"  value="#{invUpdateFormUploadedMB.invInvoiceDTO.date}" pattern="dd/MM/yyyy" />
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 76px;margin-right: 6%;" value="#{userData.userDDs['DEPOSITORY']}"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 76px;margin-right: 6%;" value="#{invUpdateFormUploadedMB.invInvoiceDTO.invInventoryId}"/>
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 75px" value="#{userData.userDDs['INVEN_DOC']}"/>
+                        </h:panelGroup>
+                        <h:panelGroup >
+                            <h:panelGroup>
+                                <p:inputText style="width: 37%!important"  id="stripDocument" value="#{invUpdateFormUploadedMB.invInvoiceDTO.supplierInvoiceNumber}" />
+                            </h:panelGroup>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+                </h:panelGrid>
+                <h:panelGroup>
+                    <div class="note">
+                        <h:panelGroup>
+                            <p:outputLabel  style="width: 71px;margin-right: 3%;"  value="#{userData.userDDs['NOTE']}"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:inputText style="width: 67.5%!important"  id="ad11" value="#{invUpdateFormUploadedMB.invInvoiceDTO.remarks}" />
+                        </h:panelGroup>
+                    </div>
+                </h:panelGroup>
+
+
+            </p:fieldset>
+            <p:fieldset  style="margin-bottom:20px">
+                <p:dataTable id="invPurchaseInvoiceDetailsTable"
+                             widgetVar="invPurchaseInvoiceDetailsTable"
+                             style="margin-bottom:20px"
+                             var="invPurchaseInvoiceDetailsTable"
+                             rowIndexVar="index" 
+                             dir="rtl"  rows="15"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             paginator="true" 
+                             editable="true"
+                             editMode="cell"
+                             selectionMode="single"
+                             sortBy="#{1}"
+                             rowKey="#{invPurchaseInvoiceDetailsTable.index}"
+                             selection="#{invUpdateFormUploadedMB.invInvoiceDTO.invPurchaseInvoiceDetailsSelected}"
+                             value="#{invUpdateFormUploadedMB.invInvoiceDTO.invPurchaseInvoiceDetailList}" >
+
+                    <f:facet name="header" >
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('invPurchaseInvoiceDetailsTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column headerText="#" style="width: 4vh;text-align:center;border-radius: 0px" >
+                        <h:outputText value="#{invPurchaseInvoiceDetailsTable.serial}"  />
+                    </p:column>
+
+                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="#{userData.userDDs['ITEM']}" 
+                              filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
+                              filterable="false">
+                        <h:outputText value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.name}"  />          
+                    </p:column>
+
+
+                    <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="dafterQuantity"
+
+                               filterBy="#{invPurchaseInvoiceDetailsTable.oldQuantity}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{invPurchaseInvoiceDetailsTable.oldQuantity}"
+                               filterable="false"
+                               headerText="الدفترى">
+                        <h:outputText id="dafterValue" 
+                                      value="#{invPurchaseInvoiceDetailsTable.oldQuantity}" style="width: 95%" />
+
+                    </p:column>
+
+
+                    <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="actualQuantity"
+
+                               filterBy="#{invPurchaseInvoiceDetailsTable.actualQuantity}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{invPurchaseInvoiceDetailsTable.actualQuantity}"
+                               filterable="false"
+                               headerText="الفعلى">
+                        <h:outputText id="actualValue"
+                                      value="#{invPurchaseInvoiceDetailsTable.actualQuantity}" style="width: 95%" />
+
+                    </p:column>
+
+
+                    <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="differanceQuantity"
+
+                               filterBy="#{invPurchaseInvoiceDetailsTable.differanceQuantity}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{invPurchaseInvoiceDetailsTable.differanceQuantity}"
+                               filterable="false"
+                               headerText="الفرق">
+                        <h:outputText id="differanceQuantityValue"
+                                      value="#{invPurchaseInvoiceDetailsTable.differanceQuantity}" style="width: 95%" />
+
+                    </p:column>
+
+                    <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="wasalate"
+
+                               filterBy="#{invPurchaseInvoiceDetailsTable.wasalate}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{invPurchaseInvoiceDetailsTable.wasalate}"
+                               filterable="false"
+                               headerText="الوصلات">
+                        <h:outputText id="wasalateT"
+                                      value="#{invPurchaseInvoiceDetailsTable.wasalate}" style="width: 95%" />
+
+                    </p:column>
+
+                    <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="supplierName"
+
+                               filterBy="#{invPurchaseInvoiceDetailsTable.supplierName}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{invPurchaseInvoiceDetailsTable.supplierName}"
+                               filterable="false"
+                               headerText="المورد">
+                        <h:outputText id="supplierNameT"
+                                      value="#{invPurchaseInvoiceDetailsTable.supplierName}" style="width: 95%" />
+
+                    </p:column>
+
+
+
+                    <p:summaryRow>
+                        <p:column colspan="4" />
+                        <p:column />
+                        <p:column />
+                        <p:column />
+                    </p:summaryRow>
+
+
+                </p:dataTable>
+
+                <div style="text-align: center!important;margin-top: 2%;margin-bottom: 2%;">
+                    <p:commandButton class="saveButton"
+                                     id="saveB" 
+                                     title="#{userData.userDDs['SAVE']}"
+                                     disabled="#{invUpdateFormUploadedMB.invInvoiceDTO.id != null}"
+                                     value="#{userData.userDDs['SAVE']}"
+                                     style=""
+                                     action="#{invUpdateFormUploadedMB.saveAll()}" 
+                                     update="@form"/>
+
+                    <h:commandLink  class="sdcreenimg">  
+                        <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                        <p:dataExporter type="xls"
+                                        target="invUpdateTable" 
+                                        fileName="ضبط المخزن"  preProcessor="#{invUpdateFormUploadedMB.preProcessXLS()}"
+                                        postProcessor="#{invUpdateFormUploadedMB.postProcessXLS}" />  
+                    </h:commandLink>
+                </div>
+                <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                </p:blockUI> 
+            </p:fieldset>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
