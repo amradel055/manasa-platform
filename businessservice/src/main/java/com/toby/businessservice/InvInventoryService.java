@@ -10,6 +10,7 @@ import com.toby.entity.Branch;
 import com.toby.entity.InvInventory;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -62,5 +63,6 @@ public interface InvInventoryService {
 
     public InvInventoryDTO maptoDTOSmall(InvInventoryDTO dto, InvInventory entity);
 
-   public List<InvInventoryDTO> findInventoryByBranch(Integer branchId ,TobyUser tobyUser );
+    public List<InvInventoryDTO> findInventoryByBranch(Integer branchId, TobyUser tobyUser);
+
 }
