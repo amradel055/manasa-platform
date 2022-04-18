@@ -9,14 +9,17 @@ import com.toby.core.GenericDAO;
 import com.toby.dto.CostCenterDTO;
 import com.toby.dto.GlAccountDTO;
 import com.toby.dto.GlAdminUnitDTO;
+import com.toby.dto.GlBankTransactionDetailDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.CostCenter;
 import com.toby.entity.GlAccount;
 import com.toby.entity.GlAdminUnit;
+import com.toby.entity.GlBankTransactionDetail;
 import com.toby.entity.InvInventory;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -60,7 +63,7 @@ public class InvInventoryImpl implements InvInventoryService {
             entity.setPhone(dto.getPhone());
             entity.setInvName(dto.getInvName());
             entity.setSellerName(dto.getSellerName());
-            
+
             if (dto.getGlAdminUnitId() != null) {
                 GlAdminUnit glAdminUnit = new GlAdminUnit();
                 glAdminUnit.setId(dto.getGlAdminUnitId().getId());
@@ -68,32 +71,32 @@ public class InvInventoryImpl implements InvInventoryService {
                 glAdminUnit.setCode(dto.getGlAdminUnitId().getCode());
                 entity.setAdminUnitId(glAdminUnit);
             }
-            
+
             if (dto.getCostCenterId() != null) {
                 CostCenter costCenter = new CostCenter();
                 costCenter.setId(dto.getCostCenterId().getId());
                 costCenter.setName(dto.getCostCenterId().getName());
                 entity.setCostCenterId(costCenter);
             }
-            
+
             if (dto.getAccountId() != null) {
                 GlAccount account = new GlAccount();
                 account.setId(dto.getAccountId().getId());
                 entity.setAccountId(account);
             }
-            
+
             if (dto.getRunningAccount() != null) {
                 GlAccount account = new GlAccount();
                 account.setId(dto.getRunningAccount().getId());
                 entity.setRunningAccount(account);
             }
-            
+
             if (dto.getCostAccount() != null) {
                 GlAccount account = new GlAccount();
                 account.setId(dto.getCostAccount().getId());
                 entity.setCostAccount(account);
             }
-            
+
             if (dto.getCustomerAccount() != null) {
                 GlAccount account = new GlAccount();
                 account.setId(dto.getCustomerAccount().getId());
@@ -338,15 +341,15 @@ public class InvInventoryImpl implements InvInventoryService {
 
         return dao.findListByQuery("SELECT i FROM InvInventory i where i.branchId.id = :branchId and i.code = :code  ORDER BY i.code", params);
     }
-    
-        @Override
-    public List<InvInventoryDTO> findInventoryByBranch(Integer branchId ,TobyUser tobyUser ) {
+
+    @Override
+    public List<InvInventoryDTO> findInventoryByBranch(Integer branchId, TobyUser tobyUser) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
-       List<InvInventory>inventoryList = dao.findListByQuery("SELECT i FROM InvInventory i where i.branchId.id = :branchId AND i.invType = 2 ", params);
-         List<InvInventoryDTO>inventoryListdDTOList =mapToDTOList(inventoryList, tobyUser);
-         return inventoryListdDTOList;
-        
+        List<InvInventory> inventoryList = dao.findListByQuery("SELECT i FROM InvInventory i where i.branchId.id = :branchId AND i.invType = 2 ", params);
+        List<InvInventoryDTO> inventoryListdDTOList = mapToDTOList(inventoryList, tobyUser);
+        return inventoryListdDTOList;
+
     }
 
     @Override
@@ -453,4 +456,7 @@ public class InvInventoryImpl implements InvInventoryService {
 
         return errorMessage.toString();
     }
+
+   
+
 }

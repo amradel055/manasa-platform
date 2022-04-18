@@ -542,7 +542,7 @@
                                     <p:menuitem id="sr_lnk312" value="#{userData.userDDs['ITEMS_DATA']}" icon="&#xE8D2;" url="/faces/views/itemsdata/itemsdatalist.xhtml" 
                                                 rendered="#{userData.userScreens['itemsdata'].view or userData.isAdmin}"
                                                 />
-                                      <p:menuitem id="sr_lnk3125" value="انواع الثياب" icon="&#xE8D2;" url="/faces/views/InvItemType/invItemTypeList.xhtml" 
+                                    <p:menuitem id="sr_lnk3125" value="انواع الثياب" icon="&#xE8D2;" url="/faces/views/InvItemType/invItemTypeList.xhtml" 
                                                 rendered="#{userData.userScreens['itemsdata'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk312001" value="اسعار الاصناف لكل فرع" icon="&#xE8D2;" url="/faces/views/invitemprice/itemspricelist.xhtml" 
@@ -649,11 +649,11 @@
                                     <p:menuitem id="sr_lnk9999321" value="#{userData.userDDs['CONVERSION_BET_STORE']}" icon="&#xE8D2;" url="/faces/views/invtransferInventory/invTransferInventoryList.xhtml" 
                                                 rendered="#{userData.userScreens['invtransferInventory'].view or userData.isAdmin}"
                                                 />
-                                    
-                                     <p:menuitem id="sr_lnk9999322" value="جرد المخزون" icon="&#xE8D2;" url="/faces/views/invstripNew/invStripList.xhtml" 
+
+                                    <p:menuitem id="sr_lnk9999322" value="جرد المخزون" icon="&#xE8D2;" url="/faces/views/invstripNew/invStripList.xhtml" 
                                                 rendered="#{userData.userScreens['invstrip'].view or userData.isAdmin}"
                                                 />
-                                     
+
                                     <p:menuitem id="sr_lnk9999323" value="ضبط المخزون" icon="&#xE8D2;" url="/faces/views/invupdate/invUpdateList.xhtml" 
                                                 rendered="#{userData.userScreens['invupdate'].view or userData.isAdmin}"
                                                 />
@@ -797,6 +797,13 @@
 
                                     <p:menuitem id="sr_lnk466" value="الأصناف حسب الفئات" icon="&#xE8D2;" url="/faces/views/inventoryreports/itemDataReport.xhtml" 
                                                 rendered="#{userData.userScreens['basicdataofitemsbysuppliersreport'].view or userData.isAdmin}"
+                                                />
+                                    
+                                    <p:menuitem id="sr_lnk999935513" value=" تقرير بالمبالغ المسددة" icon="&#xE8D2;" url="/faces/views/inventoryreports/paidAmountReport.xhtml" 
+                                                rendered="#{userData.userScreens['paidAmountReport'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk99990035513" value=" تقرير بالمبالغ الغير المسددة" icon="&#xE8D2;" url="/faces/views/inventoryreports/unPaidAmountReport.xhtml" 
+                                                rendered="#{userData.userScreens['unPaidAmountReport'].view or userData.isAdmin}"
                                                 />
 
                                 </p:submenu>
@@ -1193,7 +1200,7 @@
                                                 />  <p:menuitem id="sr_lnk10014" value= "Projects Customer" icon="&#xE8D2;" url="/faces/views/crmReports/projectsCustomer.xhtml" 
                                                 rendered="#{userData.userScreens['projectsCustomer'].view or userData.isAdmin}"
                                                 />
-                         
+
 
                                 </p:submenu>
 

@@ -13,6 +13,7 @@ import com.toby.define.ModuleClassEnum;
 import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInvoiceDTO;
+import com.toby.dto.balanceGalary;
 import com.toby.entity.GlYear;
 import com.toby.entity.InvAddingorderDetail;
 import com.toby.entity.InvInventory;
@@ -32,6 +33,7 @@ import com.toby.procedure.TempInvPurchaseInvoiceNotLoadedYet;
 import com.toby.views.ItemsBarcodesDetailsView;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -536,7 +538,7 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
         }
 
     }
-    
+
     @Override
     public <T> List<ItemsBarcodesDetailsView> findItemBarcodeDetails(List<T> list, Integer branchId) {
         List<String> barcodeList = new ArrayList<>();
@@ -553,17 +555,17 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
             } else if (Entity.getClass().equals(InvAddingorderDetail.class)) {
                 InvAddingorderDetail entity = (InvAddingorderDetail) Entity;
                 barcodeList.add(entity.getItemBarcode());
-            }else if (Entity.getClass().equals(InvTransferDetail.class)) {
+            } else if (Entity.getClass().equals(InvTransferDetail.class)) {
                 InvTransferDetail entity = (InvTransferDetail) Entity;
                 barcodeList.add(entity.getItemBarcode());
-            }else if (Entity.getClass().equals(InvUpdateDetail.class)) {
+            } else if (Entity.getClass().equals(InvUpdateDetail.class)) {
                 InvUpdateDetail entity = (InvUpdateDetail) Entity;
                 barcodeList.add(entity.getItemBarcode());
-            }else if (Entity.getClass().equals(InvStripDetail.class)) {
+            } else if (Entity.getClass().equals(InvStripDetail.class)) {
                 InvStripDetail entity = (InvStripDetail) Entity;
                 barcodeList.add(entity.getItemBarcode());
             }
-            
+
         }
         List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewList = itemsBarcodesDetailsViewService.findItemsBarcodesDetailsViewBranchIdByBarcode(branchId, barcodeList);
         return itemsBarcodesDetailsViewList;
@@ -676,7 +678,27 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
     public List<InvDetailDTO> addInvPurchaseInvoiceDetailsDTOOne(List<InvDetailDTO> invPurchaseInvoiceDetailList, Integer headId, TobyUser tobyUser) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
+
+    @Override
+    public List<balanceGalary> UnPaidAmountAfterSearchNative(Integer branchId, Date dateFrom1, Date dateTo1, String stringBuilder, TobyUser tobyUser) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        String dateFrom = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(dateFrom1);
+        String dateTo = new SimpleDateFormat("yyyy-MM-dd  23:59:59").format(dateTo1);
+        List<balanceGalary> galarysLIST = new ArrayList<>();
+        StringBuilder builder = new StringBuilder();
+        builder.append("select name , sum(value) from (select ii.name as name , sum(net_after_discount_head)  as value from inv_purchase_invoice_detail ipid left join inv_purchase_invoice ipi on ipi.id = ipid.inv_purchase_invoice_id left join inv_inventory ii on ii.id = ipi.galary_Id where ipi.branch_id = "+branchId+" and ii.id in (").append(stringBuilder).append(") and ipi.date >= '").append(dateFrom).append("' and ipi.date <= '").append(dateTo).append("' group by ii.id union all select ii.name as name ,(sum(value) * -1) as value from gl_bank_transaction gbt left join inv_purchase_invoice ipi on gbt.invoice_id = ipi.id left join inv_inventory ii on ii.id = ipi.galary_Id where ipi.branch_id = "+branchId+" and ii.id in (").append(stringBuilder).append(") and ipi.date >= '").append(dateFrom).append("' and ipi.date <= '").append(dateTo).append("' group by ii.id union all select ii.name as name ,(sum(value) * -1) as value from gl_bank_transaction_detail gbt left join inv_purchase_invoice ipi on gbt.invoice_id = ipi.id left join inv_inventory ii on ii.id = ipi.galary_Id where ipi.branch_id = "+branchId+" and ii.id in (").append(stringBuilder).append(") and ipi.date >= '").append(dateFrom).append("' and ipi.date <= '").append(dateTo).append("' group by ii.id ) s group by name");
+
+        List<Object[]> res = dao.executeNativeQuery(builder.toString());
+        for (Object[] object : res) {
+            balanceGalary galary = new balanceGalary();
+            galary.setGallaryName((String) object[0]);
+            galary.setValue((BigDecimal) object[1]);
+            galarysLIST.add(galary);
+        }
+
+        return galarysLIST;
+
+    }
 
 }

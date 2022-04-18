@@ -7,9 +7,12 @@ package com.toby.businessservice;
 
 import com.toby.core.GenericDAO;
 import com.toby.dto.GeneralJournalDTO;
+import com.toby.dto.GlBankTransactionDetailDTO;
 import com.toby.dto.GlYearDTO;
+import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.SymbolDTO;
+import com.toby.dto.balanceGalary;
 import com.toby.entity.CostCenter;
 import com.toby.entity.Currency;
 import com.toby.entity.GeneralJournal;
@@ -27,6 +30,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -1047,4 +1051,26 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
         return journal1;
     }
 
+
+    @Override
+    public List<balanceGalary> GlBankTransactionDetailAfterSearchNative(Integer branchId, Date dateFrom1, Date dateTo1, String stringBuilder, TobyUser tobyUser) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        String dateFrom = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(dateFrom1);
+        String dateTo = new SimpleDateFormat("yyyy-MM-dd  23:59:59").format(dateTo1);
+        List<balanceGalary> galarysLIST = new ArrayList<>();
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT ii.name , sum(gbtd.value) FROM gl_bank_transaction_detail gbtd left join gl_bank_transaction gbt on gbt.id = gbtd.gl_bank_transaction_id left join gl_bank gb on gbtd.bank_id_from = gb.id left join inv_inventory ii on ii.id = gb.gallary_id where gb.branch_id = "+branchId+" and ii.id in (").append(stringBuilder).append(") and gbt.date >= '").append(dateFrom).append("' and gbt.date <= '").append(dateTo).append("' group by ii.id");
+
+        List<Object[]> res = dao.executeNativeQuery(builder.toString());
+        for (Object[] object : res) {
+            balanceGalary galary = new balanceGalary();
+            galary.setGallaryName((String) object[0]);
+            galary.setValue((BigDecimal) object[1]);
+            galarysLIST.add(galary);
+        }
+
+        return galarysLIST;
+
+    }
 }
