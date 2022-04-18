@@ -69,6 +69,14 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
     }
 
     @Override
+    public List<InvDetailDTO> getAllInvDetailDTOByInvUpdateDetails(Integer id) {
+        Map<String, Object> params = new HashMap();
+        params.put("invUpdate", id);
+        List<InvUpdateDetail> list = dao.findListByQuery("SELECT d FROM InvUpdateDetail d WHERE d.invUpdateId.id =:invUpdate", params);
+       return returnListDTOInvUpdateDetail(list, list.get(0).getInvUpdateId().getBranchId().getId(), list.get(0).getInvUpdateId().getInventoryId().getId());
+    }
+
+    @Override
     public List<InvDetailDTO> getAllInvTransferDetailsByInvPurchaseInvoiceIdDTO(InvInvoiceDTO invInvoiceDTO, Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("invUpdate", invInvoiceDTO.getId());
@@ -169,6 +177,7 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
 
         entity.setNewAmount(dTO.getActualQuantity());
         entity.setDifference(dTO.getActualQuantity().subtract(dTO.getAvailableQuantityRow()));
+        entity.setWasalate(dTO.getWasalate());
 
         InvUpdate invUpdate = new InvUpdate();
         invUpdate.setId(invUpdateId);
@@ -217,19 +226,19 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
         StringBuilder error = null;
         List<InvDetailDTO> list = new ArrayList<>();
         for (InvDetailDTO detailDTO : detailDTOList) {
-                error = invGlobalService.validateSelectItem(detailDTO, error);
+            error = invGlobalService.validateSelectItem(detailDTO, error);
 
-                if (error != null && !error.toString().isEmpty()) {
-                    detailDTO.setMsg(error.toString());
-                    return null;
-                }
-                InvUpdateDetail detail;
+            if (error != null && !error.toString().isEmpty()) {
+                detailDTO.setMsg(error.toString());
+                return null;
+            }
+            InvUpdateDetail detail;
 
-                detail = mapToEntity(detailDTO, invUpdateId, tobyUser);
-                detail = dao.updateEntity(detail);
-                detailDTO.setId(detail.getId());
-                detailDTO.setSerial(detail.getSerial());
-                list.add(detailDTO);
+            detail = mapToEntity(detailDTO, invUpdateId, tobyUser);
+            detail = dao.updateEntity(detail);
+            detailDTO.setId(detail.getId());
+            detailDTO.setSerial(detail.getSerial());
+            list.add(detailDTO);
         }
 
         return list;
@@ -269,6 +278,7 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
             if (map.containsKey(detailDTO.getItemId().getId())) {
                 InvDetailDTO detail = map.get(detailDTO.getItemId().getId());
                 detailDTO.setActualQuantity(detail.getActualQuantity().add(detailDTO.getActualQuantity()));
+                detailDTO.setWasalate(detail.getWasalate().add(detailDTO.getWasalate()));
                 map.put(detailDTO.getItemId().getId(), detailDTO);
             } else {
                 map.put(detailDTO.getItemId().getId(), detailDTO);
@@ -280,6 +290,7 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
             dTO.setAvailableQuantityRow(quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, dTO.getItemId().getId(), true, null));
             dTO.setOldQuantity(dTO.getAvailableQuantityRow());
             dTO.setOldQuantityBak(dTO.getAvailableQuantityRow());
+            dTO.setId(null);
             invdetailListAfterSummition.add(dTO);
         }
 
@@ -334,6 +345,75 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
 
         dto.setActualQuantity(entity.getActualAmount());
         dto.setWasalate(entity.getWasalate());
+
+        if (entity.getInvItemId() != null) {
+            InvItemDTO invItemDTO = new InvItemDTO();
+            invItemDTO.setId(entity.getInvItemId().getId());
+            invItemDTO.setName(entity.getInvItemId().getName());
+            invItemDTO.setCode(entity.getInvItemId().getCode());
+            dto.setItemId(invItemDTO);
+
+        }
+
+        dto.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
+        dto.setCreatedDate(entity.getCreationDate());
+
+        dto.setCompanyId(entity.getCompanyId() != null ? entity.getCompanyId().getId() : null);
+
+        return dto;
+    }
+
+    private List<InvDetailDTO> returnListDTOInvUpdateDetail(List<InvUpdateDetail> list, Integer branchId, Integer inventoryId) {
+        List<InvDetailDTO> dTOList = new ArrayList<>();
+        Map<String, ItemsBarcodesDetailsView> itemsBarcodeMap = new HashMap<>();
+        List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewList = invPurchaseInvoiceDetailsService.findItemBarcodeDetails(list, branchId);
+
+        for (ItemsBarcodesDetailsView itemsBarcodesDetailsView : itemsBarcodesDetailsViewList) {
+            itemsBarcodeMap.put(itemsBarcodesDetailsView.getBarcode(), itemsBarcodesDetailsView);
+        }
+        for (InvUpdateDetail entity : list) {
+            dTOList.add(mapTODTO(entity, itemsBarcodeMap, inventoryId));
+        }
+        return dTOList;
+    }
+
+    private InvDetailDTO mapTODTO(InvUpdateDetail entity, Map<String, ItemsBarcodesDetailsView> itemsBarcodeMap, Integer inventoryId) {
+        InvDetailDTO dTO = initMapToDTO(entity, itemsBarcodeMap, inventoryId);
+        return dTO;
+    }
+
+    private InvDetailDTO initMapToDTO(InvUpdateDetail entity, Map<String, ItemsBarcodesDetailsView> itemsBarcodeMap, Integer inventoryId) {
+
+        InvDetailDTO dto = new InvDetailDTO();
+
+        dto.setId(entity.getId());
+        dto.setSerial(entity.getSerial());
+
+        ItemsBarcodesDetailsView barcodesDetailsView = itemsBarcodeMap.get(entity.getItemBarcode());
+        dto.setItemsBarcodesDetail(barcodesDetailsView);
+        dto.setItemsBarcodesDetailTrans(dto.getItemsBarcodesDetail());
+        dto.setItemName(entity.getInvItemId().getName());
+        dto.setItemCode(entity.getInvItemId().getCode());
+        dto.setSupplierName(entity.getInvItemId().getSiteId() != null ? entity.getInvItemId().getSiteId().getName() : "");
+
+        if (entity.getUnitId() != null) {
+            SymbolDTO unitDTO = new SymbolDTO();
+            unitDTO.setId(entity.getUnitId().getId());
+            unitDTO.setName(entity.getUnitId().getName());
+            unitDTO.setSerial(entity.getUnitId().getSerial());
+            dto.setUnitName(entity.getUnitId().getName());
+            dto.setUnitId(unitDTO);
+        }
+
+        dto.setIndex(entity.getId());
+        dto.setCreatedDate(dto.getCreatedDate());
+        dto.setCreatedBy(entity.getCreatedBy().getId());
+
+        dto.setOldQuantity(entity.getOldAmount());
+        dto.setOldQuantityBak(entity.getOldAmount());
+        dto.setWasalate(entity.getWasalate());
+        dto.setActualQuantity(entity.getNewAmount());
+        dto.setDifferanceQuantity(entity.getDifference());
 
         if (entity.getInvItemId() != null) {
             InvItemDTO invItemDTO = new InvItemDTO();

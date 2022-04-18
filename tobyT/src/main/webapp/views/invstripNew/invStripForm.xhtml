@@ -195,7 +195,7 @@
                                         itemValue="#{item}" 
                                         forceSelection="true" 
                                         completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" >
-                            <p:ajax  update="itemNaturalT" />
+                            <p:ajax event="itemSelect"  update="itemNaturalT" />
                         </p:autoComplete>            
                     </p:column>
 

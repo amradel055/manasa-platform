@@ -46,14 +46,14 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
     private String uri;
     private String screenMode;
     private Integer invoiceType;
-
+    
     private Boolean isSales;
 
     // Bean Objs and Lists
     private InvItemSalesSearchBean invItemSalesSearchBean;
     private List<ItemSalesView> itemSalesViewList;
     private Map<Integer, List<ItemSalesView>> itemSalesViewMap = new HashMap<>();
-
+    
     private List<InvGroup> invGroupRootList;
     private Map<Integer, ItemSalesViewBean> itemSalesReportBeanMap = new HashMap<>();
     private TreeMap<Integer, ItemSalesViewBean> salesReportTreeMap = new TreeMap<>();
@@ -80,23 +80,23 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
     private OrganizationSiteService organizationSiteService;
     @EJB
     private PurchaseOfItemsBySuppliersReportService purchaseOfItemsBySuppliersReportService;
-
+    
     @Override
     @PostConstruct
     public void load() {
-
+        
         branchId = getUserData().getUserBranch().getId();
         uri = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestURI();
         super.load();
         initObjs();
-
+        
         fillLists();
         invGroupRootList = invGroupService.getInvGroupsRootsByBranchId(branchId);
-
+        
     }
-
+    
     private void initObjs() {
-
+        
         itemSalesViewList = new ArrayList<>();
         itemSalesViewBeanList = new ArrayList<>();
         itemSalesViewBeanTempList = new ArrayList<>();
@@ -115,40 +115,40 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
         purchaseOfItemsBySuppliersSearchBean = new PurchaseOfItemsBySuppliersSearchBean();
         purchaseOfItemsBySuppliersSearchBean.setFrompaymentType(0);
         purchaseOfItemsBySuppliersSearchBean.setTopaymentType(2);
-
+        
         setSumTotal(BigDecimal.ZERO);
-
+        
     }
-
+    
     private void fillLists() {
         getInventoryListByBranch();
         getDelegateSalesListByBranch();
-
-        setOrganizationSiteRootList(organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(),true,1));
+        
+        setOrganizationSiteRootList(organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(), true, 1));
         getInvOrganizationSiteAsSupplier();
         getInvoicePurchaseListByBranch();
     }
-
+    
     @Override
     public void reset() {
         initObjs();
 
         // fillLists();
     }
-
+    
     public void resetSearch() {
         purchaseOfItemsBySuppliersSearchBean = new PurchaseOfItemsBySuppliersSearchBean();
         purchaseOfItemsBySuppliersSearchBean.setFrompaymentType(0);
         purchaseOfItemsBySuppliersSearchBean.setTopaymentType(2);
         invItemSalesSearchBean = new InvItemSalesSearchBean();
     }
-
+    
     public void showItemReport() {
         itemSalesViewList = new ArrayList<>();
         search();
-
+        
     }
-
+    
     public void shortReportListing() {
         if (invItemSalesSearchBean.getShortReport() != null) {
             if (invItemSalesSearchBean.getShortReport()) {
@@ -158,7 +158,7 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
             }
         }
     }
-
+    
     @Override
     public void search() {
         itemSalesViewMap = new HashMap<>();
@@ -170,15 +170,18 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
         itemSalesViewBeanShortList = new ArrayList<>();
         itemSalesViewBeanTempList = new ArrayList<>();
         ItemSalesViewGroupedByItemIdMap = new HashMap<>();
-
+        
         setSumTotal(BigDecimal.ZERO);
-
+        
         purchaseOfItemsBySuppliersSearchBean.setBranchId(branchId);
         purchaseOfItemsBySuppliersSearchBean.setType(4);
 
         //itemSalesViewList = invItemSalesReportService.getAllInvPurchaseInvoiceDetailsByInvItemSalesSearchBean(invItemSalesSearchBean);
-        itemSalesViewList = purchaseOfItemsBySuppliersReportService.getAllPurchaseOfItemsBySuppliersSearchBeanNew(getPurchaseOfItemsBySuppliersSearchBean(),getInvoiceType());
-
+        if (getUri().contains("inventoryreports/SalesOfItemsBySupplier.xhtml")) {
+            getPurchaseOfItemsBySuppliersSearchBean().setOrganizationType(1);
+        }
+        itemSalesViewList = purchaseOfItemsBySuppliersReportService.getAllPurchaseOfItemsBySuppliersSearchBeanNew(getPurchaseOfItemsBySuppliersSearchBean(), getInvoiceType());
+        
         if (itemSalesViewList != null && !itemSalesViewList.isEmpty()) {
             fillEachGroupWithItsCorrespondingList();
             if (invItemSalesSearchBean.getShowReport() != null && invItemSalesSearchBean.getShowReport()) {
@@ -188,14 +191,14 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
             prepareRootGroupValues();
         }
         mergeGroupsWithItems();
-
+        
         setSumTotal(getSumTotal().divide(new BigDecimal(2)));
-
+        
         if (invItemSalesSearchBean.getShortReport() != null) {
             shortReportListing();
         }
     }
-
+    
     private void fillItemIdMapByGroupId() {
         itemSalesViewList = new ArrayList<>();
         for (Map.Entry<Integer, List<ItemSalesView>> entry : itemSalesViewMap.entrySet()) {
@@ -217,7 +220,7 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
             }
         }
     }
-
+    
     private void fillEachGroupWithItsCorrespondingList() {
         itemSalesViewMap = new HashMap<>();
         for (ItemSalesView item : itemSalesViewList) {
@@ -232,12 +235,12 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
             }
         }
     }
-
+    
     public void prepareRootGroupValues() {
         stripMapReference = 0;
         if (organizationSiteRootList != null && !organizationSiteRootList.isEmpty()) {
             for (InvOrganizationSite ig : organizationSiteRootList) {
-
+                
                 ItemSalesViewBean isvb = new ItemSalesViewBean();
                 // isvb.setItemName("المجموعة");
                 //isvb.setDetailUnitName(grp.getName());
@@ -246,12 +249,12 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
                 isvb.setGroupId(ig.getId());
                 itemSalesReportBeanMap.put(ig.getId(), isvb);
                 salesReportTreeMap.put(salesMapReference++, itemSalesReportBeanMap.get(ig.getId()));
-
+                
                 getChildTreeNodesForGroup(ig);
             }
         }
     }
-
+    
     private void getChildTreeNodesForGroup(InvOrganizationSite grp) {
         if (grp.getInvOrganizationSiteCollection() != null && !grp.getInvOrganizationSiteCollection().isEmpty()) {
             for (InvOrganizationSite childGrp : grp.getInvOrganizationSiteCollection()) {
@@ -267,7 +270,7 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
             }
         }
     }
-
+    
     private void findListFromMapAndPutValue(InvOrganizationSite childGrp, PurchaseOfItemsBySuppliersViewBean srvb) {
         if (itemSalesViewMap.containsKey(childGrp.getId())) {
             if (itemSalesViewMap.get(childGrp.getId()) != null && !itemSalesViewMap.get(childGrp.getId()).isEmpty()) {
@@ -285,7 +288,7 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
             }
         }
     }
-
+    
     public void putValueOfParent(InvOrganizationSite ParentGrp, BigDecimal bd) {
         if (PurchaseOfItemsBySuppliersBeanMap.containsKey(ParentGrp.getId())) {
             PurchaseOfItemsBySuppliersViewBean bean = PurchaseOfItemsBySuppliersBeanMap.get(ParentGrp.getId());
@@ -296,12 +299,12 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
             }
         }
     }
-
+    
     public void mergeGroupsWithItems() {
-
+        
         for (Map.Entry<Integer, ItemSalesViewBean> entry : salesReportTreeMap.entrySet()) {
             ItemSalesViewBean viewBean = entry.getValue();
-
+            
             if (itemSalesViewMap.containsKey(viewBean.getGroupId())) {
                 if (itemSalesViewMap.get(viewBean.getGroupId()) != null && !itemSalesViewMap.get(viewBean.getGroupId()).isEmpty()) {
                     ItemSalesViewBean viewBean1 = new ItemSalesViewBean();
@@ -326,23 +329,23 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
                         salesViewBean.setItemBarcode(idv.getItemBarcode());
                         salesViewBean.setDetailItemQuantity(idv.getDetailItemQuantity());
                         itemSalesViewBeanList.add(salesViewBean);
-
+                        
                         totalNet = totalNet.add(idv.getNet());
                     }
                     viewBean1.setNet(totalNet);
                     viewBean1.setIndex(index);
                     setSumTotal(totalNet.add(getSumTotal() == null ? BigDecimal.ZERO : getSumTotal()));
                     itemSalesViewBeanList.set(index, viewBean1);
-
+                    
                 }
             }
         }
-
+        
         if (itemSalesViewBeanList != null && !itemSalesViewBeanList.isEmpty()) {
             itemSalesViewBeanTempList = new ArrayList<>(itemSalesViewBeanList);
         }
         pieChartsRows = new ArrayList<>();
-
+        
         List<Object> colmns = new ArrayList<>();
         colmns.add("'" + "x" + "'");
         colmns.add("'" + "y" + "'");
@@ -352,10 +355,10 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
             colmns.add("'" + itemSalesViewBean.getGroupName() + "'");
             colmns.add(itemSalesViewBean.getNet());
             pieChartsRows.add(colmns);
-
+            
             BigDecimal percentage = itemSalesViewBean.getNet().multiply(BigDecimal.valueOf(100)).divide(sumTotal, 4, 4);
             percentage = percentage.setScale(1, BigDecimal.ROUND_UP);
-
+            
             ItemSalesViewBean suppliersViewBean = itemSalesViewBeanList.get(itemSalesViewBean.getIndex());
             suppliersViewBean.setChartPercentage(percentage);
             itemSalesViewBeanList.set(suppliersViewBean.getIndex(), suppliersViewBean);
@@ -366,7 +369,7 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
          System.out.println(row);
          }*/
     }
-
+    
     @Override
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
         search();
@@ -376,44 +379,44 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
             fillReport(prepareReport(), getUserData().getReportPath() + "ItemSalesReport.jasper", itemSalesViewBeanList, "pdf");
         }
     }
-
+    
     public void exportChartPDF(ActionEvent actionEvent) throws JRException, IOException {
         search();
         if (itemSalesViewBeanList != null && !itemSalesViewBeanList.isEmpty()) {
             fillReport(prepareReport(), getUserData().getReportPath() + "ItemSalesReportWithColumnChart.jasper", itemSalesViewBeanList, "pdf");
         }
     }
-
+    
     @Override
     public HashMap prepareReport() {
         Map<String, String> userDDs = getUserData().getUserDDs();
         HashMap hashMap = new HashMap();
-
+        
         hashMap.put("UserName", getUserData().getUser().getName());
         hashMap.put("Branch", getUserData().getUserBranch().getNameAr());
         hashMap.put("CompanyName", getUserData().getCompany().getName());
-
+        
         if (isFileExist(getUserData().getImageReportPath())) {
             hashMap.put("companyImage", getUserData().getImageReportPath());
         } else {
             hashMap.put("companyImage", null);
         }
         hashMap.put("dateText", userDDs.get("DATE"));
-
+        
         hashMap.put("header", userDDs.get("ITEM_SALE_SUPP"));
-
+        
         hashMap.put("DateFromLabel", userDDs.get("FROM_PERIOD"));
         hashMap.put("DateToLabel", userDDs.get("TO_PERIOD"));
-
+        
         hashMap.put("DateFromValue", invItemSalesSearchBean.getDateFrom());
         hashMap.put("DateToValue", invItemSalesSearchBean.getDateTo());
-
+        
         hashMap.put("ReceiptNum", userDDs.get("INVOICE_NO"));
         hashMap.put("ReceiptDate", userDDs.get("INVOICE_DATE"));
-
+        
         hashMap.put("ItemNum", userDDs.get("ITEM_NUMBER"));
         hashMap.put("Description", userDDs.get(" ITEM_NAM "));
-
+        
         hashMap.put("Unit", userDDs.get("UNIT"));
         hashMap.put("Quantitiy", userDDs.get("QUANTITY"));
         hashMap.put("UnitPrice", userDDs.get("UNIT_PRICE"));
@@ -422,53 +425,53 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
         hashMap.put("groupName", userDDs.get("GROUP_NAME"));
         hashMap.put("total", userDDs.get("TOTAL"));
         hashMap.put("totalnet", sumTotal);
-
+        
         return hashMap;
     }
-
+    
     @Override
     public void exportExcel(ActionEvent actionEvent) throws JRException, IOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public void exportHtml(ActionEvent actionEvent) throws JRException, IOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public String getScreenName() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     public String getScreenMode() {
         return screenMode;
     }
-
+    
     public void setScreenMode(String screenMode) {
         this.screenMode = screenMode;
     }
-
+    
     public InvItemSalesSearchBean getInvItemSalesSearchBean() {
         return invItemSalesSearchBean;
     }
-
+    
     public void setInvItemSalesSearchBean(InvItemSalesSearchBean invItemSalesSearchBean) {
         this.invItemSalesSearchBean = invItemSalesSearchBean;
     }
-
+    
     public List<ItemSalesView> getItemSalesViewList() {
         return itemSalesViewList;
     }
-
+    
     public void setItemSalesViewList(List<ItemSalesView> itemSalesViewList) {
         this.itemSalesViewList = itemSalesViewList;
     }
-
+    
     public Boolean getIsSales() {
         return isSales;
     }
-
+    
     public void setIsSales(Boolean isSales) {
         this.isSales = isSales;
     }
@@ -680,9 +683,7 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
      public void setChart(Boolean chart) {
      this.chart = chart;
      }*/
-
     /**
      * @return the invoiceType
      */
-  
 }

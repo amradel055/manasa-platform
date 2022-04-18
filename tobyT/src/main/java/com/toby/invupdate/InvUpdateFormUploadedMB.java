@@ -36,12 +36,13 @@ public class InvUpdateFormUploadedMB extends BaseFormBean {
 
     @Override
     public void load() {
-        if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("edit")) {
+        if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("EditInvUpdate")) {
             try {
-                Integer invStripId = (Integer) getContext().getSessionMap().get("invStripSelected");
-//                invStripDTO = invUpdateService.findInvStripByInvStripIdDTO(invStripId, getUserData().getUser());
-//                setInvStripDetailList(invStripDetailService.getAllInvStripDetailsDTOASINVDEtail(invStripDTO.getId(), getUserData().getUser()));
-//                completeInventory(null);
+                Integer invStripId = (Integer) getContext().getSessionMap().get("invUpdateSelected");
+                if (invStripId != null) {
+                    invInvoiceDTO = invUpdateService.findInvInvoiceByInvUpdateId(invStripId);
+                    invInvoiceDTO.setInvPurchaseInvoiceDetailList(invUpdateDetailService.getAllInvDetailDTOByInvUpdateDetails(invStripId));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -55,9 +56,11 @@ public class InvUpdateFormUploadedMB extends BaseFormBean {
     }
 
     public void loadInvStrip() {
-        if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvInventoryId() != null && getInvInvoiceDTO().getInvInventoryId().getId() != null && getInvInvoiceDTO().getSearchBySerial() != null) {
+        if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getSearchBySerial() != null) {
             getInvInvoiceDTO().setInvInventoryId(invUpdateService.findinvinventoryDTO(getInvInvoiceDTO().getSearchBySerial(), getUserData().getUserBranch().getId()));
-            getInvInvoiceDTO().setInvPurchaseInvoiceDetailList(invUpdateDetailService.getAllInvUpdatesDetailFromInvTransferDetail(getInvInvoiceDTO().getSearchBySerial(), getUserData().getUserBranch().getId(), getInvInvoiceDTO().getInvInventoryId().getId()));
+            if (getInvInvoiceDTO().getInvInventoryId() != null && getInvInvoiceDTO().getInvInventoryId().getId() != null) {
+                getInvInvoiceDTO().setInvPurchaseInvoiceDetailList(invUpdateDetailService.getAllInvUpdatesDetailFromInvTransferDetail(getInvInvoiceDTO().getSearchBySerial(), getUserData().getUserBranch().getId(), getInvInvoiceDTO().getInvInventoryId().getId()));
+            }
         }
     }
 
@@ -70,9 +73,9 @@ public class InvUpdateFormUploadedMB extends BaseFormBean {
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا يوجد تفاصيل "));
         }
     }
-    
+
     public void saveAll() {
-        if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvPurchaseInvoiceDetailList() != null && !getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().isEmpty() ) {
+        if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvPurchaseInvoiceDetailList() != null && !getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().isEmpty()) {
             invInvoiceDTO = invUpdateService.saveNewAll(getInvInvoiceDTO(), getUserData().getUser());
             msgSave(getInvInvoiceDTO().getMsg());
         } else {
@@ -116,11 +119,14 @@ public class InvUpdateFormUploadedMB extends BaseFormBean {
     public void setInvStripDetailSelected(InvDetailDTO invStripDetailSelected) {
         this.invStripDetailSelected = invStripDetailSelected;
     }
-    
+
     /**
      * @return the invInvoiceDTO
      */
     public InvInvoiceDTO getInvInvoiceDTO() {
+        if (invInvoiceDTO == null) {
+            invInvoiceDTO = new InvInvoiceDTO();
+        }
         return invInvoiceDTO;
     }
 

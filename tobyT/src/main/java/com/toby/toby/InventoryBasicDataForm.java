@@ -2251,7 +2251,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         findScreenName();
 
         if (invInvoiceDTO.getId() == null) {
-            invInvoiceDTO.setDate(Utility.hourNow());
+//            invInvoiceDTO.setDate(Utility.hourNow());
+            invInvoiceDTO.setDate(Utility.findDateStatic());
         }
 
         invInvoiceDTO.setInventorySetupDTO(inventorySetupService.getInventoryByBranchIdDTO(getUserData().getUserBranch().getId()));

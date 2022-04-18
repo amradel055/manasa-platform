@@ -24,6 +24,8 @@ public interface InvUpdateDetailService {
     List<InvUpdateDetail> getAllInvUpdateDetails();
 
     List<InvUpdateDetail> getAllInvUpdateDetails(Integer id);
+    
+    public List<InvDetailDTO> getAllInvDetailDTOByInvUpdateDetails(Integer id) ;
 
     public List<InvDetailDTO> getAllInvTransferDetailsByInvPurchaseInvoiceIdDTO(InvInvoiceDTO invInvoiceDTO, Integer branchId);
 

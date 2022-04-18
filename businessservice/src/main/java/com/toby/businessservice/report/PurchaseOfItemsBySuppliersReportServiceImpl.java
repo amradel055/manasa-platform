@@ -77,12 +77,12 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
             appendPaymentType(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
             stringBuilder.append(" order by ipid.invPurchaseInvoiceId.date ASC,ipid.itemId ASC");
             List<InvPurchaseInvoiceDetail> details = dao.findListByQuery(stringBuilder.toString(), params);
-            return prepareItemSalesViewList(details);
+            return prepareItemSalesViewList(details,purchaseOfItemsBySuppliersSearchBean.getOrganizationType());
         }
         return null;
     }
 
-    private List<ItemSalesView> prepareItemSalesViewList(List<InvPurchaseInvoiceDetail> entityList) {
+    private List<ItemSalesView> prepareItemSalesViewList(List<InvPurchaseInvoiceDetail> entityList, Integer organizationType) {
         List<ItemSalesView> list = new ArrayList<>();
         ItemSalesView itemsDataView;
         for (InvPurchaseInvoiceDetail entity : entityList) {
@@ -93,7 +93,15 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
             itemsDataView.setItemName(entity.getItemId().getName());
             itemsDataView.setItemCode(entity.getItemId().getCode());
             itemsDataView.setItemUnitName(entity.getUnitId().getName());
-            itemsDataView.setOrganizationSiteId(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getId());
+            if (organizationType != null && organizationType == 1) {
+                itemsDataView.setOrganizationSiteId(entity.getItemId().getSiteId().getId());
+                itemsDataView.setOrganizationSiteCode(entity.getItemId().getSiteId().getCode());
+                itemsDataView.setOrganizationSiteName(entity.getItemId().getSiteId().getName());
+            } else {
+                itemsDataView.setOrganizationSiteId(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getId());
+                itemsDataView.setOrganizationSiteCode(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getCode());
+                itemsDataView.setOrganizationSiteName(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getName());
+            }
             itemsDataView.setCost(entity.getCost());
             itemsDataView.setSerial(entity.getInvPurchaseInvoiceId().getSerial());
 
@@ -105,8 +113,6 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
             itemsDataView.setDetailItemQuantity(entity.getQuantity());
             itemsDataView.setDiscount(entity.getDiscount());
             itemsDataView.setSerialTax(entity.getInvPurchaseInvoiceId().getSerialTax());
-            itemsDataView.setOrganizationSiteCode(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getCode());
-            itemsDataView.setOrganizationSiteName(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getName());
 
             list.add(itemsDataView);
         }
@@ -152,7 +158,7 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
         if (purchaseOfItemsBySuppliersSearchBean.getDateFrom() != null) {
 //            params.put("dateFrom", purchaseOfItemsBySuppliersSearchBean.getDateFrom());
 //            stringBuilder.append(" AND ipid.invPurchaseInvoiceId.date >= :dateFrom");
-            
+
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
             stringBuilder.append(" AND ipid.invPurchaseInvoiceId.date >= '").append(dateFormat.format(purchaseOfItemsBySuppliersSearchBean.getDateFrom())).append("'");
         }
@@ -160,10 +166,10 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
         if (purchaseOfItemsBySuppliersSearchBean.getDateTo() != null) {
 //            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
 //            params.put("dateTo", purchaseOfItemsBySuppliersSearchBean.getDateTo());
-            
+
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
             stringBuilder.append(" AND ipid.invPurchaseInvoiceId.date <= '").append(dateFormat.format(purchaseOfItemsBySuppliersSearchBean.getDateTo())).append("'");
-            
+
 //            stringBuilder.append(" AND ipid.invPurchaseInvoiceId.date <= :dateTo");
         }
 
@@ -184,15 +190,26 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
     }
 
     private void appendSupplierNew(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean, StringBuilder stringBuilder, Map<String, Object> params) {
+        if (purchaseOfItemsBySuppliersSearchBean.getOrganizationType() != null && purchaseOfItemsBySuppliersSearchBean.getOrganizationType() == 1) {
+            if (purchaseOfItemsBySuppliersSearchBean.getFromorganizationName() != null) {
+                params.put("fromorganization", purchaseOfItemsBySuppliersSearchBean.getFromorganizationName().getCode());
+                stringBuilder.append(" AND ipid.itemId.siteId.code >= :fromorganization");
+            }
 
-        if (purchaseOfItemsBySuppliersSearchBean.getFromorganizationName() != null) {
-            params.put("fromorganization", purchaseOfItemsBySuppliersSearchBean.getFromorganizationName().getCode());
-            stringBuilder.append(" AND ipid.invPurchaseInvoiceId.organizationSiteId.code >= :fromorganization");
-        }
+            if (purchaseOfItemsBySuppliersSearchBean.getToorganizationName() != null) {
+                params.put("toorganization", purchaseOfItemsBySuppliersSearchBean.getToorganizationName().getCode());
+                stringBuilder.append(" AND ipid.itemId.siteId.code <= :toorganization");
+            }
+        } else {
+            if (purchaseOfItemsBySuppliersSearchBean.getFromorganizationName() != null) {
+                params.put("fromorganization", purchaseOfItemsBySuppliersSearchBean.getFromorganizationName().getCode());
+                stringBuilder.append(" AND ipid.invPurchaseInvoiceId.organizationSiteId.code >= :fromorganization");
+            }
 
-        if (purchaseOfItemsBySuppliersSearchBean.getToorganizationName() != null) {
-            params.put("toorganization", purchaseOfItemsBySuppliersSearchBean.getToorganizationName().getCode());
-            stringBuilder.append(" AND ipid.invPurchaseInvoiceId.organizationSiteId.code <= :toorganization");
+            if (purchaseOfItemsBySuppliersSearchBean.getToorganizationName() != null) {
+                params.put("toorganization", purchaseOfItemsBySuppliersSearchBean.getToorganizationName().getCode());
+                stringBuilder.append(" AND ipid.invPurchaseInvoiceId.organizationSiteId.code <= :toorganization");
+            }
         }
 
     }
@@ -390,7 +407,7 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
     //-------------------------------------------
     @Override
     public List<ItemSalesView> getAllInvoiceDetailBySuppliersSearchBean(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean) {
-       dao.executeNativeQuery("select toby.sql_mode_function()");
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         StringBuilder stringBuilder = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", purchaseOfItemsBySuppliersSearchBean.getBranchId());

@@ -79,7 +79,7 @@ public class InvUpdateListMB extends BaseListBean {
         try {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             context.getSessionMap().put("ScreenMode", "AddInvUpdate");
-            exit("../invupdate/invUpdateForm.xhtml");
+            exit("../invupdate/invUpdateFormAutoSaveLoading.xhtml");
         } catch (Exception e) {
             saveError(e, "InvUpdateListMB", "goToAdd()");
         }
@@ -95,7 +95,7 @@ public class InvUpdateListMB extends BaseListBean {
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
                 context.getSessionMap().put("invUpdateSelected", getInvUpdateSelected().getId());
                 context.getSessionMap().put("ScreenMode", "EditInvUpdate");
-                exit("../invupdate/invUpdateForm.xhtml");
+                exit("../invupdate/invUpdateFormAutoSaveLoading.xhtml");
                 return "";
             } else {
                 return "";

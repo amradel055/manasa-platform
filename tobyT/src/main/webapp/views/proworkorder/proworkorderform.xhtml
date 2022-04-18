@@ -791,7 +791,10 @@
                                 <p:calendar id="dateFrom"  locale="es" rendered="#{(userData.userScreens['proworkorder'].edit)}"
                                             value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.date}"
                                             pattern="dd/MM/yyyy hh:mm:ss"
-                                            style="width:50%!important"/>
+                                            style="width:50%!important">
+                                    <p:ajax event="dateSelect" listener="#{invPurchaseInvoiceFormDTOMB.hishis()}" />
+
+                                </p:calendar>
                                 <p:outputLabel value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.date}" rendered="#{not (userData.userScreens['proworkorder'].edit)}" >
                                     <f:convertDateTime type="date" pattern="dd-MM-yyyy  hh:mm:ss"/>
                                 </p:outputLabel>  
