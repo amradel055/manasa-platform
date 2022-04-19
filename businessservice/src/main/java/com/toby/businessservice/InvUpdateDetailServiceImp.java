@@ -178,6 +178,7 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
         entity.setNewAmount(dTO.getActualQuantity());
         entity.setDifference(dTO.getActualQuantity().subtract(dTO.getAvailableQuantityRow()));
         entity.setWasalate(dTO.getWasalate());
+        entity.setCostAvarage(dTO.getCostAvarage());
 
         InvUpdate invUpdate = new InvUpdate();
         invUpdate.setId(invUpdateId);
@@ -290,6 +291,8 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
             dTO.setAvailableQuantityRow(quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, dTO.getItemId().getId(), true, null));
             dTO.setOldQuantity(dTO.getAvailableQuantityRow());
             dTO.setOldQuantityBak(dTO.getAvailableQuantityRow());
+            dTO.setCostAvarage(dTO.getItemId().getLastCost());
+            dTO.setTotalQuantityCost(dTO.getCostAvarage().multiply(dTO.getActualQuantity()));
             dTO.setId(null);
             invdetailListAfterSummition.add(dTO);
         }
@@ -351,6 +354,7 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
             invItemDTO.setId(entity.getInvItemId().getId());
             invItemDTO.setName(entity.getInvItemId().getName());
             invItemDTO.setCode(entity.getInvItemId().getCode());
+            invItemDTO.setLastCost(entity.getInvItemId().getLastCost());
             dto.setItemId(invItemDTO);
 
         }
@@ -414,6 +418,8 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
         dto.setWasalate(entity.getWasalate());
         dto.setActualQuantity(entity.getNewAmount());
         dto.setDifferanceQuantity(entity.getDifference());
+        dto.setCostAvarage(entity.getCostAvarage());
+        dto.setTotalQuantityCost(entity.getCostAvarage().multiply(entity.getNewAmount()));
 
         if (entity.getInvItemId() != null) {
             InvItemDTO invItemDTO = new InvItemDTO();

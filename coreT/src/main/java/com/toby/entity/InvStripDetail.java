@@ -44,7 +44,7 @@ public class InvStripDetail extends BaseEntity {
     @Column(name = "serial")
     private Integer serial;
     @Column(name = "item_barcode")
-    private String itemBarcode;    
+    private String itemBarcode;
     @JoinColumn(name = "unit_id", referencedColumnName = "id")
     @ManyToOne
     private Symbol unitId;
@@ -57,6 +57,9 @@ public class InvStripDetail extends BaseEntity {
     }
 
     public BigDecimal getActualAmount() {
+        if (actualAmount == null) {
+            actualAmount = BigDecimal.ZERO;
+        }
         return actualAmount;
     }
 
@@ -161,6 +164,9 @@ public class InvStripDetail extends BaseEntity {
      * @return the wasalate
      */
     public BigDecimal getWasalate() {
+        if (wasalate == null) {
+            wasalate = BigDecimal.ZERO;
+        }
         return wasalate;
     }
 

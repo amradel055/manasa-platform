@@ -31,13 +31,14 @@
                 <h:panelGrid id="firstLine" columns="2" cellspacing="10" cellpadding="0" >
 
                     <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel for="searchBySerial" style="width: 95px;"  value="بحث برقم الفاتورة" />
+                        </div>
                         <div class="ui-g-6 ui-xl-6">
                             <p:inputText id="searchBySerial"  style="width:100%" value="#{invUpdateFormUploadedMB.invInvoiceDTO.searchBySerial}" >
                                 <p:ajax event="blur" update="@form"  listener="#{invUpdateFormUploadedMB.loadInvStrip()}"  />
                             </p:inputText>
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:outputLabel for="searchBySerial" style="width: 95px;"  value="بحث برقم الفاتورة" />
                         </div>
                     </div>
 
@@ -185,6 +186,18 @@
                                headerText="الوصلات">
                         <h:outputText id="wasalateT"
                                       value="#{invPurchaseInvoiceDetailsTable.wasalate}" style="width: 95%" />
+
+                    </p:column>
+                    
+                    <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="totalQuantityCost"
+
+                               filterBy="#{invPurchaseInvoiceDetailsTable.totalQuantityCost}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{invPurchaseInvoiceDetailsTable.totalQuantityCost}"
+                               filterable="false"
+                               headerText="تكلفة القماش">
+                        <h:outputText id="totalQuantityCostT"
+                                      value="#{invPurchaseInvoiceDetailsTable.totalQuantityCost}" style="width: 95%" />
 
                     </p:column>
 

@@ -1814,6 +1814,7 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
     public void print() {
         Map<String, String> userDDs = getUserData().getUserDDs();
         if (selectedGeneralJournal != null && selectedGeneralJournal.getId() != null) {
+            journalDocumentArrangedReportBeanList = new ArrayList<>();
             for (GeneralJournalDetailsDTO generalJournalDetails : detailsList) {
                 JournalDocumentArrangedReportBean journalDocumentArrangedReportBean = new JournalDocumentArrangedReportBean();
                 journalDocumentArrangedReportBean.setJournalNum(selectedGeneralJournal.getSerial());
