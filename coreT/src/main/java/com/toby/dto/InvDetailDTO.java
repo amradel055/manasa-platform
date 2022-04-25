@@ -1015,7 +1015,7 @@ public class InvDetailDTO extends BaseEntityDTO implements Comparable< InvDetail
      * @param totalQuantityCost the totalQuantityCost to set
      */
     public void setTotalQuantityCost(BigDecimal totalQuantityCost) {
-        totalQuantityCost = getDifferanceQuantity().multiply(getCostAvarage());
+        totalQuantityCost = getActualQuantity().multiply(getCostAvarage());
         this.totalQuantityCost = totalQuantityCost;
     }
 

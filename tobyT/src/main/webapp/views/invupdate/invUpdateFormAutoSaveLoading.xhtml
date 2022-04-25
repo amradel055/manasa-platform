@@ -30,18 +30,6 @@
 
                 <h:panelGrid id="firstLine" columns="2" cellspacing="10" cellpadding="0" >
 
-                    <div class="ui-g-12 ui-xl-12">
-
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:outputLabel for="searchBySerial" style="width: 95px;"  value="بحث برقم الفاتورة" />
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:inputText id="searchBySerial"  style="width:100%" value="#{invUpdateFormUploadedMB.invInvoiceDTO.searchBySerial}" >
-                                <p:ajax event="blur" update="@form"  listener="#{invUpdateFormUploadedMB.loadInvStrip()}"  />
-                            </p:inputText>
-                        </div>
-                    </div>
-
                     <h:panelGroup>
                         <h:panelGroup>
                             <p:outputLabel  style="width: 70px;margin-right: 6%;" value="#{userData.userDDs['TRANSACTION_NO']}"/>
@@ -188,7 +176,7 @@
                                       value="#{invPurchaseInvoiceDetailsTable.wasalate}" style="width: 95%" />
 
                     </p:column>
-                    
+
                     <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="totalQuantityCost"
 
                                filterBy="#{invPurchaseInvoiceDetailsTable.totalQuantityCost}" 
@@ -225,30 +213,134 @@
 
                 </p:dataTable>
 
-                <div style="text-align: center!important;margin-top: 2%;margin-bottom: 2%;">
-                    <p:commandButton class="saveButton"
-                                     id="saveB" 
-                                     title="#{userData.userDDs['SAVE']}"
-                                     disabled="#{invUpdateFormUploadedMB.invInvoiceDTO.id != null}"
-                                     value="#{userData.userDDs['SAVE']}"
-                                     style=""
-                                     action="#{invUpdateFormUploadedMB.saveAll()}" 
-                                     update="@form"/>
 
-                    <h:commandLink  class="sdcreenimg">  
-                        <p:graphicImage name="/img/excel.jpg" width="24"/>  
-                        <p:dataExporter type="xls"
-                                        target="invUpdateTable" 
-                                        fileName="ضبط المخزن"  preProcessor="#{invUpdateFormUploadedMB.preProcessXLS()}"
-                                        postProcessor="#{invUpdateFormUploadedMB.postProcessXLS}" />  
-                    </h:commandLink>
-                </div>
                 <p:blockUI block="form" trigger="saveB" animate="true" >
 
                     <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
 
                 </p:blockUI> 
             </p:fieldset>
+
+            <div style="text-align: center!important;margin-top: 2%;margin-bottom: 2%;">
+                <p:commandButton class="saveButton"
+                                 id="saveB" 
+                                 title="#{userData.userDDs['SAVE']}"
+                                 disabled="#{invUpdateFormUploadedMB.invInvoiceDTO.id != null}"
+                                 value="#{userData.userDDs['SAVE']}"
+                                 style=""
+                                 action="#{invUpdateFormUploadedMB.saveAll()}" 
+                                 update="@form"/>
+                    <p:commandButton  
+                        class="reloadButtons"
+                        id="loadL"
+                        rendered="#{invUpdateFormUploadedMB.invInvoiceDTO.id == null}"
+                        title="#{userData.userDDs['UPLOAD']}"
+                        value="#{userData.userDDs['UPLOAD']}" 
+                        action="#{invUpdateFormUploadedMB.loadDailogue()}"
+                        update="loaddlg"/>
+
+                <h:commandLink  class="sdcreenimg">  
+                    <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                    <p:dataExporter type="xls"
+                                    target="invPurchaseInvoiceDetailsTable" 
+                                    fileName="ضبط المخزن"  preProcessor="#{invUpdateFormUploadedMB.preProcessXLS()}"
+                                    postProcessor="#{invUpdateFormUploadedMB.postProcessXLS}" />  
+                </h:commandLink>
+            </div>
+
+            <h:panelGroup>
+
+
+
+                <p:dialog id="loaddlg" header="مستندات الجرد السابقة"  style="width: 50% ; height: 50%;"
+                          widgetVar="loaddlg" modal="true">
+                    <h:panelGrid columns="1" cellpadding="5">
+                        <div class="ui-g-12 ui-md-12">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 45px" value="المخزن"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:selectOneMenu id="advanced" value="#{invUpdateFormUploadedMB.invInvoiceDTO.invInventoryId}" converter="#{invUpdateFormUploadedMB.invInventoryDTOConverter}"
+                                                     panelStyle="width:180px" effect="fade" 
+                                                     filter="true" filterMatchMode="contains">
+
+                                        <f:selectItems value="#{invUpdateFormUploadedMB.invInventoryDTOList}" var="inventory"
+                                                       itemLabel="#{inventory}" itemValue="#{inventory}"/>
+                                        <p:ajax listener="#{invUpdateFormUploadedMB.changeInventory()}" update="dlgTable" />
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                    </h:panelGrid>
+                    <div>
+                        <p:messages id="loadMsg"
+                                    autoUpdate="true" 
+                                    showDetail="true" 
+                                    closable="true"/>   
+                    </div>
+                    <p:dataTable id="dlgTable" var="dlgTable" value="#{invUpdateFormUploadedMB.invInvoiceDTO.invDailogueDataList}"
+                                 selection="#{invUpdateFormUploadedMB.invInvoiceDTO.invDailogeDataListSelected}" rowKey="#{dlgTable.index}"
+                                 style="margin-bottom:0" paginator="true" rows="10" 
+                                 >
+                        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+
+                        <f:facet name="header" >
+                            <p:outputPanel  >
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                <p:inputText id="globalFilter" onkeyup="PF('dlgTable').filter()" style="width:150px" />
+                            </p:outputPanel>
+                        </f:facet>
+
+
+                        <p:column style="width:15vw;font-size:1.8vw;text-align: right;border-radius: 0px" 
+                                  filterStyle="display:none"
+                                  filterBy="#{dlgTable.serial}" 
+                                  filterMatchMode="contains"
+                                  headerText="#{userData.userDDs['DELEGATOR_NUMBER']}"
+                                  sortBy="#{dlgTable.serial}"
+                                  >
+                            <p:outputLabel value="#{dlgTable.serial}" />
+                        </p:column>
+
+                        <p:column style="width:15vw;font-size:1.8vw;text-align: right;border-radius: 0px"
+                                  filterStyle="display:none" filterBy="#{dlgTable.remarks}"
+                                  filterMatchMode="contains"
+                                  headerText="#{userData.userDDs['REMARK']}" 
+                                  sortBy="#{dlgTable.remarks}" >
+                            <p:outputLabel value="#{dlgTable.remarks}" />
+                        </p:column>  
+                        <p:column style="width:15vw;font-size:1.8vw;text-align: right;border-radius: 0px"
+                                  filterStyle="display:none"
+                                  filterBy="#{dlgTable.date}" 
+                                  filterMatchMode="contains" 
+                                  headerText="#{userData.userDDs['DATEE']}" 
+                                  sortBy="#{dlgTable.date}" >
+                            <p:outputLabel value="#{dlgTable.date}" >
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            </p:outputLabel>                           
+                        </p:column>
+
+
+                    </p:dataTable> 
+
+                    <p:commandButton  update="@form"  
+                                      class="reloadButtons"
+                                      style="color: #fff!important;background-color: #00BCD4"   
+                                      action="#{invUpdateFormUploadedMB.loadMultiInvStrip()}" 
+                                      title="#{userData.userDDs['UPLOAD']}"  >
+
+                    </p:commandButton>
+
+                </p:dialog>
+
+
+            </h:panelGroup>
+
+
+
 
         </h:form>
     </ui:define>

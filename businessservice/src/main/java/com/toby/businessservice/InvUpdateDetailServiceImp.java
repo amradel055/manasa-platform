@@ -73,7 +73,7 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
         Map<String, Object> params = new HashMap();
         params.put("invUpdate", id);
         List<InvUpdateDetail> list = dao.findListByQuery("SELECT d FROM InvUpdateDetail d WHERE d.invUpdateId.id =:invUpdate", params);
-       return returnListDTOInvUpdateDetail(list, list.get(0).getInvUpdateId().getBranchId().getId(), list.get(0).getInvUpdateId().getInventoryId().getId());
+        return returnListDTOInvUpdateDetail(list, list.get(0).getInvUpdateId().getBranchId().getId(), list.get(0).getInvUpdateId().getInventoryId().getId());
     }
 
     @Override
@@ -267,8 +267,55 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
     }
 
     @Override
+    public List<InvDetailDTO> getAllInvUpdatesDetailFromInvTransferDetail(String invStripSerial, Integer branchId, Integer inventoryId) {
+        List<InvDetailDTO> invdetailListAfterSummition = new ArrayList<>();
+        StringBuilder itemIdString = new StringBuilder();
+        itemIdString.append(0);
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        params.put("inventoryId", inventoryId);
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT d FROM InvStripDetail d WHERE d.invStripId.branchId.id = :branchId AND d.invStripId.inventoryId.id = :inventoryId AND d.invStripId.serial in ( ").append(invStripSerial).append(")");
+//        List<InvStripDetail> stripDetailList = dao.findListByQuery(query.toString());
+        List<InvStripDetail> stripDetailList = dao.findListByQuery(query.toString(), params);
+        List<InvDetailDTO> invdetailListBeforeSummition = returnListDTO(stripDetailList, branchId, inventoryId);
+
+        Map<Integer, InvDetailDTO> map = new HashMap<>();
+        for (InvDetailDTO detailDTO : invdetailListBeforeSummition) {
+            if (map.containsKey(detailDTO.getItemId().getId())) {
+                InvDetailDTO detail = map.get(detailDTO.getItemId().getId());
+                detailDTO.setActualQuantity(detail.getActualQuantity().add(detailDTO.getActualQuantity()));
+                detailDTO.setWasalate(detail.getWasalate().add(detailDTO.getWasalate()));
+                map.put(detailDTO.getItemId().getId(), detailDTO);
+            } else {
+                map.put(detailDTO.getItemId().getId(), detailDTO);
+            }
+        }
+        List<InvDetailDTO> result = new ArrayList(map.values());
+
+        for (InvDetailDTO dTO : result) {
+            dTO.setAvailableQuantityRow(quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, dTO.getItemId().getId(), true, null));
+            dTO.setOldQuantity(dTO.getAvailableQuantityRow());
+            dTO.setOldQuantityBak(dTO.getAvailableQuantityRow());
+            dTO.setCostAvarage(dTO.getItemId().getLastCost());
+            dTO.setTotalQuantityCost(dTO.getCostAvarage().multiply(dTO.getActualQuantity()).stripTrailingZeros());
+            dTO.setId(null);
+            dTO.setSerial(null);
+            itemIdString.append(",").append(dTO.getItemId().getId());
+            invdetailListAfterSummition.add(dTO);
+        }
+        
+        addRemainItems(inventoryId, itemIdString, invdetailListBeforeSummition, invdetailListAfterSummition);
+
+        return invdetailListAfterSummition;
+    }
+
+    @Override
     public List<InvDetailDTO> getAllInvUpdatesDetailFromInvTransferDetail(Integer invStripSerial, Integer branchId, Integer inventoryId) {
         List<InvDetailDTO> invdetailListAfterSummition = new ArrayList<>();
+        StringBuilder itemIdString = new StringBuilder();
+        itemIdString.append(0);
+
         Map<String, Object> params = new HashMap();
         params.put("invStripSerial", invStripSerial);
         List<InvStripDetail> stripDetailList = dao.findListByQuery("SELECT d FROM InvStripDetail d WHERE d.invStripId.serial =:invStripSerial", params);
@@ -292,12 +339,163 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
             dTO.setOldQuantity(dTO.getAvailableQuantityRow());
             dTO.setOldQuantityBak(dTO.getAvailableQuantityRow());
             dTO.setCostAvarage(dTO.getItemId().getLastCost());
-            dTO.setTotalQuantityCost(dTO.getCostAvarage().multiply(dTO.getActualQuantity()));
+            dTO.setTotalQuantityCost(dTO.getCostAvarage().multiply(dTO.getActualQuantity()).stripTrailingZeros());
             dTO.setId(null);
+             dTO.setSerial(null);
+            itemIdString.append(",").append(dTO.getItemId().getId());
             invdetailListAfterSummition.add(dTO);
         }
 
+        addRemainItems(inventoryId, itemIdString, invdetailListBeforeSummition, invdetailListAfterSummition);
+
         return invdetailListAfterSummition;
+    }
+
+    public void addRemainItems(Integer inventoryId, StringBuilder itemIdString, List<InvDetailDTO> invdetailListBeforeSummition, List<InvDetailDTO> invdetailListAfterSummition) {
+        //////////////////////
+        
+        StringBuilder builder = new StringBuilder();
+        builder.append("select  IDV.cost_average , IDV.itemId ,IDV.code  ,IDV.itemName,IDV.supplierName \n"
+                + "from ( \n"
+                + "	SELECT  IFNULL(`ii`.`cost_average`, 0) AS `cost_average`,\n"
+                + "        `ipid`.`item_id` AS `itemId`,ii.code,ii.name as itemName ,ios.name as supplierName,\n"
+                + "        'فاتورة مشتريات' AS `ScreenName`\n"
+                + "    FROM\n"
+                + "       ( ((`inv_purchase_invoice` `ipi`\n"
+                + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
+                + "        LEFT JOIN `inv_item` `ii` ON ((`ii`.`id` = `ipid`.`item_id`)))\n"
+                + "         LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ii`.`site_id`)))\n"
+                + "    WHERE\n"
+                + "        ((`ipi`.`type` = 0) AND (`ipi`.`date` IS NOT NULL))  AND `ipi`.`inv_inventory_id` = ").append(inventoryId);
+        builder.append("    UNION ALL SELECT  IFNULL(`ii`.`cost_average`, 0) AS `cost_average`,\n"
+                + "        `ipid`.`item_id` AS `item_Id`,ii.code,ii.name as itemName ,ios.name as supplierName,\n"
+                + "        'فاتورة مبيعات' AS `ScreenName`\n"
+                + "    FROM\n"
+                + "        (((`inv_purchase_invoice` `ipi`\n"
+                + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
+                + "        LEFT JOIN `inv_item` `ii` ON ((`ii`.`id` = `ipid`.`item_id`)))        \n"
+                + "         LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ii`.`site_id`)))\n"
+                + "    WHERE\n"
+                + "        ((`ipi`.`type` = 4)\n"
+                + "            AND (`ipi`.`date` IS NOT NULL))  AND `ipi`.`inv_inventory_id` =  ").append(inventoryId);
+        builder.append("    UNION ALL SELECT  IFNULL(`ii`.`cost_average`, 0) AS `cost_average`,\n"
+                + "        `ipid`.`item_id` AS `item_Id`,ii.code,ii.name as itemName ,ios.name as supplierName,\n"
+                + "        'مردودات المشتريات' AS `ScreenName`\n"
+                + "    FROM\n"
+                + "        (((`inv_purchase_invoice` `ipi`\n"
+                + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
+                + "        LEFT JOIN `inv_item` `ii` ON ((`ii`.`id` = `ipid`.`item_id`)))\n"
+                + "         LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ii`.`site_id`)))\n"
+                + "    WHERE\n"
+                + "        ((`ipi`.`type` = 2)\n"
+                + "            AND (`ipi`.`date` IS NOT NULL))  AND `ipi`.`inv_inventory_id` =  ").append(inventoryId);
+        builder.append("    UNION ALL SELECT  IFNULL(`ii`.`cost_average`, 0) AS `cost_average`,\n"
+                + "        `ipid`.`item_id` AS `item_Id`,ii.code,ii.name as itemName ,ios.name as supplierName,\n"
+                + "        'مردودات المبيعات' AS `ScreenName`\n"
+                + "    FROM\n"
+                + "        (((`inv_purchase_invoice` `ipi`\n"
+                + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
+                + "        LEFT JOIN `inv_item` `ii` ON ((`ii`.`id` = `ipid`.`item_id`)))\n"
+                + "         LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ii`.`site_id`)))\n"
+                + "    WHERE\n"
+                + "        ((`ipi`.`type` = 3) AND (`ipi`.`date` IS NOT NULL))  AND `ipi`.`inv_inventory_id` =  ").append(inventoryId);
+        builder.append("    UNION ALL SELECT  IFNULL(`ii`.`cost_average`, 0) AS `cost_average`,\n"
+                + "        `itd`.`inv_item_id` AS `item_Id`,ii.code,ii.name as itemName ,ios.name as supplierName,\n"
+                + "        'تحويل بين المخازن من ' AS `ScreenName`\n"
+                + "    FROM\n"
+                + "        (((`inv_transfer` `it`\n"
+                + "        LEFT JOIN `inv_transfer_detail` `itd` ON ((`it`.`id` = `itd`.`inv_transfer_id`)))\n"
+                + "        LEFT JOIN `inv_item` `ii` ON ((`ii`.`id` = `itd`.`inv_item_id`)))\n"
+                + "         LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ii`.`site_id`)))\n"
+                + "    WHERE\n"
+                + "        ((`it`.`transfer_date` IS NOT NULL)  AND (`it`.`transfer_type` = 0))  AND `it`.`inv_from` =  ").append(inventoryId);
+        builder.append("    UNION ALL SELECT  IFNULL(`ii`.`cost_average`, 0) AS `cost_average`,\n"
+                + "        `itd`.`inv_item_id` AS `item_Id`,ii.code,ii.name as itemName ,ios.name as supplierName,\n"
+                + "        'تحويل بين المخازن الى' AS `ScreenName`\n"
+                + "    FROM\n"
+                + "        (((`inv_transfer` `it`\n"
+                + "        LEFT JOIN `inv_transfer_detail` `itd` ON ((`it`.`id` = `itd`.`inv_transfer_id`)))\n"
+                + "        LEFT JOIN `inv_item` `ii` ON ((`ii`.`id` = `itd`.`inv_item_id`)))\n"
+                + "         LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ii`.`site_id`)))\n"
+                + "    WHERE\n"
+                + "        ((`it`.`transfer_date` IS NOT NULL)\n"
+                + "            AND (`it`.`transfer_type` = 0))  AND `it`.`inv_to` =  ").append(inventoryId);
+        builder.append("    UNION ALL SELECT \n"
+                + "        IFNULL(`ii`.`cost_average`, 0) AS `cost_average`,\n"
+                + "        `isd`.`inv_item_id` AS `item_Id`,ii.code,ii.name as itemName ,ios.name as supplierName,\n"
+                + "        'ضبط  المخزون' AS `ScreenName`\n"
+                + "    FROM\n"
+                + "        (((`inv_update` `is`\n"
+                + "        LEFT JOIN `inv_update_detail` `isd` ON ((`is`.`id` = `isd`.`inv_update_id`)))\n"
+                + "        LEFT JOIN `inv_item` `ii` ON ((`ii`.`id` = `isd`.`inv_item_id`)))\n"
+                + "         LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ii`.`site_id`)))\n"
+                + "    WHERE\n"
+                + "        (`is`.`date` IS NOT NULL)  AND  `is`.`inventory_id` =  ").append(inventoryId);
+        builder.append("    UNION ALL SELECT \n"
+                + "        IFNULL(`ii`.`cost_average`, 0) AS `cost_average`,\n"
+                + "        `iobid`.`item_id` AS `item_Id`,ii.code,ii.name as itemName ,ios.name as supplierName,\n"
+                + "        'رصيد افتتاحي للاصناف' AS `ScreenName`\n"
+                + "    FROM\n"
+                + "        (((`inv_openning_balance_item` `iobi`\n"
+                + "        LEFT JOIN `inv_openning_balance_item_detail` `iobid` ON ((`iobi`.`id` = `iobid`.`inv_openning_balance_item_id`)))\n"
+                + "        LEFT JOIN `inv_item` `ii` ON ((`ii`.`id` = `iobid`.`item_id`)))\n"
+                + "         LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ii`.`site_id`)))\n"
+                + "    WHERE\n"
+                + "        (`iobi`.`date` IS NOT NULL) AND `iobi`.`inv_inventory_id` =  ").append(inventoryId);
+        builder.append("     ) IDV    where itemId not in (").append(itemIdString.toString()).append(")");
+        builder.append("        group by IDV.itemId");
+
+        List<InvDetailDTO> result2 = new ArrayList<>();
+
+        List<Object[]> res2 = dao.executeNativeQuery(builder.toString());
+        List<String> barcodeList = null;
+        for (Object[] object : res2) {
+            InvDetailDTO dto = new InvDetailDTO();
+            barcodeList = new ArrayList<>();
+            barcodeList.add((String) object[2]);
+            ItemsBarcodesDetailsView barcodesDetailsView = itemsBarcodesDetailsViewService.findItemsBarcodesDetailsViewBranchIdByBarcode(182, barcodeList).get(0);
+            dto.setItemsBarcodesDetail(barcodesDetailsView);
+            dto.setItemsBarcodesDetailTrans(dto.getItemsBarcodesDetail());
+            dto.setItemCode((String) object[2]);
+            dto.setItemName((String) object[3]);
+            dto.setSupplierName((String) object[4]);
+
+            dto.setActualQuantity(BigDecimal.ZERO);
+            dto.setWasalate(BigDecimal.ZERO);
+
+            InvItemDTO invItemDTO = new InvItemDTO();
+            invItemDTO.setId((Integer) object[1]);
+            invItemDTO.setCode((String) object[2]);
+            invItemDTO.setName((String) object[3]);
+            invItemDTO.setLastCost((BigDecimal) object[0]);
+            dto.setItemId(invItemDTO);
+            dto.setIndex((Integer) object[1] + 10000000);
+            
+            result2.add(dto);
+        }
+
+        Map<Integer, InvDetailDTO> map2 = new HashMap<>();
+        for (InvDetailDTO detailDTO : result2) {
+            if (map2.containsKey(detailDTO.getItemId().getId())) {
+                InvDetailDTO detail = map2.get(detailDTO.getItemId().getId());
+                detailDTO.setActualQuantity(detail.getActualQuantity().add(detailDTO.getActualQuantity()));
+                detailDTO.setWasalate(detail.getWasalate().add(detailDTO.getWasalate()));
+                map2.put(detailDTO.getItemId().getId(), detailDTO);
+            } else {
+                map2.put(detailDTO.getItemId().getId(), detailDTO);
+            }
+        }
+        List<InvDetailDTO> result22 = new ArrayList(map2.values());
+
+        for (InvDetailDTO dTO : result22) {
+            dTO.setAvailableQuantityRow(quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, dTO.getItemId().getId(), true, null));
+            dTO.setOldQuantity(dTO.getAvailableQuantityRow());
+            dTO.setOldQuantityBak(dTO.getAvailableQuantityRow());
+            dTO.setCostAvarage(dTO.getItemId().getLastCost());
+            dTO.setTotalQuantityCost(dTO.getCostAvarage().multiply(dTO.getActualQuantity()).stripTrailingZeros());
+            dTO.setId(null);
+            invdetailListAfterSummition.add(dTO);
+        }
     }
 
     private List<InvDetailDTO> returnListDTO(List<InvStripDetail> list, Integer branchId, Integer inventoryId) {

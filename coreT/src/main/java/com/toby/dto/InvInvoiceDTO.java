@@ -166,6 +166,9 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private Integer generalJournalId;
     
     private Integer excel;
+    
+    
+    private String seialsInvoices;
 
     public InvInvoiceDTO() {
     }
@@ -1875,6 +1878,20 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setDeliveryPlace(InvInventoryDTO deliveryPlace) {
         this.deliveryPlace = deliveryPlace;
+    }
+
+    /**
+     * @return the seialsInvoices
+     */
+    public String getSeialsInvoices() {
+        return seialsInvoices;
+    }
+
+    /**
+     * @param seialsInvoices the seialsInvoices to set
+     */
+    public void setSeialsInvoices(String seialsInvoices) {
+        this.seialsInvoices = seialsInvoices;
     }
 
 }
