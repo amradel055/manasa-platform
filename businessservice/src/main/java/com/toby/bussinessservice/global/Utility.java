@@ -72,7 +72,7 @@ public class Utility {
     }
 
     public static Date hourNow() {
-        Integer hoursNew = 7 * -1;
+        Integer hoursNew = 9 * -1;
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         calendar.add(Calendar.HOUR_OF_DAY, hoursNew);

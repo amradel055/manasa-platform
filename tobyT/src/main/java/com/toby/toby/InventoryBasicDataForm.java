@@ -346,8 +346,9 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                 getInvInvoiceDTO().setInvDelegatorId(getInventoryDelegatorList(1, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId()).get(0));
             }
         }
-
-        sumDateToDueDate();
+        if (getInvInvoiceDTO().getId() == null) {
+            sumDateToDueDate();
+        }
         if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
             getInvInvoiceDTO().setDueperiod(invGlobalService.getDeliveryDaysByGalleryId(getInvInvoiceDTO() == null ? null : getInvInvoiceDTO().getGallaryId().getId()));
             if (getInvInvoiceDTO().getPricetype() == null) {
@@ -533,7 +534,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         replacedetail(detailDTONew);
         updateSummitionSmall();
     }
-    
+
     public void validateActulQuantityColum(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
         try {
             if (checkdetail(invPurchaseInvoiceDetailsValidate)) {
@@ -962,7 +963,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     public void checkDetailData() {
 
         for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
-            
+
             if (detailDTO.getItemsBarcodesDetailTrans() != null) {
                 detailDTO.setItemsBarcodesDetail(detailDTO.getItemsBarcodesDetailTrans());
                 detailDTO.setCost(detailDTO.getCostBak());
@@ -1477,8 +1478,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             @Override
             public List<InvDailogueData> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
 
-                setRowCount(invDialogueService.getTotalRegistors(getUserData().getUserBranch().getId(), filters, getInvInvoiceDTO().getInventorySetupDTO().getSellBuy(), getInvInvoiceDTO().getScreenName(),null).intValue());
-                getInvInvoiceDTO().setInvDailogueDataList(invDialogueService.loadInvDailogueData(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), filters, getInvInvoiceDTO().getInventorySetupDTO(), getUserData().getUserBranch().getId(), getInvInvoiceDTO().getScreenName(),null));
+                setRowCount(invDialogueService.getTotalRegistors(getUserData().getUserBranch().getId(), filters, getInvInvoiceDTO().getInventorySetupDTO().getSellBuy(), getInvInvoiceDTO().getScreenName(), null).intValue());
+                getInvInvoiceDTO().setInvDailogueDataList(invDialogueService.loadInvDailogueData(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), filters, getInvInvoiceDTO().getInventorySetupDTO(), getUserData().getUserBranch().getId(), getInvInvoiceDTO().getScreenName(), null));
                 return getInvInvoiceDTO().getInvDailogueDataList();
             }
 

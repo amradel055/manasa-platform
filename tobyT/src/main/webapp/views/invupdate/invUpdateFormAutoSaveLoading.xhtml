@@ -126,6 +126,17 @@
                         <h:outputText value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.name}"  />          
                     </p:column>
 
+                    <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="costAvarage"
+
+                               filterBy="#{invPurchaseInvoiceDetailsTable.totalQuantityCost}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{invPurchaseInvoiceDetailsTable.totalQuantityCost}"
+                               filterable="false"
+                               headerText="تكلفة الصنف">
+                        <h:outputText id="costAvarageT"
+                                      value="#{invPurchaseInvoiceDetailsTable.costAvarage}" style="width: 95%" />
+
+                    </p:column>
 
                     <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="dafterQuantity"
 
@@ -176,6 +187,18 @@
                                       value="#{invPurchaseInvoiceDetailsTable.wasalate}" style="width: 95%" />
 
                     </p:column>
+                    
+                    <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="totalWasalatQuantityCost"
+
+                               filterBy="#{invPurchaseInvoiceDetailsTable.totalWasalatQuantityCost}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{invPurchaseInvoiceDetailsTable.totalWasalatQuantityCost}"
+                               filterable="false"
+                               headerText="تكلفة  الوصلات">
+                        <h:outputText id="totalWasalatQuantityCostT"
+                                      value="#{invPurchaseInvoiceDetailsTable.totalWasalatQuantityCost}" style="width: 95%" />
+
+                    </p:column>
 
                     <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="totalQuantityCost"
 
@@ -183,7 +206,7 @@
                                filterMatchMode="contains" 
                                sortBy="#{invPurchaseInvoiceDetailsTable.totalQuantityCost}"
                                filterable="false"
-                               headerText="تكلفة القماش">
+                               headerText="تكلفة القماش الفعلى">
                         <h:outputText id="totalQuantityCostT"
                                       value="#{invPurchaseInvoiceDetailsTable.totalQuantityCost}" style="width: 95%" />
 

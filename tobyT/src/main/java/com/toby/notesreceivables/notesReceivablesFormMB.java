@@ -18,6 +18,7 @@ import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.SymbolService;
 import com.toby.businessservice.report.SupplierAccountService;
 import com.toby.bussinessservice.global.AutoCompleteService;
+import com.toby.bussinessservice.global.Utility;
 import com.toby.converter.GlBankConverter;
 import com.toby.converter.GlaccountConverter;
 import com.toby.converter.InstTransactionViewConverter;
@@ -384,7 +385,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
             glBankTransactionEntity.setValueLocal(glBankTransactionEntity.getValue() != null ? glBankTransactionEntity.getValue().setScale(2, BigDecimal.ROUND_UP) : null);
             glBankTransactionEntity.setRate(BigDecimal.ONE);
 
-            glBankTransactionEntity.setDate(new Date());
+            glBankTransactionEntity.setDate(Utility.hourNow());
             glBankTransaction = new GlBankTransaction();
             glBankTransactionDetailEntity = new GlBankTransactionDetailEntity();
             glBankTransactionDetailsList = new ArrayList<>();
