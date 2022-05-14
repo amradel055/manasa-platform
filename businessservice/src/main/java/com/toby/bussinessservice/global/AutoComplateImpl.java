@@ -267,6 +267,7 @@ public class AutoComplateImpl implements AutoCompleteService {
         invOrganizationSiteDTO.setShoulder(invOrganizationSite.getShoulder());
         invOrganizationSiteDTO.setStep(invOrganizationSite.getStep());
         invOrganizationSiteDTO.setDiscount(invOrganizationSite.getDiscount());
+        invOrganizationSiteDTO.setEmail(invOrganizationSite.getEmail());
         if (invOrganizationSite.getCurrencyId() != null) {
             CurrencyDTO currencyDTO = new CurrencyDTO();
             currencyDTO.setId(invOrganizationSite.getCurrencyId().getId());

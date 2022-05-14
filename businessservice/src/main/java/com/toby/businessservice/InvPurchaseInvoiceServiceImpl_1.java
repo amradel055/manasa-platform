@@ -24,6 +24,7 @@ import com.toby.dto.GeneralJournalDTO;
 import com.toby.dto.GlAccountDTO;
 import com.toby.dto.GlAdminUnitDTO;
 import com.toby.dto.GlBankDTO;
+import com.toby.dto.GlPayDTO;
 import com.toby.dto.GlYearDTO;
 import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInventoryDTO;
@@ -1545,9 +1546,10 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     invPurchaseInvoice = dao.updateEntity(invPurchaseInvoice);
 
                     invInvoiceDTO.setId(invPurchaseInvoice.getId());
-                    if (invInvoiceDTO.getPayed() != null && invInvoiceDTO.getPayed().compareTo(BigDecimal.ZERO) == 1 && invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
-                        glBankTransactionService.addCash(invInvoiceDTO, tobyUser);
-                    }
+                    payCash(invInvoiceDTO.getGlPayDTOList(), invInvoiceDTO.getDate(), invPurchaseInvoice.getId(), invPurchaseInvoice.getRate(), invPurchaseInvoice.getRemarks(), invPurchaseInvoice.getOrganizationSiteId().getId(), tobyUser);
+//                    if (invInvoiceDTO.getPayed() != null && invInvoiceDTO.getPayed().compareTo(BigDecimal.ZERO) == 1 && invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
+//                        glBankTransactionService.addCash(invInvoiceDTO, tobyUser);
+//                    }
                 }
 
                 invPurchaseInvoiceDetailsService.deleteInvPurchaseInvoiceDetailListDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailsDeletedList());
@@ -1580,6 +1582,14 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         return invInvoiceDTO;
     }
 
+    public void payCash(List<GlPayDTO> glPayDTOList, Date date, Integer invoiceId, BigDecimal rate, String remarks, Integer invOrganizationId, TobyUser tobyUser) {
+        for (GlPayDTO glPayDTO : glPayDTOList) {
+            if (glPayDTO.getBank() != null && glPayDTO.getBank().getId() != null && glPayDTO.getValue() != null && glPayDTO.getValue().compareTo(BigDecimal.ZERO) == 1) {
+                glBankTransactionService.addCash(date, glPayDTO.getBank(), invoiceId, rate, remarks, glPayDTO.getValue(), invOrganizationId, tobyUser);
+            }
+        }
+    }
+    
     @Override
     public InvInvoiceDTO completeTarhilInvoiceAfterSave(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) throws CloneNotSupportedException {
         ///   الترحيل

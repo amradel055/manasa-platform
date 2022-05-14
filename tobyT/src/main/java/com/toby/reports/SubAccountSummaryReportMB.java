@@ -249,9 +249,9 @@ public class SubAccountSummaryReportMB extends BaseGlAccountReportBean {
             subAccountSummaryReports.add(subAccountSummaryReport);
 
             if (uri.contains("Extended")) {
-                subAccountSummaryList = subAccountSummaryService.getSubAccountSummary(subAccountSummarySearchBean, glYear, true);
+                subAccountSummaryList = subAccountSummaryService.getSubAccountSummaryNew(subAccountSummarySearchBean, glYear, true);
             } else {
-                subAccountSummaryList = subAccountSummaryService.getSubAccountSummary(subAccountSummarySearchBean, glYear, false);
+                subAccountSummaryList = subAccountSummaryService.getSubAccountSummaryNew(subAccountSummarySearchBean, glYear, false);
             }
 
              totalDebit = BigDecimal.ZERO;

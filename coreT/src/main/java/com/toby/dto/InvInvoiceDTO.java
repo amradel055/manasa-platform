@@ -169,6 +169,9 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     
     
     private String seialsInvoices;
+    
+
+    private List<GlPayDTO> glPayDTOList ; 
 
     public InvInvoiceDTO() {
     }
@@ -1892,6 +1895,23 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setSeialsInvoices(String seialsInvoices) {
         this.seialsInvoices = seialsInvoices;
+    }
+
+    /**
+     * @return the glPayDTOList
+     */
+    public List<GlPayDTO> getGlPayDTOList() {
+        if(glPayDTOList == null){
+            glPayDTOList = new ArrayList<>();
+        }
+        return glPayDTOList;
+    }
+
+    /**
+     * @param glPayDTOList the glPayDTOList to set
+     */
+    public void setGlPayDTOList(List<GlPayDTO> glPayDTOList) {
+        this.glPayDTOList = glPayDTOList;
     }
 
 }

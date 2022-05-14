@@ -193,6 +193,19 @@ public class notesReceivablesListMB extends BaseGlBankListBean {
         }
     }
 
+    public String goToAddNew() {
+        try {
+            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+            context.getSessionMap().put("ScreenMode", "Add");
+            exit("../notesreceivables/notesreceivablesFormNew.xhtml");
+
+            return "";
+        } catch (Exception e) {
+            saveError(e, "notesReceivablesListMB", "load");
+            return null;
+        }
+    }
+
     private void redirectPage() {
         if (getUri().contains("notesreceivablesadmin")) {
             exit("../notesreceivablesadmin/notesreceivablesForm.xhtml");

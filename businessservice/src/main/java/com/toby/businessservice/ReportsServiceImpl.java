@@ -53,7 +53,7 @@ public class ReportsServiceImpl implements ReportsService {
     public List<SalesReportByValueAded> getSalesReportByValueAded(SalesReportByValueAded salesReportByValueAded, Integer branchId) {
 
         dao.executeNativeQuery("select toby.sql_mode_function()");
-        dao.executeNativeQuery("select toby.net_after_discount_head()");
+//        dao.executeNativeQuery("select toby.net_after_discount_head()");
         List<SalesReportByValueAded> salesReportByValueAdeds = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("select sum(s.net) , sum(s.netBeforTax) , s.gallary_name  from ( ");
@@ -68,7 +68,6 @@ public class ReportsServiceImpl implements ReportsService {
             salesReportByValueAded1.setTotalBeforeTax((BigDecimal) object[1]);
             salesReportByValueAded1.setGalleryName((String) object[2]);
             salesReportByValueAdeds.add(salesReportByValueAded1);
-
         }
         return salesReportByValueAdeds;
     }

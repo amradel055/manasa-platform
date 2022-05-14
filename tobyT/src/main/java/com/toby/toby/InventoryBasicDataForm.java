@@ -55,6 +55,7 @@ import com.toby.dto.CostCenterDTO;
 import com.toby.dto.CurrencyDTO;
 import com.toby.dto.GlAdminUnitDTO;
 import com.toby.dto.GlBankDTO;
+import com.toby.dto.GlPayDTO;
 import com.toby.dto.InvDailogueData;
 import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInventoryDTO;
@@ -145,6 +146,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     private Boolean firstLoad;
 
     private InvOrganizationSiteDTO organizationSiteId;
+    private InvOrganizationSiteDTO organizationSiteIdNew;
 
     private InvInvoiceDTO invInvoiceDTO;
     private InvInvoiceDTO invInvoiceDTOSelected;
@@ -263,8 +265,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                     || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)
                     || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVRETURNPURCHASEFORM)) {
                 getInvInvoiceDTO().setOrganizationSiteId(getInvOrganizationSiteDTOList(true, 1).get(0));
-//                getInvInvoiceDTO().setInvDelegatorId(getInventoryDelegatorList(0,getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId()).get(0));
                 getInvInvoiceDTO().setGallaryId(getGallaryDTOSelect());
+                getInvInvoiceDTO().setInvDelegatorId(getInventoryDelegatorList(0,getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId()).get(0));
                 putCurrency();
             } else if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVSALESINVOICEFORM)
                     || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVSALESORDERFORM)
@@ -274,9 +276,9 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                     || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)
                     || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVRETURNSALESFORM)) {
                 getInvInvoiceDTO().setOrganizationSiteId(getInvOrganizationSiteDTOList(true, 0).get(0));
-//                getInvInvoiceDTO().setInvDelegatorId(getInventoryDelegatorList(1,getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId()).get(0));
                 getInvInvoiceDTO().setGallaryId(getGallaryDTOSelect());
                 putCurrency();
+                getInvInvoiceDTO().setInvDelegatorId(getInventoryDelegatorList(1, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId()).get(0));
                 if (getInvInvoiceDTO().getInventorySetupDTO() != null) {
                     getInvInvoiceDTO().setDueperiod(invGlobalService.getDeliveryDaysByGalleryId((getInvInvoiceDTO() == null || getInvInvoiceDTO().getGallaryId() == null) ? null : getInvInvoiceDTO().getGallaryId().getId()));
                     sumDateToDueDate();
@@ -1232,6 +1234,22 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         }
     }
 
+    public void fillGlPay() {
+        if (getInvInvoiceDTO().getGlPayDTOList() == null || getInvInvoiceDTO().getGlPayDTOList().isEmpty()) {
+            for (GlBankDTO bankDTO : getGlBankList()) {
+                GlPayDTO glPayDTO = new GlPayDTO();
+                glPayDTO.setBank(bankDTO);
+                glPayDTO.setValue(BigDecimal.ZERO);
+                getInvInvoiceDTO().getGlPayDTOList().add(glPayDTO);
+            }
+        }
+    }
+
+    public void openPayDlg() {
+        fillGlPay();
+        OpenDlg("dlgpay");
+    }
+
     public void updatePriceAndQuantityForDetail() {
         getInvInvoiceDTO().setInvPurchaseInvoiceDetailList(invGlobalService.updatePriceAndQuantityForDetail(getInvInvoiceDTO(), true));
     }
@@ -1245,17 +1263,16 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     }
 
     public void addNewCustomer() {
-        getOrganizationSiteId().setGallaryIdDTO(getInvInvoiceDTO().getGallaryId());
-        getInvInvoiceDTO().setOrganizationSiteId(organizationSiteService.addNewCustomer(getOrganizationSiteId(), getInvOrganizationSiteDTOList(true, 0), getUserData().getUser(), getInvInvoiceDTO().getGallaryId().getCustomerAccount().getId()));
+        getOrganizationSiteIdNew().setGallaryIdDTO(getInvInvoiceDTO().getGallaryId());
+        getInvInvoiceDTO().setOrganizationSiteId(organizationSiteService.addNewCustomer(getOrganizationSiteIdNew(), getInvOrganizationSiteDTOList(true, 0), getUserData().getUser(), getInvInvoiceDTO().getGallaryId().getCustomerAccount().getId()));
         getInvInvoiceDTO().setShowCustomerDate(Boolean.FALSE);
     }
 
     public void editCustomer() {
 
-        if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getId() != null) {
-
-            organizationSiteService.updateOrganizationSiteMobile(getInvInvoiceDTO() == null ? null : getInvInvoiceDTO().getOrganizationSiteId());
-        }
+//        if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getId() != null) {
+        organizationSiteService.updateOrganizationSiteMobile(getOrganizationSiteId());
+//        }
     }
 
     private Boolean checkdetail(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
@@ -1341,7 +1358,9 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         findAccountStatement();
         if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getOrganizationSiteId() != null && getInvInvoiceDTO().getOrganizationSiteId().getId() != null) {
             setInvInvoiceList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(4, getInvInvoiceDTO().getGallaryId().getId(), getInvInvoiceDTO().getOrganizationSiteId() == null ? null : getInvInvoiceDTO().getOrganizationSiteId().getId()));
+            setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
         }
+
     }
 
     public void findAccountStatement() {
@@ -1875,11 +1894,11 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     }
 
     public List<InventoryDelegatorDTO> getInventoryDelegatorList(Integer type, Integer gallaryId) {
-        if (inventoryDelegatorList == null) {
+//        if (inventoryDelegatorList == null) {
 //            setInventoryDelegatorList(invDelegatorService.getDelegatorDTOByBranch(getUserData().getUserBranch().getId(), type));// )مندوب المشتريات
-            setInventoryDelegatorList(invDelegatorService.getDelegatorByInventory(gallaryId, type));// )مندوب المشتريات
-            setInvDelegatorDTOConvertor(new InvDelegatorDTOConvertor(inventoryDelegatorList));
-        }
+        setInventoryDelegatorList(invDelegatorService.getDelegatorByInventory(gallaryId, type));// )مندوب المشتريات
+        setInvDelegatorDTOConvertor(new InvDelegatorDTOConvertor(inventoryDelegatorList));
+//        }
         return inventoryDelegatorList;
     }
 
@@ -2252,8 +2271,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         findScreenName();
 
         if (invInvoiceDTO.getId() == null) {
-//            invInvoiceDTO.setDate(Utility.hourNow());
-            invInvoiceDTO.setDate(Utility.findDateStatic());
+            invInvoiceDTO.setDate(Utility.hourNow());
+//            invInvoiceDTO.setDate(Utility.findDateStatic());
         }
 
         invInvoiceDTO.setInventorySetupDTO(inventorySetupService.getInventoryByBranchIdDTO(getUserData().getUserBranch().getId()));
@@ -2972,6 +2991,23 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
      */
     public void setInvOrganizationSiteDTOSelected(InvOrganizationSiteDTO invOrganizationSiteDTOSelected) {
         this.invOrganizationSiteDTOSelected = invOrganizationSiteDTOSelected;
+    }
+
+    /**
+     * @return the organizationSiteIdNew
+     */
+    public InvOrganizationSiteDTO getOrganizationSiteIdNew() {
+        if (organizationSiteIdNew == null) {
+            organizationSiteIdNew = new InvOrganizationSiteDTO();
+        }
+        return organizationSiteIdNew;
+    }
+
+    /**
+     * @param organizationSiteIdNew the organizationSiteIdNew to set
+     */
+    public void setOrganizationSiteIdNew(InvOrganizationSiteDTO organizationSiteIdNew) {
+        this.organizationSiteIdNew = organizationSiteIdNew;
     }
 
 }

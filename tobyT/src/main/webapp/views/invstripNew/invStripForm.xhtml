@@ -233,7 +233,7 @@
 
                         <p:inputText id="wasalateT" value="#{invStripTable.wasalate}"
                                      style="width:95%">
-                            <p:ajax  update="@form" listener="#{invStripFormNewMB.validateActulQuantityColumNew(invStripTable)}" />
+                            <p:ajax event="blur"  update="@form" listener="#{invStripFormNewMB.validateActulQuantityColumNew(invStripTable)}" />
                         </p:inputText>
 
 
@@ -251,6 +251,7 @@
                                           ajax="true" />
 
                         <p:commandButton class="sdeleteButton" update="invStripTable" title="#{userData.userDDs['DELETE']}"
+                                         rendered="#{userData.userScreens['proworkorder'].edit or userData.isAdmin}"
                                          action="#{invStripFormNewMB.deleteInvDetailNew(invStripTable)}" icon="fa fa-remove" >
 
                             <p:confirm header="#{userData.userDDs['COFIGRATION']}"

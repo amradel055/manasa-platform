@@ -196,9 +196,9 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             discountCustomer = invOrganizationSiteDTO.getDiscount();
         }
         // هنا يرقد خصم الشركات بسلام 
-//        if (invOrganizationSiteDTO != null && invOrganizationSiteDTO.getOfferCompanyDTO() != null && invOrganizationSiteDTO.getOfferCompanyDTO() != null) {
-//            discountCompany = invOrganizationSiteDTO.getOfferCompanyDTO().getDiscount();
-//        }
+        if (invOrganizationSiteDTO != null && invOrganizationSiteDTO.getOfferCompanyDTO() != null && invOrganizationSiteDTO.getOfferCompanyDTO() != null) {
+            discountCompany = invOrganizationSiteDTO.getOfferCompanyDTO().getDiscount();
+        }
         if (discountCustomer.compareTo(discountCompany) == 1) {
 //            detailEntity.setDiscount(discountCustomer);
             return discountCustomer;
@@ -295,7 +295,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                         }
                     }
                 } else {
-                    if (invInvoiceDTO.getPricetype() == 1) {
+                    if (invInvoiceDTO.getPricetype() != null && invInvoiceDTO.getPricetype() == 1) {
                         if (detailEntity.getItemsBarcodesDetail().getTypeShow() != null
                                 && detailEntity.getItemsBarcodesDetail().getProGroupId() != null && detailEntity.getItemsBarcodesDetail().getTypeShow() == 1) {
                             cost = calculateIncrease(detailEntity.getQuantityOfOneUnit(), new BigDecimal(5), priceFinalPriceMen,

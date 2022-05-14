@@ -7,6 +7,7 @@ package com.toby.businessservice;
 
 import com.toby.core.GenericDAO;
 import com.toby.dto.GeneralJournalDTO;
+import com.toby.dto.GlBankDTO;
 import com.toby.dto.GlBankTransactionDetailDTO;
 import com.toby.dto.GlYearDTO;
 import com.toby.dto.InvInventoryDTO;
@@ -1072,5 +1073,65 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
 
         return galarysLIST;
 
+    }
+    
+    @Override
+    public void addCashDetail(GlBankDTO glBankDTO, Integer invOrganizationId, Integer glBankTransactionId, GlBankDTO bankDTO, String remarks, BigDecimal value, TobyUser tobyUser) {
+
+        GlBankTransactionDetail bankTransactionDetail = mapToEntityDetailFromInvSales(glBankDTO, invOrganizationId, glBankTransactionId, bankDTO, remarks, value, tobyUser);
+
+        dao.updateEntity(bankTransactionDetail);
+    }
+    
+    public GlBankTransactionDetail mapToEntityDetailFromInvSales(GlBankDTO glBankDTO, Integer invOrganizationId, Integer glBankTransactionId, GlBankDTO bankDTO, String remarks, BigDecimal value, TobyUser tobyUser) {
+        GlBankTransactionDetail entity = new GlBankTransactionDetail();
+
+        if (glBankDTO != null && glBankDTO.getAccountId() != null) {
+            GlAccount accountDebitId = new GlAccount();
+            accountDebitId.setId(glBankDTO.getAccountId());
+            entity.setAccountDebitId(accountDebitId);
+        }
+
+        if (invOrganizationId != null) {
+            InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
+            invOrganizationSite.setId(invOrganizationId);
+            entity.setOrganizationSiteId(invOrganizationSite);
+            InvOrganizationSite ios = dao.findEntityById(InvOrganizationSite.class, invOrganizationId);
+            if (ios.getAccountId() != null) {
+                entity.setAccountCreditId(ios.getAccountId());
+            }
+        }
+
+//        if (dTO.getAdminUnitId() != null && dTO.getAdminUnitId().getId() != null) {
+//            GlAdminUnit glAdminUnit = new GlAdminUnit();
+//            glAdminUnit.setId(dTO.getAdminUnitId().getId());
+//            entity.setAdminUnitId(glAdminUnit);
+//        }
+//
+//        if (dTO.getCostCenterId() != null) {
+//            CostCenter costCenter = new CostCenter();
+//            costCenter.setId(dTO.getCostCenterId().getId());
+//            entity.setCostCenterId(costCenter);
+//        }
+        if (bankDTO != null && bankDTO.getId() != null) {
+            GlBank glBank = new GlBank();
+            glBank.setId(bankDTO.getId());
+            entity.setBankIdFrom(glBank);
+        }
+
+        entity.setRemarks(remarks);
+        entity.setValue(value != null ? value : BigDecimal.ZERO);
+        entity.setValueLocal(value != null ? value : BigDecimal.ZERO);
+
+        entity.setSerial(finMaxSerial(glBankTransactionId));
+        GlBankTransaction bankTransaction = new GlBankTransaction();
+        bankTransaction.setId(glBankTransactionId);
+        entity.setGlBankTransactionId(bankTransaction);
+
+        entity.setCreatedBy(tobyUser);
+        entity.setCreationDate(new Date());
+        entity.setCompanyId(tobyUser.getCompanyId());
+
+        return entity;
     }
 }
