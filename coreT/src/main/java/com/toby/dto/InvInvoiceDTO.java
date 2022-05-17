@@ -80,7 +80,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private BigDecimal payed;
     private BigDecimal remain;
     private BigDecimal accountStatement;
-    private InvInventoryDTO deliveryPlace ;
+    private InvInventoryDTO deliveryPlace;
 
     private InventorySetupDTO inventorySetupDTO;
 
@@ -160,11 +160,14 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private String customerMobile;
     private Integer invoiceType;
     private Boolean sendCloth;
-    
+
+    private Integer gallaryDelivery;
+    private Integer gallaryDeliveryShow;
+
     private String offerCopoun;
-    
+
     private Integer generalJournalId;
-    
+
     private Integer excel;
 
     public InvInvoiceDTO() {
@@ -426,7 +429,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      * @return the taxFlagFinal
      */
     public Boolean getTaxFlagFinal() {
-        if(taxFlagFinal == null){
+        if (taxFlagFinal == null) {
             taxFlagFinal = Boolean.FALSE;
         }
         return taxFlagFinal;
@@ -526,7 +529,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      * @return the totalQuatity
      */
     public BigDecimal getTotalQuatity() {
-        if(totalQuatity == null){
+        if (totalQuatity == null) {
             totalQuatity = BigDecimal.ZERO;
         }
         return totalQuatity;
@@ -557,7 +560,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      * @return the totalNet
      */
     public BigDecimal getTotalNet() {
-        if(totalNet == null){
+        if (totalNet == null) {
             totalNet = BigDecimal.ZERO;
         }
         return totalNet;
@@ -1822,7 +1825,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      * @return the sendCloth
      */
     public Boolean getSendCloth() {
-        if(sendCloth == null){
+        if (sendCloth == null) {
             sendCloth = Boolean.FALSE;
         }
         return sendCloth;
@@ -1875,6 +1878,34 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setDeliveryPlace(InvInventoryDTO deliveryPlace) {
         this.deliveryPlace = deliveryPlace;
+    }
+
+    /**
+     * @return the gallaryDelivery
+     */
+    public Integer getGallaryDelivery() {
+        return gallaryDelivery;
+    }
+
+    /**
+     * @param gallaryDelivery the gallaryDelivery to set
+     */
+    public void setGallaryDelivery(Integer gallaryDelivery) {
+        this.gallaryDelivery = gallaryDelivery;
+    }
+
+    /**
+     * @return the gallaryDeliveryShow
+     */
+    public Integer getGallaryDeliveryShow() {
+        return gallaryDeliveryShow;
+    }
+
+    /**
+     * @param gallaryDeliveryShow the gallaryDeliveryShow to set
+     */
+    public void setGallaryDeliveryShow(Integer gallaryDeliveryShow) {
+        this.gallaryDeliveryShow = gallaryDeliveryShow;
     }
 
 }

@@ -160,6 +160,13 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     InvPurchaseReturnSave invPurchaseReturnSave;
 
     @Override
+    public void updateGallaryDelivery(Integer invoiceId) {
+        InvPurchaseInvoice invPurchaseInvoice = dao.findEntityById(InvPurchaseInvoice.class, invoiceId);
+        invPurchaseInvoice.setGallaryDelivery(1);
+        dao.updateEntity(invPurchaseInvoice);
+    }
+
+    @Override
     public Integer getInvoiceBySerial(Integer serial) {
         if (serial != null && serial > 0) {
             StringBuilder builder = new StringBuilder();
@@ -195,6 +202,15 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             return null;
         }
         return null;
+    }
+
+    public InvPurchaseInvoice findInvPurchaseInvoiceGallaryDelivery(Integer serial, Integer type, Integer branchId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("serial", serial);
+        params.put("branchId", branchId);
+        params.put("type", type);
+        List<InvPurchaseInvoice> details = dao.findListByQuery("SELECT e FROM InvPurchaseInvoice e WHERE e.serial = :serial AND e.branchId.id = :branchId AND e.type = :type AND e.gallaryDelivery = 1 order by e.id desc", params);
+        return (details == null || details.isEmpty()) ? null : details.get(0);
     }
 
     @Override
@@ -1286,6 +1302,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         entity.setPostFlag(0);
         entity.setPaymentType(dto.getPaymentType() > 0 ? dto.getPaymentType() : 0);
         entity.setOfferCopoun(dto.getOfferCopoun());
+        entity.setGallaryDelivery(dto.getGallaryDelivery());
         if (dto.getPaymentType() == 1) {
             entity.setGlBankId(null);
         }
@@ -1659,6 +1676,35 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         return invPurchaseInvoiceDTO;
     }
 
+    @Override
+    public InvInvoiceDTO convertInvPurchaseInvoiceToInvInvoice(InvInvoiceDTO invInvoiceDTO, Integer type) {
+        InvPurchaseInvoice invPurchaseInvoice = null;
+        if (invInvoiceDTO.getNeedLoadedSerial() != null && invInvoiceDTO.getNeedLoadedSerial() != 0) {
+            invPurchaseInvoice = findInvPurchaseInvoiceGallaryDelivery(invInvoiceDTO.getNeedLoadedSerial(), type, invInvoiceDTO.getBranchId());
+            if (invPurchaseInvoice != null) {
+                invInvoiceDTO.setInvPurchaseInvoiceId(invPurchaseInvoice.getId());
+                invInvoiceDTO.setOrganizationSiteName((invPurchaseInvoice.getOrganizationSiteId() != null) ? invPurchaseInvoice.getOrganizationSiteId().getName() : null);
+                invInvoiceDTO.setInvnameType(invPurchaseInvoice.getGalaryId().getInvName());
+                invInvoiceDTO.setGallaryPhone(invPurchaseInvoice.getGalaryId().getPhone());
+            } else {
+                invInvoiceDTO.setMsg("لم يتم استلام الفاتوره");
+            }
+        }
+        if (invPurchaseInvoice != null) {
+            if (invInvoiceDTO.getInvDailogeDataSelected() != null && invInvoiceDTO.getInvDailogeDataSelected().getProFactoryDeliveryId() != null) {
+                invInvoiceDTO.setProFactoryDeliveryId(invInvoiceDTO.getInvDailogeDataSelected().getProFactoryDeliveryId());
+            }
+            invInvoiceDTO = mapToDTO(invPurchaseInvoice, invInvoiceDTO, true);
+            modifyReturnData(invInvoiceDTO, invPurchaseInvoice);
+            invInvoiceDTO.setOrganizationSiteName((invPurchaseInvoice.getOrganizationSiteId() != null) ? invPurchaseInvoice.getOrganizationSiteId().getName() : null);
+            invInvoiceDTO.setGallaryName((invPurchaseInvoice.getOrganizationSiteId() != null) ? invPurchaseInvoice.getGalaryId().getName() : null);
+            invInvoiceDTO.setNumberOfToob(invPurchaseInvoiceDetailsService.getNumberOftoob(invPurchaseInvoice.getId()));
+        } else {
+            invInvoiceDTO.setMsg("حدث خطأ - تم حذفه ");
+        }
+        return invInvoiceDTO;
+    }
+
     private InvPurchaseInvoice findInvPurchaseInvoiceByInvPurchaseInvoiceId(Integer serial, Integer type, Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("serial", serial);
@@ -1753,6 +1799,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         dto.setInvoiceType(entity.getInvoiceType());
         dto.setProof(entity.getProof() == 1);
         dto.setOfferCopoun(entity.getOfferCopoun());
+        dto.setGallaryDelivery(entity.getGallaryDelivery());
 
         if (entity.getDeliveryPlace() != null) {
             InvInventoryDTO deliveryPlace = new InvInventoryDTO();
@@ -1852,7 +1899,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         System.out.println(new Date() + " -> 11");
         dto.setInvPurchaseInvoiceDetailsDeletedList(new ArrayList<InvDetailDTO>());
         dto.setInvPurchaseInvoiceDetailList(invPurchaseInvoiceDetailsListDTO);
-
+        dto.setGallaryDeliveryShow(checkGallaryDeliveryStatus(invPurchaseInvoiceDetailsListDTO, entity.getGallaryDelivery()));
 //        dto = invGlobalService.updateSummition(dto,false);
         dto = invGlobalService.updateSummitionSmall(dto);
         System.out.println(new Date() + " -> 12 ");
@@ -1869,6 +1916,34 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         appendFilter(filters, builder);
         Long details = dao.findEntityByQuery(builder.toString(), filters);
         return details == null ? 0 : details;
+    }
+
+    public Integer checkGallaryDeliveryStatus(List<InvDetailDTO> invDetailDTOList, Integer gallaryDeliveryId) {
+        if (invDetailDTOList != null && invDetailDTOList.size() == 1) {
+            if ("60004".equals(invDetailDTOList.get(0).getBarCode())) {
+                if (gallaryDeliveryId == null) {
+                    return 1;
+                } else {
+                    return 2;
+                }
+            }
+
+        } else {
+            return null;
+        }
+        return null;
+    }
+
+    public Integer checkGallaryDeliveryStatus(InvPurchaseInvoiceDetail invPurchaseInvoiceDetail, Integer gallaryDeliveryId) {
+        if ("60004".equals(invPurchaseInvoiceDetail.getItemBarcode())) {
+            if (gallaryDeliveryId == null) {
+                return 1;
+            } else {
+                return 2;
+            }
+        }
+
+        return null;
     }
 
     @Override
@@ -2018,12 +2093,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 + " left join inv_inventory invi on invi.id = s.galary_Id "
                 + " left join inv_organization_site ios on ios.id = s.organization_site_id "
                 + " WHERE s.branch_id = ").append(branchId).append(
-                        " AND  s.type = ").append(printProductionDTO.getInvoiceStatus()).append(
-                        " AND s.id not in (SELECT p.inv_purchase_invoice_id from pro_factory_delivery p )  \n"
-                        + " AND  s.galary_Id IN (").append(gallarySelected).append(" )  AND   s.date >= '"
-                        + formatDateFrom.format(printProductionDTO.getFromDate()) + "'"
-                        + " AND   s.date <= '" + formatDateTo.format(printProductionDTO.getToDate()) + "'"
-                        + " order by s.serial");
+                " AND  s.type = ").append(printProductionDTO.getInvoiceStatus()).append(
+                " AND s.id not in (SELECT p.inv_purchase_invoice_id from pro_factory_delivery p )  \n"
+                + " AND  s.galary_Id IN (").append(gallarySelected).append(" )  AND   s.date >= '"
+                + formatDateFrom.format(printProductionDTO.getFromDate()) + "'"
+                + " AND   s.date <= '" + formatDateTo.format(printProductionDTO.getToDate()) + "'"
+                + " order by s.serial");
 
         List<Object[]> res = dao.executeNativeQuery(builder.toString());
 
@@ -2111,37 +2186,49 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         return invInvoiceDTO;
     }
 
-    private void commonData(InvInvoiceDTO invInvoiceDTO, InvPurchaseInvoice entity) {
+    private void commonData(InvInvoiceDTO dto, InvPurchaseInvoice entity) {
 
-        invInvoiceDTO.setId(entity.getId());
-        invInvoiceDTO.setSerial(entity.getSerial());
-        invInvoiceDTO.setSerialTax(entity.getSerialTax());
-        invInvoiceDTO.setInvoiceSerial(entity.getSerial());
-        invInvoiceDTO.setDate(entity.getDate());
-        invInvoiceDTO.setIndex(entity.getSerial());
-        invInvoiceDTO.setPostFlag(entity.getPostFlag());
-        invInvoiceDTO.setRemarks(entity.getRemarks());
-        invInvoiceDTO.setDueDate(entity.getDueDate());
-        invInvoiceDTO.setNumberOfToob(invoiceMovementReportService.summitionTob(entity.getId()));
+        dto.setId(entity.getId());
+        dto.setSerial(entity.getSerial());
+        dto.setSerialTax(entity.getSerialTax());
+        dto.setInvoiceSerial(entity.getSerial());
+        dto.setDate(entity.getDate());
+        dto.setIndex(entity.getSerial());
+        dto.setPostFlag(entity.getPostFlag());
+        dto.setRemarks(entity.getRemarks());
+        dto.setDueDate(entity.getDueDate());
+        dto.setNumberOfToob(invoiceMovementReportService.summitionTob(entity.getId()));
         String invoiceStatus = invPurchaseInvoiceService.findInvoiceStatus(entity.getId());
+        Integer detailNumber = invPurchaseInvoiceDetailsService.findDetailNumber(entity.getId());
+        if (detailNumber != null && detailNumber == 1) {
+            if (invPurchaseInvoiceDetailsService.checkItemBarcode(entity.getId())) {
+                if (entity.getGallaryDelivery() == null) {
+                    dto.setGallaryDeliveryShow(1);
+                } else {
+                    dto.setGallaryDeliveryShow(2);
+                }
+            }
+        }
 
         if (invoiceStatus != null && !invoiceStatus.isEmpty()) {
-            invInvoiceDTO.setInvoiceStatus(invoiceStatus);
+            dto.setInvoiceStatus(invoiceStatus);
+        } else if (entity.getGallaryDelivery() != null && entity.getGallaryDelivery() == 1) {
+            dto.setInvoiceStatus("جاهز");
         } else {
-            invInvoiceDTO.setInvoiceStatus("بالمعرض");
+            dto.setInvoiceStatus("بالمعرض");
         }
 
         if (entity.getDueDate() != null) {
-            invInvoiceDTO.setDiffrentTime(entity.getDueDate().getTime() - (new Date()).getTime());
+            dto.setDiffrentTime(entity.getDueDate().getTime() - (new Date()).getTime());
         }
         if (entity.getGalaryId() != null) {
             InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
             invInventoryDTO.setId(entity.getGalaryId().getId());
             invInventoryDTO.setName(entity.getGalaryId().getName());
             invInventoryDTO.setCode(entity.getGalaryId().getCode());
-            invInvoiceDTO.setGallary(invInventoryDTO);
-            invInvoiceDTO.setGallaryId(invInventoryDTO);
-            invInvoiceDTO.setGallaryName(invInventoryDTO.getName());
+            dto.setGallary(invInventoryDTO);
+            dto.setGallaryId(invInventoryDTO);
+            dto.setGallaryName(invInventoryDTO.getName());
         }
         if (entity.getOrganizationSiteId() != null) {
             InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
@@ -2149,32 +2236,32 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invOrganizationSiteDTO.setName(entity.getOrganizationSiteId().getName());
             invOrganizationSiteDTO.setCode(entity.getOrganizationSiteId().getCode());
             invOrganizationSiteDTO.setMobile(entity.getOrganizationSiteId().getMobile());
-            invInvoiceDTO.setOrganizationSiteName(entity.getOrganizationSiteId().getName());
-            invInvoiceDTO.setOrganizationSiteId(invOrganizationSiteDTO);
-            invInvoiceDTO.setCustomerCode(invOrganizationSiteDTO.getCode());
-            invInvoiceDTO.setCustomerName(invOrganizationSiteDTO.getName());
-            invInvoiceDTO.setCustomerMobile(invOrganizationSiteDTO.getMobile());
+            dto.setOrganizationSiteName(entity.getOrganizationSiteId().getName());
+            dto.setOrganizationSiteId(invOrganizationSiteDTO);
+            dto.setCustomerCode(invOrganizationSiteDTO.getCode());
+            dto.setCustomerName(invOrganizationSiteDTO.getName());
+            dto.setCustomerMobile(invOrganizationSiteDTO.getMobile());
         }
         if (entity.getInvInventoryId() != null) {
             InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
             invInventoryDTO.setId(entity.getInvInventoryId().getId());
             invInventoryDTO.setName(entity.getInvInventoryId().getName());
             invInventoryDTO.setCode(entity.getInvInventoryId().getCode());
-            invInvoiceDTO.setInvInventoryId(invInventoryDTO);
+            dto.setInvInventoryId(invInventoryDTO);
         }
         if (entity.getInvDelegatorId() != null) {
             InventoryDelegatorDTO inventoryDelegatorDTO = new InventoryDelegatorDTO();
             inventoryDelegatorDTO.setId(entity.getInvDelegatorId().getId());
             inventoryDelegatorDTO.setName(entity.getInvDelegatorId().getName());
             inventoryDelegatorDTO.setCode(entity.getInvDelegatorId().getCode());
-            invInvoiceDTO.setInvDelegatorId(inventoryDelegatorDTO);
-            invInvoiceDTO.setInvDelegatorName(entity.getInvDelegatorId().getName());
+            dto.setInvDelegatorId(inventoryDelegatorDTO);
+            dto.setInvDelegatorName(entity.getInvDelegatorId().getName());
         }
 
-        invInvoiceDTO.setPaymentType(entity.getPaymentType());
+        dto.setPaymentType(entity.getPaymentType());
 
         if (entity.getCreatedBy() != null) {
-            invInvoiceDTO.setCreatedByName(entity.getCreatedBy().getName());
+            dto.setCreatedByName(entity.getCreatedBy().getName());
         }
     }
 

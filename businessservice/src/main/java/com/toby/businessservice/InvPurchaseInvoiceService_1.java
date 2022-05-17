@@ -38,6 +38,8 @@ public interface InvPurchaseInvoiceService_1 {
     public Integer getInvoiceBySerial(Integer serial);
 
     public InvInvoiceDTO findInvoiceBySerial(Integer serial);
+    
+    public InvPurchaseInvoice findInvPurchaseInvoiceGallaryDelivery(Integer serial, Integer type, Integer branchId);
 
     public void updateInvoiceForsendCloth(Integer id, Integer sendCloth);
 
@@ -172,4 +174,8 @@ public interface InvPurchaseInvoiceService_1 {
 
     public void saveDeliveryPlace(Integer invoiceId, Integer deliverPlaceId);
 
-    }
+    public void updateGallaryDelivery(Integer invoiceId);
+    
+     public InvInvoiceDTO convertInvPurchaseInvoiceToInvInvoice(InvInvoiceDTO invInvoiceDTO, Integer type);
+
+}

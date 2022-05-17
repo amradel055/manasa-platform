@@ -42,6 +42,13 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
         }
     }
 
+    public void updateGallaryDelivery() {
+        if (getInvInvoiceDTOSelected() != null && getInvInvoiceDTOSelected().getId() != null) {
+            invPurchaseInvoiceService.updateGallaryDelivery(getInvInvoiceDTOSelected().getId());
+        }
+
+    }
+
     @Override
     public void load() {
         try {
@@ -151,8 +158,7 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
                 exit("../invreturnsales_1/invreturnsalesform.xhtml");
             } else if (getUri().contains("proworkorderlist")) {
                 exit("../proworkorder/proworkorderform.xhtml");
-            }
-             else if (getUri().contains("deliveryPlaceList")) {
+            } else if (getUri().contains("deliveryPlaceList")) {
                 exit("../deliveryPlace/deliveryPlaceForm.xhtml");
             }
 
@@ -196,10 +202,9 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
                     exit("../invreturnsales_1/invreturnsalesform.xhtml");
                 } else if (getUri().contains("proworkorderlist")) {
                     exit("../proworkorder/proworkorderform.xhtml");
+                } else if (getUri().contains("deliveryPlaceList")) {
+                    exit("../deliveryPlace/deliveryPlaceForm.xhtml");
                 }
-                 else if (getUri().contains("deliveryPlaceList")) {
-                exit("../deliveryPlace/deliveryPlaceForm.xhtml");
-            }
                 return "";
             } else {
                 return "";

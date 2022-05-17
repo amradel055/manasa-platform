@@ -578,7 +578,7 @@ public class InvDialogueServiceImpl implements InvDialogueService {
             dTO = loadProSendToGallary(dTO, 0);
         } else if (screenNameClassEnum.equals(ScreenNameClassEnum.PRORECIEVEGALLARY)) {
             dTO = loadProSendToGallary(dTO, 1);
-        }else if (screenNameClassEnum.equals(ScreenNameClassEnum.PROSALES)) {
+        } else if (screenNameClassEnum.equals(ScreenNameClassEnum.PROSALES)) {
             dTO = loadProSendToGallary(dTO, 2);
         }
         return dTO;
@@ -586,25 +586,25 @@ public class InvDialogueServiceImpl implements InvDialogueService {
 
     public InvInvoiceDTO loadInvQotation(InvInvoiceDTO dTO, Integer type) {
         dTO = invQuotationService.convertQotationToPurchaseInvoice(dTO, type);
-        dTO = invGlobalService.updateSummition(dTO,false);
+        dTO = invGlobalService.updateSummition(dTO, false);
         return dTO;
     }
 
     public InvInvoiceDTO loadInvPurchaseOrder(InvInvoiceDTO dTO) {
         dTO = invPurchaseOrderService.convertPurchaseOrderToPurchaseInvoice(dTO);
-        dTO = invGlobalService.updateSummition(dTO,false);
+        dTO = invGlobalService.updateSummition(dTO, false);
         return dTO;
     }
 
     public InvInvoiceDTO loadInvAddingOrder(InvInvoiceDTO dTO) {
         dTO = invAddingOrderService.convertAddingOrderToPurchaseInvoice(dTO);
-        dTO = invGlobalService.updateSummition(dTO,false);
+        dTO = invGlobalService.updateSummition(dTO, false);
         return dTO;
     }
 
     public InvInvoiceDTO loadInvPurchaseInvoice(InvInvoiceDTO dTO, Integer type) {
         dTO = invPurchaseInvoiceService.convertInvPurchaseInvoiceToPurchaseInvoice(dTO, type);
-        dTO = invGlobalService.updateSummition(dTO,false);
+        dTO = invGlobalService.updateSummition(dTO, false);
         return dTO;
     }
 
@@ -615,6 +615,10 @@ public class InvDialogueServiceImpl implements InvDialogueService {
 
     public InvInvoiceDTO loadProSendToGallary(InvInvoiceDTO dTO, Integer type) {
         dTO = proFactoryDeliveryService.convertProFactoryDeliveryToInvInvoice(dTO, type);
+        if (dTO.getMsg() != null && !dTO.getMsg().isEmpty()) {
+            dTO.setMsg(null);
+            dTO = invPurchaseInvoiceService.convertInvPurchaseInvoiceToInvInvoice(dTO, 4);
+        }
         return dTO;
     }
 

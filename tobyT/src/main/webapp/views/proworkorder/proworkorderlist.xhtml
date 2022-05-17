@@ -166,6 +166,21 @@
                               sortBy="#{invInvoicePurchaseTable.remarks}" >
                         <p:outputLabel value="#{invInvoicePurchaseTable.remarks}" />
                     </p:column>
+                    <p:column  style="width: 12vh;font-size: 1.8vh;text-align:center;border-radius: 0px;" headerText="check" >
+                        <p:commandButton  id="addnew"
+                                          style="margin-right: 33%;"
+                                          update="@form" 
+                                          class="saddButton"
+                                          icon="fa fa-plus"
+                                          title="check" 
+                                          disabled="#{invInvoicePurchaseTable.gallaryDeliveryShow eq 2}" 
+                                          rendered="#{invInvoicePurchaseTable.gallaryDeliveryShow ne null}"
+                                          actionListener="#{invPurchaseInvoiceListDTOMB.updateGallaryDelivery()}"  >
+                            <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" 
+                                                         target="#{invPurchaseInvoiceListDTOMB.invInvoiceDTOSelected}" />
+                        </p:commandButton>     
+
+                    </p:column>
                     <p:column  style="width: 12vh;font-size: 1.8vh;text-align:center;border-radius: 0px;" headerText="#{userData.userDDs['TRANSACTION']}" >
                         <p:commandButton  
                             update="@form" 

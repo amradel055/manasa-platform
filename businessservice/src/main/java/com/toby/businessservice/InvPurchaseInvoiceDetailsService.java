@@ -67,4 +67,7 @@ public interface InvPurchaseInvoiceDetailsService {
 
     public List<balanceGalary> UnPaidAmountAfterSearchNative(Integer branchId, Date dateFrom1, Date dateTo1, String stringBuilder, TobyUser tobyUser) ;
 
+    public Integer findDetailNumber(Integer id);
+    
+    public Boolean checkItemBarcode(Integer id) ;
     }

@@ -230,6 +230,9 @@ public class InvPurchaseInvoice extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "delivery_place", referencedColumnName = "id")
     private InvInventory deliveryPlace;
+    @Column(name = "gallary_delivery")
+    private Integer gallaryDelivery;
+
     public InvPurchaseInvoice() {
     }
 
@@ -954,4 +957,19 @@ public class InvPurchaseInvoice extends BaseEntity {
     public void setDeliveryPlace(InvInventory deliveryPlace) {
         this.deliveryPlace = deliveryPlace;
     }
+
+    /**
+     * @return the gallaryDelivery
+     */
+    public Integer getGallaryDelivery() {
+        return gallaryDelivery;
+    }
+
+    /**
+     * @param gallaryDelivery the gallaryDelivery to set
+     */
+    public void setGallaryDelivery(Integer gallaryDelivery) {
+        this.gallaryDelivery = gallaryDelivery;
+    }
+
 }

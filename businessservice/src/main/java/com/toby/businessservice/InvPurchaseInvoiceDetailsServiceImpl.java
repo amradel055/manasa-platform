@@ -163,6 +163,32 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
 
         return BigDecimal.ZERO;
     }
+    
+    @Override
+    public Integer findDetailNumber(Integer id) {
+        List<InvPurchaseInvoiceDetail> purchaseInvoiceDetails = new ArrayList<>();
+        Map<String, Object> params = new HashMap();
+        params.put("id", id);
+        purchaseInvoiceDetails = dao.findListByQuery(" SELECT ipid from InvPurchaseInvoiceDetail  ipid where ipid.invPurchaseInvoiceId.id = :id ", params);
+        if (purchaseInvoiceDetails != null && !purchaseInvoiceDetails.isEmpty()) {
+            return  purchaseInvoiceDetails.size();
+        }
+
+        return 0;
+    }
+    
+    @Override
+    public Boolean checkItemBarcode(Integer id) {
+        List<String> purchaseInvoiceDetails = new ArrayList<>();
+        Map<String, Object> params = new HashMap();
+        params.put("id", id);
+        purchaseInvoiceDetails = dao.findListByQuery(" SELECT ipid.itemBarcode from InvPurchaseInvoiceDetail  ipid where ipid.invPurchaseInvoiceId.id = :id and ipid.itemId.id = 22284 ", params);
+        if (purchaseInvoiceDetails != null && !purchaseInvoiceDetails.isEmpty()) {
+            return true;
+        }
+
+        return false;
+    }
 
     public void updateCostAvarage(Integer branchId) {
         List<InvPurchaseInvoiceDetail> purchaseInvoiceDetails = new ArrayList<>();
