@@ -22,6 +22,7 @@ public class PurchaseOfItemsBySuppliersSearchBean {
 
     private Integer branchId;
     private Integer type;
+    private Integer organizationType;
 
     private InvOrganizationSite fromorganizationName;
     private InvOrganizationSite toorganizationName;
@@ -43,6 +44,7 @@ public class PurchaseOfItemsBySuppliersSearchBean {
 
     private Boolean showReport;
     private Boolean shortReport = false;
+    
 
     public Integer getBranchId() {
         return branchId;
@@ -324,6 +326,20 @@ public class PurchaseOfItemsBySuppliersSearchBean {
      */
     public void setGalleryFrom(List<InvInventoryDTO> galleryFrom) {
         this.galleryFrom = galleryFrom;
+    }
+
+    /**
+     * @return the organizationType
+     */
+    public Integer getOrganizationType() {
+        return organizationType;
+    }
+
+    /**
+     * @param organizationType the organizationType to set
+     */
+    public void setOrganizationType(Integer organizationType) {
+        this.organizationType = organizationType;
     }
 
 }

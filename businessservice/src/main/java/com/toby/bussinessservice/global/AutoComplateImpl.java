@@ -222,7 +222,7 @@ public class AutoComplateImpl implements AutoCompleteService {
             params.put("gallaryId", gallaryId);
         }
         appendOrganizationTypeAndActive(params, type, sql, active, gallaryId);
-        List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params, 0, 10);
+        List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params, 0, 15);
         list = returnListDTO2(detailses);
         return list;
     }
@@ -267,6 +267,7 @@ public class AutoComplateImpl implements AutoCompleteService {
         invOrganizationSiteDTO.setShoulder(invOrganizationSite.getShoulder());
         invOrganizationSiteDTO.setStep(invOrganizationSite.getStep());
         invOrganizationSiteDTO.setDiscount(invOrganizationSite.getDiscount());
+        invOrganizationSiteDTO.setEmail(invOrganizationSite.getEmail());
         if (invOrganizationSite.getCurrencyId() != null) {
             CurrencyDTO currencyDTO = new CurrencyDTO();
             currencyDTO.setId(invOrganizationSite.getCurrencyId().getId());

@@ -651,7 +651,7 @@
                                                 />
 
                                     <p:menuitem id="sr_lnk9999322" value="جرد المخزون" icon="&#xE8D2;" url="/faces/views/invstripNew/invStripList.xhtml" 
-                                                rendered="#{userData.userScreens['invstrip'].view or userData.isAdmin}"
+                                                rendered="#{userData.userScreens['invpermissionorder_1'].view or userData.isAdmin}"
                                                 />
 
                                     <p:menuitem id="sr_lnk9999323" value="ضبط المخزون" icon="&#xE8D2;" url="/faces/views/invupdate/invUpdateList.xhtml" 
@@ -800,10 +800,10 @@
                                                 />
                                     
                                     <p:menuitem id="sr_lnk999935513" value=" تقرير بالمبالغ المسددة" icon="&#xE8D2;" url="/faces/views/inventoryreports/paidAmountReport.xhtml" 
-                                                rendered="#{userData.userScreens['paidAmountReport'].view or userData.isAdmin}"
+                                                rendered="#{userData.userScreens['CustomerBalancesReport'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk99990035513" value=" تقرير بالمبالغ الغير المسددة" icon="&#xE8D2;" url="/faces/views/inventoryreports/unPaidAmountReport.xhtml" 
-                                                rendered="#{userData.userScreens['unPaidAmountReport'].view or userData.isAdmin}"
+                                                rendered="#{userData.userScreens['CustomerBalancesReport'].view or userData.isAdmin}"
                                                 />
 
                                 </p:submenu>

@@ -24,6 +24,7 @@ import com.toby.dto.GeneralJournalDTO;
 import com.toby.dto.GlAccountDTO;
 import com.toby.dto.GlAdminUnitDTO;
 import com.toby.dto.GlBankDTO;
+import com.toby.dto.GlPayDTO;
 import com.toby.dto.GlYearDTO;
 import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInventoryDTO;
@@ -40,7 +41,6 @@ import com.toby.entity.Branch;
 import com.toby.entity.CostCenter;
 import com.toby.entity.Currency;
 import com.toby.entity.DiscountCodes;
-import static com.toby.entity.Employee_.code;
 import com.toby.entity.GeneralJournal;
 import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlAccount;
@@ -66,7 +66,6 @@ import com.toby.entity.InventoryDelegator;
 import com.toby.entity.InventorySetup;
 import com.toby.entity.ProFactoryDelivery;
 import com.toby.views.ClientsNoMovment;
-import static com.toby.views.CollectionPaymentView_.customerName;
 import com.toby.views.FactoryInvoiceStatus;
 import com.toby.views.ItemsBarcodesDetailsView;
 import com.toby.views.QuantityItemsStore;
@@ -173,6 +172,22 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             builder.append(" select id from inv_purchase_invoice ").
                     append(" where serial = \n").
                     append(serial).
+                    append(" and type = 4  and branch_id = 182 ");
+            List<Integer> details = dao.executeNativeQuery(builder.toString());
+            if (details != null && !details.isEmpty()) {
+                return details.get(0);
+            }
+            return null;
+        }
+        return null;
+    }
+    @Override
+    public Integer getInvoiceSerialById(Integer invoiceId) {
+        if (invoiceId != null && invoiceId > 0) {
+            StringBuilder builder = new StringBuilder();
+            builder.append(" select serial from inv_purchase_invoice ").
+                    append(" where id = \n").
+                    append(invoiceId).
                     append(" and type = 4  and branch_id = 182 ");
             List<Integer> details = dao.executeNativeQuery(builder.toString());
             if (details != null && !details.isEmpty()) {
@@ -1562,9 +1577,10 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     invPurchaseInvoice = dao.updateEntity(invPurchaseInvoice);
 
                     invInvoiceDTO.setId(invPurchaseInvoice.getId());
-                    if (invInvoiceDTO.getPayed() != null && invInvoiceDTO.getPayed().compareTo(BigDecimal.ZERO) == 1 && invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
-                        glBankTransactionService.addCash(invInvoiceDTO, tobyUser);
-                    }
+                    payCash(invInvoiceDTO.getGlPayDTOList(), invInvoiceDTO.getDate(), invPurchaseInvoice.getId(), invPurchaseInvoice.getRate(), invPurchaseInvoice.getRemarks(), invPurchaseInvoice.getOrganizationSiteId().getId(), tobyUser);
+//                    if (invInvoiceDTO.getPayed() != null && invInvoiceDTO.getPayed().compareTo(BigDecimal.ZERO) == 1 && invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
+//                        glBankTransactionService.addCash(invInvoiceDTO, tobyUser);
+//                    }
                 }
 
                 invPurchaseInvoiceDetailsService.deleteInvPurchaseInvoiceDetailListDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailsDeletedList());
@@ -1597,6 +1613,14 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         return invInvoiceDTO;
     }
 
+    public void payCash(List<GlPayDTO> glPayDTOList, Date date, Integer invoiceId, BigDecimal rate, String remarks, Integer invOrganizationId, TobyUser tobyUser) {
+        for (GlPayDTO glPayDTO : glPayDTOList) {
+            if (glPayDTO.getBank() != null && glPayDTO.getBank().getId() != null && glPayDTO.getValue() != null && glPayDTO.getValue().compareTo(BigDecimal.ZERO) == 1) {
+                glBankTransactionService.addCash(date, glPayDTO.getBank(), invoiceId, rate, remarks, glPayDTO.getValue(), invOrganizationId, tobyUser);
+            }
+        }
+    }
+    
     @Override
     public InvInvoiceDTO completeTarhilInvoiceAfterSave(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) throws CloneNotSupportedException {
         ///   الترحيل
@@ -2364,8 +2388,30 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         params.put("invPurchaseInvoiceId", invPurchaseInvoiceId);
         List<BigDecimal> details = dao.findListByQuery("SELECT  sum(i.value)    FROM GlBankTransaction i WHERE i.invoiceId.id = :invPurchaseInvoiceId Group by i.invoiceId.id", params);
         List<BigDecimal> detailsReturn = dao.findListByQuery("SELECT  sum(i.value)    FROM GlBankTransactionDetail i WHERE i.invoiceId.id = :invPurchaseInvoiceId Group by i.invoiceId.id", params);
+        if(detailsReturn != null && detailsReturn.size() > 0){
+            System.err.println("");
+        }
         BigDecimal payment = (details != null && !details.isEmpty()) ? details.get(0).subtract((detailsReturn != null && !detailsReturn.isEmpty()) ? detailsReturn.get(0) : BigDecimal.ZERO) : BigDecimal.ZERO;
         return payment;
+    }
+    
+    @Override
+    public BigDecimal returnRemain(Integer invPurchaseInvoiceId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("invPurchaseInvoiceId", invPurchaseInvoiceId);
+        List<BigDecimal> details = dao.findListByQuery("SELECT  sum(i.value)    FROM GlBankTransaction i WHERE i.invoiceId.id = :invPurchaseInvoiceId Group by i.invoiceId.id", params);
+        List<BigDecimal> detailsReturn = dao.findListByQuery("SELECT  sum(i.value)    FROM GlBankTransactionDetail i WHERE i.invoiceId.id = :invPurchaseInvoiceId Group by i.invoiceId.id", params);
+        List<BigDecimal> detailsMainValue = dao.findListByQuery("SELECT  sum(i.netAfterDiscountHead)    FROM InvPurchaseInvoiceDetail i WHERE i.invPurchaseInvoiceId.id = :invPurchaseInvoiceId ", params);
+        if(detailsReturn != null && detailsReturn.size() > 0){
+            System.err.println("");
+        }
+        
+        BigDecimal total = BigDecimal.ZERO;
+        if(detailsMainValue != null && !detailsMainValue.isEmpty()){
+            total = new BigDecimal((detailsMainValue.get(0).add(detailsMainValue.get(0).multiply((new BigDecimal(15)).divide(new BigDecimal(100)).setScale(5, RoundingMode.HALF_UP)))).stripTrailingZeros().toPlainString());
+        }
+        BigDecimal remain = new BigDecimal((total.subtract((details != null && !details.isEmpty()) ? details.get(0).subtract((detailsReturn != null && !detailsReturn.isEmpty()) ? detailsReturn.get(0) : BigDecimal.ZERO) : BigDecimal.ZERO)).stripTrailingZeros().toPlainString());
+        return remain;
     }
 
     @Override

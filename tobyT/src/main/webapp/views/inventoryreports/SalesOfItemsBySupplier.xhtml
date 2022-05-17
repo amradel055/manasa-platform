@@ -29,13 +29,13 @@
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete style="width:75%!important"
                                                     dropdown="true"
-                                                    converter="#{salesOfItemsBySupplierMB.invOrgSiteSupplierConverter}"
-                                                    value="#{salesOfItemsBySupplierMB.purchaseOfItemsBySuppliersSearchBean.fromorganizationName}"
+                                                    converter="#{salesOfItemsBySupplierNewMB.invOrgSiteSupplierConverter}"
+                                                    value="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.fromorganizationName}"
                                                     var="organization"
                                                     itemLabel="#{organization}" 
                                                     itemValue="#{organization}"
                                                     forceSelection="true" 
-                                                    completeMethod="#{salesOfItemsBySupplierMB.completOrgSiteAsSupplier}"
+                                                    completeMethod="#{salesOfItemsBySupplierNewMB.completOrgSiteAsSupplier}"
 
                                                     >
 
@@ -52,13 +52,13 @@
 
                                                     dropdown="true"
 
-                                                    converter="#{salesOfItemsBySupplierMB.invOrgSiteSupplierConverter}"
-                                                    value="#{salesOfItemsBySupplierMB.purchaseOfItemsBySuppliersSearchBean.toorganizationName}"
+                                                    converter="#{salesOfItemsBySupplierNewMB.invOrgSiteSupplierConverter}"
+                                                    value="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.toorganizationName}"
                                                     var="organization"
                                                     itemLabel="#{organization}" 
                                                     itemValue="#{organization}"
                                                     forceSelection="true" 
-                                                    completeMethod="#{salesOfItemsBySupplierMB.completOrgSiteAsSupplier}" >
+                                                    completeMethod="#{salesOfItemsBySupplierNewMB.completOrgSiteAsSupplier}" >
                                     </p:autoComplete>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -69,7 +69,7 @@
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:calendar pattern="dd/MM/yyyy" 
-                                                value="#{salesOfItemsBySupplierMB.purchaseOfItemsBySuppliersSearchBean.dateFrom}"
+                                                value="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.dateFrom}"
                                                 style="width: 56%">
 
                                     </p:calendar>
@@ -82,7 +82,7 @@
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:calendar pattern="dd/MM/yyyy" 
-                                                value="#{salesOfItemsBySupplierMB.purchaseOfItemsBySuppliersSearchBean.dateTo}"
+                                                value="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.dateTo}"
                                                 style="width: 56%">
 
                                     </p:calendar>
@@ -98,14 +98,14 @@
                                                     style="width:75%!important " 
                                                     dropdown="true"
 
-                                                    converter="#{salesOfItemsBySupplierMB.invInvoiceSalesConverter}"
-                                                    value="#{salesOfItemsBySupplierMB.purchaseOfItemsBySuppliersSearchBean.salesInvoiceFrom}"
+                                                    converter="#{salesOfItemsBySupplierNewMB.invInvoiceSalesConverter}"
+                                                    value="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.salesInvoiceFrom}"
 
                                                     var="purchasePerson"
                                                     itemLabel="#{purchasePerson}" 
                                                     itemValue="#{purchasePerson}" 
                                                     forceSelection="true" 
-                                                    completeMethod="#{salesOfItemsBySupplierMB.completeSalesInvoice}">
+                                                    completeMethod="#{salesOfItemsBySupplierNewMB.completeSalesInvoice}">
                                     </p:autoComplete>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -119,14 +119,14 @@
                                                     style="width:75%!important " 
                                                     dropdown="true"
 
-                                                    converter="#{salesOfItemsBySupplierMB.invInvoiceSalesConverter}"
-                                                    value="#{salesOfItemsBySupplierMB.purchaseOfItemsBySuppliersSearchBean.salesInvoiceTo}"
+                                                    converter="#{salesOfItemsBySupplierNewMB.invInvoiceSalesConverter}"
+                                                    value="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.salesInvoiceTo}"
 
                                                     var="purchasePerson"
                                                     itemLabel="#{purchasePerson}" 
                                                     itemValue="#{purchasePerson}" 
                                                     forceSelection="true" 
-                                                    completeMethod="#{salesOfItemsBySupplierMB.completeSalesInvoice}">
+                                                    completeMethod="#{salesOfItemsBySupplierNewMB.completeSalesInvoice}">
                                     </p:autoComplete>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -138,7 +138,7 @@
                               <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
                                 <p:selectOneMenu style="width: 100%" id="invoiceType1" 
-                                                 value="#{salesOfItemsBySupplierMB.invoiceType}">                                                             
+                                                 value="#{salesOfItemsBySupplierNewMB.invoiceType}">                                                             
                                     <f:selectItem itemLabel="Sales مبيعات"  itemValue=""  />
                                     <f:selectItem itemLabel="منيكانات الفروع"  itemValue="0"  />
                                     <f:selectItem itemLabel="منيكانات القماشين"  itemValue="1"  />
@@ -158,13 +158,13 @@
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete style="width:75%!important"
                                                     dropdown="true"
-                                                    converter="#{salesOfItemsBySupplierMB.itemDTOFromConverter}"
-                                                    value="#{salesOfItemsBySupplierMB.purchaseOfItemsBySuppliersSearchBean.fromItemName}"
+                                                    converter="#{salesOfItemsBySupplierNewMB.itemDTOFromConverter}"
+                                                    value="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.fromItemName}"
                                                     var="item"
                                                     itemLabel="#{item}" 
                                                     itemValue="#{item}"
                                                     forceSelection="true" 
-                                                    completeMethod="#{salesOfItemsBySupplierMB.completInvItemDTOFrom}"   >
+                                                    completeMethod="#{salesOfItemsBySupplierNewMB.completInvItemDTOFrom}"   >
 
                                     </p:autoComplete>
                                 </div>
@@ -179,13 +179,13 @@
 
                                                     dropdown="true"
 
-                                                    converter="#{salesOfItemsBySupplierMB.itemDTOToConverter}"
-                                                    value="#{salesOfItemsBySupplierMB.purchaseOfItemsBySuppliersSearchBean.toItemName}"
+                                                    converter="#{salesOfItemsBySupplierNewMB.itemDTOToConverter}"
+                                                    value="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.toItemName}"
                                                     var="item"
                                                     itemLabel="#{item}" 
                                                     itemValue="#{item}"
                                                     forceSelection="true" 
-                                                    completeMethod="#{salesOfItemsBySupplierMB.completInvItemDTOTo}" >
+                                                    completeMethod="#{salesOfItemsBySupplierNewMB.completInvItemDTOTo}" >
                                     </p:autoComplete>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -201,13 +201,13 @@
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete style="width:75%!important"
                                                     dropdown="true"
-                                                    converter="#{salesOfItemsBySupplierMB.invInventoryConverter}"
-                                                    value="#{salesOfItemsBySupplierMB.purchaseOfItemsBySuppliersSearchBean.fromInventoryName}"
+                                                    converter="#{salesOfItemsBySupplierNewMB.invInventoryConverter}"
+                                                    value="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.fromInventoryName}"
                                                     var="inventory"
                                                     itemLabel="#{inventory}" 
                                                     itemValue="#{inventory}"
                                                     forceSelection="true" 
-                                                    completeMethod="#{salesOfItemsBySupplierMB.completeInventory}"
+                                                    completeMethod="#{salesOfItemsBySupplierNewMB.completeInventory}"
                                                     >
 
                                     </p:autoComplete>
@@ -222,13 +222,13 @@
                                     <p:autoComplete style="width:75%!important" 
 
                                                     dropdown="true"
-                                                    converter="#{salesOfItemsBySupplierMB.invInventoryConverter}"
-                                                    value="#{salesOfItemsBySupplierMB.purchaseOfItemsBySuppliersSearchBean.toInventoryName}"
+                                                    converter="#{salesOfItemsBySupplierNewMB.invInventoryConverter}"
+                                                    value="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.toInventoryName}"
                                                     var="inventory"
                                                     itemLabel="#{inventory}" 
                                                     itemValue="#{inventory}"
                                                     forceSelection="true" 
-                                                    completeMethod="#{salesOfItemsBySupplierMB.completeInventory}">
+                                                    completeMethod="#{salesOfItemsBySupplierNewMB.completeInventory}">
                                     </p:autoComplete>
 
                                 </div>
@@ -241,7 +241,7 @@
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:selectOneMenu style="width:56%!important "
                                                      id="invoiceTypeFrom" 
-                                                     value ="#{salesOfItemsBySupplierMB.purchaseOfItemsBySuppliersSearchBean.frompaymentType}">                                                             
+                                                     value ="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.frompaymentType}">                                                             
                                         <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"/>
                                         <f:selectItem itemLabel="#{userData.userDDs['CASH']}"  itemValue="0"  />                            
                                         <f:selectItem itemLabel="#{userData.userDDs['POSTPONE']}" itemValue="1" />
@@ -256,7 +256,7 @@
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:selectOneMenu style="width:56%!important " id="invoiceTypeTo" 
-                                                     value ="#{salesOfItemsBySupplierMB.purchaseOfItemsBySuppliersSearchBean.topaymentType}">    
+                                                     value ="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.topaymentType}">    
                                         <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"/>
                                         <f:selectItem itemLabel="#{userData.userDDs['CASH']}"  itemValue="0"  />                            
                                         <f:selectItem itemLabel="#{userData.userDDs['POSTPONE']}" itemValue="1" />
@@ -271,7 +271,7 @@
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
 
-                                    <p:selectBooleanCheckbox  id="showReportCheck" value="#{salesOfItemsBySupplierMB.invItemSalesSearchBean.showReport}">
+                                    <p:selectBooleanCheckbox  id="showReportCheck" value="#{salesOfItemsBySupplierNewMB.invItemSalesSearchBean.showReport}">
                                     </p:selectBooleanCheckbox>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -281,7 +281,7 @@
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:selectBooleanCheckbox  id="shortReportCheck"  value="#{salesOfItemsBySupplierMB.invItemSalesSearchBean.shortReport}">
+                                    <p:selectBooleanCheckbox  id="shortReportCheck"  value="#{salesOfItemsBySupplierNewMB.invItemSalesSearchBean.shortReport}">
                                     </p:selectBooleanCheckbox>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -324,7 +324,7 @@
                                           onclick="form.target = '_blank'"  
                                           icon="fa fa-fw fa-print"
                                           value="#{userData.userDDs['PRINT']}" 
-                                          actionListener="#{salesOfItemsBySupplierMB.exportChartPDF}"
+                                          actionListener="#{salesOfItemsBySupplierNewMB.exportChartPDF}"
                                           title="#{userData.userDDs['PRINT']}"
                                           immediate="true" />
                     </p:dialog> 
@@ -334,7 +334,7 @@
                 <div style="text-align: center">
                     <p:commandButton    class="searchButton"
                                         title="#{userData.userDDs['SEARCH']}"
-                                        action="#{salesOfItemsBySupplierMB.search()}"
+                                        action="#{salesOfItemsBySupplierNewMB.search()}"
                                         id="saveB"
                                         value="#{userData.userDDs['SEARCH']}"
                                         update="@form" 
@@ -344,7 +344,7 @@
                                       id="NewB"
                                       title="#{userData.userDDs['NEW']}" 
                                       immediate="true" 
-                                      action="#{salesOfItemsBySupplierMB.resetSearch()}"
+                                      action="#{salesOfItemsBySupplierNewMB.resetSearch()}"
                                       update="form"
                                       value="#{userData.userDDs['NEW']}"
                                       icon="fa fa-plus"/>
@@ -355,7 +355,7 @@
                                       onclick="form.target = '_blank'"  
                                       icon="fa fa-fw fa-print"
                                       value="#{userData.userDDs['PRINT']}" 
-                                      actionListener="#{salesOfItemsBySupplierMB.exportPDF}"
+                                      actionListener="#{salesOfItemsBySupplierNewMB.exportPDF}"
                                       title="#{userData.userDDs['PRINT']}"
                                       immediate="true" />
 
@@ -370,7 +370,7 @@
                         <p:dataExporter type="xls"
                                         target="itemSalesReportTable" 
                                         fileName=" تقرير مبيعات الاصناف"
-                                        postProcessor="#{salesOfItemsBySupplierMB.postProcessXLS}" />  
+                                        postProcessor="#{salesOfItemsBySupplierNewMB.postProcessXLS}" />  
                     </h:commandLink>
 
                     <p:blockUI block="form" trigger="saveB NewB PrintB CloseB shortReportCheck showReportCheck" animate="true" >
@@ -385,19 +385,19 @@
 
             <p:fieldset id="reportDB">
                 <p:dataTable 
-                    rendered="#{salesOfItemsBySupplierMB.invItemSalesSearchBean.showReport eq false}"
+                    rendered="#{salesOfItemsBySupplierNewMB.invItemSalesSearchBean.showReport eq false}"
                     draggableColumns="true" 
                     var="itemSalesReportTable" 
                     widgetVar="itemSalesReportTable"  
                     rowKey="#{itemSalesReportTable}"
                     rowIndexVar="index" 
-                    value="#{salesOfItemsBySupplierMB.itemSalesViewBeanList}" 
+                    value="#{salesOfItemsBySupplierNewMB.itemSalesViewBeanList}" 
                     dir="rtl" 
                     paginator="true"
                     rows="20"
                     emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
                     id="itemSalesReportTable"
-                    rowStyleClass="#{not ( itemSalesReportTable.groupName eq null) and salesOfItemsBySupplierMB.invItemSalesSearchBean.shortReport eq false ? 'colored' : null} ">
+                    rowStyleClass="#{not ( itemSalesReportTable.groupName eq null) and salesOfItemsBySupplierNewMB.invItemSalesSearchBean.shortReport eq false ? 'colored' : null} ">
                     <f:facet name="header">
 
 
@@ -408,15 +408,6 @@
 
                     </f:facet>
 
-                    <p:column   style="width: 10vh;text-align: right;font-size: 2.2vh" headerText="#{userData.userDDs['SUPPLIER_NAME']}" 
-
-                                filterBy="#{itemSalesReportTable.groupName}" 
-                                filterMatchMode="contains" 
-                                sortBy="#{itemSalesReportTable.groupName}"
-                                filterable="false">
-
-                        <p:outputLabel value="#{itemSalesReportTable.groupName}" />
-                    </p:column>
 
                     <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh" headerText="#{userData.userDDs['INVOICE_NO']}" 
 
@@ -524,7 +515,7 @@
                     <p:columnGroup type="footer">
                         <p:row>
                             <p:column colspan="9"  footerText="#{userData.userDDs['TOTAL']}" /> 
-                            <p:column  footerText="#{salesOfItemsBySupplierMB.sumTotal}" /> 
+                            <p:column  footerText="#{salesOfItemsBySupplierNewMB.sumTotalNew}" /> 
                         </p:row>
 
                     </p:columnGroup>
@@ -534,21 +525,18 @@
 
 
                 <p:dataTable style="margin-top: 2%"
-                             rendered="#{salesOfItemsBySupplierMB.invItemSalesSearchBean.showReport eq true}"
+                             rendered="#{salesOfItemsBySupplierNewMB.invItemSalesSearchBean.showReport eq true}"
                              draggableColumns="true" 
                              var="itemSalesReportTable2" 
                              widgetVar="itemSalesReportTable2"  
                              rowKey="#{itemSalesReportTable2}"
                              rowIndexVar="index" 
-                             value="#{salesOfItemsBySupplierMB.itemSalesViewBeanList}" 
+                             value="#{salesOfItemsBySupplierNewMB.itemSalesViewBeanList}" 
                              dir="rtl" 
                              emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
                              id="itemSalesReportTable2"
-                             rowStyleClass="#{not ( itemSalesReportTable2.groupName eq null) and salesOfItemsBySupplierMB.invItemSalesSearchBean.shortReport eq false ? 'colored' : null} ">
-                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
-                              headerText="#{userData.userDDs['GROUP_NAME']}" >
-                        <p:outputLabel value="#{itemSalesReportTable2.groupName}" />
-                    </p:column>
+                             rowStyleClass="#{not ( itemSalesReportTable2.groupName eq null) and salesOfItemsBySupplierNewMB.invItemSalesSearchBean.shortReport eq false ? 'colored' : null} ">
+                    
                     <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh" headerText="#{userData.userDDs['INVOICE_NO']}" >
                         <p:outputLabel value="#{itemSalesReportTable2.serial}" />
                     </p:column>
@@ -581,7 +569,7 @@
                     <p:columnGroup type="footer">
                         <p:row>
                             <p:column colspan="6"  footerText="#{userData.userDDs['TOTAL']}" /> 
-                            <p:column  footerText="#{salesOfItemsBySupplierMB.sumTotal}" /> 
+                            <p:column  footerText="#{salesOfItemsBySupplierNewMB.sumTotal}" /> 
                         </p:row>
 
                     </p:columnGroup>
@@ -594,7 +582,7 @@
                 google.charts.setOnLoadCallback(drawChart);
                 function drawChart() {
                     var data = google.visualization.arrayToDataTable(
-                #{salesOfItemsBySupplierMB.pieChartsRows}
+                #{salesOfItemsBySupplierNewMB.pieChartsRows}
                     );
                     var options = {
                         title: 'مبيعات اصناف حسب الموردين',

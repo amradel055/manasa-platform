@@ -10,9 +10,11 @@ import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.ProFactoryDeliveryDetailService;
 import com.toby.businessservice.ProFactoryDeliveryService;
 import com.toby.define.ScreenNameClassEnum;
+import com.toby.dto.GlPayDTO;
 import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.toby.InventoryBasicDataForm;
+import java.math.BigDecimal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -32,6 +34,7 @@ import javax.inject.Named;
 public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
 
     private Boolean checkFactory;
+    private Boolean checkSendSms;
 
     private Boolean checkDiscountValue = false;
     private Boolean checkDiscountRate = false;
@@ -56,7 +59,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
         try {
 
             load();
-
+            fillGlPay();
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "init");
         }
@@ -113,6 +116,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
             } else {
                 exit("../base/error.xhtml");
             }
+            completeDelegatorSales(null);
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "load");
         }
@@ -133,7 +137,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                     setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
                     msgSave(getInvInvoiceDTO().getMsg());
                     findAccountStatement();
-                    if (id == null && getUri().contains("proworkorderform") && getInvInvoiceDTO().getInvoiceType() == null) {
+                    if (id == null && getUri().contains("proworkorderform") && getInvInvoiceDTO().getInvoiceType() == null && getCheckSendSms() && checkDetailDataSMS()) {
                         StringBuilder message = new StringBuilder();
                         message.append("عميلنا العزيز ، شكراً لتسوقك تمت عملية شراء رقم ");
                         message.append(getInvInvoiceDTO().getSerial());
@@ -161,6 +165,29 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
         }
 
         return "";
+    }
+
+     public Boolean checkDetailDataSMS() {
+
+        for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
+
+            if (detailDTO.getItemsBarcodesDetail() != null && detailDTO.getItemsBarcodesDetail().getBarcode() != null 
+                    && (detailDTO.getItemsBarcodesDetail().getBarcode().equals("000012")
+                    || detailDTO.getItemsBarcodesDetail().getBarcode().equals("000013")
+                    || detailDTO.getItemsBarcodesDetail().getBarcode().equals("60004"))) {
+                return false;
+            }
+        }
+        return true;
+    }
+     
+     
+    public void calcPayed() {
+        getInvInvoiceDTO().setPayed(BigDecimal.ZERO);
+        for (GlPayDTO glPayDTO : getInvInvoiceDTO().getGlPayDTOList()) {
+            getInvInvoiceDTO().setPayed(getInvInvoiceDTO().getPayed().add(glPayDTO.getValue()));
+        }
+        calculateRemainValue();
     }
 
     private Boolean validateInvoiceType() {
@@ -312,7 +339,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
             if (getInvInvoiceDTOSelected() != null && getInvInvoiceDTO().getSearchBySerial() == null) {
                 getInvInvoiceDTO().setSearchBySerial(getInvInvoiceDTOSelected().getSerial());
             }
-            if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getSearchBySerial() > 0) {
+            if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getSearchBySerial() != null && getInvInvoiceDTO().getSearchBySerial() > 0) {
                 Integer invoiceId = invPurchaseInvoiceService_1.getInvoiceBySerial(getInvInvoiceDTO().getSearchBySerial());
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
                 context.getSessionMap().put("invPurchaseInvoiceIdSeclected", invoiceId);
@@ -421,6 +448,23 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
      */
     public void setInvInvoiceDTOSelected(InvInvoiceDTO invInvoiceDTOSelected) {
         this.invInvoiceDTOSelected = invInvoiceDTOSelected;
+    }
+
+    /**
+     * @return the checkSendSms
+     */
+    public Boolean getCheckSendSms() {
+        if (checkSendSms == null) {
+            checkSendSms = Boolean.TRUE;
+        }
+        return checkSendSms;
+    }
+
+    /**
+     * @param checkSendSms the checkSendSms to set
+     */
+    public void setCheckSendSms(Boolean checkSendSms) {
+        this.checkSendSms = checkSendSms;
     }
 
 }

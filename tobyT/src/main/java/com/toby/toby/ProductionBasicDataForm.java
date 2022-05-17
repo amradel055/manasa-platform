@@ -159,9 +159,8 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
             
             @Override
             public List<InvDailogueData> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
-                
-                setRowCount(invDialogueService.getTotalRegistors(getUserData().getUserBranch().getId(), filters, null, getInvInvoiceDTO().getScreenName()).intValue());
-                getInvInvoiceDTO().setInvDailogueDataList(invDialogueService.loadInvDailogueData(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), filters, getInvInvoiceDTO().getInventorySetupDTO(), getUserData().getUserBranch().getId(), getInvInvoiceDTO().getScreenName()));
+                setRowCount(invDialogueService.getTotalRegistors(getUserData().getUserBranch().getId(), filters, null, getInvInvoiceDTO().getScreenName(),null).intValue());
+                getInvInvoiceDTO().setInvDailogueDataList(invDialogueService.loadInvDailogueData(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), filters, getInvInvoiceDTO().getInventorySetupDTO(), getUserData().getUserBranch().getId(), getInvInvoiceDTO().getScreenName(),null));
                 return getInvInvoiceDTO().getInvDailogueDataList();
             }
             

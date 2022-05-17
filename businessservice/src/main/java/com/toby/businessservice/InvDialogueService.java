@@ -17,9 +17,12 @@ import javax.ejb.Remote;
 public interface InvDialogueService {
 
     // public List<InvDailogueData> loadInvDailogueData(InventorySetupDTO inventorySetupDTO, ScreenNameClassEnum screenNameClassEnum);
-    public List<InvDailogueData> loadInvDailogueData(int first, int pageSize, String sortField, Boolean asc, Map<String, Object> filters, InventorySetupDTO inventorySetupDTO,Integer branchId, ScreenNameClassEnum screenNameClassEnum);
+    public List<InvDailogueData> loadInvDailogueData(int first, int pageSize, String sortField, Boolean asc, Map<String, Object> filters, InventorySetupDTO inventorySetupDTO,
+            Integer branchId, ScreenNameClassEnum screenNameClassEnum,Integer inventoryId);
 
     public InvInvoiceDTO loadDlg(InvInvoiceDTO dTO);
 
-    public Long getTotalRegistors(Integer branchId, Map<String, Object> filters, Boolean sellBuy, ScreenNameClassEnum screenNameClassEnum);
+    public Long getTotalRegistors(Integer branchId, Map<String, Object> filters, Boolean sellBuy, ScreenNameClassEnum screenNameClassEnum,Integer inventoryId);
+    
+    public List<InvDailogueData> loadInvDailogueDataForInvStrip(Integer branchId, Integer inventoryId);
 }

@@ -24,6 +24,8 @@ public interface InvUpdateDetailService {
     List<InvUpdateDetail> getAllInvUpdateDetails();
 
     List<InvUpdateDetail> getAllInvUpdateDetails(Integer id);
+    
+    public List<InvDetailDTO> getAllInvDetailDTOByInvUpdateDetails(Integer id) ;
 
     public List<InvDetailDTO> getAllInvTransferDetailsByInvPurchaseInvoiceIdDTO(InvInvoiceDTO invInvoiceDTO, Integer branchId);
 
@@ -34,6 +36,8 @@ public interface InvUpdateDetailService {
     public String addInvUpdateDetailsDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList, InvInvoiceDTO invInvoiceDTO, ScreenNameClassEnum screenNameClassEnum, TobyUser tobyUser);
 
     public InvDetailDTO addInvUpdateDetailsDTONew(InvDetailDTO detailDTO, Integer invUpdateId, TobyUser tobyUser);
+    
+    public List<InvDetailDTO> getAllInvUpdatesDetailFromInvTransferDetail(String invStripSerial, Integer branchId, Integer inventoryId);
     
     public List<InvDetailDTO> getAllInvUpdatesDetailFromInvTransferDetail(Integer invStripSerial, Integer branchId, Integer inventoryId);
     

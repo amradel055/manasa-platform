@@ -33,7 +33,7 @@ public class InvPurchaseInvoiceDeliveryPalace extends Basic {
 
     public void load() {
         try {
-
+            getInvInventoryDTOList();
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceDeliveryPalace", "init");
         }

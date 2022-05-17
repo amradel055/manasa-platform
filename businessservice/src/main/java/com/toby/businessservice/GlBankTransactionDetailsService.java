@@ -6,12 +6,14 @@
 package com.toby.businessservice;
 
 import com.toby.dto.GeneralJournalDTO;
+import com.toby.dto.GlBankDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.balanceGalary;
 import com.toby.entity.GeneralJournal;
 import com.toby.entity.GlBankTransaction;
 import com.toby.entity.GlBankTransactionDetail;
 import com.toby.entity.TobyUser;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
@@ -55,5 +57,7 @@ public interface GlBankTransactionDetailsService {
     public List<GeneralJournal> tarhilCashOne(TobyUser tobyUser, Integer type);
     
     public List<balanceGalary> GlBankTransactionDetailAfterSearchNative(Integer branchId, Date dateFrom1, Date dateTo1, String stringBuilder, TobyUser tobyUser) ;
+    
+    public void addCashDetail(GlBankDTO glBankDTO, Integer invOrganizationId, Integer glBankTransactionId, GlBankDTO bankDTO, String remarks, BigDecimal value, TobyUser tobyUser);
 
     }

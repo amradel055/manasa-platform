@@ -147,11 +147,10 @@
 
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-                                <h:inputText id="payed"  rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null}"
-                                             style="width:100%;text-align:right" 
-                                             value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.payed}" >
-                                    <p:ajax  listener="#{invPurchaseInvoiceFormDTOMB.calculateRemainValue()}" update="remain" />
-                                </h:inputText>
+
+                                <h:outputText id="payed"  rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null}"
+                                              style="text-align:right" 
+                                              value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.payed}" />
 
                             </div>
                             <div class="ui-g-6 ui-xl-6">
@@ -199,7 +198,7 @@
                                 <f:selectItems value="#{invPurchaseInvoiceFormDTOMB.gallaryLists}" 
                                                var="inventory" itemLabel="#{inventory.name}"
                                                itemValue="#{inventory}"/> 
-                                <p:ajax  listener="#{invPurchaseInvoiceFormDTOMB.hishis()}" update="remain" />
+                                <p:ajax  listener="#{invPurchaseInvoiceFormDTOMB.completeDelegatorSales(query)}" update="remain purchasePerson" />
 
                             </p:selectOneMenu>
 
@@ -243,6 +242,29 @@
                             </div>
                             <div class="ui-g-4 ui-xl-4">
                                 <p:outputLabel style="width: 100px;" value="مكان الإستلام"/>
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-8 ui-xl-8">
+                                <p:autoComplete style="width:37%!important " 
+                                                dropdown="true"
+                                                disabled="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial ne null}"
+                                                converter="#{invPurchaseInvoiceFormDTOMB.invDelegatorDTOConvertor}"
+                                                value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.invDelegatorId}"
+                                                var="purchasePerson" id="purchasePerson"
+                                                itemLabel="#{purchasePerson}" 
+                                                itemValue="#{purchasePerson}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{invPurchaseInvoiceFormDTOMB.completeDelegatorSales}"
+                                                >
+                                    <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.hishis()}" event="itemSelect" />
+                                </p:autoComplete>
+                            </div>
+
+                            <div class="ui-g-4 ui-xl-4">
+                                <p:outputLabel style="width: 100px;" value="#{userData.userDDs['SALESPERSON']}"/>
+
                             </div>
                         </div>
                     </div>
@@ -322,6 +344,14 @@
                     <div class="ui-g-12 ui-xl-12" style="margin-top: -2%;" >
 
                         <div style="text-align: center">
+                            <p:commandButton  
+                                class="reloadButtons"
+                                id="payButtun"
+                                title="الدفع"
+                                value="الدفع" 
+                                rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id == null and invPurchaseInvoiceFormDTOMB.invInvoiceDTO.paymentType eq 1}"
+                                action="#{invPurchaseInvoiceFormDTOMB.openPayDlg()}"
+                                update=":form:dlgpay"/>
 
                             <p:commandButton  id="saveB" immediate="true" 
                                               class="saveButtons"
@@ -556,8 +586,10 @@
 
                                     <p:ajax update="@form" process="@form"  event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.updateCustomerData()}" />
                                 </p:autoComplete>
-                                <p:commandButton style="float: left;" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null}"  icon="fa fa-plus" type="button" onclick="PF('dlg3').show();"/> 
+                                <p:commandButton style="float: left;" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null}"  icon="fa fa-fw fa-edit" type="button" onclick="PF('dlg31').show();"/> 
+                                <p:commandButton style="float: left;" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null}"  icon="fa fa-plus"       type="button" onclick="PF('dlg3').show();"/> 
                                 <p:commandButton style="margin-right: 40%" rendered="#{(userData.userScreens['proworkorder'].edit) and invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id ne null}"  value="تعديل" type="button" onclick="PF('dlg31').show();"/> 
+
 
                             </div>
                             <div class="ui-g-6 ui-xl-6">
@@ -593,96 +625,32 @@
 
                             </div>
                         </div>
-                        <div class="ui-g-12 ui-xl-12">
-                            <div class="ui-g-6 ui-xl-6">
 
-
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-
-
-                                <p:dialog header="إضافة عميل جديد" 
-                                          rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null}" 
-                                          widgetVar="dlg3" showEffect="explode" hideEffect="bounce" height="500" width="500">
-
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 100px" value=" الإســم "/>
-                                    </h:panelGroup> 
-                                    <h:panelGroup>
-                                        <p:inputText value="#{invPurchaseInvoiceFormDTOMB.organizationSiteId.name}"/>  
-                                    </h:panelGroup>
-                                    <br/>
-                                    <br/>
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 100px" value="التليفون "/>
-                                    </h:panelGroup> 
-                                    <h:panelGroup>
-                                        <p:inputMask  value="#{invPurchaseInvoiceFormDTOMB.organizationSiteId.mobile}" mask="999999999999" />
-                                    </h:panelGroup>
-                                    <h:panelGroup>
-                                        <br/>
-                                        <p:commandButton     class="saveButton"  
-                                                             title="#{userData.userDDs['SAVE']}"
-                                                             value="#{userData.userDDs['SAVE']}" 
-                                                             icon="fa fa-fw fa-save" 
-                                                             action="#{invPurchaseInvoiceFormDTOMB.addNewCustomer()}"
-                                                             update="@form"
-                                                             >
-                                        </p:commandButton>
-                                    </h:panelGroup>
-
-                                </p:dialog>
-
-                                <p:dialog header=" تعديل بيانات العميل" 
-                                          rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id ne null}"
-                                          widgetVar="dlg31" showEffect="explode" hideEffect="bounce" height="500" width="500">
-
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 100px" value=" الإســم: "/>
-                                    </h:panelGroup> 
-                                    <h:panelGroup>
-                                        <p:outputLabel value="#{invPurchaseInvoiceFormDTOMB.organizationSiteId.name}"/>  
-                                    </h:panelGroup>
-                                    <br/>
-                                    <br/>
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 100px" value="التليفون: "/>
-                                    </h:panelGroup> 
-                                    <h:panelGroup>
-                                        <p:inputMask  value="#{invPurchaseInvoiceFormDTOMB.organizationSiteId.mobile}" mask="999999999999" />
-                                    </h:panelGroup>
-                                    <h:panelGroup>
-                                        <br/>
-                                        <p:commandButton     class="saveButton"  
-                                                             title="#{userData.userDDs['SAVE']}"
-                                                             value="#{userData.userDDs['SAVE']}" 
-                                                             icon="fa fa-fw fa-save" 
-                                                             action="#{invPurchaseInvoiceFormDTOMB.editCustomer()}"
-                                                             update="@form"
-                                                             >
-                                        </p:commandButton>
-                                    </h:panelGroup>
-
-                                </p:dialog>
-
-                            </div>
-                        </div>
                     </div>
 
 
 
                     <div class="ui-g-4 ui-xl-4" style="margin-top: -2%;" >
 
-                        <div class="ui-g-12 ui-xl-12">
-                            <div class="ui-g-6 ui-xl-6">
 
-                                <p:inputText style="width: 100%" 
-                                             id="purchIdVal" readonly="true"
-                                             value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.serialTax}" />
+                        <div class="ui-g-12 ui-xl-12" >
+                            <div class="ui-g-6 ui-xl-6" style="overflow: hidden;">
+                                <p:calendar id="dateFrom"  locale="es" rendered="#{(userData.userScreens['proworkorder'].edit)}"
+                                            value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.date}"
+                                            pattern="dd/MM/yyyy hh:mm:ss"
+                                            style="width:50%!important">
+                                    <p:ajax event="dateSelect" listener="#{invPurchaseInvoiceFormDTOMB.hishis()}" />
 
+                                </p:calendar>
+                                <p:outputLabel value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.date}" rendered="#{not (userData.userScreens['proworkorder'].edit)}" >
+                                    <f:convertDateTime type="date" pattern="dd-MM-yyyy  hh:mm:ss"/>
+                                </p:outputLabel>  
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 95px;" id="purchId" value="#{userData.userDDs['INVOICE_NO']}" />
+
+                                <p:outputLabel style="width: 95px; " value="#{userData.userDDs['DATEE']}*"/>
+
+
                             </div>
                         </div>
 
@@ -746,7 +714,7 @@
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
 
-
+                                <p:selectBooleanCheckbox   rendered="#{(userData.userScreens['proworkorder'].edit) or userData.isAdmin}" value="#{invPurchaseInvoiceFormDTOMB.checkSendSms}" itemLabel="ارسال رسالة "/>
                             </div>
                             <div class="ui-g-6 ui-xl-6">
 
@@ -786,23 +754,19 @@
                     </div>
 
                     <div class="ui-g-4 ui-xl-4" style="margin-top: -2%;" >
-                        <div class="ui-g-12 ui-xl-12" >
-                            <div class="ui-g-6 ui-xl-6" style="overflow: hidden;">
-                                <p:calendar id="dateFrom"  locale="es" rendered="#{(userData.userScreens['proworkorder'].edit)}"
-                                            value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.date}"
-                                            pattern="dd/MM/yyyy hh:mm:ss"
-                                            style="width:50%!important"/>
-                                <p:outputLabel value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.date}" rendered="#{not (userData.userScreens['proworkorder'].edit)}" >
-                                    <f:convertDateTime type="date" pattern="dd-MM-yyyy  hh:mm:ss"/>
-                                </p:outputLabel>  
-                            </div>
+                        <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
 
-                                <p:outputLabel style="width: 95px; " value="#{userData.userDDs['DATEE']}*"/>
-
+                                <p:inputText style="width: 100%" 
+                                             id="purchIdVal" readonly="true"
+                                             value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.serialTax}" />
 
                             </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 95px;" id="purchId" value="#{userData.userDDs['INVOICE_NO']}" />
+                            </div>
                         </div>
+
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
 
@@ -910,11 +874,7 @@
                                     <h:outputText value="#{invPurchaseInvoiceDetailsTable.serial}"  />
                                 </p:column>
 
-                                <p:column style="width: 21vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="#{userData.userDDs['ITEM']}" 
-                                          filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
-                                          filterMatchMode="contains" 
-                                          sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
-                                          filterable="false">
+                                <p:column style="width: 21vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="#{userData.userDDs['ITEM']}" >
                                     <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
                                                    rendered="#{invPurchaseInvoiceDetailsTable.isEdit}" />
                                     <p:autoComplete id="invItemNameIn"    
@@ -929,16 +889,12 @@
                                                     forceSelection="true" 
                                                     completeMethod="#{autoComplete.completeItemsBarcodesDetailsViewName}" 
                                                     >
-                                        <p:ajax update="invItemCodeIn proof2 proof QuantityT  QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount  form:discounthala   form:totalWithTaxValue form:remain  form:taxvalue"
+                                        <p:ajax update="invItemCodeIn proof2 proof QuantityT availableQuantityRowT  QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount  form:discounthala   form:totalWithTaxValue form:remain  form:taxvalue"
                                                 event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
                                     </p:autoComplete>            
                                 </p:column>
 
-                                <p:column style="width: 17vh;text-align: -webkit-auto;border-radius: 0px" id="itemNameCode" headerText="الكود" 
-                                          filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
-                                          filterMatchMode="contains" 
-                                          sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
-                                          filterable="false">
+                                <p:column style="width: 17vh;text-align: -webkit-auto;border-radius: 0px" id="itemNameCode" headerText="الكود" >
                                     <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
                                                    rendered="#{invPurchaseInvoiceDetailsTable.isEdit}" />
                                     <p:autoComplete id="invItemCodeIn"  dir="LTR"
@@ -953,7 +909,7 @@
                                                     forceSelection="true" 
                                                     completeMethod="#{autoComplete.completeItemsBarcodesDetailsViewCode}" 
                                                     >
-                                        <p:ajax update=" invItemNameIn proof2 proof QuantityT  QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount  form:discounthala   form:totalWithTaxValue form:remain  form:taxvalue"
+                                        <p:ajax update=" invItemNameIn proof2 proof QuantityT availableQuantityRowT  QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount  form:discounthala   form:totalWithTaxValue form:remain  form:taxvalue"
                                                 event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
                                     </p:autoComplete>            
                                 </p:column>
@@ -964,11 +920,7 @@
 
                                 <p:column style="width: 10vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;"
                                           id="QuantityOu" 
-                                          headerText="الكمية"
-                                          filterBy="#{invPurchaseInvoiceDetailsTable.quantityOfOneUnit}" 
-                                          filterMatchMode="contains" 
-                                          sortBy="#{invPurchaseInvoiceDetailsTable.quantityOfOneUnit}"
-                                          filterable="false">
+                                          headerText="الكمية">
                                     <p:inputText id="QuantityTOU"  dir="LTR"
                                                  value="#{invPurchaseInvoiceDetailsTable.quantityOfOneUnit}" 
                                                  disabled="#{not userData.userScreens['proworkorder'].edit and invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id ne null}"
@@ -982,11 +934,7 @@
 
                                 <p:column style="width: 9vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;"
                                           id="NUMBERe"
-                                          headerText="#{userData.userDDs['NUMBER']}"
-                                          filterBy="#{invPurchaseInvoiceDetailsTable.number}" 
-                                          filterMatchMode="contains" 
-                                          sortBy="#{invPurchaseInvoiceDetailsTable.number}"
-                                          filterable="false">
+                                          headerText="#{userData.userDDs['NUMBER']}" >
 
                                     <p:inputText id="NUMBER"  dir="LTR"
                                                  value="#{invPurchaseInvoiceDetailsTable.number}" 
@@ -994,7 +942,7 @@
                                                  style="width:95%; text-align: left;">
                                         <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateQuantityColum(invPurchaseInvoiceDetailsTable)}" 
                                                 process="@this"
-                                                update="netId totalQuantity   totalNet form:totalNetAfterDiscount  form:discounthala form:totalActualWeight form:totalWithTaxValue form:remain form:taxvalue  invItemNameIn Quantity QuantityT NUMBER QuantityOu costTt "/>
+                                                update="netId totalQuantity   totalNet form:totalNetAfterDiscount  form:discounthala form:totalActualWeight form:totalWithTaxValue form:remain form:taxvalue  invItemNameIn Quantity QuantityT  NUMBER QuantityOu costTt "/>
                                     </p:inputText>        
 
                                 </p:column>
@@ -1002,11 +950,7 @@
 
                                 <p:column style="width: 9vh;text-align: left;border-radius: 0px; font-size: 14px;"
                                           id="Quantity"
-                                          headerText="ك ك"
-                                          filterBy="#{invPurchaseInvoiceDetailsTable.quantity}" 
-                                          filterMatchMode="contains" 
-                                          sortBy="#{invPurchaseInvoiceDetailsTable.quantity}"
-                                          filterable="false">
+                                          headerText="ك ك">
 
                                     <p:outputLabel id="QuantityT"  dir="LTR"
                                                    value="#{invPurchaseInvoiceDetailsTable.quantity}" 
@@ -1017,24 +961,26 @@
 
                                 <p:column style="width: 11vh;text-align: left;border-radius: 0px; font-size: 14px;"
                                           id="InvinventoryId" 
-                                          headerText="المخزن"
-                                          filterBy="#{invPurchaseInvoiceDetailsTable.inventoryDTO}" 
-                                          filterMatchMode="contains" 
-                                          sortBy="#{invPurchaseInvoiceDetailsTable.inventoryDTO}"
-                                          filterable="false">
+                                          headerText="المخزن">
 
                                     <p:outputLabel id="InvinventoryIdt" 
                                                    value="#{invPurchaseInvoiceDetailsTable.inventoryDTO.code}" 
                                                    style="width:95%; text-align: left;"/>     
 
                                 </p:column>
+                                
+                                <p:column style="width: 9vh;text-align: left;border-radius: 0px; font-size: 14px;"
+                                          id="availableQuantityRow"
+                                          headerText="ك م">
 
-                                <p:column style="width: 15vh;text-align: -webkit-auto;border-radius: 0px" id="COST" headerText="#{userData.userDDs['PRICE']}"
-                                          filterBy="#{invPurchaseInvoiceDetailsTable.cost}" 
-                                          filterMatchMode="contains" 
-                                          sortBy="#{invPurchaseInvoiceDetailsTable.cost}"
+                                    <p:outputLabel id="availableQuantityRowT"  dir="LTR"
+                                                   value="#{invPurchaseInvoiceDetailsTable.availableQuantityRow}" 
+                                                   style="width:95%; text-align: left;"/>
 
-                                          filterable="false">
+                                </p:column>
+
+                                <p:column style="width: 15vh;text-align: -webkit-auto;border-radius: 0px" id="COST" headerText="#{userData.userDDs['PRICE']}">
+                                          
                                     <p:inputText id="costTt" dir="LTR"
                                                  value="#{invPurchaseInvoiceDetailsTable.cost}"
                                                  disabled="#{not userData.userScreens['proworkorder'].edit and invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id ne null}"
@@ -1069,11 +1015,7 @@
 
 
                                 <p:column style="width: 11vh;text-align: left;border-radius: 0px;font-size: 11px;" 
-                                          id="net" headerText="#{userData.userDDs['TOTAL']}" 
-                                          filterBy="#{invPurchaseInvoiceDetailsTable.net}" 
-                                          filterMatchMode="contains" 
-                                          sortBy="#{invPurchaseInvoiceDetailsTable.net}"
-                                          filterable="false">
+                                          id="net" headerText="#{userData.userDDs['TOTAL']}" >
                                     <p:outputLabel id="netId" value="#{invPurchaseInvoiceDetailsTable.net}" dir="LTR"  />
                                 </p:column>
 
@@ -1342,6 +1284,124 @@
 
             </div>
 
+
+            <div class="ui-g-6 ui-xl-6" >
+
+                <p:dialog header="الدفع" widgetVar="dlgpay" id="dlgpay" showEffect="explode" hideEffect="bounce" height="440" width="500" style="margin-top: 2%">
+                    <p:ajax event="close" listener="#{invPurchaseInvoiceFormDTOMB.calcPayed()}" update="@form"  />
+
+                    <h:panelGroup>
+                        <p:dataTable id="payTable"
+                                     var="payTable" 
+                                     style="margin-top: 5%"
+                                     widgetVar="itemTable" 
+                                     rowIndexVar="index" 
+                                     dir="rtl" 
+                                     value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.glPayDTOList}" 
+                                     emptyMessage="#{userData.userDDs['EMPTY_TABLE']}">
+
+                            <p:column style="width:2vw;font-size:0.8vw;text-align: right;border-radius: 0px"
+                                      headerText="الخزينة" 
+                                      >
+                                <p:outputLabel value="#{payTable.bank}" />
+                            </p:column>  
+
+                            <p:column style="width:10vw;font-size:0.8vw;text-align: right;border-radius: 0px"
+                                      headerText="المبلغ"  >
+                                <p:inputNumber value="#{payTable.value}" >
+                                    <p:ajax event="blur" listener="#{invPurchaseInvoiceFormDTOMB.hishis()}" />
+                                </p:inputNumber>
+                            </p:column>  
+                        </p:dataTable> 
+
+                    </h:panelGroup>
+                </p:dialog>
+
+
+
+            </div>
+            <div class="ui-g-6 ui-xl-6">
+
+
+                <p:dialog header="إضافة عميل جديد" 
+                          rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null}" 
+                          widgetVar="dlg3" showEffect="explode" hideEffect="bounce" height="250" width="500">
+
+                    <h:panelGroup>
+                        <p:outputLabel style="width: 100px" value=" الإســم "/>
+                    </h:panelGroup> 
+                    <h:panelGroup>
+                        <p:inputText value="#{invPurchaseInvoiceFormDTOMB.organizationSiteIdNew.name}"/>  
+                    </h:panelGroup>
+                    <br/>
+                    <br/>
+                    <h:panelGroup>
+                        <p:outputLabel style="width: 100px" value="التليفون "/>
+                    </h:panelGroup> 
+                    <h:panelGroup>
+                        <p:inputMask  value="#{invPurchaseInvoiceFormDTOMB.organizationSiteIdNew.mobile}" mask="999999999999" />
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <br/><br/>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 100px" value=" الايميل "/>
+                        </h:panelGroup>
+                        <h:inputText id="email" value="#{invPurchaseInvoiceFormDTOMB.organizationSiteIdNew.email}" label="Email" validatorMessage="الايميل غير صحيح">
+                            <f:validateRegex pattern="^([\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]){0,255}$" />
+                        </h:inputText>
+                        <br/> <br/>
+                        <p:commandButton     class="saveButton"  
+                                             title="#{userData.userDDs['SAVE']}"
+                                             value="#{userData.userDDs['SAVE']}" 
+                                             icon="fa fa-fw fa-save" 
+                                             action="#{invPurchaseInvoiceFormDTOMB.addNewCustomer()}"
+                                             update="@form"
+                                             >
+                        </p:commandButton>
+                    </h:panelGroup>
+
+                </p:dialog>
+
+                <p:dialog header=" تعديل بيانات العميل" 
+
+                          widgetVar="dlg31" showEffect="explode" hideEffect="bounce" height="500" width="500">
+
+                    <h:panelGroup>
+                        <p:outputLabel style="width: 100px" value=" الإســم: "/>
+                    </h:panelGroup> 
+                    <h:panelGroup>
+                        <p:outputLabel value="#{invPurchaseInvoiceFormDTOMB.organizationSiteId.name}"/>  
+                    </h:panelGroup>
+                    <br/>
+                    <br/>
+                    <h:panelGroup>
+                        <p:outputLabel style="width: 100px" value="التليفون: "/>
+                    </h:panelGroup> 
+                    <h:panelGroup>
+                        <p:inputMask  value="#{invPurchaseInvoiceFormDTOMB.organizationSiteId.mobile}" mask="999999999999" />
+                    </h:panelGroup>
+                    <br/><br/>
+                    <h:panelGroup>
+                        <p:outputLabel style="width: 100px" value=" الايميل "/>
+                    </h:panelGroup>
+                    <h:inputText  value="#{invPurchaseInvoiceFormDTOMB.organizationSiteId.email}" label="Email" validatorMessage="الايميل غير صحيح">
+                        <f:validateRegex pattern="^([\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]){0,255}$" />
+                    </h:inputText>
+                    <h:panelGroup>
+                        <br/>
+                        <p:commandButton     class="saveButton"  
+                                             title="#{userData.userDDs['SAVE']}"
+                                             value="#{userData.userDDs['SAVE']}" 
+                                             icon="fa fa-fw fa-save" 
+                                             action="#{invPurchaseInvoiceFormDTOMB.editCustomer()}"
+                                             update="@form"
+                                             >
+                        </p:commandButton>
+                    </h:panelGroup>
+
+                </p:dialog>
+
+            </div>
 
         </h:form>
 

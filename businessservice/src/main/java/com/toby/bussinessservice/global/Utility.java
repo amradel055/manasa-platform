@@ -5,8 +5,12 @@
  */
 package com.toby.bussinessservice.global;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -66,11 +70,25 @@ public class Utility {
         calendar.add(Calendar.HOUR_OF_DAY, hoursNew);
         return calendar.getTime();
     }
+
     public static Date hourNow() {
-        Integer hoursNew = 7 * -1;
+//        Integer hoursNew = 2 * -1;
+        Integer hoursNew = 2 ;
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         calendar.add(Calendar.HOUR_OF_DAY, hoursNew);
         return calendar.getTime();
+    }
+
+    public static Date findDateStatic() {
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            String dateInString = "06/05/2022";
+            Date date = formatter.parse(dateInString);
+            return date;
+        } catch (ParseException ex) {
+            Logger.getLogger(Utility.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }

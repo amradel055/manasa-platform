@@ -40,4 +40,6 @@ public interface InvUpdateService {
     public InvInvoiceDTO saveNew(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser);
     
     public InvInventoryDTO findinvinventoryDTO(Integer stripSerial, Integer branchId);
+    
+    public InvInvoiceDTO findInvInvoiceByInvUpdateId(Integer invUpdateId);
 }

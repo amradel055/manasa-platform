@@ -190,14 +190,14 @@ public class InvStripDetailServiceImp implements InvStripDetailService {
     public List<InvDetailDTO> mapToDTOListInvDetail(List<InvStripDetail> invStripDetailList, TobyUser tobyUser) {
         List<InvDetailDTO> invStripDetailDTOList = new ArrayList<>();
         Map<String, ItemsBarcodesDetailsView> itemsBarcodeMap = new HashMap<>();//        }
-        List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewList = invPurchaseInvoiceDetailsService.findItemBarcodeDetails(invStripDetailList, tobyUser.getBranchId().getId());
+        List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewList = findItemBarcodeDetails(invStripDetailList, tobyUser.getBranchId().getId());
 
         for (ItemsBarcodesDetailsView itemsBarcodesDetailsView : itemsBarcodesDetailsViewList) {
             itemsBarcodeMap.put(itemsBarcodesDetailsView.getBarcode(), itemsBarcodesDetailsView);
         }
 
         for (InvStripDetail invStripDetail : invStripDetailList) {
-            invStripDetailDTOList.add(mapToDTOInvDetail(invStripDetail,itemsBarcodeMap));
+            invStripDetailDTOList.add(mapToDTOInvDetail(invStripDetail, itemsBarcodeMap));
         }
         return invStripDetailDTOList;
     }
@@ -350,6 +350,45 @@ public class InvStripDetailServiceImp implements InvStripDetailService {
 
         entity.setCompanyId(tobyUser.getCompanyId());
         return entity;
+    }
+
+    public List<ItemsBarcodesDetailsView> findItemBarcodeDetails(List<InvStripDetail> list, Integer branchId) {
+        List<String> barcodeList = new ArrayList<>();
+        for (InvStripDetail entity : list) {
+            barcodeList.add(entity.getItemBarcode());
+        }
+        List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewList = findItemsBarcodesDetailsViewBranchIdByBarcode(branchId, barcodeList);
+        return itemsBarcodesDetailsViewList;
+    }
+
+    public List<ItemsBarcodesDetailsView> findItemsBarcodesDetailsViewBranchIdByBarcode(Integer branchId, List<String> barcodeList) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        List<ItemsBarcodesDetailsView> list = new ArrayList<>();
+        StringBuilder query1 = new StringBuilder();
+        query1.append(" select i from InvItem i where i.branchId.id = :branchId  ");
+        if (barcodeList != null && !barcodeList.isEmpty()) {
+            params.put("barcode", barcodeList);
+            query1.append(" AND i.code in   :barcode ");
+        }
+        List<InvItem> queryList = dao.findListByQuery(query1.toString(), params);
+
+        for (InvItem invItem : queryList) {
+            ItemsBarcodesDetailsView itemsBarcodesDetailsView = new ItemsBarcodesDetailsView();
+            itemsBarcodesDetailsView.setBarcode(invItem.getCode());
+            itemsBarcodesDetailsView.setItemId(invItem.getId());
+            itemsBarcodesDetailsView.setCostAverage(invItem.getCostAverage());
+            itemsBarcodesDetailsView.setName(invItem.getName());
+            itemsBarcodesDetailsView.setNameEn(invItem.getNameen());
+            itemsBarcodesDetailsView.setSellPrice(invItem.getSellPrice());
+            itemsBarcodesDetailsView.setUnitId(invItem.getUnitId() == null ? null : invItem.getUnitId().getId());
+            itemsBarcodesDetailsView.setUnitName(invItem.getUnitId().getName());
+            itemsBarcodesDetailsView.setProGroupId(invItem.getProGroupId() == null ? null : invItem.getProGroupId().getId());
+            itemsBarcodesDetailsView.setTypeShow(invItem.getItemNatural());
+            list.add(itemsBarcodesDetailsView);
+        }
+
+        return list;
     }
 
 }

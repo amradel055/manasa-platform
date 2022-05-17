@@ -225,6 +225,9 @@ public class InvUpdateServiceImp implements InvUpdateService {
     }
 
     private InvInvoiceDTO initData(InvInvoiceDTO dto, InvUpdate entity) {
+        if (dto == null) {
+            dto = new InvInvoiceDTO();
+        }
         dto.setId(entity.getId());
         dto.setSerial(entity.getSerial());
         dto.setCompanyActivity(entity.getBranchId().getCompanyActivity());
@@ -246,13 +249,13 @@ public class InvUpdateServiceImp implements InvUpdateService {
         dto.setIndex(entity.getId());
         dto.setCompanyId(entity.getCompanyId().getId() != null ? entity.getCompanyId().getId() : null);
         dto.setCreatedByName(entity.getCreatedBy() != null ? entity.getCreatedBy().getName() : null);
-
-        List<InvDetailDTO> invPurchaseInvoiceDetailsListDTO = invUpdateDetailService.getAllInvTransferDetailsByInvPurchaseInvoiceIdDTO(dto, entity.getBranchId().getId());
-
-        dto.setInvPurchaseInvoiceDetailList(invPurchaseInvoiceDetailsListDTO);
-        dto.setInvPurchaseInvoiceDetailsDeletedList(new ArrayList<InvDetailDTO>());
-
-        dto = invGlobalService.updateSummition(dto, false);
+//
+//        List<InvDetailDTO> invPurchaseInvoiceDetailsListDTO = invUpdateDetailService.getAllInvTransferDetailsByInvPurchaseInvoiceIdDTO(dto, entity.getBranchId().getId());
+//
+//        dto.setInvPurchaseInvoiceDetailList(invPurchaseInvoiceDetailsListDTO);
+//        dto.setInvPurchaseInvoiceDetailsDeletedList(new ArrayList<InvDetailDTO>());
+//
+//        dto = invGlobalService.updateSummition(dto, false);
         return dto;
     }
 
@@ -323,5 +326,11 @@ public class InvUpdateServiceImp implements InvUpdateService {
         params.put("stripSerial", stripSerial);
         List<InvInventory> invStripList = dao.findListByQuery("SELECT e.inventoryId FROM InvStrip e WHERE e.branchId.id = :branchId AND e.serial= :stripSerial", params);
         return invInventoryService.maptoDTOSmall(null, invStripList.get(0));
+    }
+
+    @Override
+    public InvInvoiceDTO findInvInvoiceByInvUpdateId(Integer invUpdateId) {
+        InvUpdate invUpdate = dao.findEntityById(InvUpdate.class, invUpdateId);
+        return mapToDTO(invUpdate, null);
     }
 }

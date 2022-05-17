@@ -6,12 +6,10 @@
 package com.toby.businessservice;
 
 import com.toby.core.GenericDAO;
-import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.GlBankDTO;
 import com.toby.dto.GlBankTransactionDTO;
-import com.toby.dto.InvInventoryDTO;
+import com.toby.dto.GlPayDTO;
 import com.toby.dto.InvInvoiceDTO;
-import com.toby.entity.AccountsSystemSettings;
 import com.toby.entity.GeneralJournal;
 import com.toby.entity.GlBank;
 import com.toby.entity.GlBankTransaction;
@@ -691,6 +689,67 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         entity.setTransactionType(1);
         entity.setValue(dTO.getPayed());
         entity.setValueLocal(dTO.getPayed());
+        entity.setCreatedBy(tobyUser);
+        entity.setCreationDate(new Date());
+
+        entity.setBranchId(tobyUser.getBranchId());
+        entity.setCompanyId(tobyUser.getCompanyId());
+
+        entity.setSerial(getMaxSerail(entity));
+
+        return entity;
+    }
+
+    @Override
+    public GlBankTransaction addCash(Date date, GlBankDTO bankDTO, Integer invoiceId, BigDecimal rate, String remarks, BigDecimal value, Integer invOrganizationId, TobyUser tobyUser) {
+        GlBankTransaction glBankTransaction = mapToEntityFromInvSales(date, bankDTO, invoiceId, rate, remarks, value, tobyUser);
+
+        glBankTransaction = dao.updateEntity(glBankTransaction);
+
+        glBankTransactionDetailsService.addCashDetail(bankDTO, invOrganizationId, glBankTransaction.getId(), bankDTO, remarks, value, tobyUser);
+
+        return glBankTransaction;
+    }
+
+    @Override
+    public List<GlPayDTO> addCash(List<GlPayDTO> glPayDTOList, Date date, BigDecimal rate, String remarks, Integer invOrganizationId, TobyUser tobyUser) {
+        for (GlPayDTO dTO : glPayDTOList) {
+            if (dTO.getId() == null && date != null && dTO.getBank() != null && dTO.getBank().getId() != null && dTO.getInvoiceId() != null && dTO.getValue() != null && rate != null  && dTO.getValue().compareTo(BigDecimal.ZERO) == 1 && invOrganizationId != null && tobyUser != null) {
+                GlBankTransaction bankTransaction = addCash(date, dTO.getBank(), dTO.getInvoiceId(), rate, remarks, dTO.getValue(), invOrganizationId, tobyUser);
+                dTO.setId(bankTransaction.getId());
+                dTO.setSerial(bankTransaction.getSerial());
+                dTO.setBankName(dTO.getBank().getName());
+            }
+        }
+
+        return glPayDTOList;
+    }
+
+    public GlBankTransaction mapToEntityFromInvSales(Date date, GlBankDTO bankDTO, Integer invoiceId, BigDecimal rate, String remarks, BigDecimal value, TobyUser tobyUser) {
+        GlBankTransaction entity = new GlBankTransaction();
+
+        entity.setDate(date);
+
+        if (bankDTO != null && bankDTO.getId() != null) {
+            GlBank glBank = new GlBank();
+            glBank.setId(bankDTO.getId());
+            entity.setGlBankId(glBank);
+        }
+        if (invoiceId != null) {
+            InvPurchaseInvoice invPurchaseInvoice = new InvPurchaseInvoice();
+            invPurchaseInvoice.setId(invoiceId);
+            entity.setInvoiceId(invPurchaseInvoice);
+        }
+        entity.setOrganizationType(0);
+        entity.setPaymentType(0);
+        entity.setPostFlag(0);
+        entity.setRate(rate);
+        entity.setRemark(remarks);
+        entity.setRemark2(tobyUser.getName());
+//        entity.setSerial(dTO.getSerial());
+        entity.setTransactionType(1);
+        entity.setValue(value);
+        entity.setValueLocal(value.multiply(rate));
         entity.setCreatedBy(tobyUser);
         entity.setCreationDate(new Date());
 

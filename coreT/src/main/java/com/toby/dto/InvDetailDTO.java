@@ -66,6 +66,7 @@ public class InvDetailDTO extends BaseEntityDTO implements Comparable< InvDetail
     private BigDecimal actualQuantity;
     private BigDecimal differanceQuantity;
     private BigDecimal totalQuantityCost;
+    private BigDecimal totalWasalatQuantityCost;
     private BigDecimal wasalate;
     private Integer itemNatural;
 
@@ -89,7 +90,7 @@ public class InvDetailDTO extends BaseEntityDTO implements Comparable< InvDetail
     private List<ProDetailTypeDTO> proDetailTypeDTOList;
 
     private List<InvPurchaseInvoiceDetailDetailDTO> invPurchaseInvoiceDetailDetailDTOList;
-    
+
     private String supplierName;
 
     public InvDetailDTO() {
@@ -945,7 +946,7 @@ public class InvDetailDTO extends BaseEntityDTO implements Comparable< InvDetail
      * @return the oldQuantity
      */
     public BigDecimal getOldQuantity() {
-        if(oldQuantity == null){
+        if (oldQuantity == null) {
             oldQuantity = BigDecimal.ZERO;
         }
         return oldQuantity;
@@ -993,7 +994,7 @@ public class InvDetailDTO extends BaseEntityDTO implements Comparable< InvDetail
      * @return the differanceQuantity
      */
     public BigDecimal getDifferanceQuantity() {
-        differanceQuantity = getActualQuantity().subtract(getOldQuantity());
+        differanceQuantity = getOldQuantity().subtract(getActualQuantity());
         return differanceQuantity;
     }
 
@@ -1015,7 +1016,7 @@ public class InvDetailDTO extends BaseEntityDTO implements Comparable< InvDetail
      * @param totalQuantityCost the totalQuantityCost to set
      */
     public void setTotalQuantityCost(BigDecimal totalQuantityCost) {
-        totalQuantityCost = getDifferanceQuantity().multiply(getCostAvarage());
+        totalQuantityCost = getActualQuantity().multiply(getCostAvarage());
         this.totalQuantityCost = totalQuantityCost;
     }
 
@@ -1023,7 +1024,7 @@ public class InvDetailDTO extends BaseEntityDTO implements Comparable< InvDetail
      * @return the bookBalance
      */
     public BigDecimal getBookBalance() {
-        if(bookBalance == null){
+        if (bookBalance == null) {
             bookBalance = BigDecimal.ZERO;
         }
         return bookBalance;
@@ -1040,6 +1041,9 @@ public class InvDetailDTO extends BaseEntityDTO implements Comparable< InvDetail
      * @return the wasalate
      */
     public BigDecimal getWasalate() {
+        if (wasalate == null) {
+            wasalate = BigDecimal.ZERO;
+        }
         return wasalate;
     }
 
@@ -1076,6 +1080,21 @@ public class InvDetailDTO extends BaseEntityDTO implements Comparable< InvDetail
      */
     public void setSupplierName(String supplierName) {
         this.supplierName = supplierName;
+    }
+
+    /**
+     * @return the totalWasalatQuantityCost
+     */
+    public BigDecimal getTotalWasalatQuantityCost() {
+        totalWasalatQuantityCost = getWasalate().multiply(getCostAvarage());
+        return totalWasalatQuantityCost;
+    }
+
+    /**
+     * @param totalWasalatQuantityCost the totalWasalatQuantityCost to set
+     */
+    public void setTotalWasalatQuantityCost(BigDecimal totalWasalatQuantityCost) {
+        this.totalWasalatQuantityCost = totalWasalatQuantityCost;
     }
 
 }

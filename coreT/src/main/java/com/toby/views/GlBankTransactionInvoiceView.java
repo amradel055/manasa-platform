@@ -97,5 +97,30 @@ public class GlBankTransactionInvoiceView implements Serializable {
     public void setBranchId(Integer branchId) {
         this.branchId = branchId;
     }
+
+    @Override
+    public String toString() {
+        return serial + " " ; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (rowNum != null ? rowNum.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof GlBankTransactionInvoiceView)) {
+            return false;
+        }
+        GlBankTransactionInvoiceView other = (GlBankTransactionInvoiceView) object;
+        if ((this.rowNum == null && other.rowNum != null) || (this.rowNum != null && !this.rowNum.equals(other.rowNum))) {
+            return false;
+        }
+        return true;
+    }
     
 }
