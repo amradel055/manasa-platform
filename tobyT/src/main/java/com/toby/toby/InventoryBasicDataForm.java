@@ -266,7 +266,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                     || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVRETURNPURCHASEFORM)) {
                 getInvInvoiceDTO().setOrganizationSiteId(getInvOrganizationSiteDTOList(true, 1).get(0));
                 getInvInvoiceDTO().setGallaryId(getGallaryDTOSelect());
-                getInvInvoiceDTO().setInvDelegatorId(getInventoryDelegatorList(0,getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId()).get(0));
+                getInvInvoiceDTO().setInvDelegatorId(getInventoryDelegatorList(0, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId()).get(0));
                 putCurrency();
             } else if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVSALESINVOICEFORM)
                     || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVSALESORDERFORM)
@@ -617,8 +617,16 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 //                    invPurchaseInvoiceDetailsValidate.setIndexSerial(1);
                 }
                 invPurchaseInvoiceDetailsValidate = invGlobalService.validateItems(invPurchaseInvoiceDetailsValidate, getInvInvoiceDTO(), findCost);
-                invPurchaseInvoiceDetailsValidate.setDiscount(invGlobalService.calcDiscount(invPurchaseInvoiceDetailsValidate, getInvInvoiceDTO().getOrganizationSiteId(), getInvInvoiceDTO().getScreenName()));
-                afterValidation(invPurchaseInvoiceDetailsValidate, true);
+//                invPurchaseInvoiceDetailsValidate.setDiscount(invGlobalService.calcDiscount(invPurchaseInvoiceDetailsValidate, getInvInvoiceDTO().getOrganizationSiteId(), getInvInvoiceDTO().getScreenName()));
+//                afterValidation(invPurchaseInvoiceDetailsValidate, true);
+                if (invPurchaseInvoiceDetailsValidate.getMsg() != null && !invPurchaseInvoiceDetailsValidate.getMsg().isEmpty()) {
+                    errorMessage(invPurchaseInvoiceDetailsValidate.getMsg());
+                    replacedetail(invPurchaseInvoiceDetailsValidate);
+                } else {
+                    invPurchaseInvoiceDetailsValidate.setDiscount(invGlobalService.calcDiscount(invPurchaseInvoiceDetailsValidate, getInvInvoiceDTO().getOrganizationSiteId(), getInvInvoiceDTO().getScreenName()));
+                    afterValidation(invPurchaseInvoiceDetailsValidate, true);
+                }
+                
             }
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "validateItems");

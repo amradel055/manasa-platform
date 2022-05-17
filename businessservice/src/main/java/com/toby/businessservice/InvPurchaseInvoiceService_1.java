@@ -37,6 +37,8 @@ public interface InvPurchaseInvoiceService_1 {
 
     public Integer getInvoiceBySerial(Integer serial);
 
+    public Integer getInvoiceSerialById(Integer invoiceId);
+
     public InvInvoiceDTO findInvoiceBySerial(Integer serial);
 
     public void updateInvoiceForsendCloth(Integer id, Integer sendCloth);
@@ -119,6 +121,8 @@ public interface InvPurchaseInvoiceService_1 {
 
     public BigDecimal findPayed(Integer invPurchaseInvoiceId);
 
+    public BigDecimal returnRemain(Integer invPurchaseInvoiceId);
+
     public String findInvoiceStatus(Integer invPurchaseInvoiceId);
 
     public List<FactoryInvoiceStatus> findInvoiceStatus(Date dateFrom, Date dateTo, Integer status, Integer gallaryId, Integer branchId);
@@ -172,4 +176,4 @@ public interface InvPurchaseInvoiceService_1 {
 
     public void saveDeliveryPlace(Integer invoiceId, Integer deliverPlaceId);
 
-    }
+}

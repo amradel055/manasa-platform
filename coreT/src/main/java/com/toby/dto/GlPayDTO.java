@@ -14,10 +14,13 @@ import java.math.BigDecimal;
 public class GlPayDTO  {
 
     private GlBankDTO bank;
+    private String bankName;
     private BigDecimal value;
     private Integer invoiceId;
+    private Integer invoiceSerial;
     private Integer serial;
     private Integer id;
+    private Integer index;
     private BigDecimal remain;
 
 
@@ -42,6 +45,9 @@ public class GlPayDTO  {
      * @return the value
      */
     public BigDecimal getValue() {
+        if(value == null){
+            value = BigDecimal.ZERO;
+        }
         return value;
     }
 
@@ -84,6 +90,9 @@ public class GlPayDTO  {
      * @return the remain
      */
     public BigDecimal getRemain() {
+        if(remain == null){
+            remain = BigDecimal.ZERO;
+        }
         return remain;
     }
 
@@ -106,6 +115,48 @@ public class GlPayDTO  {
      */
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    /**
+     * @return the index
+     */
+    public Integer getIndex() {
+        return index;
+    }
+
+    /**
+     * @param index the index to set
+     */
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
+
+    /**
+     * @return the bankName
+     */
+    public String getBankName() {
+        return bankName;
+    }
+
+    /**
+     * @param bankName the bankName to set
+     */
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    /**
+     * @return the invoiceSerial
+     */
+    public Integer getInvoiceSerial() {
+        return invoiceSerial;
+    }
+
+    /**
+     * @param invoiceSerial the invoiceSerial to set
+     */
+    public void setInvoiceSerial(Integer invoiceSerial) {
+        this.invoiceSerial = invoiceSerial;
     }
 
     

@@ -874,11 +874,7 @@
                                     <h:outputText value="#{invPurchaseInvoiceDetailsTable.serial}"  />
                                 </p:column>
 
-                                <p:column style="width: 21vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="#{userData.userDDs['ITEM']}" 
-                                          filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
-                                          filterMatchMode="contains" 
-                                          sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
-                                          filterable="false">
+                                <p:column style="width: 21vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="#{userData.userDDs['ITEM']}" >
                                     <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
                                                    rendered="#{invPurchaseInvoiceDetailsTable.isEdit}" />
                                     <p:autoComplete id="invItemNameIn"    
@@ -893,16 +889,12 @@
                                                     forceSelection="true" 
                                                     completeMethod="#{autoComplete.completeItemsBarcodesDetailsViewName}" 
                                                     >
-                                        <p:ajax update="invItemCodeIn proof2 proof QuantityT  QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount  form:discounthala   form:totalWithTaxValue form:remain  form:taxvalue"
+                                        <p:ajax update="invItemCodeIn proof2 proof QuantityT availableQuantityRowT  QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount  form:discounthala   form:totalWithTaxValue form:remain  form:taxvalue"
                                                 event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
                                     </p:autoComplete>            
                                 </p:column>
 
-                                <p:column style="width: 17vh;text-align: -webkit-auto;border-radius: 0px" id="itemNameCode" headerText="الكود" 
-                                          filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
-                                          filterMatchMode="contains" 
-                                          sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
-                                          filterable="false">
+                                <p:column style="width: 17vh;text-align: -webkit-auto;border-radius: 0px" id="itemNameCode" headerText="الكود" >
                                     <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
                                                    rendered="#{invPurchaseInvoiceDetailsTable.isEdit}" />
                                     <p:autoComplete id="invItemCodeIn"  dir="LTR"
@@ -917,7 +909,7 @@
                                                     forceSelection="true" 
                                                     completeMethod="#{autoComplete.completeItemsBarcodesDetailsViewCode}" 
                                                     >
-                                        <p:ajax update=" invItemNameIn proof2 proof QuantityT  QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount  form:discounthala   form:totalWithTaxValue form:remain  form:taxvalue"
+                                        <p:ajax update=" invItemNameIn proof2 proof QuantityT availableQuantityRowT  QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount  form:discounthala   form:totalWithTaxValue form:remain  form:taxvalue"
                                                 event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
                                     </p:autoComplete>            
                                 </p:column>
@@ -928,11 +920,7 @@
 
                                 <p:column style="width: 10vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;"
                                           id="QuantityOu" 
-                                          headerText="الكمية"
-                                          filterBy="#{invPurchaseInvoiceDetailsTable.quantityOfOneUnit}" 
-                                          filterMatchMode="contains" 
-                                          sortBy="#{invPurchaseInvoiceDetailsTable.quantityOfOneUnit}"
-                                          filterable="false">
+                                          headerText="الكمية">
                                     <p:inputText id="QuantityTOU"  dir="LTR"
                                                  value="#{invPurchaseInvoiceDetailsTable.quantityOfOneUnit}" 
                                                  disabled="#{not userData.userScreens['proworkorder'].edit and invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id ne null}"
@@ -946,11 +934,7 @@
 
                                 <p:column style="width: 9vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;"
                                           id="NUMBERe"
-                                          headerText="#{userData.userDDs['NUMBER']}"
-                                          filterBy="#{invPurchaseInvoiceDetailsTable.number}" 
-                                          filterMatchMode="contains" 
-                                          sortBy="#{invPurchaseInvoiceDetailsTable.number}"
-                                          filterable="false">
+                                          headerText="#{userData.userDDs['NUMBER']}" >
 
                                     <p:inputText id="NUMBER"  dir="LTR"
                                                  value="#{invPurchaseInvoiceDetailsTable.number}" 
@@ -958,7 +942,7 @@
                                                  style="width:95%; text-align: left;">
                                         <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateQuantityColum(invPurchaseInvoiceDetailsTable)}" 
                                                 process="@this"
-                                                update="netId totalQuantity   totalNet form:totalNetAfterDiscount  form:discounthala form:totalActualWeight form:totalWithTaxValue form:remain form:taxvalue  invItemNameIn Quantity QuantityT NUMBER QuantityOu costTt "/>
+                                                update="netId totalQuantity   totalNet form:totalNetAfterDiscount  form:discounthala form:totalActualWeight form:totalWithTaxValue form:remain form:taxvalue  invItemNameIn Quantity QuantityT  NUMBER QuantityOu costTt "/>
                                     </p:inputText>        
 
                                 </p:column>
@@ -966,11 +950,7 @@
 
                                 <p:column style="width: 9vh;text-align: left;border-radius: 0px; font-size: 14px;"
                                           id="Quantity"
-                                          headerText="ك ك"
-                                          filterBy="#{invPurchaseInvoiceDetailsTable.quantity}" 
-                                          filterMatchMode="contains" 
-                                          sortBy="#{invPurchaseInvoiceDetailsTable.quantity}"
-                                          filterable="false">
+                                          headerText="ك ك">
 
                                     <p:outputLabel id="QuantityT"  dir="LTR"
                                                    value="#{invPurchaseInvoiceDetailsTable.quantity}" 
@@ -981,24 +961,26 @@
 
                                 <p:column style="width: 11vh;text-align: left;border-radius: 0px; font-size: 14px;"
                                           id="InvinventoryId" 
-                                          headerText="المخزن"
-                                          filterBy="#{invPurchaseInvoiceDetailsTable.inventoryDTO}" 
-                                          filterMatchMode="contains" 
-                                          sortBy="#{invPurchaseInvoiceDetailsTable.inventoryDTO}"
-                                          filterable="false">
+                                          headerText="المخزن">
 
                                     <p:outputLabel id="InvinventoryIdt" 
                                                    value="#{invPurchaseInvoiceDetailsTable.inventoryDTO.code}" 
                                                    style="width:95%; text-align: left;"/>     
 
                                 </p:column>
+                                
+                                <p:column style="width: 9vh;text-align: left;border-radius: 0px; font-size: 14px;"
+                                          id="availableQuantityRow"
+                                          headerText="ك م">
 
-                                <p:column style="width: 15vh;text-align: -webkit-auto;border-radius: 0px" id="COST" headerText="#{userData.userDDs['PRICE']}"
-                                          filterBy="#{invPurchaseInvoiceDetailsTable.cost}" 
-                                          filterMatchMode="contains" 
-                                          sortBy="#{invPurchaseInvoiceDetailsTable.cost}"
+                                    <p:outputLabel id="availableQuantityRowT"  dir="LTR"
+                                                   value="#{invPurchaseInvoiceDetailsTable.availableQuantityRow}" 
+                                                   style="width:95%; text-align: left;"/>
 
-                                          filterable="false">
+                                </p:column>
+
+                                <p:column style="width: 15vh;text-align: -webkit-auto;border-radius: 0px" id="COST" headerText="#{userData.userDDs['PRICE']}">
+                                          
                                     <p:inputText id="costTt" dir="LTR"
                                                  value="#{invPurchaseInvoiceDetailsTable.cost}"
                                                  disabled="#{not userData.userScreens['proworkorder'].edit and invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id ne null}"
@@ -1033,11 +1015,7 @@
 
 
                                 <p:column style="width: 11vh;text-align: left;border-radius: 0px;font-size: 11px;" 
-                                          id="net" headerText="#{userData.userDDs['TOTAL']}" 
-                                          filterBy="#{invPurchaseInvoiceDetailsTable.net}" 
-                                          filterMatchMode="contains" 
-                                          sortBy="#{invPurchaseInvoiceDetailsTable.net}"
-                                          filterable="false">
+                                          id="net" headerText="#{userData.userDDs['TOTAL']}" >
                                     <p:outputLabel id="netId" value="#{invPurchaseInvoiceDetailsTable.net}" dir="LTR"  />
                                 </p:column>
 

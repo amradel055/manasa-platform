@@ -887,7 +887,8 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                     detailDTO = findDataForItem(detailDTO, invInvoiceDTO, null, findCost);
                     detailDTO.setCostBak(detailDTO.getCost());
                     if (!invInvoiceDTO.getInventorySetupDTO().getNegativeSell() || ScreenNameClassEnum.INVUPDATE.equals(invInvoiceDTO.getScreenName())) {
-                        detailDTO = updateAvailableQuantityRow(invInvoiceDTO.getScreenName(), detailDTO, invInvoiceDTO.getInvInventoryId() == null ? null : invInvoiceDTO.getInvInventoryId().getId(), invInvoiceDTO.getInventorySetupDTO().getSellBuy(), invInvoiceDTO.getInventorySetupDTO().getNegativeSell(), invInvoiceDTO.getIsEdit());
+//                        detailDTO = updateAvailableQuantityRow(invInvoiceDTO.getScreenName(), detailDTO, invInvoiceDTO.getInvInventoryId() == null ? null : invInvoiceDTO.getInvInventoryId().getId(), invInvoiceDTO.getInventorySetupDTO().getSellBuy(), invInvoiceDTO.getInventorySetupDTO().getNegativeSell(), invInvoiceDTO.getIsEdit());
+                        detailDTO = updateAvailableQuantityRow(invInvoiceDTO.getScreenName(), detailDTO, 45, invInvoiceDTO.getInventorySetupDTO().getSellBuy(), invInvoiceDTO.getInventorySetupDTO().getNegativeSell(), invInvoiceDTO.getIsEdit());
                     }
                 } else {
                     detailDTO = resetInvItem(detailDTO);

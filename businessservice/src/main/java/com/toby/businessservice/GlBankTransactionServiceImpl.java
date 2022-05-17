@@ -6,13 +6,10 @@
 package com.toby.businessservice;
 
 import com.toby.core.GenericDAO;
-import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.GlBankDTO;
 import com.toby.dto.GlBankTransactionDTO;
 import com.toby.dto.GlPayDTO;
-import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
-import com.toby.entity.AccountsSystemSettings;
 import com.toby.entity.GeneralJournal;
 import com.toby.entity.GlBank;
 import com.toby.entity.GlBankTransaction;
@@ -717,12 +714,11 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
     @Override
     public List<GlPayDTO> addCash(List<GlPayDTO> glPayDTOList, Date date, BigDecimal rate, String remarks, Integer invOrganizationId, TobyUser tobyUser) {
         for (GlPayDTO dTO : glPayDTOList) {
-            if (date != null && dTO.getBank() != null && dTO.getBank().getId() != null && dTO.getInvoiceId() != null && dTO.getValue() != null && rate != null && value != null && invOrganizationId != null && tobyUser != null) {
+            if (dTO.getId() == null && date != null && dTO.getBank() != null && dTO.getBank().getId() != null && dTO.getInvoiceId() != null && dTO.getValue() != null && rate != null  && dTO.getValue().compareTo(BigDecimal.ZERO) == 1 && invOrganizationId != null && tobyUser != null) {
                 GlBankTransaction bankTransaction = addCash(date, dTO.getBank(), dTO.getInvoiceId(), rate, remarks, dTO.getValue(), invOrganizationId, tobyUser);
                 dTO.setId(bankTransaction.getId());
                 dTO.setSerial(bankTransaction.getSerial());
-            }else{
-                return null;
+                dTO.setBankName(dTO.getBank().getName());
             }
         }
 
