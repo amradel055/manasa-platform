@@ -20,7 +20,6 @@ import com.toby.businessservice.report.SupplierAccountService;
 import com.toby.bussinessservice.global.AutoCompleteService;
 import com.toby.bussinessservice.global.Utility;
 import com.toby.converter.GlBankConverter;
-import com.toby.converter.GlBankDTOConverter;
 import com.toby.converter.GlaccountConverter;
 import com.toby.converter.InstTransactionViewConverter;
 import com.toby.converter.InvOrganizationSiteConverter;
@@ -826,14 +825,14 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
 
     public String saveAll() {
         BigDecimal valueTotal = BigDecimal.ZERO;
-        StringBuilder serialList = null ;
+        StringBuilder serialList = null;
         for (GlPayDTO glPayDTO : glPayDTOList) {
             setGlPayDTOSelection(glPayDTO);
             valueTotal = valueTotal.add(glPayDTO.getValue());
-            if(serialList == null){
+            if (serialList == null) {
                 serialList = new StringBuilder();
                 serialList.append(invPurchaseInvoiceService_1.getInvoiceSerialById(glPayDTO.getInvoiceId()));
-            }else{
+            } else {
                 serialList.append(",").append(invPurchaseInvoiceService_1.getInvoiceSerialById(glPayDTO.getInvoiceId()));
             }
             if (!checkValue()) {
@@ -842,6 +841,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
         }
         setGlPayDTOList(glBankTransactionService.addCash(getGlPayDTOList(), glBankTransactionEntity.getDate(), BigDecimal.ONE, glBankTransactionEntity.getRemark(), glBankTransactionDetailEntity.getInvOrganizationSite().getId(), getUserData().getUser()));
         sendSMS(serialList.toString(), valueTotal);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserDDs().get("INFO"), getUserDDs().get("SAVED")));
         setSaveCheck(Boolean.FALSE);
         return "";
     }

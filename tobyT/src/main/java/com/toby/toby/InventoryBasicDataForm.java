@@ -1534,6 +1534,9 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     }
 
     public void print() {
+        if(getInvInvoiceDTO().getOrganizationSiteId() != null && ( getInvInvoiceDTO().getOrganizationSiteId().getMobile() == null || getInvInvoiceDTO().getOrganizationSiteId().getMobile().isEmpty() ) && getOrganizationSiteIdNew() != null && getOrganizationSiteIdNew().getMobile() != null ){
+            getInvInvoiceDTO().getOrganizationSiteId().setMobile(getOrganizationSiteIdNew().getMobile());
+        }        
         iReportService.printReportInvoice(getInvInvoiceDTO(), getUserData());
     }
 
@@ -1609,7 +1612,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public HashMap prepareReport() {
         try {
-            Map<String, String> userDDs = getUserData().getUserDDs();
+//            Map<String, String> userDDs = getUserData().getUserDDs();
             HashMap hashMap = new HashMap();
 
 //            hashMap.put("PrintedBy", getUserData().getUser().getName());

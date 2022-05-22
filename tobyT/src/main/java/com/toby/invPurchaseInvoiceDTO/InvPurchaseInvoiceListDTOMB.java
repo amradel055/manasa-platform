@@ -45,8 +45,23 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
     public void updateGallaryDelivery() {
         if (getInvInvoiceDTOSelected() != null && getInvInvoiceDTOSelected().getId() != null) {
             invPurchaseInvoiceService.updateGallaryDelivery(getInvInvoiceDTOSelected().getId());
+            sendSMS();
         }
 
+    }
+
+    public void sendSMS() {
+        StringBuilder message = new StringBuilder();
+        if (getInvInvoiceDTOSelected().getInvnameType() != null && getInvInvoiceDTOSelected().getInvnameType() == 0) {
+            message.append(" اكمل اناقتك مع شماغ برنس ");
+            message.append("برنس للخياطة يبلغكم بأن الثياب جاهزة للتسليم  للاستفسار الاتصال على الرقم");
+            message.append("920027070");
+            sendSms(getInvInvoiceDTOSelected().getCustomerMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
+        } else if (getInvInvoiceDTOSelected().getInvnameType() != null && getInvInvoiceDTOSelected().getInvnameType() == 1) {
+            message.append("لي رويال للخياطة الرجالية يبلغكم بان الثياب جاهزة للاستلام ت ");
+            message.append("920027711");
+            sendSms(getInvInvoiceDTOSelected().getCustomerMobile(), "التوبى العالمى", message.toString(), "20099320", "Royal@e12z");
+        }
     }
 
     @Override
