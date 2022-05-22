@@ -118,4 +118,6 @@ public interface InvItemService {
     public InvItemDTO mapToDTO(InvItem invItem, TobyUser tobyUser);
     
     public InvItem findItemByCode(String code) ;
+    
+     public void updateByOffer(Integer invItem, Integer isOfferFinal);
 }

@@ -120,6 +120,7 @@ public class InvItemServiceImpl implements InvItemService {
         invItem.setIsInventoryItem(invItemDTO.getIsinventoryitem());
         invItem.setTypeshow(invItemDTO.getTypeshow());
         invItem.setPriceType(invItemDTO.getPriceType());
+        invItem.setIsOfferItemFinal(invItemDTO.getIsOfferItemFinal());
 //        invItem.setItemNatural(invItemDTO.getItem_natural());
         if (invItemDTO.getOriginCountry() != null) {
             Symbol symbol = new Symbol();
@@ -248,6 +249,7 @@ public class InvItemServiceImpl implements InvItemService {
         invItemDTO.setTypeshow(invItem.getTypeshow());
         invItemDTO.setCostAverage(invItem.getCostAverage());
         invItemDTO.setPriceType(invItem.getPriceType());
+        invItemDTO.setIsOfferItemFinal(invItem.getIsOfferItemFinal());
 
 //        invItemDTO.setItem_natural(invItem.getItemNatural());
         if (invItem.getOriginCountry() != null) {
@@ -610,7 +612,7 @@ public class InvItemServiceImpl implements InvItemService {
     public List<InvItemDTO> getInvItemByBranchIdAndProGroupIdDTO(StringBuilder list) {
         Map<String, Object> params = new HashMap<>();
         params.put("list", list.toString());
-        List<InvItem> details = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.proGroupId.id in( "+list+" ) ORDER BY e.code");
+        List<InvItem> details = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.proGroupId.id in( " + list + " ) ORDER BY e.code");
         List<InvItemDTO> detailsReturn = retriveItemDTOData(details, ScreenNameClassEnum.ITEMCARDREPORT);
         return detailsReturn;
     }
@@ -1290,6 +1292,13 @@ public class InvItemServiceImpl implements InvItemService {
 
         return invItems.get(0);
 
+    }
+
+    @Override
+    public void updateByOffer(Integer invItem, Integer isOfferFinal) {
+        InvItem item = dao.findEntityById(InvItem.class, invItem);
+        item.setIsOfferItemFinal(isOfferFinal);
+        dao.updateEntity(item);
     }
 
 }

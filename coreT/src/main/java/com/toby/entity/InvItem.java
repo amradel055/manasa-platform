@@ -27,31 +27,56 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "inv_item")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "InvItem.findAll", query = "SELECT i FROM InvItem i"),
-    @NamedQuery(name = "InvItem.findById", query = "SELECT i FROM InvItem i WHERE i.id = :id"),
-    @NamedQuery(name = "InvItem.findByCode", query = "SELECT i FROM InvItem i WHERE i.code = :code"),
-    @NamedQuery(name = "InvItem.findByName", query = "SELECT i FROM InvItem i WHERE i.name = :name"),
-    @NamedQuery(name = "InvItem.findByNameen", query = "SELECT i FROM InvItem i WHERE i.nameen = :nameen"),
-    @NamedQuery(name = "InvItem.findByTypeCat", query = "SELECT i FROM InvItem i WHERE i.typeCat = :typeCat"),
-    @NamedQuery(name = "InvItem.findBySellPrice", query = "SELECT i FROM InvItem i WHERE i.sellPrice = :sellPrice"),
-    @NamedQuery(name = "InvItem.findByUndirectCost", query = "SELECT i FROM InvItem i WHERE i.undirectCost = :undirectCost"),
-    @NamedQuery(name = "InvItem.findByRemarks", query = "SELECT i FROM InvItem i WHERE i.remarks = :remarks"),
-    @NamedQuery(name = "InvItem.findByStatusCat", query = "SELECT i FROM InvItem i WHERE i.statusCat = :statusCat"),
-    @NamedQuery(name = "InvItem.findByContractPrice", query = "SELECT i FROM InvItem i WHERE i.contractPrice = :contractPrice"),
-    @NamedQuery(name = "InvItem.findByStorageLocation", query = "SELECT i FROM InvItem i WHERE i.storageLocation = :storageLocation"),
-    @NamedQuery(name = "InvItem.findByNickname", query = "SELECT i FROM InvItem i WHERE i.nickname = :nickname"),
-    @NamedQuery(name = "InvItem.findByMinimumAmount", query = "SELECT i FROM InvItem i WHERE i.minimumAmount = :minimumAmount"),
-    @NamedQuery(name = "InvItem.findByMaxmumAmount", query = "SELECT i FROM InvItem i WHERE i.maxmumAmount = :maxmumAmount"),
-    @NamedQuery(name = "InvItem.findByLastCost", query = "SELECT i FROM InvItem i WHERE i.lastCost = :lastCost"),
-    @NamedQuery(name = "InvItem.findByCostAverage", query = "SELECT i FROM InvItem i WHERE i.costAverage = :costAverage"),
-    @NamedQuery(name = "InvItem.findByDateCreateCat", query = "SELECT i FROM InvItem i WHERE i.dateCreateCat = :dateCreateCat"),
-    @NamedQuery(name = "InvItem.findByOpeningCost", query = "SELECT i FROM InvItem i WHERE i.openingCost = :openingCost"),
-    @NamedQuery(name = "InvItem.findByStoresQuality", query = "SELECT i FROM InvItem i WHERE i.storesQuality = :storesQuality"),
-    @NamedQuery(name = "InvItem.findByImage", query = "SELECT i FROM InvItem i WHERE i.image = :image"),
-    @NamedQuery(name = "InvItem.findByWeightPackage", query = "SELECT i FROM InvItem i WHERE i.weightPackage = :weightPackage"),
-    @NamedQuery(name = "InvItem.findByCreationDate", query = "SELECT i FROM InvItem i WHERE i.creationDate = :creationDate"),
-    @NamedQuery(name = "InvItem.findByModificationDate", query = "SELECT i FROM InvItem i WHERE i.modificationDate = :modificationDate"),
-    @NamedQuery(name = "InvItem.findByIssell", query = "SELECT i FROM InvItem i WHERE i.issell = :issell"),
+    @NamedQuery(name = "InvItem.findAll", query = "SELECT i FROM InvItem i")
+    ,
+    @NamedQuery(name = "InvItem.findById", query = "SELECT i FROM InvItem i WHERE i.id = :id")
+    ,
+    @NamedQuery(name = "InvItem.findByCode", query = "SELECT i FROM InvItem i WHERE i.code = :code")
+    ,
+    @NamedQuery(name = "InvItem.findByName", query = "SELECT i FROM InvItem i WHERE i.name = :name")
+    ,
+    @NamedQuery(name = "InvItem.findByNameen", query = "SELECT i FROM InvItem i WHERE i.nameen = :nameen")
+    ,
+    @NamedQuery(name = "InvItem.findByTypeCat", query = "SELECT i FROM InvItem i WHERE i.typeCat = :typeCat")
+    ,
+    @NamedQuery(name = "InvItem.findBySellPrice", query = "SELECT i FROM InvItem i WHERE i.sellPrice = :sellPrice")
+    ,
+    @NamedQuery(name = "InvItem.findByUndirectCost", query = "SELECT i FROM InvItem i WHERE i.undirectCost = :undirectCost")
+    ,
+    @NamedQuery(name = "InvItem.findByRemarks", query = "SELECT i FROM InvItem i WHERE i.remarks = :remarks")
+    ,
+    @NamedQuery(name = "InvItem.findByStatusCat", query = "SELECT i FROM InvItem i WHERE i.statusCat = :statusCat")
+    ,
+    @NamedQuery(name = "InvItem.findByContractPrice", query = "SELECT i FROM InvItem i WHERE i.contractPrice = :contractPrice")
+    ,
+    @NamedQuery(name = "InvItem.findByStorageLocation", query = "SELECT i FROM InvItem i WHERE i.storageLocation = :storageLocation")
+    ,
+    @NamedQuery(name = "InvItem.findByNickname", query = "SELECT i FROM InvItem i WHERE i.nickname = :nickname")
+    ,
+    @NamedQuery(name = "InvItem.findByMinimumAmount", query = "SELECT i FROM InvItem i WHERE i.minimumAmount = :minimumAmount")
+    ,
+    @NamedQuery(name = "InvItem.findByMaxmumAmount", query = "SELECT i FROM InvItem i WHERE i.maxmumAmount = :maxmumAmount")
+    ,
+    @NamedQuery(name = "InvItem.findByLastCost", query = "SELECT i FROM InvItem i WHERE i.lastCost = :lastCost")
+    ,
+    @NamedQuery(name = "InvItem.findByCostAverage", query = "SELECT i FROM InvItem i WHERE i.costAverage = :costAverage")
+    ,
+    @NamedQuery(name = "InvItem.findByDateCreateCat", query = "SELECT i FROM InvItem i WHERE i.dateCreateCat = :dateCreateCat")
+    ,
+    @NamedQuery(name = "InvItem.findByOpeningCost", query = "SELECT i FROM InvItem i WHERE i.openingCost = :openingCost")
+    ,
+    @NamedQuery(name = "InvItem.findByStoresQuality", query = "SELECT i FROM InvItem i WHERE i.storesQuality = :storesQuality")
+    ,
+    @NamedQuery(name = "InvItem.findByImage", query = "SELECT i FROM InvItem i WHERE i.image = :image")
+    ,
+    @NamedQuery(name = "InvItem.findByWeightPackage", query = "SELECT i FROM InvItem i WHERE i.weightPackage = :weightPackage")
+    ,
+    @NamedQuery(name = "InvItem.findByCreationDate", query = "SELECT i FROM InvItem i WHERE i.creationDate = :creationDate")
+    ,
+    @NamedQuery(name = "InvItem.findByModificationDate", query = "SELECT i FROM InvItem i WHERE i.modificationDate = :modificationDate")
+    ,
+    @NamedQuery(name = "InvItem.findByIssell", query = "SELECT i FROM InvItem i WHERE i.issell = :issell")
+    ,
     @NamedQuery(name = "InvItem.findByIspurchase", query = "SELECT i FROM InvItem i WHERE i.ispurchase = :ispurchase")})
 public class InvItem extends BaseEntity {
 
@@ -142,7 +167,7 @@ public class InvItem extends BaseEntity {
     @JoinColumn(name = "author", referencedColumnName = "id")
     @ManyToOne
     private Symbol author;
-    
+
     @JoinColumn(name = "addon1", referencedColumnName = "id")
     @ManyToOne
     private Symbol addon1;
@@ -154,7 +179,7 @@ public class InvItem extends BaseEntity {
     private InvOrganizationSite siteId;
     @JoinColumn(name = "stone", referencedColumnName = "id")
     @ManyToOne
-    private Symbol stone;    
+    private Symbol stone;
     @JoinColumn(name = "pro_group_id", referencedColumnName = "id")
     @ManyToOne
     private ProGroup proGroupId;
@@ -208,8 +233,10 @@ public class InvItem extends BaseEntity {
     private Integer type;
     @Column(name = "price_type")
     private Integer priceType;
-     @Column(name = "is_offer_item")
+    @Column(name = "is_offer_item")
     private Integer isOfferItem;
+    @Column(name = "is_offer_item_final")
+    private Integer isOfferItemFinal;
 
     public InvItem() {
     }
@@ -682,7 +709,7 @@ public class InvItem extends BaseEntity {
      * @return the numbermetersmen
      */
     public BigDecimal getNumbermetersmen() {
-        if(numbermetersmen == null){
+        if (numbermetersmen == null) {
             numbermetersmen = BigDecimal.ZERO;
         }
         return numbermetersmen;
@@ -889,6 +916,20 @@ public class InvItem extends BaseEntity {
      */
     public void setIsOfferItem(Integer isOfferItem) {
         this.isOfferItem = isOfferItem;
+    }
+
+    /**
+     * @return the isOfferItemFinal
+     */
+    public Integer getIsOfferItemFinal() {
+        return isOfferItemFinal;
+    }
+
+    /**
+     * @param isOfferItemFinal the isOfferItemFinal to set
+     */
+    public void setIsOfferItemFinal(Integer isOfferItemFinal) {
+        this.isOfferItemFinal = isOfferItemFinal;
     }
 
 }

@@ -58,18 +58,29 @@
                         <p:column headerText="#{userData.userDDs['ITEM_NAME']}" style="width: 24vh;text-align: right;font-size: 1.4vh" filterBy="#{itemData.name}" sortBy="#{itemData.name}" filterMatchMode="contains" filterStyle="display:none">
                             <h:outputText value="#{itemData.name}"/>
                         </p:column>
-                        
+
                         <p:column headerText="التكلفة" style="width: 24vh;text-align: right;font-size: 1.4vh" 
                                   filterBy="#{itemData.lastCost}" sortBy="#{itemData.lastCost}" 
                                   filterMatchMode="contains" filterStyle="display:none">
                             <h:outputText value="#{itemData.lastCost}"/>
                         </p:column>
-                        
+
                         <p:column headerText="أعلى سعر رجالى" style="width: 24vh;text-align: right;font-size: 1.4vh" 
                                   filterBy="#{itemData.maxpricemen}" sortBy="#{itemData.maxpricemen}" 
                                   filterMatchMode="contains" filterStyle="display:none">
                             <h:outputText value="#{itemData.maxpricemen}"/>
                         </p:column>
+                        <p:column headerText="الخصم" style="width: 24vh;text-align: right;font-size: 1.4vh" >
+                            <p:selectOneMenu  id="isOfferItemFinal" filter="true" filterMatchMode="contains"
+                                              value="#{itemData.isOfferItemFinal}"
+                                              >
+                                <f:selectItem itemLabel="اختر" itemValue=""/>
+                                <f:selectItem itemLabel="ضمن الخصم" itemValue="0"/>
+                                <f:selectItem itemLabel="ليس ضمن الخصم" itemValue="1"/>
+                            </p:selectOneMenu>     
+                        </p:column>
+
+
 
 
                         <p:column style="width: 10vh;font-size: 1.4vh"  headerText="#{userData.userDDs['TRANSACTION']}" >
@@ -85,8 +96,8 @@
                                 <f:setPropertyActionListener value="#{itemData.id}" 
                                                              target="#{itemDataListMB.invItemDTOId}" />
                             </p:commandButton>
-                             <p:commandButton 
-                                 class="sprintButtons" value="لي رويال"
+                            <p:commandButton 
+                                class="sprintButtons" value="لي رويال"
                                 update="@form" 
                                 onclick="form.target = '_blank'" 
                                 ajax="false"
@@ -115,6 +126,9 @@
                                 <f:setPropertyActionListener value="#{itemData.id}" 
                                                              target="#{itemDataListMB.invItemDTOId}" />
                                 <p:confirm header="#{userData.userDDs['COFIGRATION']}" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton class="seditButtons" update="@form" icon="fa fa-fw fa-save" style="background-color: #6a6967;border-radius: 3px;" 
+                                             title="#{userData.userDDs['SAVE']}" action="#{itemDataListMB.updateOffer(itemData)}">
                             </p:commandButton>
 
                             <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">

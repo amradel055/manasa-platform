@@ -205,6 +205,13 @@ public class invItemDataListMB extends BaseListBean implements Serializable {
         }
 
     }
+    
+    public void updateOffer(InvItemDTO invItemDTO){
+     if (invItemDTO != null && invItemDTO.getId()!=null) {
+     itemDataService.updateByOffer(invItemDTO.getId(),invItemDTO.getIsOfferItemFinal() );
+     }
+    
+    }
 
     @Override
     public void delete() {
@@ -350,4 +357,6 @@ public class invItemDataListMB extends BaseListBean implements Serializable {
     public void setDataModel(LazyDataModel<InvItemDTO> dataModel) {
         this.dataModel = dataModel;
     }
+    
+    
 }
