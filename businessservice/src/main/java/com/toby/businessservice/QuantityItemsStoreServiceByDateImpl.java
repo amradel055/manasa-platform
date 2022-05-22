@@ -141,7 +141,7 @@ public class QuantityItemsStoreServiceByDateImpl implements QuantityItemsStoreBy
                     + "        `inv_purchase_invoice` `ipi`\n"
                     + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                     + "    WHERE\n"
-                    + "        ((`ipi`.`type` = 1) AND (`ipi`.`date` IS NOT NULL)) AND `ipid`.`item_id` = " + invItemId + "  AND `ipi`.`inv_inventory_id` =  " + invInventoryId);
+                    + "        ((`ipi`.`type` = 4) AND (`ipi`.`date` IS NOT NULL)) AND `ipid`.`item_id` = " + invItemId + "  AND `ipi`.`inv_inventory_id` =  " + invInventoryId);
         } else {
             query.append(" SELECT \n"
                     + "        0 AS `qtyin`,\n"
@@ -398,7 +398,7 @@ public class QuantityItemsStoreServiceByDateImpl implements QuantityItemsStoreBy
                         + "        `inv_purchase_invoice` `ipi`\n"
                         + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                         + "    WHERE\n"
-                        + "        ((`ipi`.`type` = 1) AND (`ipi`.`date` IS NOT NULL)) AND `ipid`.`item_id` = " + invItemId + " ");
+                        + "        ((`ipi`.`type` = 4) AND (`ipi`.`date` IS NOT NULL)) AND `ipid`.`item_id` = " + invItemId + " ");
                 if (date != null) {
                     query.append("AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `ipi`.`date` <= '" ).append(dateStr).append(  "' ,true) ");
                 }

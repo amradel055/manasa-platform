@@ -72,7 +72,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
 
         calcRowAfterCalcTotal(total, discount, detailEntity);
         if ((isNeeadQuantity && invInvoiceDTO.getInventorySetupDTO() != null && !invInvoiceDTO.getInventorySetupDTO().getNegativeSell()) || invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVUPDATE)) {
-            detailEntity = updateAvailableQuantityRow(invInvoiceDTO.getScreenName(), detailEntity, invInvoiceDTO.getInvInventoryId() != null ? invInvoiceDTO.getInvInventoryId().getId() : null, invInvoiceDTO.getInventorySetupDTO().getSellBuy(), invInvoiceDTO.getInventorySetupDTO().getNegativeSell(), invInvoiceDTO.getIsEdit());
+            detailEntity = updateAvailableQuantityRow(invInvoiceDTO.getScreenName(), detailEntity, invInvoiceDTO.getInvInventoryId() != null ? invInvoiceDTO.getInvInventoryId().getId() : null, false, invInvoiceDTO.getInventorySetupDTO().getNegativeSell(), invInvoiceDTO.getIsEdit());
         }
         if (detailEntity.getItemId() != null
                 && detailEntity.getItemId().getProGroupId() != null && detailEntity.getItemId().getProGroupId().getId() != null
@@ -658,7 +658,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                         invInvoiceDTO.getInvInventoryId() != null ? invInvoiceDTO.getInvInventoryId().getId() : null,
                         invInvoiceDTO.getScreenName(),
                         invInvoiceDTO.getInventorySetupDTO().getNegativeSell(),
-                        (invInvoiceDTO.getLoadedSerial() != null), invInvoiceDTO.getInventorySetupDTO().getSellBuy(), invInvoiceDTO.getCompanyActivity());
+                        (invInvoiceDTO.getLoadedSerial() != null), false, invInvoiceDTO.getCompanyActivity());
                 if (error != null && !error.isEmpty()) {
                     invInvoiceDTO.setMsg(error);
                     return invInvoiceDTO;
@@ -687,7 +687,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             ScreenNameClassEnum screenNameClassEnum, Boolean negativeSell, Boolean isload, Boolean sellBuy, CompanyActivityClassEnum companyActivityClassEnum) {
         StringBuilder error = new StringBuilder();
         for (InvDetailDTO detailDTO : invPurchaseInvoiceDetailDTOList) {
-            detailDTO = validateRow(detailDTO, invtentortId, screenNameClassEnum, negativeSell, isload, sellBuy, companyActivityClassEnum);
+            detailDTO = validateRow(detailDTO, invtentortId, screenNameClassEnum, negativeSell, isload, false, companyActivityClassEnum);
             if (detailDTO.getMsg() != null && !detailDTO.getMsg().isEmpty()) {
                 error.append("\n ").append(detailDTO.getMsg()).append("\n").append(detailDTO.getItemsBarcodesDetail() != null ? detailDTO.getItemsBarcodesDetail().getName() : "يوجد سطر فارغ برجاء ملئ السطر الفارغ");
                 return error.toString();
@@ -736,7 +736,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
 //                        }
 //                    }
                         if (!negativeSell && (invDetailDTO.getIsInventoryItem() == 1)) {
-                            invDetailDTO = validateQuantityWhenSave(invDetailDTO, inventoryId, screenNameClassEnum, isload, sellBuy, companyActivityClassEnum);
+                            invDetailDTO = validateQuantityWhenSave(invDetailDTO, inventoryId, screenNameClassEnum, isload, false, companyActivityClassEnum);
                             if (invDetailDTO.getMsg() != null && !invDetailDTO.getMsg().isEmpty()) {
                                 error.append(invDetailDTO.getMsg());
                             }
@@ -819,7 +819,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                     || ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)
                     || ScreenNameClassEnum.INVRESERVATIONFORM.equals(screenNameClassEnum)) {
 //                BigDecimal avilableQuantity = quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), sellBuy);
-                BigDecimal avilableQuantity = quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), sellBuy, null);
+                BigDecimal avilableQuantity = quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), false, null);
                 avilableQuantity = avilableQuantity.add(detailDTO.getOriginQuantity());
                 detailDTO.setAvailableQuantityRow(avilableQuantity);
                 if (avilableQuantity.compareTo(detailDTO.getTotalQuantityWithScrewing()) < 0) {
@@ -886,9 +886,11 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                     detailDTO.setIsInventoryItem(detailDTO.getItemsBarcodesDetail().getIsInventoryItem());
                     detailDTO = findDataForItem(detailDTO, invInvoiceDTO, null, findCost);
                     detailDTO.setCostBak(detailDTO.getCost());
-                    if (!invInvoiceDTO.getInventorySetupDTO().getNegativeSell() || ScreenNameClassEnum.INVUPDATE.equals(invInvoiceDTO.getScreenName())) {
+//                    if ((!invInvoiceDTO.getInventorySetupDTO().getNegativeSell() || ScreenNameClassEnum.INVUPDATE.equals(invInvoiceDTO.getScreenName())) && detailDTO.getItemsBarcodesDetail().getIsInventoryItem() == 1 ) {
+                    if (detailDTO.getItemsBarcodesDetail().getIsInventoryItem() == 1 ) {
 //                        detailDTO = updateAvailableQuantityRow(invInvoiceDTO.getScreenName(), detailDTO, invInvoiceDTO.getInvInventoryId() == null ? null : invInvoiceDTO.getInvInventoryId().getId(), invInvoiceDTO.getInventorySetupDTO().getSellBuy(), invInvoiceDTO.getInventorySetupDTO().getNegativeSell(), invInvoiceDTO.getIsEdit());
-                        detailDTO = updateAvailableQuantityRow(invInvoiceDTO.getScreenName(), detailDTO, 45, invInvoiceDTO.getInventorySetupDTO().getSellBuy(), invInvoiceDTO.getInventorySetupDTO().getNegativeSell(), invInvoiceDTO.getIsEdit());
+                        detailDTO = updateAvailableQuantityRow(invInvoiceDTO.getScreenName(), detailDTO, 45, false, invInvoiceDTO.getInventorySetupDTO().getNegativeSell(), invInvoiceDTO.getIsEdit());
+                        detailDTO.setAvailableQuantityRow(new BigDecimal(detailDTO.getAvailableQuantityRow().stripTrailingZeros().toPlainString()));
                     }
                 } else {
                     detailDTO = resetInvItem(detailDTO);
@@ -1067,9 +1069,10 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 || ScreenNameClassEnum.INVRESERVATIONFORM.equals(screenNameClassEnum)
                 || ScreenNameClassEnum.INVRETURNPURCHASEFORM.equals(screenNameClassEnum)) {
             detailDTO.setTotalQuantityWithScrewing(detailDTO.getQuantity().multiply(detailDTO.getScrewing()));
-            detailDTO.setAvailableQuantityRow(quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), sellBuy, null));
+            detailDTO.setAvailableQuantityRow(quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), false, null));
 //            detailDTO.setAvailableQuantityRow(quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), sellBuy));
-            if ((detailDTO.getAvailableQuantityRow() == null || detailDTO.getAvailableQuantityRow().compareTo(BigDecimal.ZERO) < 1) && !sellNegative && !isEdit) {
+//            if ((detailDTO.getAvailableQuantityRow() == null || detailDTO.getAvailableQuantityRow().compareTo(BigDecimal.ZERO) < 1) && !sellNegative && !isEdit) {
+            if ((detailDTO.getAvailableQuantityRow() == null || detailDTO.getAvailableQuantityRow().compareTo(BigDecimal.ZERO) < 1) && !isEdit) {
                 detailDTO.setItemsBarcodesDetail(null);
                 detailDTO.setItemsBarcodesDetailTrans(null);
                 detailDTO.setQuantity(BigDecimal.ZERO);
@@ -1078,7 +1081,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             }
         } else if (ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)
                 || ScreenNameClassEnum.INVUPDATE.equals(screenNameClassEnum)) {
-            detailDTO.setAvailableQuantityRow(quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), sellBuy, null));
+            detailDTO.setAvailableQuantityRow(quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), false, null));
             detailDTO.setOldQuantity(detailDTO.getAvailableQuantityRow());
             detailDTO.setOldQuantityBak(detailDTO.getAvailableQuantityRow());
 

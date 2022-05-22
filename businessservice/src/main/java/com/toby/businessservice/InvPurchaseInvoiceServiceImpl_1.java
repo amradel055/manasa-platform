@@ -2220,6 +2220,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         dto.setIndex(entity.getSerial());
         dto.setPostFlag(entity.getPostFlag());
         dto.setRemarks(entity.getRemarks());
+        dto.setInvnameType(entity.getGalaryId().getInvName());
         dto.setDueDate(entity.getDueDate());
         dto.setNumberOfToob(invoiceMovementReportService.summitionTob(entity.getId()));
         String invoiceStatus = invPurchaseInvoiceService.findInvoiceStatus(entity.getId());

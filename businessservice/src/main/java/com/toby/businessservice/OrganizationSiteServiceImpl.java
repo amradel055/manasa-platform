@@ -1533,6 +1533,9 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             inventoryDelegatorDTO.setId(77);
             invOrganizationSiteDTO.setDelegatorId(inventoryDelegatorDTO);
             invOrganizationSiteDTO.setCode(code.toString());
+            invOrganizationSiteDTO.setMobile(invOrganizationSiteDTO.getMobile());
+            invOrganizationSiteDTO.setEmail(invOrganizationSiteDTO.getEmail());
+            invOrganizationSiteDTO.setAddress(invOrganizationSiteDTO.getAddress());
 
             invOrganizationSiteDTO = addOrganizationSiteDTO(invOrganizationSiteDTO, tobyUser);
             if (invOrganizationSiteDTOList == null) {
