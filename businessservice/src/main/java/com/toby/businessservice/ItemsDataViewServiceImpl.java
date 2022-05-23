@@ -844,6 +844,113 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
 //        itemsDataViewList = new ArrayList<ItemsDataView>(treeMap.values());
         return itemsDataViewList;
     }
+    
+    
+//    @Override
+//    public List<ItemsDataView> getAllItemCardByInvStripSearchBeanNew(ItemCardReportSerachBean itemCardReportSerachBean, GlYear glYear) {
+//        dao.executeNativeQuery("select toby.sql_mode_function()");
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("branchId", itemCardReportSerachBean.getBranchId());
+//
+//        StringBuilder stringBuilder = new StringBuilder();
+//        Map<Integer, BigDecimal> itemOpeningBalanceMap = new HashMap<>();
+//        Map<Integer, String> itemOpeningBalanceAfterAllDateMap = new HashMap<>();
+//        Map<Integer, BigDecimal> qtyInMap = new HashMap<>();
+//        Map<Integer, BigDecimal> qtyOutMap = new HashMap<>();
+//        if (itemCardReportSerachBean.getDateFrom() != null && itemCardReportSerachBean.getDateFrom().after(glYear.getDateFrom())) {
+//            stringBuilder.append("SELECT IDV.itemId, sum(COALESCE(IDV.qtyin * IDV.screwing,0))-sum(COALESCE(IDV.qtyout * IDV.screwing,0)),IDV.itemName"
+//                    + ",sum(COALESCE(IDV.qtyin * IDV.screwing,0)), sum(COALESCE(IDV.qtyout * IDV.screwing,0)) "
+//                    + " FROM ItemsDataView IDV WHERE IDV.branchId = :branchId "
+//                    + " AND IDV.date is not null AND IDV.itemId is not null "
+//                    + " AND IDV.inventoryId is not null AND IDV.groupId is not null"
+//                    + " AND IDV.itemName is not null AND IDV.itemCode is not null "
+//                    + " AND IDV.qtyin is not null  AND IDV.qtyout is not null ");
+//
+//            stringBuilder.append(appendGlYear(itemCardReportSerachBean, glYear, params));
+//            stringBuilder.append(appendTillDate(itemCardReportSerachBean, glYear, params));
+//            stringBuilder.append(appendInventory(itemCardReportSerachBean, params));
+//            stringBuilder.append(appendInvItem(itemCardReportSerachBean, params));
+//
+//            stringBuilder.append(" group by IDV.itemId ,IDV.itemName");
+////            stringBuilder.append(" order by IDV.itemId ,IDV.date ASC");
+//            List<Object[]> list = dao.findListByQuery(stringBuilder.toString(), params);
+//
+//            for (Object[] os : list) {
+//                itemOpeningBalanceMap.put((Integer) os[0], (BigDecimal) os[1]);
+//                itemOpeningBalanceAfterAllDateMap.put((Integer) os[0], (String) os[2]);
+//            }
+//        }
+//        //to add total qtyin and qtyout
+//        params = new HashMap<>();
+//        params.put("branchId", itemCardReportSerachBean.getBranchId());
+//
+//        stringBuilder = new StringBuilder();
+//        stringBuilder.append("SELECT IDV.itemId, sum(COALESCE(IDV.qtyin * IDV.screwing,0))-sum(COALESCE(IDV.qtyout * IDV.screwing,0)),IDV.itemName"
+//                + ",sum(COALESCE(IDV.qtyin * IDV.screwing,0)), sum(COALESCE(IDV.qtyout * IDV.screwing,0)) "
+//                + " FROM ItemsDataView IDV WHERE IDV.branchId = :branchId "
+//                + " AND IDV.date is not null AND IDV.itemId is not null "
+//                + " AND IDV.inventoryId is not null AND IDV.groupId is not null"
+//                + " AND IDV.itemName is not null AND IDV.itemCode is not null "
+//                + " AND IDV.qtyin is not null  AND IDV.qtyout is not null ");
+//
+//        stringBuilder.append(appendGlYear(itemCardReportSerachBean, glYear, params));
+//        stringBuilder.append(appendDate(itemCardReportSerachBean, params));
+//        stringBuilder.append(appendInventory(itemCardReportSerachBean, params));
+//        stringBuilder.append(appendInvItem(itemCardReportSerachBean, params));
+//
+//        stringBuilder.append(" group by IDV.itemId ,IDV.itemName");
+//        stringBuilder.append(" order by IDV.itemId ASC, IDV.date ASC");
+//        List<Object[]> list2 = dao.findListByQuery(stringBuilder.toString(), params);
+//        for (Object[] os : list2) {
+//            qtyInMap.put((Integer) os[0], (BigDecimal) os[3]);
+//            qtyOutMap.put((Integer) os[0], (BigDecimal) os[4]);
+//        }
+//
+//        stringBuilder = new StringBuilder();
+//        params = new HashMap<>();
+//        params.put("branchId", itemCardReportSerachBean.getBranchId());
+//        stringBuilder.append("SELECT IDV FROM ItemsDataView IDV WHERE IDV.branchId = :branchId "
+//                + " AND IDV.date is not null AND IDV.itemId is not null "
+//                + " AND IDV.inventoryId is not null AND IDV.groupId is not null"
+//                + " AND IDV.itemName is not null AND IDV.itemCode is not null "
+//                + " AND IDV.qtyin is not null  AND IDV.qtyout is not null ");
+//
+//        stringBuilder.append(appendDate(itemCardReportSerachBean, params));
+//        stringBuilder.append(appendInventory(itemCardReportSerachBean, params));
+//        stringBuilder.append(appendInvItem(itemCardReportSerachBean, params));
+//
+//        stringBuilder.append(" order by IDV.itemId , IDV.date ASC");
+//
+//        List<ItemsDataView> itemsDataViewList = dao.findListByQuery(stringBuilder.toString(), params);
+//
+//        for (ItemsDataView dataView : itemsDataViewList) {
+//            dataView.setOpeningBalance(itemOpeningBalanceMap.get(dataView.getItemId()));
+//            //i will set in organizationopenbalance credit and debit fields and use them as total value for qtyin and qty out
+//            dataView.setTotalQtyIn(qtyInMap.get(dataView.getItemId()));
+//            dataView.setTotalQtyOut(qtyOutMap.get(dataView.getItemId()));
+//            if (itemOpeningBalanceAfterAllDateMap.containsKey(dataView.getItemId())) {
+//                itemOpeningBalanceAfterAllDateMap.remove(dataView.getItemId());
+//            }
+//        }
+////if search after all dates of item and need to get the open balance for them
+//        for (Map.Entry<Integer, String> entry : itemOpeningBalanceAfterAllDateMap.entrySet()) {
+//            ItemsDataView idv = new ItemsDataView();
+//            idv.setItemName(entry.getValue());
+//            idv.setItemId(entry.getKey());
+//            idv.setOpeningBalance(itemOpeningBalanceMap.get(entry.getKey()));
+//            idv.setTotalQtyIn(qtyInMap.get(entry.getKey()));
+//            idv.setTotalQtyOut(qtyOutMap.get(entry.getKey()));
+//            itemsDataViewList.add(idv);
+//        }
+//
+////        TreeMap<Date,ItemsDataView> treeMap = new TreeMap<>();
+////        for(ItemsDataView dataView : itemsDataViewList){
+////            treeMap.put(dataView.getDate(), dataView);
+////        }
+////        itemsDataViewList = new ArrayList<>();
+////        itemsDataViewList = new ArrayList<ItemsDataView>(treeMap.values());
+//        return itemsDataViewList;
+//    }
 
     @Override
     public InvItemDTO findInvItem(Integer invItemById, TobyUser tobyUser) {

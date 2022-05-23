@@ -53,9 +53,9 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
     public void sendSMS() {
         StringBuilder message = new StringBuilder();
         if (getInvInvoiceDTOSelected().getInvnameType() != null && getInvInvoiceDTOSelected().getInvnameType() == 0) {
-            message.append(" اكمل اناقتك مع شماغ برنس ");
             message.append("برنس للخياطة يبلغكم بأن الثياب جاهزة للتسليم  للاستفسار الاتصال على الرقم");
             message.append("920027070");
+            message.append(" اكمل اناقتك مع شماغ برنس ");
             sendSms(getInvInvoiceDTOSelected().getCustomerMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
         } else if (getInvInvoiceDTOSelected().getInvnameType() != null && getInvInvoiceDTOSelected().getInvnameType() == 1) {
             message.append("لي رويال للخياطة الرجالية يبلغكم بان الثياب جاهزة للاستلام ت ");
