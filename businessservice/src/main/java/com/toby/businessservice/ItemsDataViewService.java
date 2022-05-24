@@ -28,13 +28,12 @@ public interface ItemsDataViewService {
 
     public BigDecimal findMaxItemCode(Integer settingType, Integer searchId, String searchCode);
 
-//    public List<ItemsDataView> getAllItemCardByInvStripSearchBean(ItemCardReportSerachBean itemCardReportSerachBean, GlYear glYear);
-//    
-//    public List<ItemsDataView> getAllInvStripListByInvStripSearchBean(InvItemSalesSearchBean invStripSearchBean);
     public List<ItemsDataView> getAllInvStripListByInvStripSearchBean(InvItemSalesSearchBean invStripSearchBean);
 
     public List<ItemsDataView> getAllItemCardByInvStripSearchBean(ItemCardReportSerachBean itemCardReportSerachBean, GlYear glYear);
 
     public InvItemDTO findInvItem(Integer invItemById, TobyUser tobyUser);
+    
+    public List<ItemsDataView> getAllItemCardByInvStripSearchBeanNew(ItemCardReportSerachBean itemCardReportSerachBean, GlYear glYear);
 
 }

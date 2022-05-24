@@ -108,7 +108,7 @@ public class ItemCardReportMB extends BaseReportBean {
 
     @Override
     public void search() {
-        itemsDataViewList = itemsDataViewService.getAllItemCardByInvStripSearchBean(itemCardReportSerachBean, getUserData().getGlYear());
+        itemsDataViewList = itemsDataViewService.getAllItemCardByInvStripSearchBeanNew(itemCardReportSerachBean, getUserData().getGlYear());
         ItemCardReportEntity itemCardReport;
         BigDecimal balance = BigDecimal.ZERO;
         itemCardReportEntityList = new ArrayList<>();
