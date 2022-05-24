@@ -568,24 +568,16 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        IFNULL(`iaod`.`screwing`, 1) AS `screwing`,\n"
                 + "        `iaod`.`item_id` AS `item_id`\n"
                 + "    FROM\n"
-                + "        (((`inv_inventory_transaction` `iao`\n"
+                + "        (`inv_inventory_transaction` `iao`\n"
                 + "        LEFT JOIN `inv_inventory_transaction_detail` `iaod` ON ((`iao`.`id` = `iaod`.`inventory_transaction_id`)))\n"
-                + "        LEFT JOIN `inv_item` `ii` ON ((`ii`.`id` = `iaod`.`item_id`)))\n"
-                + "        LEFT JOIN `inv_inventory` `ini` ON ((`ini`.`id` = `iao`.`inv_inventory_id`)))\n"
                 + "    WHERE\n"
                 + "        ((`iao`.`type` = 1)\n"
                 + "            AND (`iao`.`date` IS NOT NULL)) ");
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` >= ").append(itemCardReportSerachBean.getInvItemForm().getCode());
+        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+            stringBuilder.append(" AND `iaod`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` <= ").append(itemCardReportSerachBean.getInvItemTo().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` >= ").append(itemCardReportSerachBean.getInventoryFrom().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` <= ").append(itemCardReportSerachBean.getInventoryTo().getCode());
+        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
+            stringBuilder.append(" AND `iao`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
@@ -597,32 +589,22 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         }
 
         stringBuilder.append(" AND `iao`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
-                + "        AND `iao`.`date` is not null AND  `iaod`.`item_id` is not null  AND `iao`.`inv_inventory_id` is not null  \n"
-                + "                 AND `iaod`.`quantity` is not null    \n"
                 + "    UNION ALL SELECT \n"
                 + "        IFNULL(`iaod`.`quantity`, 0) AS `qtyin`,\n"
                 + "        0 AS `qtyout`,\n"
                 + "        IFNULL(`iaod`.`screwing`, 1) AS `screwing`,\n"
                 + "        `iaod`.`item_id` AS `item_Id`\n"
                 + "    FROM\n"
-                + "        (((`inv_inventory_transaction` `iao`\n"
+                + "        (`inv_inventory_transaction` `iao`\n"
                 + "        LEFT JOIN `inv_inventory_transaction_detail` `iaod` ON ((`iao`.`id` = `iaod`.`inventory_transaction_id`)))\n"
-                + "        LEFT JOIN `inv_item` `ii` ON ((`ii`.`id` = `iaod`.`item_id`)))\n"
-                + "        LEFT JOIN `inv_inventory` `ini` ON ((`ini`.`id` = `iao`.`inv_inventory_id`)))\n"
                 + "    WHERE\n"
                 + "        ((`iao`.`type` = 0)\n"
                 + "            AND (`iao`.`date` IS NOT NULL))");
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` >= ").append(itemCardReportSerachBean.getInvItemForm().getCode());
+        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+            stringBuilder.append(" AND `iaod`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` <= ").append(itemCardReportSerachBean.getInvItemTo().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` >= ").append(itemCardReportSerachBean.getInventoryFrom().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` <= ").append(itemCardReportSerachBean.getInventoryTo().getCode());
+        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
+            stringBuilder.append(" AND `iao`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
@@ -633,34 +615,25 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             stringBuilder.append(" AND `iao`.`date` <= '").append(formatDateTo).append("23:59:59 '");
         }
         stringBuilder.append(" AND `iao`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
-                + "        AND `iao`.`date` is not null AND  `iaod`.`item_id` is not null  AND `iao`.`inv_inventory_id` is not null \n"
-                + "                 AND `ii`.`name` is not null AND `ii`.`code` is not null \n"
-                + "                 AND `iaod`.`quantity` is not null    \n"
                 + "    UNION ALL SELECT \n"
                 + "        IFNULL(`ipid`.`quantity`, 0) AS `qtyin`,\n"
                 + "        0 AS `qtyout`,\n"
                 + "        IFNULL(`ipid`.`screwing`, 1) AS `screwing`,\n"
                 + "        `ipid`.`item_id` AS `item_Id`\n"
                 + "    FROM\n"
-                + "        (((`inv_purchase_invoice` `ipi`\n"
+                + "        (`inv_purchase_invoice` `ipi`\n"
                 + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
-                + "        LEFT JOIN `inv_item` `ii` ON ((`ii`.`id` = `ipid`.`item_id`)))\n"
-                + "        LEFT JOIN `inv_inventory` `ini` ON ((`ini`.`id` = `ipid`.`inv_inventory_id`)))\n"
                 + "    WHERE\n"
                 + "        ((`ipi`.`type` = 0)\n"
                 + "            AND (`ipi`.`date` IS NOT NULL)) ");
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` >= ").append(itemCardReportSerachBean.getInvItemForm().getCode());
+        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+            stringBuilder.append(" AND `ipid`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` <= ").append(itemCardReportSerachBean.getInvItemTo().getCode());
+
+        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
+            stringBuilder.append(" AND `ipid`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
-        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` >= ").append(itemCardReportSerachBean.getInventoryFrom().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` <= ").append(itemCardReportSerachBean.getInventoryTo().getCode());
-        }
+
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
             stringBuilder.append(" AND `ipi`.`date` >= '").append(formatDateFrom).append("00:00:00 '");
@@ -671,34 +644,25 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         }
 
         stringBuilder.append(" AND `ipi`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
-                + "        AND `ipi`.`date` is not null AND  `ipid`.`item_id` is not null  AND `ipid`.`inv_inventory_id` is not null \n"
-                + "                 AND `ii`.`name` is not null AND `ii`.`code` is not null \n"
-                + "                 AND `ipid`.`quantity` is not null    \n"
                 + "    UNION ALL SELECT \n"
                 + "        0 AS `qtyin`,\n"
                 + "        IFNULL(`ipid`.`quantity`, 0) AS `qtyout`,\n"
                 + "        IFNULL(`ipid`.`screwing`, 1) AS `screwing`,\n"
                 + "        `ipid`.`item_id` AS `item_Id`\n"
                 + "    FROM\n"
-                + "        (((`inv_purchase_invoice` `ipi`\n"
+                + "        (`inv_purchase_invoice` `ipi`\n"
                 + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
-                + "        LEFT JOIN `inv_item` `ii` ON ((`ii`.`id` = `ipid`.`item_id`)))\n"
-                + "        LEFT JOIN `inv_inventory` `ini` ON ((`ini`.`id` = `ipid`.`inv_inventory_id`)))\n"
                 + "    WHERE\n"
                 + "        ((`ipi`.`type` = 4)\n"
                 + "            AND (`ipi`.`date` IS NOT NULL)) ");
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` >= ").append(itemCardReportSerachBean.getInvItemForm().getCode());
+        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+            stringBuilder.append(" AND `ipid`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` <= ").append(itemCardReportSerachBean.getInvItemTo().getCode());
+
+        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
+            stringBuilder.append(" AND `ipid`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
-        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` >= ").append(itemCardReportSerachBean.getInventoryFrom().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` <= ").append(itemCardReportSerachBean.getInventoryTo().getCode());
-        }
+
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
             stringBuilder.append(" AND `ipi`.`date` >= '").append(formatDateFrom).append("00:00:00 '");
@@ -708,32 +672,22 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             stringBuilder.append(" AND `ipi`.`date` <= '").append(formatDateTo).append("23:59:59 '");
         }
         stringBuilder.append(" AND `ipi`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
-                + "        AND `ipi`.`date` is not null AND  `ipid`.`item_id` is not null  AND `ipid`.`inv_inventory_id` is not null  \n"
-                + "                 AND `ii`.`name` is not null AND `ii`.`code` is not null \n"
-                + "                 AND `ipid`.`quantity` is not null    \n"
                 + "    UNION ALL SELECT \n"
                 + "        0 AS `qtyin`,\n"
                 + "        IFNULL(`ird`.`amount`, 0) AS `qtyout`,\n"
                 + "        IFNULL(`ird`.`screwing`, 1) AS `screwing`,\n"
                 + "        `ird`.`item_id` AS `item_Id` \n"
                 + "    FROM\n"
-                + "        (((`inv_reservation` `ir`\n"
+                + "        (`inv_reservation` `ir`\n"
                 + "        LEFT JOIN `inv_reservation_detail` `ird` ON ((`ir`.`id` = `ird`.`reservation_id`)))\n"
-                + "        LEFT JOIN `inv_item` `ii` ON ((`ii`.`id` = `ird`.`item_id`)))\n"
-                + "        LEFT JOIN `inv_inventory` `ini` ON ((`ini`.`id` = `ir`.`inv_id`)))\n"
                 + "    WHERE\n"
                 + "        ((`ir`.`reservation_date` IS NOT NULL)) ");
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` >= ").append(itemCardReportSerachBean.getInvItemForm().getCode());
+        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+            stringBuilder.append(" AND `ird`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` <= ").append(itemCardReportSerachBean.getInvItemTo().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` >= ").append(itemCardReportSerachBean.getInventoryFrom().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` <= ").append(itemCardReportSerachBean.getInventoryTo().getCode());
+
+        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
+            stringBuilder.append(" AND `ir`.`inv_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
@@ -744,33 +698,23 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             stringBuilder.append(" AND `ir`.`reservation_date` <= '").append(formatDateTo).append("23:59:59 '");
         }
         stringBuilder.append(" AND `ir`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
-                + "        AND `ir`.`date` is not null AND  `ird`.`item_id` is not null  AND `ir`.`inv_id` is not null  \n"
-                + "                 AND `ii`.`name` is not null AND `ii`.`code` is not null \n"
-                + "                 AND `ird`.`amount` is not null    \n"
                 + "    UNION ALL SELECT \n"
                 + "        0 AS `qtyin`,\n"
                 + "        IFNULL(`ipid`.`quantity`, 0) AS `qtyout`,\n"
                 + "        IFNULL(`ipid`.`screwing`, 1) AS `screwing`,\n"
                 + "        `ipid`.`item_id` AS `item_Id` \n"
                 + "    FROM\n"
-                + "        (((`inv_purchase_invoice` `ipi`\n"
+                + "        (`inv_purchase_invoice` `ipi`\n"
                 + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
-                + "        LEFT JOIN `inv_item` `ii` ON ((`ii`.`id` = `ipid`.`item_id`)))\n"
-                + "        LEFT JOIN `inv_inventory` `ini` ON ((`ini`.`id` = `ipid`.`inv_inventory_id`)))\n"
                 + "    WHERE\n"
                 + "        ((`ipi`.`type` = 2)\n"
                 + "            AND (`ipi`.`date` IS NOT NULL)) ");
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` >= ").append(itemCardReportSerachBean.getInvItemForm().getCode());
+        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+            stringBuilder.append(" AND `ipid`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` <= ").append(itemCardReportSerachBean.getInvItemTo().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` >= ").append(itemCardReportSerachBean.getInventoryFrom().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` <= ").append(itemCardReportSerachBean.getInventoryTo().getCode());
+
+        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
+            stringBuilder.append(" AND `ipid`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
@@ -782,33 +726,23 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         }
 
         stringBuilder.append(" AND `ipi`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
-                + "        AND `ipi`.`date` is not null AND  `ipid`.`item_id` is not null  AND `ipid`.`inv_inventory_id` is not null \n"
-                + "                 AND `ii`.`name` is not null AND `ii`.`code` is not null \n"
-                + "                 AND `ipid`.`quantity` is not null   \n"
                 + "    UNION ALL SELECT \n"
                 + "        IFNULL(`ipid`.`quantity`, 0) AS `qtyin`,\n"
                 + "        0 AS `qtyout`,\n"
                 + "        IFNULL(`ipid`.`screwing`, 1) AS `screwing`,\n"
                 + "        `ipid`.`item_id` AS `item_Id`\n"
                 + "    FROM\n"
-                + "        (((`inv_purchase_invoice` `ipi`\n"
+                + "        (`inv_purchase_invoice` `ipi`\n"
                 + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
-                + "        LEFT JOIN `inv_item` `ii` ON ((`ii`.`id` = `ipid`.`item_id`)))\n"
-                + "        LEFT JOIN `inv_inventory` `ini` ON ((`ini`.`id` = `ipid`.`inv_inventory_id`)))\n"
                 + "    WHERE\n"
                 + "        ((`ipi`.`type` = 3)\n"
                 + "            AND (`ipi`.`date` IS NOT NULL)) ");
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` >= ").append(itemCardReportSerachBean.getInvItemForm().getCode());
+        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+            stringBuilder.append(" AND `ipid`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` <= ").append(itemCardReportSerachBean.getInvItemTo().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` >= ").append(itemCardReportSerachBean.getInventoryFrom().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` <= ").append(itemCardReportSerachBean.getInventoryTo().getCode());
+
+        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
+            stringBuilder.append(" AND `ipid`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
@@ -819,33 +753,23 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             stringBuilder.append(" AND `ipi`.`date` <= '").append(formatDateTo).append("23:59:59 '");
         }
         stringBuilder.append(" AND `ipi`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
-                + "        AND `ipi`.`date` is not null AND  `ipid`.`item_id` is not null  AND `ipid`.`inv_inventory_id` is not null  \n"
-                + "                 AND `ii`.`name` is not null AND `ii`.`code` is not null \n"
-                + "                 AND `ipid`.`quantity` is not null    \n"
                 + "    UNION ALL SELECT \n"
                 + "        0 AS `qtyin`,\n"
                 + "        IFNULL(`itd`.`amount`, 0) AS `qtyout`,\n"
                 + "        IFNULL(`itd`.`screwing`, 1) AS `screwing`,\n"
                 + "        `itd`.`inv_item_id` AS `item_Id`\n"
                 + "    FROM\n"
-                + "        (((`inv_transfer` `it`\n"
+                + "        (`inv_transfer` `it`\n"
                 + "        LEFT JOIN `inv_transfer_detail` `itd` ON ((`it`.`id` = `itd`.`inv_transfer_id`)))\n"
-                + "        LEFT JOIN `inv_item` `ii` ON ((`ii`.`id` = `itd`.`inv_item_id`)))\n"
-                + "        LEFT JOIN `inv_inventory` `ini` ON ((`ini`.`id` = `it`.`inv_from`)))\n"
                 + "    WHERE\n"
                 + "        ((`it`.`transfer_date` IS NOT NULL)\n"
                 + "            AND (`it`.`transfer_type` = 0)) ");
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` >= ").append(itemCardReportSerachBean.getInvItemForm().getCode());
+        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+            stringBuilder.append(" AND `itd`.`inv_item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` <= ").append(itemCardReportSerachBean.getInvItemTo().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` >= ").append(itemCardReportSerachBean.getInventoryFrom().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` <= ").append(itemCardReportSerachBean.getInventoryTo().getCode());
+
+        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
+            stringBuilder.append(" AND `it`.`inv_from` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
@@ -856,33 +780,23 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             stringBuilder.append(" AND `it`.`transfer_date` <= '").append(formatDateTo).append("23:59:59 '");
         }
         stringBuilder.append(" AND `it`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
-                + "        AND `it`.`date` is not null AND  `itd`.`inv_item_id` is not null  AND `it`.`inv_from` is not null \n"
-                + "                 AND `ii`.`name` is not null AND `ii`.`code` is not null \n"
-                + "                 AND `itd`.`amount` is not null    \n"
                 + "    UNION ALL SELECT \n"
                 + "        IFNULL(`itd`.`amount`, 0) AS `qtyin`,\n"
                 + "        0 AS `qtyout`,\n"
                 + "        IFNULL(`itd`.`screwing`, 1) AS `screwing`,\n"
                 + "        `itd`.`inv_item_id` AS `item_Id`\n"
                 + "    FROM\n"
-                + "        (((`inv_transfer` `it`\n"
+                + "        (`inv_transfer` `it`\n"
                 + "        LEFT JOIN `inv_transfer_detail` `itd` ON ((`it`.`id` = `itd`.`inv_transfer_id`)))\n"
-                + "        LEFT JOIN `inv_item` `ii` ON ((`ii`.`id` = `itd`.`inv_item_id`)))\n"
-                + "        LEFT JOIN `inv_inventory` `ini` ON ((`ini`.`id` = `it`.`inv_to`)))\n"
                 + "    WHERE\n"
                 + "        ((`it`.`transfer_date` IS NOT NULL)\n"
                 + "            AND (`it`.`transfer_type` = 0)) ");
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` >= ").append(itemCardReportSerachBean.getInvItemForm().getCode());
+        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+            stringBuilder.append(" AND `itd`.`inv_item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` <= ").append(itemCardReportSerachBean.getInvItemTo().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` >= ").append(itemCardReportSerachBean.getInventoryFrom().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` <= ").append(itemCardReportSerachBean.getInventoryTo().getCode());
+
+        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
+            stringBuilder.append(" AND `it`.`inv_to` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
@@ -894,32 +808,22 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         }
 
         stringBuilder.append(" AND `it`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
-                + "        AND `it`.`date` is not null AND  `itd`.`inv_item_id` is not null  AND `it`.`inv_to` is not null  \n"
-                + "                 AND `ii`.`name` is not null AND `ii`.`code` is not null \n"
-                + "                 AND `itd`.`amount` is not null    \n"
                 + "    UNION ALL SELECT \n"
                 + "        `isd`.`difference` AS `qtyin`,\n"
                 + "        0 AS `qtyout`,\n"
                 + "        IFNULL(`isd`.`screwing`, 1) AS `screwing`,\n"
                 + "        `isd`.`inv_item_id` AS `item_Id`\n"
                 + "    FROM\n"
-                + "        (((`inv_update` `is`\n"
+                + "        (`inv_update` `is`\n"
                 + "        LEFT JOIN `inv_update_detail` `isd` ON ((`is`.`id` = `isd`.`inv_update_id`)))\n"
-                + "        LEFT JOIN `inv_item` `ii` ON ((`ii`.`id` = `isd`.`inv_item_id`)))\n"
-                + "        LEFT JOIN `inv_inventory` `ini` ON ((`ini`.`id` = `is`.`inventory_id`)))\n"
                 + "    WHERE\n"
                 + "        (`is`.`date` IS NOT NULL) ");
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` >= ").append(itemCardReportSerachBean.getInvItemForm().getCode());
+        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+            stringBuilder.append(" AND `isd`.`inv_item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` <= ").append(itemCardReportSerachBean.getInvItemTo().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` >= ").append(itemCardReportSerachBean.getInventoryFrom().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` <= ").append(itemCardReportSerachBean.getInventoryTo().getCode());
+
+        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
+            stringBuilder.append(" AND `is`.`inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
@@ -930,32 +834,22 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             stringBuilder.append(" AND `is`.`date` <= '").append(formatDateTo).append("23:59:59 '");
         }
         stringBuilder.append(" AND `is`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
-                + "        AND `is`.`date` is not null AND  `isd`.`inv_item_id` is not null  AND `is`.`inventory_id` is not null \n"
-                + "                 AND `ii`.`name` is not null AND `ii`.`code` is not null \n"
-                + "                 AND `isd`.`difference` is not null    \n"
                 + "    UNION ALL SELECT \n"
                 + "        `iobid`.`quantity` AS `qtyin`,\n"
                 + "        0 AS `qtyout`,\n"
                 + "        IFNULL(`iobid`.`screwing`, 1) AS `screwing`,\n"
                 + "        `iobid`.`item_id` AS `item_Id`\n"
                 + "    FROM\n"
-                + "        (((`inv_openning_balance_item` `iobi`\n"
+                + "        (`inv_openning_balance_item` `iobi`\n"
                 + "        LEFT JOIN `inv_openning_balance_item_detail` `iobid` ON ((`iobi`.`id` = `iobid`.`inv_openning_balance_item_id`)))\n"
-                + "        LEFT JOIN `inv_item` `ii` ON ((`ii`.`id` = `iobid`.`item_id`)))\n"
-                + "        LEFT JOIN `inv_inventory` `ini` ON ((`ini`.`id` = `iobi`.`inv_inventory_id`)))\n "
                 + "    WHERE\n"
                 + "        (`iobi`.`date` IS NOT NULL) ");
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` >= ").append(itemCardReportSerachBean.getInvItemForm().getCode());
+        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+            stringBuilder.append(" AND `iobid`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` <= ").append(itemCardReportSerachBean.getInvItemTo().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` >= ").append(itemCardReportSerachBean.getInventoryFrom().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` <= ").append(itemCardReportSerachBean.getInventoryTo().getCode());
+
+        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
+            stringBuilder.append(" AND `iobi`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
@@ -966,10 +860,8 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             stringBuilder.append(" AND `iobi`.`date` <= '").append(formatDateTo).append(" 23:59:59'");
         }
         stringBuilder.append(" AND `iobi`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
-                + "        AND `iobi`.`date` is not null AND  `iobid`.`item_id` is not null  AND `iobi`.`inv_inventory_id` is not null  \n"
-                + "                 AND `ii`.`name` is not null AND `ii`.`code` is not null \n"
-                + "                 AND `iobid`.`quantity` is not null    ");
-        
+                + "                   ");
+
         stringBuilder.append(" ) IDV group by IDV.item_id order by IDV.item_id ASC");
 
         List<Object[]> res2 = dao.executeNativeQuery(stringBuilder.toString());
@@ -985,7 +877,6 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
 //        stringBuilder.append(" order by IDV.itemId ASC, IDV.date ASC");
 //        List<Object[]> list2 = dao.findListByQuery(stringBuilder.toString(), params);
 //       
-
         stringBuilder = new StringBuilder();
         stringBuilder.append("SELECT IDV.* from ( ");
         stringBuilder.append("SELECT         \n"
@@ -1049,17 +940,12 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "    WHERE\n"
                 + "        ((`iao`.`type` = 1)\n"
                 + "            AND (`iao`.`date` IS NOT NULL)) ");
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` >= ").append(itemCardReportSerachBean.getInvItemForm().getCode());
+        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+            stringBuilder.append(" AND `iaod`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` <= ").append(itemCardReportSerachBean.getInvItemTo().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` >= ").append(itemCardReportSerachBean.getInventoryFrom().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` <= ").append(itemCardReportSerachBean.getInventoryTo().getCode());
+
+        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
+            stringBuilder.append(" AND `iao`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
@@ -1071,9 +957,6 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         }
 
         stringBuilder.append(" AND `iao`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
-                + "        AND `iao`.`date` is not null AND  `iaod`.`item_id` is not null  AND `iao`.`inv_inventory_id` is not null AND `ig`.`id` is not null\n"
-                + "                 AND `ii`.`name` is not null AND `ii`.`code` is not null \n"
-                + "                 AND `iaod`.`quantity` is not null    \n"
                 + "    UNION ALL SELECT \n"
                 + "        \n"
                 + "        `iao`.`id` AS `id`,\n"
@@ -1136,17 +1019,12 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "    WHERE\n"
                 + "        ((`iao`.`type` = 0)\n"
                 + "            AND (`iao`.`date` IS NOT NULL))");
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` >= ").append(itemCardReportSerachBean.getInvItemForm().getCode());
+        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+            stringBuilder.append(" AND `iaod`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` <= ").append(itemCardReportSerachBean.getInvItemTo().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` >= ").append(itemCardReportSerachBean.getInventoryFrom().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` <= ").append(itemCardReportSerachBean.getInventoryTo().getCode());
+
+        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
+            stringBuilder.append(" AND `iao`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
@@ -1157,9 +1035,6 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             stringBuilder.append(" AND `iao`.`date` <= '").append(formatDateTo).append("23:59:59 '");
         }
         stringBuilder.append(" AND `iao`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
-                + "        AND `iao`.`date` is not null AND  `iaod`.`item_id` is not null  AND `iao`.`inv_inventory_id` is not null AND `ig`.`id` is not null\n"
-                + "                 AND `ii`.`name` is not null AND `ii`.`code` is not null \n"
-                + "                 AND `iaod`.`quantity` is not null    \n"
                 + "    UNION ALL SELECT \n"
                 + "        \n"
                 + "        `ipi`.`id` AS `id`,\n"
@@ -1222,17 +1097,12 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "    WHERE\n"
                 + "        ((`ipi`.`type` = 0)\n"
                 + "            AND (`ipi`.`date` IS NOT NULL)) ");
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` >= ").append(itemCardReportSerachBean.getInvItemForm().getCode());
+        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+            stringBuilder.append(" AND `ipid`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` <= ").append(itemCardReportSerachBean.getInvItemTo().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` >= ").append(itemCardReportSerachBean.getInventoryFrom().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` <= ").append(itemCardReportSerachBean.getInventoryTo().getCode());
+
+        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
+            stringBuilder.append(" AND `ipid`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
@@ -1244,9 +1114,6 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         }
 
         stringBuilder.append(" AND `ipi`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
-                + "        AND `ipi`.`date` is not null AND  `ipid`.`item_id` is not null  AND `ipid`.`inv_inventory_id` is not null AND `ig`.`id` is not null\n"
-                + "                 AND `ii`.`name` is not null AND `ii`.`code` is not null \n"
-                + "                 AND `ipid`.`quantity` is not null    \n"
                 + "    UNION ALL SELECT \n"
                 + "        \n"
                 + "        `ipi`.`id` AS `id`,\n"
@@ -1309,17 +1176,12 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "    WHERE\n"
                 + "        ((`ipi`.`type` = 4)\n"
                 + "            AND (`ipi`.`date` IS NOT NULL)) ");
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` >= ").append(itemCardReportSerachBean.getInvItemForm().getCode());
+        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+            stringBuilder.append(" AND `ipid`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` <= ").append(itemCardReportSerachBean.getInvItemTo().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` >= ").append(itemCardReportSerachBean.getInventoryFrom().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` <= ").append(itemCardReportSerachBean.getInventoryTo().getCode());
+
+        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
+            stringBuilder.append(" AND `ipid`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
@@ -1330,9 +1192,6 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             stringBuilder.append(" AND `ipi`.`date` <= '").append(formatDateTo).append("23:59:59 '");
         }
         stringBuilder.append(" AND `ipi`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
-                + "        AND `ipi`.`date` is not null AND  `ipid`.`item_id` is not null  AND `ipid`.`inv_inventory_id` is not null AND `ig`.`id` is not null\n"
-                + "                 AND `ii`.`name` is not null AND `ii`.`code` is not null \n"
-                + "                 AND `ipid`.`quantity` is not null    \n"
                 + "    UNION ALL SELECT \n"
                 + "        \n"
                 + "        `ir`.`id` AS `id`,\n"
@@ -1393,17 +1252,12 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        LEFT JOIN `inv_inventory` `ini` ON ((`ini`.`id` = `ir`.`inv_id`)))\n"
                 + "    WHERE\n"
                 + "        ((`ir`.`reservation_date` IS NOT NULL)) ");
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` >= ").append(itemCardReportSerachBean.getInvItemForm().getCode());
+        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+            stringBuilder.append(" AND `ird`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` <= ").append(itemCardReportSerachBean.getInvItemTo().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` >= ").append(itemCardReportSerachBean.getInventoryFrom().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` <= ").append(itemCardReportSerachBean.getInventoryTo().getCode());
+
+        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
+            stringBuilder.append(" AND `ir`.`inv_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
@@ -1414,9 +1268,6 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             stringBuilder.append(" AND `ir`.`reservation_date` <= '").append(formatDateTo).append("23:59:59 '");
         }
         stringBuilder.append(" AND `ir`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
-                + "        AND `ir`.`date` is not null AND  `ird`.`item_id` is not null  AND `ir`.`inv_id` is not null AND `ig`.`id` is not null\n"
-                + "                 AND `ii`.`name` is not null AND `ii`.`code` is not null \n"
-                + "                 AND `ird`.`amount` is not null    \n"
                 + "    UNION ALL SELECT \n"
                 + "        \n"
                 + "        `ipi`.`id` AS `id`,\n"
@@ -1479,17 +1330,12 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "    WHERE\n"
                 + "        ((`ipi`.`type` = 2)\n"
                 + "            AND (`ipi`.`date` IS NOT NULL)) ");
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` >= ").append(itemCardReportSerachBean.getInvItemForm().getCode());
+        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+            stringBuilder.append(" AND `ipid`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` <= ").append(itemCardReportSerachBean.getInvItemTo().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` >= ").append(itemCardReportSerachBean.getInventoryFrom().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` <= ").append(itemCardReportSerachBean.getInventoryTo().getCode());
+
+        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
+            stringBuilder.append(" AND `ipid`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
@@ -1501,9 +1347,6 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         }
 
         stringBuilder.append(" AND `ipi`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
-                + "        AND `ipi`.`date` is not null AND  `ipid`.`item_id` is not null  AND `ipid`.`inv_inventory_id` is not null AND `ig`.`id` is not null\n"
-                + "                 AND `ii`.`name` is not null AND `ii`.`code` is not null \n"
-                + "                 AND `ipid`.`quantity` is not null   \n"
                 + "    UNION ALL SELECT \n"
                 + "        \n"
                 + "        `ipi`.`id` AS `id`,\n"
@@ -1566,17 +1409,12 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "    WHERE\n"
                 + "        ((`ipi`.`type` = 3)\n"
                 + "            AND (`ipi`.`date` IS NOT NULL)) ");
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` >= ").append(itemCardReportSerachBean.getInvItemForm().getCode());
+       if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+            stringBuilder.append(" AND `ipid`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` <= ").append(itemCardReportSerachBean.getInvItemTo().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` >= ").append(itemCardReportSerachBean.getInventoryFrom().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` <= ").append(itemCardReportSerachBean.getInventoryTo().getCode());
+
+        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
+            stringBuilder.append(" AND `ipid`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
@@ -1587,9 +1425,6 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             stringBuilder.append(" AND `ipi`.`date` <= '").append(formatDateTo).append("23:59:59 '");
         }
         stringBuilder.append(" AND `ipi`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
-                + "        AND `ipi`.`date` is not null AND  `ipid`.`item_id` is not null  AND `ipid`.`inv_inventory_id` is not null AND `ig`.`id` is not null\n"
-                + "                 AND `ii`.`name` is not null AND `ii`.`code` is not null \n"
-                + "                 AND `ipid`.`quantity` is not null    \n"
                 + "    UNION ALL SELECT \n"
                 + "        \n"
                 + "        `it`.`id` AS `id`,\n"
@@ -1651,17 +1486,12 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "    WHERE\n"
                 + "        ((`it`.`transfer_date` IS NOT NULL)\n"
                 + "            AND (`it`.`transfer_type` = 0)) ");
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` >= ").append(itemCardReportSerachBean.getInvItemForm().getCode());
+        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+            stringBuilder.append(" AND `itd`.`inv_item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` <= ").append(itemCardReportSerachBean.getInvItemTo().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` >= ").append(itemCardReportSerachBean.getInventoryFrom().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` <= ").append(itemCardReportSerachBean.getInventoryTo().getCode());
+
+        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
+            stringBuilder.append(" AND `it`.`inv_from` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
@@ -1672,9 +1502,6 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             stringBuilder.append(" AND `it`.`transfer_date` <= '").append(formatDateTo).append("23:59:59 '");
         }
         stringBuilder.append(" AND `it`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
-                + "        AND `it`.`date` is not null AND  `itd`.`inv_item_id` is not null  AND `it`.`inv_from` is not null AND `ig`.`id` is not null\n"
-                + "                 AND `ii`.`name` is not null AND `ii`.`code` is not null \n"
-                + "                 AND `itd`.`amount` is not null    \n"
                 + "    UNION ALL SELECT \n"
                 + "        \n"
                 + "        `it`.`id` AS `id`,\n"
@@ -1736,17 +1563,12 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "    WHERE\n"
                 + "        ((`it`.`transfer_date` IS NOT NULL)\n"
                 + "            AND (`it`.`transfer_type` = 0)) ");
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` >= ").append(itemCardReportSerachBean.getInvItemForm().getCode());
+        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+            stringBuilder.append(" AND `itd`.`inv_item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` <= ").append(itemCardReportSerachBean.getInvItemTo().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` >= ").append(itemCardReportSerachBean.getInventoryFrom().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` <= ").append(itemCardReportSerachBean.getInventoryTo().getCode());
+
+        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
+            stringBuilder.append(" AND `it`.`inv_to` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
@@ -1758,9 +1580,6 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         }
 
         stringBuilder.append(" AND `it`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
-                + "        AND `it`.`date` is not null AND  `itd`.`inv_item_id` is not null  AND `it`.`inv_to` is not null AND `ig`.`id` is not null\n"
-                + "                 AND `ii`.`name` is not null AND `ii`.`code` is not null \n"
-                + "                 AND `itd`.`amount` is not null    \n"
                 + "    UNION ALL SELECT \n"
                 + "        \n"
                 + "        `is`.`id` AS `id`,\n"
@@ -1821,17 +1640,12 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        LEFT JOIN `inv_inventory` `ini` ON ((`ini`.`id` = `is`.`inventory_id`)))\n"
                 + "    WHERE\n"
                 + "        (`is`.`date` IS NOT NULL) ");
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` >= ").append(itemCardReportSerachBean.getInvItemForm().getCode());
+         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+            stringBuilder.append(" AND `isd`.`inv_item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` <= ").append(itemCardReportSerachBean.getInvItemTo().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` >= ").append(itemCardReportSerachBean.getInventoryFrom().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` <= ").append(itemCardReportSerachBean.getInventoryTo().getCode());
+
+        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
+            stringBuilder.append(" AND `is`.`inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
@@ -1842,9 +1656,6 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             stringBuilder.append(" AND `is`.`date` <= '").append(formatDateTo).append("23:59:59 '");
         }
         stringBuilder.append(" AND `is`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
-                + "        AND `is`.`date` is not null AND  `isd`.`inv_item_id` is not null  AND `is`.`inventory_id` is not null AND `ig`.`id` is not null\n"
-                + "                 AND `ii`.`name` is not null AND `ii`.`code` is not null \n"
-                + "                 AND `isd`.`difference` is not null    \n"
                 + "    UNION ALL SELECT \n"
                 + "        \n"
                 + "        `iobi`.`id` AS `id`,\n"
@@ -1905,17 +1716,12 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        LEFT JOIN `inv_inventory` `ini` ON ((`ini`.`id` = `iobi`.`inv_inventory_id`)))\n"
                 + "    WHERE\n"
                 + "        (`iobi`.`date` IS NOT NULL) ");
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` >= ").append(itemCardReportSerachBean.getInvItemForm().getCode());
+         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+            stringBuilder.append(" AND `iobid`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
-            stringBuilder.append(" AND `ii`.`code` <= ").append(itemCardReportSerachBean.getInvItemTo().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` >= ").append(itemCardReportSerachBean.getInventoryFrom().getCode());
-        }
-        if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
-            stringBuilder.append(" AND `ini`.`code` <= ").append(itemCardReportSerachBean.getInventoryTo().getCode());
+
+        if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
+            stringBuilder.append(" AND `iobi`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
@@ -1926,9 +1732,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             stringBuilder.append(" AND `iobi`.`date` <= '").append(formatDateTo).append(" 23:59:59'");
         }
         stringBuilder.append(" AND `iobi`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
-                + "        AND `iobi`.`date` is not null AND  `iobid`.`item_id` is not null  AND `iobi`.`inv_inventory_id` is not null AND `ig`.`id` is not null\n"
-                + "                 AND `ii`.`name` is not null AND `ii`.`code` is not null \n"
-                + "                 AND `iobid`.`quantity` is not null    ");
+                + "                                  ");
 
         stringBuilder.append(" ) IDV order by IDV.item_id , IDV.date ASC");
         List<Object[]> res = dao.executeNativeQuery(stringBuilder.toString());
@@ -2006,7 +1810,6 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         return newList;
     }
 
-    
     @Override
     public InvItemDTO findInvItem(Integer invItemById, TobyUser tobyUser) {
         InvItem invItem = dao.findEntityById(InvItem.class, invItemById);
@@ -2060,7 +1863,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             appendQuery.append(" AND IDV.itemCode >= :itemCodeFrom");
         }
 
-        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
+        if (itemCardReportSerachBean.getInvItemTo()!= null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
             params.put("itemCodeTo", itemCardReportSerachBean.getInvItemTo().getCode());
             appendQuery.append(" AND IDV.itemCode <= :itemCodeTo");
         }
@@ -2097,7 +1900,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
 
         return appendQuery.toString();
     }
-    
+
     @Override
     public List<ItemsDataView> getAllItemCardByInvStripSearchBean(ItemCardReportSerachBean itemCardReportSerachBean, GlYear glYear) {
         dao.executeNativeQuery("select toby.sql_mode_function()");

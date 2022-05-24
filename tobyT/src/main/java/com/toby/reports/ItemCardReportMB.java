@@ -108,6 +108,8 @@ public class ItemCardReportMB extends BaseReportBean {
 
     @Override
     public void search() {
+        itemCardReportSerachBean.setInvItemTo(itemCardReportSerachBean.getInvItemForm());
+        itemCardReportSerachBean.setInventoryTo(itemCardReportSerachBean.getInventoryFrom());
         itemsDataViewList = itemsDataViewService.getAllItemCardByInvStripSearchBeanNew(itemCardReportSerachBean, getUserData().getGlYear());
         ItemCardReportEntity itemCardReport;
         BigDecimal balance = BigDecimal.ZERO;
@@ -206,7 +208,7 @@ public class ItemCardReportMB extends BaseReportBean {
 
     @Override
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
-        search();
+//        search();
         fillReport(prepareReport(), getUserData().getReportPath() + "ItemCardReport.jasper", itemCardReportEntityList, "pdf");
     }
 

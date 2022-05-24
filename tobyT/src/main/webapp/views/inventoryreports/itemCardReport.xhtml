@@ -19,42 +19,8 @@
 
                     <div class="ui-g-6 ui-xl-6">
 
-                        <div class="ui-g-12 ui-xl-12">
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:autoComplete style="width: 34%!important " 
-                                                dropdown="true"
-                                                converter="#{itemCardReportMB.invInventoryConverter}"
-                                                value="#{itemCardReportMB.itemCardReportSerachBean.inventoryTo}"
-                                                var="inventory"
-                                                itemLabel="#{inventory}" 
-                                                itemValue="#{inventory}" 
-                                                forceSelection="true" 
-                                                completeMethod="#{itemCardReportMB.completInventory}" >
-                                </p:autoComplete>
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_REPOS_NO']}"/>
 
-                            </div>
-                        </div>
-                        <div class="ui-g-12 ui-xl-12">
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:autoComplete style="width: 34%!important " 
-                                                dropdown="true"
-                                                converter="#{itemCardReportMB.itemConverter}"
-                                                value="#{itemCardReportMB.itemCardReportSerachBean.invItemTo}"
-                                                var="item"
-                                                itemLabel="#{item}" 
-                                                itemValue="#{item}" 
-                                                forceSelection="true" 
-                                                completeMethod="#{itemCardReportMB.completInvItem}" >
-                                </p:autoComplete>
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_ITEM']}"/>
 
-                            </div>
-                        </div>
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
                                 <p:calendar pattern="dd/MM/yyyy" 
@@ -124,54 +90,54 @@
 
                 </div>
 
-              <div style="text-align: center">
-                        <p:commandButton   class="searchButtons"
-                                           title="#{userData.userDDs['SEARCH']}"
-                                           action="#{itemCardReportMB.search()}"
-                                           id="search"
-                                           value="#{userData.userDDs['SEARCH']}"
-                                           update="itemCardTable" 
-                                           />
+                <div style="text-align: center">
+                    <p:commandButton   class="searchButtons"
+                                       title="#{userData.userDDs['SEARCH']}"
+                                       action="#{itemCardReportMB.search()}"
+                                       id="search"
+                                       value="#{userData.userDDs['SEARCH']}"
+                                       update="itemCardTable" 
+                                       />
 
-                        <p:commandButton     class="newButtons"
-                                             id="NewB"
-                                             title="#{userData.userDDs['NEW']}" 
-                                             immediate="true" 
-                                             action="#{itemCardReportMB.reset()}"
-                                             update="form"
-                                             value="#{userData.userDDs['NEW']}"
-                                             />
+                    <p:commandButton     class="newButtons"
+                                         id="NewB"
+                                         title="#{userData.userDDs['NEW']}" 
+                                         immediate="true" 
+                                         action="#{itemCardReportMB.reset()}"
+                                         update="form"
+                                         value="#{userData.userDDs['NEW']}"
+                                         />
 
-                        <p:commandButton     class="printButtons"
-                                             id="PrintB"
-                                             ajax="false"
-                                             onclick="form.target = '_blank'"  
-                                             value="#{userData.userDDs['PRINT']}" 
-                                             actionListener="#{itemCardReportMB.exportPDF}"
-                                             title="#{userData.userDDs['PRINT']}"
-                                             immediate="true" />
+                    <p:commandButton     class="printButtons"
+                                         id="PrintB"
+                                         ajax="false"
+                                         onclick="form.target = '_blank'"  
+                                         value="#{userData.userDDs['PRINT']}" 
+                                         actionListener="#{itemCardReportMB.exportPDF}"
+                                         title="#{userData.userDDs['PRINT']}"
+                                         immediate="true" />
 
-                        <p:commandButton     class="closeButtons"
-                                             id="CloseB"
-                                             title="#{userData.userDDs['BACK']}"
-                                             action="exit"
-                                             value="#{userData.userDDs['BACK']}"/>
+                    <p:commandButton     class="closeButtons"
+                                         id="CloseB"
+                                         title="#{userData.userDDs['BACK']}"
+                                         action="exit"
+                                         value="#{userData.userDDs['BACK']}"/>
 
-                        <h:commandLink  class="sdcreenimg" style="margin-right: 4px;">  
-                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
-                            <p:dataExporter type="xls"
-                                            target="itemCardTable" 
-                                            fileName="بطاقة صنف"
-                                            postProcessor="#{itemCardReportMB.postProcessXLS}" />  
-                        </h:commandLink>
+                    <h:commandLink  class="sdcreenimg" style="margin-right: 4px;">  
+                        <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                        <p:dataExporter type="xls"
+                                        target="itemCardTable" 
+                                        fileName="بطاقة صنف"
+                                        postProcessor="#{itemCardReportMB.postProcessXLS}" />  
+                    </h:commandLink>
 
-                        <p:blockUI block="form" trigger="search NewB PrintB CloseB" animate="true" >
+                    <p:blockUI block="form" trigger="search NewB PrintB CloseB" animate="true" >
 
-                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
 
-                        </p:blockUI> 
+                    </p:blockUI> 
 
-              </div>
+                </div>
 
             </p:fieldset>
 

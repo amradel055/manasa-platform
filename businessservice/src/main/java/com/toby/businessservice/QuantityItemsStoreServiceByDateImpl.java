@@ -403,7 +403,7 @@ public class QuantityItemsStoreServiceByDateImpl implements QuantityItemsStoreBy
                     query.append("AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `ipi`.`date` <= '" ).append(dateStr).append(  "' ,true) ");
                 }
                 if (invInventoryId != null) {
-                    query.append("  AND `ipi`.`inv_inventory_id` = \n").append(invInventoryId);
+                    query.append("  AND `ipid`.`inv_inventory_id` = \n").append(invInventoryId);
                 }
             } else {
                 query.append(" SELECT \n"
