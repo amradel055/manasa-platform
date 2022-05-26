@@ -290,7 +290,7 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
     private GeneralJournal tarhilCashAnotherGallary(GeneralJournal journal, GlBankTransactionDetail dto, TobyUser tobyUser, Map<String, Object> params) {
         journal = generaljournalService.addGeneralJournalGlobal(dto.getGlBankTransactionId().getGlYear(), 1004, dto.getGlBankTransactionId().getSerial(), dto.getGlBankTransactionId().getDate(),
                 dto.getGlBankTransactionId().getRemark(), tobyUser, 1, true, dto.getGlBankTransactionId().getId());
-        String remark = "قبض نقدي رقم  " + dto.getGlBankTransactionId().getSerial() + " " + dto.getGlBankTransactionId().getGlBankId().getName();
+        String remark = "قبض نقدي رقم  " + dto.getGlBankTransactionId().getSerial() + " " + dto.getGlBankTransactionId().getGlBankId().getName() + " " + "  لعميل " +  dto.getOrganizationSiteId().getGallaryId().getName() + " " + " فاتورة رقم " + dto.getGlBankTransactionId().getInvoiceId().getSerial();
         BigDecimal valueCommition = dto.getValue().multiply(dto.getBankIdFrom().getCommition().divide(new BigDecimal(100)));
         BigDecimal valueCommitionTax = (((dto.getValue().multiply(dto.getBankIdFrom().getCommition().divide(new BigDecimal(100)))).multiply(new BigDecimal(0.15))).setScale(5, RoundingMode.HALF_UP));
         BigDecimal valueAfterCommition = ((dto.getValue().subtract(valueCommition)).setScale(5, RoundingMode.HALF_UP));
@@ -301,20 +301,23 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
                 && dto.getBankIdFrom().getGallaryId().getCostCenterId().getId() != null) {
 
             generaljournalDetailsService.addGenDetalil(false, dto.getValue(), journal.getId(), dto.getAccountCreditId().getId(),
-                    dto.getBankIdFrom().getGallaryId().getCostCenterId().getId(),
+                    dto.getOrganizationSiteId().getGallaryId().getCostCenterId().getId(),
                     remark, tobyUser);
             Integer bankCommition = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"BANK_COMMITION\" AND a.accountId IS NOT NULL", params);
 
             if (dto.getBankIdFrom().getCommition().compareTo(BigDecimal.ZERO) == 1) {
+//                Integer bankTax = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"BANK_TAX\" AND a.accountId IS NOT NULL", params);
 
-                generaljournalDetailsService.addGenDetalil(true, valueCommition.add(valueCommitionTax), journal.getId(), bankCommition,
+                generaljournalDetailsService.addGenDetalil(true, valueCommition, journal.getId(), bankCommition,
+                        dto.getOrganizationSiteId().getGallaryId().getCostCenterId().getId(),
+                        remark, tobyUser);
+                generaljournalDetailsService.addGenDetalil(true, valueCommitionTax, journal.getId(), bankCommition,
                         dto.getBankIdFrom().getGallaryId().getCostCenterId().getId(),
                         remark, tobyUser);
             }
             if (dto.getBankIdFrom() != null && dto.getBankIdFrom().getCommition() != null
                     && dto.getBankIdFrom().getCommition().compareTo(BigDecimal.ZERO) == 1) {
 
-                Integer bankTax = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"BANK_TAX\" AND a.accountId IS NOT NULL", params);
 
 //                    generaljournalDetailsService.addGenDetalil(true, valueCommitionTax, journal.getId(), bankTax,
 //                            dto.getBankIdFrom().getGallaryId().getCostCenterId().getId(),

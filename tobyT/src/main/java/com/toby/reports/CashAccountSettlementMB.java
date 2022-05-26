@@ -285,7 +285,8 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
 
         cashAccountSettlementReports = new ArrayList<>();
         cashAccountSettlementOpeningBalanceList = new ArrayList<>();
-        cashAccountSettlementList = cashAccountSettlmentService.findAllCashAccountSettlment2(cashAccountSettlementSearchBean);
+//        cashAccountSettlementList = cashAccountSettlmentService.findAllCashAccountSettlment2(cashAccountSettlementSearchBean);
+        cashAccountSettlementList = cashAccountSettlmentService.findAllCashAccountSettlmentNew1(cashAccountSettlementSearchBean);
         if (cashAccountSettlementSearchBean.getOrderBy() == 1) {
             cashAccountSettlementList.sort(new CashAccountSettlmentViewComparator());
         }

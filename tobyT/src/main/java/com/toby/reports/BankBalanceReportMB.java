@@ -71,7 +71,7 @@ public class BankBalanceReportMB extends BaseGlAccountReportBean {
     @Override
     public void search() {
         getBankBalanceReportSearchBean().setBranchId(getUserData().getUserBranch().getId());
-        setBankBalanceReportBeanList(bankBalanceViewService.search(getBankBalanceReportSearchBean()));
+        setBankBalanceReportBeanList(bankBalanceViewService.searchNative(getBankBalanceReportSearchBean()));
     }
 
     @Override
