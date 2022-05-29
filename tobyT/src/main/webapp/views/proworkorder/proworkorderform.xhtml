@@ -874,7 +874,7 @@
                                     <h:outputText value="#{invPurchaseInvoiceDetailsTable.serial}"  />
                                 </p:column>
 
-                                <p:column style="width: 21vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="#{userData.userDDs['ITEM']}" >
+                                <p:column style="width: 15vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="#{userData.userDDs['ITEM']}" >
                                     <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
                                                    rendered="#{invPurchaseInvoiceDetailsTable.isEdit}" />
                                     <p:autoComplete id="invItemNameIn"    
@@ -894,10 +894,10 @@
                                     </p:autoComplete>            
                                 </p:column>
 
-                                <p:column style="width: 17vh;text-align: -webkit-auto;border-radius: 0px" id="itemNameCode" headerText="الكود" >
+                                <p:column style="width: 15vh;text-align: -webkit-auto;border-radius: 0px" id="itemNameCode" headerText="الكود" >
                                     <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
                                                    rendered="#{invPurchaseInvoiceDetailsTable.isEdit}" />
-                                    <p:autoComplete id="invItemCodeIn"  dir="LTR"
+                                    <p:autoComplete id="invItemCodeIn"  dir="RTL"
                                                     style="width:100%"
                                                     rendered="#{not invPurchaseInvoiceDetailsTable.isEdit}"
                                                     converter="#{autoComplete.itemsBarcodesDetailsViewConverter}"
@@ -1020,7 +1020,7 @@
                                 </p:column>
 
 
-                                <p:column style="width: 11vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;" id="proof" headerText="بروفه" >
+                                <p:column style="width: 8vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;" id="proof" headerText="بروفه" >
                                     <p:selectBooleanCheckbox id="proof2" value="#{invPurchaseInvoiceDetailsTable.proof}">
                                         <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.hishis()}" />
                                     </p:selectBooleanCheckbox>
