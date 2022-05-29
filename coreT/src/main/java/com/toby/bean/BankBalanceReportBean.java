@@ -6,6 +6,7 @@
 package com.toby.bean;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 /**
  *
@@ -17,9 +18,9 @@ public class BankBalanceReportBean {
     private Integer bankId;
     private Integer accountIdTo;
     private Integer accountIdFrom;
-    private BigDecimal credit =BigDecimal.ZERO;
+    private BigDecimal credit = BigDecimal.ZERO;
     private BigDecimal debit = BigDecimal.ZERO;
-    private BigDecimal balance = BigDecimal.ZERO ;
+    private BigDecimal balance = BigDecimal.ZERO;
     private BigDecimal previousBalance = BigDecimal.ZERO;
     private BigDecimal localValue = BigDecimal.ZERO;
     private BigDecimal bankFromBalance = BigDecimal.ZERO;
@@ -28,6 +29,8 @@ public class BankBalanceReportBean {
     private String itemName;
     private Integer itemSerial;
     private String customerName;
+
+
     /**
      * @return the bankName
      */
@@ -42,7 +45,7 @@ public class BankBalanceReportBean {
         this.bankName = bankName;
     }
 
-    /** 
+    /**
      * @return the credit
      */
     public BigDecimal getCredit() {
