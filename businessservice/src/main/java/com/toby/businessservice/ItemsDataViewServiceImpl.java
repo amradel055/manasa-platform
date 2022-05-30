@@ -733,7 +733,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        `ipid`.`item_id` AS `item_Id`\n"
                 + "    FROM\n"
                 + "        (`inv_purchase_invoice` `ipi`\n"
-                + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
+                + "         LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
                 + "    WHERE\n"
                 + "        ((`ipi`.`type` = 3)\n"
                 + "            AND (`ipi`.`date` IS NOT NULL)) ");

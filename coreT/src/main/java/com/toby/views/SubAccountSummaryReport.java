@@ -1,8 +1,10 @@
 package com.toby.views;
 
+import com.toby.bean.BankBalanceReportBean;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public class SubAccountSummaryReport implements Serializable {
 
@@ -368,5 +370,7 @@ public class SubAccountSummaryReport implements Serializable {
     public void setInvoiceNumber(Integer invoiceNumber) {
         this.invoiceNumber = invoiceNumber;
     }
+
+ 
 
 }

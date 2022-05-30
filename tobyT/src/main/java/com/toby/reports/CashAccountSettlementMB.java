@@ -5,12 +5,14 @@
  */
 package com.toby.reports;
 
+import com.toby.bean.BankBalanceReportBean;
 import com.toby.businessservice.AccountsSystemSettingsService;
 import com.toby.businessservice.CostCenterService;
 import com.toby.businessservice.GlAccountService;
 import com.toby.businessservice.GlBankService;
 import com.toby.businessservice.GlYearService;
 import com.toby.businessservice.TobyUserRoleService;
+import com.toby.businessservice.report.BankBalanceViewService;
 import com.toby.businessservice.report.CashAccountSettlmentService;
 import com.toby.businessservice.reports.searchBean.SubAccountSummarySearchBean;
 import com.toby.bussinessservice.global.Utility;
@@ -59,7 +61,7 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
     private List<TobyUser> users = new ArrayList<>();
     private GlBankDTOConverter glBankConverter;
     private List<GlBankDTO> glBankList;
-   
+
     private TobyUserConverter tobyUserConverter;
     private List<TobyUser> tobyUserList;
 
@@ -85,14 +87,19 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
     private Integer glBankTransactionIdSeclected;
     private AccountsSystemSettings accountsSystemSettings;
     private CompanyActivityClassEnum companyActivity;
-    
+
     private CashAccountSettlementBean accountSettlementBean;
+
+    private List<BankBalanceReportBean> balanceList;
 
     @EJB
     AccountsSystemSettingsService accountsSystemSettingsService;
     private SubAccountSummaryReport glBankTransactionTypeSeclected;
     @EJB
     GlAccountService glAccountService;
+
+    @EJB
+    BankBalanceViewService bankBalanceViewService;
 
     @EJB
     GlYearService glYearService;
@@ -183,8 +190,9 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
         getCashAccountSettlementSearchBean().setGlYearSelected(glYearDTO);
         fillBankList();
         setAccountSettlementBean(cashAccountSettlmentService.searchNew(getCashAccountSettlementSearchBean()));
+        balanceList = bankBalanceViewService.searchNativeNew(getCashAccountSettlementSearchBean());
     }
-    
+
     public void exportPDFNew(ActionEvent actionEvent) {
 //        search();
         try {
@@ -196,26 +204,25 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
         }
 
     }
-    
-    
+
     private void fillBankList() {
         StringBuilder builder = null;
-        
+
         for (GlBankDTO gb : getCashAccountSettlementSearchBean().getGlBankDTOListSelected()) {
-            
+
             if (builder == null) {
                 builder = new StringBuilder();
                 builder.append(gb.getId());
-                
+
             } else {
-                
+
                 builder.append(",").append(gb.getId());
             }
         }
-        
+
         cashAccountSettlementSearchBean.setGlBankIdSelected(builder.toString());
     }
-    
+
     public HashMap prepareReportNew() {
 
         Map<String, String> userDDs = getUserData().getUserDDs();
@@ -253,14 +260,26 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
 
         hashMap.put("fromDate", getCashAccountSettlementSearchBean().getDateFrom());
         hashMap.put("toDate", getCashAccountSettlementSearchBean().getDateTo());
+
+        hashMap.put("TheNameBank", "اسم البنك");
+        hashMap.put("TheBalance", "القيمة");
+        hashMap.put("tresuray1Name", balanceList.get(0).getBankName());
+        hashMap.put("tresuray1Value", balanceList.get(0).getCredit());
+        hashMap.put("tresuray2Name", balanceList.get(1).getBankName());
+        hashMap.put("tresuray2Value", balanceList.get(1).getCredit());
+        hashMap.put("tresuray3Name", balanceList.get(2).getBankName());
+        hashMap.put("tresuray3Value", balanceList.get(2).getCredit());
+        hashMap.put("tresuray4Name", balanceList.get(3).getBankName());
+        hashMap.put("tresuray4Value", balanceList.get(3).getCredit());
+
         if (isFileExist(getUserData().getImageReportPath())) {
             hashMap.put("companyImage", getUserData().getImageReportPath());
         } else {
             hashMap.put("companyImage", null);
         }
+
         return hashMap;
     }
-
 
     public void search2() {
         glBankCopyMap = new HashMap<>();
@@ -404,7 +423,7 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
              cashAccountSettlment.setDebitAmount(cashAccountSettlment.getDebitAmount() != null ? cashAccountSettlment.getDebitAmount() : BigDecimal.ZERO);
              }*/
             BigDecimal bala = totalForBalanceMap.get(cashAccountSettlment.getBankId());
-            if(bala == null){
+            if (bala == null) {
                 bala = BigDecimal.ZERO;
             }
             bala = bala.add(openingBalance);
@@ -426,7 +445,7 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
              cashAccountSettlment.setDebitAmount(cashAccountSettlment.getDebitAmount() != null ? cashAccountSettlment.getDebitAmount() : BigDecimal.ZERO);
              }*/
             BigDecimal bala = totalForBalanceMap.get(cashAccountSettlment.getBankId());
-            if(bala == null){
+            if (bala == null) {
                 bala = BigDecimal.ZERO;
             }
             bala = bala.add(openingBalance);
@@ -467,10 +486,10 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
         }
         if (builder.length() != 0 && builder != null) {
             List<GlBankDTO> glBankList = glBankService.findGlBankDTOList(builder);
-            
+
             if (glBankList != null && !glBankList.isEmpty()) {
 
-                for ( GlBankDTO bankDTO : glBankList) {
+                for (GlBankDTO bankDTO : glBankList) {
                     BigDecimal debitOpenBalance = cashAccountSettlmentService.findOpeningBalancesForSpecificCashAccount(cashAccountSettlementSearchBean, bankDTO.getId(), 1);
                     BigDecimal creditOpenBalance = cashAccountSettlmentService.findOpeningBalancesForSpecificCashAccount(cashAccountSettlementSearchBean, bankDTO.getId(), 0);
                     openingBalance = (debitOpenBalance != null ? debitOpenBalance : BigDecimal.ZERO).subtract(creditOpenBalance != null ? creditOpenBalance : BigDecimal.ZERO);
@@ -993,5 +1012,18 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
         this.accountSettlementBean = accountSettlementBean;
     }
 
-  
+    /**
+     * @return the balanceList
+     */
+    public List<BankBalanceReportBean> getBalanceList() {
+        return balanceList;
+    }
+
+    /**
+     * @param balanceList the balanceList to set
+     */
+    public void setBalanceList(List<BankBalanceReportBean> balanceList) {
+        this.balanceList = balanceList;
+    }
+
 }

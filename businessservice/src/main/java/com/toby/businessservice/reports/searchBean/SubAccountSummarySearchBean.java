@@ -5,7 +5,9 @@ import com.toby.dto.GlYearDTO;
 import com.toby.entity.Symbol;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SubAccountSummarySearchBean implements Serializable {
 
@@ -21,23 +23,27 @@ public class SubAccountSummarySearchBean implements Serializable {
     private Integer currencyType;
     private String accClass;
     private GlBankDTO glBankFrom;
-    private GlBankDTO  glBankTo;
+    private GlBankDTO glBankTo;
     private Integer type;
 
     private Integer orderBy;
-    private Integer transactionType; 
+    private Integer transactionType;
     private Integer serialFrom;
     private Integer serialTo;
     private Symbol itemSerialFrom;
     private Symbol itemSerialTo;
     private String TobyUserFrom;
-    private String TobyUserTo;    
+    private String TobyUserTo;
     private Integer bankId;
-    private List<GlBankDTO>  glBankToListSelected;
-    
+    private List<GlBankDTO> glBankToListSelected;
+
     private GlYearDTO glYearSelected;
     private List<GlBankDTO> glBankDTOListSelected;
-    private String glBankIdSelected ;
+    private String glBankIdSelected;
+
+    private String bankBuilder;
+    private Set<Integer> serchedBanksSet;
+
     public GlBankDTO getGlBankFrom() {
         return glBankFrom;
     }
@@ -336,6 +342,37 @@ public class SubAccountSummarySearchBean implements Serializable {
      */
     public void setGlBankIdSelected(String glBankIdSelected) {
         this.glBankIdSelected = glBankIdSelected;
+    }
+
+    /**
+     * @return the bankBuilder
+     */
+    public String getBankBuilder() {
+        return bankBuilder;
+    }
+
+    /**
+     * @param bankBuilder the bankBuilder to set
+     */
+    public void setBankBuilder(String bankBuilder) {
+        this.bankBuilder = bankBuilder;
+    }
+
+    /**
+     * @return the serchedBanksSet
+     */
+    public Set<Integer> getSerchedBanksSet() {
+         if(serchedBanksSet == null){
+            serchedBanksSet = new HashSet<>();
+        }
+        return serchedBanksSet;
+    }
+
+    /**
+     * @param serchedBanksSet the serchedBanksSet to set
+     */
+    public void setSerchedBanksSet(Set<Integer> serchedBanksSet) {
+        this.serchedBanksSet = serchedBanksSet;
     }
 
 }
