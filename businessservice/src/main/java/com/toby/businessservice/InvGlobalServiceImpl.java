@@ -231,7 +231,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 BigDecimal priceFinalPriceYoung = detailEntity.getItemsBarcodesDetail().getMaxPriceYoung();
                 if (invInvoiceDTO.getGallaryId() != null && invInvoiceDTO.getGallaryId().getInvName() != null
                         && invInvoiceDTO.getGallaryId().getInvName() == 0
-                        && calaDiscountCustomerCompany(invInvoiceDTO).compareTo(BigDecimal.ZERO) != 1
+                        && (calaDiscountCustomerCompany(invInvoiceDTO).compareTo(BigDecimal.ZERO) != 1 || detailEntity.getItemId().getCode().equals("41007"))
                         && detailEntity.getItemId().getDiscountvalue().compareTo(BigDecimal.ZERO) == 1) {
                     priceFinalPriceYoung = priceFinalPriceMen = detailEntity.getItemId().getDiscountvalue();
 

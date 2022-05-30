@@ -146,25 +146,12 @@
                                         <div class="ui-g-6 ui-xl-6">
                                             <p:selectOneMenu style="width:57%" id="year" filter="true" filterMatchMode="startsWith" 
                                                              value="#{subAccountSummaryReportMB.glYearSelection}" converter="#{subAccountSummaryReportMB.glYearConverter}"  >
-                                                <p:ajax update="dateFrom dateTo" listener="#{subAccountSummaryReportMB.pushGlYearSelection()}" />
                                                 <f:selectItems value="#{subAccountSummaryReportMB.glYearList}"  var="year" itemLabel="#{year.name}" itemValue="#{year}"/>
                                             </p:selectOneMenu>
                                         </div>
                                         <div class="ui-g-6 ui-xl-6">
                                             <p:outputLabel style="width: 65px;margin-bottom: 5%" value="#{userData.userDDs['FINANCE_YEAR']}"/>
 
-                                        </div>
-                                    </div>
-                                    <div class="ui-g-12 ui-xl-12">
-                                        <div class="ui-g-6 ui-xl-6">
-                                            <p:selectOneMenu style="width:57%;" id="paymentType"  value="#{subAccountSummaryReportMB.subAccountSummarySearchBean.currencyType}"  >                                                             
-                                                <f:selectItem itemLabel="#{userData.userDDs['LOCAL_CURRENCY']}"  itemValue="0"  />
-                                                <f:selectItem itemLabel="#{userData.userDDs['FOREIGN_CURRENCY']}"  itemValue="1"  />
-                                            </p:selectOneMenu>  
-                                        </div>
-                                        <div class="ui-g-6 ui-xl-6">
-                                            <p:outputLabel style="width: 65px"
-                                                           value="#{userData.userDDs['CURRENCY']}"/>
                                         </div>
                                     </div>
                                     <div class="ui-g-12 ui-xl-12">
