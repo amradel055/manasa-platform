@@ -236,7 +236,7 @@ public class SubAccountSummaryServiceImpl implements SubAccountSummaryService {
             }
         }
         
-        builder.append(" order by gj.general_data ");
+        builder.append(" order by gj.general_data ,  gj.serial");
         List<Object[]> res = dao.executeNativeQuery(builder.toString());
         return convertToSubAccountSummary(res);
     }
@@ -326,7 +326,7 @@ public class SubAccountSummaryServiceImpl implements SubAccountSummaryService {
         if (subAccountSummarySearchBean.getDateTo() != null) {
             String d3 = new SimpleDateFormat("yyyy-MM-dd").format(subAccountSummarySearchBean.getDateTo());
 
-            sql.append(" and gj.general_data < '").append(d3).append("'");
+            sql.append(" and gj.general_data <= '").append(d3).append("'");
         }
     }
 }

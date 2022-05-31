@@ -25,6 +25,6 @@ public interface QuantityItemsStoreService {
     public List<QuantityItemsStore> findItemsForBranchList(Integer itemId, Integer branchId);
 
     public List<QuantityItemsStore> findAllQuantityItemsListStoreByBranchId(Integer branchId, Boolean sellBuy);
-    
-        public List<QuantityItemsStoreDTO> findInventoryItemsListDTO(Integer inventoryId, TobyUser tobyUser, Boolean sellBuy);
+
+    public List<QuantityItemsStoreDTO> findInventoryItemsListDTO(Integer inventoryId, TobyUser tobyUser, Boolean sellBuy);
 }

@@ -100,6 +100,8 @@ public class SubAccountSummaryReportMB extends BaseGlAccountReportBean {
             accountConverter = new GlaccountConverter(accountLocalList);
 
             reset();
+            
+            
         } else {
             redirectFinancailYearPage();
         }
@@ -118,6 +120,8 @@ public class SubAccountSummaryReportMB extends BaseGlAccountReportBean {
 
         resetDateFrom();
         resetDateTo();
+        
+        subAccountSummarySearchBean.setCurrencyType(0);
     }
 
     public List<CostCenter> completeCostCenter(String query) {
