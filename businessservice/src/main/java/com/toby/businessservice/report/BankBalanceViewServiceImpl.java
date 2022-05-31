@@ -264,7 +264,9 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                 + "        NULL AS `accountIdFrom`,\n"
                 + "        `gb`.`branch_id` AS `branchId`,\n"
                 + "        `gb`.`code` AS `bankCodeto`,\n"
-                + "        `gb`.`code` AS `bankCodeFrom`\n"
+                + "        `gb`.`code` AS `bankCodeFrom`,\n"
+                + "        `gb`.`cash` AS `cashto`,\n"
+                + "        `gb`.`cash` AS `cashfrom`\n"
                 + "    FROM\n"
                 + "        `gl_bank` `gb`\n"
                 + "    WHERE\n"
@@ -287,7 +289,9 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                 + "        `glb2`.`account_id` AS `accountIdFrom`,\n"
                 + "        `glb`.`branch_id` AS `branchId`,\n"
                 + "        `glb1`.`code` AS `bankCodeto`,\n"
-                + "        `glb2`.`code` AS `bankCodeFrom`\n"
+                + "        `glb2`.`code` AS `bankCodeFrom`,\n"
+                + "        `glb1`.`cash` AS `cashto`,\n"
+                + "        `glb2`.`cash` AS `cashfrom`\n"
                 + "    FROM\n"
                 + "        (((`gl_bank_transaction` `glb`\n"
                 + "        LEFT JOIN `gl_bank_transaction_detail` `glbt` ON ((`glb`.`id` = `glbt`.`gl_bank_transaction_id`)))\n"
@@ -312,7 +316,9 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                 + "        `glb2`.`account_id` AS `accountIdFrom`,\n"
                 + "        `glb`.`branch_id` AS `branchId`,\n"
                 + "        `glb1`.`code` AS `bankCodeto`,\n"
-                + "        `glb2`.`code` AS `bankCodeFrom`\n"
+                + "        `glb2`.`code` AS `bankCodeFrom`,\n"
+                + "        `glb1`.`cash` AS `cashto`,\n"
+                + "        `glb2`.`cash` AS `cashfrom`\n"
                 + "    FROM\n"
                 + "        (((`gl_bank_transaction` `glb`\n"
                 + "        LEFT JOIN `gl_bank_transaction_detail` `glbt` ON ((`glb`.`id` = `glbt`.`gl_bank_transaction_id`)))\n"
@@ -360,7 +366,15 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                 + "        (CASE\n"
                 + "            WHEN (`ipi`.`type` = 0) THEN `glb1`.`code`\n"
                 + "            WHEN (`ipi`.`type` = 1) THEN NULL\n"
-                + "        END) AS `bankCodeFrom`\n"
+                + "        END) AS `bankCodeFrom`,\n"
+                + "        (CASE\n"
+                + "            WHEN (`ipi`.`type` = 0) THEN NULL\n"
+                + "            WHEN (`ipi`.`type` = 1) THEN `glb1`.`cash`\n"
+                + "        END) AS `cashto`,\n"
+                + "        (CASE\n"
+                + "            WHEN (`ipi`.`type` = 0) THEN `glb1`.`cash`\n"
+                + "            WHEN (`ipi`.`type` = 1) THEN NULL\n"
+                + "        END) AS `cashfrom`\n"
                 + "    FROM\n"
                 + "       `inv_purchase_invoice` `ipi`  LEFT JOIN  `inv_purchase_invoice_detail` `ipid`  ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                 + "        LEFT JOIN `gl_bank` `glb1` ON `glb1`.`id` = `ipi`.`gl_bank_id`\n"
@@ -398,6 +412,8 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
             bankBalanceViewNew.setBranchId(object[13] != null ? Integer.valueOf(object[13].toString()) : null);
             bankBalanceViewNew.setBankCodeto(object[14] != null ? object[14].toString() : null);
             bankBalanceViewNew.setBankCodeFrom(object[15] != null ? object[13].toString() : null);
+            bankBalanceViewNew.setCashTo(object[16] != null ? (Integer) object[16] : null);
+            bankBalanceViewNew.setCashFrom(object[17] != null ? (Integer) object[17] : null);
             list.add(bankBalanceViewNew);
         }
         return list;
@@ -589,6 +605,7 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                     if (!balanceViewMap.containsKey(balanceReportView.getBankIdTo())) {
                         balanceReportBean.setBankId(balanceReportView.getBankIdTo());
                         balanceReportBean.setSerial(balanceReportView.getSerial());
+                        balanceReportBean.setCashType(balanceReportView.getCashTo());
                         balanceReportBean.setBankName(balanceReportView.getBankNameTo() == null ? balanceReportBean.getBankName() : balanceReportView.getBankNameTo());
 //                        balanceReportBean.setAccountIdTo(balanceReportView.getAccountIdTo());
                         if (cashAccountSettlementSearchBean.getDateFrom() != null && balanceReportView.getDate().before(cashAccountSettlementSearchBean.getDateFrom())) {
@@ -601,6 +618,7 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                     } else {
                         balanceReportBean.setBankId(balanceReportView.getBankIdTo());
                         balanceReportBean.setSerial(balanceReportView.getSerial());
+                        balanceReportBean.setCashType(balanceReportView.getCashTo());
                         balanceReportBean.setBankName(balanceReportView.getBankNameTo() == null ? balanceReportBean.getBankName() : balanceReportView.getBankNameTo());
 //                        balanceReportBean.setAccountIdTo(balanceReportView.getAccountIdTo());
                         balanceReportBean = balanceViewMap.get(balanceReportView.getBankIdTo());
@@ -623,6 +641,7 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                     if (!balanceViewMap.containsKey(balanceReportView.getBankIdFrom())) {
                         balanceReportBean.setBankId(balanceReportView.getBankIdFrom());
                         balanceReportBean.setSerial(balanceReportView.getSerial());
+                        balanceReportBean.setCashType(balanceReportView.getCashFrom());
                         balanceReportBean.setBankName(balanceReportView.getBankNameFrom() == null ? balanceReportBean.getBankName() : balanceReportView.getBankNameFrom());
 //                        balanceReportBean.setAccountIdFrom(balanceReportView.getAccountIdFrom());
                         if (cashAccountSettlementSearchBean.getDateFrom() != null && balanceReportView.getDate().before(cashAccountSettlementSearchBean.getDateFrom())) {
@@ -635,6 +654,7 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                     } else {
                         balanceReportBean.setBankId(balanceReportView.getBankIdFrom());
                         balanceReportBean.setSerial(balanceReportView.getSerial());
+                        balanceReportBean.setCashType(balanceReportView.getCashFrom());
                         balanceReportBean.setBankName(balanceReportView.getBankNameFrom() == null ? balanceReportBean.getBankName() : balanceReportView.getBankNameFrom());
 //                        balanceReportBean.setAccountIdFrom(balanceReportView.getAccountIdFrom());
                         balanceReportBean = balanceViewMap.get(balanceReportView.getBankIdFrom());

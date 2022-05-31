@@ -92,6 +92,10 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
 
     private List<BankBalanceReportBean> balanceList;
 
+    private BigDecimal cash;
+    private BigDecimal netWork;
+    private BigDecimal RaghiBank;
+
     @EJB
     AccountsSystemSettingsService accountsSystemSettingsService;
     private SubAccountSummaryReport glBankTransactionTypeSeclected;
@@ -263,15 +267,49 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
 
         hashMap.put("TheNameBank", "اسم البنك");
         hashMap.put("TheBalance", "القيمة");
-        hashMap.put("tresuray1Name", balanceList.get(0).getBankName());
-        hashMap.put("tresuray1Value", balanceList.get(0).getCredit());
-        hashMap.put("tresuray2Name", balanceList.get(1).getBankName());
-        hashMap.put("tresuray2Value", balanceList.get(1).getCredit());
-        hashMap.put("tresuray3Name", balanceList.get(2).getBankName());
-        hashMap.put("tresuray3Value", balanceList.get(2).getCredit());
-        hashMap.put("tresuray4Name", balanceList.get(3).getBankName());
-        hashMap.put("tresuray4Value", balanceList.get(3).getCredit());
+        hashMap.put("TotalCash", "اجمالي بنك النقدي ");
+        hashMap.put("TotalNet", "اجمال بنك الشبكة");
+        hashMap.put("TotalElraghie", "اجمالي بنك الراجحي ");
 
+        if (balanceList.size() >= 1) {
+            sumTotalBanks(0, getCash(), getNetWork(), getRaghiBank());
+            hashMap.put("tresuray1Name", balanceList.get(0).getBankName());
+            hashMap.put("tresuray1Value", balanceList.get(0).getCredit());
+        }
+        if (balanceList.size() >= 2) {
+            sumTotalBanks(1, getCash(), getNetWork(), getRaghiBank());
+            hashMap.put("tresuray2Name", balanceList.get(1).getBankName());
+            hashMap.put("tresuray2Value", balanceList.get(1).getCredit());
+        }
+        if (balanceList.size() >= 3) {
+            sumTotalBanks(2, getCash(), getNetWork(), getRaghiBank());
+            hashMap.put("tresuray3Name", balanceList.get(2).getBankName());
+            hashMap.put("tresuray3Value", balanceList.get(2).getCredit());
+        }
+        if (balanceList.size() >= 4) {
+            sumTotalBanks(3, getCash(), getNetWork(), getRaghiBank());
+            hashMap.put("tresuray4Name", balanceList.get(3).getBankName());
+            hashMap.put("tresuray4Value", balanceList.get(3).getCredit());
+        }
+        if (balanceList.size() >= 5) {
+            sumTotalBanks(4, getCash(), getNetWork(), getRaghiBank());
+            hashMap.put("tresuray5Name", balanceList.get(4).getBankName());
+            hashMap.put("tresuray5Value", balanceList.get(4).getCredit());
+        }
+        if (balanceList.size() >= 6) {
+            sumTotalBanks(5, getCash(), getNetWork(), getRaghiBank());
+            hashMap.put("tresuray6Name", balanceList.get(5).getBankName());
+            hashMap.put("tresuray6Value", balanceList.get(5).getCredit());
+        }
+        if (balanceList.size() >= 7) {
+            sumTotalBanks(6, getCash(), getNetWork(), getRaghiBank());
+            hashMap.put("tresuray7Name", balanceList.get(6).getBankName());
+            hashMap.put("tresuray7Value", balanceList.get(6).getCredit());
+        }
+
+        hashMap.put("Cash", getCash());
+        hashMap.put("Net", getNetWork());
+        hashMap.put("Elraghie", getRaghiBank());
         if (isFileExist(getUserData().getImageReportPath())) {
             hashMap.put("companyImage", getUserData().getImageReportPath());
         } else {
@@ -279,6 +317,17 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
         }
 
         return hashMap;
+    }
+
+    public void sumTotalBanks(Integer number, BigDecimal cash, BigDecimal netWork, BigDecimal RaghiBank) {
+        BankBalanceReportBean entity = balanceList.get(number);
+        if (entity.getCashType() != null && entity.getCashType() == 0) {
+            setCash(getCash().add(balanceList.get(number).getCredit().subtract(entity.getDebit())));
+        } else if (entity.getCashType() != null && entity.getCashType() == 1) {
+            setNetWork(getNetWork().add(balanceList.get(number).getCredit().subtract(entity.getDebit())));
+        } else if (entity.getCashType() != null && entity.getCashType() == 2) {
+            setRaghiBank(getRaghiBank().add(balanceList.get(number).getCredit().subtract(entity.getDebit())));
+        }
     }
 
     public void search2() {
@@ -1024,6 +1073,57 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
      */
     public void setBalanceList(List<BankBalanceReportBean> balanceList) {
         this.balanceList = balanceList;
+    }
+
+    /**
+     * @return the cash
+     */
+    public BigDecimal getCash() {
+        if (cash == null) {
+            cash = BigDecimal.ZERO;
+        }
+        return cash;
+    }
+
+    /**
+     * @param cash the cash to set
+     */
+    public void setCash(BigDecimal cash) {
+        this.cash = cash;
+    }
+
+    /**
+     * @return the netWork
+     */
+    public BigDecimal getNetWork() {
+        if (netWork == null) {
+            netWork = BigDecimal.ZERO;
+        }
+        return netWork;
+    }
+
+    /**
+     * @param netWork the netWork to set
+     */
+    public void setNetWork(BigDecimal netWork) {
+        this.netWork = netWork;
+    }
+
+    /**
+     * @return the RaghiBank
+     */
+    public BigDecimal getRaghiBank() {
+        if (RaghiBank == null) {
+            RaghiBank = BigDecimal.ZERO;
+        }
+        return RaghiBank;
+    }
+
+    /**
+     * @param RaghiBank the RaghiBank to set
+     */
+    public void setRaghiBank(BigDecimal RaghiBank) {
+        this.RaghiBank = RaghiBank;
     }
 
 }
