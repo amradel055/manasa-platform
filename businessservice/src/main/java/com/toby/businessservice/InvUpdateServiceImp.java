@@ -4,8 +4,10 @@ import com.toby.core.GenericDAO;
 import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
+import com.toby.dto.SymbolDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.InvInventory;
+import com.toby.entity.InvItem;
 import com.toby.entity.InvUpdate;
 import com.toby.entity.InvUpdateDetail;
 import com.toby.entity.TobyCompany;
@@ -269,8 +271,84 @@ public class InvUpdateServiceImp implements InvUpdateService {
     @Override
     public InvInvoiceDTO saveNewAll(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) {
         invInvoiceDTO = saveNew(invInvoiceDTO, tobyUser);
-        invInvoiceDTO.setInvPurchaseInvoiceDetailList(invUpdateDetailService.addInvUpdateDetailsDTONewList(invInvoiceDTO.getInvPurchaseInvoiceDetailList(), invInvoiceDTO.getId(), tobyUser));
+        invInvoiceDTO.setInvPurchaseInvoiceDetailList(addInvUpdateDetailsDTONewList(invInvoiceDTO.getInvPurchaseInvoiceDetailList(), invInvoiceDTO.getId(), tobyUser));
         return invInvoiceDTO;
+    }
+
+    public List<InvDetailDTO> addInvUpdateDetailsDTONewList(List<InvDetailDTO> detailDTOList, Integer invUpdateId, TobyUser tobyUser) {
+        StringBuilder error = null;
+        List<InvDetailDTO> list = new ArrayList<>();int i = 0 ;
+        for (InvDetailDTO detailDTO : detailDTOList) {
+            error = invGlobalService.validateSelectItem(detailDTO, error);
+//            System.out.println(detailDTO.getItemsBarcodesDetail().getBarcode() + " -> " + i++);
+            if (error != null && !error.toString().isEmpty()) {
+                detailDTO.setMsg(error.toString());
+                return null;
+            }
+            InvUpdateDetail detail;
+
+            detail = mapToEntityDetail(detailDTO, invUpdateId, tobyUser);
+                detail = dao.updateEntity(detail);
+                detailDTO.setId(detail.getId());
+            detailDTO.setSerial(detail.getSerial());
+            list.add(detailDTO);
+        }
+
+        return list;
+    }
+
+    private InvUpdateDetail mapToEntityDetail(InvDetailDTO dTO, Integer invUpdateId, TobyUser tobyUser) {
+        InvUpdateDetail entity = new InvUpdateDetail();
+
+        entity.setSerial(dTO.getSerial());
+        entity.setItemBarcode(dTO.getItemBarcode());
+        entity.setOldAmount(dTO.getAvailableQuantityRow());
+
+        entity.setNewAmount(dTO.getActualQuantity());
+        entity.setDifference(dTO.getActualQuantity().subtract(dTO.getAvailableQuantityRow()));
+        entity.setWasalate(dTO.getWasalate());
+        entity.setCostAvarage(dTO.getCostAvarage());
+
+        InvUpdate invUpdate = new InvUpdate();
+        invUpdate.setId(invUpdateId);
+        entity.setInvUpdateId(invUpdate);
+
+        if (dTO.getItemsBarcodesDetail() != null || dTO.getItemsBarcodesDetailTrans() != null) {
+            InvItem invItem = new InvItem();
+            invItem.setId(dTO.getItemsBarcodesDetail() != null ? dTO.getItemsBarcodesDetail().getItemId() : dTO.getItemsBarcodesDetailTrans().getItemId());
+            entity.setInvItemId(invItem);
+            entity.setItemBarcode(dTO.getItemsBarcodesDetail() != null ? dTO.getItemsBarcodesDetail().getBarcode() : dTO.getItemsBarcodesDetailTrans().getBarcode());
+        }
+
+        if (entity.getUnitId() != null) {
+            SymbolDTO unitDTO = new SymbolDTO();
+            unitDTO.setId(entity.getUnitId().getId());
+            unitDTO.setName(entity.getUnitId().getName());
+            unitDTO.setSerial(entity.getUnitId().getSerial());
+            dTO.setUnitId(unitDTO);
+        }
+
+        if (dTO.getId() == null) {
+            if (entity.getSerial() == null) {
+                Map<String, Object> params = new HashMap<>();
+                params.put("invUpdateId", invUpdateId);
+                Integer max = genericService.getMaxGenericSerialForDetail(InvUpdateDetail.class, "invUpdateId", invUpdateId);
+                entity.setSerial(max);
+            }
+            entity.setCreatedBy(tobyUser);
+            entity.setCreationDate(new Date());
+        } else {
+            TobyUser user = new TobyUser();
+            user.setId(dTO.getCreatedBy());
+            entity.setCreatedBy(user);
+            entity.setCreationDate(dTO.getCreatedDate());
+            entity.setId(dTO.getId());
+            entity.setModificationDate(new Date());
+            entity.setModifiedBy(tobyUser);
+        }
+
+        entity.setCompanyId(tobyUser.getCompanyId());
+        return entity;
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvItemDTO;
 import com.toby.dto.SymbolDTO;
+import com.toby.entity.InvBarcode;
 import com.toby.entity.InvItem;
 import com.toby.entity.InvStripDetail;
 import com.toby.entity.InvUpdate;
@@ -270,7 +271,9 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
     public List<InvDetailDTO> getAllInvUpdatesDetailFromInvTransferDetail(String invStripSerial, Integer branchId, Integer inventoryId) {
         List<InvDetailDTO> invdetailListAfterSummition = new ArrayList<>();
         StringBuilder itemIdString = new StringBuilder();
+        StringBuilder itemIdS = new StringBuilder();
         itemIdString.append(0);
+        itemIdS.append(0);
         Map<String, Object> params = new HashMap();
         params.put("branchId", branchId);
         params.put("inventoryId", inventoryId);
@@ -289,12 +292,13 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
                 map.put(detailDTO.getItemId().getId(), detailDTO);
             } else {
                 map.put(detailDTO.getItemId().getId(), detailDTO);
+                itemIdS.append(",").append(detailDTO.getItemId().getId());
             }
         }
         List<InvDetailDTO> result = new ArrayList(map.values());
-
+        Map<Integer, BigDecimal> itemMap = quantityItemsStoreAddExitService.getAllQuantatyItemByinventory(inventoryId, itemIdS.toString() , true, null);
         for (InvDetailDTO dTO : result) {
-            dTO.setAvailableQuantityRow(quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, dTO.getItemId().getId(), true, null));
+            dTO.setAvailableQuantityRow(itemMap.get(dTO.getItemId().getId()));
             dTO.setOldQuantity(dTO.getAvailableQuantityRow());
             dTO.setOldQuantityBak(dTO.getAvailableQuantityRow());
             dTO.setCostAvarage(dTO.getItemId().getLastCost());
@@ -304,7 +308,7 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
             itemIdString.append(",").append(dTO.getItemId().getId());
             invdetailListAfterSummition.add(dTO);
         }
-        
+
         addRemainItems(inventoryId, itemIdString, invdetailListBeforeSummition, invdetailListAfterSummition);
 
         return invdetailListAfterSummition;
@@ -341,7 +345,7 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
             dTO.setCostAvarage(dTO.getItemId().getLastCost());
             dTO.setTotalQuantityCost(dTO.getCostAvarage().multiply(dTO.getActualQuantity()).stripTrailingZeros());
             dTO.setId(null);
-             dTO.setSerial(null);
+            dTO.setSerial(null);
             itemIdString.append(",").append(dTO.getItemId().getId());
             invdetailListAfterSummition.add(dTO);
         }
@@ -353,7 +357,7 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
 
     public void addRemainItems(Integer inventoryId, StringBuilder itemIdString, List<InvDetailDTO> invdetailListBeforeSummition, List<InvDetailDTO> invdetailListAfterSummition) {
         //////////////////////
-        
+
         StringBuilder builder = new StringBuilder();
         builder.append("select  IDV.cost_average , IDV.itemId ,IDV.code  ,IDV.itemName,IDV.supplierName \n"
                 + "from ( \n"
@@ -448,14 +452,15 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
         List<InvDetailDTO> result2 = new ArrayList<>();
 
         List<Object[]> res2 = dao.executeNativeQuery(builder.toString());
-        List<String> barcodeList = null;
+        List<String> barcodeList = new ArrayList<>();
+        StringBuilder invItemId = null;
+        Map<Integer, InvDetailDTO> map2 = new HashMap<>();
         for (Object[] object : res2) {
             InvDetailDTO dto = new InvDetailDTO();
-            barcodeList = new ArrayList<>();
+//            barcodeList = new ArrayList<>();
             barcodeList.add((String) object[2]);
-            ItemsBarcodesDetailsView barcodesDetailsView = itemsBarcodesDetailsViewService.findItemsBarcodesDetailsViewBranchIdByBarcode(182, barcodeList).get(0);
-            dto.setItemsBarcodesDetail(barcodesDetailsView);
-            dto.setItemsBarcodesDetailTrans(dto.getItemsBarcodesDetail());
+//            ItemsBarcodesDetailsView barcodesDetailsView = itemsBarcodesDetailsViewService.findItemsBarcodesDetailsViewBranchIdByBarcode(182, barcodeList).get(0);
+
             dto.setItemCode((String) object[2]);
             dto.setItemName((String) object[3]);
             dto.setSupplierName((String) object[4]);
@@ -470,25 +475,34 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
             invItemDTO.setLastCost((BigDecimal) object[0]);
             dto.setItemId(invItemDTO);
             dto.setIndex((Integer) object[1] + 10000000);
-            
+
+            if (map2.containsKey(dto.getItemId().getId())) {
+                InvDetailDTO detail = map2.get(dto.getItemId().getId());
+                dto.setActualQuantity(detail.getActualQuantity().add(dto.getActualQuantity()));
+                dto.setWasalate(detail.getWasalate().add(dto.getWasalate()));
+                map2.put(dto.getItemId().getId(), dto);
+            } else {
+                map2.put(dto.getItemId().getId(), dto);
+            }
+
+            if (invItemId == null) {
+                invItemId = new StringBuilder();
+                invItemId.append((Integer) object[1]);
+            } else {
+                invItemId.append(",").append((Integer) object[1]);
+            }
+
             result2.add(dto);
         }
 
-        Map<Integer, InvDetailDTO> map2 = new HashMap<>();
-        for (InvDetailDTO detailDTO : result2) {
-            if (map2.containsKey(detailDTO.getItemId().getId())) {
-                InvDetailDTO detail = map2.get(detailDTO.getItemId().getId());
-                detailDTO.setActualQuantity(detail.getActualQuantity().add(detailDTO.getActualQuantity()));
-                detailDTO.setWasalate(detail.getWasalate().add(detailDTO.getWasalate()));
-                map2.put(detailDTO.getItemId().getId(), detailDTO);
-            } else {
-                map2.put(detailDTO.getItemId().getId(), detailDTO);
-            }
-        }
         List<InvDetailDTO> result22 = new ArrayList(map2.values());
+        Map<Integer, BigDecimal> map = quantityItemsStoreAddExitService.getAllQuantatyItemByinventory(inventoryId, invItemId.toString(), true, null);
+        Map<String, ItemsBarcodesDetailsView> barcodesDetailsViewMap = itemsBarcodesDetailsViewService.findItemsBarcodesDetailsViewBranchIdByBarcodeMap(182, barcodeList);
 
         for (InvDetailDTO dTO : result22) {
-            dTO.setAvailableQuantityRow(quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, dTO.getItemId().getId(), true, null));
+            dTO.setItemsBarcodesDetail(barcodesDetailsViewMap.get(dTO.getItemCode()));
+            dTO.setItemsBarcodesDetailTrans(dTO.getItemsBarcodesDetail());
+            dTO.setAvailableQuantityRow(map.get(dTO.getItemId().getId()));
             dTO.setOldQuantity(dTO.getAvailableQuantityRow());
             dTO.setOldQuantityBak(dTO.getAvailableQuantityRow());
             dTO.setCostAvarage(dTO.getItemId().getLastCost());
@@ -501,7 +515,12 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
     private List<InvDetailDTO> returnListDTO(List<InvStripDetail> list, Integer branchId, Integer inventoryId) {
         List<InvDetailDTO> dTOList = new ArrayList<>();
         Map<String, ItemsBarcodesDetailsView> itemsBarcodeMap = new HashMap<>();
-        List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewList = invPurchaseInvoiceDetailsService.findItemBarcodeDetails(list, branchId);
+        List<String> barcodeList = new ArrayList<>();
+        for (InvDetailDTO entity : dTOList) {
+            barcodeList.add(entity.getItemBarcode());
+        }
+
+        List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewList = findItemsBarcodesDetailsViewBranchIdByBarcode(branchId, barcodeList);
 
         for (ItemsBarcodesDetailsView itemsBarcodesDetailsView : itemsBarcodesDetailsViewList) {
             itemsBarcodeMap.put(itemsBarcodesDetailsView.getBarcode(), itemsBarcodesDetailsView);
@@ -510,6 +529,77 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
             dTOList.add(mapTODTO(entity, itemsBarcodeMap, inventoryId));
         }
         return dTOList;
+    }
+
+    public List<ItemsBarcodesDetailsView> findItemsBarcodesDetailsViewBranchIdByBarcode(Integer branchId, List<String> barcodeList) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        List<ItemsBarcodesDetailsView> list = new ArrayList<>();
+        StringBuilder query1 = new StringBuilder();
+        StringBuilder query2 = new StringBuilder();
+        query1.append(" select i from InvItem i where i.branchId.id = :branchId  ");
+        query2.append(" select i from InvBarcode i where i.branchId.id = :branchId  ");
+        if (barcodeList != null && !barcodeList.isEmpty()) {
+            params.put("barcode", barcodeList);
+            query1.append(" AND i.code in   :barcode ");
+            query2.append(" AND i.code in   :barcode ");
+        }
+        List<InvItem> queryList = dao.findListByQuery(query1.toString(), params);
+        List<InvBarcode> queryList2 = dao.findListByQuery(query2.toString(), params);
+
+        for (InvItem invItem : queryList) {
+            ItemsBarcodesDetailsView itemsBarcodesDetailsView = new ItemsBarcodesDetailsView();
+            itemsBarcodesDetailsView.setBarcode(invItem.getCode());
+            itemsBarcodesDetailsView.setItemId(invItem.getId());
+            itemsBarcodesDetailsView.setCostAverage(invItem.getCostAverage());
+            itemsBarcodesDetailsView.setName(invItem.getName());
+            itemsBarcodesDetailsView.setNameEn(invItem.getNameen());
+            itemsBarcodesDetailsView.setSellPrice(invItem.getSellPrice());
+            itemsBarcodesDetailsView.setUnitId(invItem.getUnitId() == null ? null : invItem.getUnitId().getId());
+            itemsBarcodesDetailsView.setWeight(invItem.getWeight());
+            itemsBarcodesDetailsView.setHeight(invItem.getHeight());
+            itemsBarcodesDetailsView.setAddon1(invItem.getAddon1() == null ? null : invItem.getAddon1().getName());
+            itemsBarcodesDetailsView.setAddon2(invItem.getAddon2() == null ? null : invItem.getAddon2().getName());
+            itemsBarcodesDetailsView.setPaintColor(invItem.getPaintColor() == null ? null : invItem.getPaintColor().getId());
+            itemsBarcodesDetailsView.setUnitName(invItem.getUnitId().getName());
+            itemsBarcodesDetailsView.setPaintColorName(invItem.getPaintColor() == null ? null : invItem.getPaintColor().getName());
+            itemsBarcodesDetailsView.setScrewing(BigDecimal.ONE);
+            itemsBarcodesDetailsView.setIsInventoryItem(invItem.getIsInventoryItem());
+            itemsBarcodesDetailsView.setMaxPriceMen(invItem.getMaxpricemen());
+            itemsBarcodesDetailsView.setMinPriceMen(invItem.getMinpricemen());
+            itemsBarcodesDetailsView.setMaxPriceYoung(invItem.getMaxpriceyoung());
+            itemsBarcodesDetailsView.setMinPriceYoung(invItem.getMinpriceyoung());
+            itemsBarcodesDetailsView.setNumberMetersFreeMen(invItem.getNumbermetersfreemen());
+            itemsBarcodesDetailsView.setNumberMetersFreeYoung(invItem.getNumbermetersfreeyoung());
+            itemsBarcodesDetailsView.setNumberMetersMen(invItem.getNumbermetersmen());
+            itemsBarcodesDetailsView.setNumberMetersYoung(invItem.getNumbermetersyoung());
+            itemsBarcodesDetailsView.setProGroupId(invItem.getProGroupId() == null ? null : invItem.getProGroupId().getId());
+            itemsBarcodesDetailsView.setTypeShow(invItem.getItemNatural());
+            list.add(itemsBarcodesDetailsView);
+        }
+
+        for (InvBarcode invBarcode : queryList2) {
+            ItemsBarcodesDetailsView itemsBarcodesDetailsView = new ItemsBarcodesDetailsView();
+            itemsBarcodesDetailsView.setBarcode(invBarcode.getCode());
+            itemsBarcodesDetailsView.setItemId(invBarcode.getItemId().getId());
+            itemsBarcodesDetailsView.setCostAverage(invBarcode.getItemId().getCostAverage());
+            itemsBarcodesDetailsView.setName(invBarcode.getItemId().getName());
+            itemsBarcodesDetailsView.setNameEn(invBarcode.getItemId().getNameen());
+            itemsBarcodesDetailsView.setSellPrice(invBarcode.getPrice1());
+            itemsBarcodesDetailsView.setUnitId(invBarcode.getUnitId() == null ? null : invBarcode.getUnitId().getId());
+            itemsBarcodesDetailsView.setWeight(invBarcode.getWeight());
+            itemsBarcodesDetailsView.setHeight(invBarcode.getHeight());
+            itemsBarcodesDetailsView.setAddon1(invBarcode.getItemId().getAddon1() == null ? null : invBarcode.getItemId().getAddon1().getName());
+            itemsBarcodesDetailsView.setAddon2(invBarcode.getItemId().getAddon2() == null ? null : invBarcode.getItemId().getAddon2().getName());
+            itemsBarcodesDetailsView.setPaintColor(invBarcode.getPaintColor() == null ? null : invBarcode.getPaintColor().getId());
+            itemsBarcodesDetailsView.setUnitName(invBarcode.getUnitId() == null ? null : invBarcode.getUnitId().getName());
+            itemsBarcodesDetailsView.setPaintColorName(invBarcode.getPaintColor() == null ? null : invBarcode.getPaintColor().getName());
+            itemsBarcodesDetailsView.setScrewing(invBarcode.getScrewing());
+            itemsBarcodesDetailsView.setIsInventoryItem(invBarcode.getItemId() == null ? 1 : invBarcode.getItemId().getIsInventoryItem());
+            list.add(itemsBarcodesDetailsView);
+        }
+        return list;
     }
 
     private InvDetailDTO mapTODTO(InvStripDetail entity, Map<String, ItemsBarcodesDetailsView> itemsBarcodeMap, Integer inventoryId) {

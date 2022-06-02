@@ -4,7 +4,6 @@ import com.toby.businessservice.InvStripService;
 import com.toby.entity.InvStrip;
 import com.toby.entiy.InvStripEntity;
 import com.toby.toby.BaseListBean;
-import com.toby.toby.UserData;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;

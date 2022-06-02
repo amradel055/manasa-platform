@@ -81,6 +81,16 @@ public class ItemsBarcodesDetailsViewServiceImpl implements ItemsBarcodesDetails
     }
     
     @Override
+    public Map<String, ItemsBarcodesDetailsView> findItemsBarcodesDetailsViewBranchIdByBarcodeMap(Integer branchId, List<String> barcodeList) {
+        Map<String, ItemsBarcodesDetailsView> map = new HashMap<>();
+        List<ItemsBarcodesDetailsView> list = findItemsBarcodesDetailsViewBranchIdByBarcode(branchId,barcodeList);
+        for(ItemsBarcodesDetailsView code : list){
+            map.put(code.getBarcode(), code);
+        }
+        return map ;
+    }
+    
+    @Override
     public List<ItemsBarcodesDetailsView> findItemsBarcodesDetailsViewBranchIdByBarcode(Integer branchId, List<String> barcodeList) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);

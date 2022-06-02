@@ -650,7 +650,7 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
     @Override
     public List<SalesOfItemsByCompany> getAllSalesOfItemsByCompany(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("SELECT inv.id , inv.name , oc.name as name , oc.code code , sum(ipid.net) as sum \n"
+        stringBuilder.append("SELECT inv.id , inv.name , oc.name as name , oc.code code , sum(ipid.net_after_discount_head) as sum \n"
                 + "        FROM `inv_purchase_invoice` `ipi`\n"
                 + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                 + "        LEFT JOIN inv_organization_site ios on ios.id = ipi.organization_site_id\n"

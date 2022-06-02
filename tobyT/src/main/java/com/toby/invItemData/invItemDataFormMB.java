@@ -47,11 +47,13 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
 import com.toby.businessservice.InventorySetupService;
 import com.toby.businessservice.ProGroupService;
+import com.toby.bussinessservice.global.AutoCompleteService;
 import com.toby.converter.InvItemTypeDTOConverter;
+import com.toby.converter.ItemsBarcodesDetailsViewConverter;
 import com.toby.converter.ProGroupDTOConverter;
 import com.toby.dto.InvItemTypeDTO;
 import com.toby.dto.ProGroupDTO;
-import com.toby.entity.InvItemType;
+import com.toby.views.ItemsBarcodesDetailsView;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.sf.jasperreports.engine.JRException;
@@ -59,13 +61,12 @@ import net.sf.jasperreports.engine.JRException;
 @Named(value = "itemDataFormMB")
 @ViewScoped
 public class invItemDataFormMB extends BaseFormBean implements Serializable {
-
+    
     private static final long serialVersionUID = 1L;
     private Integer determinePrice;
     private InvItemDTO itemDataEntity;
     private InvItemDTO itemDataEntitySelected;
     private List<InvItemDTO> itemDataEntityReportList;
-    private List<InvItemDTO> itemDataEntityList;
     private Boolean showMessageDetails = Boolean.FALSE;
     private Boolean showMessageGeneral = Boolean.FALSE;
     private String fileName;
@@ -82,34 +83,28 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
     private SymbolConverter unitConverter;
     private List<InvOrganizationSite> invOrganizationSiteList;
     private InvOrganizationSiteConverter organizationSiteConvertor;
-    private List<SymbolDTO> brandList;
-    private List<SymbolDTO> countryList;
-    private List<SymbolDTO> paintColorList;
-    private List<SymbolDTO> enamelColorList;
-    private List<SymbolDTO> stoneList;
-    private List<SymbolDTO> typeCatList;
     private List<SymbolDTO> addon1List;
     private List<SymbolDTO> addon2List;
     private SymbolDTOConverter typeCatConverter;
     private SymbolDTOConverter unitDTOConverter;
     private ProGroupDTOConverter proGroupDTOConverter;
     private SymbolConverter paintColorConverter;
-
+    
     private BigDecimal qtySummition = BigDecimal.ZERO;
-
+    
     private StreamedContent dbImage;
-
+    
     private Integer companyId;
     private Integer branchId;
     String imageName;
     InvItem invItemValidate;
     private Integer settingType;
-
+    
     private String destination;
     private StringBuilder errorMessage = new StringBuilder();
-
+    
     private FileUploadEvent fileUploadEvent;
-
+    
     private Map itemBarcodeMap = new HashMap();
 
     // barcode
@@ -119,40 +114,49 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
     private List<InvBarcodeDTO> invBarcodesList;
     private List<QuantityItemsStore> quantityItemsStoreList;
     private Integer itemDataId;
-
+    
+    private String itemName;
+    
+    private List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewListForSearch;
+    private ItemsBarcodesDetailsView itemsBarcodesDetailsViewListForSearchSelected;
+    private ItemsBarcodesDetailsViewConverter itemsBarcodesDetailsViewConverterForSearch;
+    
     @EJB
     private InvItemService invItemService;
-
+    
     @EJB
     private InvGroupService invGroupService;
     @EJB
     private OrganizationSiteService organizationSiteService;
-
+    
     @EJB
     private SymbolService symbolService;
-
+    
     @EJB
     private ProGroupService proGroupService;
-
+    
     @EJB
     private CompanyService companyService;
-
+    
     @EJB
     private InvPurchaseInvoiceDetailService invPurchaseInvoiceDetailsService;
-
+    
     @EJB
     QuantityItemsStoreService quantityItemsStoreService;
     @EJB
     InventorySetupService inventorySetupService;
-
+    
     @EJB
     private ItemsDataViewService itemsDataViewService;
-
+    
     private FileUploadController fileUploadController = new FileUploadController();
-
+    
     @EJB
     InvItemTypeService invItemTypeService;
-
+    
+    @EJB
+    AutoCompleteService autoCompleteService;
+    
     @Override
     @PostConstruct
     public void init() {
@@ -162,30 +166,29 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
             saveError(e, "invItemDataFormMB", "init");
         }
     }
-
+    
     @Override
     public void load() {
         try {
-
+            
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             setUserData((UserData) context.getSessionMap().get("userLogInData"));
             setScreenMode((String) context.getSessionMap().get("ScreenMode"));
             companyId = getUserData().getCompany().getId();
             branchId = getUserData().getUserBranch().getId();
-
+            
             initObjs();
             fillLists();
             InventorySetup setup = inventorySetupService.getInventoryByBranchId(branchId);
             setSettingType(setup.getItemCoding());
-
+            
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("add")) {
                 resetItemDataForm();
-
+                
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("edit")) {
                 try {
                     itemDataId = ((Integer) context.getSessionMap().get("itemDataEntitySelected"));
-
-//                    if (itemDataId != null) {
+                    //                    if (itemDataId != null) {
 //                        quantityItemsStoreList = quantityItemsStoreService.findItemsForBranchList(itemDataId, branchId);
 //
 //                        qtySummition = BigDecimal.ZERO;
@@ -202,7 +205,17 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
             saveError(e, "invItemDataFormMB", "load");
         }
     }
-
+    
+    public void fillItemDate() {
+        itemDataEntity = itemsDataViewService.findInvItem(itemsBarcodesDetailsViewListForSearchSelected.getItemId(), getUserlogin());
+        CloseDlg("dlg4");
+    }
+    
+    public void findAllItemsBarcodesDetailsViewBranchId() {
+        setItemsBarcodesDetailsViewListForSearch(autoCompleteService.findAllItemsBarcodesDetailsViewBranchId(getUserData().getUserBranch().getId(), getItemName()));
+        setItemsBarcodesDetailsViewConverterForSearch(getItemsBarcodesDetailsViewConverterForSearch());
+    }
+    
     private void initObjs() {
         try {
 //            invItem = new InvItem();
@@ -213,23 +226,23 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
             saveError(e, "invItemDataFormMB", "initObjs");
         }
     }
-
+    
     public void calcDiscountValue() {
         getItemDataEntity().setDiscountvalue(getItemDataEntity().getMaxpricemen().multiply((new BigDecimal(100).subtract(getItemDataEntity().getDiscountrate())).divide(new BigDecimal(100))));
     }
-
+    
     private void fillLists() {
         try {
             invGroupList = invGroupService.getallInvGroupByBranchIdDTO(getUserData().getUserlogin()); // groups
 //            invGroupList = invGroupService.getAllSubInvGroupByBranchId(null, branchId);
             invGroupDTOConverter = new InvGroupDTOConverter(invGroupList);
-
+            
             unitList = symbolService.getUnitCompanyId(companyId); //units
             unitDTOConverter = new SymbolDTOConverter(unitList);
-
+            
             proGroupDTOList = proGroupService.getallProGroupByBranchIdDTO(getUserData().getUserlogin());
             setProGroupDTOConverter(new ProGroupDTOConverter(proGroupDTOList));
-
+            
             invOrganizationSiteList = organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(branchId, true, 1); //suppliers
             organizationSiteConvertor = new InvOrganizationSiteConverter(invOrganizationSiteList);
 
@@ -247,9 +260,9 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
         } catch (Exception e) {
             saveError(e, "invItemDataFormMB", "fillLists");
         }
-
+        
     }
-
+    
     InvItemDTO mapInvItemDataToItemDataEntityForm(InvItem invItem) {
         try {
             setItemDataEntitySelected(new InvItemDTO());
@@ -309,10 +322,10 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
         } catch (Exception e) {
             saveError(e, "invItemDataFormMB", "mapInvItemDataToItemDataEntityForm");
         }
-
+        
         return getItemDataEntitySelected();
     }
-
+    
     public void upload(FileUploadEvent event) {
         try {
             fileUploadEvent = event;
@@ -324,9 +337,9 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
         } catch (Exception e) {
             saveError(e, "invItemDataFormMB", "upload");
         }
-
+        
     }
-
+    
     public void copyfile() throws IOException {
         try {
             fileUploadController.copyFile(imageName, fileUploadEvent.getFile().getInputstream(),
@@ -339,7 +352,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
             saveError(e, "invItemDataFormMB", "copyfile");
         }
     }
-
+    
     public void CloseDlg(String dlgvar) {
         try {
             RequestContext context = RequestContext.getCurrentInstance();
@@ -348,7 +361,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
             saveError(e, "invItemDataFormMB", "CloseDlg");
         }
     }
-
+    
     public void reset() {
         try {
 //            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
@@ -362,9 +375,9 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
         } catch (Exception e) {
             saveError(e, "invItemDataFormMB", "reset");
         }
-
+        
     }
-
+    
     public void OpenDlg(String dlgvar) {
         try {
             RequestContext context = RequestContext.getCurrentInstance();
@@ -373,11 +386,11 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
             saveError(e, "invItemDataFormMB", "OpenDlg");
         }
     }
-
+    
     private void resetItemDataForm() {
         try {
             setItemDataEntity(new InvItemDTO());
-
+            
             setFileName("1.png");
             setShowImage("");
             setUploadedImage("");
@@ -385,7 +398,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
             saveError(e, "invItemDataFormMB", "resetItemDataForm");
         }
     }
-
+    
     public void findMaxItemCode() {
         try {
             if (getSettingType() == 0) {
@@ -400,17 +413,17 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
         } catch (Exception e) {
             saveError(e, "invItemDataFormMB", "findMaxItemCode");
         }
-
+        
     }
-
+    
     public void saveItem() {
-        System.out.println("");
+        System.out.println("s");
         if (itemDataEntity != null && itemDataEntity.getName() != null && getItemDataEntity().getSiteId().getId() != null) {
             itemDataEntity = itemsDataViewService.addItemsData(itemDataEntity, getUserData().getUser());
-
+            savedMeesage(getUserData().getUserDDs().get("SAVED"));
         }
     }
-
+    
     @Override
     public String save() {
         System.out.println("");
@@ -420,20 +433,20 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
         }
         return "";
     }
-
+    
     public void validationSave() {
         try {
             validationCodeAndNickname();
         } catch (Exception e) {
             saveError(e, "invItemDataFormMB", "validationSave");
         }
-
+        
     }
-
+    
     public void validateBlur() {
         try {
             initializeSeachObjet(getItemDataEntity().getCode(), null, getItemDataEntity().getId());
-
+            
             if (invItemService.validateCodeFromView(invItemValidate)) {
                 errorMessage.append(getUserData().getUserDDs().get("UNIQE_SERIAL"));
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), errorMessage.toString()));
@@ -441,9 +454,9 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
         } catch (Exception e) {
             saveError(e, "invItemDataFormMB", "validateBlur");
         }
-
+        
     }
-
+    
     public void validateBarcodeBlur(InvBarcodeDTO invBarcodeEntitySelectionTable) {
         try {
             if (invBarcodeEntitySelectionTable != null && itemBarcodeMap != null && !itemBarcodeMap.containsKey(invBarcodeEntitySelectionTable.getCode())) {
@@ -461,7 +474,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
             saveError(e, "invItemDataFormMB", "validateBarcodeBlur");
         }
     }
-
+    
     public void validationCodeAndNickname() {
         try {
             initializeSeachObjet(getItemDataEntity().getCode(), getItemDataEntity().getNickname(), getItemDataEntity().getId());
@@ -477,11 +490,11 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
             saveError(e, "invItemDataFormMB", "validationCodeAndNickname");
         }
     }
-
+    
     public void initializeSeachObjet(String code, String NichName, Integer itemId) {
         try {
             invItemValidate = new InvItem();
-
+            
             invItemValidate.setCode(code);
             invItemValidate.setBranchId(getUserData().getUserBranch());
             invItemValidate.setNickname(NichName);
@@ -490,7 +503,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
             saveError(e, "invItemDataFormMB", "initializeSeachObjet");
         }
     }
-
+    
     public void setLastCost(InvItem invItem) {
         try {
             invItem.setLastCost(invPurchaseInvoiceDetailsService.getLastCostItem(invItem.getId(), getUserData().getGlYear(), getUserData().getUserBranch().getId()));
@@ -498,13 +511,13 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
             saveError(e, "invItemDataFormMB", "setLastCost");
         }
     }
-
+    
     @Override
     public String getScreenName() {
         // TODO Auto-generated method stub
         return null;
     }
-
+    
     public void onCellEdit(CellEditEvent event) {
         try {
             Object oldValue = event.getOldValue();
@@ -515,7 +528,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
         } catch (Exception e) {
             saveError(e, "invItemDataFormMB", "onCellEdit");
         }
-
+        
     }
 
     // barcode 
@@ -531,9 +544,9 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
         } catch (Exception e) {
             saveError(e, "invItemDataFormMB", "deleteBarcode");
         }
-
+        
     }
-
+    
     public String adddetails() {
         try {
             InvBarcodeDTO invBarcodeEntity = new InvBarcodeDTO();
@@ -549,17 +562,17 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
         }
         return "";
     }
-
+    
     public List<InvGroupDTO> completeInvGroups(String query) {
         List<InvGroupDTO> invGroupsFiltered = new ArrayList<>();
         try {
             List<InvGroupDTO> groups = invGroupList;
-
+            
             if (query == null || query.trim().equals("")) {
                 setInvGroupDTOConverter(new InvGroupDTOConverter(groups));
                 return groups;
             }
-
+            
             String nameAr;
             Integer code;
             InvGroupDTO group;
@@ -569,32 +582,32 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
                 if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase()) && !invGroupsFiltered.contains(group)) {
                     invGroupsFiltered.add(group);
                 }
-
+                
                 code = group.getCode();
                 if (code != null && String.valueOf(code).contains(query) && !invGroupsFiltered.contains(group)) {
                     invGroupsFiltered.add(group);
                 }
             }
-
+            
             invGroupDTOConverter = new InvGroupDTOConverter(invGroupsFiltered);
         } catch (Exception e) {
             saveError(e, "invItemDataFormMB", "completeInvGroups");
         }
-
+        
         return invGroupsFiltered;
-
+        
     }
-
+    
     public List<ProGroupDTO> completeproGroups(String query) {
         List<ProGroupDTO> invGroupsFiltered = new ArrayList<>();
         try {
             List<ProGroupDTO> groups = proGroupDTOList;
-
+            
             if (query == null || query.trim().equals("")) {
                 setProGroupDTOConverter(new ProGroupDTOConverter(groups));
                 return groups;
             }
-
+            
             String nameAr;
             Integer code;
             ProGroupDTO group;
@@ -604,22 +617,22 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
                 if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase()) && !invGroupsFiltered.contains(group)) {
                     invGroupsFiltered.add(group);
                 }
-
+                
                 code = group.getCode();
                 if (code != null && String.valueOf(code).contains(query) && !invGroupsFiltered.contains(group)) {
                     invGroupsFiltered.add(group);
                 }
             }
-
+            
             proGroupDTOConverter = new ProGroupDTOConverter(invGroupsFiltered);
         } catch (Exception e) {
             saveError(e, "invItemDataFormMB", "completeInvGroups");
         }
-
+        
         return invGroupsFiltered;
-
+        
     }
-
+    
     public List<SymbolDTO> completeUnits(String query) {
         List<SymbolDTO> list = new ArrayList<>();
         try {
@@ -628,7 +641,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
                 unitDTOConverter = new SymbolDTOConverter(symbols);
                 return symbols;
             }
-
+            
             String nameAr;
             Integer code;
             SymbolDTO symbol;
@@ -638,20 +651,20 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
                 if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase()) && !list.contains(symbol)) {
                     list.add(symbol);
                 }
-
+                
                 code = symbol.getId();
                 if (code != null && String.valueOf(code).contains(query) && !list.contains(symbol)) {
                     list.add(symbol);
                 }
             }
-
+            
             unitDTOConverter = new SymbolDTOConverter(list);
         } catch (Exception e) {
             saveError(e, "invItemDataFormMB", "completeUnits");
         }
         return list;
     }
-
+    
     public List<Symbol> completePaintColor(String query) {
         List<Symbol> list = new ArrayList<>();
 //        try {
@@ -683,7 +696,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
 //        }
         return list;
     }
-
+    
     public List<SymbolDTO> completeAddon1(String query) {
         List<SymbolDTO> list = new ArrayList<>();
         try {
@@ -692,7 +705,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
                 setTypeCatConverter(new SymbolDTOConverter(symbols));
                 return symbols;
             }
-
+            
             String nameAr;
             Integer code;
             SymbolDTO symbol;
@@ -702,20 +715,20 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
                 if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase()) && !list.contains(symbol)) {
                     list.add(symbol);
                 }
-
+                
                 code = symbol.getId();
                 if (code != null && String.valueOf(code).contains(query) && !list.contains(symbol)) {
                     list.add(symbol);
                 }
             }
-
+            
             setTypeCatConverter(new SymbolDTOConverter(list));
         } catch (Exception e) {
             saveError(e, "invItemDataFormMB", "completeAddon1");
         }
         return list;
     }
-
+    
     public List<SymbolDTO> completeAddon2(String query) {
         List<SymbolDTO> list = new ArrayList<>();
         try {
@@ -724,7 +737,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
                 setTypeCatConverter(new SymbolDTOConverter(symbols));
                 return symbols;
             }
-
+            
             String nameAr;
             Integer code;
             SymbolDTO symbol;
@@ -734,20 +747,20 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
                 if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase()) && !list.contains(symbol)) {
                     list.add(symbol);
                 }
-
+                
                 code = symbol.getId();
                 if (code != null && String.valueOf(code).contains(query) && !list.contains(symbol)) {
                     list.add(symbol);
                 }
             }
-
+            
             setTypeCatConverter(new SymbolDTOConverter(list));
         } catch (Exception e) {
             saveError(e, "invItemDataFormMB", "completeAddon2");
         }
         return list;
     }
-
+    
     public List<Symbol> completeTypeCat(String query) {
         List<Symbol> list = new ArrayList<>();
 //        try {
@@ -779,18 +792,18 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
 //        }
         return list;
     }
-
+    
     public List<InvOrganizationSite> completeOrganizationSite(String query) {
         List<InvOrganizationSite> filteredSuppliers = new ArrayList<>();
         try {
             List<InvOrganizationSite> supplierList = invOrganizationSiteList;
             if (query == null || query.trim().equals("")) {
-
+                
                 organizationSiteConvertor = new InvOrganizationSiteConverter(supplierList);
-
+                
                 return supplierList;
             }
-
+            
             String nameAr;
             String code;
             InvOrganizationSite supplierFilter;
@@ -802,7 +815,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
                         filteredSuppliers.add(supplierFilter);
                     }
                 }
-
+                
                 code = supplierFilter.getCode();
                 if (code != null && code.toLowerCase().contains(query.toLowerCase())) {
                     if (!filteredSuppliers.contains(supplierFilter)) {
@@ -810,16 +823,16 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
                     }
                 }
             }
-
+            
             organizationSiteConvertor = new InvOrganizationSiteConverter(filteredSuppliers);
         } catch (Exception e) {
             saveError(e, "invItemDataFormMB", "completeOrganizationSite");
         }
         return filteredSuppliers;
     }
-
+    
     public void print() {
-
+        
         try {
             if (itemDataEntity != null) {
                 setItemDataEntityReportList(new ArrayList<>());
@@ -832,7 +845,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
             Logger.getLogger(invItemDataFormMB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     public HashMap prepareReport() {
         try {
             Map<String, String> userDDs = getUserData().getUserDDs();
@@ -854,7 +867,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
             return null;
         }
     }
-
+    
     public String cancel() {
         try {
             exit("../itemsdata/itemsdatalist.xhtml");
@@ -862,38 +875,38 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
             saveError(e, "invItemDataFormMB", "cancel");
         }
         return "";
-
+        
     }
-
+    
     public String exit() {
         // TODO Auto-generated method stub
         return null;
     }
-
+    
     public boolean isShowMessage() {
         return showMessage;
     }
-
+    
     public void setShowMessage(boolean showMessage) {
         this.showMessage = showMessage;
     }
-
+    
     public List<InvGroupDTO> getInvGroupList() {
         return invGroupList;
     }
-
+    
     public void setInvGroupList(List<InvGroupDTO> invGroupList) {
         this.invGroupList = invGroupList;
     }
-
+    
     public List<InvOrganizationSite> getInvOrganizationSiteList() {
         return invOrganizationSiteList;
     }
-
+    
     public void setInvOrganizationSiteList(List<InvOrganizationSite> invOrganizationSiteList) {
         this.invOrganizationSiteList = invOrganizationSiteList;
     }
-
+    
     public List<SymbolDTO> getUnitList() {
         return unitList;
     }
@@ -904,15 +917,15 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
     public void setUnitList(List<SymbolDTO> unitList) {
         this.unitList = unitList;
     }
-
+    
     public Integer getBranchId() {
         return branchId;
     }
-
+    
     public void setBranchId(Integer branchId) {
         this.branchId = branchId;
     }
-
+    
     public Boolean getDelete() {
         return delete;
     }
@@ -923,99 +936,99 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
     public void setDelete(Boolean delete) {
         this.delete = delete;
     }
-
+    
     public String getFileName() {
         return fileName;
     }
-
+    
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
-
+    
     public String getShowImage() {
         return showImage;
     }
-
+    
     public void setShowImage(String showImage) {
         this.showImage = showImage;
     }
-
+    
     public StreamedContent getDbImage() {
         return dbImage;
     }
-
+    
     public void setDbImage(StreamedContent dbImage) {
         this.dbImage = dbImage;
     }
-
+    
     public String getDestination() {
         return destination;
     }
-
+    
     public void setDestination(String destination) {
         this.destination = destination;
     }
-
+    
     public String getUploadedImage() {
         return uploadedImage;
     }
-
+    
     public void setUploadedImage(String uploadedImage) {
         this.uploadedImage = uploadedImage;
     }
-
+    
     public FileUploadController getFileUploadController() {
         return fileUploadController;
     }
-
+    
     public void setFileUploadController(FileUploadController fileUploadController) {
         this.fileUploadController = fileUploadController;
     }
-
+    
     public FileUploadEvent getFileUploadEvent() {
         return fileUploadEvent;
     }
-
+    
     public void setFileUploadEvent(FileUploadEvent fileUploadEvent) {
         this.fileUploadEvent = fileUploadEvent;
     }
-
+    
     public Integer getCompanyId() {
         return companyId;
     }
-
+    
     public void setCompanyId(Integer companyId) {
         this.companyId = companyId;
     }
-
+    
     public BigDecimal getQtySummition() {
         return qtySummition;
     }
-
+    
     public void setQtySummition(BigDecimal qtySummition) {
         this.qtySummition = qtySummition;
     }
-
+    
     public SymbolConverter getUnitConverter() {
         return unitConverter;
     }
-
+    
     public void setUnitConverter(SymbolConverter unitConverter) {
         this.unitConverter = unitConverter;
     }
-
+    
     public InvOrganizationSiteConverter getOrganizationSiteConvertor() {
         return organizationSiteConvertor;
     }
-
+    
     public void setOrganizationSiteConvertor(InvOrganizationSiteConverter organizationSiteConvertor) {
         this.organizationSiteConvertor = organizationSiteConvertor;
     }
-
+    
     public CompanyService getCompanyService() {
         return companyService;
     }
-
+    
     public void setCompanyService(CompanyService companyService) {
         this.companyService = companyService;
     }
@@ -1310,7 +1323,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
         if (invItemType == null) {
             setInvItemType(invItemTypeService.getALLInvItemTypeDTOByBranchId(getUserData().getUserBranch().getId()));
             invItemTypeDTOConverter = new InvItemTypeDTOConverter(invItemType);
-
+            
         }
         return invItemType;
     }
@@ -1336,4 +1349,63 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
         this.invItemTypeDTOConverter = invItemTypeDTOConverter;
     }
 
+    /**
+     * @return the itemName
+     */
+    public String getItemName() {
+        return itemName;
+    }
+
+    /**
+     * @param itemName the itemName to set
+     */
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
+
+    /**
+     * @return the itemsBarcodesDetailsViewListForSearch
+     */
+    public List<ItemsBarcodesDetailsView> getItemsBarcodesDetailsViewListForSearch() {
+        return itemsBarcodesDetailsViewListForSearch;
+    }
+
+    /**
+     * @param itemsBarcodesDetailsViewListForSearch the
+     * itemsBarcodesDetailsViewListForSearch to set
+     */
+    public void setItemsBarcodesDetailsViewListForSearch(List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewListForSearch) {
+        this.itemsBarcodesDetailsViewListForSearch = itemsBarcodesDetailsViewListForSearch;
+    }
+
+    /**
+     * @return the itemsBarcodesDetailsViewListForSearchSelected
+     */
+    public ItemsBarcodesDetailsView getItemsBarcodesDetailsViewListForSearchSelected() {
+        return itemsBarcodesDetailsViewListForSearchSelected;
+    }
+
+    /**
+     * @param itemsBarcodesDetailsViewListForSearchSelected the
+     * itemsBarcodesDetailsViewListForSearchSelected to set
+     */
+    public void setItemsBarcodesDetailsViewListForSearchSelected(ItemsBarcodesDetailsView itemsBarcodesDetailsViewListForSearchSelected) {
+        this.itemsBarcodesDetailsViewListForSearchSelected = itemsBarcodesDetailsViewListForSearchSelected;
+    }
+
+    /**
+     * @return the itemsBarcodesDetailsViewConverterForSearch
+     */
+    public ItemsBarcodesDetailsViewConverter getItemsBarcodesDetailsViewConverterForSearch() {
+        return itemsBarcodesDetailsViewConverterForSearch;
+    }
+
+    /**
+     * @param itemsBarcodesDetailsViewConverterForSearch the
+     * itemsBarcodesDetailsViewConverterForSearch to set
+     */
+    public void setItemsBarcodesDetailsViewConverterForSearch(ItemsBarcodesDetailsViewConverter itemsBarcodesDetailsViewConverterForSearch) {
+        this.itemsBarcodesDetailsViewConverterForSearch = itemsBarcodesDetailsViewConverterForSearch;
+    }
+    
 }

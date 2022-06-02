@@ -23,6 +23,8 @@ public interface ItemsBarcodesDetailsViewService {
     
     public Map<String, ItemsBarcodesDetailsView> findItemsBarcodesDetailsViewBranchIdMap(Integer branchId);
     
+    public Map<String, ItemsBarcodesDetailsView> findItemsBarcodesDetailsViewBranchIdByBarcodeMap(Integer branchId, List<String> barcodeList) ;
+    
     public List<ItemsBarcodesDetailsView> findItemsBarcodesDetailsViewBranchIdAndStore(Integer branchId, String barcodes);
     
     public List<ItemsBarcodesDetailsView> findItemsBarcodesDetailsViewBranchIdByBarcode(Integer branchId ,List<String> barcodeList);

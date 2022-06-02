@@ -28,14 +28,21 @@
             <div class="layout-main">
                 <ui:include src="./topbar.xhtml" />
 
-                <div class="layout-breadcrumb" style="height: 160px;">
+                <div class="layout-breadcrumb" style="height: 110px;">
                     <ul>
                         <li><p:link outcome="/dashboard"><i class="material-icons">&#xE88A;</i></p:link></li>
                         <li>/</li>
                         <ui:insert name="breadcrumb" />
                     </ul>
 
-                    <div class="layout-breadcrumb-options">
+                    <div class="layout-breadcrumb-options">                        
+                        <a href="#" title="اضافة عميل محتمل" >
+                            <h:form>
+                                <p:commandButton    action="#{globalMB.showAddDialog}"    icon="fa fa-sign-out-alt"
+                                                    id="addProbCustomer" style="background-color:#0064bc;"  
+                                                    />
+                            </h:form>
+                        </a>
                         <a href="#" title="Backup">
                             <i class="material-icons">&#xE864;</i>
                         </a>
@@ -43,22 +50,11 @@
                             <i class="material-icons">&#xE866;</i>
                         </a>
                         <a href="#" title="Logout" >
-
                             <h:form>
                                 <p:commandButton    action="#{loginBean.logout}"   icon="fa fa-sign-out-alt"
-                                                    id="logout"   ajax="false" style="background-color:#CC1C1C; border-radius: 50%;" class="material-icons"
-                                                    />
-
+                                                    id="logout"   ajax="false" style="background-color:#CC1C1C; border-radius: 50%;" class="material-icons" />
                             </h:form>
                         </a>
-                        <h:form>
-                            <p:commandButton    action="#{globalMB.showAddDialog}"   label="اضافة عميل محتمل" title="اضافة عميل محتمل"
-                                                id="addProbCustomer"   style=" width:100%;" 
-                                                />
-
-
-                        </h:form>
-
                     </div>
 
                 </div>
