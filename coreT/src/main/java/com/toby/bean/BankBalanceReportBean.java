@@ -29,6 +29,7 @@ public class BankBalanceReportBean {
     private String itemName;
     private Integer itemSerial;
     private String customerName;
+    private Integer cashType;
 
 
     /**
@@ -49,6 +50,9 @@ public class BankBalanceReportBean {
      * @return the credit
      */
     public BigDecimal getCredit() {
+        if(credit == null){
+            credit = BigDecimal.ZERO;
+        }
         return credit;
     }
 
@@ -63,6 +67,9 @@ public class BankBalanceReportBean {
      * @return the debit
      */
     public BigDecimal getDebit() {
+        if(debit == null){
+            debit = BigDecimal.ZERO;
+        }
         return debit;
     }
 
@@ -239,5 +246,19 @@ public class BankBalanceReportBean {
      */
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
+    }
+
+    /**
+     * @return the cashType
+     */
+    public Integer getCashType() {
+        return cashType;
+    }
+
+    /**
+     * @param cashType the cashType to set
+     */
+    public void setCashType(Integer cashType) {
+        this.cashType = cashType;
     }
 }
