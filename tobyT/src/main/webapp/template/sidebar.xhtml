@@ -646,6 +646,11 @@
                                                        or userData.userScreens['invupdate'].view 
                                                        or userData.isAdmin}"
                                            >
+                                    
+                                     <p:menuitem id="sr_lnk361" value="#{userData.userDDs['STORE_INIT_BALAN']}" icon="&#xE8D2;" url="/faces/views/invopeningbalanceitem/invopeningbalanceitemlist.xhtml" 
+                                                rendered="#{userData.userScreens['invopeningbalanceitem'].view or userData.isAdmin}"
+                                                />
+                                     
                                     <p:menuitem id="sr_lnk9999321" value="#{userData.userDDs['CONVERSION_BET_STORE']}" icon="&#xE8D2;" url="/faces/views/invtransferInventory/invTransferInventoryList.xhtml" 
                                                 rendered="#{userData.userScreens['invtransferInventory'].view or userData.isAdmin}"
                                                 />
