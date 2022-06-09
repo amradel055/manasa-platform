@@ -618,7 +618,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
                     invGroupsFiltered.add(group);
                 }
                 
-                code = group.getCode();
+                code = group.getSerial();
                 if (code != null && String.valueOf(code).contains(query) && !invGroupsFiltered.contains(group)) {
                     invGroupsFiltered.add(group);
                 }

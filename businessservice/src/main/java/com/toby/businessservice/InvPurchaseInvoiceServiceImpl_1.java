@@ -2715,7 +2715,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         if (proGrouplist != null && !proGrouplist.isEmpty()) {
             for (ProGroupDTO groupDTO : proGrouplist) {
                 SummitionItemsView summitionItemsView = new SummitionItemsView();
-                summitionItemsView.setCode(groupDTO.getCode());
+                summitionItemsView.setCode(groupDTO.getSerial());
                 summitionItemsView.setName(groupDTO.getName());
                 summitionItemsView.setFactoryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 0, invInventoryDTOs, null));
                 summitionItemsView.setSendNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 1, invInventoryDTOs, null));

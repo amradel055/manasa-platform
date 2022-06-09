@@ -188,7 +188,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             ProGroupDTO proGroupDTO = new ProGroupDTO();
             proGroupDTO.setId(invItem.getProGroupId().getId());
             proGroupDTO.setName(invItem.getProGroupId().getName());
-            proGroupDTO.setCode(invItem.getProGroupId().getCode());
+            proGroupDTO.setSerial(invItem.getProGroupId().getSerial());
             invItemDTO.setProGroupId(proGroupDTO);
         }
 
@@ -323,7 +323,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             ProGroup proGroup = new ProGroup();
             proGroup.setId(invItemDTO.getProGroupId().getId());
             proGroup.setName(invItemDTO.getProGroupId().getName());
-            proGroup.setCode(invItemDTO.getProGroupId().getCode());
+            proGroup.setSerial(invItemDTO.getProGroupId().getSerial());
             invItem.setProGroupId(proGroup);
         }
 

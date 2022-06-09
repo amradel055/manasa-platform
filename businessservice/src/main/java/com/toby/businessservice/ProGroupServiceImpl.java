@@ -25,6 +25,8 @@ public class ProGroupServiceImpl implements ProGroupService {
 
     @EJB
     private GenericDAO dao;
+   @EJB
+    GenericService genericService ;
 
     @Override
     public List<ProGroup> getallProGroupByBranchId(Integer branchId) {
@@ -51,7 +53,7 @@ public class ProGroupServiceImpl implements ProGroupService {
         proGroup.setIsDeleted(1);
         proGroup = dao.updateEntity(proGroup);
         return mapToDTO(proGroup, tobyUser);
-        
+
     }
 
     @Override
@@ -90,7 +92,7 @@ public class ProGroupServiceImpl implements ProGroupService {
     public List<ProGroup> getProGroupForUser(Integer id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public ProGroupDTO findProGroupDTO(Integer id) {
         ProGroup proGroup = dao.findEntityById(ProGroup.class, id);
@@ -101,7 +103,7 @@ public class ProGroupServiceImpl implements ProGroupService {
     public List<ProGroupDTO> getallProGroupByBranchIdDTO(TobyUser tobyUser) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", tobyUser.getBranchId().getId());
-        List<ProGroup> proGroupList = dao.findListByQuery("SELECT e FROM ProGroup e WHERE e.branchId.id = :branchId ORDER BY e.code", params);
+        List<ProGroup> proGroupList = dao.findListByQuery("SELECT e FROM ProGroup e WHERE e.branchId.id = :branchId ORDER BY e.serial", params);
         return mapToDTOList(proGroupList, tobyUser);
     }
 
@@ -109,7 +111,7 @@ public class ProGroupServiceImpl implements ProGroupService {
     public List<ProGroup> getSubProGroupByBranchId(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
-        List<ProGroup> proGroupList = dao.findListByQuery("SELECT e FROM ProGroup e WHERE  e.id in (select ii.groupId.id from InvItem ii where ii.branchId.id = :branchId)  ORDER BY e.code", params);
+        List<ProGroup> proGroupList = dao.findListByQuery("SELECT e FROM ProGroup e WHERE  e.id in (select ii.groupId.id from InvItem ii where ii.branchId.id = :branchId)  ORDER BY e.serial", params);
         return proGroupList;
     }
 
@@ -117,7 +119,7 @@ public class ProGroupServiceImpl implements ProGroupService {
     public List<ProGroup> getSubProGroupByBranchIdPer(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
-        List<ProGroup> proGroupList = dao.findListByQuery("SELECT e FROM ProGroup e WHERE  e.id in (select ii.groupId.id from InvItem ii where ii.branchId.id = :branchId)  ORDER BY e.code", params);
+        List<ProGroup> proGroupList = dao.findListByQuery("SELECT e FROM ProGroup e WHERE  e.id in (select ii.groupId.id from InvItem ii where ii.branchId.id = :branchId)  ORDER BY e.serial", params);
         List<ProGroup> list = improvePerformane(proGroupList);
         return list;
     }
@@ -128,7 +130,7 @@ public class ProGroupServiceImpl implements ProGroupService {
             ProGroup proGroup = new ProGroup();
             proGroup.setId(group.getId());
             proGroup.setName(group.getName());
-            proGroup.setCode(group.getCode());
+            proGroup.setSerial(group.getSerial());
             proGroup.setLevel(group.getLevel());
             list.add(proGroup);
         }
@@ -174,7 +176,7 @@ public class ProGroupServiceImpl implements ProGroupService {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", tobyUser.getBranchId().getId());
         params.put("proGroupId", proGroupId);
-        List<ProGroup> proGroupList = dao.findListByQuery("SELECT e FROM ProGroup e WHERE e.branchId.id = :branchId AND e.id != :proGroupId AND (e.parent.id != :proGroupId OR e.parent IS NULL)  ORDER BY e.code", params);
+        List<ProGroup> proGroupList = dao.findListByQuery("SELECT e FROM ProGroup e WHERE e.branchId.id = :branchId AND e.id != :proGroupId AND (e.parent.id != :proGroupId OR e.parent IS NULL)  ORDER BY e.serial", params);
         return mapToDTOList(proGroupList, tobyUser);
     }
 
@@ -187,7 +189,7 @@ public class ProGroupServiceImpl implements ProGroupService {
         String query = "SELECT e FROM ProGroup e WHERE e.branchId.id = :branchId ";
         stringBuilder.append(query);
         searchForGroup(stringBuilder, group1, group2, params);
-        stringBuilder.append(" ORDER BY e.code");
+        stringBuilder.append(" ORDER BY e.serial");
         List<ProGroup> proGroupList = dao.findListByQuery(stringBuilder.toString(), params);
         return proGroupList;
     }
@@ -207,7 +209,7 @@ public class ProGroupServiceImpl implements ProGroupService {
     public List<ProGroup> getProGroupsRootsByBranchId(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
-        List<ProGroup> proGroupList = dao.findListByQuery("SELECT e FROM ProGroup e WHERE e.branchId.id = :branchId AND e.id not in (select g.parent.id  FROM ProGroup g WHERE g.branchId.id = :branchId AND g.parent is not null) AND e.parent is not null ORDER BY e.code", params);
+        List<ProGroup> proGroupList = dao.findListByQuery("SELECT e FROM ProGroup e WHERE e.branchId.id = :branchId AND e.id not in (select g.parent.id  FROM ProGroup g WHERE g.branchId.id = :branchId AND g.parent is not null) AND e.parent is not null ORDER BY e.serial", params);
         List<ProGroup> list = improvePerformane(proGroupList);
         return list;
     }
@@ -259,7 +261,7 @@ public class ProGroupServiceImpl implements ProGroupService {
 
         stringBuilder.append(appendGroup(ItemMainDataByGroupSearchBean, params));
 
-        stringBuilder.append(" ORDER BY e.code");
+        stringBuilder.append(" ORDER BY e.serial");
         List<ProGroup> proGroupList = dao.findListByQuery(stringBuilder.toString(), params);
         return proGroupList;
     }
@@ -289,7 +291,7 @@ public class ProGroupServiceImpl implements ProGroupService {
         proGroup.setId(proGroupDTO.getId());
         proGroup.setIsDeleted(proGroupDTO.getIsDeleted());
 
-        proGroup.setCode(proGroupDTO.getCode());
+        proGroup.setSerial(proGroupDTO.getSerial());
         proGroup.setLevel(proGroupDTO.getLevel());
 
         proGroup.setName(proGroupDTO.getName());
@@ -327,7 +329,7 @@ public class ProGroupServiceImpl implements ProGroupService {
 
         proGroupDTO.setId(proGroup.getId());
         proGroupDTO.setCreatedDate(proGroup.getCreationDate());
-        proGroupDTO.setCode(proGroup.getCode());
+        proGroupDTO.setSerial(proGroup.getSerial());
         proGroupDTO.setIndex(proGroup.getId());
         proGroupDTO.setLevel(proGroup.getLevel());
         proGroupDTO.setIsDeleted(proGroup.getIsDeleted());
@@ -363,8 +365,16 @@ public class ProGroupServiceImpl implements ProGroupService {
 
             proGroupDTO.setMsg(null);
             String error = genralValidate(tobyUser, proGroupDTO);
+             ProGroup proGroup = mapToEntity(proGroupDTO, tobyUser);
             if (error.isEmpty()) {
-                ProGroup proGroup = dao.updateEntity(mapToEntity(proGroupDTO, tobyUser));
+                if (proGroupDTO.getId() != null) {
+                     proGroup = dao.updateEntity(proGroup);
+                } else {
+                    
+                    Integer serial = genericService.getMaxSerialForInvoice(ProGroup.class, proGroup.getBranchId().getId(),null,null);
+                    proGroup.setSerial(serial);
+                    proGroup = dao.updateEntity(proGroup);
+                }
                 proGroupDTO = mapToDTO(proGroup, tobyUser);
             } else {
                 proGroupDTO.setMsg(error);
@@ -381,9 +391,9 @@ public class ProGroupServiceImpl implements ProGroupService {
             errorMessage.append("الاسم موجود");
 
         }
-        if (!validateCode(tobyUser, proGroupDTO.getId(), proGroupDTO.getCode())) {
-            errorMessage.append("الكود موجود");
-        }
+//        if (!validateCode(tobyUser, proGroupDTO.getId(), proGroupDTO.getCode())) {
+//            errorMessage.append("الكود موجود");
+//        }
 
         return errorMessage.toString();
     }
@@ -411,9 +421,9 @@ public class ProGroupServiceImpl implements ProGroupService {
 
     @Override
     public Boolean validateCode(TobyUser tobyUser, Integer proGroupid, Integer code) {
-      
+
         StringBuilder quary = new StringBuilder();
-        
+
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", tobyUser.getBranchId().getId());
         params.put("code", code);
@@ -432,13 +442,13 @@ public class ProGroupServiceImpl implements ProGroupService {
         }
 
     }
-    
+
     @Override
     public ProGroup getProGroupBySerial(Integer branchId, Integer code) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         params.put("code", code);
-        List<ProGroup> proGroupList = dao.findListByQuery("SELECT e FROM ProGroup e WHERE e.branchId.id = :branchId AND e.code = :code ORDER BY e.code", params);
+        List<ProGroup> proGroupList = dao.findListByQuery("SELECT e FROM ProGroup e WHERE e.branchId.id = :branchId AND e.serial = :code ORDER BY e.serial", params);
         return proGroupList.get(0);
     }
 
