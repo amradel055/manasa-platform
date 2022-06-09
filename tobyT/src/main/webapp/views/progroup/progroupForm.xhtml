@@ -18,11 +18,8 @@
                             <p:outputLabel style="width: 55px" value="#{userData.userDDs['GROP_COD']}"/>
                         </h:panelGroup>
                         <h:panelGroup>
-                            <p:inputText   style="width: 49%" id="id" value="#{proGroupFormBean.proGroupDTO.code}" >
-                            
-                                <p:ajax event="blur" listener="#{proGroupFormBean.validateCode()}"  />
-                            
-                            </p:inputText>
+                            <p:outputLabel   style="width: 49%" id="id" value="#{proGroupFormBean.proGroupDTO.serial}" >
+                            </p:outputLabel>
                         </h:panelGroup>
                     </h:panelGroup>
 

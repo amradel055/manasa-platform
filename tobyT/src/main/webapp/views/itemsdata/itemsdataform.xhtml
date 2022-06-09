@@ -347,6 +347,24 @@
                             <p:outputLabel style="width:70px" value="  نوع التوب"/>
                         </div>
                     </div>
+                    
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:autoComplete style="width:40%" 
+                                            dropdown="true"
+                                            converter="#{itemDataFormMB.proGroupDTOConverter}"
+                                            value="#{itemDataFormMB.itemDataEntity.proGroupId}"
+                                            var="group"
+                                            itemLabel="#{group}" 
+                                            itemValue="#{group}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{itemDataFormMB.completeproGroups}" >
+                            </p:autoComplete>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 75px;" value="#{userData.userDDs['GROUP']}"/>
+                        </div>
+                    </div>
                 </div>
                 <!--First Segment-->
                 <h:panelGrid id="firstSegment" columns="2"  class="col-md-12" cellspacing="20" cellpadding="0" style="margin-top:15px" >

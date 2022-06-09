@@ -13,7 +13,7 @@ public class ProGroupDTO extends BaseEntityDTO {
 
     private String name;
     private Integer level;
-    private Integer code;
+    private Integer serial;
     private Integer isDeleted;
 
     public ProGroupDTO() {
@@ -61,22 +61,10 @@ public class ProGroupDTO extends BaseEntityDTO {
 
     @Override
     public String toString() {
-        return name + " " + code;
+        return name + " " + serial;
     }
 
-    /**
-     * @return the code
-     */
-    public Integer getCode() {
-        return code;
-    }
 
-    /**
-     * @param code the code to set
-     */
-    public void setCode(Integer code) {
-        this.code = code;
-    }
 
     /**
      * @return the isDeleted
@@ -90,6 +78,20 @@ public class ProGroupDTO extends BaseEntityDTO {
      */
     public void setIsDeleted(Integer isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    /**
+     * @return the serial
+     */
+    public Integer getSerial() {
+        return serial;
+    }
+
+    /**
+     * @param serial the serial to set
+     */
+    public void setSerial(Integer serial) {
+        this.serial = serial;
     }
 
 }

@@ -41,7 +41,7 @@ public class ProGroup extends BaseEntity {
     @Column(name = "level")
     private Integer level;
     @Column(name = "code")
-    private Integer code;
+    private Integer serial;
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
     private Branch branchId;
@@ -101,23 +101,10 @@ public class ProGroup extends BaseEntity {
 
     @Override
     public String toString() {
-        return name + " " + code;
+        return name + " " + getSerial();
     }
 
-    /**
-     * @return the code
-     */
-    public Integer getCode() {
-        return code;
-    }
-
-    /**
-     * @param code the code to set
-     */
-    public void setCode(Integer code) {
-        this.code = code;
-    }
-
+    
     /**
      * @return the isDeleted
      */
@@ -130,6 +117,20 @@ public class ProGroup extends BaseEntity {
      */
     public void setIsDeleted(Integer isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    /**
+     * @return the serial
+     */
+    public Integer getSerial() {
+        return serial;
+    }
+
+    /**
+     * @param serial the serial to set
+     */
+    public void setSerial(Integer serial) {
+        this.serial = serial;
     }
 
 }

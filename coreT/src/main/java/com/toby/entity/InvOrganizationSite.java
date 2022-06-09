@@ -145,8 +145,7 @@ public class InvOrganizationSite extends BaseEntity {
     private BigDecimal shoulder;
     @Column(name = "step")
     private BigDecimal step;
-    
-    
+
     @JoinColumn(name = "assigned_to", referencedColumnName = "id")
     @ManyToOne
     private Employee assignedTo;
@@ -182,11 +181,23 @@ public class InvOrganizationSite extends BaseEntity {
     @ManyToOne
     private Symbol projectName;
     @Column(name = "tax_Number")
-    private String taxNumber;    
+    private String taxNumber;
     @JoinColumn(name = "Learn_about_company_from", referencedColumnName = "id")
     @ManyToOne
     private Symbol LearnAboutCompanyfrom;
-
+    @Column(name = "companyName")
+    private String companyName;
+    @Column(name = "employer")
+    private String employer;
+    @Column(name = "street")
+    private String street;
+    @Column(name = "city")
+    private String city;
+    @Column(name = "country")
+    private String country;
+    @Column(name = "job_named")
+    private String jobNamed;
+    
 
     public InvOrganizationSite() {
     }
@@ -356,7 +367,7 @@ public class InvOrganizationSite extends BaseEntity {
         return accountId;
     }
 
-   public void setAccountId(GlAccount accountId) {
+    public void setAccountId(GlAccount accountId) {
         this.accountId = accountId;
     }
 
@@ -728,6 +739,90 @@ public class InvOrganizationSite extends BaseEntity {
      */
     public void setLearnAboutCompanyfrom(Symbol LearnAboutCompanyfrom) {
         this.LearnAboutCompanyfrom = LearnAboutCompanyfrom;
+    }
+
+    /**
+     * @return the companyName
+     */
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    /**
+     * @param companyName the companyName to set
+     */
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    /**
+     * @return the employer
+     */
+    public String getEmployer() {
+        return employer;
+    }
+
+    /**
+     * @param employer the employer to set
+     */
+    public void setEmployer(String employer) {
+        this.employer = employer;
+    }
+
+    /**
+     * @return the street
+     */
+    public String getStreet() {
+        return street;
+    }
+
+    /**
+     * @param street the street to set
+     */
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    /**
+     * @return the city
+     */
+    public String getCity() {
+        return city;
+    }
+
+    /**
+     * @param city the city to set
+     */
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    /**
+     * @return the country
+     */
+    public String getCountry() {
+        return country;
+    }
+
+    /**
+     * @param country the country to set
+     */
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    /**
+     * @return the jobNamed
+     */
+    public String getJobNamed() {
+        return jobNamed;
+    }
+
+    /**
+     * @param jobNamed the jobNamed to set
+     */
+    public void setJobNamed(String jobNamed) {
+        this.jobNamed = jobNamed;
     }
 
 }
