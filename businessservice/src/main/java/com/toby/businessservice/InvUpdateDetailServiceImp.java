@@ -296,7 +296,7 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
             }
         }
         List<InvDetailDTO> result = new ArrayList(map.values());
-        Map<Integer, BigDecimal> itemMap = quantityItemsStoreAddExitService.getAllQuantatyItemByinventory(inventoryId, itemIdS.toString() , true, null);
+        Map<Integer, BigDecimal> itemMap = quantityItemsStoreAddExitService.getAllQuantatyItemByinventory(inventoryId, itemIdS.toString() , false, null);
         for (InvDetailDTO dTO : result) {
             dTO.setAvailableQuantityRow(itemMap.get(dTO.getItemId().getId()));
             dTO.setOldQuantity(dTO.getAvailableQuantityRow());

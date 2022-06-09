@@ -275,7 +275,7 @@
 
 
 
-                <p:dialog id="loaddlg" header="مستندات الجرد السابقة"  showEffect="explode" hideEffect="bounce" height="440" width="500" style="margin-top: 2%"
+                <p:dialog id="loaddlg" header="مستندات الجرد السابقة"  showEffect="explode" hideEffect="bounce" height="440" width="700" style="margin-top: 2%"
                           widgetVar="loaddlg" modal="true">
                     <h:panelGrid columns="1" cellpadding="5">
                         <div class="ui-g-12 ui-md-12">
@@ -312,36 +312,36 @@
 
                         <f:facet name="header" >
                             <p:outputPanel  >
-                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
-                                <p:inputText id="globalFilter" onkeyup="PF('dlgTable').filter()" style="width:150px" />
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  />
+                                <p:inputText id="globalFilter" onkeyup="PF('dlgTable').filter()"  />
                             </p:outputPanel>
                         </f:facet>
 
 
-                        <p:column style="width:15vw;font-size:1.8vw;text-align: right;border-radius: 0px" 
+                        <p:column style="text-align: right"
                                   filterStyle="display:none"
                                   filterBy="#{dlgTable.serial}" 
                                   filterMatchMode="contains"
                                   headerText="#{userData.userDDs['DELEGATOR_NUMBER']}"
                                   sortBy="#{dlgTable.serial}"
                                   >
-                            <p:outputLabel value="#{dlgTable.serial}" />
+                            <p:outputLabel value="#{dlgTable.serial}" style="text-align: right" />
                         </p:column>
 
-                        <p:column style="width:15vw;font-size:1.8vw;text-align: right;border-radius: 0px"
+                        <p:column style="text-align: right"
                                   filterStyle="display:none" filterBy="#{dlgTable.remarks}"
                                   filterMatchMode="contains"
                                   headerText="#{userData.userDDs['REMARK']}" 
                                   sortBy="#{dlgTable.remarks}" >
-                            <p:outputLabel value="#{dlgTable.remarks}" />
+                            <p:outputLabel value="#{dlgTable.remarks}" style="text-align: right" />
                         </p:column>  
-                        <p:column style="width:15vw;font-size:1.8vw;text-align: right;border-radius: 0px"
+                        <p:column style="text-align: right"
                                   filterStyle="display:none"
                                   filterBy="#{dlgTable.date}" 
                                   filterMatchMode="contains" 
                                   headerText="#{userData.userDDs['DATEE']}" 
                                   sortBy="#{dlgTable.date}" >
-                            <p:outputLabel value="#{dlgTable.date}" >
+                            <p:outputLabel value="#{dlgTable.date}" style="text-align: right" >
                                 <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
                             </p:outputLabel>                           
                         </p:column>

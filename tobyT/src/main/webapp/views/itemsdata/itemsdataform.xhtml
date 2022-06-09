@@ -335,7 +335,7 @@
                     </div>
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
-                            <p:selectOneMenu value="#{itemDataFormMB.itemDataEntity.typeItem}" >
+                            <p:selectOneMenu value="#{itemDataFormMB.itemDataEntity.typeItem}" converter="#{itemDataFormMB.invItemTypeDTOConverter}" >
                                 <f:selectItem itemLabel="اختر" itemValue="" />
                                 <f:selectItems value="#{itemDataFormMB.invItemType}"  
                                                var="InvItemType" 
@@ -354,12 +354,27 @@
                 </h:panelGrid>
                 <p:commandButton    value="حفظ" 
                                     action="#{itemDataFormMB.saveItem()}" />
+                <p:commandButton  class="newButtons" 
+                                          id="newN"
+                                          ajax="false"
+
+                                          value="#{userData.userDDs['NEW']}" 
+                                          onclick="form.target = ''" 
+                                          actionListener="#{itemDataFormMB.reset()}"/>
+                 <p:commandButton  class="printButtons"
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          title="#{userData.userDDs['PRINT']}"
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{itemDataFormMB.print}"/>
                 <p:commandButton   title="بحث" 
                                    class="sreloadButtons" style="background-color:rgb(162, 46, 247);border-radius: 3px;margin-bottom:3px"
 
                                    onclick="PF('dlg4').show();"
                                    icon="fa fa-fw fa-search-plus" >
                 </p:commandButton>
+                
+                
             </p:fieldset>   
 
             <div class="ui-g-6 ui-xl-6" >

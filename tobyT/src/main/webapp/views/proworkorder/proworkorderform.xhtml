@@ -968,7 +968,7 @@
                                                    style="width:95%; text-align: left;"/>     
 
                                 </p:column>
-                                
+
                                 <p:column style="width: 9vh;text-align: left;border-radius: 0px; font-size: 12px;"
                                           id="availableQuantityRow"
                                           headerText="ك م">
@@ -980,7 +980,7 @@
                                 </p:column>
 
                                 <p:column style="width: 15vh;text-align: -webkit-auto;border-radius: 0px" id="COST" headerText="#{userData.userDDs['PRICE']}">
-                                          
+
                                     <p:inputText id="costTt" dir="LTR"
                                                  value="#{invPurchaseInvoiceDetailsTable.cost}"
                                                  disabled="#{not userData.userScreens['proworkorder'].edit and invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id ne null}"
@@ -1314,6 +1314,25 @@
                             </p:column>  
                         </p:dataTable> 
 
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <br/>
+                        <p:commandButton     class="saveButton"  
+                                             title="أغلاق"
+                                             value="أغلاق" 
+                                             action="#{invPurchaseInvoiceFormDTOMB.close()}"
+                                             update="@form"
+                                             >
+                        </p:commandButton>
+                        
+                        <p:commandButton     class="saveButton"  
+                                             title="حفظ و اغلاق"
+                                             value="حفظ و اغلاق"
+                                             icon="fa fa-fw fa-save" 
+                                             action="#{invPurchaseInvoiceFormDTOMB.saveAndClose()}"
+                                             update="@form"
+                                             >
+                        </p:commandButton>
                     </h:panelGroup>
                 </p:dialog>
 

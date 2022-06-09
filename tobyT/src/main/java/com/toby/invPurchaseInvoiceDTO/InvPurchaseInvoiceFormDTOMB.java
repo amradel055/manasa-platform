@@ -122,6 +122,15 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
         }
     }
 
+    public void close() {
+        CloseDlg("dlgpay");
+    }
+
+    public void saveAndClose() {
+        save();
+        CloseDlg("dlgpay");
+    }
+
     @Override
     public String save() {
         if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvPurchaseInvoiceDetailList() != null && !getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().isEmpty()) {
@@ -167,11 +176,11 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
         return "";
     }
 
-     public Boolean checkDetailDataSMS() {
+    public Boolean checkDetailDataSMS() {
 
         for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
 
-            if (detailDTO.getItemsBarcodesDetail() != null && detailDTO.getItemsBarcodesDetail().getBarcode() != null 
+            if (detailDTO.getItemsBarcodesDetail() != null && detailDTO.getItemsBarcodesDetail().getBarcode() != null
                     && (detailDTO.getItemsBarcodesDetail().getBarcode().equals("000012")
                     || detailDTO.getItemsBarcodesDetail().getBarcode().equals("000013")
                     || detailDTO.getItemsBarcodesDetail().getBarcode().equals("60004"))) {
@@ -180,8 +189,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
         }
         return true;
     }
-     
-     
+
     public void calcPayed() {
         getInvInvoiceDTO().setPayed(BigDecimal.ZERO);
         for (GlPayDTO glPayDTO : getInvInvoiceDTO().getGlPayDTOList()) {

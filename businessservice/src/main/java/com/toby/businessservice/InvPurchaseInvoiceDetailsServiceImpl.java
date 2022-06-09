@@ -163,7 +163,7 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
 
         return BigDecimal.ZERO;
     }
-    
+
     @Override
     public Integer findDetailNumber(Integer id) {
         List<InvPurchaseInvoiceDetail> purchaseInvoiceDetails = new ArrayList<>();
@@ -171,12 +171,12 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
         params.put("id", id);
         purchaseInvoiceDetails = dao.findListByQuery(" SELECT ipid from InvPurchaseInvoiceDetail  ipid where ipid.invPurchaseInvoiceId.id = :id ", params);
         if (purchaseInvoiceDetails != null && !purchaseInvoiceDetails.isEmpty()) {
-            return  purchaseInvoiceDetails.size();
+            return purchaseInvoiceDetails.size();
         }
 
         return 0;
     }
-    
+
     @Override
     public Boolean checkItemBarcode(Integer id) {
         List<String> purchaseInvoiceDetails = new ArrayList<>();
@@ -616,10 +616,11 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
 
                 detail = mapToEntity(detailDTO, invInvoiceDTO.getId(), invInvoiceDTO.getDiscountType(), invInvoiceDTO.getDiscount(), invInvoiceDTO.getTotalNet(), tobyUser);
                 if (ScreenNameClassEnum.INVPURCHASEINVOICEFORM.equals(invInvoiceDTO.getScreenName())) {
-                    if (!invInvoiceDTO.getInventorySetupDTO().getNegativeSell()) {
-                        BigDecimal quantityItemsStoreByDate = findQuantityItemByDate(invInvoiceDTO, detailDTO);
-                        detail.setCostAvarage(updateCostAvarage(detailDTO, quantityItemsStoreByDate));
-                    }
+//                    if (!invInvoiceDTO.getInventorySetupDTO().getNegativeSell()) {
+                    BigDecimal quantityItemsStoreByDate = findQuantityItemByDate(invInvoiceDTO, detailDTO);
+                    detail.setCostAvarage(updateCostAvarage(detailDTO, quantityItemsStoreByDate));
+                        invItemService.updateLastCostInvItem(detailDTO.getItemsBarcodesDetail().getItemId(), detailDTO.getCost());
+//                    }
                 } else if (ScreenNameClassEnum.PROWORKORDER.equals(invInvoiceDTO.getScreenName())) {
                     detail.setCostAvarage(findCostAvarageForItemByDate(invInvoiceDTO.getInvInventoryId().getId(), invInvoiceDTO.getBranchId(), detail.getItemId().getId(), invInvoiceDTO.getDate()));
                 }
@@ -713,7 +714,7 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
         String dateTo = new SimpleDateFormat("yyyy-MM-dd  23:59:59").format(dateTo1);
         List<balanceGalary> galarysLIST = new ArrayList<>();
         StringBuilder builder = new StringBuilder();
-        builder.append("select name , sum(value) from (select ii.name as name , sum(net_after_discount_head)  as value from inv_purchase_invoice_detail ipid left join inv_purchase_invoice ipi on ipi.id = ipid.inv_purchase_invoice_id left join inv_inventory ii on ii.id = ipi.galary_Id where ipi.branch_id = "+branchId+" and ii.id in (").append(stringBuilder).append(") and ipi.date >= '").append(dateFrom).append("' and ipi.date <= '").append(dateTo).append("' group by ii.id union all select ii.name as name ,(sum(value) * -1) as value from gl_bank_transaction gbt left join inv_purchase_invoice ipi on gbt.invoice_id = ipi.id left join inv_inventory ii on ii.id = ipi.galary_Id where ipi.branch_id = "+branchId+" and ii.id in (").append(stringBuilder).append(") and ipi.date >= '").append(dateFrom).append("' and ipi.date <= '").append(dateTo).append("' group by ii.id union all select ii.name as name ,(sum(value) * -1) as value from gl_bank_transaction_detail gbt left join inv_purchase_invoice ipi on gbt.invoice_id = ipi.id left join inv_inventory ii on ii.id = ipi.galary_Id where ipi.branch_id = "+branchId+" and ii.id in (").append(stringBuilder).append(") and ipi.date >= '").append(dateFrom).append("' and ipi.date <= '").append(dateTo).append("' group by ii.id ) s group by name");
+        builder.append("select name , sum(value) from (select ii.name as name , sum(net_after_discount_head)  as value from inv_purchase_invoice_detail ipid left join inv_purchase_invoice ipi on ipi.id = ipid.inv_purchase_invoice_id left join inv_inventory ii on ii.id = ipi.galary_Id where ipi.branch_id = " + branchId + " and ii.id in (").append(stringBuilder).append(") and ipi.date >= '").append(dateFrom).append("' and ipi.date <= '").append(dateTo).append("' group by ii.id union all select ii.name as name ,(sum(value) * -1) as value from gl_bank_transaction gbt left join inv_purchase_invoice ipi on gbt.invoice_id = ipi.id left join inv_inventory ii on ii.id = ipi.galary_Id where ipi.branch_id = " + branchId + " and ii.id in (").append(stringBuilder).append(") and ipi.date >= '").append(dateFrom).append("' and ipi.date <= '").append(dateTo).append("' group by ii.id union all select ii.name as name ,(sum(value) * -1) as value from gl_bank_transaction_detail gbt left join inv_purchase_invoice ipi on gbt.invoice_id = ipi.id left join inv_inventory ii on ii.id = ipi.galary_Id where ipi.branch_id = " + branchId + " and ii.id in (").append(stringBuilder).append(") and ipi.date >= '").append(dateFrom).append("' and ipi.date <= '").append(dateTo).append("' group by ii.id ) s group by name");
 
         List<Object[]> res = dao.executeNativeQuery(builder.toString());
         for (Object[] object : res) {
