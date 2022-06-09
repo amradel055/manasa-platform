@@ -25,6 +25,7 @@ import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.PrintProductionDTO;
 import com.toby.dto.SymbolDTO;
 import com.toby.views.InvoiceProductionStagesReport;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -61,22 +62,23 @@ public class CustomerTrackingMB extends Basic implements Serializable {
     private List<InvoiceProductionStagesReport> invoiceProductionStagesReports;
 
     private List<CrmEventDTO> listEveentMainScrren;
-    
-        private Integer dateType;
-        
-        private Boolean employeeIsSupervisor = Boolean.FALSE;
-        
-            private CrmEventDTO crmEventDTO;
-            
-                private SymbolDTOConverter activityTypeDTOconverter;
 
-  private List<SymbolDTO> activityTypeDTOList;
-  
-  private SymbolDTOConverter eventStatusDTOconverter;
-  
-      private List<SymbolDTO> eventStatusDTOList;
+    private Integer dateType;
 
+    private Boolean employeeIsSupervisor = Boolean.FALSE;
 
+    private CrmEventDTO crmEventDTO;
+
+    private SymbolDTOConverter activityTypeDTOconverter;
+
+    private List<SymbolDTO> activityTypeDTOList;
+
+    private SymbolDTOConverter eventStatusDTOconverter;
+
+    private List<SymbolDTO> eventStatusDTOList;
+
+    private Date lastInvoiceDate;
+    private BigDecimal lastInvoiceValue;
 
     /**
      * Creates a new instance of LoginBean
@@ -98,16 +100,27 @@ public class CustomerTrackingMB extends Basic implements Serializable {
 
     @EJB
     CRMEventServiceDTO cRMEventServiceDTO;
-   
-       @EJB
-       SymbolService symbolService;
-       
+
+    @EJB
+    SymbolService symbolService;
+
     public void search() {
         if (getInvOrganizationSiteDTO() != null && getInvOrganizationSiteDTO().getId() != null) {
+            setListEveentMainScrren(new ArrayList<>());
             Integer type = 4;
-
             setInvInvoiceList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(type, null, getInvOrganizationSiteDTO().getId()));
+            if (getListEveentMainScrren() == null || getListEveentMainScrren().isEmpty() ) {
+                setListEveentMainScrren(cRMEventServiceDTO.findALLEventByCustomerId(getInvOrganizationSiteDTO().getId(), getUserData().getUserBranch().getId()));
+            }
+            if (getInvInvoiceList() != null && !getInvInvoiceList().isEmpty()) {
+                setLastInvoiceDate(getInvInvoiceList().get(0).getDate());
+                setLastInvoiceValue(getInvInvoiceList().get(0).getValue());
+            }
         }
+    }
+
+    public void FillEventByCustomerId() {
+
     }
 
     public void searchProductionStagesReport(SelectEvent event) {
@@ -127,8 +140,8 @@ public class CustomerTrackingMB extends Basic implements Serializable {
             e.printStackTrace();
         }
     }
-    
-     public void updateTODOValue() {
+
+    public void updateTODOValue() {
         getCrmEventDTO().setType(1);
     }
 
@@ -139,15 +152,15 @@ public class CustomerTrackingMB extends Basic implements Serializable {
     public void reset() {
         invOrganizationSiteDTO = new InvOrganizationSiteDTO();
     }
-    
-      public void resetEvent() {
+
+    public void resetEvent() {
         setCrmEventDTO(new CrmEventDTO());
     }
-      
-         public String saveEvent() { 
-             if(getInvOrganizationSiteDTO()!= null){
-             getCrmEventDTO().setCustomerId(getInvOrganizationSiteDTO());
-             }
+
+    public String saveEvent() {
+        if (getInvOrganizationSiteDTO() != null) {
+            getCrmEventDTO().setCustomerId(getInvOrganizationSiteDTO());
+        }
         if (!getEmployeeIsSupervisor()) {
             getCrmEventDTO().setAssignedTo(getUserData().getEmployeeDTODefault());
         }
@@ -171,8 +184,8 @@ public class CustomerTrackingMB extends Basic implements Serializable {
         }
         return "";
     }
-         
-           private Date endDate() {
+
+    private Date endDate() {
         Calendar calEnd = Calendar.getInstance();
         calEnd.setTime(new Date(new Date().getTime() + (1000 * 60 * 60 * 24)));
         calEnd.set(Calendar.HOUR_OF_DAY, 0);
@@ -181,20 +194,19 @@ public class CustomerTrackingMB extends Basic implements Serializable {
         calEnd.set(Calendar.MILLISECOND, 0);
         return calEnd.getTime();
     }
-         
-          public String validateSave(CrmEventDTO crmEventDTO) {
+
+    public String validateSave(CrmEventDTO crmEventDTO) {
         String error = cRMEventServiceDTO.validateSave(crmEventDTO);
         return error;
     }
-          
-            public List<SymbolDTO> completeEventStatus(String query) {
+
+    public List<SymbolDTO> completeEventStatus(String query) {
         return AutoComplete.completeEventStatus(query, getEventStatusDTOList(), getEventStatusDTOconverter());
     }
-          
-           public List<SymbolDTO> completeActivityType(String query) {
+
+    public List<SymbolDTO> completeActivityType(String query) {
         return AutoComplete.completeActivityType(query, getActivityTypeDTOList(), getActivityTypeDTOconverter());
     }
-
 
     public List<InvOrganizationSiteDTO> completeCustomerDTO(String query) {
 
@@ -342,12 +354,12 @@ public class CustomerTrackingMB extends Basic implements Serializable {
      * @return the listEveentMainScrren
      */
     public List<CrmEventDTO> getListEveentMainScrren() {
-        if (listEveentMainScrren == null || listEveentMainScrren.isEmpty()) {
-            listEveentMainScrren = new ArrayList<>();
-        }
-        if (getUserData() != null) {
-            listEveentMainScrren = cRMEventServiceDTO.findCrmEventListWithDate(getUserData().getUserlogin().getBranchId().getId(), null , getUserData().getUser().getId(), getDateType(), null);
-        }
+//        if (listEveentMainScrren == null || listEveentMainScrren.isEmpty()) {
+//            listEveentMainScrren = new ArrayList<>();
+//        }
+//        if (getUserData() != null) {
+//            listEveentMainScrren = cRMEventServiceDTO.findCrmEventListWithDate(getUserData().getUserlogin().getBranchId().getId(), null, getUserData().getUser().getId(), getDateType(), null);
+//        }
         return listEveentMainScrren;
     }
 
@@ -362,8 +374,8 @@ public class CustomerTrackingMB extends Basic implements Serializable {
      * @return the dateType
      */
     public Integer getDateType() {
-        if(dateType == null){
-        dateType = 0 ; 
+        if (dateType == null) {
+            dateType = 0;
         }
         return dateType;
     }
@@ -379,7 +391,7 @@ public class CustomerTrackingMB extends Basic implements Serializable {
      * @return the employeeIsSupervisor
      */
     public Boolean getEmployeeIsSupervisor() {
-          if (getUserData().getEmployeeDTODefault() != null) {
+        if (getUserData().getEmployeeDTODefault() != null) {
             employeeIsSupervisor = employeeService.getAllEmployeesIsSuperVisor(getUserData().getEmployeeDTODefault().getId());
         }
         getInvOrganizationSiteDTO().setEmployeeIsSupervisor(employeeIsSupervisor);
@@ -397,7 +409,7 @@ public class CustomerTrackingMB extends Basic implements Serializable {
      * @return the crmEventDTO
      */
     public CrmEventDTO getCrmEventDTO() {
-           if (crmEventDTO == null) {
+        if (crmEventDTO == null) {
             crmEventDTO = new CrmEventDTO();
         }
         if (crmEventDTO != null && getUserData() != null && getUserData().getEmployeeDTODefault() != null && getUri() != null && !getUri().contains("TodoEvent")) {
@@ -438,7 +450,7 @@ public class CustomerTrackingMB extends Basic implements Serializable {
      * @return the activityTypeDTOList
      */
     public List<SymbolDTO> getActivityTypeDTOList() {
-              if (activityTypeDTOList == null || activityTypeDTOList.isEmpty()) {
+        if (activityTypeDTOList == null || activityTypeDTOList.isEmpty()) {
             activityTypeDTOList = symbolService.getSymbolListByCompanyId(getUserData().getCompany().getId(), 58);
             setActivityTypeDTOconverter(new SymbolDTOConverter(activityTypeDTOList));
         }
@@ -470,8 +482,8 @@ public class CustomerTrackingMB extends Basic implements Serializable {
      * @return the eventStatusDTOList
      */
     public List<SymbolDTO> getEventStatusDTOList() {
-        
-         if (eventStatusDTOList == null || eventStatusDTOList.isEmpty()) {
+
+        if (eventStatusDTOList == null || eventStatusDTOList.isEmpty()) {
             eventStatusDTOList = symbolService.getSymbolListByCompanyId(getUserData().getCompany().getId(), 61);
             setEventStatusDTOconverter(new SymbolDTOConverter(eventStatusDTOList));
         }
@@ -483,6 +495,36 @@ public class CustomerTrackingMB extends Basic implements Serializable {
      */
     public void setEventStatusDTOList(List<SymbolDTO> eventStatusDTOList) {
         this.eventStatusDTOList = eventStatusDTOList;
+    }
+
+    /**
+     * @return the lastInvoiceDate
+     */
+    public Date getLastInvoiceDate() {
+
+        return lastInvoiceDate;
+    }
+
+    /**
+     * @param lastInvoiceDate the lastInvoiceDate to set
+     */
+    public void setLastInvoiceDate(Date lastInvoiceDate) {
+        this.lastInvoiceDate = lastInvoiceDate;
+    }
+
+    /**
+     * @return the lastInvoiceValue
+     */
+    public BigDecimal getLastInvoiceValue() {
+
+        return lastInvoiceValue;
+    }
+
+    /**
+     * @param lastInvoiceValue the lastInvoiceValue to set
+     */
+    public void setLastInvoiceValue(BigDecimal lastInvoiceValue) {
+        this.lastInvoiceValue = lastInvoiceValue;
     }
 
 }

@@ -1,0 +1,771 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+
+    <ui:define name="content">
+        <style>
+            .crmBtn{
+                z-index: 1;
+                background: orange;
+                border: none;
+                color: white;
+                padding: 7px 10px;
+                margin: -4px;
+            }
+            .crmInp{
+                padding: 6px 10px !important;
+                margin: 0 !important;
+                z-index: -1 !important;
+                border: 1px solid gray !important;
+                border-left: 0px !important;
+                box-shadow: 4px 4px 5px #eee;
+            }
+            .crmInp2{
+                padding: 6px 10px ;
+                margin: 0 ;
+                z-index: -1 ;
+                box-shadow: 4px 4px 5px #eee;
+                border: 1px solid gray ;
+            }
+            .roww{
+                display: flex;
+                justify-content: space-between
+            }
+            .row{
+                display: flex;
+            }
+            .plus{
+                padding: 5px 8px 6px 8px;
+                font-size: 16px;
+                background: #607d8b;
+                border: none;
+                color: white;
+            }
+            .bg-1{
+                text-align: center;
+                font-size: 16px;
+                color: black;
+                background: #e1e1e1;
+                color: black;
+            }
+            .bg-2{
+                font-size: 16px;
+                color: black;
+                text-align: center;
+                background: #c1c1c1;
+                color: black;
+            }
+            .mt-3{
+                margin-top: 3px;
+            }
+            button.lastplus {
+                background: red;
+                border: none;
+                border-radius: 50%;
+                color: white;
+                font-size: 21px;
+            }
+            button:hover{
+                cursor: pointer;
+            }
+        </style>
+        <h:form id="ScreenAddEditForm" enctype="multipart/form-data" dir="#{userData.dir}" class='formmargin'>
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 12%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />  
+            </div>
+
+
+
+
+
+            <p:fieldset  >
+                <div class="roww" style="margin-bottom:20px">
+                    <div class="ui-g-8 ui-xl-8">
+                        <p:fieldset legend=" متابعة بيانات العميل" style="margin-bottom:20px">
+
+                            <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:104px;margin-right: 5%; margin-left: 5%"  value="العميل" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:34%!important " 
+                                                    dropdown="true"
+                                                    converter="#{CustomerTrackingMB.invOrganizationSiteDTOConverter}"
+                                                    value="#{CustomerTrackingMB.invOrganizationSiteDTO}"
+                                                    var="customer"
+                                                    itemLabel="#{customer}" 
+                                                    itemValue="#{customer}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{CustomerTrackingMB.completeCustomerDTO}"
+                                                    >
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </div>
+                        </p:fieldset> 
+                        <p:commandButton class="crmBtn" value="تفاصيل" action="#{CustomerTrackingMB.search}" update="@form" >
+                        </p:commandButton>
+                    </div>
+                    <div class="ui-g-4 ui-xl-4">
+                        <button class="plus"> + </button>
+                        <button class="crmBtn">شكوي عامة</button>
+                    </div>
+                </div>   
+
+
+
+
+                <div class="row">
+
+                    <div class="ui-g-6 ui-xl-6 ">
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-8 ui-xl-8">
+                                <input class="crmInp2" value="#{CustomerTrackingMB.invOrganizationSiteDTO.name}"  ></input>
+
+                            </div>
+                            <div class="ui-g-4 ui-xl-4">
+                                <p:outputLabel  value="اسم العميل" style="width: 60px"/>
+
+                            </div>
+                        </div>   
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-8 ui-xl-8">
+                                <input class="crmInp2" value="#{CustomerTrackingMB.invOrganizationSiteDTO.email}"  type="text" ></input>
+
+                            </div>
+                            <div class="ui-g-4 ui-xl-4">
+                                <p:outputLabel  value="البريد الالكتروني " style="width: 60px"/>
+
+                            </div>
+                        </div>  
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-8 ui-xl-8">
+                                <input class="crmInp2" value="#{CustomerTrackingMB.invOrganizationSiteDTO.mobile}"  type="text" ></input>
+
+                            </div>
+                            <div class="ui-g-4 ui-xl-4">
+                                <p:outputLabel  value="رقم الموبايل " style="width: 60px"/>
+
+                            </div>
+                        </div>  
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-8 ui-xl-8">
+                                <input class="crmInp2" value="#{CustomerTrackingMB.invOrganizationSiteDTO.active}"  type="text" ></input>
+
+                            </div>
+                            <div class="ui-g-4 ui-xl-4">
+                                <p:outputLabel  value="حالة العميل" style="width: 60px"/>
+
+                            </div>
+                        </div>  
+                        <div class="ui-g-12 ui-xl-12" style="margin-top:20px; font-weight: bold;padding: 0.5em;">
+                            معلومات عن العميل
+                        </div>
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-8 ui-xl-8">
+                                <input class="crmInp2" value="#{CustomerTrackingMB.invOrganizationSiteDTO.companyName}" type="text" ></input>
+
+                            </div>
+                            <div class="ui-g-4 ui-xl-4">
+                                <p:outputLabel  value="الشركة التابع لها " style="width: 60px"/>
+
+                            </div>
+                        </div>  
+
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-8 ui-xl-8">
+                                <input class="crmInp2" value="#{CustomerTrackingMB.invOrganizationSiteDTO.employer}"  type="text" ></input>
+
+                            </div>
+                            <div class="ui-g-4 ui-xl-4">
+                                <p:outputLabel  value=" جهة العمل" style="width: 60px"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12" style="margin-top:15px; font-weight: bold;padding: 0.5em;">
+                            تفاصيل العنوان
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-8 ui-xl-8">
+                                <input class="crmInp2" value="#{CustomerTrackingMB.invOrganizationSiteDTO.street}"   type="text" ></input>
+
+                            </div>
+                            <div class="ui-g-4 ui-xl-4">
+                                <p:outputLabel  value="  الشارع" style="width: 60px"/>
+
+                            </div>
+                        </div>  
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-8 ui-xl-8">
+                                <input class="crmInp2" value="#{CustomerTrackingMB.invOrganizationSiteDTO.city}"  type="text" ></input>
+
+                            </div>
+                            <div class="ui-g-4 ui-xl-4">
+                                <p:outputLabel  value=" المدينة " style="width: 60px"/>
+
+                            </div>
+                        </div>  
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-8 ui-xl-8">
+                                <input class="crmInp2" value="#{CustomerTrackingMB.invOrganizationSiteDTO.country}"  type="text" ></input>
+
+                            </div>
+                            <div class="ui-g-4 ui-xl-4">
+                                <p:outputLabel  value=" الدولة " style="width: 60px"/>
+
+                            </div>
+                        </div>  
+                    </div>
+                    <div class="ui-g-6 ui-xl-6 ">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-8 ui-xl-8">
+                                <input class="crmInp2" value="#{CustomerTrackingMB.lastInvoiceValue}"  type="text" ></input>
+
+                            </div>
+                            <div class="ui-g-4 ui-xl-4">
+                                <p:outputLabel  value=" قيمة اخر فاتورة " style="width: 60px"/>
+
+                            </div>
+                        </div> 
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-8 ui-xl-8 ">
+                                <input class="crmInp2" value="#{CustomerTrackingMB.lastInvoiceDate}"  type="text" ></input>
+
+                            </div>
+                            <div class="ui-g-4 ui-xl-4">
+                                <p:outputLabel  value=" تاريخ اخر فاتورة " style="width: 60px"/>
+
+                            </div>
+                        </div>  
+                        <div class="ui-g-12 ui-xl-12">
+
+                        </div>  
+                        <div class="ui-g-12 ui-xl-12" style="margin-top:75px; font-weight: bold;padding: 0.5em;">
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-8 ui-xl-8">
+                                <input class="crmInp2" value="#{CustomerTrackingMB.invOrganizationSiteDTO.learnAboutCompanyFrom.name}"  type="text" ></input>
+
+                            </div>
+                            <div class="ui-g-4 ui-xl-4">
+                                <p:outputLabel  value=" مصدر العميل " />
+
+                            </div>
+                        </div>  
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-8 ui-xl-8">
+                                <input class="crmInp2" value="#{CustomerTrackingMB.invOrganizationSiteDTO.jobNamed}"  type="text" ></input>
+
+                            </div>
+                            <div class="ui-g-4 ui-xl-4">
+                                <p:outputLabel  value=" المسمي الوظيفي " />
+
+                            </div>
+                        </div>  
+
+
+                    </div>
+                </div>
+
+                <p:fieldset   legend="اوامر الشغل الخاصه بالعميل" >
+
+
+
+                    <p:dataTable id="invInvoicePurchaseTable2"
+                                 draggableColumns="true"
+                                 draggableRows="true"
+                                 var="invInvoicePurchaseTable2" 
+                                 widgetVar="bTable2" 
+                                 rowIndexVar="index" 
+                                 value="#{CustomerTrackingMB.invInvoiceList}"
+                                 paginator="true"
+                                 rows="10" 
+                                 selectionMode="single"
+                                 rowKey="#{invInvoicePurchaseTable2.serial}"
+                                 selection="#{CustomerTrackingMB.invInvoiceDTOSelected}" 
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                                 {PreviousPageLink} {PageLinks} {NextPageLink}
+                                 {LastPageLink} {RowsPerPageDropdown}" 
+                                 emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" 
+
+                                 >
+                        <p:ajax event="rowSelect" listener="#{CustomerTrackingMB.searchProductionStagesReport}" update="@form"  />
+                        <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px; text-align: right"  filterStyle="display:none" 
+                                   filterBy="#{invInvoicePurchaseTable2.serial}" 
+                                   filterMatchMode="contains" 
+                                   headerText="#{userData.userDDs['INVOICE_NO']}"
+                                   sortBy="#{invInvoicePurchaseTable2.serial}"
+                                   >
+                            <p:outputLabel value="#{invInvoicePurchaseTable2.serial}"/>
+                        </p:column>
+
+
+                        <p:column style="width: 9vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px; text-align: center" filterStyle="display:none" 
+                                  filterBy="#{invInvoicePurchaseTable2.date}" 
+                                  filterMatchMode="contains"
+                                  headerText="#{userData.userDDs['DATEE']}"
+                                  sortBy="#{invInvoicePurchaseTable2.date}" 
+                                  >
+                            <p:outputLabel value="#{invInvoicePurchaseTable2.date}" >
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            </p:outputLabel>                           
+                        </p:column>
+
+                        <p:column style="width: 9vh;font-size: 1.8vh;border-radius: 0px;text-align: center" filterStyle="display:none"
+                                  filterBy="#{invInvoicePurchaseTable2.invInventoryId.name}"
+                                  filterMatchMode="contains" 
+                                  headerText="#{userData.userDDs['DEPOSITORY']}"
+                                  sortBy="#{invInvoicePurchaseTable2.invInventoryId.name}" 
+                                  >
+                            <p:outputLabel value="#{invInvoicePurchaseTable2.invInventoryId.name}" />
+                        </p:column>
+
+                        <p:column style="width: 8vh;font-size: 1.8vh;border-radius: 0px;text-align: center" filterStyle="display:none"
+                                  filterBy="#{invInvoicePurchaseTable2.customerCode}"
+                                  filterMatchMode="contains" 
+                                  headerText="كود"
+                                  sortBy="#{invInvoicePurchaseTable2.customerCode}" 
+                                  >
+                            <p:outputLabel value="#{invInvoicePurchaseTable2.customerCode}" />
+                        </p:column>
+
+                        <p:column style="width: 8vh;font-size: 1.8vh;border-radius: 0px;text-align: center" filterStyle="display:none"
+                                  filterBy="#{invInvoicePurchaseTable2.organizationSiteName}"
+                                  filterMatchMode="contains" 
+                                  headerText="العميل"
+                                  sortBy="#{invInvoicePurchaseTable2.organizationSiteName}" 
+                                  >
+                            <p:outputLabel value="#{invInvoicePurchaseTable2.organizationSiteName}" />
+                        </p:column>
+                        <p:column style="width: 9vh;font-size: 1.8vh;border-radius: 0px;text-align: center" filterStyle="display:none"
+                                  filterBy="#{invInvoicePurchaseTable2.customerMobile}"
+                                  filterMatchMode="contains" 
+                                  headerText="الهاتف"
+                                  sortBy="#{invInvoicePurchaseTable2.customerMobile}" 
+                                  >
+                            <p:outputLabel value="#{invInvoicePurchaseTable2.customerMobile}" />
+                        </p:column>
+                        <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;text-align: center" filterStyle="display:none"
+                                  filterBy="#{invInvoicePurchaseTable2.invoiceStatus}"
+                                  filterMatchMode="contains" 
+                                  headerText="الحالة"
+                                  sortBy="#{invInvoicePurchaseTable2.invoiceStatus}" >
+                            <p:outputLabel value="#{invInvoicePurchaseTable2.invoiceStatus}" />
+                        </p:column>
+                        <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;text-align: center" filterStyle="display:none"
+                                  filterBy="#{invInvoicePurchaseTable2.numberOfToob}"
+                                  filterMatchMode="contains" 
+                                  headerText="عدد التوب"
+                                  sortBy="#{invInvoicePurchaseTable2.numberOfToob}" >
+                            <p:outputLabel value="#{invInvoicePurchaseTable2.numberOfToob}" />
+                        </p:column>
+
+                        <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                                  filterBy="#{invInvoicePurchaseTable2.createdByName}"
+                                  filterMatchMode="contains" 
+                                  headerText="#{userData.userDDs['INVOI_ENTR']}"
+                                  sortBy="#{invInvoicePurchaseTable2.createdByName}" >
+                            <p:outputLabel value="#{invInvoicePurchaseTable2.createdByName}" />
+                        </p:column>
+                        <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;text-align: center" filterStyle="display:none"
+                                  filterBy="#{invInvoicePurchaseTable2.remarks}"
+                                  filterMatchMode="contains" 
+                                  headerText="#{userData.userDDs['NOTE']}"
+                                  sortBy="#{invInvoicePurchaseTable2.remarks}" >
+                            <p:outputLabel value="#{invInvoicePurchaseTable2.remarks}" />
+                        </p:column>
+                        <p:column  style="width: 12vh;font-size: 1.8vh;text-align:center;border-radius: 0px;" headerText="#{userData.userDDs['TRANSACTION']}" >
+                            <p:commandButton  
+                                update="@form" 
+                                class="smsearchButtons"
+                                icon="fa fa-fw fa-search-plus"  style="background-color: rgba(63, 81, 181, 0.88);border-radius: 3px;"
+                                title="#{userData.userDDs['VIEW']}" 
+                                action="#{invPurchaseInvoiceListDTOMB.goToEdit()}"  >
+                                <f:setPropertyActionListener value="#{invInvoicePurchaseTable2}" 
+                                                             target="#{invPurchaseInvoiceListDTOMB.invInvoiceDTOSelected}" />
+                            </p:commandButton>
+
+
+
+                            <p:commandButton 
+                                class="sprintButtons"
+                                update="@form" onclick="form.target = '_blank'"  ajax="false"
+                                icon="fa fa-fw fa-print" style="background-color: rgb(0, 74, 128);border-radius: 3px;"
+                                title="print" 
+                                action="#{invPurchaseInvoiceListDTOMB.printList()}"  >
+                                <f:setPropertyActionListener value="#{invInvoicePurchaseTable2}" 
+                                                             target="#{invPurchaseInvoiceListDTOMB.invInvoiceDTOSelected}" />
+                            </p:commandButton>
+
+                        </p:column>
+                        <f:facet name="footer"   >
+
+                        </f:facet>
+                    </p:dataTable> 
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+
+                </p:fieldset>
+                <p:fieldset  legend="البيانات"   style="margin-bottom:20px">
+                    <p:dataTable  id="table"
+                                  var="data"
+                                  value="#{CustomerTrackingMB.invoiceProductionStagesReports}"
+                                  draggableColumns="true"
+                                  paginator="true"
+                                  widgetVar="data" 
+                                  rowIndexVar="index" 
+                                  emptyMessage="EMPTY_TABLE"
+                                  sortBy="#{data.invInvoice}"
+                                  rows="20"
+                                  >
+                        <p:headerRow>
+                            <p:column colspan="1" style="width: 15vh;font-size: 2vh;border-radius: 0px;" >
+                                <h:outputText value="عدد الثوب" />
+                            </p:column>
+                            <p:column colspan="5" style="width: 15vh;font-size: 2vh;border-radius: 0px;" >
+                                <h:outputText value="#{data.number}" />
+                            </p:column>
+                        </p:headerRow>
+                        <p:column headerText="#" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="التاريخ" style="width: 13vh;text-align: center!important;font-size: 2vh">
+                            <h:outputText value="#{data.date}">
+                                <f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="اسم الصنف" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.productName}" />
+                        </p:column>
+                        <p:column headerText="الكمية" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.quantity}" />
+                        </p:column>
+                        <p:column headerText="المرحلة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.stage}" />
+                        </p:column>
+                        <p:column headerText="الموظف" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.empName}" />
+                        </p:column>
+
+
+
+                    </p:dataTable>
+
+                </p:fieldset>
+                <p:fieldset>
+
+                    <p:dataTable 
+                        id="eventListFormtable"
+                        var="eventListForm" 
+                        widgetVar="eventListForm"  
+                        rowIndexVar="index" 
+                        value="#{CustomerTrackingMB.listEveentMainScrren}"
+                        rows="10" 
+                        paginator="true"  
+                        paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                        {PreviousPageLink} {PageLinks} {NextPageLink}
+                        {LastPageLink} {RowsPerPageDropdown}"
+                        emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"  >
+
+                        <f:facet name="header" class="col-md-12">
+                            <p:commandButton  icon="fa fa-plus" 
+                                              class="saddButton"
+                                              title="#{userData.userDDs['ADD']}" 
+                                              onclick ="PF('dlg1').show()" 
+                                              style="float:right" 
+                                              />
+                        </f:facet>
+                        <p:column headerText="#" style="width: 2vh;font-size: 1.8vh;text-align:right;border-radius: 0px;border-radius: 0px;">
+                            <h:outputText value="#{index + 1}"  style="font-size: 1.5vh" />
+                        </p:column>
+
+                        <p:column   headerText="اسم العميل"
+                                    style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                    filterStyle="display:none" 
+                                    filterBy="#{eventListForm.customerId.name}"
+                                    filterMatchMode="contains"  
+                                    sortBy="#{eventListForm.customerId.name}" >
+                            <p:outputLabel value="#{eventListForm.customerId.name}"  style="font-size: 1.5vh"/>
+                        </p:column> 
+                        <p:column   headerText="الهاتف"
+                                    style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                    filterStyle="display:none" 
+                                    filterBy="#{eventListForm.customerId.phone}"
+                                    filterMatchMode="contains"  
+                                    sortBy="#{eventListForm.customerId.phone}" >
+                            <p:outputLabel value="#{eventListForm.customerId.phone}"  style="font-size: 1.5vh"/>
+                        </p:column>
+                        <p:column   headerText="الموضوع"
+                                    style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                    filterStyle="display:none" 
+                                    filterBy="#{eventListForm.subject}"
+                                    filterMatchMode="contains"  
+                                    sortBy="#{eventListForm.subject}" >
+                            <p:outputLabel value="#{eventListForm.subject}"  style="font-size: 1.5vh"/>
+                        </p:column>
+                        <p:column   headerText="تاريخ وتوقيت البدايه"
+                                    style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                    filterStyle="display:none" 
+                                    filterBy="#{eventListForm.startDate}"
+                                    filterMatchMode="contains"
+                                    sortBy="#{eventListForm.startDate}" >
+                            <p:outputLabel value="#{eventListForm.startDate}"  style="font-size: 1.5vh">
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column   headerText="الوصف"
+                                    style="width: 20vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                    filterStyle="display:none" 
+                                    filterBy="#{eventListForm.discription}"
+                                    filterMatchMode="contains"  
+                                    sortBy="#{eventListForm.discription}" >
+                            <p:outputLabel value="#{eventListForm.discription}"  style="font-size: 1.5vh"/>
+                        </p:column>
+                        <p:column   headerText="الحاله"
+                                    style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                    filterStyle="display:none" 
+                                    filterBy="#{eventListForm.status}"
+                                    filterMatchMode="contains"  
+                                    sortBy="#{eventListForm.status}" >
+                            <p:outputLabel value="#{eventListForm.status}"  style="font-size: 1.5vh"/>
+                        </p:column>
+
+                        <p:column   headerText="نوع المهمه"
+                                    style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                    filterStyle="display:none" 
+                                    filterBy="#{eventListForm.activityType}"
+                                    filterMatchMode="contains"  
+                                    sortBy="#{eventListForm.activityType}" >
+                            <p:outputLabel value="#{eventListForm.activityType}"  style="font-size: 1.5vh"/>
+                        </p:column>
+                        <p:column   headerText="المتابع"
+                                    style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                    filterStyle="display:none" 
+                                    filterBy="#{eventListForm.assignedTo.name}"
+                                    filterMatchMode="contains"  
+                                    sortBy="#{eventListForm.assignedTo.name}" >
+                            <p:outputLabel value="#{eventListForm.assignedTo.name}"  style="font-size: 1.5vh"/>
+                        </p:column>
+
+
+                    </p:dataTable>
+                </p:fieldset>
+
+                <p:dialog class="dialogueCRM" id="dialogueCRM" header="إضافة مهمة جديدة" widgetVar="dlg1" minHeight="40">
+                    <h:panelGrid id="panelDialogueCRM" > 
+                        <p:commandButton id="t1"  style="z-index: 2;
+                                         margin-top: 3%;
+                                         color: #035c70!important; 
+                                         background-color: #{CustomerTrackingMB.crmEventDTO.type eq 0 ? '#CCCCCC!important' : '#223238'};
+                                         border: 1px solid #22323a!important;
+                                         background: #{CustomerTrackingMB.crmEventDTO.type eq 0 ? '#CCCCCC!important' : '#22323a'} 50% 50% repeat-x!important;"
+                                         value="إضافة مهمة" update="t1 t2"
+                                         title="إضافة مهمة"
+                                         class="addnewwidget" 
+                                         action="#{CustomerTrackingMB.updateTODOValue()}" />  
+
+                        <p:commandButton id="t2" style="z-index: 2;
+                                         margin-top: 3%;
+                                         color: #035c70!important; 
+                                         background-color: #{CustomerTrackingMB.crmEventDTO.type eq 1 ? '#CCCCCC!important' : '#223238'};
+                                         border: 1px solid #22323a!important;
+                                         background: #{CustomerTrackingMB.crmEventDTO.type eq 1 ? '#CCCCCC!important' : '#22323a'} 50% 50% repeat-x!important;"
+                                         value="إضافة حدث" update="t1 t2"
+                                         title="إضافة حدث"
+                                         class="addnewwidget" 
+                                         action="#{CustomerTrackingMB.updateEventValue()}" />
+
+                        <div class="ui-g-12 ui-g-nopad"  >
+                            <div class="ui-g">
+
+                                <div class="ui-g-12 ui-md-6">
+
+                                    <h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel style="width: 98px;margin-right: 4%;" value="الموضوع"/>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <p:inputText style="width: 52%!important" value="#{CustomerTrackingMB.crmEventDTO.subject}"/>
+                                        </h:panelGroup>
+                                    </h:panelGroup>
+
+                                </div>
+
+
+
+
+                                <div class="ui-g-12 ui-md-6">
+                                    <h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel style="width: 103px;margin-right: 4%;" value="اسم المتابع"/>
+                                        </h:panelGroup>
+                                        <p:outputLabel id="assignedTo" style="width:50%!important "   value="#{CustomerTrackingMB.crmEventDTO.assignedTo}" />
+                                    </h:panelGroup>
+
+
+
+                                </div>
+                                <div class="ui-g-12 ui-md-6">
+                                    <h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel style="width: 103px;margin-right: 4%;margin-left: 4%;" value="اسم العميل"/>
+                                        </h:panelGroup>
+                                        <p:outputLabel id="customerName" style="width:50%!important "   value="#{CustomerTrackingMB.invOrganizationSiteDTO.name}" />
+                                    </h:panelGroup>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                                    <h:panelGroup>
+                                        <p:outputLabel style="margin-right: 5%;" for="datetime1" value="تاريخ  وتوقيت  البداية" />
+                                        <p:calendar id="datetime1" value="#{CustomerTrackingMB.crmEventDTO.startDate}" 
+                                                    pattern="MM/dd/yyyy HH:mm:ss" />
+
+                                    </h:panelGroup>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                                    <h:panelGroup>
+                                        <p:outputLabel style="margin-right: 5%;" for="datetime" value="تاريخ  وتوقيت  النهاية" />
+                                        <p:calendar id="datetime" value="#{CustomerTrackingMB.crmEventDTO.endDate}" 
+                                                    pattern="MM/dd/yyyy HH:mm:ss" />
+                                    </h:panelGroup>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                                    <h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel style="width:105px;margin-right: 5%"  value="الحاله" />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:autoComplete style="width:49%!important " 
+                                                            dropdown="true"
+                                                            converter="#{CustomerTrackingMB.eventStatusDTOconverter}"
+                                                            value="#{CustomerTrackingMB.crmEventDTO.status}"
+                                                            var="eventStatus"
+                                                            itemLabel="#{eventStatus}" 
+                                                            itemValue="#{eventStatus}" 
+                                                            forceSelection="true" 
+                                                            completeMethod="#{CustomerTrackingMB.completeEventStatus}"
+                                                            >
+
+                                            </p:autoComplete>
+                                        </h:panelGroup>
+                                    </h:panelGroup>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                                    <h:panelGroup >
+                                        <h:panelGroup>
+                                            <p:outputLabel style="width:105px;margin-right: 5%"  value="نوع المهمه / الحدث" />
+                                        </h:panelGroup>
+                                        <h:panelGroup >
+                                            <p:autoComplete style="width:49%!important " 
+
+                                                            dropdown="true"
+                                                            converter="#{CustomerTrackingMB.activityTypeDTOconverter}"
+                                                            value="#{CustomerTrackingMB.crmEventDTO.activityType}"
+                                                            var="activityType"
+                                                            itemLabel="#{activityType}" 
+                                                            itemValue="#{activityType}" 
+                                                            forceSelection="true" 
+                                                            completeMethod="#{CustomerTrackingMB.completeActivityType}"
+                                                            >
+
+                                            </p:autoComplete>
+                                        </h:panelGroup>
+                                    </h:panelGroup>
+                                </div>
+
+                                <div>
+                                    <panelGrid class="centerButtons col-md-12">
+
+                                        <h:panelGroup>
+
+                                            <p:commandButton  class="saveButton" id="saveB" 
+                                                              title="#{userData.userDDs['SAVE']}" 
+                                                              value="#{userData.userDDs['SAVE']}" 
+                                                              style="color: #ecf0f1!important;;background-color: #009688!important;margin-left: 5px" 
+                                                              action="#{CustomerTrackingMB.saveEvent() }" 
+                                                              >
+                                            </p:commandButton>
+
+                                            <p:commandButton  class="closeButton" id="cancelC" 
+                                                              title="#{userData.userDDs['CANCEL']}" 
+                                                              value="#{userData.userDDs['CANCEL']}" onclick="PF('dlg1').hide();" 
+                                                              style="color: #ecf0f1!important;background-color: #009688!important;margin-left: 5px" 
+                                                              >
+                                            </p:commandButton>
+
+                                            <p:commandButton  class="closeButton" id="resetEvent" 
+                                                              title="جديد" 
+                                                              value="جديد"  
+                                                              style="color: #ecf0f1!important;background-color: #009688!important;margin-left: 5px" 
+                                                              action="#{CustomerTrackingMB.resetEvent()}"
+                                                              update="panelDialogueCRM"
+
+                                                              > 
+                                            </p:commandButton>
+
+                                            <p:commandButton  class="fullButton" id="cancelC1" 
+                                                              title="استمارة كاملة" 
+                                                              value="استمارة كاملة" 
+
+                                                              actionListener="#{crmEventFormDTOMB.goToEvent()}"                                                      
+                                                              onclick="form.target = '_blank'"  ajax="false"
+                                                              style="color: #ecf0f1!important;background-color: #22323a!important;margin-left: 5px" 
+                                                              >
+                                            </p:commandButton>
+
+
+
+                                          
+
+
+                                        </h:panelGroup>
+                                    </panelGrid>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+                    </h:panelGrid> 
+                </p:dialog>
+
+
+
+
+            </p:fieldset>
+
+
+        </h:form>
+    </ui:define>
+
+</ui:composition>

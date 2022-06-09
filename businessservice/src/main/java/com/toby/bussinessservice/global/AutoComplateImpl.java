@@ -18,6 +18,7 @@ import com.toby.dto.InvItemDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.InventoryDelegatorDTO;
 import com.toby.dto.OfferCompanyDTO;
+import com.toby.dto.SymbolDTO;
 import com.toby.entity.CostCenter;
 import com.toby.entity.Currency;
 import com.toby.entity.GlAccount;
@@ -268,6 +269,25 @@ public class AutoComplateImpl implements AutoCompleteService {
         invOrganizationSiteDTO.setStep(invOrganizationSite.getStep());
         invOrganizationSiteDTO.setDiscount(invOrganizationSite.getDiscount());
         invOrganizationSiteDTO.setEmail(invOrganizationSite.getEmail());
+        invOrganizationSiteDTO.setMobile(invOrganizationSite.getMobile());
+        invOrganizationSiteDTO.setActive(invOrganizationSite.getActive());
+        invOrganizationSiteDTO.setStreet(invOrganizationSite.getStreet());
+        invOrganizationSiteDTO.setCity(invOrganizationSite.getCity());
+        invOrganizationSiteDTO.setCountry(invOrganizationSite.getCountry());
+        invOrganizationSiteDTO.setCompanyName(invOrganizationSite.getCompanyName());
+        invOrganizationSiteDTO.setEmployer(invOrganizationSite.getEmployer());
+        invOrganizationSiteDTO.setJobNamed(invOrganizationSite.getJobNamed());
+        
+         if (invOrganizationSite.getLearnAboutCompanyfrom() != null) {
+            SymbolDTO symbolDTO = new SymbolDTO();
+            symbolDTO.setId(invOrganizationSite.getLearnAboutCompanyfrom().getId());
+            symbolDTO.setName(invOrganizationSite.getLearnAboutCompanyfrom().getName());
+            symbolDTO.setSerial(invOrganizationSite.getLearnAboutCompanyfrom().getSerial());
+            symbolDTO.setIndex(invOrganizationSite.getLearnAboutCompanyfrom().getId());
+            invOrganizationSiteDTO.setLearnAboutCompanyFrom(symbolDTO);
+        }
+        
+
         if (invOrganizationSite.getCurrencyId() != null) {
             CurrencyDTO currencyDTO = new CurrencyDTO();
             currencyDTO.setId(invOrganizationSite.getCurrencyId().getId());
@@ -606,6 +626,5 @@ public class AutoComplateImpl implements AutoCompleteService {
         }
         sql.append(" ORDER BY e.code");
     }
-
 
 }

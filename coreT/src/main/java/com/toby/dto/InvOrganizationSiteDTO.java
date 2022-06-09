@@ -5,6 +5,7 @@
  */
 package com.toby.dto;
 
+import com.toby.entity.Symbol;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,9 +64,8 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
     private BigDecimal shoulder;
     private BigDecimal step;
 
-    
     /////////////// CRM /////////////////////////
-     private SymbolDTO categoryIndustryId;
+    private SymbolDTO categoryIndustryId;
     private SymbolDTO leadStatus;
     private String urlSite;
     private String urlFacebook;
@@ -92,8 +92,15 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
     private Integer numberOfLeadsAssigned;
     private Integer numberOfNewLeadsAssigned;
     private String legalAffairsRemark;
-    
-    
+
+  
+
+    private String employer;
+    private String street;
+    private String city;
+    private String country;
+    private String jobNamed;
+
     public InvOrganizationSiteDTO() {
     }
 
@@ -979,7 +986,8 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
     }
 
     /**
-     * @param crmCustomerInterestedProductsDTOList the crmCustomerInterestedProductsDTOList to set
+     * @param crmCustomerInterestedProductsDTOList the
+     * crmCustomerInterestedProductsDTOList to set
      */
     public void setCrmCustomerInterestedProductsDTOList(List<CrmCustomerInterestedProductsDTO> crmCustomerInterestedProductsDTOList) {
         this.crmCustomerInterestedProductsDTOList = crmCustomerInterestedProductsDTOList;
@@ -993,7 +1001,8 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
     }
 
     /**
-     * @param CrmCustomerInterestedProductsDTODeleteList the CrmCustomerInterestedProductsDTODeleteList to set
+     * @param CrmCustomerInterestedProductsDTODeleteList the
+     * CrmCustomerInterestedProductsDTODeleteList to set
      */
     public void setCrmCustomerInterestedProductsDTODeleteList(List<CrmCustomerInterestedProductsDTO> CrmCustomerInterestedProductsDTODeleteList) {
         this.CrmCustomerInterestedProductsDTODeleteList = CrmCustomerInterestedProductsDTODeleteList;
@@ -1045,8 +1054,8 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
      * @return the crmEventDTOList
      */
     public List<CrmEventDTO> getCrmEventDTOList() {
-        if (crmEventDTOList == null){
-        crmEventDTOList = new ArrayList<>();
+        if (crmEventDTOList == null) {
+            crmEventDTOList = new ArrayList<>();
         }
         return crmEventDTOList;
     }
@@ -1155,5 +1164,77 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
     public void setLegalAffairsRemark(String legalAffairsRemark) {
         this.legalAffairsRemark = legalAffairsRemark;
     }
+
+    /**
+     * @return the employer
+     */
+    public String getEmployer() {
+        return employer;
+    }
+
+    /**
+     * @param employer the employer to set
+     */
+    public void setEmployer(String employer) {
+        this.employer = employer;
+    }
+
+    /**
+     * @return the street
+     */
+    public String getStreet() {
+        return street;
+    }
+
+    /**
+     * @param street the street to set
+     */
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    /**
+     * @return the city
+     */
+    public String getCity() {
+        return city;
+    }
+
+    /**
+     * @param city the city to set
+     */
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    /**
+     * @return the country
+     */
+    public String getCountry() {
+        return country;
+    }
+
+    /**
+     * @param country the country to set
+     */
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    /**
+     * @return the jobNamed
+     */
+    public String getJobNamed() {
+        return jobNamed;
+    }
+
+    /**
+     * @param jobNamed the jobNamed to set
+     */
+    public void setJobNamed(String jobNamed) {
+        this.jobNamed = jobNamed;
+    }
+
+  
 
 }
