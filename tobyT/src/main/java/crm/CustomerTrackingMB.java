@@ -4,10 +4,10 @@
  * and open the template in the editor.
  */
 package crm;
-
 import com.toby.businessservice.CRMEventServiceDTO;
 import com.toby.toby.*;
 import com.toby.businessservice.EmployeeService;
+import com.toby.businessservice.FireBaseNotificationServices;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.InvoiceProductionStagesReportService;
 import java.io.Serializable;
@@ -29,10 +29,12 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
 /**
@@ -79,6 +81,8 @@ public class CustomerTrackingMB extends Basic implements Serializable {
 
     private Date lastInvoiceDate;
     private BigDecimal lastInvoiceValue;
+    
+    private Integer eventId ;
 
     /**
      * Creates a new instance of LoginBean
@@ -102,14 +106,21 @@ public class CustomerTrackingMB extends Basic implements Serializable {
     CRMEventServiceDTO cRMEventServiceDTO;
 
     @EJB
+    FireBaseNotificationServices firebaseServices;
+
+    @EJB
     SymbolService symbolService;
+    
+   
+    
+     
 
     public void search() {
         if (getInvOrganizationSiteDTO() != null && getInvOrganizationSiteDTO().getId() != null) {
             setListEveentMainScrren(new ArrayList<>());
             Integer type = 4;
             setInvInvoiceList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(type, null, getInvOrganizationSiteDTO().getId()));
-            if (getListEveentMainScrren() == null || getListEveentMainScrren().isEmpty() ) {
+            if (getListEveentMainScrren() == null || getListEveentMainScrren().isEmpty()) {
                 setListEveentMainScrren(cRMEventServiceDTO.findALLEventByCustomerId(getInvOrganizationSiteDTO().getId(), getUserData().getUserBranch().getId()));
             }
             if (getInvInvoiceList() != null && !getInvInvoiceList().isEmpty()) {
@@ -175,6 +186,9 @@ public class CustomerTrackingMB extends Basic implements Serializable {
             employeeDTO.setId(1);
             getCrmEventDTO().setAssignedTo(employeeDTO);
             setCrmEventDTO(cRMEventServiceDTO.save(getCrmEventDTO(), getUserData().getUser()));
+            setEventId(getCrmEventDTO().getId());
+            excuteScript("saveNotificationToFirebase();");
+//            firebaseServices.saveNotifications(getUserData().getUserBranch().getId(), getCrmEventDTO().getId());
             msgSave(getCrmEventDTO().getMsg());
 
             //update Crm Notification
@@ -525,6 +539,20 @@ public class CustomerTrackingMB extends Basic implements Serializable {
      */
     public void setLastInvoiceValue(BigDecimal lastInvoiceValue) {
         this.lastInvoiceValue = lastInvoiceValue;
+    }
+
+    /**
+     * @return the eventId
+     */
+    public Integer getEventId() {
+        return eventId;
+    }
+
+    /**
+     * @param eventId the eventId to set
+     */
+    public void setEventId(Integer eventId) {
+        this.eventId = eventId;
     }
 
 }

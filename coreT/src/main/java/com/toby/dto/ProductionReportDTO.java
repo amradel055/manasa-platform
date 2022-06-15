@@ -65,6 +65,6 @@ public class ProductionReportDTO extends BaseEntityDTO{
 
     public void setEmpName(String empName) {
         this.empName = empName;
-    }
+    }   
 
 }

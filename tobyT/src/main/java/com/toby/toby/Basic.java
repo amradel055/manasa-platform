@@ -137,40 +137,41 @@ public class Basic implements Serializable {
     private List<InvInventoryDTO> inventoryListSelected;
     private InvInventoryDTO inventoryDTOSelect;
     private String inventoryIdList;
-    
-     public boolean savedMeesage(String msg) {
+
+    public boolean savedMeesage(String msg) {
 
         FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), msg));
         return false;
     }
-     
-     
+
     public boolean errorMessage(String msg) {
         FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), msg));
         return false;
     }
 
-   
-     
-     
-     public void errorMsg(String error) {
+    public void excuteScript(String focusId) {
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.execute(focusId);
+    }
+
+    public void errorMsg(String error) {
         if (error != null && !error.isEmpty()) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), error));
         }
     }
-     
-      public void msgSave(String error) {
+
+    public void msgSave(String error) {
         if (error != null && !error.isEmpty()) {
             errorMsg(error);
-        }else{
+        } else {
             savedMeesage(getUserData().getUserDDs().get("SAVED"));
         }
     }
-    
-      public void OpenDlg(String dlgvar) {
+
+    public void OpenDlg(String dlgvar) {
         RequestContext context = RequestContext.getCurrentInstance();
         context.execute("PF('" + dlgvar + "').show();");
     }
