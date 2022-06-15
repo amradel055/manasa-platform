@@ -35,6 +35,7 @@ import com.toby.businessservice.DDService;
 import com.toby.businessservice.GallerySettingsService;
 import com.toby.businessservice.GlAnalyticsAccountsServcie;
 import com.toby.businessservice.GlYearService;
+import com.toby.businessservice.NotificationsService;
 import com.toby.businessservice.PathService;
 import com.toby.businessservice.PrivilegeService;
 import com.toby.businessservice.TobyUserRoleService;
@@ -113,6 +114,9 @@ public class LoginBean extends Basic implements Serializable {
     private TobyUserBankService tobyUserBankService;
     @EJB
     private ProProductionStagesService proProductionStagesService;
+    
+     @EJB
+    NotificationsService notificationsService;
 
     public LoginBean() throws IOException {
 
@@ -170,7 +174,8 @@ public class LoginBean extends Basic implements Serializable {
                 loggedInUser.setBranchId(userData.getUserBranch());
                 context.getSessionMap().put("userlogin", loggedInUser);
                 context.getSessionMap().put("userDataDTO", userDataDTO);
-
+                Integer notificationNumber = notificationsService.getUserUnreadNotificationsNumber(getUserData().getUser().getId());
+                context.getSessionMap().put("notificationNumber", notificationNumber);
                 saveUserData(userData, true);
 
 //                if (userData.getUserBranch() != null) {

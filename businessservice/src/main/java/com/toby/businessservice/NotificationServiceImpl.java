@@ -97,6 +97,7 @@ public class NotificationServiceImpl implements NotificationsService {
           notifications = new Notifications();
           notifications.setUserId(userId);
           notifications.setNumber(0);
+          notifications.setEventId(0);
           notifications =  dao.updateEntity(notifications);
         }
         NotificationsDTO dto = mapToDTO(notifications);
