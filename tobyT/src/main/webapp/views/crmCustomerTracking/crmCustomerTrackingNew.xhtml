@@ -97,12 +97,16 @@
             
             firebase.initializeApp(config);
             const list = '#{userData.gallaryIdList}';
+            const gallerySelected = '#{CustomerTrackingMB.crmEventDTO.gallaryId}';
             const idList = list.split(" , ");
-            for (i = 0; i &#60; idList.length; i++) {
-            firebase.database().ref("notifications/" + idList[i]).set({
-               "eventId" : document.getElementById("eventIdInput").value.toString()
+            const eventId = document.getElementById("eventIdInput").value.toString();
+             
+             if(gallerySelected !== null){
+            firebase.database().ref("notifications/" + idList[i] +"/" + gallerySelected  ).set({
+               "eventId" : eventId
             });
-        }}
+        }
+    }
         </script>
         <h:form id="ScreenAddEditForm" enctype="multipart/form-data" dir="#{userData.dir}" class='formmargin'>
             <div style=" position: absolute;left: 20px"> 
@@ -681,6 +685,27 @@
                                         <p:outputLabel style="margin-right: 5%;" for="datetime" value="تاريخ  وتوقيت  النهاية" />
                                         <p:calendar id="datetime" value="#{CustomerTrackingMB.crmEventDTO.endDate}" 
                                                     pattern="MM/dd/yyyy HH:mm:ss" />
+                                    </h:panelGroup>
+                                </div>
+                                      <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                                    <h:panelGroup >
+                                        <h:panelGroup>
+                                            <p:outputLabel style="width:105px;margin-right: 5%"  value="المعرض " />
+                                        </h:panelGroup>
+                                        <h:panelGroup >
+                                            <p:autoComplete style="width:49%!important " 
+                                                            dropdown="true"
+                                                            converter="#{CustomerTrackingMB.gallaryDTOConverters}"
+                                                            value="#{CustomerTrackingMB.crmEventDTO.gallaryId}"
+                                                            var="gallery"
+                                                            itemLabel="#{gallery}" 
+                                                            itemValue="#{gallery.id}" 
+                                                            forceSelection="true" 
+                                                            completeMethod="#{CustomerTrackingMB.completeGalleryList}"
+                                                            >
+
+                                            </p:autoComplete>
+                                        </h:panelGroup>
                                     </h:panelGroup>
                                 </div>
 

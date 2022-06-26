@@ -7,8 +7,9 @@ package com.igma.topbar;
 
 import com.toby.businessservice.FireBaseNotificationServices;
 import com.toby.businessservice.NotificationsService;
-import com.toby.toby.BaseFormBean;
-import com.toby.toby.UserData;
+import com.toby.businessservice.UserNotificationsService;
+import com.toby.dto.UserNotificationsDTO;
+import com.toby.toby.Basic;
 import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.faces.context.ExternalContext;
@@ -18,43 +19,38 @@ import javax.inject.Named;
 
 @Named(value = "topBarMB")
 @ViewScoped
-public class TopBarMB extends BaseFormBean implements Serializable {
+public class TopBarMB extends Basic implements Serializable {
 
     @EJB
     FireBaseNotificationServices firebaseServices;
 
     @EJB
     NotificationsService notificationsService;
+    
+    @EJB
+    UserNotificationsService userNotificationsService;
 
     private Integer onReadNotifications;
     private Integer lastEventId;
 
-    @Override
-    public String save() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     public void updateNotificationsData() {
-        setOnReadNotifications(notificationsService.updateNotifications(getUserData().getUser().getId(), getLastEventId()));
+        UserNotificationsDTO notificationsDTO = userNotificationsService.getUserNotificationsbyeventId(getLastEventId());
+        if(notificationsDTO == null){
+        setOnReadNotifications(notificationsService.getUserUnreadNotificationsNumber(getUserData().getUser().getId(), getUserData().getGallaryIdList()).size());
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        context.getSessionMap().put("notificationNumber", getOnReadNotifications());
-    }
-
-    @Override
-    public void load() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String getScreenName() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        context.getSessionMap().put("notificationNumber", getOnReadNotifications()); 
+        }
     }
 
     /**
      * @return the onReadNotifications
      */
     public Integer getOnReadNotifications() {
-
+        if(onReadNotifications == null){
+         Integer notificationNumber = notificationsService.getUserUnreadNotificationsNumber(getUserData().getUser().getId(), getUserData().getGallaryIdList()).size();
+         getContext().getSessionMap().put("notificationNumber", notificationNumber);
+        }
         setOnReadNotifications((Integer) getContext().getSessionMap().get("notificationNumber"));
 
         return onReadNotifications;
@@ -65,11 +61,6 @@ public class TopBarMB extends BaseFormBean implements Serializable {
      */
     public void setOnReadNotifications(Integer onReadNotifications) {
         this.onReadNotifications = onReadNotifications;
-    }
-
-    @Override
-    public void init() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**

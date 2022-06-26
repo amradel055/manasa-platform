@@ -39,7 +39,6 @@ import com.toby.businessservice.NotificationsService;
 import com.toby.businessservice.PathService;
 import com.toby.businessservice.PrivilegeService;
 import com.toby.businessservice.TobyUserRoleService;
-import com.toby.bussinessservice.global.Utility;
 import com.toby.core.UserDataDTO;
 import com.toby.dto.GlBankDTO;
 import com.toby.dto.InvInventoryDTO;
@@ -59,7 +58,7 @@ public class LoginBean extends Basic implements Serializable {
      */
 
     @EJB
-    private TobyUserLoginService tobyUserLoginService1;
+    private TobyUserLoginService tobyUserLoginService;
     @EJB
     private CompanyService companyService;
 
@@ -146,7 +145,7 @@ public class LoginBean extends Basic implements Serializable {
                 System.out.println("Logged In Successfully");
 //                int branchId = branchService.getBranchesForUser(loggedInUser.getId()).get(0).getId();
 //                  
-//                 boolean state = tobyUserLoginService1.checkUserLogged(loggedInUser.getId(), branchId);
+//                 boolean state = tobyUserLoginService.checkUserLogged(loggedInUser.getId(), branchId);
 //                if (!state /*|| loggedInUser.getId() == 61*/) {
                 userData = new UserData();
                 UserDataDTO userDataDTO = new UserDataDTO();
@@ -174,10 +173,9 @@ public class LoginBean extends Basic implements Serializable {
                 loggedInUser.setBranchId(userData.getUserBranch());
                 context.getSessionMap().put("userlogin", loggedInUser);
                 context.getSessionMap().put("userDataDTO", userDataDTO);
-                Integer notificationNumber = notificationsService.getUserUnreadNotificationsNumber(getUserData().getUser().getId());
-                context.getSessionMap().put("notificationNumber", notificationNumber);
+               
                 saveUserData(userData, true);
-
+                
 //                if (userData.getUserBranch() != null) {
 ////                    designateMonitoringForEachBranch();
 ////                    purchaseAndSalesAccountsForEachBranch();

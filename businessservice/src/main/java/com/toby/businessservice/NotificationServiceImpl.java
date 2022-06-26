@@ -5,35 +5,11 @@
  */
 package com.toby.businessservice;
 
-import com.toby.apiServices.AttributeService;
-import com.toby.apiServices.VariationProductService;
-import com.toby.businessservice.reports.searchBean.ItemMainDataByGroupSearchBean;
 import com.toby.core.GenericDAO;
-import com.toby.define.ScreenNameClassEnum;
-import com.toby.dto.AttributeDTO;
-import com.toby.dto.CurrencyDTO;
-import com.toby.dto.InvGroupDTO;
-import com.toby.dto.InvItemDTO;
-import com.toby.dto.InvItemDTOApi;
-import com.toby.dto.InvOrganizationSiteDTO;
+import com.toby.dto.CrmEventDTO;
 import com.toby.dto.NotificationsDTO;
-import com.toby.dto.ProGroupDTO;
-import com.toby.dto.SymbolDTO;
-import com.toby.dto.VariationDTO;
-import com.toby.entity.Branch;
-import com.toby.entity.InvBarcode;
-import com.toby.entity.InvGroup;
-import com.toby.entity.InvItem;
-import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.Notifications;
-import com.toby.entity.ProGroup;
-import com.toby.entity.Symbol;
-import com.toby.entity.TobyCompany;
-import com.toby.entity.TobyUser;
-import com.toby.views.ItemsBarcodesDetailsView;
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,15 +25,19 @@ public class NotificationServiceImpl implements NotificationsService {
 
     @EJB
     private GenericDAO dao;
-
+    
+    @EJB
+    private CRMEventServiceDTO  eventService ;
+    
+    @EJB
+    private UserNotificationsService userNotificationsService;
+    
     public Notifications mapToEntity(NotificationsDTO notificationsDTO) {
-
         Notifications notifications = new Notifications();
         notifications.setId(notificationsDTO.getId());
         notifications.setNumber(notificationsDTO.getNumber());
         notifications.setUserId(notificationsDTO.getUserId());
         notifications.setEventId(notificationsDTO.getEventId());
-
         return notifications;
     }
 
@@ -88,6 +68,18 @@ public class NotificationServiceImpl implements NotificationsService {
         }
         return notifications.getNumber();
     }
+    
+        public Integer updateNotificationsNumber(Integer userId  , Integer number) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", userId);
+        Notifications notifications = dao.findEntityByQuery("SELECT e FROM Notifications e WHERE e.userId = :userId ", params);
+        NotificationsDTO dto = mapToDTO(notifications);
+        dto.setNumber(number);
+        notifications =  mapToEntity(dto);
+        notifications =  dao.updateEntity(notifications);
+        return notifications.getNumber();
+    }
+        
         @Override
         public Integer getUserUnreadNotificationsNumber(Integer userId) {
         Map<String, Object> params = new HashMap<>();
@@ -102,7 +94,20 @@ public class NotificationServiceImpl implements NotificationsService {
         }
         NotificationsDTO dto = mapToDTO(notifications);
         return dto.getNumber();
-    }
+    }    
+        
+    
+        
+        @Override
+        public List<CrmEventDTO> getUserUnreadNotificationsNumber(Integer userId , String galleryList) {
+            List<CrmEventDTO> galleryEventsListNotReadedByUser = eventService.findALLEventByGalleryId(galleryList , userId);
+            if(galleryEventsListNotReadedByUser != null && !galleryEventsListNotReadedByUser.isEmpty()){
+               updateNotificationsNumber(userId, galleryEventsListNotReadedByUser.size());
+            }else{
+                galleryEventsListNotReadedByUser = new ArrayList<>();
+            }
+            return galleryEventsListNotReadedByUser ;
+        }
 
 
 }

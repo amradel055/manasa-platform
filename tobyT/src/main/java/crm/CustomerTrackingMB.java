@@ -20,6 +20,7 @@ import com.toby.converter.InvOrganizationSiteDTOConverter;
 import com.toby.converter.SymbolDTOConverter;
 import com.toby.dto.CrmEventDTO;
 import com.toby.dto.EmployeeDTO;
+import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.PrintProductionDTO;
@@ -220,6 +221,10 @@ public class CustomerTrackingMB extends Basic implements Serializable {
 
     public List<SymbolDTO> completeActivityType(String query) {
         return AutoComplete.completeActivityType(query, getActivityTypeDTOList(), getActivityTypeDTOconverter());
+    }
+    
+      public List<InvInventoryDTO> completeGalleryList(String query) {
+        return AutoComplete.completeGalleryList(query, getUserData().getGallaryLists(), getGallaryDTOConverters());
     }
 
     public List<InvOrganizationSiteDTO> completeCustomerDTO(String query) {

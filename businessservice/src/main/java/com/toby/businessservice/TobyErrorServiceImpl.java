@@ -50,8 +50,9 @@ public class TobyErrorServiceImpl implements TobyErrorService {
             TobyError.setModificationDate(new Date());
             TobyError.setModifiedBy(tobyUser);
         }
-
-        TobyError.setBranchId(tobyUser.getBranchId());
+        if(tobyUser.getBranchId() != null){
+        TobyError.setBranchId(tobyUser.getBranchId()); 
+        }
         TobyError.setCompanyId(tobyUser.getCompanyId());
         return TobyError;
     }
