@@ -30,5 +30,7 @@ public interface PurchaseOfItemsBySuppliersReportService {
     public List<ItemSalesView> getAllInvoiceDetailBySuppliersSearchBean(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean);
 
     public List<SalesOfItemsByCompany> getAllSalesOfItemsByCompany(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean);
+    
+    public List<ItemSalesView> getAllPurchaseOfItemsBySuppliersSearchBeanNewNew(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean, Integer invoiceType);
 
 }

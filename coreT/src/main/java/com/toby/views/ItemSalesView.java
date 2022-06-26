@@ -7,6 +7,7 @@ package com.toby.views;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -17,6 +18,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -127,7 +129,7 @@ public class ItemSalesView implements Serializable {
     @Column(name = "item_quantity")
     private BigDecimal itemQuantity;
     @Column(name = "cost")
-    private BigDecimal cost;
+    private BigDecimal cost;    
     @Column(name = "discount")
     private BigDecimal discount;
     @Column(name = "net")
@@ -143,6 +145,21 @@ public class ItemSalesView implements Serializable {
     private String gallaryCode;
     @Column(name = "gallaryName")
     private String gallaryName;
+    
+    @Transient
+    private BigDecimal costAvarage;
+    @Transient
+    private BigDecimal costAvarageTotal;
+    @Transient
+    private BigDecimal number;
+    @Transient
+    private BigDecimal quantityOfOne;
+    @Transient
+    private BigDecimal fash;
+    @Transient
+    private BigDecimal costAvarageFashTotal;
+   
+    
 
     public ItemSalesView() {
     }
@@ -260,6 +277,9 @@ public class ItemSalesView implements Serializable {
     }
 
     public BigDecimal getDetailItemQuantity() {
+        if(detailItemQuantity == null){
+            detailItemQuantity = BigDecimal.ZERO;
+        }
         return detailItemQuantity;
     }
 
@@ -506,6 +526,97 @@ public class ItemSalesView implements Serializable {
      */
     public void setGallaryName(String gallaryName) {
         this.gallaryName = gallaryName;
+    }
+
+    /**
+     * @return the costAvarageTotal
+     */
+    public BigDecimal getCostAvarageTotal() {
+        return costAvarageTotal;
+    }
+
+    /**
+     * @param costAvarageTotal the costAvarageTotal to set
+     */
+    public void setCostAvarageTotal(BigDecimal costAvarageTotal) {
+        this.costAvarageTotal = costAvarageTotal;
+    }
+
+    /**
+     * @return the number
+     */
+    public BigDecimal getNumber() {
+        if(number == null){
+            number = BigDecimal.ONE;
+        }
+        return number;
+    }
+
+    /**
+     * @param number the number to set
+     */
+    public void setNumber(BigDecimal number) {
+        this.number = number;
+    }
+
+    /**
+     * @return the quantityOfOne
+     */
+    public BigDecimal getQuantityOfOne() {
+        quantityOfOne = getItemQuantity().divide(getNumber(), 2, RoundingMode.HALF_UP);
+        return quantityOfOne;
+    }
+
+    /**
+     * @param quantityOfOne the quantityOfOne to set
+     */
+    public void setQuantityOfOne(BigDecimal quantityOfOne) {
+        this.quantityOfOne = quantityOfOne;
+    }
+
+    /**
+     * @return the fash
+     */
+    public BigDecimal getFash() {
+        if(fash== null){
+            fash = BigDecimal.ZERO;
+        }
+        return fash;
+    }
+
+    /**
+     * @param fash the fash to set
+     */
+    public void setFash(BigDecimal fash) {
+        this.fash = fash;
+    }
+
+    /**
+     * @return the costAvarageFashTotal
+     */
+    public BigDecimal getCostAvarageFashTotal() {
+        return costAvarageFashTotal;
+    }
+
+    /**
+     * @param costAvarageFashTotal the costAvarageFashTotal to set
+     */
+    public void setCostAvarageFashTotal(BigDecimal costAvarageFashTotal) {
+        this.costAvarageFashTotal = costAvarageFashTotal;
+    }
+
+    /**
+     * @return the costAvarage
+     */
+    public BigDecimal getCostAvarage() {
+        return costAvarage;
+    }
+
+    /**
+     * @param costAvarage the costAvarage to set
+     */
+    public void setCostAvarage(BigDecimal costAvarage) {
+        this.costAvarage = costAvarage;
     }
 
 }

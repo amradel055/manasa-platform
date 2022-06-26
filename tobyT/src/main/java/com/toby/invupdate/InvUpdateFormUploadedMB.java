@@ -38,6 +38,8 @@ public class InvUpdateFormUploadedMB extends BaseFormBean {
 
     private InvInventoryDTOConverter invInventoryDTOConverter;
 
+    private Boolean findAll;
+
     @EJB
     private InvUpdateService invUpdateService;
     @EJB
@@ -61,6 +63,7 @@ public class InvUpdateFormUploadedMB extends BaseFormBean {
                 if (invStripId != null) {
                     invInvoiceDTO = invUpdateService.findInvInvoiceByInvUpdateId(invStripId);
                     invInvoiceDTO.setInvPurchaseInvoiceDetailList(invUpdateDetailService.getAllInvDetailDTOByInvUpdateDetails(invStripId));
+                    
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -96,7 +99,7 @@ public class InvUpdateFormUploadedMB extends BaseFormBean {
                         serials.append(",").append(dailogueData.getSerial());
                     }
                 }
-                getInvInvoiceDTO().setInvPurchaseInvoiceDetailList(invUpdateDetailService.getAllInvUpdatesDetailFromInvTransferDetail(serials.toString(), getUserData().getUserBranch().getId(), getInvInvoiceDTO().getInvInventoryId().getId()));
+                getInvInvoiceDTO().setInvPurchaseInvoiceDetailList(invUpdateDetailService.getAllInvUpdatesDetailFromInvTransferDetail(serials.toString(), getUserData().getUserBranch().getId(), getInvInvoiceDTO().getInvInventoryId().getId(), getInvInvoiceDTO().getDate(), getFindAll()));
                 CloseDlg("loaddlg");
                 errorMsg(getInvInvoiceDTO().getMsg());
             }
@@ -260,5 +263,22 @@ public class InvUpdateFormUploadedMB extends BaseFormBean {
 
     public void setInvInventoryDTOConverter(InvInventoryDTOConverter invInventoryDTOConverter) {
         this.invInventoryDTOConverter = invInventoryDTOConverter;
+    }
+
+    /**
+     * @return the findAll
+     */
+    public Boolean getFindAll() {
+        if (findAll == null) {
+            findAll = Boolean.TRUE;
+        }
+        return findAll;
+    }
+
+    /**
+     * @param findAll the findAll to set
+     */
+    public void setFindAll(Boolean findAll) {
+        this.findAll = findAll;
     }
 }

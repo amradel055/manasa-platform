@@ -10,7 +10,6 @@ import com.toby.bean.BankBalanceReportSearchBean;
 import com.toby.businessservice.reports.searchBean.SubAccountSummarySearchBean;
 import com.toby.core.GenericDAO;
 import com.toby.dto.GlBankDTO;
-import com.toby.entity.GlYear;
 import com.toby.views.BankBalanceView;
 import com.toby.views.BankBalanceViewNew;
 import java.math.BigDecimal;
@@ -19,10 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -129,7 +126,9 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                 + "        NULL AS `accountIdFrom`,\n"
                 + "        `gb`.`branch_id` AS `branchId`,\n"
                 + "        `gb`.`code` AS `bankCodeto`,\n"
-                + "        `gb`.`code` AS `bankCodeFrom`\n"
+                + "        `gb`.`code` AS `bankCodeFrom`,\n"
+                + "        `gb`.`cash` AS `cashto`,\n"
+                + "        `gb`.`cash` AS `cashfrom`\n"
                 + "    FROM\n"
                 + "        `gl_bank` `gb`\n"
                 + "    WHERE\n"
@@ -152,7 +151,9 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                 + "        `glb2`.`account_id` AS `accountIdFrom`,\n"
                 + "        `glb`.`branch_id` AS `branchId`,\n"
                 + "        `glb1`.`code` AS `bankCodeto`,\n"
-                + "        `glb2`.`code` AS `bankCodeFrom`\n"
+                + "        `glb2`.`code` AS `bankCodeFrom`,\n"
+                + "        `glb1`.`cash` AS `cashto`,\n"
+                + "        `glb2`.`cash` AS `cashfrom`\n"
                 + "    FROM\n"
                 + "        (((`gl_bank_transaction` `glb`\n"
                 + "        LEFT JOIN `gl_bank_transaction_detail` `glbt` ON ((`glb`.`id` = `glbt`.`gl_bank_transaction_id`)))\n"
@@ -177,7 +178,9 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                 + "        `glb2`.`account_id` AS `accountIdFrom`,\n"
                 + "        `glb`.`branch_id` AS `branchId`,\n"
                 + "        `glb1`.`code` AS `bankCodeto`,\n"
-                + "        `glb2`.`code` AS `bankCodeFrom`\n"
+                + "        `glb2`.`code` AS `bankCodeFrom`,\n"
+                + "        `glb1`.`cash` AS `cashto`,\n"
+                + "        `glb2`.`cash` AS `cashfrom`\n"
                 + "    FROM\n"
                 + "        (((`gl_bank_transaction` `glb`\n"
                 + "        LEFT JOIN `gl_bank_transaction_detail` `glbt` ON ((`glb`.`id` = `glbt`.`gl_bank_transaction_id`)))\n"
@@ -225,7 +228,15 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                 + "        (CASE\n"
                 + "            WHEN (`ipi`.`type` = 0) THEN `glb1`.`code`\n"
                 + "            WHEN (`ipi`.`type` = 1) THEN NULL\n"
-                + "        END) AS `bankCodeFrom`\n"
+                + "        END) AS `bankCodeFrom`,\n"
+                + "        (CASE\n"
+                + "            WHEN (`ipi`.`type` = 0) THEN NULL\n"
+                + "            WHEN (`ipi`.`type` = 1) THEN `glb1`.`cash`\n"
+                + "        END) AS `cashto`,\n"
+                + "        (CASE\n"
+                + "            WHEN (`ipi`.`type` = 0) THEN `glb1`.`cash`\n"
+                + "            WHEN (`ipi`.`type` = 1) THEN NULL\n"
+                + "        END) AS `cashfrom`\n"
                 + "    FROM\n"
                 + "       `inv_purchase_invoice` `ipi`  LEFT JOIN  `inv_purchase_invoice_detail` `ipid`  ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                 + "        LEFT JOIN `gl_bank` `glb1` ON `glb1`.`id` = `ipi`.`gl_bank_id`\n"
@@ -544,7 +555,8 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                             balanceReportBean.setBankToBalance(balanceReportView.getValueLocal() == null ? balanceReportBean.getBankToBalance().setScale(2, RoundingMode.UP) : (balanceReportView.getValueLocal().add(balanceReportBean.getBankToBalance())).setScale(2, RoundingMode.UP));
                             balanceReportBean.setPreviousBalance((balanceReportBean.getBankToBalance().subtract(balanceReportBean.getBankFromBalance())).setScale(2, RoundingMode.UP));
                         } else {
-                            balanceReportBean.setDebit(balanceReportView.getValueLocal() != null ? (balanceReportBean.getDebit().add(balanceReportView.getValueLocal())).setScale(2, RoundingMode.UP) : balanceReportBean.getDebit().setScale(2, RoundingMode.UP));
+                            balanceReportBean.setCredit(balanceReportView.getValueLocal() != null ? (balanceReportBean.getCredit().add(balanceReportView.getValueLocal()).setScale(2, RoundingMode.UP)) : balanceReportBean.getCredit().setScale(2, RoundingMode.UP));
+//                            balanceReportBean.setDebit(balanceReportView.getValueLocal() != null ? (balanceReportBean.getDebit().add(balanceReportView.getValueLocal())).setScale(2, RoundingMode.UP) : balanceReportBean.getDebit().setScale(2, RoundingMode.UP));
                         }
                     }
 
@@ -562,6 +574,7 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                         balanceReportBean.setBankName(balanceReportView.getBankNameFrom() == null ? balanceReportBean.getBankName() : balanceReportView.getBankNameFrom());
 //                        balanceReportBean.setAccountIdFrom(balanceReportView.getAccountIdFrom());
                         if (bankBalanceReportSearchBean.getDateFrom() != null && balanceReportView.getDate().before(bankBalanceReportSearchBean.getDateFrom())) {
+//                            balanceReportBean.setBankFromBalance(balanceReportView.getValueLocal() == null ? BigDecimal.ZERO : balanceReportView.getValueLocal().setScale(2, RoundingMode.UP));
                             balanceReportBean.setBankFromBalance(balanceReportView.getValueLocal() == null ? BigDecimal.ZERO : balanceReportView.getValueLocal().setScale(2, RoundingMode.UP));
                             balanceReportBean.setPreviousBalance((balanceReportBean.getBankToBalance().subtract(balanceReportBean.getBankFromBalance())).setScale(2, RoundingMode.UP));
                         } else {
@@ -576,10 +589,12 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                         balanceReportBean = balanceViewMap.get(balanceReportView.getBankIdFrom());
                         if (bankBalanceReportSearchBean.getDateFrom() != null && balanceReportView.getDate().before(bankBalanceReportSearchBean.getDateFrom())) {
                             balanceReportBean.setBankFromBalance(balanceReportView.getValueLocal() == null ? balanceReportBean.getBankFromBalance().setScale(2, RoundingMode.UP) : (balanceReportView.getValueLocal().add(balanceReportBean.getBankFromBalance())).setScale(2, RoundingMode.UP));
-                            balanceReportBean.setPreviousBalance((balanceReportBean.getBankToBalance().subtract(balanceReportBean.getBankFromBalance())).setScale(2, RoundingMode.UP));
+//                            balanceReportBean.setPreviousBalance((balanceReportBean.getBankToBalance().subtract(balanceReportBean.getBankFromBalance())).setScale(2, RoundingMode.UP));
+                            balanceReportBean.setPreviousBalance((balanceReportBean.getBankFromBalance().subtract(balanceReportBean.getBankToBalance())).setScale(2, RoundingMode.UP));
 
                         } else {
-                            balanceReportBean.setCredit(balanceReportView.getValueLocal() != null ? (balanceReportBean.getCredit().add(balanceReportView.getValueLocal()).setScale(2, RoundingMode.UP)) : balanceReportBean.getCredit().setScale(2, RoundingMode.UP));
+                            balanceReportBean.setDebit(balanceReportView.getValueLocal() != null ? (balanceReportBean.getDebit().add(balanceReportView.getValueLocal())).setScale(2, RoundingMode.UP) : balanceReportBean.getDebit().setScale(2, RoundingMode.UP));
+//                            balanceReportBean.setCredit(balanceReportView.getValueLocal() != null ? (balanceReportBean.getCredit().add(balanceReportView.getValueLocal()).setScale(2, RoundingMode.UP)) : balanceReportBean.getCredit().setScale(2, RoundingMode.UP));
                         }
                     }
                     balanceReportBean.setBalance((balanceReportBean.getDebit().subtract(balanceReportBean.getCredit()).add(balanceReportBean.getPreviousBalance() != null ? balanceReportBean.getPreviousBalance() : BigDecimal.ZERO)).setScale(2, RoundingMode.UP));

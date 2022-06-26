@@ -22,6 +22,7 @@ public class GlPayDTO  {
     private Integer id;
     private Integer index;
     private BigDecimal remain;
+    private Integer transactionId;
 
 
     public GlPayDTO() {
@@ -157,6 +158,20 @@ public class GlPayDTO  {
      */
     public void setInvoiceSerial(Integer invoiceSerial) {
         this.invoiceSerial = invoiceSerial;
+    }
+
+    /**
+     * @return the transactionId
+     */
+    public Integer getTransactionId() {
+        return transactionId;
+    }
+
+    /**
+     * @param transactionId the transactionId to set
+     */
+    public void setTransactionId(Integer transactionId) {
+        this.transactionId = transactionId;
     }
 
     

@@ -248,6 +248,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
 
         StringBuilder stringBuilder = new StringBuilder();
 //        stringBuilder.append("SELECT sum(RIV.exitt) - sum(RIV.adding) FROM OrganizationSiteStatementView RIV WHERE RIV.organizationSiteId = :organizationSiteId  ");
+        stringBuilder.append("SELECT * from ( ");
         stringBuilder.append("SELECT 0 AS `exitt`, IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) AS `adding` ,\n"
                 + "       ipi.serial , ipi.date , 'فاتورة مشتريات' ,gb.name,ipi.organization_site_id,\n"
                 + "       ios.code,ios.name as customerName,\n"
@@ -417,6 +418,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "    FROM  `inv_notice` `in`   left join `inv_organization_site` `ios` on ios.id = `in`.organization_site_id WHERE   (`in`.`type` = 3) "
                 + "     and `in`.organization_site_id =  " + organizationSiteId + "\n"
                 + " ");
+        stringBuilder.append("    ) as s order by date");
 
         List<Object[]> res = dao.executeNativeQuery(stringBuilder.toString());
         return prepareListStateMent(res);

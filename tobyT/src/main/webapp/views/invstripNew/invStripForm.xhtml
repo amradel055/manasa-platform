@@ -176,6 +176,11 @@
                         <h:outputText value="#{invStripTable.serial}"  />
                     </p:column>
 
+                    
+                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="itemCode" headerText="#{userData.userDDs['ITEM']}" >
+                        <h:outputText  id="itemCodeT"
+                            value="#{invStripTable.itemsBarcodesDetail.barcode}"  />          
+                    </p:column>
 
                     <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="#{userData.userDDs['ITEM']}" 
                               filterBy="#{invStripTable.itemsBarcodesDetail}" 
@@ -195,7 +200,7 @@
                                         itemValue="#{item}" 
                                         forceSelection="true" 
                                         completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" >
-                            <p:ajax event="itemSelect"  update="itemNaturalT" />
+                            <p:ajax event="itemSelect"  update="itemNaturalT itemCodeT" />
                         </p:autoComplete>            
                     </p:column>
 

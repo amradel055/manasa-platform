@@ -282,6 +282,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                     getInvInvoiceDTO().setDueperiod(invGlobalService.getDeliveryDaysByGalleryId((getInvInvoiceDTO() == null || getInvInvoiceDTO().getGallaryId() == null) ? null : getInvInvoiceDTO().getGallaryId().getId()));
                     sumDateToDueDate();
                 }
+                getGallaryLists();
+                getInvInvoiceDTO().setGlPayDTOList(null);
             } else if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVTRANSFERINVENTORY)
                     || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVTRANSFER)) {
                 if (getInvInventoryDTOList() != null && !getInvInventoryDTOList().isEmpty()) {
@@ -625,7 +627,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                     invPurchaseInvoiceDetailsValidate.setDiscount(invGlobalService.calcDiscount(invPurchaseInvoiceDetailsValidate, getInvInvoiceDTO().getOrganizationSiteId(), getInvInvoiceDTO().getScreenName()));
                     afterValidation(invPurchaseInvoiceDetailsValidate, true);
                 }
-                
+
             }
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "validateItems");
@@ -1243,7 +1245,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void fillGlPay() {
         if (getInvInvoiceDTO().getGlPayDTOList() == null || getInvInvoiceDTO().getGlPayDTOList().isEmpty()) {
-            for (GlBankDTO bankDTO : getGlBankList()) {
+            for (GlBankDTO bankDTO : getUserData().getGlBankDTOList()) {
                 GlPayDTO glPayDTO = new GlPayDTO();
                 glPayDTO.setBank(bankDTO);
                 glPayDTO.setValue(BigDecimal.ZERO);
@@ -1532,10 +1534,19 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         getInvInvoiceDTO().setInvPurchaseInvoiceId(invoiceDTO.getId());
     }
 
+    public void calcPayed() {
+        checkDetailData();
+        getInvInvoiceDTO().setPayed(BigDecimal.ZERO);
+        for (GlPayDTO glPayDTO : getInvInvoiceDTO().getGlPayDTOList()) {
+            getInvInvoiceDTO().setPayed(getInvInvoiceDTO().getPayed().add(glPayDTO.getValue()));
+        }
+        calculateRemainValue();
+    }
+
     public void print() {
-        if(getInvInvoiceDTO().getOrganizationSiteId() != null && ( getInvInvoiceDTO().getOrganizationSiteId().getMobile() == null || getInvInvoiceDTO().getOrganizationSiteId().getMobile().isEmpty() ) && getOrganizationSiteIdNew() != null && getOrganizationSiteIdNew().getMobile() != null ){
+        if (getInvInvoiceDTO().getOrganizationSiteId() != null && (getInvInvoiceDTO().getOrganizationSiteId().getMobile() == null || getInvInvoiceDTO().getOrganizationSiteId().getMobile().isEmpty()) && getOrganizationSiteIdNew() != null && getOrganizationSiteIdNew().getMobile() != null) {
             getInvInvoiceDTO().getOrganizationSiteId().setMobile(getOrganizationSiteIdNew().getMobile());
-        }        
+        }
         iReportService.printReportInvoice(getInvInvoiceDTO(), getUserData());
     }
 

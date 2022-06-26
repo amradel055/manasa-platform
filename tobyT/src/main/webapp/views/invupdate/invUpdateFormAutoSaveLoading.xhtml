@@ -75,7 +75,12 @@
                         </h:panelGroup>
 
                     </h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:selectBooleanCheckbox value="#{invUpdateFormUploadedMB.findAll}" itemLabel="تصفير باقى الاأصناف"/>
+                    </h:panelGroup>
                 </h:panelGrid>
+
                 <h:panelGroup>
                     <div class="note">
                         <h:panelGroup>
@@ -118,6 +123,10 @@
                         <h:outputText value="#{invPurchaseInvoiceDetailsTable.serial}"  />
                     </p:column>
 
+                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="itemCode" headerText="#{userData.userDDs['ITEM']}" >
+                        <h:outputText value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.barcode}" id="itemCodeT" />          
+                    </p:column>
+                    
                     <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="#{userData.userDDs['ITEM']}" 
                               filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
                               filterMatchMode="contains" 
@@ -187,7 +196,7 @@
                                       value="#{invPurchaseInvoiceDetailsTable.wasalate}" style="width: 95%" />
 
                     </p:column>
-                    
+
                     <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="totalWasalatQuantityCost"
 
                                filterBy="#{invPurchaseInvoiceDetailsTable.totalWasalatQuantityCost}" 
@@ -253,14 +262,14 @@
                                  style=""
                                  action="#{invUpdateFormUploadedMB.saveAll()}" 
                                  update="@form"/>
-                    <p:commandButton  
-                        class="reloadButtons"
-                        id="loadL"
-                        rendered="#{invUpdateFormUploadedMB.invInvoiceDTO.id == null}"
-                        title="#{userData.userDDs['UPLOAD']}"
-                        value="#{userData.userDDs['UPLOAD']}" 
-                        action="#{invUpdateFormUploadedMB.loadDailogue()}"
-                        update="loaddlg"/>
+                <p:commandButton  
+                    class="reloadButtons"
+                    id="loadL"
+                    rendered="#{invUpdateFormUploadedMB.invInvoiceDTO.id == null}"
+                    title="#{userData.userDDs['UPLOAD']}"
+                    value="#{userData.userDDs['UPLOAD']}" 
+                    action="#{invUpdateFormUploadedMB.loadDailogue()}"
+                    update="loaddlg"/>
 
                 <h:commandLink  class="sdcreenimg">  
                     <p:graphicImage name="/img/excel.jpg" width="24"/>  

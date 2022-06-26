@@ -117,7 +117,7 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
                 null, null, null,
                 entity.getInvItemId().getIsInventoryItem(),
                 BigDecimal.ZERO, BigDecimal.ZERO, entity.getInvUpdateId().getInventoryId(), entity.getInvItemId(),
-                invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), null, BigDecimal.ZERO);
+                invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), null, BigDecimal.ZERO, null);
 
         dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true, false);
         dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
@@ -268,7 +268,7 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
     }
 
     @Override
-    public List<InvDetailDTO> getAllInvUpdatesDetailFromInvTransferDetail(String invStripSerial, Integer branchId, Integer inventoryId) {
+    public List<InvDetailDTO> getAllInvUpdatesDetailFromInvTransferDetail(String invStripSerial, Integer branchId, Integer inventoryId, Date date, Boolean findAll) {
         List<InvDetailDTO> invdetailListAfterSummition = new ArrayList<>();
         StringBuilder itemIdString = new StringBuilder();
         StringBuilder itemIdS = new StringBuilder();
@@ -296,7 +296,9 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
             }
         }
         List<InvDetailDTO> result = new ArrayList(map.values());
-        Map<Integer, BigDecimal> itemMap = quantityItemsStoreAddExitService.getAllQuantatyItemByinventory(inventoryId, itemIdS.toString() , false, null);
+//        itemIdS = new StringBuilder();
+//        itemIdS.append("22955");
+        Map<Integer, BigDecimal> itemMap = quantityItemsStoreAddExitService.getAllQuantatyItemByinventory(inventoryId, itemIdS.toString(), false, date);
         for (InvDetailDTO dTO : result) {
             dTO.setAvailableQuantityRow(itemMap.get(dTO.getItemId().getId()));
             dTO.setOldQuantity(dTO.getAvailableQuantityRow());
@@ -309,7 +311,9 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
             invdetailListAfterSummition.add(dTO);
         }
 
-        addRemainItems(inventoryId, itemIdString, invdetailListBeforeSummition, invdetailListAfterSummition);
+        if (findAll) {
+            addRemainItems(inventoryId, itemIdString, invdetailListBeforeSummition, invdetailListAfterSummition);
+        }
 
         return invdetailListAfterSummition;
     }
@@ -658,7 +662,7 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
     private List<InvDetailDTO> returnListDTOInvUpdateDetail(List<InvUpdateDetail> list, Integer branchId, Integer inventoryId) {
         List<InvDetailDTO> dTOList = new ArrayList<>();
         Map<String, ItemsBarcodesDetailsView> itemsBarcodeMap = new HashMap<>();
-        List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewList = invPurchaseInvoiceDetailsService.findItemBarcodeDetails(list, branchId);
+        List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewList = findItemBarcodeDetails(list, branchId);
 
         for (ItemsBarcodesDetailsView itemsBarcodesDetailsView : itemsBarcodesDetailsViewList) {
             itemsBarcodeMap.put(itemsBarcodesDetailsView.getBarcode(), itemsBarcodesDetailsView);
@@ -667,6 +671,15 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
             dTOList.add(mapTODTO(entity, itemsBarcodeMap, inventoryId));
         }
         return dTOList;
+    }
+
+    public List<ItemsBarcodesDetailsView> findItemBarcodeDetails(List<InvUpdateDetail> list, Integer branchId) {
+        List<String> barcodeList = new ArrayList<>();
+        for (InvUpdateDetail entity : list) {
+            barcodeList.add(entity.getItemBarcode());
+        }
+        List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewList = findItemsBarcodesDetailsViewBranchIdByBarcode(branchId, barcodeList);
+        return itemsBarcodesDetailsViewList;
     }
 
     private InvDetailDTO mapTODTO(InvUpdateDetail entity, Map<String, ItemsBarcodesDetailsView> itemsBarcodeMap, Integer inventoryId) {

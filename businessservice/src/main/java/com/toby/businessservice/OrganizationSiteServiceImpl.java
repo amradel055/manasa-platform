@@ -1536,6 +1536,9 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             invOrganizationSiteDTO.setMobile(invOrganizationSiteDTO.getMobile());
             invOrganizationSiteDTO.setEmail(invOrganizationSiteDTO.getEmail());
             invOrganizationSiteDTO.setAddress(invOrganizationSiteDTO.getAddress());
+            invOrganizationSiteDTO.setLength(invOrganizationSiteDTO.getLength());
+            invOrganizationSiteDTO.setShoulder(invOrganizationSiteDTO.getShoulder());
+            invOrganizationSiteDTO.setStep(invOrganizationSiteDTO.getStep());
 
             invOrganizationSiteDTO = addOrganizationSiteDTO(invOrganizationSiteDTO, tobyUser);
             if (invOrganizationSiteDTOList == null) {

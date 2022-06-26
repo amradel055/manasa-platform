@@ -309,7 +309,7 @@
                             </p:commandButton>
                             <p:commandButton     class="saveButton"  
                                                  title="العرض"
-                                                 value="عرض الخصم 25 %" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0}"
+                                                 value="عرض الخصم 25 %" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0 and false }"
                                                  icon="fa fa-fw fa-save" 
                                                  action="#{invPurchaseInvoiceFormDTOMB.discount25ForAll(25)}"
                                                  update="@form"
@@ -417,17 +417,6 @@
                                               title="كشف حساب" 
                                               rendered="#{(userData.userScreens['proworkorder'].add) or  userData.isAdmin}"
                                               actionListener="#{invPurchaseInvoiceFormDTOMB.goTClientacoount}"/>
-                            <p:commandButton  id="r2"  
-                                              ajax="false"
-                                              onclick="form.target = '_blank'" 
-                                              class="saveButtons"
-                                              title="سند قبض"
-                                              value="سند قبض" 
-                                              rendered="#{(userData.userScreens['proworkorder'].add) or  userData.isAdmin}"
-                                              actionListener="#{invPurchaseInvoiceFormDTOMB.goTNotesreceivables()}"
-                                              />
-
-
                         </div>
                     </div>
                     <div class="ui-g-12 ui-xl-12" style="margin-top: -2%;" >
@@ -676,7 +665,6 @@
                                 </p:autoComplete>
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-
                                 <p:outputLabel style="width: 100px;" value="#{userData.userDDs['DEPOSITORY']}"/>
 
 
@@ -1291,6 +1279,25 @@
                     <p:ajax event="close" listener="#{invPurchaseInvoiceFormDTOMB.calcPayed()}" update="@form"  />
 
                     <h:panelGroup>
+                        <br/>
+                        <p:commandButton     class="saveButton"  
+                                             title="أغلاق"
+                                             value="أغلاق" 
+                                             action="#{invPurchaseInvoiceFormDTOMB.close()}"
+                                             update="@form"
+                                             >
+                        </p:commandButton>
+
+                        <p:commandButton     class="saveButton"  
+                                             title="حفظ و اغلاق"
+                                             value="حفظ و اغلاق"
+                                             icon="fa fa-fw fa-save" 
+                                             action="#{invPurchaseInvoiceFormDTOMB.saveAndClose()}"
+                                             update="@form"
+                                             >
+                        </p:commandButton>
+                    </h:panelGroup>
+                    <h:panelGroup>
                         <p:dataTable id="payTable"
                                      var="payTable" 
                                      style="margin-top: 5%"
@@ -1324,7 +1331,7 @@
                                              update="@form"
                                              >
                         </p:commandButton>
-                        
+
                         <p:commandButton     class="saveButton"  
                                              title="حفظ و اغلاق"
                                              value="حفظ و اغلاق"
@@ -1368,6 +1375,32 @@
                         <h:inputText id="email" value="#{invPurchaseInvoiceFormDTOMB.organizationSiteIdNew.email}" label="Email" validatorMessage="الايميل غير صحيح">
                             <f:validateRegex pattern="^([\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]){0,255}$" />
                         </h:inputText>
+                        <br/>
+                        <br/>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 100px" value="الطول "/>
+                        </h:panelGroup> 
+                        <h:panelGroup>
+                            <p:inputText  value="#{invPurchaseInvoiceFormDTOMB.organizationSiteIdNew.length}" />
+                        </h:panelGroup>
+
+                        <br/>
+                        <br/>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 100px" value="كتف "/>
+                        </h:panelGroup> 
+                        <h:panelGroup>
+                            <p:inputText  value="#{invPurchaseInvoiceFormDTOMB.organizationSiteIdNew.shoulder}" />
+                        </h:panelGroup>
+
+                        <br/>
+                        <br/>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 100px" value="خطوة "/>
+                        </h:panelGroup> 
+                        <h:panelGroup>
+                            <p:inputText  value="#{invPurchaseInvoiceFormDTOMB.organizationSiteIdNew.step}"/>
+                        </h:panelGroup>
                         <br/> <br/>
                         <p:commandButton     class="saveButton"  
                                              title="#{userData.userDDs['SAVE']}"
@@ -1378,6 +1411,7 @@
                                              >
                         </p:commandButton>
                     </h:panelGroup>
+
 
                 </p:dialog>
 
@@ -1406,6 +1440,32 @@
                     <h:inputText  value="#{invPurchaseInvoiceFormDTOMB.organizationSiteId.email}" label="Email" validatorMessage="الايميل غير صحيح">
                         <f:validateRegex pattern="^([\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]){0,255}$" />
                     </h:inputText>
+                    <br/>
+                    <br/>
+                    <h:panelGroup>
+                        <p:outputLabel style="width: 100px" value="الطول "/>
+                    </h:panelGroup> 
+                    <h:panelGroup>
+                        <p:inputText  value="#{invPurchaseInvoiceFormDTOMB.organizationSiteId.length}" />
+                    </h:panelGroup>
+
+                    <br/>
+                    <br/>
+                    <h:panelGroup>
+                        <p:outputLabel style="width: 100px" value="كتف "/>
+                    </h:panelGroup> 
+                    <h:panelGroup>
+                        <p:inputText  value="#{invPurchaseInvoiceFormDTOMB.organizationSiteId.shoulder}" />
+                    </h:panelGroup>
+
+                    <br/>
+                    <br/>
+                    <h:panelGroup>
+                        <p:outputLabel style="width: 100px" value="خطوة "/>
+                    </h:panelGroup> 
+                    <h:panelGroup>
+                        <p:inputText  value="#{invPurchaseInvoiceFormDTOMB.organizationSiteId.step}"/>
+                    </h:panelGroup>
                     <h:panelGroup>
                         <br/>
                         <p:commandButton     class="saveButton"  

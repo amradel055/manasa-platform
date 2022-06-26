@@ -46,6 +46,7 @@ import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlAccount;
 import com.toby.entity.GlAdminUnit;
 import com.toby.entity.GlBank;
+import com.toby.entity.GlBankTransaction;
 import com.toby.entity.GlYear;
 import com.toby.entity.InvAddingorder;
 import com.toby.entity.InvAddingorderDetail;
@@ -1578,7 +1579,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     invPurchaseInvoice = dao.updateEntity(invPurchaseInvoice);
 
                     invInvoiceDTO.setId(invPurchaseInvoice.getId());
-                    payCash(invInvoiceDTO.getGlPayDTOList(), invInvoiceDTO.getDate(), invPurchaseInvoice.getId(), invPurchaseInvoice.getRate(), invPurchaseInvoice.getRemarks(), invPurchaseInvoice.getOrganizationSiteId().getId(), tobyUser);
+                    payCash(invInvoiceDTO.getGlPayDTOList(), invInvoiceDTO.getDate(), invPurchaseInvoice.getId(), invPurchaseInvoice.getRate(), invPurchaseInvoice.getRemarks(), invPurchaseInvoice.getOrganizationSiteId().getId(),invInvoiceDTO.getGlYearSelection().getId(), tobyUser);
 //                    if (invInvoiceDTO.getPayed() != null && invInvoiceDTO.getPayed().compareTo(BigDecimal.ZERO) == 1 && invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
 //                        glBankTransactionService.addCash(invInvoiceDTO, tobyUser);
 //                    }
@@ -1614,10 +1615,11 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         return invInvoiceDTO;
     }
 
-    public void payCash(List<GlPayDTO> glPayDTOList, Date date, Integer invoiceId, BigDecimal rate, String remarks, Integer invOrganizationId, TobyUser tobyUser) {
+    public void payCash(List<GlPayDTO> glPayDTOList, Date date, Integer invoiceId, BigDecimal rate, String remarks, Integer invOrganizationId, Integer glYearId, TobyUser tobyUser) {
         for (GlPayDTO glPayDTO : glPayDTOList) {
             if (glPayDTO.getBank() != null && glPayDTO.getBank().getId() != null && glPayDTO.getValue() != null && glPayDTO.getValue().compareTo(BigDecimal.ZERO) == 1) {
-                glBankTransactionService.addCash(date, glPayDTO.getBank(), invoiceId, rate, remarks, glPayDTO.getValue(), invOrganizationId, tobyUser);
+                GlBankTransaction transaction = glBankTransactionService.addCash(date, glPayDTO.getBank(), invoiceId, rate, remarks, glPayDTO.getValue(), invOrganizationId,glYearId, tobyUser);
+                glPayDTO.setTransactionId(transaction.getId());
             }
         }
     }
@@ -2410,9 +2412,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         List<BigDecimal> details = dao.findListByQuery("SELECT  sum(i.value)    FROM GlBankTransaction i WHERE i.invoiceId.id = :invPurchaseInvoiceId Group by i.invoiceId.id", params);
         List<BigDecimal> detailsReturn = dao.findListByQuery("SELECT  sum(i.value)    FROM GlBankTransactionDetail i WHERE i.invoiceId.id = :invPurchaseInvoiceId Group by i.invoiceId.id", params);
         List<BigDecimal> detailsMainValue = dao.findListByQuery("SELECT  sum(i.netAfterDiscountHead)    FROM InvPurchaseInvoiceDetail i WHERE i.invPurchaseInvoiceId.id = :invPurchaseInvoiceId ", params);
-         List<BigDecimal> noticeDebit = dao.findListByQuery("SELECT  sum(i.value)    FROM InvNotice i WHERE i.invInvoice.id = :invPurchaseInvoiceId AND i.type = 0 Group by i.invInvoice.id", params);
+        List<BigDecimal> noticeDebit = dao.findListByQuery("SELECT  sum(i.value)    FROM InvNotice i WHERE i.invInvoice.id = :invPurchaseInvoiceId AND i.type = 0 Group by i.invInvoice.id", params);
         List<BigDecimal> noticeCredit = dao.findListByQuery("SELECT  sum(i.value)    FROM InvNotice i WHERE i.invInvoice.id = :invPurchaseInvoiceId AND i.type in (1,4)  Group by i.invInvoice.id", params);
-       
+
         if (detailsReturn != null && detailsReturn.size() > 0) {
             System.err.println("");
         }
@@ -2992,17 +2994,50 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             }
             // ادخال المشتريات
         } else if (dto.getScreenName().equals(ScreenNameClassEnum.INVPURCHASEINVOICEFORM)) {
+            Integer storeAccountNumber = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"STORE_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
+
+            List<InvPurchaseInvoiceDetail> list = invPurchaseInvoiceDetailsService.getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceId(dto.getId());
+
+            Map<Integer, BigDecimal> map = new HashMap<>();
+            BigDecimal accountvalue = BigDecimal.ZERO;
+            for (InvPurchaseInvoiceDetail detail : list) {
+                if (detail.getAccountId() != null) {
+                    if (map.containsKey(detail.getAccountId())) {
+                        accountvalue = map.get(detail.getAccountId());
+                        accountvalue = accountvalue.add(detail.getNetAfterDiscountHead());
+                    } else {
+                        accountvalue = detail.getNetAfterDiscountHead();
+                    }
+                    map.put(detail.getAccountId(), accountvalue);
+                } else {
+                    if (map.containsKey(storeAccountNumber)) {
+                        accountvalue = map.get(storeAccountNumber);
+                        accountvalue = accountvalue.add(detail.getNetAfterDiscountHead());
+                    } else {
+                        accountvalue = detail.getNetAfterDiscountHead();
+                    }
+
+                    map.put(storeAccountNumber, accountvalue);
+                }
+            }
+
+            List<Integer> ListofKeys = new ArrayList(map.keySet());
+
             journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1010, dto.getSerial(), dto.getDate(), "فاتورة مشتريات", tobyUser, 0, true, dto.getId());
 
-            Integer storeAccountNumber = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"STORE_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
             Integer purchseTaxAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"PURCHASE_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
             BigDecimal totalNetAfterDiscount = dto.getTotalNetAfterDiscount();
             if (dto.getDiscount() != null && dto.getDiscount().compareTo(BigDecimal.ZERO) == 1) {
                 totalNetAfterDiscount = totalNetAfterDiscount.add(dto.getDiscount());
             }
-            generaljournalDetailsService.addGenDetalil(true, totalNetAfterDiscount, journal.getId(), storeAccountNumber,
-                    835,
-                    "فاتورة المورد " + (dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getName()) + " رقم " + dto.getSupplierInvoiceNumber(), tobyUser);
+
+            for (Integer accountNumber : ListofKeys) {
+                BigDecimal value = map.get(accountNumber);
+                generaljournalDetailsService.addGenDetalil(true, value, journal.getId(), accountNumber,
+                        835,
+                        "فاتورة المورد " + (dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getName()) + " رقم " + dto.getSupplierInvoiceNumber(), tobyUser);
+            }
+
             generaljournalDetailsService.addGenDetalil(false, dto.getFinalNet(), journal.getId(),
                     (dto.getOrganizationSiteId() == null || dto.getOrganizationSiteId().getAccountId() == null || dto.getOrganizationSiteId().getAccountId().getId() == null) ? null : dto.getOrganizationSiteId().getAccountId().getId(),
                     835,
@@ -3806,7 +3841,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             summitionItemsView.setAllAvarageCost((BigDecimal) line[2]);
 //            summitionItemsView.setAllAvarageCost((BigDecimal) line[4]);
             Integer groupId = (Integer) line[3];
-            summitionItemsView.setCode(Integer.parseInt((String) line[4]));
+            summitionItemsView.setCode((Integer) line[4]);
             summitionItemsView.setName((String) line[5]);
             if (detail) {
                 summitionItemsView.setFactoryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 0, invInventoryDTOs, proGroupListSelected));

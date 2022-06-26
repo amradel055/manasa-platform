@@ -7,6 +7,7 @@ package com.toby.businessservice.reports.searchBean;
 
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvItemDTO;
+import com.toby.dto.ProGroupDTO;
 import com.toby.entity.InvInventory;
 import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.InvPurchaseInvoice;
@@ -23,7 +24,8 @@ public class PurchaseOfItemsBySuppliersSearchBean {
     private Integer branchId;
     private Integer type;
     private Integer organizationType;
-
+    private List<InvOrganizationSite> organizationSiteList;
+    private String supplierIdList;
     private InvOrganizationSite fromorganizationName;
     private InvOrganizationSite toorganizationName;
     private Date dateFrom;
@@ -45,6 +47,22 @@ public class PurchaseOfItemsBySuppliersSearchBean {
     private Boolean showReport;
     private Boolean shortReport = false;
     
+    private List<ProGroupDTO> groupDTOSelected;
+    
+      public String fillStringBuilder() {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (getOrganizationSiteList() != null && !getOrganizationSiteList().isEmpty()) {
+            for (InvOrganizationSite Site : getOrganizationSiteList()) {
+                if (stringBuilder != null && stringBuilder.length() == 0) {
+                    stringBuilder.append(Site.getId());
+                } else {
+                    stringBuilder.append(",").append(Site.getId());
+                }
+            }
+        }
+        return stringBuilder.toString();
+    }
+
 
     public Integer getBranchId() {
         return branchId;
@@ -340,6 +358,55 @@ public class PurchaseOfItemsBySuppliersSearchBean {
      */
     public void setOrganizationType(Integer organizationType) {
         this.organizationType = organizationType;
+    }
+    /**
+     * @return the organizationSiteList
+     */
+    public List<InvOrganizationSite> getOrganizationSiteList() {
+        if(organizationSiteList == null){
+        setOrganizationSiteList(new ArrayList<>() );
+
+}
+        return organizationSiteList;
+    }
+
+    /**
+     * @param organizationSiteList the organizationSiteList to set
+     */
+    public void setOrganizationSiteList(List<InvOrganizationSite> organizationSiteList) {
+        this.organizationSiteList = organizationSiteList;
+    }
+       /**
+     * @return the supplierIdList
+     */
+    public String getSupplierIdList() {
+        supplierIdList = fillStringBuilder();
+        return supplierIdList;
+    }
+
+    /**
+     * @param supplierIdList the supplierIdList to set
+     */
+    public void setSupplierIdList(String supplierIdList) {
+        this.supplierIdList = supplierIdList;
+    }
+    
+
+    /**
+     * @return the groupDTOSelected
+     */
+    public List<ProGroupDTO> getGroupDTOSelected() {
+        if (groupDTOSelected == null) {
+            groupDTOSelected = new ArrayList<>();
+        }
+        return groupDTOSelected;
+    }
+
+    /**
+     * @param groupDTOSelected the groupDTOSelected to set
+     */
+    public void setGroupDTOSelected(List<ProGroupDTO> groupDTOSelected) {
+        this.groupDTOSelected = groupDTOSelected;
     }
 
 }
