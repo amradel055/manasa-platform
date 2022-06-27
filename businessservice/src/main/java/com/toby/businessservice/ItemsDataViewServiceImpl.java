@@ -1801,6 +1801,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             if (itemOpeningBalanceAfterAllDateMap.containsKey(dataView.getItemId())) {
                 itemOpeningBalanceAfterAllDateMap.remove(dataView.getItemId());
             }
+            // Code Here -------------> 
         }
 //if search after all dates of item and need to get the open balance for them
         for (Map.Entry<Integer, String> entry : itemOpeningBalanceAfterAllDateMap.entrySet()) {
