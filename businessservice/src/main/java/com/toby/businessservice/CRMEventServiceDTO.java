@@ -63,11 +63,11 @@ public interface CRMEventServiceDTO {
 
     public List<CrmEventDTO> findCrmEventListWithDate(Integer branchId, Integer assignedTo, Integer createdBy, Integer type, Boolean employeeIsSupervisor);
 
-    public ChartDTO getCountEventByStatus(Integer branchId,Date dateFrom,Date dateTo);
+    public ChartDTO getCountEventByStatus(Integer branchId, Date dateFrom, Date dateTo);
 
-    public ChartDTO getCountEventByActivityType(Integer branchId,Date dateFrom,Date dateTo);
+    public ChartDTO getCountEventByActivityType(Integer branchId, Date dateFrom, Date dateTo);
 
-    public ChartDTO getCountEventByPriority(Integer branchId,Date dateFrom,Date dateTo);
+    public ChartDTO getCountEventByPriority(Integer branchId, Date dateFrom, Date dateTo);
 
     public ChartDTO getCountEventByStatusAndAssignedTo(Integer branchId, Integer status, Date fromDate, Date toDate);
 
@@ -88,4 +88,7 @@ public interface CRMEventServiceDTO {
     public Long getTotalRegistorsAllEvent(Integer branchId, Map<String, Object> filters, CrmEventDTO crmEventDTOSearch, Integer type, Integer taskType);
 
     public List<CrmEventDTO> findALLEventBank(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters, CrmEventDTO crmEventDTOSearch, Integer type, Integer taskType);
+
+    public List<CrmEventDTO> findALLEventByCustomerId(Integer custumerId , Integer branchId);
+
 }

@@ -51,9 +51,26 @@
             <version>2.0.0-alpha0</version>
             <scope>test</scope>
         </dependency>
+         <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.25</version>
+    </dependency>
+    <dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-jdk14</artifactId>
+    <version>1.7.25</version>
+</dependency>
+        
+        <dependency>
+            <groupId>com.google.firebase</groupId>
+            <artifactId>firebase-admin</artifactId>
+            <version>6.13.0</version>
+        </dependency> 
 
 
     </dependencies>
+    
 
     <build>
         <plugins>
@@ -103,6 +120,7 @@
                 </executions>
             </plugin>
         </plugins>
+     
     </build>
 
 </project>

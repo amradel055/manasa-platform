@@ -89,6 +89,8 @@ public abstract class BaseFormBean extends Basic implements BaseManagedBean {
         RequestContext context = RequestContext.getCurrentInstance();
         context.execute("PrimeFaces.focus('" + focusId + "')");
     }
+     
+
 
     public void OpenDlg(String dlgvar) {
         RequestContext context = RequestContext.getCurrentInstance();

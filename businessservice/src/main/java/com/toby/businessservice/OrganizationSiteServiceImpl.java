@@ -466,6 +466,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSite.setMobile(invOrganizationSiteDTO.getMobile());
         invOrganizationSite.setFax(invOrganizationSiteDTO.getFax());
         invOrganizationSite.setId(invOrganizationSiteDTO.getId());
+        
+        invOrganizationSite.setEmployer(invOrganizationSiteDTO.getEmployer());
+        invOrganizationSite.setStreet(invOrganizationSiteDTO.getStreet());
+        invOrganizationSite.setCity(invOrganizationSiteDTO.getCity());
+        invOrganizationSite.setCountry(invOrganizationSiteDTO.getCountry());
+        invOrganizationSite.setJobNamed(invOrganizationSiteDTO.getJobNamed());
 
         invOrganizationSite.setEmail(invOrganizationSiteDTO.getEmail());
         invOrganizationSite.setMarkDisable(invOrganizationSiteDTO.getMarkDisable());
@@ -491,6 +497,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSite.setLength(invOrganizationSiteDTO.getLength());
         invOrganizationSite.setShoulder(invOrganizationSiteDTO.getShoulder());
         invOrganizationSite.setStep(invOrganizationSiteDTO.getStep());
+        invOrganizationSite.setCompanyName(invOrganizationSiteDTO.getCompanyName());
+          if (invOrganizationSiteDTO.getLearnAboutCompanyFrom()!= null) {
+            Symbol symbol = new Symbol();
+            symbol.setId(invOrganizationSiteDTO.getLearnAboutCompanyFrom().getId());
+            invOrganizationSite.setLearnAboutCompanyfrom(symbol);
+        }
 
         if (invOrganizationSiteDTO.getGallaryIdDTO() != null && invOrganizationSiteDTO.getGallaryIdDTO().getId() != null) {
             InvInventory invInventory = new InvInventory();
@@ -594,7 +606,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSiteDTO.setType(invOrganizationSite.getType());
         invOrganizationSiteDTO.setActive(invOrganizationSite.getActive());
         invOrganizationSiteDTO.setBalanceLimit(invOrganizationSite.getBalanceLimit());
-        invOrganizationSiteDTO.setCompanyName(invOrganizationSite.getCompanyId().getName());
+        invOrganizationSiteDTO.setCompanyName(invOrganizationSite.getCompanyName());
         invOrganizationSiteDTO.setContactPerson(invOrganizationSite.getContactPerson());
         invOrganizationSiteDTO.setDiscount(invOrganizationSite.getDiscount());
         invOrganizationSiteDTO.setIndex(invOrganizationSite.getId());
@@ -610,7 +622,11 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSiteDTO.setLength(invOrganizationSite.getLength());
         invOrganizationSiteDTO.setShoulder(invOrganizationSite.getShoulder());
         invOrganizationSiteDTO.setStep(invOrganizationSite.getStep());
-
+        invOrganizationSiteDTO.setEmployer(invOrganizationSite.getEmployer());
+        invOrganizationSiteDTO.setStreet(invOrganizationSite.getStreet());
+        invOrganizationSiteDTO.setCity(invOrganizationSite.getCity());
+        invOrganizationSiteDTO.setCountry(invOrganizationSite.getCountry());
+        invOrganizationSiteDTO.setJobNamed(invOrganizationSite.getJobNamed());
         if (invOrganizationSite.getParent() != null) {
             InvOrganizationSiteDTO invOrganizationSiteDTO1 = new InvOrganizationSiteDTO();
             invOrganizationSiteDTO1.setId(invOrganizationSite.getParent().getId());
@@ -668,6 +684,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             invOrganizationSiteDTO.setDelegatorId(inventoryDelegatorDTO);
 
         }
+       
 
         return invOrganizationSiteDTO;
     }

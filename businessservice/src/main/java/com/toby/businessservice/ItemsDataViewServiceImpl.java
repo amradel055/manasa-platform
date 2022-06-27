@@ -927,7 +927,8 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        1 AS `operationType`,\n"
                 + "        1 AS `ScreenCode`,\n"
                 + "        FIND_SUPPLIER_OF_ITEM(`iaod`.`item_id`) AS `item_supplier_id`,\n"
-                + "        0 AS `disc_halala`\n"
+                + "        0 AS `disc_halala`,\n"
+                + "        '' AS `gallaryName`\n"
                 + "    FROM\n"
                 + "        (((((((`inv_addingorder` `iao`\n"
                 + "        LEFT JOIN `inv_addingorder_detail` `iaod` ON ((`iao`.`id` = `iaod`.`addingorder_id`)))\n"
@@ -1006,7 +1007,8 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        0 AS `operationType`,\n"
                 + "        2 AS `ScreenCode`,\n"
                 + "        FIND_SUPPLIER_OF_ITEM(`iaod`.`item_id`) AS `item_supplier_id`,\n"
-                + "        0 AS `disc_halala`\n"
+                + "        0 AS `disc_halala`,\n"
+                + "        '' AS `gallaryName`\n"
                 + "    FROM\n"
                 + "        (((((((`inv_inventory_transaction` `iao`\n"
                 + "        LEFT JOIN `inv_inventory_transaction_detail` `iaod` ON ((`iao`.`id` = `iaod`.`inventory_transaction_id`)))\n"
@@ -1084,7 +1086,8 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        0 AS `operationType`,\n"
                 + "        3 AS `ScreenCode`,\n"
                 + "        FIND_SUPPLIER_OF_ITEM(`ipid`.`item_id`) AS `item_supplier_id`,\n"
-                + "        IFNULL(`ipi`.`disc_halala`, 0) AS `disc_halala`\n"
+                + "        IFNULL(`ipi`.`disc_halala`, 0) AS `disc_halala`,\n"
+                + "        '' AS `gallaryName`\n"
                 + "    FROM\n"
                 + "        (((((((`inv_purchase_invoice` `ipi`\n"
                 + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
@@ -1163,7 +1166,8 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        1 AS `operationType`,\n"
                 + "        4 AS `ScreenCode`,\n"
                 + "        FIND_SUPPLIER_OF_ITEM(`ipid`.`item_id`) AS `item_supplier_id`,\n"
-                + "        IFNULL(`ipi`.`disc_halala`, 0) AS `disc_halala`\n"
+                + "        IFNULL(`ipi`.`disc_halala`, 0) AS `disc_halala`,\n"
+                + "        ini2.name AS `gallaryName`\n"
                 + "    FROM\n"
                 + "        (((((((`inv_purchase_invoice` `ipi`\n"
                 + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
@@ -1172,6 +1176,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        LEFT JOIN `symbol` `s` ON ((`s`.`id` = `ii`.`unit_id`)))\n"
                 + "        LEFT JOIN `symbol` `ss` ON ((`ss`.`id` = `ipid`.`unit_id`)))\n"
                 + "        LEFT JOIN `inv_inventory` `ini` ON ((`ini`.`id` = `ipid`.`inv_inventory_id`)))\n"
+                + "        LEFT JOIN `inv_inventory` `ini2` ON ((`ini2`.`id` = `ipid`.`galary_Id`)))\n"
                 + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`)))\n"
                 + "    WHERE\n"
                 + "        ((`ipi`.`type` = 4)\n"
@@ -1241,7 +1246,8 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        1 AS `operationType`,\n"
                 + "        5 AS `ScreenCode`,\n"
                 + "        FIND_SUPPLIER_OF_ITEM(`ird`.`item_id`) AS `item_supplier_id`,\n"
-                + "        0 AS `disc_halala`\n"
+                + "        0 AS `disc_halala`,\n"
+                + "        '' AS `gallaryName`\n"
                 + "    FROM\n"
                 + "        ((((((`inv_reservation` `ir`\n"
                 + "        LEFT JOIN `inv_reservation_detail` `ird` ON ((`ir`.`id` = `ird`.`reservation_id`)))\n"
@@ -1317,7 +1323,8 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        1 AS `operationType`,\n"
                 + "        6 AS `ScreenCode`,\n"
                 + "        FIND_SUPPLIER_OF_ITEM(`ipid`.`item_id`) AS `item_supplier_id`,\n"
-                + "        IFNULL(`ipi`.`disc_halala`, 0) AS `disc_halala`\n"
+                + "        IFNULL(`ipi`.`disc_halala`, 0) AS `disc_halala`,\n"
+                + "        '' AS `gallaryName`\n"
                 + "    FROM\n"
                 + "        (((((((`inv_purchase_invoice` `ipi`\n"
                 + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
@@ -1396,7 +1403,8 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        0 AS `operationType`,\n"
                 + "        7 AS `ScreenCode`,\n"
                 + "        FIND_SUPPLIER_OF_ITEM(`ipid`.`item_id`) AS `item_supplier_id`,\n"
-                + "        IFNULL(`ipi`.`disc_halala`, 0) AS `disc_halala`\n"
+                + "        IFNULL(`ipi`.`disc_halala`, 0) AS `disc_halala`,\n"
+                + "        '' AS `gallaryName`\n"
                 + "    FROM\n"
                 + "        (((((((`inv_purchase_invoice` `ipi`\n"
                 + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
@@ -1409,7 +1417,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "    WHERE\n"
                 + "        ((`ipi`.`type` = 3)\n"
                 + "            AND (`ipi`.`date` IS NOT NULL)) ");
-       if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `ipid`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
 
@@ -1474,7 +1482,8 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        0 AS `operationType`,\n"
                 + "        8 AS `ScreenCode`,\n"
                 + "        FIND_SUPPLIER_OF_ITEM(`itd`.`inv_item_id`) AS `item_supplier_id`,\n"
-                + "        0 AS `disc_halala`\n"
+                + "        0 AS `disc_halala`,\n"
+                + "        '' AS `gallaryName`\n"
                 + "    FROM\n"
                 + "        ((((((`inv_transfer` `it`\n"
                 + "        LEFT JOIN `inv_transfer_detail` `itd` ON ((`it`.`id` = `itd`.`inv_transfer_id`)))\n"
@@ -1551,7 +1560,8 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        0 AS `operationType`,\n"
                 + "        9 AS `ScreenCode`,\n"
                 + "        FIND_SUPPLIER_OF_ITEM(`itd`.`inv_item_id`) AS `item_supplier_id`,\n"
-                + "        0 AS `disc_halala`\n"
+                + "        0 AS `disc_halala`,\n"
+                + "        '' AS `gallaryName`\n"
                 + "    FROM\n"
                 + "        ((((((`inv_transfer` `it`\n"
                 + "        LEFT JOIN `inv_transfer_detail` `itd` ON ((`it`.`id` = `itd`.`inv_transfer_id`)))\n"
@@ -1629,7 +1639,8 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        0 AS `operationType`,\n"
                 + "        10 AS `ScreenCode`,\n"
                 + "        FIND_SUPPLIER_OF_ITEM(`isd`.`inv_item_id`) AS `item_supplier_id`,\n"
-                + "        0 AS `disc_halala`\n"
+                + "        0 AS `disc_halala`,\n"
+                + "        '' AS `gallaryName`\n"
                 + "    FROM\n"
                 + "        ((((((`inv_update` `is`\n"
                 + "        LEFT JOIN `inv_update_detail` `isd` ON ((`is`.`id` = `isd`.`inv_update_id`)))\n"
@@ -1640,7 +1651,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        LEFT JOIN `inv_inventory` `ini` ON ((`ini`.`id` = `is`.`inventory_id`)))\n"
                 + "    WHERE\n"
                 + "        (`is`.`date` IS NOT NULL) ");
-         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `isd`.`inv_item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
 
@@ -1716,7 +1727,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        LEFT JOIN `inv_inventory` `ini` ON ((`ini`.`id` = `iobi`.`inv_inventory_id`)))\n"
                 + "    WHERE\n"
                 + "        (`iobi`.`date` IS NOT NULL) ");
-         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
+        if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `iobid`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
 
@@ -1777,6 +1788,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             itemsDataView.setOperationType(((Long) line[44]).intValue());
             itemsDataView.setScreenCode(((Long) line[45]).intValue());
             itemsDataView.setItemSupplierId((Integer) line[46]);
+            itemsDataView.setGallaryName((String) line[47]);
 
             newList.add(itemsDataView);
         }
@@ -1789,6 +1801,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             if (itemOpeningBalanceAfterAllDateMap.containsKey(dataView.getItemId())) {
                 itemOpeningBalanceAfterAllDateMap.remove(dataView.getItemId());
             }
+            // Code Here -------------> 
         }
 //if search after all dates of item and need to get the open balance for them
         for (Map.Entry<Integer, String> entry : itemOpeningBalanceAfterAllDateMap.entrySet()) {
@@ -1863,7 +1876,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             appendQuery.append(" AND IDV.itemCode >= :itemCodeFrom");
         }
 
-        if (itemCardReportSerachBean.getInvItemTo()!= null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
+        if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
             params.put("itemCodeTo", itemCardReportSerachBean.getInvItemTo().getCode());
             appendQuery.append(" AND IDV.itemCode <= :itemCodeTo");
         }
