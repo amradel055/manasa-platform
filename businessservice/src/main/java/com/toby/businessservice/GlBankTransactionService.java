@@ -47,7 +47,7 @@ public interface GlBankTransactionService {
             
     public GlBankTransaction addOneGlBankTransaction(GlBankTransaction glBankTransaction, GlBankTransactionDetail bankTransactionDetail,TobyUser tobyUser);
 
-    public Integer getMaxSerail(GlBankTransaction glBankTransaction);
+//    public Integer getMaxSerail(GlBankTransaction glBankTransaction);
 
     public GlBankTransaction updateGlBankTransaction(GlBankTransaction glBankTransaction);
 
@@ -65,9 +65,9 @@ public interface GlBankTransactionService {
     
     public void addCash(InvInvoiceDTO dTO, TobyUser tobyUser);
     
-    public GlBankTransaction addCash(Date date, GlBankDTO bankDTO, Integer invoiceId, BigDecimal rate, String remarks, BigDecimal value, Integer invOrganizationId, TobyUser tobyUser) ;
+    public GlBankTransaction addCash(Date date, GlBankDTO bankDTO, Integer invoiceId, BigDecimal rate, String remarks, BigDecimal value, Integer invOrganizationId, Integer glYearId, TobyUser tobyUser) ;
     
-    public List<GlPayDTO> addCash(List<GlPayDTO> glPayDTOList, Date date, BigDecimal rate, String remarks, Integer invOrganizationId, TobyUser tobyUser);
+    public List<GlPayDTO> addCash(List<GlPayDTO> glPayDTOList, Date date, BigDecimal rate, String remarks, Integer invOrganizationId, Integer glYearId, TobyUser tobyUser);
 
     
 

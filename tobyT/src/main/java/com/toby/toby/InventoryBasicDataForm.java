@@ -282,6 +282,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                     getInvInvoiceDTO().setDueperiod(invGlobalService.getDeliveryDaysByGalleryId((getInvInvoiceDTO() == null || getInvInvoiceDTO().getGallaryId() == null) ? null : getInvInvoiceDTO().getGallaryId().getId()));
                     sumDateToDueDate();
                 }
+                getGallaryLists();
+                getInvInvoiceDTO().setGlPayDTOList(null);
             } else if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVTRANSFERINVENTORY)
                     || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVTRANSFER)) {
                 if (getInvInventoryDTOList() != null && !getInvInventoryDTOList().isEmpty()) {
@@ -1255,7 +1257,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void fillGlPay() {
         if (getInvInvoiceDTO().getGlPayDTOList() == null || getInvInvoiceDTO().getGlPayDTOList().isEmpty()) {
-            for (GlBankDTO bankDTO : getGlBankList()) {
+            for (GlBankDTO bankDTO : getUserData().getGlBankDTOList()) {
                 GlPayDTO glPayDTO = new GlPayDTO();
                 glPayDTO.setBank(bankDTO);
                 glPayDTO.setValue(BigDecimal.ZERO);
@@ -1542,6 +1544,15 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         getInvInvoiceDTO().setInvDelegatorId(invoiceDTO.getInvDelegatorId());
         getInvInvoiceDTO().setRemarks(invoiceDTO.getRemarks());
         getInvInvoiceDTO().setInvPurchaseInvoiceId(invoiceDTO.getId());
+    }
+
+    public void calcPayed() {
+        checkDetailData();
+        getInvInvoiceDTO().setPayed(BigDecimal.ZERO);
+        for (GlPayDTO glPayDTO : getInvInvoiceDTO().getGlPayDTOList()) {
+            getInvInvoiceDTO().setPayed(getInvInvoiceDTO().getPayed().add(glPayDTO.getValue()));
+        }
+        calculateRemainValue();
     }
 
     public void print() {

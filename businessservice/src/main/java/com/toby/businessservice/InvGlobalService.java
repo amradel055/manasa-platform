@@ -68,7 +68,7 @@ public interface InvGlobalService {
             String itemBarcode, BigDecimal screwing, Integer itemId, BigDecimal weight,
             Integer unitId, Integer unitSerial, String unitName, Integer inventoryItem, BigDecimal number, BigDecimal quantityOfOneUnit,
             InvInventory inventoryDTO, InvItem invItem,
-            CompanyActivityClassEnum companyActivityClassEnum, ScreenNameClassEnum screenNameClassEnum, Integer detailId, BigDecimal costAvarage);
+            CompanyActivityClassEnum companyActivityClassEnum, ScreenNameClassEnum screenNameClassEnum, Integer detailId, BigDecimal costAvarage,Integer accountId);
 
     public Date sumDateToDueDate(Date date, Date dueDate, Integer duePeroid);
 

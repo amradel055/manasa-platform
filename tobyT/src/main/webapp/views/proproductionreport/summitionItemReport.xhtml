@@ -41,11 +41,11 @@
                         </div>
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-                                <p:selectCheckboxMenu id="proGroup" value="#{summitionItemReportMB.proGroupListSelected}" 
-                                                      converter="#{summitionItemReportMB.proGroupDTOConverter}"
+                                <p:selectCheckboxMenu id="proGroup" value="#{summitionItemReportMB2.proGroupListSelected}" 
+                                                      converter="#{summitionItemReportMB2.proGroupDTOConverter}"
                                                       label="الفئة" style="width: 15rem"
                                                       filter="true" filterMatchMode="startsWith" panelStyle="width: 15rem" scrollHeight="250">
-                                    <f:selectItems value="#{summitionItemReportMB.groupDTOList}" 
+                                    <f:selectItems value="#{summitionItemReportMB2.groupDTOList}" 
                                                    var="proGroup"
                                                    itemLabel="#{proGroup}"
                                                    itemValue="#{proGroup}"/>
@@ -62,8 +62,7 @@
 
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-                                <p:selectOneMenu style="width: 100%" id="invoiceType1" 
-                                                 value="#{summitionItemReportMB.invoiceType}">                                                             
+                                <p:selectOneMenu style="width: 100%"  value="#{summitionItemReportMB2.invoiceType}">                                                             
                                     <f:selectItem itemLabel="Sales مبيعات"  itemValue=""  />
                                     <f:selectItem itemLabel="منيكانات الفروع"  itemValue="0"  />
                                     <f:selectItem itemLabel="منيكانات القماشين"  itemValue="1"  />
@@ -72,6 +71,7 @@
                                     <f:selectItem itemLabel="Employees موظفى الفروع"  itemValue="4"  />
                                     <f:selectItem itemLabel="Modify تعديلات"  itemValue="5"  />
                                     <f:selectItem itemLabel="Others أخرى"  itemValue="6"  />
+                                    <p:ajax listener="#{summitionItemReportMB2.hishis()}" />
                                 </p:selectOneMenu>      
                             </div>
                             <div class="ui-g-6 ui-xl-6">

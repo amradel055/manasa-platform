@@ -25,9 +25,6 @@
 
                     <div class="ui-g">
                         <h:panelGroup id="test">
-
-
-
                             <div class="ui-g-6 ui-xl-6"> 
                                 <div class="ui-g-12 ui-xl-12">
 
@@ -312,6 +309,25 @@
                                     </div>
                                 </div>
 
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:selectOneMenu style="width: 85%" id="running_GlAccount_ID" 
+                                                         filter="true" filterMatchMode="contains"   
+                                                         value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.account}"   >
+                                            <f:selectItem itemLabel="مخزون القماش" itemValue="11619"/>
+                                            <f:selectItem itemLabel="مخزون الاشمغة والغتر" itemValue="11620"/>
+                                            <f:selectItem itemLabel="مخزون العود" itemValue="11621"/>
+                                            <f:selectItem itemLabel="مخزون الأحذية" itemValue="11622"/>
+                                            <f:selectItem itemLabel="لوجو" itemValue="13282"/>
+                                            <f:selectItem itemLabel="طقطق وازرار خارجية هاروت" itemValue="13343"/>                                            
+                                            <p:ajax update="running_GlAccount_ID" listener="#{invPurchaseInvoiceFormDTOMB.hishis()}" />
+                                        </p:selectOneMenu>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 65px" value="رقم الحساب " />
+                                    </div>
+                                </div>
+
                             </div>
 
 
@@ -375,18 +391,18 @@
                         <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
                                        rendered="#{invPurchaseInvoiceDetailsTable.isEdit}" />
                         <p:autoComplete id="invItemNameIn"  
-                                            style="width:100%"
-                                            rendered="#{not invPurchaseInvoiceDetailsTable.isEdit}"
-                                            converter="#{autoComplete.itemsBarcodesDetailsViewConverter}"
-                                            value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
-                                            maxResults="30"
+                                        style="width:100%"
+                                        rendered="#{not invPurchaseInvoiceDetailsTable.isEdit}"
+                                        converter="#{autoComplete.itemsBarcodesDetailsViewConverter}"
+                                        value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
+                                        maxResults="30"
 
-                                            var="item"
-                                            itemLabel="#{item}" 
-                                            itemValue="#{item}" 
-                                            forceSelection="true" 
-                                            completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" 
-                                            >
+                                        var="item"
+                                        itemLabel="#{item}" 
+                                        itemValue="#{item}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" 
+                                        >
                             <p:ajax update=" unitvalue length paintColor QuantityT WeightT costTt discountT netId totalQuantity totalWeight  totalNet  form:totalActualWeight form:totalNetAfterDiscount   form:totalWithTaxValue form:taxvalue"
                                     event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
 
@@ -448,7 +464,7 @@
                         </p:inputText>        
 
                     </p:column>
-                    
+
                     <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px"
                               id="Quantity"
                               headerText="#{userData.userDDs['NUMBER']}"
@@ -478,7 +494,6 @@
                         <p:inputNumber id="WeightT" decimalPlaces="3"
                                        value="#{invPurchaseInvoiceDetailsTable.weight}"  
                                        style="width:100%">
-                            <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.updateSummition()}" update="netId totalQuantity  totalWeight totalNet form:totalActualWeight form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue"/>
                         </p:inputNumber>
                     </p:column>
 
@@ -514,6 +529,11 @@
                               sortBy="#{invPurchaseInvoiceDetailsTable.net}"
                               filterable="false">
                         <p:outputLabel id="netId" value="#{invPurchaseInvoiceDetailsTable.net}"   />
+                    </p:column>
+
+                    <p:column  style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px"   
+                               headerText="مركز تكلفة الحساب الدائن" >
+                        <h:outputText value="#{invPurchaseInvoiceDetailsTable.account}" />
                     </p:column>
 
                     <p:summaryRow>
@@ -782,7 +802,7 @@
                 </h:panelGrid>
             </p:fieldset>
 
-            
+
             <div class="ui-g-6 ui-xl-6" >
 
                 <p:dialog header="البحث عن صنف" widgetVar="dlg4" showEffect="explode" hideEffect="bounce" height="440" width="500" style="margin-top: 2%">

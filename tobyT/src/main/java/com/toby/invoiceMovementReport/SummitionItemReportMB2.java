@@ -1,6 +1,8 @@
 package com.toby.invoiceMovementReport;
 
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
+import com.toby.businessservice.ProGroupService;
+import com.toby.converter.ProGroupDTOConverter;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.ProGroupDTO;
 import com.toby.toby.Basic;
@@ -38,6 +40,9 @@ public class SummitionItemReportMB2 extends Basic {
     private Integer invoiceType;
     private List<ProGroupDTO> proGroupListSelected;
 
+    private List<ProGroupDTO> groupDTOList;
+    private ProGroupDTOConverter proGroupDTOConverter;
+
     private List<SummitionItemsView> itemsViewList;
     private ArrayList<Test> list;
 
@@ -53,6 +58,8 @@ public class SummitionItemReportMB2 extends Basic {
 
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
+    @EJB
+    ProGroupService proGroupService;
 
     @PostConstruct
     public void init() {
@@ -171,7 +178,7 @@ public class SummitionItemReportMB2 extends Basic {
             List<Test> listTest = new ArrayList<>();
             Boolean update = Boolean.TRUE;
             for (InvInventoryDTO invInventoryDTO : getGallaryListSelected()) {
-                System.out.println(invInventoryDTO.getCode()+"   " + new Date());
+                System.out.println(invInventoryDTO.getCode() + "   " + new Date());
                 listTest = new ArrayList<>();
 
                 summitionItemsView = new SummitionItemsView();
@@ -858,6 +865,35 @@ public class SummitionItemReportMB2 extends Basic {
      */
     public void setProGroupListSelected(List<ProGroupDTO> proGroupListSelected) {
         this.proGroupListSelected = proGroupListSelected;
+    }
+
+    /**
+     * @return the proGroupDTOConverter
+     */
+    public ProGroupDTOConverter getProGroupDTOConverter() {
+        return proGroupDTOConverter;
+    }
+
+    /**
+     * @param proGroupDTOConverter the proGroupDTOConverter to set
+     */
+    public void setProGroupDTOConverter(ProGroupDTOConverter proGroupDTOConverter) {
+        this.proGroupDTOConverter = proGroupDTOConverter;
+    }
+
+    public List<ProGroupDTO> getGroupDTOList() {
+        if (groupDTOList == null || groupDTOList.isEmpty()) {
+            groupDTOList = proGroupService.getallProGroupByBranchIdDTO(getUserData().getUser());
+            setProGroupDTOConverter(new ProGroupDTOConverter(groupDTOList));
+        }
+        return groupDTOList;
+    }
+
+    /**
+     * @param groupDTOList the groupDTOList to set
+     */
+    public void setGroupDTOList(List<ProGroupDTO> groupDTOList) {
+        this.groupDTOList = groupDTOList;
     }
 
 }

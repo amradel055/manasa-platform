@@ -5,6 +5,7 @@ import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.entity.InvUpdateDetail;
 import com.toby.entity.TobyUser;
+import java.util.Date;
 
 import javax.ejb.Remote;
 import java.util.List;
@@ -37,7 +38,7 @@ public interface InvUpdateDetailService {
 
     public InvDetailDTO addInvUpdateDetailsDTONew(InvDetailDTO detailDTO, Integer invUpdateId, TobyUser tobyUser);
     
-    public List<InvDetailDTO> getAllInvUpdatesDetailFromInvTransferDetail(String invStripSerial, Integer branchId, Integer inventoryId);
+    public List<InvDetailDTO> getAllInvUpdatesDetailFromInvTransferDetail(String invStripSerial, Integer branchId, Integer inventoryId,Date date, Boolean findAll);
     
     public List<InvDetailDTO> getAllInvUpdatesDetailFromInvTransferDetail(Integer invStripSerial, Integer branchId, Integer inventoryId);
     

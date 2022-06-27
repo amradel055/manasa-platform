@@ -58,6 +58,14 @@ public interface GlBankTransactionDetailsService {
     
     public List<balanceGalary> GlBankTransactionDetailAfterSearchNative(Integer branchId, Date dateFrom1, Date dateTo1, String stringBuilder, TobyUser tobyUser) ;
     
-    public void addCashDetail(GlBankDTO glBankDTO, Integer invOrganizationId, Integer glBankTransactionId, GlBankDTO bankDTO, String remarks, BigDecimal value, TobyUser tobyUser);
+    public void addCashDetail(GlBankDTO glBankDTO, Integer invOrganizationId, Integer glBankTransactionId, GlBankDTO bankDTO, String remarks, BigDecimal value, Integer glYearId, TobyUser tobyUser);
+    
+    public void tarhilAfterSave(Integer glBankTransactionId, TobyUser tobyUser);
+    
+    public void tarhilNotTarhil(GlBankTransactionDetail bankTransactionDetail , TobyUser tobyUser);
+
+    public List<GlBankTransactionDetail> findGlBankTransactionNotTarhil(TobyUser tobyUser) ;
+    
+    public List<GeneralJournalDTO> tarhilOneNotTarhil(TobyUser tobyUser, Integer type);
 
     }

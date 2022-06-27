@@ -12,6 +12,7 @@ import com.toby.businessservice.GlAdminUnitService;
 import com.toby.businessservice.GlBankTransactionDetailsService;
 import com.toby.businessservice.GlBankTransactionInvoiceViewService;
 import com.toby.businessservice.GlBankTransactionService;
+import com.toby.businessservice.InvInventoryService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.TobyUserBankService;
 import com.toby.businessservice.OrganizationSiteService;
@@ -26,6 +27,7 @@ import com.toby.converter.InvOrganizationSiteConverter;
 import com.toby.converter.SymbolConverter;
 import com.toby.dto.GlBankDTO;
 import com.toby.dto.GlPayDTO;
+import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.entity.AccountsSystemSettings;
@@ -220,6 +222,9 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
 
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
+
+    @EJB
+    InvInventoryService invInventoryService;
 
     @Override
     @PostConstruct
@@ -758,7 +763,9 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                 glBankTransactionEntity.setValue(null);
                 glBankTransactionEntity.setValueLocal(null);
             }
-
+            InvInventoryDTO inventoryDTO = new InvInventoryDTO();
+            inventoryDTO = invInventoryService.maptoDTOSmall(null, glBankTransactionEntity.getGlBank().getGallaryId());
+            setGallaryDTOSelect(inventoryDTO);
             checkAllowDate();
         } catch (Exception e) {
             saveError(e, "notesReceivablesFormMB", "updateTransactionRate");
@@ -839,7 +846,12 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                 return "";
             }
         }
-        setGlPayDTOList(glBankTransactionService.addCash(getGlPayDTOList(), glBankTransactionEntity.getDate(), BigDecimal.ONE, glBankTransactionEntity.getRemark(), glBankTransactionDetailEntity.getInvOrganizationSite().getId(), getUserData().getUser()));
+        setGlPayDTOList(glBankTransactionService.addCash(getGlPayDTOList(), glBankTransactionEntity.getDate(), BigDecimal.ONE, glBankTransactionEntity.getRemark(), glBankTransactionDetailEntity.getInvOrganizationSite().getId(), getGlYearSelection().getId(), getUserData().getUser()));
+        for (GlPayDTO pay : getGlPayDTOList()) {
+            if (pay.getTransactionId() != null) {
+                glBankTransactionDetailsService.tarhilAfterSave(pay.getTransactionId(), getUserData().getUser());
+            }
+        }
         sendSMS(serialList.toString(), valueTotal);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserDDs().get("INFO"), getUserDDs().get("SAVED")));
         setSaveCheck(Boolean.FALSE);
@@ -1383,8 +1395,11 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
         getGlBankTransactionEntity().setInvoiceId(null);
         getGlBankTransactionDetailEntity().setId(null);
         getGlBankTransactionDetailEntity().setSerial(null);
+        setGlBankTransactionDetailsUpdatedList(new ArrayList<>());
 //        fillGlPayDTO();
         setGlPayDTOSelection(null);
+        setGlPayDTOList(null);
+        setSaveCheck(Boolean.TRUE);
     }
 
     public String sendSms() {

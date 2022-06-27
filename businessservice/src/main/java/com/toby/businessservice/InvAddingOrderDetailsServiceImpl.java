@@ -12,7 +12,10 @@ import com.toby.dto.InvInvoiceDTO;
 import com.toby.entity.InvAddingorder;
 import com.toby.entity.InvAddingorderDetail;
 import com.toby.entity.InvItem;
+import com.toby.entity.InvPurchaseInvoiceDetail;
+import com.toby.entity.ItemOfferDetail;
 import com.toby.entity.Symbol;
+import com.toby.procedure.TempInvPurchaseInvoiceNotLoadedYet;
 import com.toby.views.ItemsBarcodesDetailsView;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -119,10 +122,10 @@ public class InvAddingOrderDetailsServiceImpl implements InvAddingOrderDetailsSe
 //            dTOList.add(mapTODTO(entity, itemsBarcodeMap, dto));
 //        }
 //        return dTOList;
-        
+
         List<InvDetailDTO> dTOList = new ArrayList<>();
         Map<String, ItemsBarcodesDetailsView> itemsBarcodeMap = new HashMap<>();
-        List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewList = invPurchaseInvoiceDetailsService.findItemBarcodeDetails(list, 182);
+        List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewList = findItemBarcodeDetails(list, 182);
         for (ItemsBarcodesDetailsView itemsBarcodesDetailsView : itemsBarcodesDetailsViewList) {
             itemsBarcodeMap.put(itemsBarcodesDetailsView.getBarcode(), itemsBarcodesDetailsView);
         }
@@ -130,6 +133,24 @@ public class InvAddingOrderDetailsServiceImpl implements InvAddingOrderDetailsSe
             dTOList.add(mapTODTO(entity, itemsBarcodeMap, invInvoiceDTO));
         }
         return dTOList;
+    }
+
+    public <T> List<ItemsBarcodesDetailsView> findItemBarcodeDetails(List<T> list, Integer branchId) {
+        List<String> barcodeList = new ArrayList<>();
+        for (T Entity : list) {
+            if (Entity.getClass().equals(InvPurchaseInvoiceDetail.class)) {
+                InvPurchaseInvoiceDetail entity = (InvPurchaseInvoiceDetail) Entity;
+                barcodeList.add(entity.getItemBarcode());
+            } else if (Entity.getClass().equals(ItemOfferDetail.class)) {
+                ItemOfferDetail entity = (ItemOfferDetail) Entity;
+                barcodeList.add(entity.getItemBarcode());
+            } else if (Entity.getClass().equals(TempInvPurchaseInvoiceNotLoadedYet.class)) {
+                TempInvPurchaseInvoiceNotLoadedYet entity = (TempInvPurchaseInvoiceNotLoadedYet) Entity;
+                barcodeList.add(entity.getItemBarcode());
+            }
+        }
+        List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewList = itemsBarcodesDetailsViewService.findItemsBarcodesDetailsViewBranchIdByBarcode(branchId, barcodeList);
+        return itemsBarcodesDetailsViewList;
     }
 
     private InvDetailDTO mapTODTO(InvAddingorderDetail entity, Map<String, ItemsBarcodesDetailsView> itemsBarcodeMap, InvInvoiceDTO invPurchaseInvoiceDTO) {
@@ -141,19 +162,19 @@ public class InvAddingOrderDetailsServiceImpl implements InvAddingOrderDetailsSe
 
         InvDetailDTO dTO = new InvDetailDTO();
         dTO = invGlobalService.fillItemDetail(dTO, itemsBarcodeMap,
-                    entity.getId(), entity.getSerial(), (entity.getBranchId() != null ? entity.getBranchId().getId() : null), BigDecimal.ZERO,
-                    BigDecimal.ZERO, entity.getQuantity(), 0, (entity.getAddingorderId() != null ? entity.getAddingorderId().getId() : null),
-                    BigDecimal.ZERO, BigDecimal.ZERO, entity.getId(), entity.getCreationDate(), entity.getCreatedBy().getId(),
-                    null,null,null,null,null,
-                    entity.getItemBarcode(), entity.getScrewing(), entity.getItemId().getId(), entity.getWeight(), 
-                    entity.getUnitId().getId(), entity.getUnitId().getSerial(), entity.getUnitId().getName(),entity.getItemId().getIsInventoryItem(),
-                    null,null,null,null,
-                    invInvoiceDTO.getCompanyActivity(),invInvoiceDTO.getScreenName(),null,BigDecimal.ZERO);
+                entity.getId(), entity.getSerial(), (entity.getBranchId() != null ? entity.getBranchId().getId() : null), BigDecimal.ZERO,
+                BigDecimal.ZERO, entity.getQuantity(), 0, (entity.getAddingorderId() != null ? entity.getAddingorderId().getId() : null),
+                BigDecimal.ZERO, BigDecimal.ZERO, entity.getId(), entity.getCreationDate(), entity.getCreatedBy().getId(),
+                null, null, null, null, null,
+                entity.getItemBarcode(), entity.getScrewing(), entity.getItemId().getId(), entity.getWeight(),
+                entity.getUnitId().getId(), entity.getUnitId().getSerial(), entity.getUnitId().getName(), entity.getItemId().getIsInventoryItem(),
+                null, null, null, null,
+                invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), null, BigDecimal.ZERO, null);
 
-        if(invInvoiceDTO.getLoadedSerial() != null){
+        if (invInvoiceDTO.getLoadedSerial() != null) {
             dTO.setIsEdit(Boolean.TRUE);
         }
-        dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true,false);        
+        dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true, false);
         dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
         return dTO;
     }
@@ -162,9 +183,9 @@ public class InvAddingOrderDetailsServiceImpl implements InvAddingOrderDetailsSe
     public String addInvAddingOrderDetailsDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList, InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) {
         String error = null;
         if (invPurchaseInvoiceDetailList != null && !invPurchaseInvoiceDetailList.isEmpty()) {
-            error = invGlobalService.validateSave(invPurchaseInvoiceDetailList, invInvoiceDTO.getInvInventoryId().getId(), 
-                    invInvoiceDTO.getScreenName(),invInvoiceDTO.getInventorySetupDTO().getNegativeSell(),
-                    (invInvoiceDTO.getLoadedSerial() != null),invInvoiceDTO.getInventorySetupDTO().getSellBuy(),invInvoiceDTO.getCompanyActivity());
+            error = invGlobalService.validateSave(invPurchaseInvoiceDetailList, invInvoiceDTO.getInvInventoryId().getId(),
+                    invInvoiceDTO.getScreenName(), invInvoiceDTO.getInventorySetupDTO().getNegativeSell(),
+                    (invInvoiceDTO.getLoadedSerial() != null), invInvoiceDTO.getInventorySetupDTO().getSellBuy(), invInvoiceDTO.getCompanyActivity());
             if (error != null && !error.isEmpty()) {
                 return error;
             }
@@ -244,7 +265,7 @@ public class InvAddingOrderDetailsServiceImpl implements InvAddingOrderDetailsSe
         entity.setBranchId(tobyUser.getBranchId());
         return entity;
     }
-    
+
     @Override
     public void deleteInvAddingOrderDetailListDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList) {
         if (invPurchaseInvoiceDetailList != null && !invPurchaseInvoiceDetailList.isEmpty()) {

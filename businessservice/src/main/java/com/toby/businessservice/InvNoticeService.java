@@ -23,6 +23,8 @@ import javax.ejb.Remote;
 public interface InvNoticeService {
 
     public void deleteInvNotice(InvNotice invNotice);
+    
+    public void deleteInvNoticeNew(InvNotice invNotice);
 
     public void updateInvNotice(InvNotice invNotice);
 

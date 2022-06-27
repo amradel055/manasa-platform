@@ -79,6 +79,7 @@ public class InvDetailDTO extends BaseEntityDTO implements Comparable< InvDetail
     private BigDecimal bounse;
     private BigDecimal quantityOfOneUnit;
     private InvInventoryDTO inventoryDTO;
+    private String inventoryDTOCode;
     private Integer invPurchaseInvoiceDetailId;
     private Boolean proof;
     private String statusName;
@@ -92,6 +93,8 @@ public class InvDetailDTO extends BaseEntityDTO implements Comparable< InvDetail
     private List<InvPurchaseInvoiceDetailDetailDTO> invPurchaseInvoiceDetailDetailDTOList;
 
     private String supplierName;
+    
+    private Integer account;
 
     public InvDetailDTO() {
     }
@@ -1095,6 +1098,34 @@ public class InvDetailDTO extends BaseEntityDTO implements Comparable< InvDetail
      */
     public void setTotalWasalatQuantityCost(BigDecimal totalWasalatQuantityCost) {
         this.totalWasalatQuantityCost = totalWasalatQuantityCost;
+    }
+
+    /**
+     * @return the inventoryDTOCode
+     */
+    public String getInventoryDTOCode() {
+        return inventoryDTOCode;
+    }
+
+    /**
+     * @param inventoryDTOCode the inventoryDTOCode to set
+     */
+    public void setInventoryDTOCode(String inventoryDTOCode) {
+        this.inventoryDTOCode = inventoryDTOCode;
+    }
+
+    /**
+     * @return the account
+     */
+    public Integer getAccount() {
+        return account;
+    }
+
+    /**
+     * @param account the account to set
+     */
+    public void setAccount(Integer account) {
+        this.account = account;
     }
 
 }

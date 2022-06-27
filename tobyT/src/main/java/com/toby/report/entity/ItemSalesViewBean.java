@@ -21,6 +21,8 @@ public class ItemSalesViewBean {
     private String detailUnitName;
     private String itemBarcode;
     private String groupName;
+    private String supplierName;
+    private Integer serialTax;
     private BigDecimal itemQuantity;
     private BigDecimal net;
     private BigDecimal cost;
@@ -30,6 +32,13 @@ public class ItemSalesViewBean {
     private Integer groupId;
     private Integer serial;
     private Date date;
+    private BigDecimal numberThobe;
+    private BigDecimal quantityOfOneUnit;
+    private BigDecimal costAvarage;
+    private BigDecimal fash;
+    private BigDecimal costAvarageFashTotal;
+    private BigDecimal totalQuantity;
+    private BigDecimal totalcostAvarage;
 
     /**
      * @return the detailUnitName
@@ -161,6 +170,9 @@ public class ItemSalesViewBean {
      * @return the itemQuantity
      */
     public BigDecimal getItemQuantity() {
+        if(itemQuantity == null){
+            itemQuantity = BigDecimal.ZERO;
+        }
         return itemQuantity;
     }
 
@@ -253,5 +265,135 @@ public class ItemSalesViewBean {
      */
     public void setChartPercentage(BigDecimal chartPercentage) {
         this.chartPercentage = chartPercentage;
+    }
+
+    /**
+     * @return the serialTax
+     */
+    public Integer getSerialTax() {
+        return serialTax;
+    }
+
+    /**
+     * @param serialTax the serialTax to set
+     */
+    public void setSerialTax(Integer serialTax) {
+        this.serialTax = serialTax;
+    }
+
+    /**
+     * @return the numberThobe
+     */
+    public BigDecimal getNumberThobe() {
+        return numberThobe;
+    }
+
+    /**
+     * @param numberThobe the numberThobe to set
+     */
+    public void setNumberThobe(BigDecimal numberThobe) {
+        this.numberThobe = numberThobe;
+    }
+
+    /**
+     * @return the quantityOfOneUnit
+     */
+    public BigDecimal getQuantityOfOneUnit() {
+        return quantityOfOneUnit;
+    }
+
+    /**
+     * @param quantityOfOneUnit the quantityOfOneUnit to set
+     */
+    public void setQuantityOfOneUnit(BigDecimal quantityOfOneUnit) {
+        this.quantityOfOneUnit = quantityOfOneUnit;
+    }
+
+    /**
+     * @return the costAvarage
+     */
+    public BigDecimal getCostAvarage() {
+        return costAvarage;
+    }
+
+    /**
+     * @param costAvarage the costAvarage to set
+     */
+    public void setCostAvarage(BigDecimal costAvarage) {
+        this.costAvarage = costAvarage;
+    }
+
+    /**
+     * @return the fash
+     */
+    public BigDecimal getFash() {
+        if(fash == null){
+            fash = BigDecimal.ZERO;
+        }
+        return fash;
+    }
+
+    /**
+     * @param fash the fash to set
+     */
+    public void setFash(BigDecimal fash) {
+        this.fash = fash;
+    }
+
+    /**
+     * @return the costAvarageFashTotal
+     */
+    public BigDecimal getCostAvarageFashTotal() {
+        return costAvarageFashTotal;
+    }
+
+    /**
+     * @param costAvarageFashTotal the costAvarageFashTotal to set
+     */
+    public void setCostAvarageFashTotal(BigDecimal costAvarageFashTotal) {
+        this.costAvarageFashTotal = costAvarageFashTotal;
+    }
+
+    /**
+     * @return the totalQuantity
+     */
+    public BigDecimal getTotalQuantity() {
+        totalQuantity = getItemQuantity().add(getFash());
+        return totalQuantity;
+    }
+
+    /**
+     * @param totalQuantity the totalQuantity to set
+     */
+    public void setTotalQuantity(BigDecimal totalQuantity) {
+        this.totalQuantity = totalQuantity;
+    }
+
+    /**
+     * @return the totalcostAvarage
+     */
+    public BigDecimal getTotalcostAvarage() {
+        return totalcostAvarage;
+    }
+
+    /**
+     * @param totalcostAvarage the totalcostAvarage to set
+     */
+    public void setTotalcostAvarage(BigDecimal totalcostAvarage) {
+        this.totalcostAvarage = totalcostAvarage;
+    }
+
+    /**
+     * @return the supplierName
+     */
+    public String getSupplierName() {
+        return supplierName;
+    }
+
+    /**
+     * @param supplierName the supplierName to set
+     */
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName;
     }
 }

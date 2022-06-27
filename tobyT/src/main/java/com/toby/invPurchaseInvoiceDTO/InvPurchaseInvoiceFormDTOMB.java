@@ -5,6 +5,7 @@
  */
 package com.toby.invPurchaseInvoiceDTO;
 
+import com.toby.businessservice.GlBankTransactionDetailsService;
 import com.toby.businessservice.InvGlobalService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.ProFactoryDeliveryDetailService;
@@ -14,7 +15,6 @@ import com.toby.dto.GlPayDTO;
 import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.toby.InventoryBasicDataForm;
-import java.math.BigDecimal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -41,6 +41,8 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
 
     private InvInvoiceDTO invInvoiceDTOSelected;
 
+//    private List<GlAccountDTO> glAccountList;
+//    private GlAccountDTOConverter glAccountConverter;
 // EJBs
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
@@ -52,6 +54,8 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
     ProFactoryDeliveryService proFactoryDeliveryService;
     @EJB
     ProFactoryDeliveryDetailService proFactoryDeliveryDetailService;
+    @EJB
+    private GlBankTransactionDetailsService glBankTransactionDetailsService;
 
     @Override
     @PostConstruct
@@ -122,21 +126,37 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
         }
     }
 
+    public void close() {
+        CloseDlg("dlgpay");
+    }
+
+    public void saveAndClose() {
+        save();
+        CloseDlg("dlgpay");
+    }
+
     @Override
     public String save() {
         if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvPurchaseInvoiceDetailList() != null && !getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().isEmpty()) {
+            calcPayed();
             Integer id = getInvInvoiceDTO().getId();
             getInvInvoiceDTO().setMsg(null);
             checkDetailData();
             if (validateInvoiceType()) {
                 try {
                     setInvInvoiceDTO(invPurchaseInvoiceService.save(getInvInvoiceDTO(), getUserData().getUser()));
-                    setInvInvoiceDTO(invPurchaseInvoiceService.completeTarhilInvoiceAfterSave(getInvInvoiceDTO(), getUserData().getUser()));
                     invPurchaseInvoiceService.updateDetailInvoiceValues(getInvInvoiceDTO().getId());
+                    setInvInvoiceDTO(invPurchaseInvoiceService.completeTarhilInvoiceAfterSave(getInvInvoiceDTO(), getUserData().getUser()));
+                    for (GlPayDTO pay : getInvInvoiceDTO().getGlPayDTOList()) {
+                        if (pay.getTransactionId() != null) {
+                            glBankTransactionDetailsService.tarhilAfterSave(pay.getTransactionId(), getUserData().getUser());
+                        }
+                    }
                     checkDetailData();
                     setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
                     msgSave(getInvInvoiceDTO().getMsg());
                     findAccountStatement();
+
                     if (id == null && getUri().contains("proworkorderform") && getInvInvoiceDTO().getInvoiceType() == null && getCheckSendSms() && checkDetailDataSMS()) {
                         StringBuilder message = new StringBuilder();
                         message.append("عميلنا العزيز ، شكراً لتسوقك تمت عملية شراء رقم ");
@@ -167,11 +187,11 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
         return "";
     }
 
-     public Boolean checkDetailDataSMS() {
+    public Boolean checkDetailDataSMS() {
 
         for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
 
-            if (detailDTO.getItemsBarcodesDetail() != null && detailDTO.getItemsBarcodesDetail().getBarcode() != null 
+            if (detailDTO.getItemsBarcodesDetail() != null && detailDTO.getItemsBarcodesDetail().getBarcode() != null
                     && (detailDTO.getItemsBarcodesDetail().getBarcode().equals("000012")
                     || detailDTO.getItemsBarcodesDetail().getBarcode().equals("000013")
                     || detailDTO.getItemsBarcodesDetail().getBarcode().equals("60004"))) {
@@ -179,15 +199,6 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
             }
         }
         return true;
-    }
-     
-     
-    public void calcPayed() {
-        getInvInvoiceDTO().setPayed(BigDecimal.ZERO);
-        for (GlPayDTO glPayDTO : getInvInvoiceDTO().getGlPayDTOList()) {
-            getInvInvoiceDTO().setPayed(getInvInvoiceDTO().getPayed().add(glPayDTO.getValue()));
-        }
-        calculateRemainValue();
     }
 
     private Boolean validateInvoiceType() {
@@ -467,4 +478,32 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
         this.checkSendSms = checkSendSms;
     }
 
+    /**
+     * @return the glAccountList
+     */
+//    public List<GlAccountDTO> getGlAccountList() {
+//        if (glAccountList == null || glAccountList.isEmpty()) {
+//            glAccountList = glAccountService.getBranchGLAccountsActiveDTO(getUserData().getUserBranch().getId());
+//            setGlAccountConverter(new GlAccountDTOConverter(glAccountList));
+//        }
+//        return glAccountList;
+//    }
+//
+//    public void setGlAccountList(List<GlAccountDTO> glAccountList) {
+//        this.glAccountList = glAccountList;
+////    }
+//
+//    /**
+//     * @return the glAccountConverter
+//     */
+//    public GlAccountDTOConverter getGlAccountConverter() {
+//        return glAccountConverter;
+//    }
+//
+//    /**
+//     * @param glAccountConverter the glAccountConverter to set
+//     */
+//    public void setGlAccountConverter(GlAccountDTOConverter glAccountConverter) {
+//        this.glAccountConverter = glAccountConverter;
+//    }
 }
