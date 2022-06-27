@@ -36,6 +36,8 @@ public interface InvItemService {
     public InvItem addInvItem(InvItem invItem, List<InvBarcode> invBarcodeList, List<InvBarcode> invBarcodeDeletedList);
 
     public InvItem updateInvItem(InvItem invItem);
+    
+    public void updateLastCostInvItem(Integer invItem,BigDecimal lastCost);
 
     public InvItem updateInvItemWebSite(InvItem invItem);
 

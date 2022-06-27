@@ -7,9 +7,15 @@ package com.toby.reports;
 
 import com.toby.businessservice.report.PurchaseOfItemsBySuppliersReportService;
 import com.toby.businessservice.InvGroupService;
+import com.toby.businessservice.InvItemService;
 import com.toby.businessservice.OrganizationSiteService;
+import com.toby.businessservice.ProGroupService;
 import com.toby.businessservice.reports.searchBean.InvItemSalesSearchBean;
 import com.toby.businessservice.reports.searchBean.PurchaseOfItemsBySuppliersSearchBean;
+import com.toby.converter.ItemDTOConverter;
+import com.toby.converter.ProGroupDTOConverter;
+import com.toby.define.ScreenNameClassEnum;
+import com.toby.dto.ProGroupDTO;
 import com.toby.entity.InvGroup;
 import com.toby.entity.InvOrganizationSite;
 import com.toby.report.entity.ItemSalesViewBean;
@@ -46,14 +52,14 @@ public class SalesOfItemsBySupplierNewMB extends BaseInventoryReportBean {
     private String uri;
     private String screenMode;
     private Integer invoiceType;
-    
+
     private Boolean isSales;
 
     // Bean Objs and Lists
     private InvItemSalesSearchBean invItemSalesSearchBean;
     private List<ItemSalesView> itemSalesViewList;
     private Map<Integer, List<ItemSalesView>> itemSalesViewMap = new HashMap<>();
-    
+
     private List<InvGroup> invGroupRootList;
     private Map<Integer, ItemSalesViewBean> itemSalesReportBeanMap = new HashMap<>();
     private TreeMap<Integer, ItemSalesViewBean> salesReportTreeMap = new TreeMap<>();
@@ -74,30 +80,48 @@ public class SalesOfItemsBySupplierNewMB extends BaseInventoryReportBean {
     private List<Object> pieChartsRows;
 //    private Boolean chart = false;
 
+    private BigDecimal totalThobeNumberNew = BigDecimal.ZERO;
+    private BigDecimal totalQuantityNew = BigDecimal.ZERO;
+    private BigDecimal totalFashNew = BigDecimal.ZERO;
+    private BigDecimal totalFashCostNew = BigDecimal.ZERO;
+    private BigDecimal totalQuantityWithFashNew = BigDecimal.ZERO;
+    private BigDecimal totalcostAvarageNew = BigDecimal.ZERO;
+    private BigDecimal totalDiscountNew = BigDecimal.ZERO;
+    
+    
+    private List<ProGroupDTO> groupDTOList;
+    private ProGroupDTOConverter proGroupDTOConverter;
+    
+    
+
     // EJBs
     @EJB
     private InvGroupService invGroupService;
     @EJB
+    private InvItemService invItemService;
+    @EJB
     private OrganizationSiteService organizationSiteService;
     @EJB
     private PurchaseOfItemsBySuppliersReportService purchaseOfItemsBySuppliersReportService;
-    
+     @EJB
+    ProGroupService proGroupService;
+
     @Override
     @PostConstruct
     public void load() {
-        
+
         branchId = getUserData().getUserBranch().getId();
         uri = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestURI();
         super.load();
         initObjs();
-        
+
         fillLists();
         invGroupRootList = invGroupService.getInvGroupsRootsByBranchId(branchId);
-        
+
     }
-    
+
     private void initObjs() {
-        
+
         itemSalesViewList = new ArrayList<>();
         itemSalesViewBeanList = new ArrayList<>();
         itemSalesViewBeanTempList = new ArrayList<>();
@@ -116,40 +140,52 @@ public class SalesOfItemsBySupplierNewMB extends BaseInventoryReportBean {
         purchaseOfItemsBySuppliersSearchBean = new PurchaseOfItemsBySuppliersSearchBean();
         purchaseOfItemsBySuppliersSearchBean.setFrompaymentType(0);
         purchaseOfItemsBySuppliersSearchBean.setTopaymentType(2);
-        
+
         setSumTotal(BigDecimal.ZERO);
-        
+
+        setTotalThobeNumberNew(BigDecimal.ZERO);
+        setTotalQuantityNew(BigDecimal.ZERO);
+        setTotalFashNew(BigDecimal.ZERO);
+        setTotalFashCostNew(BigDecimal.ZERO);
+        setTotalQuantityWithFashNew(BigDecimal.ZERO);
+        setTotalcostAvarageNew(BigDecimal.ZERO);
+        setTotalDiscountNew(BigDecimal.ZERO);
+//        
+
     }
-    
+
     private void fillLists() {
         getInventoryListByBranch();
         getDelegateSalesListByBranch();
-        
+
         setOrganizationSiteRootList(organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(), true, 1));
         getInvOrganizationSiteAsSupplier();
         getInvoicePurchaseListByBranch();
+
+        setInvItemDTOFromList(invItemService.getInvItemListByBranchId(branchId, ScreenNameClassEnum.ITEMCARDREPORT));
+        setItemDTOFromConverter(new ItemDTOConverter(getInvItemDTOFromList()));
     }
-    
+
     @Override
     public void reset() {
         initObjs();
 
         // fillLists();
     }
-    
+
     public void resetSearch() {
         purchaseOfItemsBySuppliersSearchBean = new PurchaseOfItemsBySuppliersSearchBean();
         purchaseOfItemsBySuppliersSearchBean.setFrompaymentType(0);
         purchaseOfItemsBySuppliersSearchBean.setTopaymentType(2);
         invItemSalesSearchBean = new InvItemSalesSearchBean();
     }
-    
+
     public void showItemReport() {
         itemSalesViewList = new ArrayList<>();
         search();
-        
+
     }
-    
+
     public void shortReportListing() {
         if (invItemSalesSearchBean.getShortReport() != null) {
             if (invItemSalesSearchBean.getShortReport()) {
@@ -159,7 +195,7 @@ public class SalesOfItemsBySupplierNewMB extends BaseInventoryReportBean {
             }
         }
     }
-    
+
     @Override
     public void search() {
         itemSalesViewMap = new HashMap<>();
@@ -171,9 +207,16 @@ public class SalesOfItemsBySupplierNewMB extends BaseInventoryReportBean {
         itemSalesViewBeanShortList = new ArrayList<>();
         itemSalesViewBeanTempList = new ArrayList<>();
         ItemSalesViewGroupedByItemIdMap = new HashMap<>();
-        
+
         setSumTotal(BigDecimal.ZERO);
-        
+        setTotalThobeNumberNew(BigDecimal.ZERO);
+        setTotalQuantityNew(BigDecimal.ZERO);
+        setTotalFashNew(BigDecimal.ZERO);
+        setTotalFashCostNew(BigDecimal.ZERO);
+        setTotalQuantityWithFashNew(BigDecimal.ZERO);
+        setTotalcostAvarageNew(BigDecimal.ZERO);
+        setTotalDiscountNew(BigDecimal.ZERO);
+
         purchaseOfItemsBySuppliersSearchBean.setBranchId(branchId);
         purchaseOfItemsBySuppliersSearchBean.setType(4);
 
@@ -181,8 +224,8 @@ public class SalesOfItemsBySupplierNewMB extends BaseInventoryReportBean {
         if (getUri().contains("inventoryreports/SalesOfItemsBySupplier.xhtml")) {
             getPurchaseOfItemsBySuppliersSearchBean().setOrganizationType(1);
         }
-        itemSalesViewList = purchaseOfItemsBySuppliersReportService.getAllPurchaseOfItemsBySuppliersSearchBeanNew(getPurchaseOfItemsBySuppliersSearchBean(), getInvoiceType());
-        
+        itemSalesViewList = purchaseOfItemsBySuppliersReportService.getAllPurchaseOfItemsBySuppliersSearchBeanNewNew(getPurchaseOfItemsBySuppliersSearchBean(), getInvoiceType());
+
         if (itemSalesViewList != null && !itemSalesViewList.isEmpty()) {
             fillEachGroupWithItsCorrespondingList();
             if (invItemSalesSearchBean.getShowReport() != null && invItemSalesSearchBean.getShowReport()) {
@@ -192,14 +235,13 @@ public class SalesOfItemsBySupplierNewMB extends BaseInventoryReportBean {
             prepareRootGroupValues();
         }
         mergeGroupsWithItems();
-        
+
 //        setSumTotal(getSumTotal().divide(new BigDecimal(2)));
-        
         if (invItemSalesSearchBean.getShortReport() != null) {
             shortReportListing();
         }
     }
-    
+
     private void fillItemIdMapByGroupId() {
         itemSalesViewList = new ArrayList<>();
         for (Map.Entry<Integer, List<ItemSalesView>> entry : itemSalesViewMap.entrySet()) {
@@ -210,8 +252,14 @@ public class SalesOfItemsBySupplierNewMB extends BaseInventoryReportBean {
                         ItemSalesView isv = ItemSalesViewGroupedByItemIdMap.get(orgView.getItemId());
                         isv.setNet((isv.getNet() != null ? isv.getNet() : BigDecimal.ZERO).add(orgView.getNet() != null ? orgView.getNet() : BigDecimal.ZERO));
                         isv.setItemQuantity((isv.getItemQuantity() != null ? isv.getItemQuantity() : BigDecimal.ZERO).add(orgView.getItemQuantity() != null ? orgView.getItemQuantity() : BigDecimal.ZERO));
+                        isv.setNumber((isv.getNumber() != null ? isv.getNumber() : BigDecimal.ZERO).add(orgView.getNumber() != null ? orgView.getNumber() : BigDecimal.ZERO));
+                        isv.setFash((isv.getFash() != null ? isv.getFash() : BigDecimal.ZERO).add(orgView.getFash() != null ? orgView.getFash() : BigDecimal.ZERO));
+                        isv.setCostAvarageFashTotal((isv.getCostAvarageFashTotal() != null ? isv.getCostAvarageFashTotal() : BigDecimal.ZERO).add(orgView.getCostAvarageFashTotal() != null ? orgView.getCostAvarageFashTotal() : BigDecimal.ZERO));
+                        isv.setCostAvarageTotal((isv.getCostAvarageTotal() != null ? isv.getCostAvarageTotal() : BigDecimal.ZERO).add(orgView.getCostAvarageTotal() != null ? orgView.getCostAvarageTotal() : BigDecimal.ZERO));
+                        isv.setDiscount((isv.getDiscount() != null ? isv.getDiscount() : BigDecimal.ZERO).add(orgView.getDiscount() != null ? orgView.getDiscount() : BigDecimal.ZERO));
                         ItemSalesViewGroupedByItemIdMap.put(orgView.getItemId(), isv);
                         setSumTotal(isv.getNet().add(getSumTotal() == null ? BigDecimal.ZERO : getSumTotal()));
+                        //here;
                     } else {
                         ItemSalesViewGroupedByItemIdMap.put(orgView.getItemId(), orgView);
                     }
@@ -221,7 +269,7 @@ public class SalesOfItemsBySupplierNewMB extends BaseInventoryReportBean {
             }
         }
     }
-    
+
     private void fillEachGroupWithItsCorrespondingList() {
         itemSalesViewMap = new HashMap<>();
         for (ItemSalesView item : itemSalesViewList) {
@@ -236,26 +284,26 @@ public class SalesOfItemsBySupplierNewMB extends BaseInventoryReportBean {
             }
         }
     }
-    
+
     public void prepareRootGroupValues() {
         stripMapReference = 0;
         if (organizationSiteRootList != null && !organizationSiteRootList.isEmpty()) {
-            for (InvOrganizationSite ig : organizationSiteRootList) {
-                
+            for (InvOrganizationSite ig : getPurchaseOfItemsBySuppliersSearchBean().getOrganizationSiteList()) {
                 ItemSalesViewBean isvb = new ItemSalesViewBean();
                 // isvb.setItemName("المجموعة");
                 //isvb.setDetailUnitName(grp.getName());
                 //isvb.setItemUnitName(grp.getName());
+                isvb.setItemName(ig.getName());
                 isvb.setGroupName(ig.getName());
                 isvb.setGroupId(ig.getId());
                 itemSalesReportBeanMap.put(ig.getId(), isvb);
                 salesReportTreeMap.put(salesMapReference++, itemSalesReportBeanMap.get(ig.getId()));
-                
+
                 getChildTreeNodesForGroup(ig);
             }
         }
     }
-    
+
     private void getChildTreeNodesForGroup(InvOrganizationSite grp) {
         if (grp.getInvOrganizationSiteCollection() != null && !grp.getInvOrganizationSiteCollection().isEmpty()) {
             for (InvOrganizationSite childGrp : grp.getInvOrganizationSiteCollection()) {
@@ -271,7 +319,7 @@ public class SalesOfItemsBySupplierNewMB extends BaseInventoryReportBean {
             }
         }
     }
-    
+
     private void findListFromMapAndPutValue(InvOrganizationSite childGrp, PurchaseOfItemsBySuppliersViewBean srvb) {
         if (itemSalesViewMap.containsKey(childGrp.getId())) {
             if (itemSalesViewMap.get(childGrp.getId()) != null && !itemSalesViewMap.get(childGrp.getId()).isEmpty()) {
@@ -289,7 +337,7 @@ public class SalesOfItemsBySupplierNewMB extends BaseInventoryReportBean {
             }
         }
     }
-    
+
     public void putValueOfParent(InvOrganizationSite ParentGrp, BigDecimal bd) {
         if (PurchaseOfItemsBySuppliersBeanMap.containsKey(ParentGrp.getId())) {
             PurchaseOfItemsBySuppliersViewBean bean = PurchaseOfItemsBySuppliersBeanMap.get(ParentGrp.getId());
@@ -300,79 +348,128 @@ public class SalesOfItemsBySupplierNewMB extends BaseInventoryReportBean {
             }
         }
     }
-    
+
     public void mergeGroupsWithItems() {
         setSumTotalNew(BigDecimal.ZERO);
-//        for (Map.Entry<Integer, ItemSalesViewBean> entry : salesReportTreeMap.entrySet()) {
-//            ItemSalesViewBean viewBean = entry.getValue();
-            
-//            if (itemSalesViewMap.containsKey(viewBean.getGroupId())) {
-//                if (itemSalesViewMap.get(viewBean.getGroupId()) != null && !itemSalesViewMap.get(viewBean.getGroupId()).isEmpty()) {
+        setTotalThobeNumberNew(BigDecimal.ZERO);
+        setTotalQuantityNew(BigDecimal.ZERO);
+        setTotalFashNew(BigDecimal.ZERO);
+        setTotalFashCostNew(BigDecimal.ZERO);
+        setTotalQuantityWithFashNew(BigDecimal.ZERO);
+        setTotalcostAvarageNew(BigDecimal.ZERO);
+        setTotalDiscountNew(BigDecimal.ZERO);
+        for (Map.Entry<Integer, ItemSalesViewBean> entry : salesReportTreeMap.entrySet()) {
+            ItemSalesViewBean viewBean = entry.getValue();
+
+            if (itemSalesViewMap.containsKey(viewBean.getGroupId())) {
+                if (itemSalesViewMap.get(viewBean.getGroupId()) != null && !itemSalesViewMap.get(viewBean.getGroupId()).isEmpty()) {
                     ItemSalesViewBean viewBean1 = new ItemSalesViewBean();
-                    //viewBean1.setGroupName(itemSalesViewMap.get(viewBean.getGroupId()).get(0).getGroupName());
-//                    viewBean1.setGroupName(entry.getValue().getGroupName());
+//                    viewBean1.setGroupName(itemSalesViewMap.get(viewBean.getGroupId()).get(0).getGroupName());
+                    viewBean1.setGroupName(entry.getValue().getGroupName());
+                    viewBean1.setSupplierName(entry.getValue().getGroupName());
                     BigDecimal totalNet = BigDecimal.ZERO;
+                    BigDecimal totalThobeNumber = BigDecimal.ZERO;
+                    BigDecimal totalQuantity = BigDecimal.ZERO;
+                    BigDecimal totalFash = BigDecimal.ZERO;
+                    BigDecimal totalFashCost = BigDecimal.ZERO;
+                    BigDecimal totalQuantityWithFash = BigDecimal.ZERO;
+                    BigDecimal totalcostAvarage = BigDecimal.ZERO;
+                    BigDecimal totalDiscount = BigDecimal.ZERO;
                     itemSalesViewBeanList.add(viewBean1);
                     itemSalesViewBeanShortList.add(viewBean1);
                     int index = itemSalesViewBeanList.size() - 1;
-                    for (ItemSalesView idv : itemSalesViewList) {
+                    List<ItemSalesView> list = itemSalesViewMap.get(viewBean.getGroupId());
+                    for (ItemSalesView idv : list) {
                         ItemSalesViewBean salesViewBean = new ItemSalesViewBean();
-                        salesViewBean.setItemCode(idv.getItemCode());
-                        salesViewBean.setItemName(idv.getItemName());
-                        salesViewBean.setItemUnitName(idv.getItemUnitName());
-                        salesViewBean.setItemQuantity(idv.getItemQuantity());
-                        salesViewBean.setNet(idv.getNet());
-                        salesViewBean.setDiscount(idv.getDiscount());
-                        salesViewBean.setCost(idv.getCost());
-                        salesViewBean.setDetailUnitName(idv.getDetailUnitName());
-                        salesViewBean.setDate(idv.getDate());
+
                         salesViewBean.setSerial(idv.getSerial());
+                        salesViewBean.setSerialTax(idv.getSerialTax());
+                        salesViewBean.setDate(idv.getDate());
+                        salesViewBean.setItemCode(idv.getItemCode());
                         salesViewBean.setItemBarcode(idv.getItemBarcode());
+                        salesViewBean.setItemName(idv.getItemName());
+                        salesViewBean.setNumberThobe(idv.getNumber());
+                        salesViewBean.setQuantityOfOneUnit(idv.getQuantityOfOne());
+                        salesViewBean.setItemQuantity(idv.getItemQuantity());
+                        salesViewBean.setCostAvarage(idv.getCostAvarage());
+                        salesViewBean.setFash(idv.getFash());
+                        salesViewBean.setCostAvarageFashTotal(idv.getCostAvarageFashTotal());
+                        salesViewBean.setTotalcostAvarage(idv.getCostAvarageFashTotal().add(idv.getCostAvarageTotal()));
+                        salesViewBean.setCost(idv.getCost());
+                        salesViewBean.setDiscount(idv.getDiscount());
+                        salesViewBean.setNet(idv.getNet());
+
+                        salesViewBean.setItemUnitName(idv.getItemUnitName());
+                        salesViewBean.setDetailUnitName(idv.getDetailUnitName());
                         salesViewBean.setDetailItemQuantity(idv.getDetailItemQuantity());
+
+                        salesViewBean.setSupplierName(idv.getOrganizationSiteName());
+
                         itemSalesViewBeanList.add(salesViewBean);
                         setSumTotalNew(getSumTotalNew().add(salesViewBean.getNet()));
                         totalNet = totalNet.add(idv.getNet());
+                        totalThobeNumber = totalThobeNumber.add(idv.getNumber());
+                        totalQuantity = totalQuantity.add(idv.getItemQuantity());
+                        totalFash = totalFash.add(idv.getFash());
+                        totalFashCost = totalFashCost.add(idv.getCostAvarageFashTotal());
+                        totalQuantityWithFash = totalQuantityWithFash.add(idv.getItemQuantity().add(idv.getFash()));
+                        totalDiscount = totalDiscount.add(idv.getDiscount());
+                        totalcostAvarage = totalcostAvarage.add(idv.getCostAvarageTotal());
                     }
                     setSumTotal(getSumTotalNew());
-                    
-//                    viewBean1.setNet(totalNet);
-//                    viewBean1.setIndex(index);
-//                    setSumTotal(totalNet.add(getSumTotal() == null ? BigDecimal.ZERO : getSumTotal()));
-//                    itemSalesViewBeanList.set(index, viewBean1);
-                    
-//                }
-//            }
-//        }
-        
+
+                    viewBean1.setNet(totalNet);
+                    viewBean1.setNumberThobe(totalThobeNumber);
+                    viewBean1.setItemQuantity(totalQuantity);
+                    viewBean1.setFash(totalFash);
+                    viewBean1.setCostAvarageFashTotal(totalFashCost);
+                    viewBean1.setTotalQuantity(totalQuantityWithFash);
+                    viewBean1.setTotalcostAvarage(totalcostAvarage);
+                    viewBean1.setDiscount(totalDiscount);
+                    viewBean1.setIndex(index);
+                    setSumTotal(totalNet.add(getSumTotal() == null ? BigDecimal.ZERO : getSumTotal()));
+                    setTotalThobeNumberNew(totalThobeNumber.add(getTotalThobeNumberNew() == null ? BigDecimal.ZERO : getTotalThobeNumberNew()));
+                    setTotalQuantityNew(totalQuantity.add(getTotalQuantityNew() == null ? BigDecimal.ZERO : getTotalQuantityNew()));
+                    setTotalFashNew(totalFash.add(getTotalFashNew() == null ? BigDecimal.ZERO : getTotalFashNew()));
+                    setTotalFashCostNew(totalFashCost.add(getTotalFashCostNew() == null ? BigDecimal.ZERO : getTotalFashCostNew()));
+                    setTotalQuantityWithFashNew(totalQuantityWithFash.add(getTotalQuantityWithFashNew() == null ? BigDecimal.ZERO : getTotalQuantityWithFashNew()));
+                    setTotalcostAvarageNew(totalcostAvarage.add(getTotalcostAvarageNew() == null ? BigDecimal.ZERO : getTotalcostAvarageNew()));
+                    setTotalDiscountNew(totalDiscount.add(getTotalDiscountNew() == null ? BigDecimal.ZERO : getTotalDiscountNew()));
+                    itemSalesViewBeanList.set(index, viewBean1);
+
+                }
+            }
+        }
+
         if (itemSalesViewBeanList != null && !itemSalesViewBeanList.isEmpty()) {
             itemSalesViewBeanTempList = new ArrayList<>(itemSalesViewBeanList);
         }
         pieChartsRows = new ArrayList<>();
-        
+
         List<Object> colmns = new ArrayList<>();
         colmns.add("'" + "x" + "'");
         colmns.add("'" + "y" + "'");
         pieChartsRows.add(colmns);
-//        for (ItemSalesViewBean itemSalesViewBean : itemSalesViewBeanShortList) {
-//            colmns = new ArrayList<>();
-//            colmns.add("'" + itemSalesViewBean.getGroupName() + "'");
-//            colmns.add(itemSalesViewBean.getNet());
-//            pieChartsRows.add(colmns);
-//            
-//            BigDecimal percentage = itemSalesViewBean.getNet().multiply(BigDecimal.valueOf(100)).divide(sumTotal, 4, 4);
-//            percentage = percentage.setScale(1, BigDecimal.ROUND_UP);
-//            
-//            ItemSalesViewBean suppliersViewBean = itemSalesViewBeanList.get(itemSalesViewBean.getIndex());
-//            suppliersViewBean.setChartPercentage(percentage);
-//            itemSalesViewBeanList.set(suppliersViewBean.getIndex(), suppliersViewBean);
-//            System.out.println("the percentage is : " + percentage);
-//        }
+        for (ItemSalesViewBean itemSalesViewBean : itemSalesViewBeanShortList) {
+            colmns = new ArrayList<>();
+            colmns.add("'" + itemSalesViewBean.getGroupName() + "'");
+            colmns.add(itemSalesViewBean.getNet());
+            pieChartsRows.add(colmns);
+
+            BigDecimal percentage = itemSalesViewBean.getNet().multiply(BigDecimal.valueOf(100)).divide(sumTotal, 4, 4);
+            percentage = percentage.setScale(1, BigDecimal.ROUND_UP);
+
+            ItemSalesViewBean suppliersViewBean = itemSalesViewBeanList.get(itemSalesViewBean.getIndex());
+            suppliersViewBean.setChartPercentage(percentage);
+            itemSalesViewBeanList.set(suppliersViewBean.getIndex(), suppliersViewBean);
+            System.out.println("the percentage is : " + percentage);
+        }
 
         /* for (Object row : pieChartsRows) {
          System.out.println(row);
          }*/
     }
-    
+
     @Override
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
         search();
@@ -382,44 +479,44 @@ public class SalesOfItemsBySupplierNewMB extends BaseInventoryReportBean {
             fillReport(prepareReport(), getUserData().getReportPath() + "ItemSalesReport.jasper", itemSalesViewBeanList, "pdf");
         }
     }
-    
+
     public void exportChartPDF(ActionEvent actionEvent) throws JRException, IOException {
         search();
         if (itemSalesViewBeanList != null && !itemSalesViewBeanList.isEmpty()) {
             fillReport(prepareReport(), getUserData().getReportPath() + "ItemSalesReportWithColumnChart.jasper", itemSalesViewBeanList, "pdf");
         }
     }
-    
+
     @Override
     public HashMap prepareReport() {
         Map<String, String> userDDs = getUserData().getUserDDs();
         HashMap hashMap = new HashMap();
-        
+
         hashMap.put("UserName", getUserData().getUser().getName());
         hashMap.put("Branch", getUserData().getUserBranch().getNameAr());
         hashMap.put("CompanyName", getUserData().getCompany().getName());
-        
+
         if (isFileExist(getUserData().getImageReportPath())) {
             hashMap.put("companyImage", getUserData().getImageReportPath());
         } else {
             hashMap.put("companyImage", null);
         }
         hashMap.put("dateText", userDDs.get("DATE"));
-        
+
         hashMap.put("header", userDDs.get("ITEM_SALE_SUPP"));
-        
+
         hashMap.put("DateFromLabel", userDDs.get("FROM_PERIOD"));
         hashMap.put("DateToLabel", userDDs.get("TO_PERIOD"));
-        
+
         hashMap.put("DateFromValue", invItemSalesSearchBean.getDateFrom());
         hashMap.put("DateToValue", invItemSalesSearchBean.getDateTo());
-        
+
         hashMap.put("ReceiptNum", userDDs.get("INVOICE_NO"));
         hashMap.put("ReceiptDate", userDDs.get("INVOICE_DATE"));
-        
+
         hashMap.put("ItemNum", userDDs.get("ITEM_NUMBER"));
         hashMap.put("Description", userDDs.get(" ITEM_NAM "));
-        
+
         hashMap.put("Unit", userDDs.get("UNIT"));
         hashMap.put("Quantitiy", userDDs.get("QUANTITY"));
         hashMap.put("UnitPrice", userDDs.get("UNIT_PRICE"));
@@ -428,53 +525,53 @@ public class SalesOfItemsBySupplierNewMB extends BaseInventoryReportBean {
         hashMap.put("groupName", userDDs.get("GROUP_NAME"));
         hashMap.put("total", userDDs.get("TOTAL"));
         hashMap.put("totalnet", sumTotal);
-        
+
         return hashMap;
     }
-    
+
     @Override
     public void exportExcel(ActionEvent actionEvent) throws JRException, IOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public void exportHtml(ActionEvent actionEvent) throws JRException, IOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public String getScreenName() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     public String getScreenMode() {
         return screenMode;
     }
-    
+
     public void setScreenMode(String screenMode) {
         this.screenMode = screenMode;
     }
-    
+
     public InvItemSalesSearchBean getInvItemSalesSearchBean() {
         return invItemSalesSearchBean;
     }
-    
+
     public void setInvItemSalesSearchBean(InvItemSalesSearchBean invItemSalesSearchBean) {
         this.invItemSalesSearchBean = invItemSalesSearchBean;
     }
-    
+
     public List<ItemSalesView> getItemSalesViewList() {
         return itemSalesViewList;
     }
-    
+
     public void setItemSalesViewList(List<ItemSalesView> itemSalesViewList) {
         this.itemSalesViewList = itemSalesViewList;
     }
-    
+
     public Boolean getIsSales() {
         return isSales;
     }
-    
+
     public void setIsSales(Boolean isSales) {
         this.isSales = isSales;
     }
@@ -681,7 +778,7 @@ public class SalesOfItemsBySupplierNewMB extends BaseInventoryReportBean {
      * @return the sumTotalNew
      */
     public BigDecimal getSumTotalNew() {
-        if(sumTotalNew == null){
+        if (sumTotalNew == null) {
             sumTotalNew = BigDecimal.ZERO;
         }
         return sumTotalNew;
@@ -694,16 +791,133 @@ public class SalesOfItemsBySupplierNewMB extends BaseInventoryReportBean {
         this.sumTotalNew = sumTotalNew;
     }
 
-    /*
-     public Boolean getChart() {
-     return chart;
-     }
-
-
-     public void setChart(Boolean chart) {
-     this.chart = chart;
-     }*/
     /**
-     * @return the invoiceType
+     * @return the totalThobeNumberNew
      */
+    public BigDecimal getTotalThobeNumberNew() {
+        return totalThobeNumberNew;
+    }
+
+    /**
+     * @param totalThobeNumberNew the totalThobeNumberNew to set
+     */
+    public void setTotalThobeNumberNew(BigDecimal totalThobeNumberNew) {
+        this.totalThobeNumberNew = totalThobeNumberNew;
+    }
+
+    /**
+     * @return the totalQuantityNew
+     */
+    public BigDecimal getTotalQuantityNew() {
+        return totalQuantityNew;
+    }
+
+    /**
+     * @param totalQuantityNew the totalQuantityNew to set
+     */
+    public void setTotalQuantityNew(BigDecimal totalQuantityNew) {
+        this.totalQuantityNew = totalQuantityNew;
+    }
+
+    /**
+     * @return the totalFashNew
+     */
+    public BigDecimal getTotalFashNew() {
+        return totalFashNew;
+    }
+
+    /**
+     * @param totalFashNew the totalFashNew to set
+     */
+    public void setTotalFashNew(BigDecimal totalFashNew) {
+        this.totalFashNew = totalFashNew;
+    }
+
+    /**
+     * @return the totalFashCostNew
+     */
+    public BigDecimal getTotalFashCostNew() {
+        return totalFashCostNew;
+    }
+
+    /**
+     * @param totalFashCostNew the totalFashCostNew to set
+     */
+    public void setTotalFashCostNew(BigDecimal totalFashCostNew) {
+        this.totalFashCostNew = totalFashCostNew;
+    }
+
+    /**
+     * @return the totalQuantityWithFashNew
+     */
+    public BigDecimal getTotalQuantityWithFashNew() {
+        return totalQuantityWithFashNew;
+    }
+
+    /**
+     * @param totalQuantityWithFashNew the totalQuantityWithFashNew to set
+     */
+    public void setTotalQuantityWithFashNew(BigDecimal totalQuantityWithFashNew) {
+        this.totalQuantityWithFashNew = totalQuantityWithFashNew;
+    }
+
+    /**
+     * @return the totalcostAvarageNew
+     */
+    public BigDecimal getTotalcostAvarageNew() {
+        return totalcostAvarageNew;
+    }
+
+    /**
+     * @param totalcostAvarageNew the totalcostAvarageNew to set
+     */
+    public void setTotalcostAvarageNew(BigDecimal totalcostAvarageNew) {
+        this.totalcostAvarageNew = totalcostAvarageNew;
+    }
+
+    /**
+     * @return the totalDiscountNew
+     */
+    public BigDecimal getTotalDiscountNew() {
+        return totalDiscountNew;
+    }
+
+    /**
+     * @param totalDiscountNew the totalDiscountNew to set
+     */
+    public void setTotalDiscountNew(BigDecimal totalDiscountNew) {
+        this.totalDiscountNew = totalDiscountNew;
+    }
+
+    /**
+     * @return the groupDTOList
+     */
+    public List<ProGroupDTO> getGroupDTOList() {
+        if (groupDTOList == null || groupDTOList.isEmpty()) {
+            groupDTOList = proGroupService.getallProGroupByBranchIdDTO(getUserData().getUser());
+            setProGroupDTOConverter(new ProGroupDTOConverter(groupDTOList));
+        }
+        return groupDTOList;
+    }
+
+    /**
+     * @param groupDTOList the groupDTOList to set
+     */
+    public void setGroupDTOList(List<ProGroupDTO> groupDTOList) {
+        this.groupDTOList = groupDTOList;
+    }
+
+    /**
+     * @return the proGroupDTOConverter
+     */
+    public ProGroupDTOConverter getProGroupDTOConverter() {
+        return proGroupDTOConverter;
+    }
+
+    /**
+     * @param proGroupDTOConverter the proGroupDTOConverter to set
+     */
+    public void setProGroupDTOConverter(ProGroupDTOConverter proGroupDTOConverter) {
+        this.proGroupDTOConverter = proGroupDTOConverter;
+    }
 }

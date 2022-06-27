@@ -705,7 +705,7 @@ public class InvDialogueServiceImpl implements InvDialogueService {
     }
 
     public InvInvoiceDTO loadInvStrip(InvInvoiceDTO dTO, Integer type) {
-        List<InvDetailDTO> dTODetail = invUpdateDetailService.getAllInvUpdatesDetailFromInvTransferDetail(dTO.getSeialsInvoices(), dTO.getBranchId(), dTO.getInvInventoryId().getId());
+        List<InvDetailDTO> dTODetail = invUpdateDetailService.getAllInvUpdatesDetailFromInvTransferDetail(dTO.getSeialsInvoices(), dTO.getBranchId(), dTO.getInvInventoryId().getId(),dTO.getDate(),true);
         dTO.setInvPurchaseInvoiceDetailList(dTODetail);
         return dTO;
     }

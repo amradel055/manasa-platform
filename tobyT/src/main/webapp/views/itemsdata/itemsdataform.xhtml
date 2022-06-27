@@ -127,7 +127,7 @@
                             <p:outputLabel style="width:70px" value=" سعر إضافى رجالى"/>
                         </div>
                     </div>
-                    
+
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
                             <p:selectOneMenu value="#{itemDataFormMB.itemDataEntity.isOfferItem}" >
@@ -335,36 +335,20 @@
                     </div>
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
-                            <p:selectOneMenu value="#{itemDataFormMB.itemDataEntity.typeItem}" >
+                            <p:selectOneMenu value="#{itemDataFormMB.itemDataEntity.typeItem}" 
+                                             >
                                 <f:selectItem itemLabel="اختر" itemValue="" />
                                 <f:selectItems value="#{itemDataFormMB.invItemType}"  
                                                var="InvItemType" 
                                                itemLabel="#{InvItemType.name}"
-                                               itemValue="#{InvItemType}"/>
+                                               itemValue="#{InvItemType.id}"/>
                             </p:selectOneMenu>
                         </div>     
                         <div class="ui-g-6 ui-xl-6">
                             <p:outputLabel style="width:70px" value="  نوع التوب"/>
                         </div>
                     </div>
-                    
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:autoComplete style="width:40%" 
-                                            dropdown="true"
-                                            converter="#{itemDataFormMB.proGroupDTOConverter}"
-                                            value="#{itemDataFormMB.itemDataEntity.proGroupId}"
-                                            var="group"
-                                            itemLabel="#{group}" 
-                                            itemValue="#{group}" 
-                                            forceSelection="true" 
-                                            completeMethod="#{itemDataFormMB.completeproGroups}" >
-                            </p:autoComplete>
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:outputLabel style="width: 75px;" value="#{userData.userDDs['GROUP']}"/>
-                        </div>
-                    </div>
+
                 </div>
                 <!--First Segment-->
                 <h:panelGrid id="firstSegment" columns="2"  class="col-md-12" cellspacing="20" cellpadding="0" style="margin-top:15px" >
@@ -372,12 +356,27 @@
                 </h:panelGrid>
                 <p:commandButton    value="حفظ" 
                                     action="#{itemDataFormMB.saveItem()}" />
+                <p:commandButton  class="newButtons" 
+                                  id="newN"
+                                  ajax="false"
+
+                                  value="#{userData.userDDs['NEW']}" 
+                                  onclick="form.target = ''" 
+                                  actionListener="#{itemDataFormMB.reset()}"/>
+                <p:commandButton  class="printButtons"
+                                  ajax="false"
+                                  onclick="form.target = '_blank'"  
+                                  title="#{userData.userDDs['PRINT']}"
+                                  value="#{userData.userDDs['PRINT']}" 
+                                  actionListener="#{itemDataFormMB.print}"/>
                 <p:commandButton   title="بحث" 
                                    class="sreloadButtons" style="background-color:rgb(162, 46, 247);border-radius: 3px;margin-bottom:3px"
 
                                    onclick="PF('dlg4').show();"
                                    icon="fa fa-fw fa-search-plus" >
                 </p:commandButton>
+
+
             </p:fieldset>   
 
             <div class="ui-g-6 ui-xl-6" >

@@ -175,6 +175,10 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     
 
     private List<GlPayDTO> glPayDTOList ; 
+    
+    ////   accountin ////   
+    
+    private Integer account;
 
     public InvInvoiceDTO() {
     }
@@ -1941,6 +1945,20 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setGallaryDeliveryShow(Integer gallaryDeliveryShow) {
         this.gallaryDeliveryShow = gallaryDeliveryShow;
+    }
+
+    /**
+     * @return the account
+     */
+    public Integer getAccount() {
+        return account;
+    }
+
+    /**
+     * @param account the account to set
+     */
+    public void setAccount(Integer account) {
+        this.account = account;
     }
 
 }

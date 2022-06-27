@@ -353,7 +353,7 @@ public class InvOpeningBalanceItemDetailServiceImpl implements InvOpeningBalance
                         entity.getUnitId().getId(), entity.getUnitId().getSerial(), entity.getUnitId().getName(),
                         entity.getItemId().getIsInventoryItem(),
                         null, null, null, entity.getItemId(),
-                        invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), null,BigDecimal.ZERO);        
+                        invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), null,BigDecimal.ZERO,null);        
         dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
         return dTO;
     }

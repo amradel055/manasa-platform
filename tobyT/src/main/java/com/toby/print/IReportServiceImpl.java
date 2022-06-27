@@ -18,7 +18,6 @@ import com.toby.toby.UserData;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -114,7 +113,6 @@ public class IReportServiceImpl implements IReportService {
                     fillReport(prepareInvSalesReport(invPurchaseInvoiceDTO, userData), userData.getReportPath() + "InvReceiptCash.jasper", invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailList(), "pdf");
                 }
             } else if (ScreenNameClassEnum.PROWORKORDER.equals(invPurchaseInvoiceDTO.getScreenName())) {
-
                 fillReport(prepareProWorkOrderReport(invPurchaseInvoiceDTO, userData), userData.getReportPath() + "salesReceiptCash1.jasper", invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailList(), "pdf");
             } else if (ScreenNameClassEnum.INVRETURNPURCHASEFORM.equals(invPurchaseInvoiceDTO.getScreenName())) {
                 fillReport(prepareReturnPurchaseReport(invPurchaseInvoiceDTO, userData), userData.getReportPath() + "ReturnPurchaseReport.jasper", invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailList(), "pdf");

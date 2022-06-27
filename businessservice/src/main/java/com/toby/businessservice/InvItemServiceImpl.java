@@ -465,6 +465,13 @@ public class InvItemServiceImpl implements InvItemService {
     public synchronized InvItem updateInvItem(InvItem invItem) {
         return dao.updateEntity(invItem);
     }
+    
+    @Override
+    public synchronized void updateLastCostInvItem(Integer invItem,BigDecimal lastCost) {
+       InvItem item = dao.findEntityById(InvItem.class, invItem);
+       item.setLastCost(lastCost);
+        dao.updateEntity(item);
+    }
 
     @Override
     public InvItem updateInvItemWebSite(InvItem invItem) {

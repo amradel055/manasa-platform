@@ -115,6 +115,9 @@ public class InvPurchaseInvoiceDetail extends BaseEntity {
     @Column(name = "proof")
     private Integer proof;
     
+    @Column(name = "account_id")
+    private Integer accountId;
+    
     
     public InvPurchaseInvoiceDetail() {
     }
@@ -345,6 +348,9 @@ public class InvPurchaseInvoiceDetail extends BaseEntity {
      * @return the costAvarage
      */
     public BigDecimal getCostAvarage() {
+        if(costAvarage == null){
+            costAvarage = BigDecimal.ZERO;
+        }
         return costAvarage;
     }
 
@@ -513,6 +519,20 @@ public class InvPurchaseInvoiceDetail extends BaseEntity {
      */
     public void setDiscountValue(BigDecimal discountValue) {
         this.discountValue = discountValue;
+    }
+
+    /**
+     * @return the accountId
+     */
+    public Integer getAccountId() {
+        return accountId;
+    }
+
+    /**
+     * @param accountId the accountId to set
+     */
+    public void setAccountId(Integer accountId) {
+        this.accountId = accountId;
     }
 
 }

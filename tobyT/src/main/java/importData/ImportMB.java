@@ -55,6 +55,7 @@ import com.toby.entity.Currency;
 import com.toby.entity.GeneralJournal;
 import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlAccount;
+import com.toby.entity.GlBankTransactionDetail;
 import com.toby.entity.GlYear;
 import com.toby.entity.InvInventory;
 import com.toby.entity.InvItem;
@@ -281,12 +282,24 @@ public class ImportMB extends Basic implements Serializable {
         tarhilInvoiceOne();
         tarhilExitOne();
     }
-    
+
     public void tarhilAllInvoice() {
         try {
             invPurchaseInvoiceService_1.tarhilExcel(getUserData().getUser());
         } catch (CloneNotSupportedException ex) {
             Logger.getLogger(ImportMB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void tarhilAllGLbankTransaction() {
+        List<GeneralJournalDTO> list = bankTransactionDetailsService.tarhilOneNotTarhil(getUserData().getUser(), 1);
+        Integer serial = generaljournalServiceDTO.findMaxSerial();
+        if (serial == null) {
+            serial = 100001;
+        }
+        for (GeneralJournalDTO dto : list) {
+            ++serial;
+            generaljournalServiceDTO.addGeneralJournalDTOWithDetail(dto, getUserData().getUser(), serial);
         }
     }
 
@@ -485,7 +498,7 @@ public class ImportMB extends Basic implements Serializable {
                 InvInventoryDTO inventory = invInventoryService.findInventory(Integer.valueOf(gallaryID.getContents()));
                 InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
                 invInventoryDTO.setId(Integer.valueOf(gallaryID.getContents()));
-                siteDTO.setGallaryIdDTO(invInventoryDTO); 
+                siteDTO.setGallaryIdDTO(invInventoryDTO);
                 InvOrganizationSiteDTO customer = organizationSiteService.addNewCustomer(siteDTO, new ArrayList<InvOrganizationSiteDTO>(), getUserData().getUser(), inventory.getCustomerAccount().getId());
                 invoiceDTO.setOrganizationSiteId(customer);
 

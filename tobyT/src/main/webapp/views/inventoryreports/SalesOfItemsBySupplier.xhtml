@@ -12,10 +12,6 @@
 
         <f:event listener="#{userData.authorize}" type="preRenderView" />
 
-
-
-
-
         <h:form  id="form" dir="#{userData.dir}"  style="margin-right: 20px">
 
             <p:fieldset    style=" position: relative;margin-bottom: 10px"   legend="  #{userData.userDDs['ITEM_SALE_SUPP']}"> 
@@ -27,45 +23,24 @@
 
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:autoComplete style="width:75%!important"
-                                                    dropdown="true"
-                                                    converter="#{salesOfItemsBySupplierNewMB.invOrgSiteSupplierConverter}"
-                                                    value="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.fromorganizationName}"
-                                                    var="organization"
-                                                    itemLabel="#{organization}" 
-                                                    itemValue="#{organization}"
-                                                    forceSelection="true" 
-                                                    completeMethod="#{salesOfItemsBySupplierNewMB.completOrgSiteAsSupplier}"
 
-                                                    >
-
-                                    </p:autoComplete>
+                                    <p:selectCheckboxMenu id="organization" value="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.organizationSiteList }" 
+                                                          converter="#{salesOfItemsBySupplierNewMB.invOrgSiteSupplierConverter}"
+                                                          label="اختر مورد" style="width: 15rem"
+                                                          filter="true" filterMatchMode="startsWith" panelStyle="width: 15rem" scrollHeight="250">
+                                        <f:selectItems value="#{salesOfItemsBySupplierNewMB.organizationSiteRootList}" 
+                                                       var="organization"
+                                                       itemLabel="#{organization}" 
+                                                       itemValue="#{organization}"/>
+                                    </p:selectCheckboxMenu>
                                 </div>
+
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_SUPPLIER']}"/>
 
                                 </div>
                             </div>
-                            <div class="ui-g-12 ui-xl-12">
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:autoComplete style="width:75%!important" 
 
-                                                    dropdown="true"
-
-                                                    converter="#{salesOfItemsBySupplierNewMB.invOrgSiteSupplierConverter}"
-                                                    value="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.toorganizationName}"
-                                                    var="organization"
-                                                    itemLabel="#{organization}" 
-                                                    itemValue="#{organization}"
-                                                    forceSelection="true" 
-                                                    completeMethod="#{salesOfItemsBySupplierNewMB.completOrgSiteAsSupplier}" >
-                                    </p:autoComplete>
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_SUPPLIER']}"/>
-
-                                </div>
-                            </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:calendar pattern="dd/MM/yyyy" 
@@ -94,180 +69,51 @@
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:autoComplete id="purchaseIdFrom"
-                                                    style="width:75%!important " 
-                                                    dropdown="true"
-
-                                                    converter="#{salesOfItemsBySupplierNewMB.invInvoiceSalesConverter}"
-                                                    value="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.salesInvoiceFrom}"
-
-                                                    var="purchasePerson"
-                                                    itemLabel="#{purchasePerson}" 
-                                                    itemValue="#{purchasePerson}" 
-                                                    forceSelection="true" 
-                                                    completeMethod="#{salesOfItemsBySupplierNewMB.completeSalesInvoice}">
-                                    </p:autoComplete>
+                                    <p:selectCheckboxMenu id="proGroup" value="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.groupDTOSelected}" 
+                                                          converter="#{salesOfItemsBySupplierNewMB.proGroupDTOConverter}"
+                                                          label="الفئة" style="width: 15rem"
+                                                          filter="true" filterMatchMode="startsWith" panelStyle="width: 15rem" scrollHeight="250">
+                                        <f:selectItems value="#{salesOfItemsBySupplierNewMB.groupDTOList}" 
+                                                       var="proGroup"
+                                                       itemLabel="#{proGroup}"
+                                                       itemValue="#{proGroup}"/>
+                                    </p:selectCheckboxMenu>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_INVOI_NO']}"/>
-
+                                    <p:outputLabel style="width: 50px;margin-right: 1%" value="الفئة"/>
                                 </div>
                             </div>
-                            <div class="ui-g-12 ui-xl-12">
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:autoComplete id="purchaseIdTo"
-                                                    style="width:75%!important " 
-                                                    dropdown="true"
-
-                                                    converter="#{salesOfItemsBySupplierNewMB.invInvoiceSalesConverter}"
-                                                    value="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.salesInvoiceTo}"
-
-                                                    var="purchasePerson"
-                                                    itemLabel="#{purchasePerson}" 
-                                                    itemValue="#{purchasePerson}" 
-                                                    forceSelection="true" 
-                                                    completeMethod="#{salesOfItemsBySupplierNewMB.completeSalesInvoice}">
-                                    </p:autoComplete>
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_INVOI_NO']}"/>
-
-                                </div>
-                            </div>
-                            
-                              <div class="ui-g-12 ui-xl-12">
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:selectOneMenu style="width: 100%" id="invoiceType1" 
-                                                 value="#{salesOfItemsBySupplierNewMB.invoiceType}">                                                             
-                                    <f:selectItem itemLabel="Sales مبيعات"  itemValue=""  />
-                                    <f:selectItem itemLabel="منيكانات الفروع"  itemValue="0"  />
-                                    <f:selectItem itemLabel="منيكانات القماشين"  itemValue="1"  />
-                                    <f:selectItem itemLabel="Relations علاقات عامة"  itemValue="2"  />
-                                    <f:selectItem itemLabel="تفصيل القماشين"  itemValue="3"  />
-                                    <f:selectItem itemLabel="Employees موظفى الفروع"  itemValue="4"  />
-                                    <f:selectItem itemLabel="Modify تعديلات"  itemValue="5"  />
-                                    <f:selectItem itemLabel="Others أخرى"  itemValue="6"  />
-                                </p:selectOneMenu>      
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 70px;" value="نوع الفاتورة"/>
-                            </div>
-                        </div>
 
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:autoComplete style="width:75%!important"
-                                                    dropdown="true"
-                                                    converter="#{salesOfItemsBySupplierNewMB.itemDTOFromConverter}"
-                                                    value="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.fromItemName}"
-                                                    var="item"
-                                                    itemLabel="#{item}" 
-                                                    itemValue="#{item}"
-                                                    forceSelection="true" 
-                                                    completeMethod="#{salesOfItemsBySupplierNewMB.completInvItemDTOFrom}"   >
-
-                                    </p:autoComplete>
+                                    <p:selectOneMenu style="width: 100%" id="invoiceType1" 
+                                                     value="#{salesOfItemsBySupplierNewMB.invoiceType}">   
+                                         <f:selectItem itemLabel="الكل"  itemValue="-1"  />
+                                        <f:selectItem itemLabel="Sales مبيعات"  itemValue=""  />
+                                        <f:selectItem itemLabel="منيكانات الفروع"  itemValue="0"  />
+                                        <f:selectItem itemLabel="منيكانات القماشين"  itemValue="1"  />
+                                        <f:selectItem itemLabel="Relations علاقات عامة"  itemValue="2"  />
+                                        <f:selectItem itemLabel="تفصيل القماشين"  itemValue="3"  />
+                                        <f:selectItem itemLabel="Employees موظفى الفروع"  itemValue="4"  />
+                                        <f:selectItem itemLabel="Modify تعديلات"  itemValue="5"  />
+                                        <f:selectItem itemLabel="Others أخرى"  itemValue="6"  />
+                                    </p:selectOneMenu>      
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_ITEM']}"/>
-
+                                    <p:outputLabel style="width: 70px;" value="نوع الفاتورة"/>
                                 </div>
                             </div>
-                            <div class="ui-g-12 ui-xl-12">
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:autoComplete style="width:75%!important" 
 
-                                                    dropdown="true"
 
-                                                    converter="#{salesOfItemsBySupplierNewMB.itemDTOToConverter}"
-                                                    value="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.toItemName}"
-                                                    var="item"
-                                                    itemLabel="#{item}" 
-                                                    itemValue="#{item}"
-                                                    forceSelection="true" 
-                                                    completeMethod="#{salesOfItemsBySupplierNewMB.completInvItemDTOTo}" >
-                                    </p:autoComplete>
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_ITEM']}"/>
 
-                                </div>
-                            </div>
+
                         </div>
 
                         <div class="ui-g-6 ui-xl-6">
 
-                            <div class="ui-g-12 ui-xl-12">
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:autoComplete style="width:75%!important"
-                                                    dropdown="true"
-                                                    converter="#{salesOfItemsBySupplierNewMB.invInventoryConverter}"
-                                                    value="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.fromInventoryName}"
-                                                    var="inventory"
-                                                    itemLabel="#{inventory}" 
-                                                    itemValue="#{inventory}"
-                                                    forceSelection="true" 
-                                                    completeMethod="#{salesOfItemsBySupplierNewMB.completeInventory}"
-                                                    >
 
-                                    </p:autoComplete>
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_REPOS_NO']}"/>
 
-                                </div>
-                            </div>
-                            <div class="ui-g-12 ui-xl-12">
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:autoComplete style="width:75%!important" 
 
-                                                    dropdown="true"
-                                                    converter="#{salesOfItemsBySupplierNewMB.invInventoryConverter}"
-                                                    value="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.toInventoryName}"
-                                                    var="inventory"
-                                                    itemLabel="#{inventory}" 
-                                                    itemValue="#{inventory}"
-                                                    forceSelection="true" 
-                                                    completeMethod="#{salesOfItemsBySupplierNewMB.completeInventory}">
-                                    </p:autoComplete>
-
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_REPOS_NO']}"/>
-
-                                </div>
-                            </div>
-                            <div class="ui-g-12 ui-xl-12">
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:selectOneMenu style="width:56%!important "
-                                                     id="invoiceTypeFrom" 
-                                                     value ="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.frompaymentType}">                                                             
-                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"/>
-                                        <f:selectItem itemLabel="#{userData.userDDs['CASH']}"  itemValue="0"  />                            
-                                        <f:selectItem itemLabel="#{userData.userDDs['POSTPONE']}" itemValue="1" />
-                                        <f:selectItem itemLabel="#{userData.userDDs['DECOM_CREDIT']}" itemValue="2" />
-                                    </p:selectOneMenu>    
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_INVOI_TYP']}"/>
-
-                                </div>
-                            </div>
-                            <div class="ui-g-12 ui-xl-12">
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:selectOneMenu style="width:56%!important " id="invoiceTypeTo" 
-                                                     value ="#{salesOfItemsBySupplierNewMB.purchaseOfItemsBySuppliersSearchBean.topaymentType}">    
-                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"/>
-                                        <f:selectItem itemLabel="#{userData.userDDs['CASH']}"  itemValue="0"  />                            
-                                        <f:selectItem itemLabel="#{userData.userDDs['POSTPONE']}" itemValue="1" />
-                                        <f:selectItem itemLabel="#{userData.userDDs['DECOM_CREDIT']}" itemValue="2" />
-                                    </p:selectOneMenu>  
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_INVOI_TYP']}"/>
-
-                                </div>
-                            </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
 
@@ -409,24 +255,13 @@
                     </f:facet>
 
 
-                    <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh" headerText="#{userData.userDDs['INVOICE_NO']}" 
-
-                                filterBy="#{itemSalesReportTable.serial}" 
-                                filterMatchMode="contains" 
-                                sortBy="#{itemSalesReportTable.serial}"
-                                filterable="false">
-
+                    <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh" headerText="#{userData.userDDs['INVOICE_NO']}" >
                         <p:outputLabel value="#{itemSalesReportTable.serial}" />
                     </p:column>
 
 
                     <p:column style="width: 12vh;text-align: right;font-size: 1.8vh" 
-                              headerText="#{userData.userDDs['INVOICE_DATE']}"
-
-                              filterBy="#{itemSalesReportTable.date}" 
-                              filterMatchMode="contains" 
-                              sortBy="#{itemSalesReportTable.date}"
-                              filterable="false">
+                              headerText="#{userData.userDDs['INVOICE_DATE']}">
 
                         <p:outputLabel value="#{itemSalesReportTable.date}">
                             <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
@@ -434,90 +269,83 @@
                     </p:column>
 
                     <p:column style="width: 12vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
-                              headerText="#{userData.userDDs['ITEM_NUMBER']}"
-
-                              filterBy="#{itemSalesReportTable.itemBarcode}" 
-                              filterMatchMode="contains" 
-                              sortBy="#{itemSalesReportTable.itemBarcode}"
-                              filterable="false">
+                              headerText="#{userData.userDDs['ITEM_NUMBER']}">
 
                         <p:outputLabel value="#{itemSalesReportTable.itemBarcode}" />
                     </p:column>
 
                     <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
-                              headerText="#{userData.userDDs['ITEM_NAME']}" 
-
-                              filterBy="#{itemSalesReportTable.itemName}" 
-                              filterMatchMode="contains" 
-                              sortBy="#{itemSalesReportTable.itemName}"
-                              filterable="false">
+                              headerText="#{userData.userDDs['ITEM_NAME']}">
 
                         <p:outputLabel value="#{itemSalesReportTable.itemName}" />
                     </p:column>
-
                     <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
-                              headerText="#{userData.userDDs['UNIT']}" 
+                              headerText="عدد الثياب" >
 
-                              filterBy="#{itemSalesReportTable.detailUnitName}" 
-                              filterMatchMode="contains" 
-                              sortBy="#{itemSalesReportTable.detailUnitName}"
-                              filterable="false">
-
-                        <p:outputLabel value="#{itemSalesReportTable.detailUnitName}" >
-
-                        </p:outputLabel>
-                    </p:column>  
-
+                        <p:outputLabel value="#{itemSalesReportTable.numberThobe}" />
+                    </p:column>
                     <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
-                              headerText="#{userData.userDDs['QUANTITY']}"
+                              headerText="عدد أمتار الثوب الواحد " >
 
-                              filterBy="#{itemSalesReportTable.detailItemQuantity}" 
-                              filterMatchMode="contains" 
-                              sortBy="#{itemSalesReportTable.detailItemQuantity}"
-                              filterable="false">
-
-                        <p:outputLabel value="#{itemSalesReportTable.detailItemQuantity}" >
-                        </p:outputLabel>                           
+                        <p:outputLabel value="#{itemSalesReportTable.quantityOfOneUnit}" />
                     </p:column>
 
-                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh"  headerText="#{userData.userDDs['UNIT_PRICE']}"
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="إجمالى عدد الأمتار " >
 
-                              filterBy="#{itemSalesReportTable.cost}" 
-                              filterMatchMode="contains" 
-                              sortBy="#{itemSalesReportTable.cost}"
-                              filterable="false">
+                        <p:outputLabel value="#{itemSalesReportTable.itemQuantity}" />
+                    </p:column> 
 
-                        <p:outputLabel value="#{itemSalesReportTable.cost}" />
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText=" تكلفة المتر" >
 
-                    </p:column>
+                        <p:outputLabel value="#{itemSalesReportTable.costAvarage}" />
+                    </p:column> 
 
-                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh"  headerText="#{userData.userDDs['DISCOUNT']}"
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText=" كمية الفسح" >
 
+                        <p:outputLabel value="#{itemSalesReportTable.fash}" />
+                    </p:column> 
 
-                              filterBy="#{itemSalesReportTable.discount}" 
-                              filterMatchMode="contains" 
-                              sortBy="#{itemSalesReportTable.discount}"
-                              filterable="false">
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="تكلفة الفسح" >
+
+                        <p:outputLabel value="#{itemSalesReportTable.costAvarageFashTotal}" />
+                    </p:column> 
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="إجمالى الكمية المباعة " >
+                        <p:outputLabel value="#{itemSalesReportTable.totalQuantity}" />
+                    </p:column> 
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText=" إجمالى تكلفة الشراء" >
+
+                        <p:outputLabel value="#{itemSalesReportTable.totalcostAvarage}" />
+
+                    </p:column> 
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh"  headerText="#{userData.userDDs['DISCOUNT']}">
 
                         <p:outputLabel value="#{itemSalesReportTable.discount}" />
 
                     </p:column>
 
-                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh"  headerText="#{userData.userDDs['TOTAL']}"
-
-                              filterBy="#{itemSalesReportTable.net}" 
-                              filterMatchMode="contains" 
-                              sortBy="#{itemSalesReportTable.net}"
-                              filterable="false">
-
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh"  headerText="#{userData.userDDs['TOTAL']}">
                         <p:outputLabel value="#{itemSalesReportTable.net}" />
                     </p:column> 
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh"  headerText="المورد">
+                        <p:outputLabel value="#{itemSalesReportTable.supplierName}" />
+                    </p:column> 
+
                     <p:columnGroup type="footer">
                         <p:row>
-                            <p:column colspan="9"  footerText="#{userData.userDDs['TOTAL']}" /> 
+                            <p:column colspan="13"  footerText="#{userData.userDDs['TOTAL']}" /> 
                             <p:column  footerText="#{salesOfItemsBySupplierNewMB.sumTotalNew}" /> 
+                            <p:column colspan="1"  footerText="" /> 
                         </p:row>
-
                     </p:columnGroup>
 
                 </p:dataTable>
@@ -536,10 +364,8 @@
                              emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
                              id="itemSalesReportTable2"
                              rowStyleClass="#{not ( itemSalesReportTable2.groupName eq null) and salesOfItemsBySupplierNewMB.invItemSalesSearchBean.shortReport eq false ? 'colored' : null} ">
-                    
-                    <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh" headerText="#{userData.userDDs['INVOICE_NO']}" >
-                        <p:outputLabel value="#{itemSalesReportTable2.serial}" />
-                    </p:column>
+
+
 
                     <p:column style="width: 12vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
                               headerText="#{userData.userDDs['ITEM_NUMBER']}" >
@@ -549,29 +375,82 @@
                     <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
                               headerText="#{userData.userDDs['ITEM_NAME']}" >
                         <p:outputLabel value="#{itemSalesReportTable2.itemName}" />
-                    </p:column>
-
+                    </p:column> 
                     <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
-                              headerText="#{userData.userDDs['UNIT']}" >
-                        <p:outputLabel value="#{itemSalesReportTable2.itemUnitName}" >
-
-                        </p:outputLabel>
-                    </p:column>  
-                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
-                              headerText="#{userData.userDDs['QUANTITY']}">
-                        <p:outputLabel value="#{itemSalesReportTable2.itemQuantity}" >
+                              headerText="عدد الثياب">
+                        <p:outputLabel value="#{itemSalesReportTable2.numberThobe}" >
                         </p:outputLabel>                           
                     </p:column>
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="عدد أمتار الثوب الواحد " >
 
-                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh"  headerText="#{userData.userDDs['TOTAL']}" >
-                        <p:outputLabel value="#{itemSalesReportTable2.net}" />
+                        <p:outputLabel value="#{itemSalesReportTable2.quantityOfOneUnit}" />
                     </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="إجمالى عدد الأمتار " >
+
+                        <p:outputLabel value="#{itemSalesReportTable2.itemQuantity}" />
+                    </p:column> 
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText=" تكلفة المتر" >
+
+                        <p:outputLabel value="#{itemSalesReportTable2.costAvarage}" />
+                    </p:column> 
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText=" كمية الفسح" >
+
+                        <p:outputLabel value="#{itemSalesReportTable2.fash}" />
+                    </p:column> 
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="تكلفة الفسح" >
+
+                        <p:outputLabel value="#{itemSalesReportTable2.costAvarageFashTotal}" />
+                    </p:column> 
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="إجمالى الكمية المباعة " >
+                        <p:outputLabel value="#{itemSalesReportTable2.totalQuantity}" />
+                    </p:column> 
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText=" إجمالى تكلفة الشراء" >
+
+                        <p:outputLabel value="#{itemSalesReportTable2.totalcostAvarage}" />
+
+                    </p:column> 
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh"  headerText="#{userData.userDDs['DISCOUNT']}">
+
+                        <p:outputLabel value="#{itemSalesReportTable2.discount}" />
+
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh"  headerText="#{userData.userDDs['TOTAL']}">
+                        <p:outputLabel value="#{itemSalesReportTable2.net}" />
+                    </p:column> 
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh"  headerText="المورد">
+                        <p:outputLabel value="#{itemSalesReportTable2.supplierName}" />
+                    </p:column> 
                     <p:columnGroup type="footer">
                         <p:row>
-                            <p:column colspan="6"  footerText="#{userData.userDDs['TOTAL']}" /> 
+                            <p:column colspan="2"  footerText="#{userData.userDDs['TOTAL']}" /> 
+                            <p:column  footerText="#{salesOfItemsBySupplierNewMB.totalThobeNumberNew}" /> 
+                            <p:column colspan="1"  /> 
+                            <p:column  footerText="#{salesOfItemsBySupplierNewMB.totalQuantityNew}" /> 
+                            <p:column colspan="1"  /> 
+                            <p:column  footerText="#{salesOfItemsBySupplierNewMB.totalFashNew}" /> 
+                            <p:column  footerText="#{salesOfItemsBySupplierNewMB.totalFashCostNew}" /> 
+                            <p:column  footerText="#{salesOfItemsBySupplierNewMB.totalQuantityWithFashNew}" /> 
+                            <p:column  footerText="#{salesOfItemsBySupplierNewMB.totalcostAvarageNew}" /> 
+                            <p:column  footerText="#{salesOfItemsBySupplierNewMB.totalDiscountNew}" /> 
                             <p:column  footerText="#{salesOfItemsBySupplierNewMB.sumTotal}" /> 
+                            <p:column colspan="1"  footerText="" /> 
                         </p:row>
-
                     </p:columnGroup>
                 </p:dataTable>
 

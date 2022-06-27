@@ -9,7 +9,6 @@ import com.toby.businessservice.InvNoticeService;
 import com.toby.dto.InvNoticeDTO;
 import com.toby.entity.InvNotice;
 import com.toby.toby.BaseListBean;
-import com.toby.toby.UserData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -140,7 +139,7 @@ public class InvNoticeListMB extends BaseListBean {
             invNotice2.setId(invNoticeId);
 
             try {
-                invNoticeService.deleteInvNotice(invNotice2);
+                invNoticeService.deleteInvNoticeNew(invNotice2);
                 invNoticeEntityList.remove(invNoticeEntitySelected);
                 savedMeesage(getUserData(), userDDs.get("DELETED"));
             } catch (Exception e) {
