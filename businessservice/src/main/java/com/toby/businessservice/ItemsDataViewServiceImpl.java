@@ -1788,6 +1788,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             itemsDataView.setOperationType(((Long) line[44]).intValue());
             itemsDataView.setScreenCode(((Long) line[45]).intValue());
             itemsDataView.setItemSupplierId((Integer) line[46]);
+            itemsDataView.setGallaryName((String) line[47]);
 
             newList.add(itemsDataView);
         }
