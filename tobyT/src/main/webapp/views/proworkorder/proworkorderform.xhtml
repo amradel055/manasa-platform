@@ -890,7 +890,7 @@
                                                     completeMethod="#{autoComplete.completeItemsBarcodesDetailsViewName}" 
                                                     >
                                         <p:ajax update="invItemCodeIn proof2 proof QuantityT availableQuantityRowT  QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount  form:discounthala   form:totalWithTaxValue form:remain  form:taxvalue"
-                                                event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
+                                                event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItemsForProworkOrder(invPurchaseInvoiceDetailsValidate)}" />
                                     </p:autoComplete>            
                                 </p:column>
 
@@ -910,7 +910,7 @@
                                                     completeMethod="#{autoComplete.completeItemsBarcodesDetailsViewCode}" 
                                                     >
                                         <p:ajax update=" invItemNameIn proof2 proof QuantityT availableQuantityRowT  QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount  form:discounthala   form:totalWithTaxValue form:remain  form:taxvalue"
-                                                event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
+                                                event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItemsForProworkOrder(invPurchaseInvoiceDetailsTable)}" />
                                     </p:autoComplete>            
                                 </p:column>
 

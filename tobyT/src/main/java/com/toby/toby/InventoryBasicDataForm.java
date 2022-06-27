@@ -604,6 +604,18 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         }
     }
 
+    public Boolean validateItemsForProworkOrder(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
+        if (getInvInvoiceDTO().getOrganizationSiteId() != null
+                && getInvInvoiceDTO().getOrganizationSiteId().getShoulder() != null && getInvInvoiceDTO().getOrganizationSiteId().getShoulder().compareTo(BigDecimal.ZERO) == 1
+                && getInvInvoiceDTO().getOrganizationSiteId().getStep() != null && getInvInvoiceDTO().getOrganizationSiteId().getStep().compareTo(BigDecimal.ZERO) == 1
+                && getInvInvoiceDTO().getOrganizationSiteId().getLength() != null && getInvInvoiceDTO().getOrganizationSiteId().getLength().compareTo(BigDecimal.ZERO) == 1) {
+            return validateItems(invPurchaseInvoiceDetailsValidate);
+        } else {
+            errorMessage(" يجب استكمال بيانات العميل");
+        }
+        return true;
+    }
+
     public Boolean validateItems(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
         try {
             if (checkdetail(invPurchaseInvoiceDetailsValidate)) {
@@ -625,7 +637,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                     invPurchaseInvoiceDetailsValidate.setDiscount(invGlobalService.calcDiscount(invPurchaseInvoiceDetailsValidate, getInvInvoiceDTO().getOrganizationSiteId(), getInvInvoiceDTO().getScreenName()));
                     afterValidation(invPurchaseInvoiceDetailsValidate, true);
                 }
-                
+
             }
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "validateItems");
@@ -1533,9 +1545,9 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     }
 
     public void print() {
-        if(getInvInvoiceDTO().getOrganizationSiteId() != null && ( getInvInvoiceDTO().getOrganizationSiteId().getMobile() == null || getInvInvoiceDTO().getOrganizationSiteId().getMobile().isEmpty() ) && getOrganizationSiteIdNew() != null && getOrganizationSiteIdNew().getMobile() != null ){
+        if (getInvInvoiceDTO().getOrganizationSiteId() != null && (getInvInvoiceDTO().getOrganizationSiteId().getMobile() == null || getInvInvoiceDTO().getOrganizationSiteId().getMobile().isEmpty()) && getOrganizationSiteIdNew() != null && getOrganizationSiteIdNew().getMobile() != null) {
             getInvInvoiceDTO().getOrganizationSiteId().setMobile(getOrganizationSiteIdNew().getMobile());
-        }        
+        }
         iReportService.printReportInvoice(getInvInvoiceDTO(), getUserData());
     }
 
