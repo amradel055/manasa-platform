@@ -190,6 +190,8 @@ public class ItemsDataView implements Serializable {
     private BigDecimal totalQtyIn;
     @Transient
     private BigDecimal totalQtyOut;
+    @Transient
+    private String gallaryName;
 
     public ItemsDataView() {
     }
@@ -597,6 +599,20 @@ public class ItemsDataView implements Serializable {
      */
     public void setTotalQtyOut(BigDecimal totalQtyOut) {
         this.totalQtyOut = totalQtyOut;
+    }
+
+    /**
+     * @return the gallaryName
+     */
+    public String getGallaryName() {
+        return gallaryName;
+    }
+
+    /**
+     * @param gallaryName the gallaryName to set
+     */
+    public void setGallaryName(String gallaryName) {
+        this.gallaryName = gallaryName;
     }
    
 }
