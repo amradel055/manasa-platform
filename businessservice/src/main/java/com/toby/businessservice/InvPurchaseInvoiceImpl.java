@@ -107,7 +107,6 @@ public class InvPurchaseInvoiceImpl implements InvPurchaseInvoiceService {
 
     InvPurchaseReturnSave invPurchaseReturnSave;
 
-    @Override
     public List<InvPurchaseInvoice> findInvPurchaseInvoiceforCustomer(Integer customerId) {
         Map<String, Object> params = new HashMap<>();
 
@@ -1239,6 +1238,11 @@ public class InvPurchaseInvoiceImpl implements InvPurchaseInvoiceService {
         List<BigDecimal> itemsStores = dao.findListByQuery(sql.toString(), params);
 
         return (itemsStores != null && itemsStores.size() > 0) ? itemsStores.get(0) : null;
+    }
+
+    @Override
+    public List<InvPurchaseInvoice> findInvPurchaseInfvoiceforCustomer(Integer customerId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 

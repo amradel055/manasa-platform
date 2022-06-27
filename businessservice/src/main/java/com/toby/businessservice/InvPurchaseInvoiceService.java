@@ -24,7 +24,7 @@ import javax.ejb.Remote;
 @Remote
 public interface InvPurchaseInvoiceService {
 
-    public List<InvPurchaseInvoice> findInvPurchaseInvoiceforCustomer(Integer customerId);
+    public List<InvPurchaseInvoice> findInvPurchaseInfvoiceforCustomer(Integer customerId);
 
     public InvPurchaseInvoiceDTO1 addInvPurchaseInvoice(InvPurchaseInvoiceDTO1 invPurchaseInvoiceDTO, TobyUser tobyUser, List<InvInventoryDTO> inventoryDTOList);
 

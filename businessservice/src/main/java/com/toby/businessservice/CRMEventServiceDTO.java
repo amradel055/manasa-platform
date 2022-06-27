@@ -90,5 +90,6 @@ public interface CRMEventServiceDTO {
     public List<CrmEventDTO> findALLEventBank(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters, CrmEventDTO crmEventDTOSearch, Integer type, Integer taskType);
 
     public List<CrmEventDTO> findALLEventByCustomerId(Integer custumerId , Integer branchId);
-
+    
+   public List<CrmEventDTO> findALLEventByGalleryId(String GalleryIdList , Integer userId);
 }

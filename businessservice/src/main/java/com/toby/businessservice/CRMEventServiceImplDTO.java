@@ -537,6 +537,8 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy().getId());
         dTO.setCloseLeadStatus(Boolean.TRUE);
+        dTO.setGallaryId(entity.getGalleryId());
+
 
         return dTO;
     }
@@ -629,6 +631,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         entity.setEventType(dTO.getEventType());
         entity.setBranchId(tobyUser.getBranchId());
         entity.setCompanyId(tobyUser.getCompanyId());
+        entity.setGalleryId(dTO.getGallaryId());
         return entity;
     }
 
@@ -1289,13 +1292,21 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
     }
 
     @Override
-    public List<CrmEventDTO> findALLEventByCustomerId(Integer custumerId, Integer branchId) {
+      public List<CrmEventDTO> findALLEventByCustomerId(Integer custumerId, Integer branchId){
         Map<String, Object> params = new HashMap<>();
         params.put("custumerId", custumerId);
         params.put("branchId", branchId);
-
         List<CrmEvent> crmEventList = dao.findListByQuery("SELECT e FROM CrmEvent e WHERE e.customerId.id = :custumerId AND e.branchId.id = :branchId AND e.deletedBy is null", params);
         return mapToDTOList(crmEventList);
-    }
+        }
+    
+        @Override
+        public List<CrmEventDTO> findALLEventByGalleryId(String GalleryIdList , Integer userId){
+        Map<String, Object> params = new HashMap<>();
+//        params.put("galleryid", GalleryIdList);
+        params.put("userId", userId);
+        List<CrmEvent> crmEventList = dao.findListByQuery("SELECT e FROM CrmEvent e WHERE e.galleryId in( "+GalleryIdList +" ) And e.id not in ( Select n.eventId from UserNotifications n where n.userId = :userId ) AND e.deletedBy is null", params);
+        return mapToDTOList(crmEventList);
+        }
 
 }

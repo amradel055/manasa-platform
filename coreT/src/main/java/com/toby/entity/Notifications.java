@@ -5,6 +5,7 @@
  */
 package com.toby.entity;
 
+import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,9 +20,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author WIN7
  */
 @Entity
-@Table(name = "notifications")
+@Table(name = "user_notifications_number")
 @XmlRootElement
-public class Notifications  {
+public class Notifications implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)

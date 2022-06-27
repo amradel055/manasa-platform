@@ -115,6 +115,8 @@ public class CrmEvent extends BaseEntity {
     private Boolean closeNotification;
     @Column(name = "close_event")
     private Boolean closeEvent;
+       @Column(name = "gallery_id")
+    private Integer galleryId;
      
     public CrmEvent() {
     }
@@ -574,6 +576,20 @@ public class CrmEvent extends BaseEntity {
      */
     public void setCloseEvent(Boolean closeEvent) {
         this.closeEvent = closeEvent;
+    }
+
+    /**
+     * @return the galleryId
+     */
+    public Integer getGalleryId() {
+        return galleryId;
+    }
+
+    /**
+     * @param galleryId the galleryId to set
+     */
+    public void setGalleryId(Integer galleryId) {
+        this.galleryId = galleryId;
     }
     
 }

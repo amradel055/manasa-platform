@@ -59,6 +59,7 @@ public class CrmEventDTO extends BaseEntityDTO {
     private Boolean notificationOldTime;
     private Boolean closeEvent;
     private Boolean closeLeadStatus;
+    private Integer gallaryId;
 
     public CrmEventDTO() {
     }
@@ -684,6 +685,20 @@ public class CrmEventDTO extends BaseEntityDTO {
      */
     public void setCloseLeadStatus(Boolean closeLeadStatus) {
         this.closeLeadStatus = closeLeadStatus;
+    }
+
+    /**
+     * @return the gallaryId
+     */
+    public Integer getGallaryId() {
+        return gallaryId;
+    }
+
+    /**
+     * @param gallaryId the gallaryId to set
+     */
+    public void setGallaryId(Integer gallaryId) {
+        this.gallaryId = gallaryId;
     }
 
 }

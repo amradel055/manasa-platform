@@ -210,6 +210,28 @@
 
                         <p:outputLabel value="#{itemCardTable.transType}" />
                     </p:column>
+                    
+                      <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              headerText="اسم المعرض "     
+
+                              filterBy="#{itemCardTable.gallaryName}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{itemCardTable.gallaryName}"
+                              filterable="false">
+
+                          <p:outputLabel value="#{itemCardTable.gallaryName}" />
+                    </p:column>
+                    
+                          <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              headerText="حالة الفاتورة "     
+
+                              filterBy="#{itemCardTable.invoiceStatus}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{itemCardTable.invoiceStatus}"
+                              filterable="false">
+
+                          <p:outputLabel value="#{itemCardTable.invoiceStatus}" />
+                    </p:column>
 
                     <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
                               headerText="#{userData.userDDs['DEPOSITORY']}"  

@@ -5,7 +5,8 @@
  */
 package com.toby.businessservice;
 
-
+import com.toby.dto.CrmEventDTO;
+import java.util.List;
 import javax.ejb.Remote;
 
 /**
@@ -15,6 +16,9 @@ import javax.ejb.Remote;
 @Remote
 public interface NotificationsService {
 
- public Integer updateNotifications(Integer userId , Integer eventId);
- public Integer getUserUnreadNotificationsNumber(Integer userId);
+    public Integer updateNotifications(Integer userId, Integer eventId);
+
+    public List<CrmEventDTO> getUserUnreadNotificationsNumber(Integer userId, String galleryList);
+
+    public Integer getUserUnreadNotificationsNumber(Integer userId);
 }

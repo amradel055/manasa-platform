@@ -8,6 +8,7 @@ package com.toby.toby;
 import com.toby.businessservice.TobyErrorService;
 import com.toby.businessservice.TobyUserBankService;
 import com.toby.businessservice.TobyUserInventoryService;
+import com.toby.businessservice.TobyUserInventoryServiceImpl;
 import com.toby.businessservice.TobyUserLoginService;
 import com.toby.common.FindClientData;
 import com.toby.common.SendEmailSMTP;
@@ -827,6 +828,9 @@ public class Basic implements Serializable {
      */
     public List<InvInventoryDTO> getGallaryLists() {
         if (gallaryLists == null || gallaryLists.isEmpty()) {
+            if(tobyUserInventoryService == null){
+                tobyUserInventoryService = new TobyUserInventoryServiceImpl();
+            }
             gallaryLists = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
             setGallaryDTOConverters(new InvInventoryDTOConverter(gallaryLists));
         }
@@ -859,7 +863,7 @@ public class Basic implements Serializable {
      */
     public List<InvInventoryDTO> getGallaryListSelected() {
         if (gallaryListSelected == null) {
-            gallaryListSelected = getGallaryLists();
+            gallaryListSelected = getUserData().getGallaryDTOList();
         }
         return gallaryListSelected;
     }

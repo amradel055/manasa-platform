@@ -31,8 +31,8 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
     @EJB
     private GenericDAO dao;
 
-    @EJB
-    TobyUserInventoryService tobyUserInventoryService;
+//    @EJB
+//    TobyUserInventoryService tobyUserInventoryService;
 
     @Override
     public List<InvInventory> getAllInventroisByUserAndBranch(Integer userId, Integer branchId, Integer type) {
@@ -54,7 +54,7 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
     @Override
     public List<InvInventory> getAllInventroisByUserAndBranchPer(Integer userId, Integer branchId) {
 
-        List<TobyUserInventory> tobyUserBankList = tobyUserInventoryService.getAllTobyUserInventroiesByUserAndBranch(userId, branchId);
+        List<TobyUserInventory> tobyUserBankList = getAllTobyUserInventroiesByUserAndBranch(userId, branchId);
 
         List<InvInventory> inventoryList = new ArrayList<>();
 
@@ -74,7 +74,7 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
     @Override
     public List<InvInventory> getAllInventroisByUserAndBranchPerByType(Integer userId, Integer branchId, Integer invType) {
 
-        List<TobyUserInventory> tobyUserBankList = tobyUserInventoryService.getAllTobyUserInventroiesByUserAndBranchByType(userId, branchId, invType);
+        List<TobyUserInventory> tobyUserBankList = getAllTobyUserInventroiesByUserAndBranchByType(userId, branchId, invType);
 
         List<InvInventory> inventoryList = new ArrayList<>();
 
@@ -96,8 +96,8 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
         Map<String, Object> params = new HashMap();
         params.put("branchId", branchId);
         params.put("userId", userId);
-
-        return dao.findListByQuery("SELECT e FROM TobyUserInventory e WHERE e.branchId.id = :branchId  AND e.userId.id = :userId AND e.invInventoryId.invType = 0 ", params);
+        List<TobyUserInventory> list = dao.findListByQuery("SELECT e FROM TobyUserInventory e WHERE e.branchId.id = :branchId  AND e.userId.id = :userId AND e.invInventoryId.invType = 0 ", params);
+        return list;
     }
 
     @Override
@@ -161,8 +161,8 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
         params.put("branchId", branchId);
         params.put("userId", userId);
         params.put("invType", 2);
-
-        return dao.findListByQuery("SELECT e FROM TobyUserInventory e WHERE (e.branchId.id = :branchId  AND e.userId.id = :userId AND e.invInventoryId.invType = :invType)", params);
+       List<TobyUserInventory> list =  dao.findListByQuery("SELECT e FROM TobyUserInventory e WHERE (e.branchId.id = :branchId  AND e.userId.id = :userId AND e.invInventoryId.invType = :invType)", params);
+        return list;
     }
 
     @Override
@@ -183,7 +183,7 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
     @Override
     public List<InvInventoryDTO> getAllInventroisByUserAndBranchPerDTO(Integer userId, Integer branchId) {
 
-        List<TobyUserInventory> tobyUserBankList = tobyUserInventoryService.getAllTobyUserInventroiesByUserAndBranch(userId, branchId);
+        List<TobyUserInventory> tobyUserBankList = getAllTobyUserInventroiesByUserAndBranch(userId, branchId);
 
         List<InvInventory> inventoryList = new ArrayList<>();
 

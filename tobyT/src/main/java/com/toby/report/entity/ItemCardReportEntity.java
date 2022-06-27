@@ -30,6 +30,8 @@ public class ItemCardReportEntity {
     private String groupName;
     private BigDecimal totalQtyin;
     private BigDecimal totalQtyout;
+    private String gallaryName;
+    private String invoiceStatus;
 
     private BigDecimal openingBalance;
 
@@ -185,5 +187,33 @@ public class ItemCardReportEntity {
      */
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    /**
+     * @return the gallaryName
+     */
+    public String getGallaryName() {
+        return gallaryName;
+    }
+
+    /**
+     * @param gallaryName the gallaryName to set
+     */
+    public void setGallaryName(String gallaryName) {
+        this.gallaryName = gallaryName;
+    }
+
+    /**
+     * @return the invoiceStatus
+     */
+    public String getInvoiceStatus() {
+        return invoiceStatus;
+    }
+
+    /**
+     * @param invoiceStatus the invoiceStatus to set
+     */
+    public void setInvoiceStatus(String invoiceStatus) {
+        this.invoiceStatus = invoiceStatus;
     }
 }
