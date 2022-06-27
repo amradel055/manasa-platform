@@ -1048,7 +1048,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
     }
 
     public BigDecimal getLenght(BigDecimal len, Integer type) {
-        BigDecimal r = null;
+        BigDecimal r = BigDecimal.ZERO;
 
         if (len.compareTo(new BigDecimal(75)) != 1) {
             if (type == 2) {
@@ -1071,49 +1071,49 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 r = new BigDecimal(3.20);
             }
         }
-        if (len.compareTo(new BigDecimal(110)) != 0 && len.compareTo(new BigDecimal(119)) != 1) {
+        if (len.compareTo(new BigDecimal(110)) != -1 && len.compareTo(new BigDecimal(119)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(2.5);
             } else if (type == 1) {
                 r = new BigDecimal(3.70);
             }
         }
-        if (len.compareTo(new BigDecimal(120)) != 0 && len.compareTo(new BigDecimal(129)) != 1) {
+        if (len.compareTo(new BigDecimal(120)) != -1 && len.compareTo(new BigDecimal(129)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(2.7);
             } else if (type == 1) {
                 r = new BigDecimal(4);
             }
         }
-        if (len.compareTo(new BigDecimal(130)) != 0 && len.compareTo(new BigDecimal(139)) != 1) {
+        if (len.compareTo(new BigDecimal(130)) != -1 && len.compareTo(new BigDecimal(139)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(3);
             } else if (type == 1) {
                 r = new BigDecimal(4.20);
             }
         }
-        if (len.compareTo(new BigDecimal(140)) != 0 && len.compareTo(new BigDecimal(145)) != 1) {
+        if (len.compareTo(new BigDecimal(140)) != -1 && len.compareTo(new BigDecimal(145)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(3.20);
             } else if (type == 1) {
                 r = new BigDecimal(4.70);
             }
         }
-        if (len.compareTo(new BigDecimal(145)) != 0 && len.compareTo(new BigDecimal(154)) != 1) {
+        if (len.compareTo(new BigDecimal(145)) != -1 && len.compareTo(new BigDecimal(154)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(3.50);
             } else if (type == 1) {
                 r = new BigDecimal(4.70);
             }
         }
-        if (len.compareTo(new BigDecimal(155)) != 0 && len.compareTo(new BigDecimal(159)) != 1) {
+        if (len.compareTo(new BigDecimal(155)) != -1 && len.compareTo(new BigDecimal(159)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(3.70);
             } else if (type == 1) {
                 r = new BigDecimal(5.2);
             }
         }
-        if (len.compareTo(new BigDecimal(160)) != 0 && len.compareTo(new BigDecimal(164)) != 1) {
+        if (len.compareTo(new BigDecimal(160)) != -1 && len.compareTo(new BigDecimal(164)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(3.90);
             } else if (type == 1) {
@@ -1132,7 +1132,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
     }
 
     public BigDecimal getShoulder(BigDecimal shou, Integer type) {
-        BigDecimal r = null;
+        BigDecimal r = BigDecimal.ZERO;
         if (shou.compareTo(new BigDecimal(24)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(1.70);
@@ -1141,35 +1141,35 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             }
         }
 
-        if (shou.compareTo(new BigDecimal(25)) != 0 && shou.compareTo(new BigDecimal(27)) != 1) {
+        if (shou.compareTo(new BigDecimal(25)) != -1 && shou.compareTo(new BigDecimal(27)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(2.20);
             } else if (type == 1) {
                 r = new BigDecimal(3.20);
             }
         }
-        if (shou.compareTo(new BigDecimal(28)) != 0 && shou.compareTo(new BigDecimal(29)) != 1) {
+        if (shou.compareTo(new BigDecimal(28)) != -1 && shou.compareTo(new BigDecimal(29)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(2.5);
             } else if (type == 1) {
                 r = new BigDecimal(3.70);
             }
         }
-        if (shou.compareTo(new BigDecimal(0)) != 0 && shou.compareTo(new BigDecimal(34)) != 1) {
+        if (shou.compareTo(new BigDecimal(0)) != -1 && shou.compareTo(new BigDecimal(34)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(2.7);
             } else if (type == 1) {
                 r = new BigDecimal(4);
             }
         }
-        if (shou.compareTo(new BigDecimal(35)) != 0 && shou.compareTo(new BigDecimal(39)) != 1) {
+        if (shou.compareTo(new BigDecimal(35)) != -1 && shou.compareTo(new BigDecimal(39)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(3);
             } else if (type == 1) {
                 r = new BigDecimal(4.20);
             }
         }
-        if (shou.compareTo(new BigDecimal(40)) != 0 && shou.compareTo(new BigDecimal(42)) != 1) {
+        if (shou.compareTo(new BigDecimal(40)) != -1 && shou.compareTo(new BigDecimal(42)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(3.2);
             } else if (type == 1) {
@@ -1177,28 +1177,28 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             }
         }
 
-        if (shou.compareTo(new BigDecimal(42)) != 0 && shou.compareTo(new BigDecimal(45)) != 1) {
+        if (shou.compareTo(new BigDecimal(42)) != -1 && shou.compareTo(new BigDecimal(45)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(3.5);
             } else if (type == 1) {
                 r = new BigDecimal(4.70);
             }
         }
-        if (shou.compareTo(new BigDecimal(46)) != 0 && shou.compareTo(new BigDecimal(47)) != 1) {
+        if (shou.compareTo(new BigDecimal(46)) != -1 && shou.compareTo(new BigDecimal(47)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(3.70);
             } else if (type == 1) {
                 r = new BigDecimal(5.2);
             }
         }
-        if (shou.compareTo(new BigDecimal(48)) != 0 && shou.compareTo(new BigDecimal(50)) != 1) {
+        if (shou.compareTo(new BigDecimal(48)) != -1 && shou.compareTo(new BigDecimal(50)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(3.90);
             } else if (type == 1) {
                 r = new BigDecimal(5.50);
             }
         }
-        if (shou.compareTo(new BigDecimal(51)) != 0) {
+        if (shou.compareTo(new BigDecimal(51)) != -1) {
             if (type == 2) {
                 r = new BigDecimal(4.2);
             } else if (type == 1) {
@@ -1210,7 +1210,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
     }
 
     public BigDecimal getStep(BigDecimal ste, Integer type) {
-        BigDecimal r = null;
+        BigDecimal r = BigDecimal.ZERO;
         if (ste.compareTo(new BigDecimal(28)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(1.70);

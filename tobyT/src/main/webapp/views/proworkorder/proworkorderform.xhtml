@@ -909,14 +909,12 @@
                                 <p:column style="width: 10vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;"
                                           id="QuantityOu" 
                                           headerText="الكمية">
-                                    <p:inputText id="QuantityTOU"  dir="LTR"
-                                                 value="#{invPurchaseInvoiceDetailsTable.quantityOfOneUnit}" 
-                                                 disabled="#{not userData.userScreens['proworkorder'].edit and invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id ne null}"
-                                                 style="width:95%; text-align: left;">
-                                        <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateQuantityOfUnitColum(invPurchaseInvoiceDetailsTable)}" 
-                                                process="@this"
-                                                update="netId totalQuantity costTt   totalNet form:totalNetAfterDiscount  form:discounthala form:totalActualWeight form:totalWithTaxValue form:remain form:taxvalue  invItemNameIn Quantity QuantityT NUMBER QuantityOu "/>
-                                    </p:inputText>  
+                                    <p:outputLabel id="QuantityTOU"  dir="LTR"
+                                                   value="#{invPurchaseInvoiceDetailsTable.quantityOfOneUnit}" 
+                                                   
+                                                   style="width:95%; text-align: left;">
+                                        
+                                    </p:outputLabel> 
 
                                 </p:column>
 
