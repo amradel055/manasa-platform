@@ -7,6 +7,7 @@ package com.toby.businessservice;
 
 import com.toby.businessservice.reports.searchBean.InvItemSalesSearchBean;
 import com.toby.businessservice.reports.searchBean.ItemCardReportSerachBean;
+import com.toby.bussinessservice.global.Utility;
 import com.toby.core.GenericDAO;
 import com.toby.dto.InvGroupDTO;
 import com.toby.dto.InvItemDTO;
@@ -24,6 +25,7 @@ import com.toby.views.ItemsDataView;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -43,6 +45,8 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
     private GenericDAO dao;
     @EJB
     private InvBarcodeSevice invBarcodeSevice;
+    @EJB
+    InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
 
     @Override
     public List<ItemsDataView> findItemsDataViewByBranchIdAndItemIdAndInventoryId(Integer branchId, Integer itemId) {
@@ -1169,14 +1173,14 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        IFNULL(`ipi`.`disc_halala`, 0) AS `disc_halala`,\n"
                 + "        ini2.name AS `gallaryName`\n"
                 + "    FROM\n"
-                + "        (((((((`inv_purchase_invoice` `ipi`\n"
+                + "        ((((((((`inv_purchase_invoice` `ipi`\n"
                 + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
                 + "        LEFT JOIN `inv_item` `ii` ON ((`ii`.`id` = `ipid`.`item_id`)))\n"
                 + "        LEFT JOIN `inv_group` `ig` ON ((`ig`.`id` = `ii`.`group_id`)))\n"
                 + "        LEFT JOIN `symbol` `s` ON ((`s`.`id` = `ii`.`unit_id`)))\n"
                 + "        LEFT JOIN `symbol` `ss` ON ((`ss`.`id` = `ipid`.`unit_id`)))\n"
                 + "        LEFT JOIN `inv_inventory` `ini` ON ((`ini`.`id` = `ipid`.`inv_inventory_id`)))\n"
-                + "        LEFT JOIN `inv_inventory` `ini2` ON ((`ini2`.`id` = `ipid`.`galary_Id`)))\n"
+                + "        LEFT JOIN `inv_inventory` `ini2` ON ((`ini2`.`id` = `ipi`.`galary_Id`)))\n"
                 + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`)))\n"
                 + "    WHERE\n"
                 + "        ((`ipi`.`type` = 4)\n"
@@ -1716,7 +1720,8 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        0 AS `operationType`,\n"
                 + "        11 AS `ScreenCode`,\n"
                 + "        FIND_SUPPLIER_OF_ITEM(`iobid`.`item_id`) AS `item_supplier_id`,\n"
-                + "        0 AS `disc_halala`\n"
+                + "        0 AS `disc_halala`,\n"
+                + "        '' AS `gallaryName`\n"
                 + "    FROM\n"
                 + "        ((((((`inv_openning_balance_item` `iobi`\n"
                 + "        LEFT JOIN `inv_openning_balance_item_detail` `iobid` ON ((`iobi`.`id` = `iobid`.`inv_openning_balance_item_id`)))\n"
@@ -1788,19 +1793,30 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             itemsDataView.setOperationType(((Long) line[44]).intValue());
             itemsDataView.setScreenCode(((Long) line[45]).intValue());
             itemsDataView.setItemSupplierId((Integer) line[46]);
-            itemsDataView.setGallaryName((String) line[47]);
+            itemsDataView.setGallaryName((String) line[48]);
 
             newList.add(itemsDataView);
         }
 
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.add(Calendar.DAY_OF_MONTH, -5);
+        Date diffrenceDate = c.getTime();
         for (ItemsDataView dataView : newList) {
             dataView.setOpeningBalance(itemOpeningBalanceMap.get(dataView.getItemId()));
             //i will set in organizationopenbalance credit and debit fields and use them as total value for qtyin and qty out
             dataView.setTotalQtyIn(qtyInMap.get(dataView.getItemId()));
             dataView.setTotalQtyOut(qtyOutMap.get(dataView.getItemId()));
+            if (dataView.getDate().after(diffrenceDate) && dataView.getScreenCode()== 4) {
+                dataView.setInvoiceStatus(invPurchaseInvoiceService_1.findInvoiceStatus(dataView.getId()));
+                if(dataView.getInvoiceStatus() == null || dataView.getInvoiceStatus().isEmpty()){
+                dataView.setInvoiceStatus("بالمعرض");
+                }
+            }
             if (itemOpeningBalanceAfterAllDateMap.containsKey(dataView.getItemId())) {
                 itemOpeningBalanceAfterAllDateMap.remove(dataView.getItemId());
             }
+
             // Code Here -------------> 
         }
 //if search after all dates of item and need to get the open balance for them

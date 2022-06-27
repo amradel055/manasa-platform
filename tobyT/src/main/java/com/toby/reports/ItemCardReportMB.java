@@ -125,6 +125,8 @@ public class ItemCardReportMB extends BaseReportBean {
             itemCardReport.setQtyout(itemsDataView.getQtyout() != null ? itemsDataView.getQtyout().multiply(itemsDataView.getScrewing()) : BigDecimal.ZERO);
             itemCardReport.setTotalQtyin(itemsDataView.getTotalQtyIn());
             itemCardReport.setTotalQtyout(itemsDataView.getTotalQtyOut());
+            itemCardReport.setGallaryName(itemsDataView.getGallaryName());
+            itemCardReport.setInvoiceStatus(itemsDataView.getInvoiceStatus());
             balance = BigDecimal.ZERO;
             if (balanceMap.containsKey(itemsDataView.getItemId())) {
                 balance = balanceMap.get(itemsDataView.getItemId());

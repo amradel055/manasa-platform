@@ -192,6 +192,8 @@ public class ItemsDataView implements Serializable {
     private BigDecimal totalQtyOut;
     @Transient
     private String gallaryName;
+    @Transient
+    private String invoiceStatus;
 
     public ItemsDataView() {
     }
@@ -613,6 +615,20 @@ public class ItemsDataView implements Serializable {
      */
     public void setGallaryName(String gallaryName) {
         this.gallaryName = gallaryName;
+    }
+
+    /**
+     * @return the invoiceStatus
+     */
+    public String getInvoiceStatus() {
+        return invoiceStatus;
+    }
+
+    /**
+     * @param invoiceStatus the invoiceStatus to set
+     */
+    public void setInvoiceStatus(String invoiceStatus) {
+        this.invoiceStatus = invoiceStatus;
     }
    
 }
