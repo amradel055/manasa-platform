@@ -1254,7 +1254,7 @@ public class InvPurchaseInvoiceImpl implements InvPurchaseInvoiceService {
         String fromDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(dateFrom);
         String toDate = new SimpleDateFormat("yyyy-MM-dd  23:59:59").format(dateTo);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT ios.name , ios.code , ios.mobile FROM inv_purchase_invoice ipi left join inv_organization_site ios on ipi.organization_site_id = ios.id Where ipi.branch_id = " + branchId + " and ipi.inv_delegator_id in (").append(delegator).append(") and ipi.date >= '").append(dateFrom).append("' and ipi.date <= '").append(dateTo).append("' and ipi.inv_inventory_id in (").append(inventory).append("' and ipi.created_by in(").append(users).append(")").append("' group by ii.id");
+        builder.append("SELECT ios.name , ios.code , ios.mobile FROM inv_purchase_invoice ipi left join inv_organization_site ios on ipi.organization_site_id = ios.id Where ipi.branch_id = " + branchId + " and ipi.inv_delegator_id in (").append(delegator).append(") and ipi.date >= '").append(dateFrom).append("' and ipi.date <= '").append(dateTo).append("' and ipi.inv_inventory_id in (").append(inventory).append(" ) and ipi.created_by in(").append(users).append(")").append(" group by ii.id");
         List <InvPurchaseInvoice> invPurchaseInvoice = dao.executeNativeQuery(builder.toString());
         List <InvPurchaseInvoiceDTO1> invPurchaseInvoiceDTOList ;
         invPurchaseInvoiceDTOList = mapToDTOList(invPurchaseInvoice, tobyUser);

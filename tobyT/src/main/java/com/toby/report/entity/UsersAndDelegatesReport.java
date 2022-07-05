@@ -51,9 +51,10 @@ public class UsersAndDelegatesReport extends BaseGlAccountReportBean {
     private List<InventoryDelegatorDTO> inventoryDelegatorList;
     private List<TobyUserDTO> tobyUserList;
     private List<InvPurchaseInvoiceDTO1> invPurchaseInvoiceDTOList;
-    private String inventory = fillInventoryList();
-    private String delegator = fillInvDelegatorList();
-    private String users = fillTobyUserList() ;
+    
+    private String inventory ;
+    private String delegator ;
+    private String users  ;
     
     private InvInventoryDTOConverter invInventoryDTOConverter ;
     private InvDelegatorDTOConvertor invDelegatorDTOConvertor ;
@@ -63,7 +64,7 @@ public class UsersAndDelegatesReport extends BaseGlAccountReportBean {
         StringBuilder stringBuilder = new StringBuilder();
         if (invInventoryList != null && !invInventoryList.isEmpty()) {
             for (InvInventoryDTO invInventoryDTO : invInventoryList) {
-                if (stringBuilder != null && stringBuilder.length() == 0) {
+                if (stringBuilder != null && stringBuilder.toString().length() == 0) {
                     stringBuilder.append(invInventoryDTO.getId());
                 } else {
                     stringBuilder.append(",").append(invInventoryDTO.getId());
@@ -77,7 +78,7 @@ public class UsersAndDelegatesReport extends BaseGlAccountReportBean {
         StringBuilder stringBuilder = new StringBuilder();
         if (inventoryDelegatorList != null && !inventoryDelegatorList.isEmpty()) {
             for (InventoryDelegatorDTO delegatorDTO : inventoryDelegatorList) {
-                if (stringBuilder != null && stringBuilder.length() == 0) {
+                if (stringBuilder != null && stringBuilder.toString().length() == 0) {
                     stringBuilder.append(delegatorDTO.getId());
                 } else {
                     stringBuilder.append(",").append(delegatorDTO.getId());
@@ -91,7 +92,7 @@ public class UsersAndDelegatesReport extends BaseGlAccountReportBean {
         StringBuilder stringBuilder = new StringBuilder();
         if (tobyUserList != null && !tobyUserList.isEmpty()) {
             for (TobyUserDTO tobyUserDTO : tobyUserList) {
-                if (stringBuilder != null && stringBuilder.length() == 0) {
+                if (stringBuilder != null && stringBuilder.toString().length() == 0) {
                     stringBuilder.append(tobyUserDTO.getId());
                 } else {
                     stringBuilder.append(",").append(tobyUserDTO.getId());
@@ -106,8 +107,7 @@ public class UsersAndDelegatesReport extends BaseGlAccountReportBean {
 
     @PostConstruct
     public void init() {
-        reset();
-        load();
+      
 
     }
 
@@ -134,7 +134,7 @@ public class UsersAndDelegatesReport extends BaseGlAccountReportBean {
     @Override
     public void search() {
         if(getInvInventoryList() != null && getInventoryDelegatorList() !=null && getTobyUserList() != null  ){
-        invPurchaseInvoiceDTOList  = invPurchaseInvoiceService.getAllClients(182, dateFrom , dateTo, inventory, delegator, users, getUserData().getUser());
+        invPurchaseInvoiceDTOList  = invPurchaseInvoiceService.getAllClients(182, dateFrom , dateTo, getInventory(), getDelegator(), getUsers(), getUserData().getUser());
         
         }
         
@@ -199,7 +199,7 @@ public class UsersAndDelegatesReport extends BaseGlAccountReportBean {
     public List<InvInventoryDTO> getInvInventoryDTOList() {
         if (invInventoryDTOList == null) {
             setInvInventoryDTOList(invInventoryService.findInventoryByBranch(getUserData().getUserBranch().getId(), getUserData().getUser()));
-            setInvInventoryDTOConverter(invInventoryDTOConverter);
+            setInvInventoryDTOConverter(new InvInventoryDTOConverter(invInventoryDTOList));
         }
 
         return invInventoryDTOList;
@@ -218,7 +218,7 @@ public class UsersAndDelegatesReport extends BaseGlAccountReportBean {
     public List<InventoryDelegatorDTO> getInventoryDelegatorDTOList() {
         if (inventoryDelegatorDTOList == null) {
             setInventoryDelegatorDTOList(invDelegatorService.getSalesDTOByBranch(getUserData().getUserBranch().getId()));
-            setInvDelegatorDTOConvertor(invDelegatorDTOConvertor);
+            setInvDelegatorDTOConvertor(new InvDelegatorDTOConvertor(inventoryDelegatorDTOList));
         }
         return inventoryDelegatorDTOList;
     }
@@ -236,7 +236,7 @@ public class UsersAndDelegatesReport extends BaseGlAccountReportBean {
     public List<TobyUserDTO> getTobyUserDTOList() {
         if (tobyUserDTOList == null) {
             setTobyUserDTOList(tobyUserService.getUsersByCompanyId(getUserData().getCompany().getId()));
-            setTobyUserDTOConverter(tobyUserDTOConverter);
+            setTobyUserDTOConverter(new TobyUserDTOConverter(tobyUserDTOList));
         }
         return tobyUserDTOList;
     }
@@ -305,6 +305,9 @@ public class UsersAndDelegatesReport extends BaseGlAccountReportBean {
      * @return the inventory
      */
     public String getInventory() {
+          if(inventory == null){
+            setInventory(fillInventoryList());
+        }
         return inventory;
     }
 
@@ -319,6 +322,9 @@ public class UsersAndDelegatesReport extends BaseGlAccountReportBean {
      * @return the delegator
      */
     public String getDelegator() {
+          if(delegator == null){
+            setDelegator(fillInvDelegatorList());
+        }
         return delegator;
     }
 
@@ -333,6 +339,9 @@ public class UsersAndDelegatesReport extends BaseGlAccountReportBean {
      * @return the users
      */
     public String getUsers() {
+        if(users == null){
+            setUsers(fillTobyUserList());
+        }
         return users;
     }
 

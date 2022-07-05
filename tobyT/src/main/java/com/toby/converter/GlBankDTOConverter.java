@@ -24,7 +24,6 @@ public class GlBankDTOConverter implements Converter {
         this.glBankDTOList = glBankDTOList;
     }
 
-
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
         for (GlBankDTO item : glBankDTOList) {
