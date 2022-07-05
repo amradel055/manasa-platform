@@ -70,10 +70,9 @@ public interface InvPurchaseInvoiceService {
     public void deleteInvPurchaseInvoice(InvPurchaseInvoice invPurchaseInvoice, Integer isPurchaseOrSales);
 
     public List<InvPurchaseInvoice> getALLSalesInvoiceByBranchIdWithStatusPer(Integer branchId);
-    
-        public BigDecimal findQuantityItemByDateWithOutInventory(InvPurchaseInvoice invPurchaseInvoice, Boolean sellBuy, InvPurchaseInvoiceDetail invPurchaseInvoiceDetail);
 
+    public BigDecimal findQuantityItemByDateWithOutInventory(InvPurchaseInvoice invPurchaseInvoice, Boolean sellBuy, InvPurchaseInvoiceDetail invPurchaseInvoiceDetail);
 
-    
+    public List<InvPurchaseInvoiceDTO1> getAllClients(Integer branchId, Date dateFrom, Date dateTo, String inventory, String delegator, String users, TobyUser tobyUser);
 
 }

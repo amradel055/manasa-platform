@@ -20,6 +20,7 @@ import com.toby.dto.InvPurchaseInvoiceDTO1;
 import com.toby.dto.InvPurchaseInvoiceDetailDTO;
 import com.toby.dto.InventoryDelegatorDTO;
 import com.toby.dto.SymbolDTO;
+import com.toby.dto.TobyUserDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.CostCenter;
 import com.toby.entity.Currency;
@@ -48,6 +49,7 @@ import com.toby.entity.TobyUser;
 import com.toby.views.QuantityItemsStore;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -1245,6 +1247,18 @@ public class InvPurchaseInvoiceImpl implements InvPurchaseInvoiceService {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-
+    @Override
+    public List<InvPurchaseInvoiceDTO1> getAllClients(Integer branchId, Date dateFrom, Date dateTo, String inventory, String delegator, String users , TobyUser tobyUser) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        String fromDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(dateFrom);
+        String toDate = new SimpleDateFormat("yyyy-MM-dd  23:59:59").format(dateTo);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT ios.name , ios.code , ios.mobile FROM inv_purchase_invoice ipi left join inv_organization_site ios on ipi.organization_site_id = ios.id Where ipi.branch_id = " + branchId + " and ipi.inv_delegator_id in (").append(delegator).append(") and ipi.date >= '").append(dateFrom).append("' and ipi.date <= '").append(dateTo).append("' and ipi.inv_inventory_id in (").append(inventory).append("' and ipi.created_by in(").append(users).append(")").append("' group by ii.id");
+        List <InvPurchaseInvoice> invPurchaseInvoice = dao.executeNativeQuery(builder.toString());
+        List <InvPurchaseInvoiceDTO1> invPurchaseInvoiceDTOList ;
+        invPurchaseInvoiceDTOList = mapToDTOList(invPurchaseInvoice, tobyUser);
+        return invPurchaseInvoiceDTOList;
+    }
 
 }
