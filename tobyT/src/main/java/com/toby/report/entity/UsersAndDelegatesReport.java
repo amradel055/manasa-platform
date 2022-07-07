@@ -12,6 +12,7 @@ import com.toby.businessservice.TobyUserService;
 import com.toby.converter.InvDelegatorDTOConvertor;
 import com.toby.converter.InvInventoryDTOConverter;
 import com.toby.converter.TobyUserDTOConverter;
+import com.toby.dto.ClientReportDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvPurchaseInvoiceDTO1;
 import com.toby.dto.InventoryDelegatorDTO;
@@ -51,6 +52,8 @@ public class UsersAndDelegatesReport extends BaseGlAccountReportBean {
     private List<InventoryDelegatorDTO> inventoryDelegatorList;
     private List<TobyUserDTO> tobyUserList;
     private List<InvPurchaseInvoiceDTO1> invPurchaseInvoiceDTOList;
+    private List<ClientReportDTO> clientReportDTOList;
+
     
     private String inventory ;
     private String delegator ;
@@ -134,7 +137,7 @@ public class UsersAndDelegatesReport extends BaseGlAccountReportBean {
     @Override
     public void search() {
         if(getInvInventoryList() != null && getInventoryDelegatorList() !=null && getTobyUserList() != null  ){
-        invPurchaseInvoiceDTOList  = invPurchaseInvoiceService.getAllClients(182, dateFrom , dateTo, getInventory(), getDelegator(), getUsers(), getUserData().getUser());
+        clientReportDTOList  = invPurchaseInvoiceService.getAllClients(182, dateFrom , dateTo, getInventory(), getDelegator(), getUsers(), getUserData().getUser());
         
         }
         
@@ -406,6 +409,20 @@ public class UsersAndDelegatesReport extends BaseGlAccountReportBean {
      */
     public void setTobyUserDTOConverter(TobyUserDTOConverter tobyUserDTOConverter) {
         this.tobyUserDTOConverter = tobyUserDTOConverter;
+    }
+
+    /**
+     * @return the clientReportDTOList
+     */
+    public List<ClientReportDTO> getClientReportDTOList() {
+        return clientReportDTOList;
+    }
+
+    /**
+     * @param clientReportDTOList the clientReportDTOList to set
+     */
+    public void setClientReportDTOList(List<ClientReportDTO> clientReportDTOList) {
+        this.clientReportDTOList = clientReportDTOList;
     }
 
 }

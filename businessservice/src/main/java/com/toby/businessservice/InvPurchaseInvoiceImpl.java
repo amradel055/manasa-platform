@@ -7,6 +7,7 @@ package com.toby.businessservice;
 
 import com.toby.bussinessservice.global.InvPurchaseReturnSave;
 import com.toby.core.GenericDAO;
+import com.toby.dto.ClientReportDTO;
 import com.toby.dto.CostCenterDTO;
 import com.toby.dto.GlAdminUnitDTO;
 import com.toby.dto.GlBankDTO;
@@ -1248,17 +1249,26 @@ public class InvPurchaseInvoiceImpl implements InvPurchaseInvoiceService {
     }
 
     @Override
-    public List<InvPurchaseInvoiceDTO1> getAllClients(Integer branchId, Date dateFrom, Date dateTo, String inventory, String delegator, String users , TobyUser tobyUser) {
+    public List<ClientReportDTO> getAllClients(Integer branchId, Date dateFrom, Date dateTo, String inventory, String delegator, String users, TobyUser tobyUser) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         String fromDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(dateFrom);
         String toDate = new SimpleDateFormat("yyyy-MM-dd  23:59:59").format(dateTo);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT ios.name , ios.code , ios.mobile FROM inv_purchase_invoice ipi left join inv_organization_site ios on ipi.organization_site_id = ios.id Where ipi.branch_id = " + branchId + " and ipi.inv_delegator_id in (").append(delegator).append(") and ipi.date >= '").append(dateFrom).append("' and ipi.date <= '").append(dateTo).append("' and ipi.inv_inventory_id in (").append(inventory).append(" ) and ipi.created_by in(").append(users).append(")").append(" group by ii.id");
-        List <InvPurchaseInvoice> invPurchaseInvoice = dao.executeNativeQuery(builder.toString());
-        List <InvPurchaseInvoiceDTO1> invPurchaseInvoiceDTOList ;
-        invPurchaseInvoiceDTOList = mapToDTOList(invPurchaseInvoice, tobyUser);
-        return invPurchaseInvoiceDTOList;
+        builder.append("SELECT ios.name , ios.code , ios.mobile FROM inv_purchase_invoice ipi left join inv_organization_site ios on ipi.organization_site_id = ios.id Where ipi.branch_id = " + branchId + " and ipi.inv_delegator_id in (").append(delegator).append(") and ipi.date >= '").append(fromDate).append("' and ipi.date <= '").append(toDate).append("' and ipi.galary_Id in (").append(inventory).append(" ) and ipi.created_by in(").append(users).append(")").append(" group by ipi.id");
+        List<Object[]> res = dao.executeNativeQuery(builder.toString());
+        List<ClientReportDTO> list = new ArrayList<>();
+        ClientReportDTO clientReportDTO ;
+        for (Object[] object : res) {
+            clientReportDTO = new ClientReportDTO();
+            clientReportDTO.setName(object[0] != null ? (String) object[0] : null);
+            clientReportDTO.setCode(object[1] != null ? (String) object[1] : null);
+            clientReportDTO.setMobile(object[2] != null ? (String) object[2] : null);
+            list.add(clientReportDTO);
+        }
+//        List<InvPurchaseInvoice> invPurchaseInvoice = dao.executeNativeQuery(builder.toString());
+//        List<InvPurchaseInvoiceDTO1> invPurchaseInvoiceDTOList = mapToDTOList(invPurchaseInvoice, tobyUser);
+        return list;
     }
 
 }

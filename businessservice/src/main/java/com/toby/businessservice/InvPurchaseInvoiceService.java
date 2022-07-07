@@ -6,6 +6,7 @@
 package com.toby.businessservice;
 
 import com.toby.bussinessservice.global.InvPurchaseReturnSave;
+import com.toby.dto.ClientReportDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvPurchaseInvoiceDTO1;
 import com.toby.entity.InvPurchaseInvoice;
@@ -73,6 +74,5 @@ public interface InvPurchaseInvoiceService {
 
     public BigDecimal findQuantityItemByDateWithOutInventory(InvPurchaseInvoice invPurchaseInvoice, Boolean sellBuy, InvPurchaseInvoiceDetail invPurchaseInvoiceDetail);
 
-    public List<InvPurchaseInvoiceDTO1> getAllClients(Integer branchId, Date dateFrom, Date dateTo, String inventory, String delegator, String users, TobyUser tobyUser);
-
+    public List<ClientReportDTO> getAllClients(Integer branchId, Date dateFrom, Date dateTo, String inventory, String delegator, String users, TobyUser tobyUser);
 }

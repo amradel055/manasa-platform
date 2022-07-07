@@ -133,7 +133,7 @@
                     widgetVar="usersAndDelegatesTable"  
                     rowKey="#{usersAndDelegatesTable}"
                     rowIndexVar="index" 
-                    value="#{usersAndDelegatesReport.invPurchaseInvoiceDTOList}" 
+                    value="#{usersAndDelegatesReport.clientReportDTOList}" 
                     dir="rtl" 
                     emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
                     id="usersAndDelegatesTable">
@@ -150,12 +150,12 @@
 
                     <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" headerText="الكود" 
 
-                                filterBy="#{usersAndDelegatesTable.organizationSiteIdDTO.code}" 
+                                filterBy="#{usersAndDelegatesTable.code}" 
                                 filterMatchMode="contains" 
-                                sortBy="#{usersAndDelegatesTable.organizationSiteIdDTO.code}"
+                                sortBy="#{usersAndDelegatesTable.code}"
                                 filterable="false">
 
-                        <h:outputText value="#{usersAndDelegatesTable.organizationSiteIdDTO.code}" style="font-size: 1.5vh"/>
+                        <h:outputText value="#{usersAndDelegatesTable.code}" style="font-size: 1.5vh"/>
                     </p:column>
 
 
@@ -165,24 +165,24 @@
 
                     <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" headerText="الاسم" 
 
-                                filterBy="#{usersAndDelegatesTable.organizationSiteIdDTO.name}" 
+                                filterBy="#{usersAndDelegatesTable.name}" 
                                 filterMatchMode="contains" 
-                                sortBy="#{usersAndDelegatesTable.organizationSiteIdDTO.name}"
+                                sortBy="#{usersAndDelegatesTable.name}"
                                 filterable="false">
 
-                        <h:outputText value="#{usersAndDelegatesTable.organizationSiteIdDTO.name}" style="font-size: 1.5vh"/>
+                        <h:outputText value="#{usersAndDelegatesTable.name}" style="font-size: 1.5vh"/>
                     </p:column>
 
 
                     <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" 
                               headerText=" الموبايل" 
 
-                              filterBy="#{usersAndDelegatesTable.organizationSiteIdDTO.mobile}" 
+                              filterBy="#{usersAndDelegatesTable.mobile}" 
                               filterMatchMode="contains" 
-                              sortBy="#{usersAndDelegatesTable.organizationSiteIdDTO.mobile}"
+                              sortBy="#{usersAndDelegatesTable.mobile}"
                               filterable="false">
 
-                        <h:outputText value="#{usersAndDelegatesTable.organizationSiteIdDTO.mobile}" style="font-size: 1.5vh;width: 95%"/>
+                        <h:outputText value="#{usersAndDelegatesTable.mobile}" style="font-size: 1.5vh;width: 95%"/>
                     </p:column>
                 </p:dataTable>
             </p:fieldset>
