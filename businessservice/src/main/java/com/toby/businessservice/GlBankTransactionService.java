@@ -69,6 +69,6 @@ public interface GlBankTransactionService {
     
     public List<GlPayDTO> addCash(List<GlPayDTO> glPayDTOList, Date date, BigDecimal rate, String remarks, Integer invOrganizationId, Integer glYearId, TobyUser tobyUser);
 
-    
+    public List<GlBankTransactionDTO> search(Integer transactionType, Integer branchId, Integer serial);
 
 }

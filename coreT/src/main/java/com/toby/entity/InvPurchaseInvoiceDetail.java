@@ -27,17 +27,28 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "inv_purchase_invoice_detail")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "InvPurchaseInvoiceDetail.findAll", query = "SELECT i FROM InvPurchaseInvoiceDetail i"),
-    @NamedQuery(name = "InvPurchaseInvoiceDetail.findById", query = "SELECT i FROM InvPurchaseInvoiceDetail i WHERE i.id = :id"),
-    @NamedQuery(name = "InvPurchaseInvoiceDetail.findByQuantity", query = "SELECT i FROM InvPurchaseInvoiceDetail i WHERE i.quantity = :quantity"),
-    @NamedQuery(name = "InvPurchaseInvoiceDetail.findByCost", query = "SELECT i FROM InvPurchaseInvoiceDetail i WHERE i.cost = :cost"),
-    @NamedQuery(name = "InvPurchaseInvoiceDetail.findByDiscount", query = "SELECT i FROM InvPurchaseInvoiceDetail i WHERE i.discount = :discount"),
-    @NamedQuery(name = "InvPurchaseInvoiceDetail.findByCreationDate", query = "SELECT i FROM InvPurchaseInvoiceDetail i WHERE i.creationDate = :creationDate"),
-    @NamedQuery(name = "InvPurchaseInvoiceDetail.findByModificationDate", query = "SELECT i FROM InvPurchaseInvoiceDetail i WHERE i.modificationDate = :modificationDate"),
-    @NamedQuery(name = "InvPurchaseInvoiceDetail.findByDiscountType", query = "SELECT i FROM InvPurchaseInvoiceDetail i WHERE i.discountType = :discountType"),
-    @NamedQuery(name = "InvPurchaseInvoiceDetail.findByTransferFrom", query = "SELECT i FROM InvPurchaseInvoiceDetail i WHERE i.transferFrom = :transferFrom"),
-    @NamedQuery(name = "InvPurchaseInvoiceDetail.findByScrewing", query = "SELECT i FROM InvPurchaseInvoiceDetail i WHERE i.screwing = :screwing"),
-    @NamedQuery(name = "InvPurchaseInvoiceDetail.findByTaxValue", query = "SELECT i FROM InvPurchaseInvoiceDetail i WHERE i.taxValue = :taxValue"),
+    @NamedQuery(name = "InvPurchaseInvoiceDetail.findAll", query = "SELECT i FROM InvPurchaseInvoiceDetail i")
+    ,
+    @NamedQuery(name = "InvPurchaseInvoiceDetail.findById", query = "SELECT i FROM InvPurchaseInvoiceDetail i WHERE i.id = :id")
+    ,
+    @NamedQuery(name = "InvPurchaseInvoiceDetail.findByQuantity", query = "SELECT i FROM InvPurchaseInvoiceDetail i WHERE i.quantity = :quantity")
+    ,
+    @NamedQuery(name = "InvPurchaseInvoiceDetail.findByCost", query = "SELECT i FROM InvPurchaseInvoiceDetail i WHERE i.cost = :cost")
+    ,
+    @NamedQuery(name = "InvPurchaseInvoiceDetail.findByDiscount", query = "SELECT i FROM InvPurchaseInvoiceDetail i WHERE i.discount = :discount")
+    ,
+    @NamedQuery(name = "InvPurchaseInvoiceDetail.findByCreationDate", query = "SELECT i FROM InvPurchaseInvoiceDetail i WHERE i.creationDate = :creationDate")
+    ,
+    @NamedQuery(name = "InvPurchaseInvoiceDetail.findByModificationDate", query = "SELECT i FROM InvPurchaseInvoiceDetail i WHERE i.modificationDate = :modificationDate")
+    ,
+    @NamedQuery(name = "InvPurchaseInvoiceDetail.findByDiscountType", query = "SELECT i FROM InvPurchaseInvoiceDetail i WHERE i.discountType = :discountType")
+    ,
+    @NamedQuery(name = "InvPurchaseInvoiceDetail.findByTransferFrom", query = "SELECT i FROM InvPurchaseInvoiceDetail i WHERE i.transferFrom = :transferFrom")
+    ,
+    @NamedQuery(name = "InvPurchaseInvoiceDetail.findByScrewing", query = "SELECT i FROM InvPurchaseInvoiceDetail i WHERE i.screwing = :screwing")
+    ,
+    @NamedQuery(name = "InvPurchaseInvoiceDetail.findByTaxValue", query = "SELECT i FROM InvPurchaseInvoiceDetail i WHERE i.taxValue = :taxValue")
+    ,
     @NamedQuery(name = "InvPurchaseInvoiceDetail.findByBounse", query = "SELECT i FROM InvPurchaseInvoiceDetail i WHERE i.bounse = :bounse")})
 public class InvPurchaseInvoiceDetail extends BaseEntity {
 
@@ -94,8 +105,8 @@ public class InvPurchaseInvoiceDetail extends BaseEntity {
     private BigDecimal costAvarage;
     @OneToMany(mappedBy = "invInvoicePurchaseDetailId")
     private Collection<InvReturnPurchaseDetail> invReturnPurchaseDetailCollection;
-    
-   @Transient
+
+    @Transient
     private BigDecimal sumDetailNet;
     @Column(name = "bounse")
     private BigDecimal bounse;
@@ -111,14 +122,14 @@ public class InvPurchaseInvoiceDetail extends BaseEntity {
     @Column(name = "cloth_number")
     private Integer clothNumber;
     @Column(name = "quantity_of_one_unit")
-    private BigDecimal quantityOfOneUnit;    
+    private BigDecimal quantityOfOneUnit;
     @Column(name = "proof")
     private Integer proof;
-    
+
     @Column(name = "account_id")
     private Integer accountId;
-    
-    
+
+
     public InvPurchaseInvoiceDetail() {
     }
 
@@ -284,7 +295,7 @@ public class InvPurchaseInvoiceDetail extends BaseEntity {
     public void setSerial(Integer serial) {
         this.serial = serial;
     }
-    
+
     public BigDecimal getTaxValue() {
         return taxValue;
     }
@@ -292,7 +303,7 @@ public class InvPurchaseInvoiceDetail extends BaseEntity {
     public void setTaxValue(BigDecimal taxValue) {
         this.taxValue = taxValue;
     }
-    
+
     @XmlTransient
     public Collection<InvReturnPurchaseDetail> getInvReturnPurchaseDetailCollection() {
         return invReturnPurchaseDetailCollection;
@@ -348,7 +359,7 @@ public class InvPurchaseInvoiceDetail extends BaseEntity {
      * @return the costAvarage
      */
     public BigDecimal getCostAvarage() {
-        if(costAvarage == null){
+        if (costAvarage == null) {
             costAvarage = BigDecimal.ZERO;
         }
         return costAvarage;
@@ -463,8 +474,8 @@ public class InvPurchaseInvoiceDetail extends BaseEntity {
      * @return the proof
      */
     public Integer getProof() {
-        if(proof == null){
-            proof = 0 ;
+        if (proof == null) {
+            proof = 0;
         }
         return proof;
     }
@@ -480,7 +491,7 @@ public class InvPurchaseInvoiceDetail extends BaseEntity {
      * @return the sumDetailNet
      */
     public BigDecimal getSumDetailNet() {
-        if(sumDetailNet == null){
+        if (sumDetailNet == null) {
             sumDetailNet = BigDecimal.ZERO;
         }
         return sumDetailNet;
