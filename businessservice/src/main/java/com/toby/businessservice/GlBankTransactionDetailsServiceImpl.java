@@ -8,6 +8,7 @@ package com.toby.businessservice;
 import com.toby.core.GenericDAO;
 import com.toby.dto.GeneralJournalDTO;
 import com.toby.dto.GlBankDTO;
+import com.toby.dto.GlBankTransactionDTO;
 import com.toby.dto.GlYearDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.SymbolDTO;
@@ -71,7 +72,7 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
 //                && glBankTransactionDetail.getGlBankTransactionId().getGeneralJournalId().getId() != null) {
 //            generaljournalService.deleteGeneralJournal(glBankTransactionDetail.getGlBankTransactionId().getGeneralJournalId().getId());
 //        }
-        id = tarhil(bankTransactionDetail, tobyUser);
+//        id = tarhil(bankTransactionDetail, tobyUser);
         return id;
     }
 
@@ -223,6 +224,26 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
             generaljournalDetailsService.addGenDetalil(false, dto.getGlBankTransactionId().getValueLocal(), journal.getId(), dto.getAccountCreditId().getId(),
                     dto.getBankIdFrom().getGallaryId().getCostCenterId().getId(),
                     dto.getRemarks(), tobyUser);
+//            
+//            Integer costCenterIdMain = dto.getAccountDebitId().getCostCenterId().getId();
+            Integer costCeterDetailId = dto.getBankIdFrom().getGallaryId().getCostCenterId().getId();
+
+            Integer costCenterIdMain = dto.getAccountDebitId().getCostCenterId().getId();
+
+            if (!costCeterDetailId.equals(costCenterIdMain)) {
+                CostCenter costCenter = dao.findEntityById(CostCenter.class, costCenterIdMain);
+                Integer currentAccountId = costCenter.getCurrentaccountId().getId();
+                generaljournalDetailsService.addGenDetalil(true, dto.getGlBankTransactionId().getValueLocal(), journal.getId(), dto.getCostCenterId().getCurrentaccountId().getId(),
+                        //                        dto.getCostCenterId().getId(),
+                        costCenterIdMain,
+                        dto.getRemarks(), tobyUser);
+                generaljournalDetailsService.addGenDetalil(false,
+                        dto.getGlBankTransactionId().getValueLocal(),
+                        journal.getId(),
+                        currentAccountId,
+                        dto.getCostCenterId().getId(),
+                        dto.getRemarks(), tobyUser);
+            }
         }
         return journal == null ? null : journal.getId();
     }
@@ -235,6 +256,7 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
         BigDecimal valueCommitionTax = (((dto.getValue().multiply(dto.getBankIdFrom().getCommition().divide(new BigDecimal(100)))).multiply(new BigDecimal(0.15))).setScale(5, RoundingMode.HALF_UP));
         BigDecimal valueAfterCommition = ((dto.getValue().subtract(valueCommition)).setScale(2, RoundingMode.FLOOR));
         //  القيمة مطروح منها عمولة البنك
+
         if (dto.getOrganizationSiteId() != null
                 && dto.getBankIdFrom().getGallaryId() != null
                 && dto.getBankIdFrom().getGallaryId().getCostCenterId() != null
@@ -245,17 +267,15 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
                     remark, tobyUser);
             Integer bankCommition = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"BANK_COMMITION\" AND a.accountId IS NOT NULL", params);
 
-            if (dto.getBankIdFrom().getCommition().compareTo(BigDecimal.ZERO) == 1) {
+            if (dto.getBankIdFrom() != null && dto.getBankIdFrom().getCommition() != null
+                    && dto.getBankIdFrom().getCommition().compareTo(BigDecimal.ZERO) == 1 && dto.getBankIdFrom().getFixedAmount().compareTo(BigDecimal.ZERO) != 1) {
 
                 generaljournalDetailsService.addGenDetalil(true, valueCommition.add(valueCommitionTax), journal.getId(), bankCommition,
                         dto.getBankIdFrom().getGallaryId().getCostCenterId().getId(),
                         remark, tobyUser);
-            }
-            if (dto.getBankIdFrom() != null && dto.getBankIdFrom().getCommition() != null
-                    && dto.getBankIdFrom().getCommition().compareTo(BigDecimal.ZERO) == 1) {
+//            }
 
 //                Integer bankTax = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"BANK_TAX\" AND a.accountId IS NOT NULL", params);
-
 //                    generaljournalDetailsService.addGenDetalil(true, valueCommitionTax, journal.getId(), bankTax,
 //                            dto.getBankIdFrom().getGallaryId().getCostCenterId().getId(),
 //                            dto.getRemarks(), tobyUser);
@@ -264,6 +284,17 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
                         remark, tobyUser);
 
             }
+
+            if (dto.getBankIdFrom() != null && dto.getBankIdFrom().getCommition() != null
+                    && dto.getBankIdFrom().getCommition().compareTo(BigDecimal.ZERO) == 1 && dto.getBankIdFrom().getFixedAmount().compareTo(BigDecimal.ZERO) == 1) {
+                BigDecimal valuetamaraBeforTax = valueCommition.add(dto.getBankIdFrom().getFixedAmount());
+                BigDecimal valueTamara = ((valuetamaraBeforTax.add((valuetamaraBeforTax).multiply(new BigDecimal(0.15)))).setScale(2, RoundingMode.HALF_UP));
+                generaljournalDetailsService.addGenDetalil(true, valueTamara, journal.getId(), 13851,
+                        dto.getBankIdFrom().getGallaryId().getCostCenterId().getId(),
+                        remark, tobyUser);
+                valueAfterCommition = (dto.getValue().subtract(valueTamara)).setScale(2, RoundingMode.FLOOR);
+            }
+
 //                BigDecimal valueAfterCommitionANDTax = valueAfterCommition.add(valueCommitionTax);
             generaljournalDetailsService.addGenDetalil(true, valueAfterCommition, journal.getId(), dto.getAccountDebitId().getId(),
                     dto.getBankIdFrom().getGallaryId().getCostCenterId().getId(),
@@ -910,7 +941,6 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
                             costCeterDetailId,
                             " عمولة البنك " + dto.getRemarks(), tobyUser);
                 }
-
                 if (!costCeterDetailId.equals(costCenterIdMain)) {
                     finalValueCurrent = finalValueCurrent.add(dto.getValue());
                     generaljournalDetailsService.addGenDetalil(debit, dto.getValue(), journal.getId(), dto.getCostCenterId().getCurrentaccountId().getId(),
@@ -1078,8 +1108,9 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
     }
 
     @Override
-    public void tarhilAfterSave(Integer glBankTransactionId, TobyUser tobyUser) {
+    public GlBankTransactionDTO tarhilAfterSave(Integer glBankTransactionId, TobyUser tobyUser) {
         Map<String, Object> params20 = new HashMap<>();
+        GlBankTransactionDTO glBankTransaction = new GlBankTransactionDTO();
         params20.put("glBankTransactionId", glBankTransactionId);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT s FROM GlBankTransactionDetail s WHERE s.glBankTransactionId.id = :glBankTransactionId");
@@ -1092,7 +1123,12 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
             generalJournal.setId(id);
             bankTransaction.setGeneralJournalId(generalJournal);
             dao.updateEntity(bankTransaction);
+            
+            glBankTransaction.setId(bankTransaction.getId());
+            glBankTransaction.setSerial(bankTransaction.getSerial());
         }
+
+        return glBankTransaction;
     }
 
     public GlBankTransactionDetail mapToEntityDetailFromInvSales(GlBankDTO glBankDTO, Integer invOrganizationId, Integer glBankTransactionId, GlBankDTO bankDTO, String remarks, BigDecimal value, TobyUser tobyUser) {

@@ -27,6 +27,8 @@ public interface InvNoticeService {
     public void deleteInvNoticeNew(InvNotice invNotice);
 
     public void updateInvNotice(InvNotice invNotice);
+    
+     public InvNotice addInvNotice(List<InvNotice> invNoticeList, TobyUser tobyUser, Integer yearSelection);
 
     public InvNotice addInvNotice(InvNotice invNotice, TobyUser tobyUser, Integer yearSelection);
 

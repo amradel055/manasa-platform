@@ -1613,36 +1613,36 @@ public class ImportMB extends Basic implements Serializable {
         GeneralJournalDTO generalJournal = new GeneralJournalDTO();
         Map<Integer, Integer> mapGlAccount = new HashMap<>();
         Map<Integer, Integer> mapCostCenter = new HashMap<>();
-        Map<Integer, GeneralJournalDTO> mapGeneraljournal = new HashMap<>();
+//        Map<Integer, GeneralJournalDTO> mapGeneraljournal = new HashMap<>();
 
         mapGlAccount = glAccountServiceDTO.getBranchGLAccountsByMap(182);
         mapCostCenter = costCenterService.getBranchCostCentersByMap(182);
-
+        List<GeneralJournalDetails> detailList = new ArrayList<>();
         for (int i = 1; i < sheetHead.getRows(); i++) {
-            if (!sheetHead.getCell(0, i).getContents().isEmpty() && sheetHead.getCell(0, i).getContents().startsWith("0000")) {
-                Integer serial = Integer.parseInt(sheetHead.getCell(0, i).getContents());
-                Integer costCenterCode = Integer.parseInt(sheetHead.getCell(1, i).getContents());
-                Integer glAccountCode = Integer.parseInt(sheetHead.getCell(8, i).getContents());
+            if (!sheetHead.getCell(4, i).getContents().isEmpty()) {
+//                Integer serial = Integer.parseInt(sheetHead.getCell(0, i).getContents());
+                Integer costCenterCode = Integer.parseInt(sheetHead.getCell(0, i).getContents());
+                Integer glAccountCode = Integer.parseInt(sheetHead.getCell(4, i).getContents());
                 Integer costCenter = mapCostCenter.get(costCenterCode);
                 Integer glAccount = mapGlAccount.get(glAccountCode);
                 if (costCenter != null && glAccount != null) {
-                    if (mapGeneraljournal.containsKey(serial)) {
-                        item = mapGeneraljournal.get(serial);
-                        item.getDetailList().add(initGeneralJournalDetailDataTasaheet(sheetHead, i, glAccount, costCenter));
-                        mapGeneraljournal.put(serial, item);
-                    } else {
-                        item = new GeneralJournalDTO();
-                        item = initGeneralJournalHeadDataTasaheet(sheetHead, i, item);
-                        item.getDetailList().add(initGeneralJournalDetailDataTasaheet(sheetHead, i, glAccount, costCenter));
-                        mapGeneraljournal.put(serial, item);
-                    }
+//                    if (mapGeneraljournal.containsKey(serial)) {
+//                        item = mapGeneraljournal.get(serial);
+
+                    detailList.add(initGeneralJournalDetailDataTasaheet(sheetHead, i, glAccount, costCenter));
+//                        mapGeneraljournal.put(serial, item);
+//                    } else {
+//                        item = new GeneralJournalDTO();
+//                        item = initGeneralJournalHeadDataTasaheet(sheetHead, i, item);
+//                        item.getDetailList().add(initGeneralJournalDetailDataTasaheet(sheetHead, i, glAccount, costCenter));
+//                        mapGeneraljournal.put(serial, item);
+//                    }
                 }
             }
         }
 
-        List<GeneralJournalDTO> list = new ArrayList<GeneralJournalDTO>(mapGeneraljournal.values());
-
-        generaljournalServiceDTO.addGeneralJournalDTOWithDetailFromExcel(list, getUserData().getUser());
+//        List<GeneralJournalDTO> list = new ArrayList<GeneralJournalDTO>(mapGeneraljournal.values());
+        generaljournalServiceDTO.addGeneralJournalDTOWithDetailFromExcelNew(detailList, getUserData().getUser());
 
         OpenDlg("sucesses");
 
@@ -1686,11 +1686,11 @@ public class ImportMB extends Basic implements Serializable {
     }
 
     public GeneralJournalDetails initGeneralJournalDetailDataTasaheet(Sheet sheet, int i, Integer accountId, Integer costCenterId) throws NumberFormatException {
-        Cell debit = sheet.getCell(6, i);
-        Cell credit = sheet.getCell(5, i);
-        Cell debitF = sheet.getCell(6, i);
-        Cell creditF = sheet.getCell(5, i);
-        Cell remark = sheet.getCell(4, i);
+        Cell debit = sheet.getCell(2, i);
+        Cell credit = sheet.getCell(1, i);
+        Cell debitF = sheet.getCell(2, i);
+        Cell creditF = sheet.getCell(1, i);
+//        Cell remark = sheet.getCell(4, i);
 
         GeneralJournalDetails journalDetails = new GeneralJournalDetails();
 
@@ -1709,7 +1709,7 @@ public class ImportMB extends Basic implements Serializable {
         journalDetails.setDebitAmountLocal(!creditF.getContents().isEmpty() ? (new BigDecimal(debitF.getContents())) : null);
         journalDetails.setCreditamount(!debit.getContents().isEmpty() ? (new BigDecimal(credit.getContents())) : null);
         journalDetails.setCreditamountLocal(!debitF.getContents().isEmpty() ? (new BigDecimal(creditF.getContents())) : null);
-        journalDetails.setDiscribtion(remark.getContents());
+//        journalDetails.setDiscribtion(remark.getContents());
         journalDetails.setBranchId(getUserData().getUserBranch());
         journalDetails.setCreatedBy(getUserData().getUser());
         journalDetails.setCreationDate(new Date());

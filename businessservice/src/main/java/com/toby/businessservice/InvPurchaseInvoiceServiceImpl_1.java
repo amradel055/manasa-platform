@@ -1579,7 +1579,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     invPurchaseInvoice = dao.updateEntity(invPurchaseInvoice);
 
                     invInvoiceDTO.setId(invPurchaseInvoice.getId());
-                    payCash(invInvoiceDTO.getGlPayDTOList(), invInvoiceDTO.getDate(), invPurchaseInvoice.getId(), invPurchaseInvoice.getRate(), invPurchaseInvoice.getRemarks(), invPurchaseInvoice.getOrganizationSiteId().getId(),invInvoiceDTO.getGlYearSelection().getId(), tobyUser);
+                    payCash(invInvoiceDTO.getGlPayDTOList(), invInvoiceDTO.getDate(), invPurchaseInvoice.getId(), invPurchaseInvoice.getRate(), invPurchaseInvoice.getRemarks(), invPurchaseInvoice.getOrganizationSiteId().getId(), invInvoiceDTO.getGlYearSelection().getId(), tobyUser);
 //                    if (invInvoiceDTO.getPayed() != null && invInvoiceDTO.getPayed().compareTo(BigDecimal.ZERO) == 1 && invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
 //                        glBankTransactionService.addCash(invInvoiceDTO, tobyUser);
 //                    }
@@ -1618,7 +1618,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     public void payCash(List<GlPayDTO> glPayDTOList, Date date, Integer invoiceId, BigDecimal rate, String remarks, Integer invOrganizationId, Integer glYearId, TobyUser tobyUser) {
         for (GlPayDTO glPayDTO : glPayDTOList) {
             if (glPayDTO.getBank() != null && glPayDTO.getBank().getId() != null && glPayDTO.getValue() != null && glPayDTO.getValue().compareTo(BigDecimal.ZERO) == 1) {
-                GlBankTransaction transaction = glBankTransactionService.addCash(date, glPayDTO.getBank(), invoiceId, rate, remarks, glPayDTO.getValue(), invOrganizationId,glYearId, tobyUser);
+                GlBankTransaction transaction = glBankTransactionService.addCash(date, glPayDTO.getBank(), invoiceId, rate, remarks, glPayDTO.getValue(), invOrganizationId, glYearId, tobyUser);
                 glPayDTO.setTransactionId(transaction.getId());
             }
         }
@@ -2122,12 +2122,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 + " left join inv_inventory invi on invi.id = s.galary_Id "
                 + " left join inv_organization_site ios on ios.id = s.organization_site_id "
                 + " WHERE s.branch_id = ").append(branchId).append(
-                        " AND  s.type = ").append(printProductionDTO.getInvoiceStatus()).append(
-                        " AND s.id not in (SELECT p.inv_purchase_invoice_id from pro_factory_delivery p )  \n"
-                        + " AND  s.galary_Id IN (").append(gallarySelected).append(" )  AND   s.date >= '"
-                        + formatDateFrom.format(printProductionDTO.getFromDate()) + "'"
-                        + " AND   s.date <= '" + formatDateTo.format(printProductionDTO.getToDate()) + "'"
-                        + " order by s.serial");
+                " AND  s.type = ").append(printProductionDTO.getInvoiceStatus()).append(
+                " AND s.id not in (SELECT p.inv_purchase_invoice_id from pro_factory_delivery p )  \n"
+                + " AND  s.galary_Id IN (").append(gallarySelected).append(" )  AND   s.date >= '"
+                + formatDateFrom.format(printProductionDTO.getFromDate()) + "'"
+                + " AND   s.date <= '" + formatDateTo.format(printProductionDTO.getToDate()) + "'"
+                + " order by s.serial");
 
         List<Object[]> res = dao.executeNativeQuery(builder.toString());
 
@@ -2411,7 +2411,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         params.put("invPurchaseInvoiceId", invPurchaseInvoiceId);
         List<BigDecimal> details = dao.findListByQuery("SELECT  sum(i.value)    FROM GlBankTransaction i WHERE i.invoiceId.id = :invPurchaseInvoiceId Group by i.invoiceId.id", params);
         List<BigDecimal> detailsReturn = dao.findListByQuery("SELECT  sum(i.value)    FROM GlBankTransactionDetail i WHERE i.invoiceId.id = :invPurchaseInvoiceId Group by i.invoiceId.id", params);
-        List<BigDecimal> detailsMainValue = dao.findListByQuery("SELECT  sum(i.netAfterDiscountHead)    FROM InvPurchaseInvoiceDetail i WHERE i.invPurchaseInvoiceId.id = :invPurchaseInvoiceId ", params);
+//        List<BigDecimal> detailsMainValue = dao.findListByQuery("SELECT   IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0)    FROM InvPurchaseInvoiceDetail i WHERE i.invPurchaseInvoiceId.id = :invPurchaseInvoiceId ", params);
+        List<BigDecimal> detailsMainValue = dao.executeNativeQuery("SELECT IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0)  AS `exitt` FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id` WHERE  ipi.id = "+invPurchaseInvoiceId+"  group by ipi.id");
         List<BigDecimal> noticeDebit = dao.findListByQuery("SELECT  sum(i.value)    FROM InvNotice i WHERE i.invInvoice.id = :invPurchaseInvoiceId AND i.type = 0 Group by i.invInvoice.id", params);
         List<BigDecimal> noticeCredit = dao.findListByQuery("SELECT  sum(i.value)    FROM InvNotice i WHERE i.invInvoice.id = :invPurchaseInvoiceId AND i.type in (1,4)  Group by i.invInvoice.id", params);
 
@@ -2421,7 +2422,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
         BigDecimal total = BigDecimal.ZERO;
         if (detailsMainValue != null && !detailsMainValue.isEmpty()) {
-            total = new BigDecimal((detailsMainValue.get(0).add(detailsMainValue.get(0).multiply((new BigDecimal(15)).divide(new BigDecimal(100)).setScale(5, RoundingMode.HALF_UP)))).stripTrailingZeros().toPlainString());
+//            total = new BigDecimal((detailsMainValue.get(0).add(detailsMainValue.get(0).multiply((new BigDecimal(15)).divide(new BigDecimal(100)).setScale(5, RoundingMode.HALF_UP)))).stripTrailingZeros().toPlainString());
+            total = new BigDecimal((detailsMainValue.get(0)).stripTrailingZeros().toPlainString());
         }
         BigDecimal remain = new BigDecimal((total.subtract((details != null && !details.isEmpty()) ? details.get(0).subtract((detailsReturn != null && !detailsReturn.isEmpty()) ? detailsReturn.get(0) : BigDecimal.ZERO) : BigDecimal.ZERO)).stripTrailingZeros().toPlainString());
         remain = remain.add((noticeDebit != null && !noticeDebit.isEmpty()) ? noticeDebit.get(0) : BigDecimal.ZERO);
@@ -3004,17 +3006,21 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 if (detail.getAccountId() != null) {
                     if (map.containsKey(detail.getAccountId())) {
                         accountvalue = map.get(detail.getAccountId());
-                        accountvalue = accountvalue.add(detail.getNetAfterDiscountHead());
+//                        accountvalue = accountvalue.add(detail.getNetAfterDiscountHead());
+                        accountvalue = accountvalue.add(detail.getNet());
                     } else {
-                        accountvalue = detail.getNetAfterDiscountHead();
+//                        accountvalue = detail.getNetAfterDiscountHead();
+                        accountvalue = detail.getNet();
                     }
                     map.put(detail.getAccountId(), accountvalue);
                 } else {
                     if (map.containsKey(storeAccountNumber)) {
                         accountvalue = map.get(storeAccountNumber);
-                        accountvalue = accountvalue.add(detail.getNetAfterDiscountHead());
+//                        accountvalue = accountvalue.add(detail.getNetAfterDiscountHead());
+                        accountvalue = accountvalue.add(detail.getNet());
                     } else {
-                        accountvalue = detail.getNetAfterDiscountHead();
+//                        accountvalue = detail.getNetAfterDiscountHead();
+                        accountvalue = detail.getNet();
                     }
 
                     map.put(storeAccountNumber, accountvalue);
@@ -3027,7 +3033,13 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
             Integer purchseTaxAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"PURCHASE_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
             BigDecimal totalNetAfterDiscount = dto.getTotalNetAfterDiscount();
+            BigDecimal discountValue = BigDecimal.ZERO;
             if (dto.getDiscount() != null && dto.getDiscount().compareTo(BigDecimal.ZERO) == 1) {
+                if (dto.getDiscountType() != null && dto.getDiscountType() == 0) {
+                    discountValue = dto.getDiscount();
+                } else if (dto.getDiscountType() != null && dto.getDiscountType() == 1) {
+                    discountValue = dto.getTotalNet().multiply((dto.getDiscount().divide(new BigDecimal(100), 3, RoundingMode.FLOOR)));
+                }
                 totalNetAfterDiscount = totalNetAfterDiscount.add(dto.getDiscount());
             }
 
@@ -3049,7 +3061,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     "فاتورة " + (dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getName()) + " رقم " + dto.getSupplierInvoiceNumber() + "رقم ضريبى " + (dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getPostBox()), tobyUser);
 
             if (dto.getDiscount() != null && dto.getDiscount().compareTo(BigDecimal.ZERO) == 1) {
-                generaljournalDetailsService.addGenDetalil(false, dto.getDiscount(), journal.getId(), 13239,
+                generaljournalDetailsService.addGenDetalil(false, discountValue, journal.getId(), 13239,
                         835,
                         "فاتورة " + (dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getName()) + " رقم " + dto.getSupplierInvoiceNumber() + "رقم ضريبى " + (dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getPostBox()), tobyUser);
             }
@@ -3062,7 +3074,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
             generaljournalDetailsService.addGenDetalil(false, dto.getTotalNetAfterDiscount(), journal.getId(), storeAccountNumber,
                     835,
-                    "فاتورة المورد " + dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getName() + " رقم " + dto.getSupplierInvoiceNumber(), tobyUser);
+                    "فاتورة المورد " + dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getName() + " رقم " + dto.getSupplierInvoiceNumber() + "رقم ضريبى " + (dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getPostBox()), tobyUser);
             generaljournalDetailsService.addGenDetalil(true, dto.getFinalNet(), journal.getId(),
                     (dto.getOrganizationSiteId() == null || dto.getOrganizationSiteId().getAccountId() == null || dto.getOrganizationSiteId().getAccountId().getId() == null) ? null : dto.getOrganizationSiteId().getAccountId().getId(),
                     835,

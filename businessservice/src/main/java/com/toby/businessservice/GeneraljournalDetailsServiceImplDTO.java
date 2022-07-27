@@ -19,6 +19,7 @@ import com.toby.entity.GeneralJournal;
 import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlAccount;
 import com.toby.entity.GlAdminUnit;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -247,5 +248,15 @@ public class GeneraljournalDetailsServiceImplDTO implements GeneraljournalDetail
         entity.setBranchId(tobyUser.getBranchId());
         entity.setCompanyId(tobyUser.getCompanyId());
         return entity;
+    }
+    
+    @Override
+    public BigDecimal getDebitAmountForGlAccount(Integer accountId , Integer costCenterId,Date dateFrom,Date dateTo) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("accountId", accountId);
+        params.put("costCenterId", costCenterId);
+        params.put("dateFrom", dateFrom);
+        params.put("dateTo", dateTo);
+        return dao.findEntityByQuery("SELECT SUM(IFNULL(details.debitAmount),0) - SUM(IFNULL(details.creditamount),0) FROM GeneralJournalDetails details WHERE details.glACCOUNTId.id = :accountId AND details.costCenterId.id = :costCenterId AND details.generalJournalId.generalData >= :dateFrom  AND details.generalJournalId.generalData <= :dateTo ", params);
     }
 }

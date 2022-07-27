@@ -10,6 +10,7 @@ import com.toby.entity.TobyUser;
 import com.toby.dto.GeneralJournalDTO;
 import com.toby.dto.GlYearDTO;
 import com.toby.entity.GeneralJournal;
+import com.toby.entity.GeneralJournalDetails;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,8 @@ public interface GeneraljournalServiceDTO {
     public void addGeneralJournalDTOForCorrectence(List<GeneralJournalDTO> generalJournals,TobyUser tobyUser); 
     
     public void addGeneralJournalDTOWithDetailFromExcel(List<GeneralJournalDTO> list, TobyUser tobyUser);
+    
+    public void addGeneralJournalDTOWithDetailFromExcelNew(List<GeneralJournalDetails> list, TobyUser tobyUser);
     
     public void addGeneralJournalDTOWithDetail(List<GeneralJournalDTO> list, TobyUser tobyUser);
     

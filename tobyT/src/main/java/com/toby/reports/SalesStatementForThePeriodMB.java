@@ -29,6 +29,7 @@ public class SalesStatementForThePeriodMB extends Basic {
     private List<SalesStatementForThePeriod> list;
     private SalesStatementForThePeriod statementForThePeriod;
     private Boolean notZeroValue ;
+    private Boolean zeroValue ;
 
     @EJB
     private ReportsService reportsService;
@@ -49,6 +50,15 @@ public class SalesStatementForThePeriodMB extends Basic {
                 List<SalesStatementForThePeriod> listBak = new ArrayList<>();
                 for( SalesStatementForThePeriod period : getList()){
                     if(period.getRemain().compareTo(BigDecimal.ZERO) == 1){
+                        listBak.add(period);
+                    }
+                }
+                setList(listBak);
+            }
+            if(getZeroValue()){
+                List<SalesStatementForThePeriod> listBak = new ArrayList<>();
+                for( SalesStatementForThePeriod period : getList()){
+                    if(period.getRemain().compareTo(BigDecimal.ZERO) != 1){
                         listBak.add(period);
                     }
                 }
@@ -161,6 +171,23 @@ public class SalesStatementForThePeriodMB extends Basic {
      */
     public void setNotZeroValue(Boolean notZeroValue) {
         this.notZeroValue = notZeroValue;
+    }
+
+    /**
+     * @return the zeroValue
+     */
+    public Boolean getZeroValue() {
+        if(zeroValue == null){
+            zeroValue = Boolean.FALSE;
+        }
+        return zeroValue;
+    }
+
+    /**
+     * @param zeroValue the zeroValue to set
+     */
+    public void setZeroValue(Boolean zeroValue) {
+        this.zeroValue = zeroValue;
     }
 
 }

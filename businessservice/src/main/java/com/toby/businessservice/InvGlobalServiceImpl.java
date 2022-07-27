@@ -9,7 +9,6 @@ import com.toby.common.Validation;
 import com.toby.core.GenericDAO;
 import com.toby.define.CompanyActivityClassEnum;
 import com.toby.define.ScreenNameClassEnum;
-import com.toby.dto.GlAccountDTO;
 import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
@@ -925,8 +924,9 @@ public class InvGlobalServiceImpl implements InvGlobalService {
     private InvDetailDTO findDataForItem(InvDetailDTO invDetailDTO, InvInvoiceDTO invInvoiceDTO, Integer offerType, Boolean findCost) {
         if (invInvoiceDTO.getCompanyActivity().equals(CompanyActivityClassEnum.RetailSaleForClothFactory)
                 && (ScreenNameClassEnum.INVSALESINVOICEFORM.equals(invInvoiceDTO.getScreenName())
-                || ScreenNameClassEnum.PROWORKORDER.equals(invInvoiceDTO.getScreenName())
-                || ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(invInvoiceDTO.getScreenName()))) {
+                || ScreenNameClassEnum.PROWORKORDER.equals(invInvoiceDTO.getScreenName()) 
+//                || ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(invInvoiceDTO.getScreenName())
+                )) {
             ItemsBarcodesDetailsView barcodesDetailsView = invDetailDTO.getItemsBarcodesDetail();
 
             if (barcodesDetailsView.getDiscountrate() != null
@@ -942,12 +942,18 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                     if (barcodesDetailsView.getTypeShow() == null) {
                         invDetailDTO.setQuantityOfOneUnit(barcodesDetailsView.getNumberMetersMen());
                         invDetailDTO.setCost(calcCost(invDetailDTO, invInvoiceDTO, findCost));
-                    } else if (barcodesDetailsView.getTypeShow() == 1) {
+                    } else if (barcodesDetailsView.getTypeShow() == 1 || barcodesDetailsView.getTypeShow() == 2) {
+                        BigDecimal length = invInvoiceDTO.getOrganizationSiteId().getLength();
+                        BigDecimal shoulder = invInvoiceDTO.getOrganizationSiteId().getShoulder();
+                        BigDecimal step = invInvoiceDTO.getOrganizationSiteId().getStep();
+                        BigDecimal r1 = getLenght(length, barcodesDetailsView.getTypeShow());
+                        BigDecimal r2 = getShoulder(shoulder, barcodesDetailsView.getTypeShow());
+                        BigDecimal r3 = getStep(step, barcodesDetailsView.getTypeShow());
+                        BigDecimal r4 = r2.max(r1);
+                        BigDecimal r5 = r4.max(r3);
+                        invDetailDTO.setQuantityOfOneUnit(new BigDecimal(r5.setScale(2, RoundingMode.FLOOR).stripTrailingZeros().toPlainString()));
+                        System.out.println(r5);
                         invDetailDTO.setCost(barcodesDetailsView.getMaxPriceMen());
-                        invDetailDTO.setQuantityOfOneUnit(new BigDecimal(5));
-                    } else if (barcodesDetailsView.getTypeShow() == 2) {
-                        invDetailDTO.setCost(barcodesDetailsView.getMaxPriceMen());
-                        invDetailDTO.setQuantityOfOneUnit(new BigDecimal(3.5));
                     }
 
                 }
@@ -1010,6 +1016,263 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         }
         invDetailDTO.setCostBak(invDetailDTO.getCost());
         return invDetailDTO;
+    }
+
+    public BigDecimal getLenght(BigDecimal len, Integer type) {
+        BigDecimal r = BigDecimal.ZERO;
+
+        if (len.compareTo(new BigDecimal(75)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(1.70);
+            } else if (type == 1) {
+                r = new BigDecimal(2.70);
+            }
+        }
+        if (len.compareTo(new BigDecimal(75)) == 1 && len.compareTo(new BigDecimal(90)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(2);
+            } else if (type == 1) {
+                r = new BigDecimal(3);
+            }
+        }
+        if (len.compareTo(new BigDecimal(90)) == 1 && len.compareTo(new BigDecimal(109)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(2.20);
+            } else if (type == 1) {
+                r = new BigDecimal(3.20);
+            }
+        }
+        if (len.compareTo(new BigDecimal(110)) != -1 && len.compareTo(new BigDecimal(119)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(2.5);
+            } else if (type == 1) {
+                r = new BigDecimal(3.70);
+            }
+        }
+        if (len.compareTo(new BigDecimal(120)) != -1 && len.compareTo(new BigDecimal(129)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(2.7);
+            } else if (type == 1) {
+                r = new BigDecimal(4);
+            }
+        }
+        if (len.compareTo(new BigDecimal(130)) != -1 && len.compareTo(new BigDecimal(139)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(3);
+            } else if (type == 1) {
+                r = new BigDecimal(4.20);
+            }
+        }
+        if (len.compareTo(new BigDecimal(140)) != -1 && len.compareTo(new BigDecimal(145)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(3.20);
+            } else if (type == 1) {
+                r = new BigDecimal(4.70);
+            }
+        }
+        if (len.compareTo(new BigDecimal(145)) != -1 && len.compareTo(new BigDecimal(154)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(3.50);
+            } else if (type == 1) {
+                r = new BigDecimal(4.70);
+            }
+        }
+        if (len.compareTo(new BigDecimal(155)) != -1 && len.compareTo(new BigDecimal(159)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(3.70);
+            } else if (type == 1) {
+                r = new BigDecimal(5.2);
+            }
+        }
+        if (len.compareTo(new BigDecimal(160)) != -1 && len.compareTo(new BigDecimal(164)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(3.90);
+            } else if (type == 1) {
+                r = new BigDecimal(5.50);
+            }
+        }
+        if (len.compareTo(new BigDecimal(164)) == 1) {
+            if (type == 2) {
+                r = new BigDecimal(4.2);
+            } else if (type == 1) {
+                r = new BigDecimal(6);
+            }
+        }
+        return r;
+
+    }
+
+    public BigDecimal getShoulder(BigDecimal shou, Integer type) {
+        BigDecimal r = BigDecimal.ZERO;
+        if (shou.compareTo(new BigDecimal(24)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(1.70);
+            } else if (type == 1) {
+                r = new BigDecimal(2.70);
+            }
+        }
+
+        if (shou.compareTo(new BigDecimal(25)) != -1 && shou.compareTo(new BigDecimal(27)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(2.20);
+            } else if (type == 1) {
+                r = new BigDecimal(3.20);
+            }
+        }
+        if (shou.compareTo(new BigDecimal(28)) != -1 && shou.compareTo(new BigDecimal(29)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(2.5);
+            } else if (type == 1) {
+                r = new BigDecimal(3.70);
+            }
+        }
+        if (shou.compareTo(new BigDecimal(0)) != -1 && shou.compareTo(new BigDecimal(34)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(2.7);
+            } else if (type == 1) {
+                r = new BigDecimal(4);
+            }
+        }
+        if (shou.compareTo(new BigDecimal(35)) != -1 && shou.compareTo(new BigDecimal(39)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(3);
+            } else if (type == 1) {
+                r = new BigDecimal(4.20);
+            }
+        }
+        if (shou.compareTo(new BigDecimal(40)) != -1 && shou.compareTo(new BigDecimal(42)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(3.2);
+            } else if (type == 1) {
+                r = new BigDecimal(4.70);
+            }
+        }
+
+        if (shou.compareTo(new BigDecimal(42)) != -1 && shou.compareTo(new BigDecimal(45)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(3.5);
+            } else if (type == 1) {
+                r = new BigDecimal(4.70);
+            }
+        }
+        if (shou.compareTo(new BigDecimal(46)) != -1 && shou.compareTo(new BigDecimal(47)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(3.70);
+            } else if (type == 1) {
+                r = new BigDecimal(5.2);
+            }
+        }
+        if (shou.compareTo(new BigDecimal(48)) != -1 && shou.compareTo(new BigDecimal(50)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(3.90);
+            } else if (type == 1) {
+                r = new BigDecimal(5.50);
+            }
+        }
+        if (shou.compareTo(new BigDecimal(51)) != -1) {
+            if (type == 2) {
+                r = new BigDecimal(4.2);
+            } else if (type == 1) {
+                r = new BigDecimal(6);
+            }
+        }
+        return r;
+
+    }
+
+    public BigDecimal getStep(BigDecimal ste, Integer type) {
+        BigDecimal r = BigDecimal.ZERO;
+        if (ste.compareTo(new BigDecimal(28)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(1.70);
+            } else if (type == 1) {
+                r = new BigDecimal(2.70);
+            }
+
+        }
+
+        if (ste.compareTo(new BigDecimal(29)) == 1 && ste.compareTo(new BigDecimal(49)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(2);
+            } else if (type == 1) {
+                r = new BigDecimal(3);
+            }
+
+        }
+        if (ste.compareTo(new BigDecimal(50)) == 1 && ste.compareTo(new BigDecimal(54)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(2.20);
+            } else if (type == 1) {
+                r = new BigDecimal(3.20);
+            }
+
+        }
+        if (ste.compareTo(new BigDecimal(55)) == 1 && ste.compareTo(new BigDecimal(59)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(2.5);
+            } else if (type == 1) {
+                r = new BigDecimal(3.70);
+            }
+
+        }
+        if (ste.compareTo(new BigDecimal(60)) == 1 && ste.compareTo(new BigDecimal(64)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(2.7);
+            } else if (type == 1) {
+                r = new BigDecimal(4);
+            }
+
+        }
+        if (ste.compareTo(new BigDecimal(65)) == 1 && ste.compareTo(new BigDecimal(69)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(3);
+            } else if (type == 1) {
+                r = new BigDecimal(4.20);
+            }
+        }
+        if (ste.compareTo(new BigDecimal(70)) == 1 && ste.compareTo(new BigDecimal(75)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(3.20);
+            } else if (type == 1) {
+                r = new BigDecimal(4.70);
+            }
+
+        }
+        if (ste.compareTo(new BigDecimal(75)) == 1 && ste.compareTo(new BigDecimal(79)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(3.50);
+            } else if (type == 1) {
+                r = new BigDecimal(4.70);
+            }
+
+        }
+        if (ste.compareTo(new BigDecimal(80)) == 1 && ste.compareTo(new BigDecimal(84)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(3.70);
+            } else if (type == 1) {
+                r = new BigDecimal(5.20);
+            }
+
+        }
+        if (ste.compareTo(new BigDecimal(85)) == 1 && ste.compareTo(new BigDecimal(89)) != 1) {
+            if (type == 2) {
+                r = new BigDecimal(3.90);
+            } else if (type == 1) {
+                r = new BigDecimal(5.50);
+            }
+
+        }
+
+        if (ste.compareTo(new BigDecimal(89)) == 1) {
+            if (type == 2) {
+                r = new BigDecimal(4.2);
+            } else if (type == 1) {
+                r = new BigDecimal(6);
+            }
+
+        }
+        return r;
+
     }
 
     private void offer999(ItemsBarcodesDetailsView barcodesDetailsView, InvDetailDTO invDetailDTO, InvInvoiceDTO invInvoiceDTO, Boolean findCost) {
@@ -1082,6 +1345,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 || ScreenNameClassEnum.INVPERMISSIONORDERFORM.equals(screenNameClassEnum)
                 || ScreenNameClassEnum.PROWORKORDER.equals(screenNameClassEnum)
                 || ScreenNameClassEnum.INVRESERVATIONFORM.equals(screenNameClassEnum)
+                || ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)
                 || ScreenNameClassEnum.INVRETURNPURCHASEFORM.equals(screenNameClassEnum)) {
             detailDTO.setTotalQuantityWithScrewing(detailDTO.getQuantity().multiply(detailDTO.getScrewing()));
             detailDTO.setAvailableQuantityRow(quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), false, null));
@@ -1094,8 +1358,10 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 detailDTO.setCost(BigDecimal.ZERO);
                 detailDTO.setMsg("الصنف لا يوجد به كمية بالمخزن");
             }
-        } else if (ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)
-                || ScreenNameClassEnum.INVUPDATE.equals(screenNameClassEnum)) {
+        } else if (
+//                ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)
+//                || 
+                ScreenNameClassEnum.INVUPDATE.equals(screenNameClassEnum)) {
             detailDTO.setAvailableQuantityRow(quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), false, null));
             detailDTO.setOldQuantity(detailDTO.getAvailableQuantityRow());
             detailDTO.setOldQuantityBak(detailDTO.getAvailableQuantityRow());

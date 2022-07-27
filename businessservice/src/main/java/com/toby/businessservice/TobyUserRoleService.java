@@ -48,7 +48,7 @@ public interface TobyUserRoleService {
 
     public TobyUserRole addUserRole(TobyUserRole userRole, List<GlYear> yearListDeleted, List<TobyUserYear> tobyUserYearListSelection,
             List<GlBank> glBankListDeleted, List<TobyUserBank> tobyUserBankListAdded,
-            List<ProProductionStages> productionStagesDTOListDeleted,List<TobyUserProproduction> tobyUserProProductionStagesListAdded,
+            List<ProProductionStages> productionStagesDTOListDeleted, List<TobyUserProproduction> tobyUserProProductionStagesListAdded,
             List<InvInventory> inventoryListDeleted, List<TobyUserInventory> tobyUserInventoryListAdded,
             List<InvInventory> gallaryListDeleted, List<TobyUserInventory> tobyUsergallaryListAdded);
 
@@ -57,4 +57,6 @@ public interface TobyUserRoleService {
     public TobyUserRole findUserRoleWithYear(Integer userRoleId);
 
     public List<TobyUser> getUsersForBranch(Integer selectedBranchId);
+
+    public List<TobyUser> getUsersForBranchNew(Integer selectedBranchId);
 }

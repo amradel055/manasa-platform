@@ -121,7 +121,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
                     tarhilId = glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetail, tobyUser);
                     maxSerial++;
                 }
-                glBankTransaction = tarhilglBankTransaction(tarhilId, glBankTransaction);
+//                glBankTransaction = tarhilglBankTransaction(tarhilId, glBankTransaction);
             }
         }
         return glBankTransaction;
@@ -190,14 +190,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
 
     @Override
     public GlBankTransaction addOneGlBankTransaction(GlBankTransaction glBankTransaction, GlBankTransactionDetail bankTransactionDetail, TobyUser tobyUser) {
-        if (glBankTransaction.getId() != null) {
-            glBankTransaction = dao.updateEntity(glBankTransaction);
-        } else {
-
-//            glBankTransaction.setSerial(getMaxSerail(glBankTransaction));
-            glBankTransaction = dao.updateEntity(glBankTransaction);
-        }
-
+        glBankTransaction = dao.updateEntity(glBankTransaction);
         bankTransactionDetail.setGlBankTransactionId(glBankTransaction);
         glBankTransactionDetailsService.updateGlBankTransactionDetails(bankTransactionDetail, tobyUser);
         return glBankTransaction;

@@ -105,7 +105,7 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
         dao.executeNativeQuery("select toby.sql_mode_function()");
         Integer branchId = bankBalanceReportSearchBean.getBranchId();
         String bankBuilder = bankBalanceReportSearchBean.getBankBuilder();
-        String dateFrom = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(bankBalanceReportSearchBean.getDateFrom());
+//        String dateFrom = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(bankBalanceReportSearchBean.getDateFrom());
         String dateTo = new SimpleDateFormat("yyyy-MM-dd  23:59:59").format(bankBalanceReportSearchBean.getDateTo());
 
         StringBuilder queryBuilder = new StringBuilder();

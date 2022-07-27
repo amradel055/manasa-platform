@@ -864,6 +864,7 @@ public class Basic implements Serializable {
     public List<InvInventoryDTO> getGallaryListSelected() {
         if (gallaryListSelected == null) {
             gallaryListSelected = getUserData().getGallaryDTOList();
+            gallaryDTOConverters = new InvInventoryDTOConverter(gallaryListSelected);
         }
         return gallaryListSelected;
     }

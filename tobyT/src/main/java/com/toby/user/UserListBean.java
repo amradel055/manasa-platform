@@ -117,7 +117,7 @@ public class UserListBean extends BaseListBean implements Serializable {
             if (companyId != null && companyId.getId() != null) {
                 //  get all user to all roles to this branch
                 if (userData.getSelectedBranch() != null) {
-                    users = tobyUserRoleService.getUsersForBranch(userData.getSelectedBranch());
+                    users = tobyUserRoleService.getUsersForBranchNew(userData.getSelectedBranch());
                 }
 
             } else {
