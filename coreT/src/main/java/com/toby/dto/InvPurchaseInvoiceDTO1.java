@@ -11,6 +11,8 @@ import java.util.List;
 
 public class InvPurchaseInvoiceDTO1 extends BaseEntityDTO {
 
+ 
+
     private Date date;
     private BigDecimal rate;
     private Integer paymentType;
@@ -680,5 +682,6 @@ public class InvPurchaseInvoiceDTO1 extends BaseEntityDTO {
     public void setInvoiceType(Integer invoiceType) {
         this.invoiceType = invoiceType;
     }
+
 
 }
