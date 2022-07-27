@@ -292,6 +292,9 @@ public class GlBankTransactionEntity extends BaseEntity {
      * @return the rateBankTo
      */
     public BigDecimal getRateBankTo() {
+        if(rateBankTo == null){
+            rateBankTo = BigDecimal.ONE;
+        }
         return rateBankTo;
     }
 

@@ -256,7 +256,6 @@
                                           ajax="true" />
 
                         <p:commandButton class="sdeleteButton" update="invStripTable" title="#{userData.userDDs['DELETE']}"
-                                         rendered="#{userData.userScreens['proworkorder'].edit or userData.isAdmin}"
                                          action="#{invStripFormNewMB.deleteInvDetailNew(invStripTable)}" icon="fa fa-remove" >
 
                             <p:confirm header="#{userData.userDDs['COFIGRATION']}"

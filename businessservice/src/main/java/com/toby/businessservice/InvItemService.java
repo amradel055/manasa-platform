@@ -14,6 +14,7 @@ import com.toby.entity.InvGroup;
 import com.toby.entity.InvItem;
 import com.toby.entity.TobyUser;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Remote;
@@ -27,7 +28,7 @@ public interface InvItemService {
 
     public List<InvItemDTO> findInvItemDTOList(TobyUser tobyUser);
 
-    public List<InvItemDTO> invItemsReport(InvItemDTO invItemDTO, Integer branchId);
+    public List<InvItemDTO> invItemsReport(InvItemDTO invItemDTO, Integer branchId, Boolean isUsed, BigDecimal lastCost, Date dateFrom, Integer itemNatural);
 
     public Map<String, String> findInvItemDTOMap(Integer branchId);
 

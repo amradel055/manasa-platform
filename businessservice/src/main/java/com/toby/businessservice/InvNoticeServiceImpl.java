@@ -55,7 +55,7 @@ public class InvNoticeServiceImpl implements InvNoticeService {
     @Override
     public void deleteInvNoticeNew(InvNotice invNotice) {
         invNotice = dao.findEntityById(InvNotice.class, invNotice.getId());
-        
+
         Integer tarhilIdOld = invNotice.getGeneralJournalId() == null ? null : invNotice.getGeneralJournalId().getId();
         if (tarhilIdOld != null) {
             generaljournalService.deleteGeneralJournal(tarhilIdOld);
@@ -223,6 +223,15 @@ public class InvNoticeServiceImpl implements InvNoticeService {
     @Override
     public void updateInvNotice(InvNotice invNotice) {
         dao.updateEntity(invNotice);
+    }
+
+    @Override
+    public InvNotice addInvNotice(List<InvNotice> invNoticeList, TobyUser tobyUser, Integer yearSelection) {
+        InvNotice notice = null;
+        for (InvNotice invNotice : invNoticeList) {
+            notice = addInvNotice(invNotice, tobyUser, yearSelection);
+        }
+        return notice;
     }
 
     @Override

@@ -21,7 +21,7 @@
 
 
 
-                <div class="ui-g-12 ui-xl-12">
+                <div class="ui-g-6 ui-xl-6">
                     <div class="ui-g-6 ui-xl-6">
                         <p:selectCheckboxMenu id="proGroup" value="#{invItemMainDataReport.groupDTOSelected}" 
                                               converter="#{invItemMainDataReport.proGroupDTOConverter}"
@@ -37,8 +37,45 @@
                         <p:outputLabel style="width: 50px;margin-right: 1%" value="الفئة"/>
                     </div>
                 </div>
+                <div class="ui-g-6 ui-xl-6">
+                    <p:selectBooleanCheckbox id="shortReportCheck" value="#{invItemMainDataReport.isUsed}" itemLabel="الأصناف المستخدمة"/>
+                </div>
 
 
+                <div class="ui-g-6 ui-xl-6">
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:inputText  style="width: 50px;margin-right: 1%" value="#{invItemMainDataReport.lastCost}"/>
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:outputLabel style="width: 50px;margin-right: 1%" value="التكلفة أقل من أو تساوي "/>
+                    </div>
+                </div>
+                <div class="ui-g-6 ui-xl-6">
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:calendar pattern="dd/MM/yyyy" 
+                                    value="#{invItemMainDataReport.dateFrom}"
+                                    style="width: 56%">
+
+                        </p:calendar>
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:outputLabel  style="width: 70px" value="الاصناف التى لم تستخدم من تاريخ"/>
+
+                    </div>
+                </div>
+                <div class="ui-g-6 ui-xl-6">
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:selectOneMenu id="option" value="#{invItemMainDataReport.itemNatural}">
+                            <f:selectItem itemLabel="الكل" itemValue=""/>
+                            <f:selectItem itemLabel="عرض" itemValue="1"/>
+                            <f:selectItem itemLabel="عرضين" itemValue="2"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:outputLabel  style="width: 70px" value="طبيعة الصنف"/>
+
+                    </div>
+                </div>
 
 
                 <p:commandButton   class="searchButtons"
@@ -118,6 +155,9 @@
                     </p:column>
                     <p:column headerText=" طبيعة الصنف" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                         <h:outputText value="#{data.itemNatural}" />
+                    </p:column>
+                    <p:column headerText="المتاح" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <h:outputText value="#{data.quantity}" />
                     </p:column>
 
                 </p:dataTable>

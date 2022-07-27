@@ -212,7 +212,7 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
         max = dao.findEntityByQuery("SELECT MAX(g.serial) FROM GeneralJournal g  WHERE g.branchId.id =182 AND g.companyId.id =125 and g.glYear.id =:glYear AND g.serial > 100000  ", params);
         return max;
     }
-    
+
     @Override
     public Integer findMaxSerialExit() {
         Map<String, Object> params = new HashMap<>();
@@ -220,6 +220,72 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
         Integer max;
         max = dao.findEntityByQuery("SELECT MAX(g.serial) FROM GeneralJournal g  WHERE g.branchId.id =182 AND g.companyId.id =125 and g.glYear.id =:glYear AND g.serial < 100000  ", params);
         return max;
+    }
+
+    @Override
+    public void addGeneralJournalDTOWithDetailFromExcelNew(List<GeneralJournalDetails> list, TobyUser tobyUser) {
+//        Integer generaldocumet = 1;
+//        Integer serial = 1;
+//        Integer idDtail = 1;
+//        for (GeneralJournalDTO dto : list) {
+//            System.err.println("----------> " + dto.getSerial() + " <---------------------" + new Date());
+//            generaldocumet++;
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", 182);
+        params.put("companyId", 125);
+        params.put("glYear", 73);
+        Map<String, Object> params1 = new HashMap<>();
+        params1.put("generalType", 81);
+        params1.put("glYear", 73);
+        params1.put("branchId", 182);
+
+        Integer generaldocumet = dao.findEntityByQuery("SELECT MAX(g.generalDecument) FROM GeneralJournal g  WHERE g.glYear.id =:glYear AND g.generalType.id =:generalType and g.branchId.id =:branchId  ", params1);
+
+        if (generaldocumet == null) {
+            generaldocumet = 1;
+
+        } else {
+            generaldocumet = generaldocumet + 1;
+        }
+        Integer max = 0;
+        synchronized (max) {
+            try {
+                max = dao.findEntityByQuery("SELECT MAX(g.serial) FROM GeneralJournal g  WHERE g.branchId.id =:branchId AND g.companyId.id =:companyId and g.glYear.id =:glYear and g.serial < 100000  ", params);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if (max == null) {
+            max = 0;
+        }
+
+        GeneralJournal entity = new GeneralJournal();
+
+        Symbol parent = new Symbol();
+        parent.setId(81);
+        entity.setGeneralType(parent);
+
+        GlYear parent2 = new GlYear();
+        parent2.setId(73);
+        entity.setGlYear(parent2);
+
+        entity.setGeneralData(new Date());
+        entity.setGeneralStatement("قيد افتتاحي .....");
+        entity.setGeneralDecument(generaldocumet);
+//        entity.setPostFlagReview(1);
+        entity.setSerial(max + 1);
+        entity.setPost_flag(true);
+        entity.setDocumentId(11227799);
+
+        entity.setCreatedBy(tobyUser);
+        entity.setCreationDate(new Date());
+
+        entity.setBranchId(tobyUser.getBranchId());
+        entity.setCompanyId(tobyUser.getCompanyId());
+
+        entity = dao.updateEntity(entity);
+
+        generaljournalDetailsService.addGenDetalilsGlobal2(list, tobyUser, entity.getId());
     }
 
     @Override

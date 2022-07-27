@@ -165,7 +165,7 @@ public class InvNoticeListMB extends BaseListBean {
             } else if (getUri().contains("supplierdiscountnotice")) {
                 exit("../supplierdiscountnotice/supplierdiscountnoticeform.xhtml");
             } else if (getUri().contains("customeraddnotice")) {
-                exit("../customeraddnotice/customernoticeform.xhtml");
+                exit("../customeraddnotice/customernoticeformList.xhtml");
             } else if (getUri().contains("customerdiscountnotice")) {
                 exit("../customerdiscountnotice/customerdiscountnoticeform.xhtml");
             }

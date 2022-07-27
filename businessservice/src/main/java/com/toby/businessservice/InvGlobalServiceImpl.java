@@ -9,7 +9,6 @@ import com.toby.common.Validation;
 import com.toby.core.GenericDAO;
 import com.toby.define.CompanyActivityClassEnum;
 import com.toby.define.ScreenNameClassEnum;
-import com.toby.dto.GlAccountDTO;
 import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
@@ -925,8 +924,9 @@ public class InvGlobalServiceImpl implements InvGlobalService {
     private InvDetailDTO findDataForItem(InvDetailDTO invDetailDTO, InvInvoiceDTO invInvoiceDTO, Integer offerType, Boolean findCost) {
         if (invInvoiceDTO.getCompanyActivity().equals(CompanyActivityClassEnum.RetailSaleForClothFactory)
                 && (ScreenNameClassEnum.INVSALESINVOICEFORM.equals(invInvoiceDTO.getScreenName())
-                || ScreenNameClassEnum.PROWORKORDER.equals(invInvoiceDTO.getScreenName())
-                || ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(invInvoiceDTO.getScreenName()))) {
+                || ScreenNameClassEnum.PROWORKORDER.equals(invInvoiceDTO.getScreenName()) 
+//                || ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(invInvoiceDTO.getScreenName())
+                )) {
             ItemsBarcodesDetailsView barcodesDetailsView = invDetailDTO.getItemsBarcodesDetail();
 
             if (barcodesDetailsView.getDiscountrate() != null
@@ -951,39 +951,10 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                         BigDecimal r3 = getStep(step, barcodesDetailsView.getTypeShow());
                         BigDecimal r4 = r2.max(r1);
                         BigDecimal r5 = r4.max(r3);
-                        invDetailDTO.setQuantityOfOneUnit(r5);
+                        invDetailDTO.setQuantityOfOneUnit(new BigDecimal(r5.setScale(2, RoundingMode.FLOOR).stripTrailingZeros().toPlainString()));
                         System.out.println(r5);
                         invDetailDTO.setCost(barcodesDetailsView.getMaxPriceMen());
-
-//                        invDetailDTO.setCost(barcodesDetailsView.getMaxPriceMen());
-////                        invDetailDTO.setQuantityOfOneUnit(new BigDecimal(5));    //// here code 
-//
-//                        BigDecimal length = invInvoiceDTO.getOrganizationSiteId().getLength();
-//                        BigDecimal shoulder = invInvoiceDTO.getOrganizationSiteId().getShoulder();
-//                        BigDecimal step = invInvoiceDTO.getOrganizationSiteId().getStep();
-//                        BigDecimal r1 = getLenght(length);
-//                        BigDecimal r2 = getShoulder(shoulder);
-//                        BigDecimal r3 = getStep(step);
-//                        BigDecimal r4 = r2.max(r1);
-//                        BigDecimal r5 = r4.max(r3);
-//                        invDetailDTO.setQuantityOfOneUnit(r5);
-//                        System.out.println(r5);
                     }
-//                    else if (barcodesDetailsView.getTypeShow() == 2) {
-//                        invDetailDTO.setCost(barcodesDetailsView.getMaxPriceMen());   //// here Code
-////                        invDetailDTO.setQuantityOfOneUnit(new BigDecimal(3.5));
-//
-//                        BigDecimal length = invInvoiceDTO.getOrganizationSiteId().getLength();
-//                        BigDecimal shoulder = invInvoiceDTO.getOrganizationSiteId().getShoulder();
-//                        BigDecimal step = invInvoiceDTO.getOrganizationSiteId().getStep();
-//                        BigDecimal r1 = getLenght(length);
-//                        BigDecimal r2 = getShoulder(shoulder);
-//                        BigDecimal r3 = getStep(step);
-//                        BigDecimal r4 = r2.max(r1);
-//                        BigDecimal r5 = r4.max(r3);
-//                        invDetailDTO.setQuantityOfOneUnit(r5);
-//                        System.out.println(r5);
-//                    }
 
                 }
             } else {
@@ -1374,6 +1345,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 || ScreenNameClassEnum.INVPERMISSIONORDERFORM.equals(screenNameClassEnum)
                 || ScreenNameClassEnum.PROWORKORDER.equals(screenNameClassEnum)
                 || ScreenNameClassEnum.INVRESERVATIONFORM.equals(screenNameClassEnum)
+                || ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)
                 || ScreenNameClassEnum.INVRETURNPURCHASEFORM.equals(screenNameClassEnum)) {
             detailDTO.setTotalQuantityWithScrewing(detailDTO.getQuantity().multiply(detailDTO.getScrewing()));
             detailDTO.setAvailableQuantityRow(quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), false, null));
@@ -1386,8 +1358,10 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 detailDTO.setCost(BigDecimal.ZERO);
                 detailDTO.setMsg("الصنف لا يوجد به كمية بالمخزن");
             }
-        } else if (ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)
-                || ScreenNameClassEnum.INVUPDATE.equals(screenNameClassEnum)) {
+        } else if (
+//                ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)
+//                || 
+                ScreenNameClassEnum.INVUPDATE.equals(screenNameClassEnum)) {
             detailDTO.setAvailableQuantityRow(quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), false, null));
             detailDTO.setOldQuantity(detailDTO.getAvailableQuantityRow());
             detailDTO.setOldQuantityBak(detailDTO.getAvailableQuantityRow());

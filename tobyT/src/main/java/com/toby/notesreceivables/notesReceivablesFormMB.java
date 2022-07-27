@@ -26,6 +26,7 @@ import com.toby.converter.InstTransactionViewConverter;
 import com.toby.converter.InvOrganizationSiteConverter;
 import com.toby.converter.SymbolConverter;
 import com.toby.dto.GlBankDTO;
+import com.toby.dto.GlBankTransactionDTO;
 import com.toby.dto.GlPayDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
@@ -705,6 +706,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
             glBankTransactionEntityMapper.setOrganizationType(bankTransaction.getOrganizationType() != null ? bankTransaction.getOrganizationType() : 0);
             glBankTransactionEntityMapper.setRemark(bankTransaction.getRemark() != null ? bankTransaction.getRemark() : null);
             glBankTransactionEntityMapper.setRemark2(bankTransaction.getRemark2());
+            glBankTransactionEntityMapper.setMovementType(bankTransaction.getMovementType());
             glBankTransactionEntityMapper.setTransactionType(bankTransaction.getTransactionType() != null ? bankTransaction.getTransactionType() : 0);
             glBankTransactionEntityMapper.setValue(bankTransaction.getValue() != null ? bankTransaction.getValue().setScale(2, BigDecimal.ROUND_UP) : BigDecimal.ZERO);
             glBankTransactionEntityMapper.setRate(bankTransaction.getRate() != null ? bankTransaction.getRate().setScale(2, BigDecimal.ROUND_UP) : BigDecimal.ONE);
@@ -903,6 +905,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                     glBankTransaction.setPaymentType(glBankTransactionEntity.getPaymentType());
                     glBankTransaction.setRemark(glBankTransactionEntity.getRemark());
                     glBankTransaction.setRemark2(glBankTransactionEntity.getRemark2());
+                    glBankTransaction.setMovementType(glBankTransactionEntity.getMovementType());
                     glBankTransaction.setOrganizationType(glBankTransactionEntity.getOrganizationType() != null ? glBankTransactionEntity.getOrganizationType() : null);
                     if (!getUri().contains("notesreceivablesFormpre")) {
                         glBankTransaction.setTransactionType(1);
@@ -1033,18 +1036,18 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                             idCheck = Boolean.FALSE;
                         }
                         bankTransaction = glBankTransactionService.addGlBankTransaction(glBankTransaction, glBankTransactionDetailsUpdatedList, new ArrayList<>(), companyId, getUserData().getUser());
-
+                        GlBankTransactionDTO gbtdto = glBankTransactionDetailsService.tarhilAfterSave(bankTransaction.getId(), getUserData().getUser());
                         if (bankTransaction != null && bankTransaction.getId() != null && printAndSave) {
                             exportPDF(null);
                             printAndSave = false;
                         }
                         if (bankTransaction != null && bankTransaction.getId() != null) {
                             glBankTransactionEntity.setId(bankTransaction.getId());
-                            glBankTransactionEntity.setSerial(bankTransaction.getSerial());
+                            glBankTransactionEntity.setSerial(gbtdto.getSerial());
 //                            findnotesReceivablesObject(bankTransaction.getId());
                         }
                         if (getUri().contains("notesreceivablesForm") && idCheck) {
-                            sendSMS(getGlBankTransactionEntity().getSerial().toString(), getGlBankTransactionEntity().getValue());
+                            sendSMS(getGlBankTransactionEntity().getSerial() == null ? null : getGlBankTransactionEntity().getSerial().toString(), getGlBankTransactionEntity().getValue());
                         }
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userDDs.get("INFO"), userDDs.get("SAVED")));
 //                        exit();

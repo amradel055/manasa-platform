@@ -30,6 +30,7 @@ public class PurchaseOfItemsByDelegatorViewBean {
     private BigDecimal cost;
     private BigDecimal discount;
     private BigDecimal net;
+    private BigDecimal thobeNumber;
     private Date dateFromValue;
     private Date dateToValue;
 
@@ -359,6 +360,20 @@ public class PurchaseOfItemsByDelegatorViewBean {
      */
     public void setChartPercentage(BigDecimal chartPercentage) {
         this.chartPercentage = chartPercentage;
+    }
+
+    /**
+     * @return the thobeNumber
+     */
+    public BigDecimal getThobeNumber() {
+        return thobeNumber;
+    }
+
+    /**
+     * @param thobeNumber the thobeNumber to set
+     */
+    public void setThobeNumber(BigDecimal thobeNumber) {
+        this.thobeNumber = thobeNumber;
     }
 
 }

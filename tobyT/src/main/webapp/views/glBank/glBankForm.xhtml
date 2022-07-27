@@ -67,21 +67,25 @@
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:inputText style="width: 49%!important" value="#{glBankFromMB.glBankEntity.commition}"/>
-
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:outputLabel style="width: 65px" value="العمولة"/>
-
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" value="#{glBankFromMB.glBankEntity.fixedAmount}"/>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="مبلغ ثابت"/>
                                 </div>
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:inputText style="width: 49%!important" value="#{glBankFromMB.glBankEntity.rate}"/>
-
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:outputLabel style="width: 65px" value="المعدل"/>
-
                                 </div>
                             </div>
                             <div class="ui-g-12 ui-xl-12">
@@ -92,7 +96,26 @@
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:outputLabel style="width: 65px" value="#{userData.userDDs['CODE']}"/>
+                                </div>
+                            </div>
 
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectOneMenu id="MACUCode" value="#{glBankFromMB.glBankEntity.glBankId}" label="الخزائن" 
+                                                          converter="#{glBankFromMB.glBankDTOConverter}"
+                                                          style="float:right;width: 80%!important;height: 30px!important;margin-right: 0.5%;"
+                                                          filter="true" filterMatchMode="contains" >
+                                        <f:selectItems value="#{glBankFromMB.glBankDTOLists}"  
+                                                       var="bank"
+                                                       itemLabel="#{bank}"
+                                                       itemValue="#{bank}"/>
+                                          <p:ajax  listener="#{glBankFromMB.hishis()}" />
+                                    </p:selectOneMenu>
+                                    
+                                    
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 50px;margin-right: 1%" value="خزينة التقفيل" />
                                 </div>
                             </div>
 

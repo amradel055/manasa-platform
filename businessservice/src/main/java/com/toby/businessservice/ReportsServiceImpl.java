@@ -550,7 +550,7 @@ public class ReportsServiceImpl implements ReportsService {
         List<ProfitOfItemsSold> profitOfItemsSoldList = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("select ii.id , ii.code , ii.name , IFNULL(ii.cost_average,0) as cost_average , sum(IFNULL(ipid.quantity,0)) as totalSell , \n"
-                + "sum(IFNULL(ipid.discount,0)) as totalDiscount  , sum(IFNULL(ipid.net,0)) as totalNet , sum(IFNULL(ipid.number,0)) as totalNumber\n"
+                + "sum(IFNULL(ipid.discount,0)) as totalDiscount  , sum(IFNULL(ipid.net_after_discount_head,0)) as totalNet , sum(IFNULL(ipid.number,0)) as totalNumber\n"
                 + "from inv_purchase_invoice_detail ipid \n"
                 + "left join inv_purchase_invoice ipi on ipi.id = ipid.inv_purchase_invoice_id left join inv_item ii on ii.id = ipid.item_id\n"
                 + "left join pro_group p on p.id = ii.pro_group_id");

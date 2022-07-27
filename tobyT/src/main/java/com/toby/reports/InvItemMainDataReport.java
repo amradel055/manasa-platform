@@ -7,7 +7,9 @@ import com.toby.dto.InvItemDTO;
 import com.toby.dto.ProGroupDTO;
 import com.toby.toby.Basic;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -34,6 +36,11 @@ public class InvItemMainDataReport extends Basic {
     private List<ProGroupDTO> groupDTOList;
     private ProGroupDTOConverter proGroupDTOConverter;
 
+    private Boolean isUsed;
+    private BigDecimal lastCost;
+    private Date dateFrom;
+    private Integer itemNatural;
+
     @EJB
     private InvItemService invItemService;
     @EJB
@@ -49,7 +56,7 @@ public class InvItemMainDataReport extends Basic {
             list = new ArrayList<>();
             for (ProGroupDTO proGroupDTO : getGroupDTOSelected()) {
                 getInvItemDTO().setProGroupId(proGroupDTO);
-                getList().addAll(invItemService.invItemsReport(getInvItemDTO(), getUserData().getUserBranch().getId()));
+                getList().addAll(invItemService.invItemsReport(getInvItemDTO(), getUserData().getUserBranch().getId(), isUsed, lastCost, dateFrom,itemNatural));
             }
         }
 
@@ -187,6 +194,65 @@ public class InvItemMainDataReport extends Basic {
      */
     public void setProGroupDTOConverter(ProGroupDTOConverter proGroupDTOConverter) {
         this.proGroupDTOConverter = proGroupDTOConverter;
+    }
+
+    /**
+     * @return the isUsed
+     */
+    public Boolean getIsUsed() {
+        if (isUsed == null) {
+            isUsed = Boolean.TRUE;
+        }
+        return isUsed;
+    }
+
+    /**
+     * @param isUsed the isUsed to set
+     */
+    public void setIsUsed(Boolean isUsed) {
+        this.isUsed = isUsed;
+    }
+
+    /**
+     * @return the lastCost
+     */
+    public BigDecimal getLastCost() {
+        return lastCost;
+    }
+
+    /**
+     * @param lastCost the lastCost to set
+     */
+    public void setLastCost(BigDecimal lastCost) {
+        this.lastCost = lastCost;
+    }
+
+    /**
+     * @return the dateFrom
+     */
+    public Date getDateFrom() {
+        return dateFrom;
+    }
+
+    /**
+     * @param dateFrom the dateFrom to set
+     */
+    public void setDateFrom(Date dateFrom) {
+        this.dateFrom = dateFrom;
+    }
+
+    /**
+     * @return the itemNatural
+     */
+    public Integer getItemNatural() {
+        return itemNatural;
+    }
+
+    /**
+     * @param itemNatural the itemNatural to set
+     */
+    public void setItemNatural(Integer itemNatural) {
+        this.itemNatural = itemNatural;
     }
 
 }

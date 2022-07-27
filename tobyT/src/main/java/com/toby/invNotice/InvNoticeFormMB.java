@@ -10,11 +10,9 @@ import com.toby.businessservice.GlBankTransactionInvoiceViewService;
 import com.toby.businessservice.InvNoticeService;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.SymbolService;
-import com.toby.businessservice.TobyUserInventoryService;
 import com.toby.bussinessservice.global.AutoCompleteService;
 import com.toby.converter.GlaccountConverter;
 import com.toby.converter.SymbolDTOConverter;
-import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.SymbolDTO;
 import com.toby.entity.CostCenter;
 import com.toby.entity.GlAccount;
@@ -51,15 +49,16 @@ public class InvNoticeFormMB extends BaseFormBean {
     private List<GlAccount> glAccountList;
     private GlaccountConverter glAccountConverter;
     private GlAccount accountId;
-    private InvOrganizationSiteDTO customer;
     private InvNoticeEntity invNoticeEntity;
     private Integer invNoticeId;
     private Integer typeFlow;
-    private InvNotice invNotice;
+//    private InvNotice invNotice;
     private Boolean fromInvoice;
     private List<SymbolDTO> symbolDtoList;
     private SymbolDTOConverter symbolDTOConverter;
     private List<GlBankTransactionInvoiceView> glBankTransactionInvoiceViewList;
+    private List<InvNotice> invNoticeList;
+    private InvNotice invNoticeSelected;
 
     @EJB
     private OrganizationSiteService organizationSiteService;
@@ -73,8 +72,20 @@ public class InvNoticeFormMB extends BaseFormBean {
     AutoCompleteService autoCompleteService;
     @EJB
     private GlBankTransactionInvoiceViewService bankTransactionInvoiceViewService;
-    @EJB
-    private TobyUserInventoryService tobyUserInventoryService;
+
+    public void addNotice() {
+        InvNotice invNotice = convertInvNoticeEntityToInvNotice(invNoticeEntity);
+        invNotice.setSerial(getIndex());
+        getInvNoticeList().add(invNotice);
+    }
+
+    public void deleteNotice() {
+        getInvNoticeList().remove(invNoticeSelected);
+    }
+
+    public void saveNoticeList() {
+        invNoticeService.addInvNotice(getInvNoticeList(), getUserData().getUser(), getUserData().getGlYear().getId());
+    }
 
     @Override
     @PostConstruct
@@ -91,7 +102,6 @@ public class InvNoticeFormMB extends BaseFormBean {
     public void reset() {
         try {
 
-            invNotice = new InvNotice();
             invNoticeEntity = new InvNoticeEntity();
             glAccountList = new ArrayList<>();
         } catch (Exception e) {
@@ -148,61 +158,11 @@ public class InvNoticeFormMB extends BaseFormBean {
     public String save() {
         try {
 
-//        typeFlow = setType();
-            if (invNotice.getId() == null) {
-                invNotice.setCreatedBy(getUserData().getUser());
-                invNotice.setCreationDate(new Date());
-            } else {
-                invNotice.setModificationDate(new Date());
-                invNotice.setModifiedBy(getUserData().getUser());
-            }
-
-            invNotice.setBranchId(getUserData().getUserBranch());
-            invNotice.setCompanyId(getUserData().getCompany());
-            invNotice.setDate(invNoticeEntity.getDate());
-            invNotice.setRemark(invNoticeEntity.getRemarks());
-            invNotice.setValue(invNoticeEntity.getAmount() != null ? invNoticeEntity.getAmount() : BigDecimal.ZERO);
-            invNotice.setMarkEdit(invNoticeEntity.getMarkEdit());
-            if (invNoticeEntity.getInvoiceId() != null) {
-                InvPurchaseInvoice invPurchaseInvoice = new InvPurchaseInvoice();
-                invPurchaseInvoice.setId(invNoticeEntity.getInvoiceId());
-                invNotice.setInvInvoice(invPurchaseInvoice);
-            }
-
-            if (getGallaryDTOSelect() != null) {
-                InvInventory invInventory = new InvInventory();
-                invInventory.setId(getGallaryDTOSelect().getId());
-                CostCenter costCenter = new CostCenter();
-                costCenter.setId(getGallaryDTOSelect().getCostCenterId().getId());
-                invInventory.setCostCenterId(costCenter);
-                invNotice.setInvInventory(invInventory);
-            }
-
-            if (invNoticeEntity.getType() != null) {
-                invNotice.setType(invNoticeEntity.getType());
-            } else {
-                errorMessage("يجب اختيار نوع الاشعار");
-                return "";
-            }
-
-            if (invNoticeEntity.getOrganizationSiteId() != null) {
-                InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
-                invOrganizationSite.setId(invNoticeEntity.getOrganizationSiteId().getId());
-                invOrganizationSite.setName(invNoticeEntity.getOrganizationSiteId().getName());
-                GlAccount glAccount = new GlAccount();
-                glAccount.setId(invNoticeEntity.getOrganizationSiteId().getAccountId().getId());
-                invOrganizationSite.setAccountId(glAccount);
-                invNotice.setOrganizationSiteId(invOrganizationSite);
-            } else {
-                errorMessage("يجب اختيار جهة التعامل");
-                return "";
-            }
-
-            invNotice.setContrastAccountId(invNoticeEntity.getAccountId());
+            InvNotice invNotice = convertInvNoticeEntityToInvNotice(invNoticeEntity);
 
             Map<String, String> userDDs = getUserData().getUserDDs();
             try {
-                invNotice = invNoticeService.addInvNotice(invNotice,getUserData().getUser(),getUserData().getGlYear().getId());
+                invNotice = invNoticeService.addInvNotice(invNotice, getUserData().getUser(), getUserData().getGlYear().getId());
                 invNoticeEntity.setId(invNotice.getId());
                 invNoticeEntity.setSerial(invNotice.getSerial());
                 if (invNotice.getInvInvoice() != null) {
@@ -220,6 +180,78 @@ public class InvNoticeFormMB extends BaseFormBean {
         }
         return "";
 
+    }
+
+    private InvNotice convertInvNoticeEntityToInvNotice(InvNoticeEntity invNoticeEntity) {
+        //        typeFlow = setType();
+        InvNotice invNotice = new InvNotice();
+        if (invNotice.getId() == null) {
+            invNotice.setCreatedBy(getUserData().getUser());
+            invNotice.setCreationDate(new Date());
+        } else {
+            invNotice.setModificationDate(new Date());
+            invNotice.setModifiedBy(getUserData().getUser());
+        }
+        invNotice.setBranchId(getUserData().getUserBranch());
+        invNotice.setCompanyId(getUserData().getCompany());
+        invNotice.setDate(invNoticeEntity.getDate());
+        invNotice.setRemark(invNoticeEntity.getRemarks());
+        invNotice.setValue(invNoticeEntity.getAmount() != null ? invNoticeEntity.getAmount() : BigDecimal.ZERO);
+        invNotice.setMarkEdit(invNoticeEntity.getMarkEdit());
+
+        if (invNoticeEntity.getInvoiceId() != null) {
+            InvPurchaseInvoice invPurchaseInvoice = new InvPurchaseInvoice();
+            invPurchaseInvoice.setId(invNoticeEntity.getInvoiceId());
+            invPurchaseInvoice.setSerial(invNoticeEntity.getInvoiceId());
+            invNotice.setInvInvoice(invPurchaseInvoice);
+        }
+        if (getGallaryDTOSelect() != null) {
+            InvInventory invInventory = new InvInventory();
+            invInventory.setId(getGallaryDTOSelect().getId());
+            invInventory.setCode(getGallaryDTOSelect().getCode());
+            invInventory.setInvName(getGallaryDTOSelect().getInvName());
+            invInventory.setName(getGallaryDTOSelect().getName());
+            CostCenter costCenter = new CostCenter();
+            costCenter.setId(getGallaryDTOSelect().getCostCenterId().getId());
+            invInventory.setCostCenterId(costCenter);
+            invNotice.setInvInventory(invInventory);
+        }
+        if (invNoticeEntity.getType() != null) {
+            invNotice.setType(invNoticeEntity.getType());
+            if (null != invNoticeEntity.getType()) {
+                switch (invNoticeEntity.getType()) {
+                    case 0:
+                        invNotice.setTypeName("إشعار مدين");
+                        break;
+                    case 1:
+                        invNotice.setTypeName("إشعار خصم");
+                        break;
+                    case 4:
+                        invNotice.setTypeName("إشعار دائن");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        } else {
+            errorMessage("يجب اختيار نوع الاشعار");
+            return invNotice;
+        }
+        if (invNoticeEntity.getOrganizationSiteId() != null) {
+            InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
+            invOrganizationSite.setId(invNoticeEntity.getOrganizationSiteId().getId());
+            invOrganizationSite.setName(invNoticeEntity.getOrganizationSiteId().getName());
+            invOrganizationSite.setCode(invNoticeEntity.getOrganizationSiteId().getCode());
+            GlAccount glAccount = new GlAccount();
+            glAccount.setId(invNoticeEntity.getOrganizationSiteId().getAccountId().getId());
+            invOrganizationSite.setAccountId(glAccount);
+            invNotice.setOrganizationSiteId(invOrganizationSite);
+        } else {
+            errorMessage("يجب اختيار جهة التعامل");
+            return invNotice;
+        }
+        invNotice.setContrastAccountId(invNoticeEntity.getAccountId());
+        return invNotice;
     }
 
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
@@ -304,8 +336,8 @@ public class InvNoticeFormMB extends BaseFormBean {
 
     public void setEditedInvNoticeValues(Integer invNoticeId) {
         try {
-            invNotice = new InvNotice();
-            invNotice = invNoticeService.findInvNoticeByInvNoticeId(invNoticeId);
+//            InvNotice invNotice = new InvNotice();
+            InvNotice invNotice = invNoticeService.findInvNoticeByInvNoticeId(invNoticeId);
 
             invNoticeEntity.setId(invNotice.getId());
             invNoticeEntity.setSerial(invNotice.getSerial());
@@ -460,20 +492,6 @@ public class InvNoticeFormMB extends BaseFormBean {
     }
 
     /**
-     * @return the invNotice
-     */
-    public InvNotice getInvNotice() {
-        return invNotice;
-    }
-
-    /**
-     * @param invNotice the invNotice to set
-     */
-    public void setInvNotice(InvNotice invNotice) {
-        this.invNotice = invNotice;
-    }
-
-    /**
      * @return the typeFlow
      */
     public Integer getTypeFlow() {
@@ -557,6 +575,37 @@ public class InvNoticeFormMB extends BaseFormBean {
      */
     public void setFromInvoice(Boolean fromInvoice) {
         this.fromInvoice = fromInvoice;
+    }
+
+    /**
+     * @return the invNoticeList
+     */
+    public List<InvNotice> getInvNoticeList() {
+        if (invNoticeList == null) {
+            invNoticeList = new ArrayList<>();
+        }
+        return invNoticeList;
+    }
+
+    /**
+     * @param invNoticeList the invNoticeList to set
+     */
+    public void setInvNoticeList(List<InvNotice> invNoticeList) {
+        this.invNoticeList = invNoticeList;
+    }
+
+    /**
+     * @return the invNoticeSelected
+     */
+    public InvNotice getInvNoticeSelected() {
+        return invNoticeSelected;
+    }
+
+    /**
+     * @param invNoticeSelected the invNoticeSelected to set
+     */
+    public void setInvNoticeSelected(InvNotice invNoticeSelected) {
+        this.invNoticeSelected = invNoticeSelected;
     }
 
 }

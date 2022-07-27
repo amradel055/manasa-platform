@@ -31,29 +31,47 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "item_sales_view")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "ItemSalesView.findAll", query = "SELECT i FROM ItemSalesView i"),
-    @NamedQuery(name = "ItemSalesView.findById", query = "SELECT i FROM ItemSalesView i WHERE i.id = :id"),
-    @NamedQuery(name = "ItemSalesView.findBySerial", query = "SELECT i FROM ItemSalesView i WHERE i.serial = :serial"),
-    @NamedQuery(name = "ItemSalesView.findByDate", query = "SELECT i FROM ItemSalesView i WHERE i.date = :date"),
-    @NamedQuery(name = "ItemSalesView.findByDelegatorId", query = "SELECT i FROM ItemSalesView i WHERE i.delegatorId = :delegatorId"),
-    @NamedQuery(name = "ItemSalesView.findByInventoryId", query = "SELECT i FROM ItemSalesView i WHERE i.inventoryId = :inventoryId"),
-    @NamedQuery(name = "ItemSalesView.findByPaymentType", query = "SELECT i FROM ItemSalesView i WHERE i.paymentType = :paymentType"),
-    @NamedQuery(name = "ItemSalesView.findByGroupId", query = "SELECT i FROM ItemSalesView i WHERE i.groupId = :groupId"),
-    @NamedQuery(name = "ItemSalesView.findByGroupName", query = "SELECT i FROM ItemSalesView i WHERE i.groupName = :groupName"),
-    @NamedQuery(name = "ItemSalesView.findByItemId", query = "SELECT i FROM ItemSalesView i WHERE i.itemId = :itemId"),
-    @NamedQuery(name = "ItemSalesView.findByItemName", query = "SELECT i FROM ItemSalesView i WHERE i.itemName = :itemName"),
-    @NamedQuery(name = "ItemSalesView.findByItemCode", query = "SELECT i FROM ItemSalesView i WHERE i.itemCode = :itemCode"),
-    @NamedQuery(name = "ItemSalesView.findByItemBarcode", query = "SELECT i FROM ItemSalesView i WHERE i.itemBarcode = :itemBarcode"),
-    @NamedQuery(name = "ItemSalesView.findByItemUnitName", query = "SELECT i FROM ItemSalesView i WHERE i.itemUnitName = :itemUnitName"),
-    @NamedQuery(name = "ItemSalesView.findByDetailUnitName", query = "SELECT i FROM ItemSalesView i WHERE i.detailUnitName = :detailUnitName"),
-    @NamedQuery(name = "ItemSalesView.findByDetailItemQuantity", query = "SELECT i FROM ItemSalesView i WHERE i.detailItemQuantity = :detailItemQuantity"),
-    @NamedQuery(name = "ItemSalesView.findByItemQuantity", query = "SELECT i FROM ItemSalesView i WHERE i.itemQuantity = :itemQuantity"),
-    @NamedQuery(name = "ItemSalesView.findByCost", query = "SELECT i FROM ItemSalesView i WHERE i.cost = :cost"),
-    @NamedQuery(name = "ItemSalesView.findByDiscount", query = "SELECT i FROM ItemSalesView i WHERE i.discount = :discount"),
+    @NamedQuery(name = "ItemSalesView.findAll", query = "SELECT i FROM ItemSalesView i")
+    ,
+    @NamedQuery(name = "ItemSalesView.findById", query = "SELECT i FROM ItemSalesView i WHERE i.id = :id")
+    ,
+    @NamedQuery(name = "ItemSalesView.findBySerial", query = "SELECT i FROM ItemSalesView i WHERE i.serial = :serial")
+    ,
+    @NamedQuery(name = "ItemSalesView.findByDate", query = "SELECT i FROM ItemSalesView i WHERE i.date = :date")
+    ,
+    @NamedQuery(name = "ItemSalesView.findByDelegatorId", query = "SELECT i FROM ItemSalesView i WHERE i.delegatorId = :delegatorId")
+    ,
+    @NamedQuery(name = "ItemSalesView.findByInventoryId", query = "SELECT i FROM ItemSalesView i WHERE i.inventoryId = :inventoryId")
+    ,
+    @NamedQuery(name = "ItemSalesView.findByPaymentType", query = "SELECT i FROM ItemSalesView i WHERE i.paymentType = :paymentType")
+    ,
+    @NamedQuery(name = "ItemSalesView.findByGroupId", query = "SELECT i FROM ItemSalesView i WHERE i.groupId = :groupId")
+    ,
+    @NamedQuery(name = "ItemSalesView.findByGroupName", query = "SELECT i FROM ItemSalesView i WHERE i.groupName = :groupName")
+    ,
+    @NamedQuery(name = "ItemSalesView.findByItemId", query = "SELECT i FROM ItemSalesView i WHERE i.itemId = :itemId")
+    ,
+    @NamedQuery(name = "ItemSalesView.findByItemName", query = "SELECT i FROM ItemSalesView i WHERE i.itemName = :itemName")
+    ,
+    @NamedQuery(name = "ItemSalesView.findByItemCode", query = "SELECT i FROM ItemSalesView i WHERE i.itemCode = :itemCode")
+    ,
+    @NamedQuery(name = "ItemSalesView.findByItemBarcode", query = "SELECT i FROM ItemSalesView i WHERE i.itemBarcode = :itemBarcode")
+    ,
+    @NamedQuery(name = "ItemSalesView.findByItemUnitName", query = "SELECT i FROM ItemSalesView i WHERE i.itemUnitName = :itemUnitName")
+    ,
+    @NamedQuery(name = "ItemSalesView.findByDetailUnitName", query = "SELECT i FROM ItemSalesView i WHERE i.detailUnitName = :detailUnitName")
+    ,
+    @NamedQuery(name = "ItemSalesView.findByDetailItemQuantity", query = "SELECT i FROM ItemSalesView i WHERE i.detailItemQuantity = :detailItemQuantity")
+    ,
+    @NamedQuery(name = "ItemSalesView.findByItemQuantity", query = "SELECT i FROM ItemSalesView i WHERE i.itemQuantity = :itemQuantity")
+    ,
+    @NamedQuery(name = "ItemSalesView.findByCost", query = "SELECT i FROM ItemSalesView i WHERE i.cost = :cost")
+    ,
+    @NamedQuery(name = "ItemSalesView.findByDiscount", query = "SELECT i FROM ItemSalesView i WHERE i.discount = :discount")
+    ,
     @NamedQuery(name = "ItemSalesView.findByNet", query = "SELECT i FROM ItemSalesView i WHERE i.net = :net")})
 public class ItemSalesView implements Serializable {
 
-   
     private static final long serialVersionUID = 1L;
     @Id
     @Column(name = "id")
@@ -129,7 +147,7 @@ public class ItemSalesView implements Serializable {
     @Column(name = "item_quantity")
     private BigDecimal itemQuantity;
     @Column(name = "cost")
-    private BigDecimal cost;    
+    private BigDecimal cost;
     @Column(name = "discount")
     private BigDecimal discount;
     @Column(name = "net")
@@ -138,14 +156,14 @@ public class ItemSalesView implements Serializable {
     private Integer proGroupId;
     @Column(name = "pro_group_name")
     private String proGroupName;
-    
+
     @Column(name = "gallaryId")
     private Integer gallaryId;
     @Column(name = "gallaryCode")
     private String gallaryCode;
     @Column(name = "gallaryName")
     private String gallaryName;
-    
+
     @Transient
     private BigDecimal costAvarage;
     @Transient
@@ -158,8 +176,6 @@ public class ItemSalesView implements Serializable {
     private BigDecimal fash;
     @Transient
     private BigDecimal costAvarageFashTotal;
-   
-    
 
     public ItemSalesView() {
     }
@@ -277,7 +293,7 @@ public class ItemSalesView implements Serializable {
     }
 
     public BigDecimal getDetailItemQuantity() {
-        if(detailItemQuantity == null){
+        if (detailItemQuantity == null) {
             detailItemQuantity = BigDecimal.ZERO;
         }
         return detailItemQuantity;
@@ -288,6 +304,9 @@ public class ItemSalesView implements Serializable {
     }
 
     public BigDecimal getItemQuantity() {
+        if (itemQuantity == null) {
+            itemQuantity = BigDecimal.ZERO;
+        }
         return itemQuantity;
     }
 
@@ -296,6 +315,9 @@ public class ItemSalesView implements Serializable {
     }
 
     public BigDecimal getCost() {
+        if (cost == null) {
+            cost = BigDecimal.ZERO;
+        }
         return cost;
     }
 
@@ -304,6 +326,9 @@ public class ItemSalesView implements Serializable {
     }
 
     public BigDecimal getDiscount() {
+        if (discount == null) {
+            discount = BigDecimal.ZERO;
+        }
         return discount;
     }
 
@@ -312,7 +337,7 @@ public class ItemSalesView implements Serializable {
     }
 
     public BigDecimal getNet() {
-        if(net == null){
+        if (net == null) {
             net = BigDecimal.ZERO;
         }
         return net;
@@ -546,7 +571,7 @@ public class ItemSalesView implements Serializable {
      * @return the number
      */
     public BigDecimal getNumber() {
-        if(number == null){
+        if (number == null) {
             number = BigDecimal.ONE;
         }
         return number;
@@ -578,7 +603,7 @@ public class ItemSalesView implements Serializable {
      * @return the fash
      */
     public BigDecimal getFash() {
-        if(fash== null){
+        if (fash == null) {
             fash = BigDecimal.ZERO;
         }
         return fash;
@@ -595,6 +620,9 @@ public class ItemSalesView implements Serializable {
      * @return the costAvarageFashTotal
      */
     public BigDecimal getCostAvarageFashTotal() {
+        if (costAvarageFashTotal == null) {
+            costAvarageFashTotal = BigDecimal.ZERO;
+        }
         return costAvarageFashTotal;
     }
 
@@ -609,6 +637,9 @@ public class ItemSalesView implements Serializable {
      * @return the costAvarage
      */
     public BigDecimal getCostAvarage() {
+        if (costAvarage == null) {
+            costAvarage = BigDecimal.ZERO;
+        }
         return costAvarage;
     }
 

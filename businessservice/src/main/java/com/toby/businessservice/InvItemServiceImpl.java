@@ -30,6 +30,8 @@ import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
 import com.toby.views.ItemsBarcodesDetailsView;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -59,6 +61,9 @@ public class InvItemServiceImpl implements InvItemService {
 
     @EJB
     private VariationProductService variationProductService;
+
+    @EJB
+    private QuantityItemsStoreByDateService quantityItemsStoreByDateService;
 
     StringBuilder appendQuery;
 
@@ -337,13 +342,32 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public List<InvItemDTO> invItemsReport(InvItemDTO invItemDTO, Integer branchId) {
+    public List<InvItemDTO> invItemsReport(InvItemDTO invItemDTO, Integer branchId, Boolean isUsed, BigDecimal lastCost, Date dateFrom, Integer itemNatural) {
         StringBuilder sql = new StringBuilder();
         List<InvItemDTO> list = new ArrayList<>();
         sql.append("select i.id ,i.name,i.last_cost,i.max_price_men,i.max_price_young,i.min_price_men,i.min_price_young\n"
                 + ",i.number_meters_free_men,i.number_meters_free_young,i.number_meters_men,i.number_meters_young \n"
-                + ",i.item_natural,i.code from inv_item i\n"
+                + ",i.item_natural,i.code ,i.pro_group_id from inv_item i\n"
                 + " where i.branch_id = ").append(branchId);
+        if (isUsed) {
+            sql.append(" and i.id in ( select ipid.item_id from inv_purchase_invoice_detail ipid ");
+            if (dateFrom != null) {
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+                sql.append(" where ipid.creation_date >=  '").append(dateFormat.format(dateFrom)).append("' ");
+            }
+            sql.append(" union all select iobd.item_id from inv_openning_balance_item_detail iobd ");
+            if (dateFrom != null) {
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+                sql.append(" where iobd.creation_date >=  '").append(dateFormat.format(dateFrom)).append("' ");
+            }
+            sql.append(" )");
+        }
+        if (lastCost != null && lastCost.compareTo(BigDecimal.ZERO) == 1) {
+            sql.append(" and i.last_cost <= ").append(lastCost);
+        }
+        if (itemNatural != null) {
+            sql.append(" and i.item_natural = ").append(itemNatural);
+        }
         appendProGroup(invItemDTO, sql);
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
         for (Object[] object : res) {
@@ -361,6 +385,10 @@ public class InvItemServiceImpl implements InvItemService {
             invItemDTO.setNumbermetersyoung((BigDecimal) object[10]);
             invItemDTO.setItemNatural((Integer) object[11]);
             invItemDTO.setCode((String) object[12]);
+            Integer proGroupId = ((Integer) object[13]);
+            if (proGroupId != null && proGroupId == 1) {
+                invItemDTO.setQuantity(quantityItemsStoreByDateService.getQuantatyItemByinventory(null, invItemDTO.getId(), false, null));
+            }
             list.add(invItemDTO);
         }
         return list;
@@ -465,11 +493,11 @@ public class InvItemServiceImpl implements InvItemService {
     public synchronized InvItem updateInvItem(InvItem invItem) {
         return dao.updateEntity(invItem);
     }
-    
+
     @Override
-    public synchronized void updateLastCostInvItem(Integer invItem,BigDecimal lastCost) {
-       InvItem item = dao.findEntityById(InvItem.class, invItem);
-       item.setLastCost(lastCost);
+    public synchronized void updateLastCostInvItem(Integer invItem, BigDecimal lastCost) {
+        InvItem item = dao.findEntityById(InvItem.class, invItem);
+        item.setLastCost(lastCost);
         dao.updateEntity(item);
     }
 

@@ -9,10 +9,14 @@ import com.toby.API.InvDetailsDTOAPI;
 import com.toby.entity.TobyUser;
 import com.toby.core.GenericDAO;
 import com.toby.core.storedProcedureParameter;
+import com.toby.define.CompanyActivityClassEnum;
 import com.toby.define.ModuleClassEnum;
 import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.InvDetailDTO;
+import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
+import com.toby.dto.InvItemDTO;
+import com.toby.dto.SymbolDTO;
 import com.toby.dto.balanceGalary;
 import com.toby.entity.GlYear;
 import com.toby.entity.InvAddingorderDetail;
@@ -382,6 +386,108 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
         InvDetailDTO dTO = initMapToDTO(Entity, itemsBarcodeMap, invPurchaseInvoiceDTO);
         return dTO;
     }
+    
+    public InvDetailDTO fillItemDetail(InvDetailDTO dTO, Map<String, ItemsBarcodesDetailsView> itemsBarcodeMap,
+            Integer id, Integer serial, Integer branchId, BigDecimal cost, BigDecimal discount,
+            BigDecimal quantity, Integer discountType, Integer invInvoiceId,
+            BigDecimal extraCost, BigDecimal net, Integer index, Date createdDate, Integer createdBy,
+            Integer clothNumber, Integer idParent, String itemBarcodeParent, String itemNameParent, Integer proof,
+            String itemBarcode, BigDecimal screwing, Integer itemId, BigDecimal weight, Integer unitId,
+            Integer unitSerial, String unitName, Integer inventoryItem, BigDecimal number,
+            BigDecimal quantityOfOneUnit, InvInventory invInventory, InvItem invItem,
+            CompanyActivityClassEnum companyActivityClassEnum, ScreenNameClassEnum screenNameClassEnum,
+            Integer detailId, BigDecimal costAvarage, Integer accountId) {
+
+//        if (companyActivityClassEnum.equals(CompanyActivityClassEnum.RetailSaleForClothFactory)
+//                && (ScreenNameClassEnum.INVSALESINVOICEFORM.equals(screenNameClassEnum)
+//                || ScreenNameClassEnum.PROWORKORDER.equals(screenNameClassEnum)
+//                || ScreenNameClassEnum.INVRETURNSALESFORM.equals(screenNameClassEnum)
+//                || ScreenNameClassEnum.PROFACTORYDELIVERY.equals(screenNameClassEnum))) {
+        dTO.setNumber(number);
+        dTO.setQuantityOfOneUnit(quantityOfOneUnit);
+        dTO.setClothNumber(clothNumber);
+        dTO.setProof(proof != null && proof == 1);
+
+        dTO.setAccount(accountId);
+
+        if (invInventory != null && invInventory.getId() != null) {
+            InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
+            invInventoryDTO.setId(invInventory.getId());
+            invInventoryDTO.setCode(invInventory.getCode());
+            dTO.setInventoryDTOCode(invInventory.getCode());
+            invInventoryDTO.setName(invInventory.getName());
+            dTO.setInventoryDTO(invInventoryDTO);
+        }
+        if (idParent != null) {
+            InvItemDTO invItemDTO = new InvItemDTO();
+            invItemDTO.setId(idParent);
+            invItemDTO.setCode(itemBarcodeParent);
+            invItemDTO.setName(itemNameParent);
+            dTO.setInvItemParentId(invItemDTO);
+        }
+
+        if (discount != null && discount.compareTo(BigDecimal.ZERO) == 1) {
+            dTO.setShowPrice(Boolean.TRUE);
+        }
+        if (ScreenNameClassEnum.PROFACTORYDELIVERY.equals(screenNameClassEnum) && detailId != null) {
+            dTO.setInvPurchaseInvoiceDetailId(detailId);
+        }
+//        }
+        dTO.setId(id);
+        dTO.setSerial(serial);
+
+        dTO.setBranchId(branchId);
+        dTO.setCost(cost != null ? new BigDecimal(cost.setScale(3, BigDecimal.ROUND_UP).stripTrailingZeros().toPlainString()) : BigDecimal.ZERO);
+        dTO.setCostBak(dTO.getCost());
+        dTO.setDiscount(discount != null ? new BigDecimal(discount.setScale(3, BigDecimal.ROUND_UP).stripTrailingZeros().toPlainString()) : BigDecimal.ZERO);
+        dTO.setQuantity(quantity != null ? new BigDecimal(quantity.setScale(3, BigDecimal.ROUND_UP).stripTrailingZeros().toPlainString()) : BigDecimal.ZERO);
+        dTO.setOriginQuantity(dTO.getQuantity().multiply(screwing == null ? BigDecimal.ONE : screwing));
+        dTO.setTotalQuantityWithScrewing(dTO.getQuantity().multiply(dTO.getScrewing()));
+        dTO.setIsEdit(Boolean.TRUE);
+        dTO.setDiscountType(discountType);
+        dTO.setInvInvoiceId(invInvoiceId);
+        dTO.setIsInventoryItem(inventoryItem);
+        dTO.setCostAvarage(costAvarage);
+
+        if (itemBarcode != null && !itemBarcode.isEmpty()) {
+            ItemsBarcodesDetailsView barcodesDetailsView = itemsBarcodeMap.get(itemBarcode);
+            dTO.setItemsBarcodesDetail(barcodesDetailsView);
+            dTO.setItemsBarcodesDetailTrans(dTO.getItemsBarcodesDetail());
+            dTO.setItemName(dTO.getItemsBarcodesDetail().getName());
+            dTO.setItemCode(dTO.getItemsBarcodesDetail().getBarcode());
+            dTO.setScrewing(screwing);
+            if (itemId != null && barcodesDetailsView != null && barcodesDetailsView.getPaintColor() != null) {
+                SymbolDTO paintColor = new SymbolDTO();
+                paintColor.setId(barcodesDetailsView.getPaintColor());
+                paintColor.setName(barcodesDetailsView.getPaintColorName());
+                dTO.setPaintColor(paintColor);
+            }
+            dTO.setLength(barcodesDetailsView == null ? null : barcodesDetailsView.getLength());
+        }
+
+        dTO.setWeight(weight != null ? weight : BigDecimal.ZERO);
+        if (unitId != null) {
+            SymbolDTO unitDTO = new SymbolDTO();
+            unitDTO.setId(unitId);
+            unitDTO.setName(unitName);
+            unitDTO.setSerial(unitSerial);
+            dTO.setUnitName(unitName);
+            dTO.setUnitId(unitDTO);
+        }
+
+        if (itemId != null) {
+            InvItemDTO invItemDTO = new InvItemDTO();
+            invItemDTO.setId(itemId);
+            dTO.setItemId(invItemDTO);
+        }
+        dTO.setExtraCost(extraCost);
+        dTO.setNet(net);
+        dTO.setIndex(index);
+        dTO.setCreatedDate(createdDate);
+        dTO.setCreatedBy(createdBy);
+
+        return dTO;
+    }
 
     private <T> InvDetailDTO initMapToDTO(T Entity, Map<String, ItemsBarcodesDetailsView> itemsBarcodeMap, InvInvoiceDTO invInvoiceDTO) {
 
@@ -419,7 +525,7 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
         } else {
             if (Entity.getClass().equals(InvPurchaseInvoiceDetail.class)) {
                 InvPurchaseInvoiceDetail entity = (InvPurchaseInvoiceDetail) Entity;
-                dTO = invGlobalService.fillItemDetail(dTO, itemsBarcodeMap,
+                dTO = fillItemDetail(dTO, itemsBarcodeMap,
                         entity.getId(), entity.getSerial(), (entity.getBranchId() != null ? entity.getBranchId().getId() : null), entity.getCost(),
                         entity.getDiscount(), entity.getQuantity(), entity.getDiscountType(), (entity.getInvPurchaseInvoiceId() != null ? entity.getInvPurchaseInvoiceId().getId() : null),
                         entity.getExtraCost(), entity.getNet(), entity.getId(), entity.getCreationDate(), entity.getCreatedBy().getId(),

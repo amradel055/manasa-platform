@@ -10,6 +10,7 @@ import com.toby.entity.InvInventory;
 import com.toby.entity.InvPurchaseInvoice;
 import com.toby.entity.InventoryDelegator;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -18,15 +19,13 @@ import java.util.Date;
 public class PurchaseOfItemsByDelegatorSearchBean {
 
     private Integer branchId;
-    private Boolean type;
-    private InventoryDelegator fromDelegatorName;
-    private InventoryDelegator toDelegatorName;
+    private Integer type;
+    private List<InventoryDelegator> delegatorList;
     private Date dateFrom;
     private Date dateTo;
     private InvItemDTO fromItemName;
     private InvItemDTO toItemName;
-    private InvInventory fromInventoryName;
-    private InvInventory toInventoryName;
+    private List<InvInventory>   inventoryList;
     private Integer fromserial;
     private Integer toserial;
     private int frompaymentType;
@@ -78,34 +77,6 @@ public class PurchaseOfItemsByDelegatorSearchBean {
      */
     public void setDateTo(Date dateTo) {
         this.dateTo = dateTo;
-    }
-
-    /**
-     * @return the fromInventoryName
-     */
-    public InvInventory getFromInventoryName() {
-        return fromInventoryName;
-    }
-
-    /**
-     * @param fromInventoryName the fromInventoryName to set
-     */
-    public void setFromInventoryName(InvInventory fromInventoryName) {
-        this.fromInventoryName = fromInventoryName;
-    }
-
-    /**
-     * @return the toInventoryName
-     */
-    public InvInventory getToInventoryName() {
-        return toInventoryName;
-    }
-
-    /**
-     * @param toInventoryName the toInventoryName to set
-     */
-    public void setToInventoryName(InvInventory toInventoryName) {
-        this.toInventoryName = toInventoryName;
     }
 
     public Integer getFromserial() {
@@ -192,43 +163,15 @@ public class PurchaseOfItemsByDelegatorSearchBean {
     /**
      * @return the type
      */
-    public Boolean getType() {
+    public Integer getType() {
         return type;
     }
 
     /**
      * @param type the type to set
      */
-    public void setType(Boolean type) {
+    public void setType(Integer type) {
         this.type = type;
-    }
-
-    /**
-     * @return the fromDelegatorName
-     */
-    public InventoryDelegator getFromDelegatorName() {
-        return fromDelegatorName;
-    }
-
-    /**
-     * @param fromDelegatorName the fromDelegatorName to set
-     */
-    public void setFromDelegatorName(InventoryDelegator fromDelegatorName) {
-        this.fromDelegatorName = fromDelegatorName;
-    }
-
-    /**
-     * @return the toDelegatorName
-     */
-    public InventoryDelegator getToDelegatorName() {
-        return toDelegatorName;
-    }
-
-    /**
-     * @param toDelegatorName the toDelegatorName to set
-     */
-    public void setToDelegatorName(InventoryDelegator toDelegatorName) {
-        this.toDelegatorName = toDelegatorName;
     }
 
     /**
@@ -271,6 +214,34 @@ public class PurchaseOfItemsByDelegatorSearchBean {
      */
     public void setShortReport(Boolean shortReport) {
         this.shortReport = shortReport;
+    }
+
+    /**
+     * @return the delegatorList
+     */
+    public List<InventoryDelegator> getDelegatorList() {
+        return delegatorList;
+    }
+
+    /**
+     * @param delegatorList the delegatorList to set
+     */
+    public void setDelegatorList(List<InventoryDelegator> delegatorList) {
+        this.delegatorList = delegatorList;
+    }
+
+    /**
+     * @return the inventoryList
+     */
+    public List<InvInventory> getInventoryList() {
+        return inventoryList;
+    }
+
+    /**
+     * @param inventoryList the inventoryList to set
+     */
+    public void setInventoryList(List<InvInventory> inventoryList) {
+        this.inventoryList = inventoryList;
     }
 
 }

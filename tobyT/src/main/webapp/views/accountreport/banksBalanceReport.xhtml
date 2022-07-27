@@ -34,7 +34,7 @@
                                         <p:selectCheckboxMenu id="MACUCode" value="#{bankBalanceReportMBNew2.bankBalanceReportSearchBean.glBankList}" label="الخزائن" 
                                                               converter="#{bankBalanceReportMBNew2.glBankConverter}"
                                                               style="width: 15rem"
-                                                              filter="true" filterMatchMode="startsWith" panelStyle="width: 15rem" scrollHeight="250">
+                                                              filter="true" filterMatchMode="contains" panelStyle="width: 15rem" scrollHeight="250">
                                             <f:selectItems value="#{bankBalanceReportMBNew2.bankTransactionViewLocalList}"  
                                                        var="bank"
                                                        itemLabel="#{bank}"
@@ -43,11 +43,7 @@
 
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
-
-
                                         <p:outputLabel style="width: 50px;margin-right: 1%" value="الخزائن" />
-
-
                                     </div>
                                 </div>
 

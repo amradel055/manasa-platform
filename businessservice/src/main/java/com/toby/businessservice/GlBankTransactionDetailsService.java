@@ -7,6 +7,7 @@ package com.toby.businessservice;
 
 import com.toby.dto.GeneralJournalDTO;
 import com.toby.dto.GlBankDTO;
+import com.toby.dto.GlBankTransactionDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.balanceGalary;
 import com.toby.entity.GeneralJournal;
@@ -60,7 +61,7 @@ public interface GlBankTransactionDetailsService {
     
     public void addCashDetail(GlBankDTO glBankDTO, Integer invOrganizationId, Integer glBankTransactionId, GlBankDTO bankDTO, String remarks, BigDecimal value, Integer glYearId, TobyUser tobyUser);
     
-    public void tarhilAfterSave(Integer glBankTransactionId, TobyUser tobyUser);
+    public GlBankTransactionDTO tarhilAfterSave(Integer glBankTransactionId, TobyUser tobyUser);
     
     public void tarhilNotTarhil(GlBankTransactionDetail bankTransactionDetail , TobyUser tobyUser);
 

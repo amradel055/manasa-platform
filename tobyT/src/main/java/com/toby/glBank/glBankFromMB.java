@@ -10,6 +10,7 @@ import com.toby.businessservice.GlAccountService;
 import com.toby.businessservice.GlBankService;
 import com.toby.converter.CurrencyConverter;
 import com.toby.converter.GlaccountConverter;
+import com.toby.dto.GlBankDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.entity.Currency;
 import com.toby.entity.GlAccount;
@@ -22,7 +23,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -54,8 +54,6 @@ public class glBankFromMB extends BaseFormBean {
     private GlaccountConverter accountConverter;
     private CurrencyConverter currencyConverter;
 
-    private Map<String, String> userDDs;
-
     private Boolean showMessage = false;
     private Boolean disableSave = false;
 
@@ -75,7 +73,6 @@ public class glBankFromMB extends BaseFormBean {
             context = FacesContext.getCurrentInstance().getExternalContext();
             setUserData((UserData) context.getSessionMap().get("userLogInData"));
             setScreenMode((String) context.getSessionMap().get("ScreenMode"));
-            userDDs = getUserData().getUserDDs();
 
             glBank = new GlBank();
             glBankEntity = new GlBankEntity();
@@ -131,13 +128,13 @@ public class glBankFromMB extends BaseFormBean {
 
                     showMessage = disableSave = false;
                 } else {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), "هذه العملة غير مربوطة بحساب"));
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "هذه العملة غير مربوطة بحساب"));
                     glBankEntity.setAccountId(null);
                     showMessage = disableSave = true;
                 }
 
             } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), "لا يمكن انشاء خزنة بدون جود عملات"));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "لا يمكن انشاء خزنة بدون جود عملات"));
                 showMessage = disableSave = true;
                 return null;
             }
@@ -157,7 +154,7 @@ public class glBankFromMB extends BaseFormBean {
 
             glBankEntity.setId(glBank.getId());
             glBankEntity.setAccountId(glBank.getAccountId() != null ? glBank.getAccountId() : null);
-             glBankEntity.setTransferaccountId(glBank.getTransferaccountId() != null ? glBank.getTransferaccountId() : null);
+            glBankEntity.setTransferaccountId(glBank.getTransferaccountId() != null ? glBank.getTransferaccountId() : null);
             glBankEntity.setBranchId(glBank.getBranchId());
             glBankEntity.setCode(glBank.getCode() != null ? glBank.getCode() : null);
             glBankEntity.setCurrencyId(glBank.getCurrencyId() != null ? glBank.getCurrencyId() : null);
@@ -168,13 +165,20 @@ public class glBankFromMB extends BaseFormBean {
             glBankEntity.setRate(glBank.getRate());
             glBankEntity.setCash(glBank.getCash());
             glBankEntity.setRemark(glBank.getRemark());
-            
+            glBankEntity.setFixedAmount(glBank.getFixedAmount());
+
+            if (glBank.getGlBankId() != null && glBank.getGlBankId().getId() != null) {
+                GlBankDTO glBankDTO = new GlBankDTO();
+                glBankDTO.setId(glBank.getGlBankId().getId());
+                glBankEntity.setGlBankId(glBankDTO);
+            }
+
             if (glBank.getGallaryId() != null) {
                 InvInventoryDTO inventory = new InvInventoryDTO();
                 inventory.setId(glBank.getGallaryId().getId());
                 setGallaryDTOSelect(inventory);
             }
-            
+
             if (getGallaryDTOSelect() != null) {
                 InvInventory inventory = new InvInventory();
                 inventory.setId(getGallaryDTOSelect().getId());
@@ -231,6 +235,14 @@ public class glBankFromMB extends BaseFormBean {
                 glBank.setRate(glBankEntity.getRate());
                 glBank.setCash(glBankEntity.getCash());
                 glBank.setRemark(glBankEntity.getRemark());
+                glBank.setFixedAmount(glBankEntity.getFixedAmount());
+
+                if (glBankEntity.getGlBankId() != null && glBankEntity.getGlBankId().getId() != null) {
+                    GlBank glBankNew = new GlBank();
+                    glBankNew.setId(glBankEntity.getGlBankId().getId());
+                    glBank.setGlBankId(glBankNew);
+                }
+
                 if (getGallaryDTOSelect() != null) {
                     InvInventory inventory = new InvInventory();
                     inventory.setId(getGallaryDTOSelect().getId());
@@ -263,7 +275,7 @@ public class glBankFromMB extends BaseFormBean {
             validateName();
             validateCurrency();
             validateAccount();
-            validateCode();
+//            validateCode();
             validateOpeningBalance();
             validateRaghiPoints();
         } catch (Exception e) {
@@ -275,7 +287,7 @@ public class glBankFromMB extends BaseFormBean {
     public void validateAccount() {
         try {
             if (glBankEntity.getAccountId() == null) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), "لا يمكن انشاء خزنة بدون اختيار حساب"));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "لا يمكن انشاء خزنة بدون اختيار حساب"));
                 showMessage = true;
             }
         } catch (Exception e) {
@@ -286,7 +298,7 @@ public class glBankFromMB extends BaseFormBean {
     public void validateCurrency() {
         try {
             if (glBankEntity.getCurrencyId() == null) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), "لا يمكن انشاء خزنة بدون اختيار عملة"));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "لا يمكن انشاء خزنة بدون اختيار عملة"));
                 showMessage = true;
             }
         } catch (Exception e) {
@@ -297,7 +309,7 @@ public class glBankFromMB extends BaseFormBean {
     public void validateName() {
         try {
             if (glBankEntity.getName() == null || glBankEntity.getName().isEmpty()) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), "لا يمكن انشاء خزنة بدون اسم"));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "لا يمكن انشاء خزنة بدون اسم"));
                 showMessage = true;
             }
         } catch (Exception e) {
@@ -308,7 +320,7 @@ public class glBankFromMB extends BaseFormBean {
     public void validateOpeningBalance() {
         try {
             if (glBankEntity.getOpeningBalance() != null && glBankEntity.getOpeningBalance().compareTo(BigDecimal.ZERO) == -1) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), "لا يمكن ادخال رصيد بالسالب"));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "لا يمكن ادخال رصيد بالسالب"));
                 showMessage = true;
             }
         } catch (Exception e) {
@@ -321,11 +333,11 @@ public class glBankFromMB extends BaseFormBean {
             if (glBankEntity.getCode() != null) {
                 List<GlBank> banks = glBankService.getGlBankByBranchIdAndCode(getUserData().getUserBranch().getId(), glBankEntity.getCode(), glBankEntity.getId());
                 if (banks != null && !banks.isEmpty()) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), "لا يمكن تكرار الكود"));
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "لا يمكن تكرار الكود"));
                     showMessage = true;
                 }
             } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), "لا يمكن انشاء خزنة بدون كود"));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "لا يمكن انشاء خزنة بدون كود"));
                 showMessage = true;
             }
         } catch (Exception e) {
@@ -337,7 +349,7 @@ public class glBankFromMB extends BaseFormBean {
         try {
             Boolean check = glBankService.getGlBankByBranchIdAndraghiPoints(getUserData().getUserBranch().getId(), glBankEntity.getRaghiPoint(), glBankEntity.getId());
             if (!check) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), "يجب الغاء نقاط الراجحى من الخزينة "));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب الغاء نقاط الراجحى من الخزينة "));
                 showMessage = true;
             }
         } catch (Exception e) {
@@ -502,14 +514,6 @@ public class glBankFromMB extends BaseFormBean {
 
     public void setShowMessage(Boolean showMessage) {
         this.showMessage = showMessage;
-    }
-
-    public Map<String, String> getUserDDs() {
-        return userDDs;
-    }
-
-    public void setUserDDs(Map<String, String> userDDs) {
-        this.userDDs = userDDs;
     }
 
     public Boolean getDisableSave() {

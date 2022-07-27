@@ -444,12 +444,19 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         calculateRemainValue();
     }
 
+    public void returnHalala() {
+//       BigDecimal halalaOld = getInvInvoiceDTO().getDiscHalala().multiply(new BigDecimal(1.5));
+        getInvInvoiceDTO().setDiscHalala(BigDecimal.ZERO);
+        calcDiscountValue();
+        calculateRemainValue();
+    }
+
     public void calcDiscountValue() {
         try {
-            if (getInvInvoiceDTO().getDiscHalala() != null
-                    && getInvInvoiceDTO().getDiscHalala().compareTo(BigDecimal.ZERO) == 1) {
+//            if (getInvInvoiceDTO().getDiscHalala() != null
+//                    && getInvInvoiceDTO().getDiscHalala().compareTo(BigDecimal.ZERO) == 1) {
                 setInvInvoiceDTO(invGlobalService.recalcHeadValues(getInvInvoiceDTO()));
-            }
+//            }
 
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "recalcHeadValues");
@@ -784,14 +791,36 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                     detailDTO.setDiscount(new BigDecimal(50));
                 } else if (detailDTO.getItemId().getProGroupId().getId() == 1) {
                     if (detailDTO.getItemsBarcodesDetail().getTypeShow() == 1) {
-                        if (detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(16.67)) != 1) {
-                            detailDTO.setCost(new BigDecimal(246.38));
+                        if ((detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(16.67)) != 1)
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("035142"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("035143"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("035157"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("15094"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("012214"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("012215"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("004430"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("047238"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("004210"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("053012"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("001029"))) {
+                            detailDTO.setCost(new BigDecimal(257.39));
                             detailDTO.setDiscount(BigDecimal.ZERO);
                             zeroDiscount();
                         }
                     } else if (detailDTO.getItemsBarcodesDetail().getTypeShow() == 2) {
-                        if (detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(20)) != 1) {
-                            detailDTO.setCost(new BigDecimal(246.38).setScale(3, RoundingMode.UP));
+                        if ((detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(20)) != 1)
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("035142"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("035143"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("035157"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("15094"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("012214"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("012215"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("004430"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("047238"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("004210"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("053012"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("001029"))) {
+                            detailDTO.setCost(new BigDecimal(257.39).setScale(3, RoundingMode.UP));
                             detailDTO.setDiscount(BigDecimal.ZERO);
                             zeroDiscount();
                         }
@@ -1287,6 +1316,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         getOrganizationSiteIdNew().setGallaryIdDTO(getInvInvoiceDTO().getGallaryId());
         getInvInvoiceDTO().setOrganizationSiteId(organizationSiteService.addNewCustomer(getOrganizationSiteIdNew(), getInvOrganizationSiteDTOList(true, 0), getUserData().getUser(), getInvInvoiceDTO().getGallaryId().getCustomerAccount().getId()));
         getInvInvoiceDTO().setShowCustomerDate(Boolean.FALSE);
+        setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
     }
 
     public void editCustomer() {
@@ -1294,6 +1324,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 //        if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getId() != null) {
         organizationSiteService.updateOrganizationSiteMobile(getOrganizationSiteId());
         getInvInvoiceDTO().setOrganizationSiteId(getOrganizationSiteId());
+        savedMeesage("تم الحفظ بنجاح");
 //        }
     }
 
