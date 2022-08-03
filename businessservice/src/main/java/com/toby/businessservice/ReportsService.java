@@ -58,4 +58,6 @@ public interface ReportsService {
     public List<ClientsByInvInventory> getClientsByInvInventory(ClientsByInvInventory invInventory, Integer branchId);
     
     public List<CustomerBalancesDebtAge> getCustomerBalancesDebtAge(CustomerBalancesDebtAgeSearch customerBalancesDebtAge);
+    
+     public List<SalesStatementForThePeriod> getSalesStatementForThePeriodForPay(SalesStatementForThePeriod statementForThePeriod);
 }

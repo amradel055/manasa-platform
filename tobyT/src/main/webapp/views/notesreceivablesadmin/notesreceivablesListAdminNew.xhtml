@@ -64,6 +64,14 @@
                                  {PreviousPageLink} {PageLinks} {NextPageLink}
                                  {LastPageLink} {RowsPerPageDropdown}"
                                  emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+                        
+                        <f:facet name="header">
+                            <p:commandButton class="saddButton" id="b2" icon="fa fa-plus" title="#{userData.userDDs['ADD']}" action="#{notesReceivablesListMB.goToAdd()}" 
+                                             style="float:right" 
+                                             rendered="#{userData.userScreens['notesreceivables'].add or userData.isAdmin}"/>
+
+                            
+                        </f:facet>
 
 
                         <p:column style="width: 11vh; text-align: right;font-size:1.8vh;border-radius: 0px" filterStyle="display:none"

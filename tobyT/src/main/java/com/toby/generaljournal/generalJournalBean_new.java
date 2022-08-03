@@ -194,6 +194,9 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
     private Date dateFrom;
     private Date dateTo;
     private boolean reviewByDate;
+
+    private Integer serial;
+
     @EJB
     private GeneraljournalService generaljournalService;
     @EJB
@@ -1120,17 +1123,17 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
                     detailsnew.setGeneralJournalId(selectedGeneralJournal);
                     detailsnew.setBranchId(getUserData().getUserBranch().getId());
                     detailsnew.setCreatedBy(getUserData().getUser().getId());
-                    if(detailsList != null && detailsList.size() > 0){
+                    if (detailsList != null && detailsList.size() > 0) {
                         detailsnew.setDiscribtion(detailsList.get(detailsList.size() - 1).getDiscribtion());
                         detailsnew.setCostCenterId(detailsList.get(detailsList.size() - 1).getCostCenterId());
-                    }else{
+                    } else {
                         detailsnew.setDiscribtion(selectedGeneralJournal.getGeneralStatement());
                         detailsnew.setCostCenterId(new CostCenterDTO());
                     }
 //                    detailsnew.setDiscribtion(selectedGeneralJournal.getGeneralStatement());
                     // To copy generalstatment from head to discription detail
                     detailsnew.setGlACCOUNTId(new GlAccountDTO());
-                    
+
                     detailsnew.setAdminUnitId(new GlAdminUnitDTO());
 
                     detailsnew.setGlAssistantAccount(new GlAccountDTO());
@@ -1250,6 +1253,10 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
                 return generalDTOList;
             }
         });
+    }
+
+    public void search() {
+        generalDTOList = generaljournalServiceDTO.getGeneralJournalDTOByBranchId(getSerial(), glYearDTOSelection, getUserData().getSelectedBranch());
     }
 
 //    public String addDetails() {
@@ -1411,7 +1418,7 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
              y++;
              }*/
 
-            /*if (account.getAssistantAcc().toString().equalsIgnoreCase("ASSACC_MANDATORY") && detail.getGlAssistantAccount() == null) {
+ /*if (account.getAssistantAcc().toString().equalsIgnoreCase("ASSACC_MANDATORY") && detail.getGlAssistantAccount() == null) {
              if (x > 0) {
              errorMessageBuilder.append("و ");
              }
@@ -2948,6 +2955,20 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
      */
     public void setGeneraDTOlList(List<GeneralJournalDTO> generalDTOList) {
         this.generalDTOList = generalDTOList;
+    }
+
+    /**
+     * @return the serial
+     */
+    public Integer getSerial() {
+        return serial;
+    }
+
+    /**
+     * @param serial the serial to set
+     */
+    public void setSerial(Integer serial) { 
+        this.serial = serial;
     }
 
 }

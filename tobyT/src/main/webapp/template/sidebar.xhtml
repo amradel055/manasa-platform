@@ -731,6 +731,7 @@
                                                    or userData.userScreens['ProfitOfItemsSoldReport'].view 
                                                    or userData.userScreens['InvoiceMovementReport'].view 
                                                    or userData.userScreens['SalesStatementForThePeriod'].view 
+                                                   or userData.userScreens['SalesStatementForThePeriodPay'].view 
 
 
                                                    or userData.isAdmin}"
@@ -752,6 +753,7 @@
                                                        or userData.userScreens['ProfitOfItemsSoldReport'].view 
                                                        or userData.userScreens['InvoiceMovementReport'].view 
                                                        or userData.userScreens['SalesStatementForThePeriod'].view 
+                                                       or userData.userScreens['SalesStatementForThePeriodPay'].view 
                                                        or userData.isAdmin}" >
                                     <p:menuitem id="sr_sm71" value=" بيان الفواتير حسب الضريبة " icon="&#xE8D2;" url="/faces/views/proproductionreport/SalesReportByValueAdedReport.xhtml" 
                                                 rendered="#{userData.userScreens['SalesReportByValueAdedReport'].view or   userData.isAdmin}"
@@ -801,6 +803,8 @@
                                     <p:menuitem id="sr_lnk33324" value="حركة الثياب حسب الفاتورة" icon="&#xE8D2;" url="/faces/views/proproductionreport/InvoiceMovementReport.xhtml" 
                                                 rendered="#{userData.userScreens['InvoiceMovementReport'].view or userData.isAdmin}"/>
                                     <p:menuitem id="sr_lnk33339" value=" بيان المبيعات لفترة" icon="&#xE8D2;" url="/faces/views/proproductionreport/SalesStatementForThePeriod.xhtml" 
+                                                rendered="#{userData.userScreens['SalesStatementForThePeriod'].view or userData.isAdmin}"/>
+                                    <p:menuitem id="sr_lnk333394" value=" الفواتير المسدده لفتره سابقه" icon="&#xE8D2;" url="/faces/views/proproductionreport/SalesStatementForThePeriodPay.xhtml" 
                                                 rendered="#{userData.userScreens['SalesStatementForThePeriod'].view or userData.isAdmin}"/>
 
                                     <p:menuitem id="sr_lnk466" value="الأصناف حسب الفئات" icon="&#xE8D2;" url="/faces/views/inventoryreports/itemDataReport.xhtml" 
@@ -924,7 +928,7 @@
 
                                                        or userData.isAdmin}"
                                            >
-                                    <p:menuitem id="sr_lnk451" value="#{userData.userDDs['ITEM_SALE_GROUP']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
+                                    <p:menuitem id="sr_lnk451" value="#{userData.userDDs['ITEM_SALE_GROUP']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/itemSalesReport.xhtml" 
                                                 rendered="#{userData.userScreens['itemSalesReport'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk452" value="#{userData.userDDs['ITEM_SALE_CUST']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 

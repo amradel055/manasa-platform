@@ -1056,34 +1056,34 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 r = new BigDecimal(4);
             }
         }
-        if (len.compareTo(new BigDecimal(130)) != -1 && len.compareTo(new BigDecimal(139)) != 1) {
+        if (len.compareTo(new BigDecimal(130)) != -1 && len.compareTo(new BigDecimal(144)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(3);
             } else if (type == 1) {
                 r = new BigDecimal(4.20);
             }
         }
-        if (len.compareTo(new BigDecimal(140)) != -1 && len.compareTo(new BigDecimal(145)) != 1) {
-            if (type == 2) {
-                r = new BigDecimal(3.20);
-            } else if (type == 1) {
-                r = new BigDecimal(4.70);
-            }
-        }
-        if (len.compareTo(new BigDecimal(145)) != -1 && len.compareTo(new BigDecimal(154)) != 1) {
+//        if (len.compareTo(new BigDecimal(140)) != -1 && len.compareTo(new BigDecimal(145)) != 1) {
+//            if (type == 2) {
+//                r = new BigDecimal(3.20);
+//            } else if (type == 1) {
+//                r = new BigDecimal(4.70);
+//            }
+//        }
+        if (len.compareTo(new BigDecimal(145)) != -1 && len.compareTo(new BigDecimal(160)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(3.50);
             } else if (type == 1) {
                 r = new BigDecimal(4.70);
             }
         }
-        if (len.compareTo(new BigDecimal(155)) != -1 && len.compareTo(new BigDecimal(159)) != 1) {
-            if (type == 2) {
-                r = new BigDecimal(3.70);
-            } else if (type == 1) {
-                r = new BigDecimal(5.2);
-            }
-        }
+//        if (len.compareTo(new BigDecimal(155)) != -1 && len.compareTo(new BigDecimal(159)) != 1) {
+//            if (type == 2) {
+//                r = new BigDecimal(3.70);
+//            } else if (type == 1) {
+//                r = new BigDecimal(5.2);
+//            }
+//        }
         if (len.compareTo(new BigDecimal(160)) != -1 && len.compareTo(new BigDecimal(164)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(3.90);
@@ -1133,35 +1133,35 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 r = new BigDecimal(4);
             }
         }
-        if (shou.compareTo(new BigDecimal(35)) != -1 && shou.compareTo(new BigDecimal(39)) != 1) {
+        if (shou.compareTo(new BigDecimal(35)) != -1 && shou.compareTo(new BigDecimal(42)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(3);
             } else if (type == 1) {
                 r = new BigDecimal(4.20);
             }
         }
-        if (shou.compareTo(new BigDecimal(40)) != -1 && shou.compareTo(new BigDecimal(42)) != 1) {
-            if (type == 2) {
-                r = new BigDecimal(3.2);
-            } else if (type == 1) {
-                r = new BigDecimal(4.70);
-            }
-        }
+//        if (shou.compareTo(new BigDecimal(40)) != -1 && shou.compareTo(new BigDecimal(42)) != 1) {
+//            if (type == 2) {
+//                r = new BigDecimal(3.2);
+//            } else if (type == 1) {
+//                r = new BigDecimal(4.70);
+//            }
+//        }
 
-        if (shou.compareTo(new BigDecimal(42)) != -1 && shou.compareTo(new BigDecimal(45)) != 1) {
+        if (shou.compareTo(new BigDecimal(42)) != -1 && shou.compareTo(new BigDecimal(47)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(3.5);
             } else if (type == 1) {
                 r = new BigDecimal(4.70);
             }
         }
-        if (shou.compareTo(new BigDecimal(46)) != -1 && shou.compareTo(new BigDecimal(47)) != 1) {
-            if (type == 2) {
-                r = new BigDecimal(3.70);
-            } else if (type == 1) {
-                r = new BigDecimal(5.2);
-            }
-        }
+//        if (shou.compareTo(new BigDecimal(46)) != -1 && shou.compareTo(new BigDecimal(47)) != 1) {
+//            if (type == 2) {
+//                r = new BigDecimal(3.70);
+//            } else if (type == 1) {
+//                r = new BigDecimal(5.2);
+//            }
+//        }
         if (shou.compareTo(new BigDecimal(48)) != -1 && shou.compareTo(new BigDecimal(50)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(3.90);
@@ -1223,22 +1223,22 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             }
 
         }
-        if (ste.compareTo(new BigDecimal(65)) == 1 && ste.compareTo(new BigDecimal(69)) != 1) {
+        if (ste.compareTo(new BigDecimal(65)) == 1 && ste.compareTo(new BigDecimal(75)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(3);
             } else if (type == 1) {
                 r = new BigDecimal(4.20);
             }
         }
-        if (ste.compareTo(new BigDecimal(70)) == 1 && ste.compareTo(new BigDecimal(75)) != 1) {
-            if (type == 2) {
-                r = new BigDecimal(3.20);
-            } else if (type == 1) {
-                r = new BigDecimal(4.70);
-            }
-
-        }
-        if (ste.compareTo(new BigDecimal(75)) == 1 && ste.compareTo(new BigDecimal(79)) != 1) {
+//        if (ste.compareTo(new BigDecimal(70)) == 1 && ste.compareTo(new BigDecimal(75)) != 1) {
+//            if (type == 2) {
+//                r = new BigDecimal(3.20);
+//            } else if (type == 1) {
+//                r = new BigDecimal(4.70);
+//            }
+//
+//        }
+        if (ste.compareTo(new BigDecimal(75)) == 1 && ste.compareTo(new BigDecimal(84)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(3.50);
             } else if (type == 1) {
@@ -1246,14 +1246,14 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             }
 
         }
-        if (ste.compareTo(new BigDecimal(80)) == 1 && ste.compareTo(new BigDecimal(84)) != 1) {
-            if (type == 2) {
-                r = new BigDecimal(3.70);
-            } else if (type == 1) {
-                r = new BigDecimal(5.20);
-            }
-
-        }
+//        if (ste.compareTo(new BigDecimal(80)) == 1 && ste.compareTo(new BigDecimal(84)) != 1) {
+//            if (type == 2) {
+//                r = new BigDecimal(3.70);
+//            } else if (type == 1) {
+//                r = new BigDecimal(5.20);
+//            }
+//
+//        }
         if (ste.compareTo(new BigDecimal(85)) == 1 && ste.compareTo(new BigDecimal(89)) != 1) {
             if (type == 2) {
                 r = new BigDecimal(3.90);

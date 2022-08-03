@@ -52,7 +52,7 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
             filters.put("globalFilter", Integer.parseInt(globalFilter.toString()));
         }
         builder.append("SELECT count(e) FROM GeneralJournal e WHERE e.branchId.id = :branchId AND e.generalData >= :dateFrom AND e.generalData <= :dateTo ");
-        appendFilter2(filters, branchId, builder);
+        appendFilter2(filters, builder);
         Long details = dao.findEntityByQuery(builder.toString(), filters);
         return details;
     }
@@ -134,7 +134,7 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
         }
     }
 
-    public void appendFilter2(Map<String, Object> filters, Integer branchId, StringBuilder builder) {
+    public void appendFilter2(Map<String, Object> filters, StringBuilder builder) {
         if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
             String filter = " and (e.serial = :globalFilter  OR  e.generalDecument = :globalFilter   ) ";
             builder.append(filter);
@@ -154,10 +154,30 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
         }
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT e FROM GeneralJournal e WHERE e.branchId.id = :branchId AND e.generalData >= :dateFrom AND e.generalData <= :dateTo  ");
-        appendFilter2(filters, branchId, builder);
+        appendFilter2(filters, builder);
         builder.append(" order by e.creationDate DESC");
         List<GeneralJournal> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
         return returnListDTO(details);
+    }
+
+    @Override
+    public List<GeneralJournalDTO> getGeneralJournalDTOByBranchId(Integer serial, GlYearDTO year, Integer branchId) { 
+        if (serial != null ) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("branchId", branchId);
+            params.put("dateFrom", year.getDateFrom());
+            params.put("dateTo", year.getDateTo());
+            params.put("serial", serial);
+
+            StringBuilder builder = new StringBuilder();
+            builder.append("SELECT e FROM GeneralJournal e WHERE e.branchId.id = :branchId AND e.generalData >= :dateFrom AND e.generalData <= :dateTo  ");
+            builder.append(" and (e.serial = :serial  OR  e.generalDecument = :serial   ) ");
+            builder.append(" order by e.creationDate DESC");
+            List<GeneralJournal> details = dao.findListByQuery(builder.toString(), params);
+            return returnListDTO(details);
+        } else {
+            return null;
+        }
     }
 
     @Override

@@ -9,6 +9,7 @@ import com.toby.views.SubAccountSummary;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,11 +42,11 @@ public class SubAccountSummaryServiceImpl implements SubAccountSummaryService {
 
         if (!extended) {
             if (glYear.getDateFrom() != null) {
-                String d3 = new SimpleDateFormat("yyyy-MM-dd").format(glYear.getDateFrom());
+                String d3 = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(glYear.getDateFrom());
                 builder.append(" and sas.date >= '").append(d3).append("'");
             }
             if (glYear.getDateTo() != null) {
-                String d4 = new SimpleDateFormat("yyyy-MM-dd").format(glYear.getDateTo());
+                String d4 = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(glYear.getDateTo());
                 builder.append(" and sas.date <= '").append(d4).append("'");
             }
         }
@@ -72,11 +73,11 @@ public class SubAccountSummaryServiceImpl implements SubAccountSummaryService {
         builder.append(sql);
         if (!extended) {
             if (glYear.getDateFrom() != null) {
-                String d3 = new SimpleDateFormat("yyyy-MM-dd").format(glYear.getDateFrom());
+                String d3 = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(glYear.getDateFrom());
                 builder.append(" and sas.date >= '").append(d3).append("'");
             }
             if (glYear.getDateTo() != null) {
-                String d4 = new SimpleDateFormat("yyyy-MM-dd").format(glYear.getDateTo());
+                String d4 = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(glYear.getDateTo());
                 builder.append(" and sas.date <= '").append(d4).append("'");
             }
         }
@@ -84,7 +85,7 @@ public class SubAccountSummaryServiceImpl implements SubAccountSummaryService {
         beforeBalance = beforeBalance != null ? beforeBalance : BigDecimal.ZERO;
         return beforeBalance;
     }
-    
+
     public StringBuilder createSqlNew(SubAccountSummarySearchBean subAccountSummarySearchBean) {
         StringBuilder sql = new StringBuilder();
         addCostCenterFromNew(sql, subAccountSummarySearchBean);
@@ -154,7 +155,7 @@ public class SubAccountSummaryServiceImpl implements SubAccountSummaryService {
 
     public void addDateFrom(StringBuilder sql, SubAccountSummarySearchBean subAccountSummarySearchBean) {
         if (subAccountSummarySearchBean.getDateFrom() != null) {
-            String d3 = new SimpleDateFormat("yyyy-MM-dd").format(subAccountSummarySearchBean.getDateFrom());
+            String d3 = new SimpleDateFormat("yyyy-MM-dd  00:00:00").format(subAccountSummarySearchBean.getDateFrom());
 
             sql.append(" and sas.date >= '").append(d3).append("'");
         }
@@ -166,7 +167,7 @@ public class SubAccountSummaryServiceImpl implements SubAccountSummaryService {
 
     public void addDateTo(StringBuilder sql, SubAccountSummarySearchBean subAccountSummarySearchBean) {
         if (subAccountSummarySearchBean.getDateTo() != null) {
-            String d3 = new SimpleDateFormat("yyyy-MM-dd").format(subAccountSummarySearchBean.getDateTo());
+            String d3 = new SimpleDateFormat("yyyy-MM-dd  23:59:59").format(subAccountSummarySearchBean.getDateTo());
 
             sql.append(" and sas.date <= '").append(d3).append("'");
         }
@@ -178,7 +179,7 @@ public class SubAccountSummaryServiceImpl implements SubAccountSummaryService {
 
     public void addDateToBefore(StringBuilder sql, SubAccountSummarySearchBean subAccountSummarySearchBean) {
         if (subAccountSummarySearchBean.getDateTo() != null) {
-            String d3 = new SimpleDateFormat("yyyy-MM-dd").format(subAccountSummarySearchBean.getDateTo());
+            String d3 = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(subAccountSummarySearchBean.getDateTo());
 
             sql.append(" and sas.date < '").append(d3).append("'");
         }
@@ -227,15 +228,17 @@ public class SubAccountSummaryServiceImpl implements SubAccountSummaryService {
 
         if (!extended) {
             if (glYear.getDateFrom() != null) {
-                String d3 = new SimpleDateFormat("yyyy-MM-dd").format(glYear.getDateFrom());
-                builder.append(" and gj.general_data >= '").append(d3).append("'");
+//                String d3 = new SimpleDateFormat("yyyy-MM-dd").format(glYear.getDateFrom());
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+                builder.append(" and gj.general_data >= '").append(dateFormat.format(glYear.getDateFrom())).append("'");
             }
             if (glYear.getDateTo() != null) {
-                String d4 = new SimpleDateFormat("yyyy-MM-dd").format(glYear.getDateTo());
-                builder.append(" and gj.general_data <= '").append(d4).append("'");
+//                String d4 = new SimpleDateFormat("yyyy-MM-dd").format(glYear.getDateTo());
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
+                builder.append(" and gj.general_data <= '").append(dateFormat.format(glYear.getDateTo())).append("'");
             }
         }
-        
+
         builder.append(" order by gj.general_data ,  gj.serial");
         List<Object[]> res = dao.executeNativeQuery(builder.toString());
         return convertToSubAccountSummary(res);
@@ -268,7 +271,7 @@ public class SubAccountSummaryServiceImpl implements SubAccountSummaryService {
             dto.setDebitAmount((BigDecimal) line[13]);
             dto.setCreditAmount((BigDecimal) line[14]);
             dto.setDebitAmountForiegn((BigDecimal) line[15]);
-            dto.setCreditAmountForiegn((BigDecimal) line[16]);          
+            dto.setCreditAmountForiegn((BigDecimal) line[16]);
 
             list.add(dto);
         }
@@ -306,9 +309,10 @@ public class SubAccountSummaryServiceImpl implements SubAccountSummaryService {
         }
     }
 
+           
     public void addDateFromNew(StringBuilder sql, SubAccountSummarySearchBean subAccountSummarySearchBean) {
         if (subAccountSummarySearchBean.getDateFrom() != null) {
-            String d3 = new SimpleDateFormat("yyyy-MM-dd").format(subAccountSummarySearchBean.getDateFrom());
+            String d3 = new SimpleDateFormat("yyyy-MM-dd  00:00:00").format(subAccountSummarySearchBean.getDateFrom());
 
             sql.append(" and gj.general_data >= '").append(d3).append("'");
         }
@@ -316,7 +320,7 @@ public class SubAccountSummaryServiceImpl implements SubAccountSummaryService {
 
     public void addDateToNew(StringBuilder sql, SubAccountSummarySearchBean subAccountSummarySearchBean) {
         if (subAccountSummarySearchBean.getDateTo() != null) {
-            String d3 = new SimpleDateFormat("yyyy-MM-dd").format(subAccountSummarySearchBean.getDateTo());
+            String d3 = new SimpleDateFormat("yyyy-MM-dd 23:59:59 ").format(subAccountSummarySearchBean.getDateTo());
 
             sql.append(" and gj.general_data <= '").append(d3).append("'");
         }
@@ -324,7 +328,7 @@ public class SubAccountSummaryServiceImpl implements SubAccountSummaryService {
 
     public void addDateToBeforeNew(StringBuilder sql, SubAccountSummarySearchBean subAccountSummarySearchBean) {
         if (subAccountSummarySearchBean.getDateTo() != null) {
-            String d3 = new SimpleDateFormat("yyyy-MM-dd").format(subAccountSummarySearchBean.getDateTo());
+            String d3 = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(subAccountSummarySearchBean.getDateTo());
 
             sql.append(" and gj.general_data <= '").append(d3).append("'");
         }

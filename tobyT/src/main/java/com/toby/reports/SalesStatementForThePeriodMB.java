@@ -66,6 +66,34 @@ public class SalesStatementForThePeriodMB extends Basic {
             }
         }
     }
+    
+    public void searchPay() {
+        if (getStatementForThePeriod() != null && getStatementForThePeriod().getGallaryListSelected() != null && !getStatementForThePeriod().getGallaryListSelected().isEmpty()) {
+            list = new ArrayList<>();
+            for (InvInventoryDTO invInventoryDTO : getStatementForThePeriod().getGallaryListSelected()) {
+                getStatementForThePeriod().setGallerySelected(invInventoryDTO);
+                getList().addAll(reportsService.getSalesStatementForThePeriodForPay(getStatementForThePeriod()));
+            }
+            if(getNotZeroValue()){
+                List<SalesStatementForThePeriod> listBak = new ArrayList<>();
+                for( SalesStatementForThePeriod period : getList()){
+                    if(period.getRemain().compareTo(BigDecimal.ZERO) == 1){
+                        listBak.add(period);
+                    }
+                }
+                setList(listBak);
+            }
+            if(getZeroValue()){
+                List<SalesStatementForThePeriod> listBak = new ArrayList<>();
+                for( SalesStatementForThePeriod period : getList()){
+                    if(period.getRemain().compareTo(BigDecimal.ZERO) != 1){
+                        listBak.add(period);
+                    }
+                }
+                setList(listBak);
+            }
+        }
+    }
 
     public void convertDateFrom() {
         getStatementForThePeriod().setDateFrom(findDateFromHijriFrom());

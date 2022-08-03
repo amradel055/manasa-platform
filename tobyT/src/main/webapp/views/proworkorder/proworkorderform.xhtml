@@ -315,7 +315,7 @@
                             </p:commandButton>
                             <p:commandButton     class="saveButton"  
                                                  title="العرض"
-                                                 value="عرض الخصم 25 %" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0 and false }"
+                                                 value="عرض الخصم 25 %" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0  }"
                                                  icon="fa fa-fw fa-save" 
                                                  action="#{invPurchaseInvoiceFormDTOMB.discount25ForAll(25)}"
                                                  update="@form"
@@ -331,7 +331,7 @@
                             </p:commandButton>
                             <p:commandButton     class="saveButton"  
                                                  title="العرض"
-                                                 value="عرض الخصم 888" 
+                                                 value="عرض الخصم 888"  rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 1 and false }"
                                                  icon="fa fa-fw fa-save"  
                                                  action="#{invPurchaseInvoiceFormDTOMB.offer999Les16Les20Only}"
                                                  update="@form"
