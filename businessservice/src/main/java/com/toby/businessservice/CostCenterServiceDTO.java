@@ -16,7 +16,7 @@ import javax.ejb.Remote;
 @Remote
 public interface CostCenterServiceDTO {
     
-     public List<CostCenterDTO> getAllSubCostCenterByBranchIdActive(Integer id);
+     public List<CostCenterDTO> getAllSubCostCenterByBranchIdActive(Integer branchId);
      
       public CostCenterDTO findCostCenter(Integer costCenterId);
 }

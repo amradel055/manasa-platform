@@ -44,5 +44,7 @@ public interface GlYearService {
     public List<GlYear> findGlYearWithCode(Integer branchId, Integer year);
 
     public List<GlYear> findGlYearByDateBetween(Integer branchId, Date date);
+    
+    public Boolean checkYearIsOpenning(Integer yearId);
 
 }

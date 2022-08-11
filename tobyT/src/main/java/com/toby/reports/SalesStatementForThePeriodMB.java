@@ -49,7 +49,7 @@ public class SalesStatementForThePeriodMB extends Basic {
             if(getNotZeroValue()){
                 List<SalesStatementForThePeriod> listBak = new ArrayList<>();
                 for( SalesStatementForThePeriod period : getList()){
-                    if(period.getRemain().compareTo(BigDecimal.ZERO) == 1){
+                    if(period.getRemain().compareTo(BigDecimal.ZERO) != 0){
                         listBak.add(period);
                     }
                 }

@@ -515,7 +515,7 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
             accountsSystemSettings = accountsSystemSettingsServiceDTO.getInventoryByCompanyId(getUserData().getCompany().getId());
             if (getUserData().getCompany() != null && getUserData().getCompany().getId() != null && getUserData().getUserBranch() != null) {
 
-                glYearDTOList = tobyUserYearService.findYearDTOByUserId(getUserData().getUser().getId(), getUserData().getUserBranch());
+                glYearDTOList = tobyUserYearService.findYearDTOByUserId(getUserData().getUser().getId(), getUserData().getUserBranch().getId());
 
                 if (glYearDTOList != null && !glYearDTOList.isEmpty()) {
                     setGlYearDTOConverter(new GlYearDTOConverter(glYearDTOList));

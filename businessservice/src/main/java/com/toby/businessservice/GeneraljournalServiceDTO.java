@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.ResponseApi;
 import com.toby.bean.JournalDocumentArrangedReportBean;
 import com.toby.entity.TobyUser;
 import com.toby.dto.GeneralJournalDTO;
@@ -63,4 +64,6 @@ public interface GeneraljournalServiceDTO {
     public Integer findMaxSerialExit();
 
     public List<GeneralJournalDTO> getGeneralJournalDTOByBranchId(Integer serial, GlYearDTO year, Integer branchId);
+    
+    public ResponseApi save(GeneralJournalDTO dTO, TobyUser tobyUser);
 }

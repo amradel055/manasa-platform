@@ -25,6 +25,7 @@ public class GeneralJournalDTO extends BaseEntityDTO {
     private boolean post_flag = Boolean.FALSE;
     private Integer serial;
     private GlYearDTO glYear;
+    private Integer glYearId;
     private String macId;
     private boolean userModifyAbility;
     private Integer companyId;
@@ -282,6 +283,20 @@ public class GeneralJournalDTO extends BaseEntityDTO {
      */
     public void setDocumentId(Integer documentId) {
         this.documentId = documentId;
+    }
+
+    /**
+     * @return the glYearId
+     */
+    public Integer getGlYearId() {
+        return glYearId;
+    }
+
+    /**
+     * @param glYearId the glYearId to set
+     */
+    public void setGlYearId(Integer glYearId) {
+        this.glYearId = glYearId;
     }
 
 }

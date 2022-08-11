@@ -5,10 +5,12 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.ResponseApi;
 import com.toby.bean.JournalDocumentArrangedReportBean;
 import com.toby.dto.TobyUserDTO;
 import com.toby.entity.TobyUser;
 import com.toby.core.GenericDAO;
+import com.toby.dto.CloseAndSaveMonthDTO;
 import com.toby.dto.GeneralJournalDTO;
 import com.toby.dto.GeneralJournalDetailsDTO;
 import com.toby.dto.GlYearDTO;
@@ -17,6 +19,7 @@ import com.toby.entity.GeneralJournal;
 import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlYear;
 import com.toby.entity.Symbol;
+import com.toby.entity.TobyCompany;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,6 +43,12 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
     private GeneraljournalDetailsService generaljournalDetailsService;
     @EJB
     private GeneraljournalDetailsServiceDTO generaljournalDetailsServiceDTO;
+    @EJB
+    private CloseAndSaveMonthServiceDTO closeAndSaveMonthServiceDTO;
+    @EJB
+    private GlYearService glYearService;
+    @EJB
+    private SymbolService symbolService;
 
     @Override
     public Long getTotalGeneralJournal(GlYearDTO year, Integer branchId, Map<String, Object> filters) {
@@ -161,8 +170,8 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
     }
 
     @Override
-    public List<GeneralJournalDTO> getGeneralJournalDTOByBranchId(Integer serial, GlYearDTO year, Integer branchId) { 
-        if (serial != null ) {
+    public List<GeneralJournalDTO> getGeneralJournalDTOByBranchId(Integer serial, GlYearDTO year, Integer branchId) {
+        if (serial != null) {
             Map<String, Object> params = new HashMap<>();
             params.put("branchId", branchId);
             params.put("dateFrom", year.getDateFrom());
@@ -583,6 +592,7 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
         return mapFromDTO(dTO, tobyUser);
     }
 
+    @Override
     public List<JournalDocumentArrangedReportBean> printVoutcher(Integer generalJournalId) {
         List<JournalDocumentArrangedReportBean> list = new ArrayList<>();
         if (generalJournalId != null) {
@@ -620,6 +630,63 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
             return list;
         }
         return null;
+    }
+
+    @Override
+    public ResponseApi save(GeneralJournalDTO dTO, TobyUser tobyUser) {
+        try {
+
+            ResponseApi responseApi = new ResponseApi();
+
+            StringBuilder error = validateGeneralJournal(dTO);
+            if (!error.toString().isEmpty()) {
+                responseApi.setStatus(2000);
+                responseApi.setResposeId(8000);
+                responseApi.setMsg(error.toString());
+            } else {
+                addGeneralJournalDTO(dTO, tobyUser);
+                responseApi.setStatus(1000);
+                responseApi.setResposeId(7000);
+                responseApi.setMsg("تم طلب  بنجاح");
+            }
+
+            return responseApi;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private StringBuilder validateGeneralJournal(GeneralJournalDTO dTO) throws NumberFormatException {
+        StringBuilder error = new StringBuilder();
+
+        String dateFrom = new SimpleDateFormat("MM").format(dTO.getGeneralData());
+        Integer numberOfMonth = Integer.parseInt(dateFrom);
+
+        List<CloseAndSaveMonthDTO> closeAndSaveMonthList = closeAndSaveMonthServiceDTO.getCloseAndSaveMonthsDTOByYearIdAndMounthNumberAndBranchId(dTO.getBranchId(), dTO.getGlYearId(), numberOfMonth);
+
+        if (closeAndSaveMonthList != null && !closeAndSaveMonthList.isEmpty()) {
+            error.append("لا يمكن انشاء قيد فى شهر مغلق");
+            error.append("\n");
+        }
+
+        GlYear glYear = glYearService.findYear(dTO.getGlYearId());
+
+        if (glYear.getOpenning() != null && glYear.getOpenning() == 1) {
+            error.append("لا يمكن انشاء قيد فى سنة مغلقة");
+            error.append("\n");
+        }
+
+        if (dTO.getGeneralData().compareTo(glYear.getDateFrom()) < 0 && dTO.getGeneralData().compareTo(glYear.getDateTo()) > 0) {
+            error.append("يجب اختيار تاريخ فى السنه الماليه المحدده");
+            error.append("\n");
+        }
+
+        if (dTO.getDocumentId() == null) {
+            error.append("يجب اختيار نوع المستند");
+            error.append("\n");
+        }
+
+        return error;
     }
 
 }

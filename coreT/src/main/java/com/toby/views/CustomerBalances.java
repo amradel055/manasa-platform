@@ -19,6 +19,7 @@ public class CustomerBalances {
     private BigDecimal Debit;
     private BigDecimal Creditor;
     private BigDecimal Balance;
+    private BigDecimal openningBalance;
     private InvInventoryDTO gallerySelected;
 
     /**
@@ -113,6 +114,20 @@ public class CustomerBalances {
      */
     public void setGallerySelected(InvInventoryDTO gallerySelected) {
         this.gallerySelected = gallerySelected;
+    }
+
+    /**
+     * @return the openningBalance
+     */
+    public BigDecimal getOpenningBalance() {
+        return openningBalance;
+    }
+
+    /**
+     * @param openningBalance the openningBalance to set
+     */
+    public void setOpenningBalance(BigDecimal openningBalance) {
+        this.openningBalance = openningBalance;
     }
 
 }

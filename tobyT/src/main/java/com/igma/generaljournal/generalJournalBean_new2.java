@@ -567,7 +567,7 @@ public class generalJournalBean_new2 extends BaseFormBean implements Serializabl
             if (getUserData().getCompany() != null && getUserData().getCompany().getId() != null && getUserData().getUserBranch() != null) {
 
 //                glYearList = tobyUserYearService.findYearByUserId(getUserData().getUser().getId(), getUserData().getUserBranch());
-                glYearDTOList = tobyUserYearService.findYearDTOByUserId(getUserData().getUser().getId(), getUserData().getUserBranch());
+                glYearDTOList = tobyUserYearService.findYearDTOByUserId(getUserData().getUser().getId(), getUserData().getUserBranch().getId());
 
                 if (glYearDTOList != null && !glYearDTOList.isEmpty()) {
                     setGlYearDTOConverter(new GlYearDTOConverter(glYearDTOList));

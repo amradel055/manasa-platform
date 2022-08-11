@@ -174,11 +174,11 @@ public class TobyUserYearServiceImpl implements TobyUserYearService {
     }
 
     @Override
-    public List<GlYearDTO> findYearDTOByUserId(Integer userId, Branch branchId) {
+    public List<GlYearDTO> findYearDTOByUserId(Integer userId, Integer branchId) {
         List<GlYearDTO> yearList = new ArrayList<>();
         Map<String, Object> params = new HashMap();
         params.put("userId", userId);
-        params.put("branchId", branchId.getId());
+        params.put("branchId", branchId);
         Map<Integer, GlYearDTO> glYearMap = new HashMap<>();
 
         List<TobyUserYear> tobyUserYearList = dao.findListByQuery("SELECT u FROM TobyUserYear u  WHERE u.branchId.id = :branchId AND u.userId.id = :userId", params);

@@ -31,9 +31,14 @@ public class SalesStatementForThePeriod {
     private int invoiceId;
     private BigDecimal remain;
     private BigDecimal paid;
+    private BigDecimal cash;
+    private BigDecimal noticeDebit;
+    private BigDecimal noticeCredit;
     private BigDecimal totalBeforeTax;
     private BigDecimal totalAfterTax;
     private BigDecimal tax;
+    private BigDecimal invNoticeValue;
+    private BigDecimal returnPurchaseValue;
     private String galleryName;
 
     /**
@@ -218,7 +223,7 @@ public class SalesStatementForThePeriod {
      */
     public BigDecimal getRemain() {
         if (remain == null) {
-            remain = getNet().subtract(getPaid());
+            remain = getNet().subtract(getReturnPurchaseValue()).add(getNoticeDebit()).subtract(getNoticeCredit()).subtract(getCash());
         }
         return remain;
     }
@@ -310,6 +315,76 @@ public class SalesStatementForThePeriod {
      */
     public void setTax(BigDecimal tax) {
         this.tax = tax;
+    }
+
+    /**
+     * @return the invNoticeValue
+     */
+    public BigDecimal getInvNoticeValue() {
+        return invNoticeValue;
+    }
+
+    /**
+     * @param invNoticeValue the invNoticeValue to set
+     */
+    public void setInvNoticeValue(BigDecimal invNoticeValue) {
+        this.invNoticeValue = invNoticeValue;
+    }
+
+    /**
+     * @return the returnPurchaseValue
+     */
+    public BigDecimal getReturnPurchaseValue() {
+        return returnPurchaseValue;
+    }
+
+    /**
+     * @param returnPurchaseValue the returnPurchaseValue to set
+     */
+    public void setReturnPurchaseValue(BigDecimal returnPurchaseValue) {
+        this.returnPurchaseValue = returnPurchaseValue;
+    }
+
+    /**
+     * @return the noticeDebit
+     */
+    public BigDecimal getNoticeDebit() {
+        return noticeDebit;
+    }
+
+    /**
+     * @param noticeDebit the noticeDebit to set
+     */
+    public void setNoticeDebit(BigDecimal noticeDebit) {
+        this.noticeDebit = noticeDebit;
+    }
+
+    /**
+     * @return the noticeCredit
+     */
+    public BigDecimal getNoticeCredit() {
+        return noticeCredit;
+    }
+
+    /**
+     * @param noticeCredit the noticeCredit to set
+     */
+    public void setNoticeCredit(BigDecimal noticeCredit) {
+        this.noticeCredit = noticeCredit;
+    }
+
+    /**
+     * @return the cash
+     */
+    public BigDecimal getCash() {
+        return cash;
+    }
+
+    /**
+     * @param cash the cash to set
+     */
+    public void setCash(BigDecimal cash) {
+        this.cash = cash;
     }
 
 }

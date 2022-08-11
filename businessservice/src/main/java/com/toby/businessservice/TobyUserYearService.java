@@ -49,6 +49,6 @@ public interface TobyUserYearService {
 
     public void deleteTobyUserYear(List<TobyUserYear> tobyUserYearList);
 
-    public List<GlYearDTO> findYearDTOByUserId(Integer userId, Branch branchId);
+    public List<GlYearDTO> findYearDTOByUserId(Integer userId, Integer branchId);
 
 }

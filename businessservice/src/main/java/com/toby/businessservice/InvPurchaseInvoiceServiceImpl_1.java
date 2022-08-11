@@ -2399,10 +2399,19 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         if (detailsReturn != null && detailsReturn.size() > 0) {
             System.err.println("");
         }
+        BigDecimal returnValue = findInvReturnValue(invPurchaseInvoiceId);
         BigDecimal payment = (details != null && !details.isEmpty()) ? details.get(0).subtract((detailsReturn != null && !detailsReturn.isEmpty()) ? detailsReturn.get(0) : BigDecimal.ZERO) : BigDecimal.ZERO;
-        payment = payment.subtract((noticeDebit != null && !noticeDebit.isEmpty()) ? noticeDebit.get(0) : BigDecimal.ZERO);
+        payment = payment.subtract(returnValue).subtract((noticeDebit != null && !noticeDebit.isEmpty()) ? noticeDebit.get(0) : BigDecimal.ZERO);
         payment = payment.add((noticeCredit != null && !noticeCredit.isEmpty()) ? noticeCredit.get(0) : BigDecimal.ZERO);
         return payment;
+    }
+
+    public BigDecimal findInvReturnValue(Integer invPurchaseInvoiceId) {
+        List<BigDecimal> value = null;
+        if (invPurchaseInvoiceId != null && invPurchaseInvoiceId > 0) {
+            value = dao.executeNativeQuery("SELECT IFNULL(SUM(ipid.net_after_discount_head), 0) from inv_purchase_invoice ipi left join  inv_purchase_invoice_detail ipid on ipi.id = ipid.inv_purchase_invoice_id where ipi.branch_id = 182 and ipi.type = 3 and ipi.parent =  " + invPurchaseInvoiceId);
+        }
+        return (value != null && !value.isEmpty()) ? (value.get(0).multiply(new BigDecimal(1.15))).setScale(3, RoundingMode.HALF_UP) : BigDecimal.ZERO;
     }
 
     @Override
@@ -2412,7 +2421,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         List<BigDecimal> details = dao.findListByQuery("SELECT  sum(i.value)    FROM GlBankTransaction i WHERE i.invoiceId.id = :invPurchaseInvoiceId Group by i.invoiceId.id", params);
         List<BigDecimal> detailsReturn = dao.findListByQuery("SELECT  sum(i.value)    FROM GlBankTransactionDetail i WHERE i.invoiceId.id = :invPurchaseInvoiceId Group by i.invoiceId.id", params);
 //        List<BigDecimal> detailsMainValue = dao.findListByQuery("SELECT   IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0)    FROM InvPurchaseInvoiceDetail i WHERE i.invPurchaseInvoiceId.id = :invPurchaseInvoiceId ", params);
-        List<BigDecimal> detailsMainValue = dao.executeNativeQuery("SELECT IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0)  AS `exitt` FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id` WHERE  ipi.id = "+invPurchaseInvoiceId+"  group by ipi.id");
+        List<BigDecimal> detailsMainValue = dao.executeNativeQuery("SELECT IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0)  AS `exitt` FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id` WHERE  ipi.id = " + invPurchaseInvoiceId + "  group by ipi.id");
         List<BigDecimal> noticeDebit = dao.findListByQuery("SELECT  sum(i.value)    FROM InvNotice i WHERE i.invInvoice.id = :invPurchaseInvoiceId AND i.type = 0 Group by i.invInvoice.id", params);
         List<BigDecimal> noticeCredit = dao.findListByQuery("SELECT  sum(i.value)    FROM InvNotice i WHERE i.invInvoice.id = :invPurchaseInvoiceId AND i.type in (1,4)  Group by i.invInvoice.id", params);
 

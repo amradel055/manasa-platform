@@ -9,7 +9,6 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:define name="content">
         <h:body>
-
             <h:form dir="RTL" style="margin-right: 20px" id="form" >
                 <p:fieldset  legend=" بيان المبيعات لفترة" id="stages"  style=" position: relative">
                     <p:messages id="messages" showDetail="true" closable="true"/> 
@@ -21,7 +20,7 @@
                                 <p:selectCheckboxMenu id="gallary_From" value="#{salesStatementForThePeriodMB.statementForThePeriod.gallaryListSelected}" 
                                                       converter="#{salesStatementForThePeriodMB.gallaryDTOConverters}"
                                                       label="المعرض" style="width: 15rem"
-                                                      filter="true" filterMatchMode="startsWith" panelStyle="width: 15rem" scrollHeight="250">
+                                                      filter="true" filterMatchMode="contains" panelStyle="width: 15rem" scrollHeight="250">
                                     <f:selectItems value="#{salesStatementForThePeriodMB.gallaryLists}" 
                                                    var="gallary"
                                                    itemLabel="#{gallary}"
@@ -30,7 +29,6 @@
                             </div>
                             <div class="ui-g-6 ui-xl-6">
                                 <p:outputLabel style="width: 50px;margin-right: 1%" value="معرض"/>
-
                             </div>
                         </div>
 
@@ -160,11 +158,17 @@
                         <p:column headerText="قيمة الفاتورة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                             <h:outputText value="#{data.net}" />
                         </p:column>
-                        <p:column headerText="صافى الفاتورة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
-                            <h:outputText value="#{data.totalNet}" />
+                        <p:column headerText="قيمة المرتجع" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.returnPurchaseValue}" />
+                        </p:column>
+                        <p:column headerText=" اشعار مدين" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.noticeDebit}" />
+                        </p:column>
+                        <p:column headerText="اشعار دائن" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.noticeCredit}" />
                         </p:column>
                         <p:column headerText="المسدد" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
-                            <h:outputText value="#{data.paid}" />
+                            <h:outputText value="#{data.cash}" />
                         </p:column>
                         <p:column headerText="الباقى" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                             <h:outputText value="#{data.remain}" />
