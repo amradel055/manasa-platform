@@ -47,6 +47,8 @@ import org.primefaces.event.SelectEvent;
 @ViewScoped
 public class CustomerTrackingMB extends Basic implements Serializable {
     
+    
+    
     private InvOrganizationSiteDTO invOrganizationSiteDTO;
     
     private Boolean errorMsgbool = Boolean.TRUE;

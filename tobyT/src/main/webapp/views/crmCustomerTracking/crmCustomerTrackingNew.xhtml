@@ -689,6 +689,24 @@
 
                 <p:dialog class="dialogueCRM" id="dialogueCRM" header="إضافة شكوي جديدة" widgetVar="dlg1" minHeight="40">
                     <h:panelGrid id="panelDialogueCRM" > 
+                        
+                        
+                            <p:selectOneMenu id="inventory" value="#{customerTrackingMB.gallaryDTOSelect}"
+                                         converter="#{CustomerTrackingMB.gallaryDTOConverters}" 
+                                         style="float:right;width: 20%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
+
+                            <p:ajax listener="#{CustomerTrackingMB.loadGallaryList()}" update="form" />
+                            <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
+
+                            <f:selectItems value="#{CustomerTrackingMB.gallaryLists}" 
+                                           var="inventory" itemLabel="#{inventory.name}"
+                                           itemValue="#{inventory}"/> 
+                        </p:selectOneMenu>
+                        
+                        
+                        
+                        
+                        
                         <p:commandButton id="t1"  style="z-index: 2;
                                          margin-top: 3%;
                                          color: #035c70!important; 
