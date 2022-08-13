@@ -1,6 +1,7 @@
 package com.toby.rest;
 
 import com.toby.businessservice.SymbolService;
+import com.toby.config.UserLoginData;
 import com.toby.dto.SymbolDTO;
 import java.util.List;
 import javax.ejb.EJB;
@@ -29,10 +30,10 @@ public class SymbolRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response findDocumentsTypesDTO(Integer companyId) {
+    public Response findDocumentsTypesDTO(UserLoginData user) {
         try {
-            if (companyId != null) {
-                List<SymbolDTO> listDocument = symbolService.getDocumentsTypesDTO(companyId);
+            if (user.getCompanyId() != null) {
+                List<SymbolDTO> listDocument = symbolService.getDocumentsTypesDTO(user.getCompanyId());
                 GenericEntity<List<SymbolDTO>> list = new GenericEntity<List<SymbolDTO>>(listDocument) {
                 };
                 return Response.ok(list).build();

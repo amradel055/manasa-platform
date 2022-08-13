@@ -1,6 +1,7 @@
 package com.toby.rest;
 
 import com.toby.businessservice.GlAccountServiceDTO;
+import com.toby.config.UserLoginData;
 import com.toby.dto.GlAccountDTO;
 import java.util.List;
 import javax.ejb.EJB;
@@ -29,10 +30,10 @@ public class GlAccountRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response findBranchGLAccountsActive(Integer branchId) {
+    public Response findBranchGLAccountsActive(UserLoginData user) {
         try {
-            if (branchId != null) {
-                List<GlAccountDTO> listDocument = glAccountServiceDTO.getBranchGLAccountsActive(branchId);
+            if (user.getBranchId() != null) {
+                List<GlAccountDTO> listDocument = glAccountServiceDTO.getBranchGLAccountsActive(user.getBranchId());
                 GenericEntity<List<GlAccountDTO>> list = new GenericEntity<List<GlAccountDTO>>(listDocument) {
                 };
                 return Response.ok(list).build();

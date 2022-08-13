@@ -386,7 +386,7 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
         InvDetailDTO dTO = initMapToDTO(Entity, itemsBarcodeMap, invPurchaseInvoiceDTO);
         return dTO;
     }
-    
+
     public InvDetailDTO fillItemDetail(InvDetailDTO dTO, Map<String, ItemsBarcodesDetailsView> itemsBarcodeMap,
             Integer id, Integer serial, Integer branchId, BigDecimal cost, BigDecimal discount,
             BigDecimal quantity, Integer discountType, Integer invInvoiceId,
@@ -453,8 +453,10 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
             ItemsBarcodesDetailsView barcodesDetailsView = itemsBarcodeMap.get(itemBarcode);
             dTO.setItemsBarcodesDetail(barcodesDetailsView);
             dTO.setItemsBarcodesDetailTrans(dTO.getItemsBarcodesDetail());
+            if(dTO.getItemsBarcodesDetail() != null){
             dTO.setItemName(dTO.getItemsBarcodesDetail().getName());
             dTO.setItemCode(dTO.getItemsBarcodesDetail().getBarcode());
+            }
             dTO.setScrewing(screwing);
             if (itemId != null && barcodesDetailsView != null && barcodesDetailsView.getPaintColor() != null) {
                 SymbolDTO paintColor = new SymbolDTO();
@@ -835,5 +837,7 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
         return galarysLIST;
 
     }
+
+  
 
 }

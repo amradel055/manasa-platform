@@ -1,10 +1,9 @@
 package com.toby.rest;
 
 import com.toby.businessservice.CostCenterServiceDTO;
-import com.toby.businessservice.SymbolService;
+import com.toby.config.UserLoginData;
 import com.toby.dto.CostCenterDTO;
 import com.toby.dto.SymbolDTO;
-import com.toby.entity.CostCenter;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.transaction.Transactional;
@@ -32,10 +31,10 @@ public class CostCenterRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response findCostCenter(Integer branchId) {
+    public Response findCostCenter(UserLoginData user) {
         try { 
-            if (branchId != null) {
-                List<CostCenterDTO> listCostCenter = costCenterServiceDTO.getAllSubCostCenterByBranchIdActive(branchId);
+            if (user.getBranchId() != null) {
+                List<CostCenterDTO> listCostCenter = costCenterServiceDTO.getAllSubCostCenterByBranchIdActive(user.getBranchId());
                 GenericEntity<List<CostCenterDTO>> list = new GenericEntity<List<CostCenterDTO>>(listCostCenter) {
                 };
                 return Response.ok(list).build();

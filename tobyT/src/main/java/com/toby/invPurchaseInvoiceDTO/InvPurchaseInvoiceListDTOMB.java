@@ -220,6 +220,9 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
                 } else if (getUri().contains("deliveryPlaceList")) {
                     exit("../deliveryPlace/deliveryPlaceForm.xhtml");
                 }
+                else if (getUri().contains("crmCustomerTracking")) {
+                    exit("../proworkorder/proworkorderform.xhtml");
+                }
                 return "";
             } else {
                 return "";

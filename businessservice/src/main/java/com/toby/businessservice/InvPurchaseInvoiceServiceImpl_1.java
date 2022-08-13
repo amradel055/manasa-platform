@@ -2032,7 +2032,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         return returnListDTOForList(details);
     }
 
-    @Override
+        @Override
     public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(Integer type, Integer galaryId, Integer customerId) {
         Map<String, Object> params = new HashMap<>();
         params.put("type", type);

@@ -4,10 +4,12 @@
  * and open the template in the editor.
  */
 package crm;
+
 import com.toby.businessservice.CRMEventServiceDTO;
 import com.toby.toby.*;
 import com.toby.businessservice.EmployeeService;
 import com.toby.businessservice.FireBaseNotificationServices;
+import com.toby.businessservice.InvPurchaseInvoiceDetailsService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.InvoiceProductionStagesReportService;
 import java.io.Serializable;
@@ -20,6 +22,7 @@ import com.toby.converter.InvOrganizationSiteDTOConverter;
 import com.toby.converter.SymbolDTOConverter;
 import com.toby.dto.CrmEventDTO;
 import com.toby.dto.EmployeeDTO;
+import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
@@ -30,12 +33,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
 /**
@@ -45,77 +46,85 @@ import org.primefaces.event.SelectEvent;
 @Named(value = "CustomerTrackingMB")
 @ViewScoped
 public class CustomerTrackingMB extends Basic implements Serializable {
-
+    
     private InvOrganizationSiteDTO invOrganizationSiteDTO;
-
+    
     private Boolean errorMsgbool = Boolean.TRUE;
-
+    
     private String errorMsg;
-
+    
     private InvOrganizationSiteDTOConverter invOrganizationSiteDTOConverter;
-
+    
     private List<InvOrganizationSiteDTO> invOrganizationSiteDTOList;
-
+    
     private List<InvInvoiceDTO> invInvoiceList;
-
+    
     private InvInvoiceDTO invInvoiceDTOSelected;
-
+    
     private PrintProductionDTO printProductionDTO;
-
+    
     private List<InvoiceProductionStagesReport> invoiceProductionStagesReports;
-
+    
     private List<CrmEventDTO> listEveentMainScrren;
-
+    
     private Integer dateType;
-
+    
     private Boolean employeeIsSupervisor = Boolean.FALSE;
-
+    
     private CrmEventDTO crmEventDTO;
-
+    
     private SymbolDTOConverter activityTypeDTOconverter;
-
+    
     private List<SymbolDTO> activityTypeDTOList;
-
+    
     private SymbolDTOConverter eventStatusDTOconverter;
-
+    
     private List<SymbolDTO> eventStatusDTOList;
-
+    
+    private List<InvDetailDTO> invDetailDTOList;
+    
+    private InvDetailDTO invDetailDTO;
+    
     private Date lastInvoiceDate;
     private BigDecimal lastInvoiceValue;
     
-    private Integer eventId ;
+    private Integer eventId;
 
     /**
      * Creates a new instance of LoginBean
      */
     @EJB
     private OrganizationSiteService organizationSiteService;
-
+    
     @EJB
     EmployeeService employeeService;
-
+    
     @EJB
     AutoCompleteService autoCompleteService;
-
+    
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
-
+    
     @EJB
     private InvoiceProductionStagesReportService invoiceProductionStagesReportService;
-
+    
     @EJB
     CRMEventServiceDTO cRMEventServiceDTO;
-
+    
     @EJB
     FireBaseNotificationServices firebaseServices;
-
+    
     @EJB
     SymbolService symbolService;
     
-   
+    @EJB
+    InvPurchaseInvoiceDetailsService invPurchaseInvoiceDetailsService;
     
-     
-
+    public void returnListOfDetailList() {
+        setInvDetailDTOList(invPurchaseInvoiceDetailsService.getAllInvPurchaseInvoiceDetailList(getInvInvoiceDTOSelected()));
+//        return (invPurchaseInvoiceDetailsService.getAllInvPurchaseInvoiceDetailList(getInvInvoiceDTOSelected()));
+    }
+    
     public void search() {
         if (getInvOrganizationSiteDTO() != null && getInvOrganizationSiteDTO().getId() != null) {
             setListEveentMainScrren(new ArrayList<>());
@@ -130,14 +139,14 @@ public class CustomerTrackingMB extends Basic implements Serializable {
             }
         }
     }
-
+    
     public void FillEventByCustomerId() {
-
+        
     }
-
+    
     public void searchProductionStagesReport(SelectEvent event) {
         try {
-
+            
             invInvoiceDTOSelected = (InvInvoiceDTO) event.getObject();
             getPrintProductionDTO().setFromInvInvoice(invInvoiceDTOSelected.getSerial());
             if ((printProductionDTO.getFromInvInvoice() != null)) {
@@ -152,23 +161,23 @@ public class CustomerTrackingMB extends Basic implements Serializable {
             e.printStackTrace();
         }
     }
-
+    
     public void updateTODOValue() {
         getCrmEventDTO().setType(1);
     }
-
+    
     public void updateEventValue() {
         getCrmEventDTO().setType(0);
     }
-
+    
     public void reset() {
         invOrganizationSiteDTO = new InvOrganizationSiteDTO();
     }
-
+    
     public void resetEvent() {
         setCrmEventDTO(new CrmEventDTO());
     }
-
+    
     public String saveEvent() {
         if (getInvOrganizationSiteDTO() != null) {
             getCrmEventDTO().setCustomerId(getInvOrganizationSiteDTO());
@@ -199,7 +208,7 @@ public class CustomerTrackingMB extends Basic implements Serializable {
         }
         return "";
     }
-
+    
     private Date endDate() {
         Calendar calEnd = Calendar.getInstance();
         calEnd.setTime(new Date(new Date().getTime() + (1000 * 60 * 60 * 24)));
@@ -209,30 +218,30 @@ public class CustomerTrackingMB extends Basic implements Serializable {
         calEnd.set(Calendar.MILLISECOND, 0);
         return calEnd.getTime();
     }
-
+    
     public String validateSave(CrmEventDTO crmEventDTO) {
         String error = cRMEventServiceDTO.validateSave(crmEventDTO);
         return error;
     }
-
+    
     public List<SymbolDTO> completeEventStatus(String query) {
         return AutoComplete.completeEventStatus(query, getEventStatusDTOList(), getEventStatusDTOconverter());
     }
-
+    
     public List<SymbolDTO> completeActivityType(String query) {
         return AutoComplete.completeActivityType(query, getActivityTypeDTOList(), getActivityTypeDTOconverter());
     }
     
-      public List<InvInventoryDTO> completeGalleryList(String query) {
+    public List<InvInventoryDTO> completeGalleryList(String query) {
         return AutoComplete.completeGalleryList(query, getUserData().getGallaryLists(), getGallaryDTOConverters());
     }
-
+    
     public List<InvOrganizationSiteDTO> completeCustomerDTO(String query) {
-
+        
         invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), Boolean.TRUE, null, query, null);
         invOrganizationSiteDTOConverter = new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList);
         return invOrganizationSiteDTOList;
-
+        
     }
 
     /**
@@ -501,7 +510,7 @@ public class CustomerTrackingMB extends Basic implements Serializable {
      * @return the eventStatusDTOList
      */
     public List<SymbolDTO> getEventStatusDTOList() {
-
+        
         if (eventStatusDTOList == null || eventStatusDTOList.isEmpty()) {
             eventStatusDTOList = symbolService.getSymbolListByCompanyId(getUserData().getCompany().getId(), 61);
             setEventStatusDTOconverter(new SymbolDTOConverter(eventStatusDTOList));
@@ -520,7 +529,7 @@ public class CustomerTrackingMB extends Basic implements Serializable {
      * @return the lastInvoiceDate
      */
     public Date getLastInvoiceDate() {
-
+        
         return lastInvoiceDate;
     }
 
@@ -535,7 +544,7 @@ public class CustomerTrackingMB extends Basic implements Serializable {
      * @return the lastInvoiceValue
      */
     public BigDecimal getLastInvoiceValue() {
-
+        
         return lastInvoiceValue;
     }
 
@@ -560,4 +569,40 @@ public class CustomerTrackingMB extends Basic implements Serializable {
         this.eventId = eventId;
     }
 
+    /**
+     * @return the invDetailDTOList
+     */
+    public List<InvDetailDTO> getInvDetailDTOList() {
+        
+        if (invDetailDTOList == null) {
+            setInvDetailDTOList(new ArrayList<>());
+        }
+        return invDetailDTOList;
+    }
+
+    /**
+     * @param invDetailDTOList the invDetailDTOList to set
+     */
+    public void setInvDetailDTOList(List<InvDetailDTO> invDetailDTOList) {
+        this.invDetailDTOList = invDetailDTOList;
+    }
+
+    /**
+     * @return the invDetailDTO
+     */
+    public InvDetailDTO getInvDetailDTO() {
+        
+        if (invDetailDTO == null) {
+            setInvDetailDTO(new InvDetailDTO());
+        }
+        return invDetailDTO;
+    }
+
+    /**
+     * @param invDetailDTO the invDetailDTO to set
+     */
+    public void setInvDetailDTO(InvDetailDTO invDetailDTO) {
+        this.invDetailDTO = invDetailDTO;
+    }
+    
 }
