@@ -643,7 +643,7 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
                 responseApi.setMsg(error.toString());
             } else {
                 GeneralJournalDTO head = addGeneralJournalDTO(dTO, tobyUser);
-                generaljournalDetailsServiceDTO.addGenDetalils(dTO.getDetailDTOList(), null, tobyUser,Boolean.TRUE,head.getId());
+                generaljournalDetailsServiceDTO.addGenDetalils(dTO.getDetailDTOList(), null, tobyUser, Boolean.TRUE, head.getId());
                 responseApi.setStatus(1000);
                 responseApi.setResposeId(7000);
                 responseApi.setMsg("تم طلب  بنجاح");
@@ -685,6 +685,35 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
         }
 
         return error;
+    }
+
+    @Override
+    public List<GeneralJournalDTO> getGeneralJournalDTOByBranchIdAndSerial(Integer serial, Integer generalDocument, Integer yearId, Integer branchId) {
+        if (serial != null) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("branchId", branchId);
+            GlYear year = glYearService.findYear(yearId);
+            params.put("dateFrom", year.getDateFrom());
+            params.put("dateTo", year.getDateTo());
+
+            StringBuilder builder = new StringBuilder();
+            builder.append("SELECT e FROM GeneralJournal e WHERE e.branchId.id = :branchId AND e.generalData >= :dateFrom AND e.generalData <= :dateTo  ");
+            if (serial != null) {
+                params.put("serial", serial);
+                builder.append(" and (e.serial = :serial) ");
+            }
+
+            if (generalDocument != null) {
+                params.put("generalDocument", generalDocument);
+                builder.append(" and (e.generalDecument = :generalDocument) ");
+            }
+
+            builder.append(" order by e.creationDate DESC");
+            List<GeneralJournal> details = dao.findListByQuery(builder.toString(), params);
+            return returnListDTO(details);
+        } else {
+            return null;
+        }
     }
 
 }

@@ -66,4 +66,6 @@ public interface GeneraljournalServiceDTO {
     public List<GeneralJournalDTO> getGeneralJournalDTOByBranchId(Integer serial, GlYearDTO year, Integer branchId);
     
     public ResponseApi save(GeneralJournalDTO dTO, TobyUser tobyUser);
+    
+    public List<GeneralJournalDTO> getGeneralJournalDTOByBranchIdAndSerial(Integer serial, Integer generalDocument, Integer yearId, Integer branchId);
 }
