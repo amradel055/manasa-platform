@@ -691,17 +691,30 @@
                     <h:panelGrid id="panelDialogueCRM" > 
                         
                         
-                            <p:selectOneMenu id="inventory" value="#{customerTrackingMB.gallaryDTOSelect}"
+                            <p:selectOneMenu id="inventory" value="#{CustomerTrackingMB.gallaryDTOSelect}"
                                          converter="#{CustomerTrackingMB.gallaryDTOConverters}" 
                                          style="float:right;width: 20%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
 
-                            <p:ajax listener="#{CustomerTrackingMB.loadGallaryList()}" update="form" />
                             <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
 
                             <f:selectItems value="#{CustomerTrackingMB.gallaryLists}" 
                                            var="inventory" itemLabel="#{inventory.name}"
                                            itemValue="#{inventory}"/> 
                         </p:selectOneMenu>
+                        
+                        
+                          <p:selectOneMenu id="users" value="#{CustomerTrackingMB.gallaryDTOSelect}"
+                                         converter="#{CustomerTrackingMB.gallaryDTOConverters}" 
+                                         style="float:right;width: 20%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
+
+                            <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
+                            <f:selectItems value="#{CustomerTrackingMB.gallaryLists}" 
+                                           var="inventory" itemLabel="#{inventory.name}"
+                                           itemValue="#{inventory}"/> 
+                        </p:selectOneMenu>
+                        
+                        
+                        
                         
                         
                         
