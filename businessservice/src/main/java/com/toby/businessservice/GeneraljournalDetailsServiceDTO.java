@@ -23,7 +23,7 @@ public interface GeneraljournalDetailsServiceDTO {
 
     public Integer getMaxSerialByGeneral(Integer id);
 
-    public List<GeneralJournalDetailsDTO> addGenDetalils(List<GeneralJournalDetailsDTO> details, List<GeneralJournalDetailsDTO> generalListDeleted, TobyUser tobyUser);
+    public List<GeneralJournalDetailsDTO> addGenDetalils(List<GeneralJournalDetailsDTO> details, List<GeneralJournalDetailsDTO> generalListDeleted, TobyUser tobyUser, Boolean isAPI,Integer headId);
 
     public BigDecimal getDebitAmountForGlAccount(Integer accountId, Integer costCenterId, Date dateFrom, Date dateTo);
 }

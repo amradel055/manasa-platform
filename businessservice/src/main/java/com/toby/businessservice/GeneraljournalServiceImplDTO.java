@@ -635,21 +635,19 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
     @Override
     public ResponseApi save(GeneralJournalDTO dTO, TobyUser tobyUser) {
         try {
-
             ResponseApi responseApi = new ResponseApi();
-
             StringBuilder error = validateGeneralJournal(dTO);
             if (!error.toString().isEmpty()) {
                 responseApi.setStatus(2000);
                 responseApi.setResposeId(8000);
                 responseApi.setMsg(error.toString());
             } else {
-                addGeneralJournalDTO(dTO, tobyUser);
+                GeneralJournalDTO head = addGeneralJournalDTO(dTO, tobyUser);
+                generaljournalDetailsServiceDTO.addGenDetalils(dTO.getDetailDTOList(), null, tobyUser,Boolean.TRUE,head.getId());
                 responseApi.setStatus(1000);
                 responseApi.setResposeId(7000);
                 responseApi.setMsg("تم طلب  بنجاح");
             }
-
             return responseApi;
         } catch (Exception e) {
             return null;
