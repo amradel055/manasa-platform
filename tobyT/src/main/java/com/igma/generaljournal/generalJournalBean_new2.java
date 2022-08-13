@@ -898,7 +898,7 @@ public class generalJournalBean_new2 extends BaseFormBean implements Serializabl
                             gjds.add(journalDetails);
                         }
 
-                        detailsList = generaljournalDetailsServiceDTO.addGenDetalils(gjds, null, getUserlogin());
+                        detailsList = generaljournalDetailsServiceDTO.addGenDetalils(gjds, null, getUserlogin(),false,null);
                         cloneGeneralJournalDetails(detailsList);
                     }
                 } else {
@@ -1549,7 +1549,7 @@ public class generalJournalBean_new2 extends BaseFormBean implements Serializabl
                             for (GeneralJournalDetailsDTO gernallistd : detailsList) {
                                 initailizeObject(gernallistd, maxSerial);
                             }
-                            detailsList = generaljournalDetailsServiceDTO.addGenDetalils(detailsList, rowsDeleted, getUserlogin());
+                            detailsList = generaljournalDetailsServiceDTO.addGenDetalils(detailsList, rowsDeleted, getUserlogin(),false,null);
                             delete = Boolean.FALSE;
                             detailsList = generaljournalDetailsServiceDTO.getAllJournalDetailsForJorunal(selectedGeneralJournal.getId());
                             cloneGeneralJournalDetails(detailsList);
@@ -1577,7 +1577,7 @@ public class generalJournalBean_new2 extends BaseFormBean implements Serializabl
                         for (GeneralJournalDetailsDTO gernallistd : detailsList) {
                             initailizeObject(gernallistd, maxSerial);
                         }
-                        detailsList = generaljournalDetailsServiceDTO.addGenDetalils(detailsList, rowsDeleted, getUserlogin());
+                        detailsList = generaljournalDetailsServiceDTO.addGenDetalils(detailsList, rowsDeleted, getUserlogin(),false,null);
                         delete = Boolean.FALSE;
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), getUserData().getUserDDs().get("SAVED")));
                         details = new ArrayList<>();
@@ -1836,7 +1836,7 @@ public class generalJournalBean_new2 extends BaseFormBean implements Serializabl
                 for (GeneralJournalDetailsDTO gernallistd : detailsList) {
                     initailizeObject(gernallistd, maxSerial);
                 }
-                detailsList = generaljournalDetailsServiceDTO.addGenDetalils(detailsList, rowsDeleted, getUserlogin());
+                detailsList = generaljournalDetailsServiceDTO.addGenDetalils(detailsList, rowsDeleted, getUserlogin(),false,null);
                 delete = Boolean.FALSE;
             } catch (Exception e) {
                 datailsNotSavedReference++;
@@ -1846,11 +1846,13 @@ public class generalJournalBean_new2 extends BaseFormBean implements Serializabl
         }
     }
 
+    @Override
     public void CloseDlg(String dlgvar) {
         RequestContext context = RequestContext.getCurrentInstance();
         context.execute("PF('" + dlgvar + "').hide();");
     }
 
+    @Override
     public void OpenDlg(String dlgvar) {
         RequestContext context = RequestContext.getCurrentInstance();
         context.execute("PF('" + dlgvar + "').show();");

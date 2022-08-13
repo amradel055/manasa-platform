@@ -71,6 +71,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private Boolean isOld;
 
     private BigDecimal totalQuatity;
+    private BigDecimal totalCostAvarage;
     private BigDecimal totalWeight;
     private BigDecimal totalNet;
     private BigDecimal taxvalue;
@@ -1959,6 +1960,20 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setAccount(Integer account) {
         this.account = account;
+    }
+
+    /**
+     * @return the totalCostAvarage
+     */
+    public BigDecimal getTotalCostAvarage() {
+        return totalCostAvarage;
+    }
+
+    /**
+     * @param totalCostAvarage the totalCostAvarage to set
+     */
+    public void setTotalCostAvarage(BigDecimal totalCostAvarage) {
+        this.totalCostAvarage = totalCostAvarage;
     }
 
 }

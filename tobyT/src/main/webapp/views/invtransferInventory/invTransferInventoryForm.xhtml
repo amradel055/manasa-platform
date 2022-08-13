@@ -251,7 +251,7 @@
                                      value="#{invPurchaseInvoiceDetailsTable.availableQuantityRow}" style="width: 95%" />  
 
                     </p:column>
-
+                    
                     <p:summaryRow>
                         <p:column colspan="3" style="text-align:right">
                             <h:outputText style="text-align:right" value="#{userData.userDDs['TOTAL']}  :" />
@@ -259,7 +259,7 @@
                         <p:column>
                             <h:outputText id="totalQuantity" value="#{invTransferFormMB1.invInvoiceDTO.totalQuatity}"/>
                         </p:column>
-                        <p:column>
+                         <p:column>
                             <h:outputText id="totalWeight" value="#{invTransferFormMB1.invInvoiceDTO.totalWeight}"/>
                         </p:column>
                         <p:column rendered="#{invTransferFormMB1.invInvoiceDTO.companyActivity eq 'Alumetal'}" />
