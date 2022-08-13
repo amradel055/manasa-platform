@@ -34,6 +34,7 @@ public class GeneralJournalDTO extends BaseEntityDTO {
     private TobyUserDTO created_by;
     private Integer documentId;
     private List<GeneralJournalDetails> detailList;
+    private List<GeneralJournalDetailsDTO> detailDTOList;
 
     /**
      * @return the generalNumber
@@ -297,6 +298,20 @@ public class GeneralJournalDTO extends BaseEntityDTO {
      */
     public void setGlYearId(Integer glYearId) {
         this.glYearId = glYearId;
+    }
+
+    /**
+     * @return the detailDTOList
+     */
+    public List<GeneralJournalDetailsDTO> getDetailDTOList() {
+        return detailDTOList;
+    }
+
+    /**
+     * @param detailDTOList the detailDTOList to set
+     */
+    public void setDetailDTOList(List<GeneralJournalDetailsDTO> detailDTOList) {
+        this.detailDTOList = detailDTOList;
     }
 
 }

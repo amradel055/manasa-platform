@@ -34,6 +34,14 @@ public class GeneralJournalDetailsDTO extends BaseEntityDTO {
     private Date modificationDate;
     private TobyUserDTO created_By ;
     
+    
+    
+    private Integer glAccount; 
+    private Integer costCenter; 
+    private Integer adminUnit; 
+    private Integer generalJournal; 
+    private Integer currency;
+    
 
     @Override
     public boolean equals(Object object) {
@@ -261,6 +269,76 @@ public class GeneralJournalDetailsDTO extends BaseEntityDTO {
      */
     public void setCreated_By(TobyUserDTO created_By) {
         this.created_By = created_By;
+    }
+
+    /**
+     * @return the glAccount
+     */
+    public Integer getGlAccount() {
+        return glAccount;
+    }
+
+    /**
+     * @param glAccount the glAccount to set
+     */
+    public void setGlAccount(Integer glAccount) {
+        this.glAccount = glAccount;
+    }
+
+    /**
+     * @return the costCenter
+     */
+    public Integer getCostCenter() {
+        return costCenter;
+    }
+
+    /**
+     * @param costCenter the costCenter to set
+     */
+    public void setCostCenter(Integer costCenter) {
+        this.costCenter = costCenter;
+    }
+
+    /**
+     * @return the adminUnit
+     */
+    public Integer getAdminUnit() {
+        return adminUnit;
+    }
+
+    /**
+     * @param adminUnit the adminUnit to set
+     */
+    public void setAdminUnit(Integer adminUnit) {
+        this.adminUnit = adminUnit;
+    }
+
+    /**
+     * @return the generalJournal
+     */
+    public Integer getGeneralJournal() {
+        return generalJournal;
+    }
+
+    /**
+     * @param generalJournal the generalJournal to set
+     */
+    public void setGeneralJournal(Integer generalJournal) {
+        this.generalJournal = generalJournal;
+    }
+
+    /**
+     * @return the currency
+     */
+    public Integer getCurrency() {
+        return currency;
+    }
+
+    /**
+     * @param currency the currency to set
+     */
+    public void setCurrency(Integer currency) {
+        this.currency = currency;
     }
  
 

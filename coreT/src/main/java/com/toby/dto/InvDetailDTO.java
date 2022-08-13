@@ -29,6 +29,7 @@ public class InvDetailDTO extends BaseEntityDTO implements Comparable< InvDetail
     private BigDecimal taxValue;
     private Integer status;
     private BigDecimal costAvarage;
+    private BigDecimal totalCostAvarage;
     private Boolean isEdit;
 
     private ItemsBarcodesDetailsView itemsBarcodesDetail;
@@ -93,7 +94,7 @@ public class InvDetailDTO extends BaseEntityDTO implements Comparable< InvDetail
     private List<InvPurchaseInvoiceDetailDetailDTO> invPurchaseInvoiceDetailDetailDTOList;
 
     private String supplierName;
-    
+
     private Integer account;
 
     public InvDetailDTO() {
@@ -1126,6 +1127,21 @@ public class InvDetailDTO extends BaseEntityDTO implements Comparable< InvDetail
      */
     public void setAccount(Integer account) {
         this.account = account;
+    }
+
+    /**
+     * @return the totalCostAvarage
+     */
+    public BigDecimal getTotalCostAvarage() {
+        totalCostAvarage = getCostAvarage().multiply(getScrewing()).multiply(getQuantity());
+        return totalCostAvarage;
+    }
+
+    /**
+     * @param totalCostAvarage the totalCostAvarage to set
+     */
+    public void setTotalCostAvarage(BigDecimal totalCostAvarage) {
+        this.totalCostAvarage = totalCostAvarage;
     }
 
 }
