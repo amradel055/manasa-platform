@@ -24,6 +24,9 @@ public class TobyUserDTO extends BaseEntityDTO {
     private List<TobyUserProproductionDTO> tobyUserProproductionDTOList;
     private List<ProProductionStagesDTO> productionStagesDTOList;
 
+    private Boolean activeCrm;
+    private String activeCrmName;
+
     public String getUserCode() {
         return userCode;
     }
@@ -152,6 +155,32 @@ public class TobyUserDTO extends BaseEntityDTO {
         this.residencyNumber = residencyNumber;
     }
 
-   
+    /**
+     * @return the activeCrm
+     */
+    public Boolean getActiveCrm() {
+        return activeCrm;
+    }
+
+    /**
+     * @param activeCrm the activeCrm to set
+     */
+    public void setActiveCrm(Boolean activeCrm) {
+        this.activeCrm = activeCrm;
+    }
+
+    /**
+     * @return the activeCrmName
+     */
+    public String getActiveCrmName() {
+        return activeCrmName;
+    }
+
+    /**
+     * @param activeCrmName the activeCrmName to set
+     */
+    public void setActiveCrmName(String activeCrmName) {
+        this.activeCrmName = activeCrmName;
+    }
 
 }

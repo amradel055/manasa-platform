@@ -58,6 +58,7 @@ public class UserFormBean extends BaseFormBean implements Serializable {
     private String residencyNumber;
     private List<Symbol> languages;
     private Branch branch;
+
     @EJB
     private TobyUserService userService;
 
@@ -83,8 +84,7 @@ public class UserFormBean extends BaseFormBean implements Serializable {
     public String save() {
         try {
             userDetails = new TobyUser();
-            if (userName != null && userPassword != null && userCode != null && selectedLangId != null ) {
-
+            if (userName != null && userPassword != null && userCode != null && selectedLangId != null) {
                 userDetails.setName(userName.trim());
                 userDetails.setPassword(userPassword);
                 userCode = userCompanyCode + "" + userCode;
@@ -105,6 +105,7 @@ public class UserFormBean extends BaseFormBean implements Serializable {
                         if (userData.getSelectedBranch() != null) {
                             b = branchService.findBranch(userData.getSelectedBranch());
                         }
+
                         userDetails.setBranchId(b);
                         userService.addUser(userDetails);
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userData.getUserDDs().get("INFO"), userData.getUserDDs().get("SAVED")));
@@ -481,6 +482,4 @@ public class UserFormBean extends BaseFormBean implements Serializable {
         this.residencyNumber = residencyNumber;
     }
 
-    
-    
 }

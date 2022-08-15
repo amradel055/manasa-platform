@@ -54,5 +54,9 @@ public interface TobyUserService {
     public List<TobyUserDTO> getUsersByCompanyId(Integer companyId);
     
     public void updateInvItem2(List<TobyUser> tobyUserList);
+    
+    public TobyUser updateUser(Integer userId);
+    
+    public List<TobyUserDTO> getUsersByInventoryId(Integer InventoryId);
 
 }

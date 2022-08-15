@@ -15,12 +15,12 @@
                 <div>
                     <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true"/>   
                 </div>
-                 <p:commandButton icon="fa fa-fw fa-backward"  
+                <p:commandButton icon="fa fa-fw fa-backward"  
                                  class="scloseButton"  style="float: left;margin: 1px 0"
-                                  action="exit" />
+                                 action="exit" />
                 <div >
                     <p:dataTable 
-                        
+
                         widgetVar="usertable"
                         paginator="true" var="user" 
                         value="#{userListBean.users}" 
@@ -46,21 +46,38 @@
                         <p:column filterStyle="display:none" style="width: 20vh;font-size: 1.8vh;text-align: right"  filterBy="#{user.name}"  filterMatchMode="contains" headerText="#{userData.userDDs['USER_NAME']}" >
                             <h:outputText value="#{user.name}" style="font-size: 1.5vh;"  />
                         </p:column>
-                        
+
                         <p:column filterStyle="display:none"  style="width: 20vh;font-size: 1.8vh;text-align: right" filterBy="#{user.lang.name}"  filterMatchMode="contains" headerText="#{userData.userDDs['USER_LANGUAGE']}" >
                             <h:outputText value="#{user.lang.name}" style="font-size: 1.5vh;font-weight: 100;"  />
                         </p:column>
                         <p:column filterStyle="display:none"  style="width: 20vh;font-size: 1.8vh;text-align: right" filterBy="#{user.residencyNumber}"  filterMatchMode="contains" headerText="رقم الاقامة" >
                             <h:outputText value="#{user.residencyNumber}" style="font-size: 1.5vh;font-weight: 100;"  />
                         </p:column>
-                        
+
                         <p:column style="width: 20vh;font-size: 1.8vh;text-align: right" filterStyle="display:none" sortBy="#{user.companyId.name}" filterBy="#{user.companyId.name}" filterMatchMode="contains" headerText="#{userData.userDDs['COMPANY_NAME']}" rendered="#{userData.isAdmin}"  >
                             <h:outputText value="#{user.companyId.name}" />
                         </p:column>
-                         
+
+                        <p:column style="width: 20vh;font-size: 1.8vh;text-align: right" headerText="صلاحية الدخول لل سي ر م"   >
+                            <p:selectBooleanCheckbox id="bool1" value="#{user.activeCrm}">
+                                <p:ajax  listener="#{userListBean.hishis()}" />
+
+                            </p:selectBooleanCheckbox>
+                        </p:column>
+
                         <p:column headerText="#{userData.userDDs['TRANSACTION']}" 
                                   style="width: 8vh;font-size: 1.8vh;text-align: right">
-                            
+                            <p:commandButton class="saveButton"
+                                             update="@form" 
+                                             icon="fa fa-fw fa-save" 
+                                             title="#{userData.userDDs['SAVE']}"
+                                             action="#{userListBean.goToUpdate()}"  >
+                                <f:setPropertyActionListener value="#{user}" target="#{userListBean.tobyUserSelected}" />
+                            </p:commandButton>   
+
+
+
+
                             <p:commandButton class="seditButton"
                                              update=":screenActionForm" 
                                              icon="fa fa-fw fa-edit" 
@@ -69,15 +86,16 @@
                                              rendered="#{userData.userScreens['user'].view or userData.isAdmin}" >
                                 <f:setPropertyActionListener value="#{user.id}" target="#{userListBean.selecteduser}" />
                             </p:commandButton>
-                            
+
+
                             <p:commandButton  class="scloseButton"
-                                update="@form" title="#{userData.userDDs['DELETE']}"
-                                icon="fa fa-remove"  action="#{userListBean.delete()}" 
-                                rendered="#{userData.userScreens['user'].delete or userData.isAdmin}" >
+                                              update="@form" title="#{userData.userDDs['DELETE']}"
+                                              icon="fa fa-remove"  action="#{userListBean.delete()}" 
+                                              rendered="#{userData.userScreens['user'].delete or userData.isAdmin}" >
                                 <f:setPropertyActionListener value="#{user.id}" target="#{userListBean.selecteduser}" />
                                 <p:confirm header="#{userData.userDDs['COFIGRATION']}" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
                             </p:commandButton>
-                            
+
                         </p:column>
 
                     </p:dataTable>

@@ -1,11 +1,13 @@
 package com.toby.rest;
 
 import com.toby.API.ResponseApi;
+import com.toby.businessservice.GeneraljournalDetailsServiceDTO;
 import com.toby.businessservice.GeneraljournalServiceDTO;
 import com.toby.dto.GeneralJournalDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.transaction.Transactional;
@@ -27,6 +29,8 @@ public class GeneralJournalRest {
 
     @EJB
     GeneraljournalServiceDTO generaljournalServiceDTO;
+    @EJB
+    GeneraljournalDetailsServiceDTO generaljournalDetailsServiceDTO;
 
     @Transactional
     @Path("/addgeneraljournal")
@@ -49,7 +53,7 @@ public class GeneralJournalRest {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
-    
+
     @Transactional
     @Path("/findgeneraljournal")
     @POST
@@ -58,8 +62,15 @@ public class GeneralJournalRest {
     public Response findGeneralJournal(GeneralJournalDTO generalJournalDTO) {
         try {
             if (generalJournalDTO.getSerial() != null || generalJournalDTO.getGeneralDecument() != null) {
-                List<GeneralJournalDTO> journalDTOList = generaljournalServiceDTO.getGeneralJournalDTOByBranchIdAndSerial(generalJournalDTO.getSerial() , generalJournalDTO.getGeneralDecument() , generalJournalDTO.getGlYearId(), generalJournalDTO.getBranchId());
-                GenericEntity<List<GeneralJournalDTO>> list = new GenericEntity<List<GeneralJournalDTO>>(journalDTOList) {
+                List<GeneralJournalDTO> journalDTOList = generaljournalServiceDTO.getGeneralJournalDTOByBranchIdAndSerial(generalJournalDTO.getSerial(), generalJournalDTO.getGeneralDecument(), generalJournalDTO.getGlYearId(), generalJournalDTO.getBranchId());
+                GeneralJournalDTO journalDTO = null;
+                if (journalDTOList != null && !journalDTOList.isEmpty()) {
+                    journalDTO = journalDTOList.get(0);
+                    journalDTO.setDetailDTOList(generaljournalDetailsServiceDTO.getAllJournalDetailsForJorunal(journalDTO.getId()));
+                }
+                List<GeneralJournalDTO> listNew = new ArrayList<>();
+                listNew.add(journalDTO);
+                GenericEntity<List<GeneralJournalDTO>> list = new GenericEntity<List<GeneralJournalDTO>>(listNew) {
                 };
                 return Response.ok(list).build();
             } else {

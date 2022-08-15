@@ -649,11 +649,11 @@
                                                        or userData.userScreens['invupdate'].view 
                                                        or userData.isAdmin}"
                                            >
-                                    
-                                     <p:menuitem id="sr_lnk361" value="#{userData.userDDs['STORE_INIT_BALAN']}" icon="&#xE8D2;" url="/faces/views/invopeningbalanceitem/invopeningbalanceitemlist.xhtml" 
+
+                                    <p:menuitem id="sr_lnk361" value="#{userData.userDDs['STORE_INIT_BALAN']}" icon="&#xE8D2;" url="/faces/views/invopeningbalanceitem/invopeningbalanceitemlist.xhtml" 
                                                 rendered="#{userData.userScreens['invopeningbalanceitem'].view or userData.isAdmin}"
                                                 />
-                                     
+
                                     <p:menuitem id="sr_lnk9999321" value="#{userData.userDDs['CONVERSION_BET_STORE']}" icon="&#xE8D2;" url="/faces/views/invtransferInventory/invTransferInventoryList.xhtml" 
                                                 rendered="#{userData.userScreens['invtransferInventory'].view or userData.isAdmin}"
                                                 />
@@ -773,6 +773,9 @@
                                     <p:menuitem id="sr_lnk33329" value="عملاء ليس عليهم حركة من تاريخ" icon="&#xE8D2;" url="/faces/views/proproductionreport/clientsNoMovmentReport.xhtml" 
                                                 rendered="#{userData.userScreens['clientsNoMovmentReport'].view or   userData.isAdmin}"
                                                 />
+                                    <p:menuitem id="sr_lnk3564543329" value="مبيعات العملاء" icon="&#xE8D2;" url="/faces/views/proproductionreport/clientSalesReport.xhtml" 
+                                                rendered="#{userData.userScreens['clientSalesReport'].view or   userData.isAdmin}"
+                                                />
                                     <p:menuitem id="sr_lnk33334" value="فواتير الشركات بدون خياطة " icon="&#xE8D2;" url="/faces/views/proproductionreport/CompanyInvoicesWithoutSewingReport.xhtml" 
                                                 rendered="#{userData.userScreens['SalesReportByValueAdedDetailsReport'].view or   userData.isAdmin}"
                                                 />
@@ -810,7 +813,7 @@
                                     <p:menuitem id="sr_lnk466" value="الأصناف حسب الفئات" icon="&#xE8D2;" url="/faces/views/inventoryreports/itemDataReport.xhtml" 
                                                 rendered="#{userData.userScreens['basicdataofitemsbysuppliersreport'].view or userData.isAdmin}"
                                                 />
-                                    
+
                                     <p:menuitem id="sr_lnk999935513" value=" تقرير بالمبالغ المسددة" icon="&#xE8D2;" url="/faces/views/inventoryreports/paidAmountReport.xhtml" 
                                                 rendered="#{userData.userScreens['CustomerBalancesReport'].view or userData.isAdmin}"
                                                 />

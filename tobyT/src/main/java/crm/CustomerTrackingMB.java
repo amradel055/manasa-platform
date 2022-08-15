@@ -21,6 +21,7 @@ import com.toby.businessservice.TobyUserService;
 import com.toby.bussinessservice.global.AutoCompleteService;
 import com.toby.converter.InvOrganizationSiteDTOConverter;
 import com.toby.converter.SymbolDTOConverter;
+import com.toby.converter.TobyUserDTOConverter;
 import com.toby.dto.CrmEventDTO;
 import com.toby.dto.EmployeeDTO;
 import com.toby.dto.InvDetailDTO;
@@ -87,6 +88,10 @@ public class CustomerTrackingMB extends Basic implements Serializable {
 
     private List<TobyUserDTO> tobyUserDTOList;
 
+    private TobyUserDTO tobyUserDTO;
+    
+    private TobyUserDTOConverter tobyUserDTOConverter ;
+
     private InvDetailDTO invDetailDTO;
 
     private Date lastInvoiceDate;
@@ -128,6 +133,10 @@ public class CustomerTrackingMB extends Basic implements Serializable {
 
     public void returnUsersList() {
 
+        if (getGallaryDTOSelect() != null) {
+            setTobyUserDTOList(tobyUserService.getUsersByInventoryId(getGallaryDTOSelect().getId()));
+            setTobyUserDTOConverter(new TobyUserDTOConverter(tobyUserDTOList));
+        }
     }
 
     public void returnListOfDetailList() {
@@ -631,6 +640,37 @@ public class CustomerTrackingMB extends Basic implements Serializable {
      */
     public void setTobyUserDTOList(List<TobyUserDTO> tobyUserDTOList) {
         this.tobyUserDTOList = tobyUserDTOList;
+    }
+
+    /**
+     * @return the tobyUserDTO
+     */
+    public TobyUserDTO getTobyUserDTO() {
+        if(tobyUserDTO == null){
+            setTobyUserDTO(new TobyUserDTO() );
+        }
+        return tobyUserDTO;
+    }
+
+    /**
+     * @param tobyUserDTO the tobyUserDTO to set
+     */
+    public void setTobyUserDTO(TobyUserDTO tobyUserDTO) {
+        this.tobyUserDTO = tobyUserDTO;
+    }
+
+    /**
+     * @return the tobyUserDTOConverter
+     */
+    public TobyUserDTOConverter getTobyUserDTOConverter() {
+        return tobyUserDTOConverter;
+    }
+
+    /**
+     * @param tobyUserDTOConverter the tobyUserDTOConverter to set
+     */
+    public void setTobyUserDTOConverter(TobyUserDTOConverter tobyUserDTOConverter) {
+        this.tobyUserDTOConverter = tobyUserDTOConverter;
     }
 
 }

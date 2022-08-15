@@ -12,6 +12,7 @@ import com.toby.entity.Branch;
 import com.toby.entity.ProProductionStages;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
+import com.toby.entity.TobyUserInventory;
 import com.toby.entity.TobyUserProproduction;
 import com.toby.entity.TobyUserRole;
 import java.math.BigDecimal;
@@ -212,6 +213,15 @@ public class TobyUserServiceImpl implements TobyUserService {
         tobyUserDTO.setCreatedDate(tobyUser.getCreationDate());
         tobyUserDTO.setBranchId(tobyUser.getBranchId().getId() != null ? tobyUser.getBranchId().getId() : null);
         tobyUserDTO.setCompanyId(tobyUser.getCompanyId() != null ? tobyUser.getCompanyId().getId() : null);
+        tobyUserDTO.setActiveCrm(tobyUser.getActiveCrm());
+//        if (tobyUser.getActiveCrm() != null) {
+//            tobyUserDTO.setActiveCrm(Boolean.TRUE);
+//            tobyUserDTO.setActiveCrmName("له صلاحية لدخول السي ر م ");
+//        } else {
+//            tobyUserDTO.setActiveCrm(Boolean.FALSE);
+//            tobyUserDTO.setActiveCrmName("ليس له صلاحية لدخول السي ر م");
+//
+//        }
 
         return tobyUserDTO;
     }
@@ -244,7 +254,7 @@ public class TobyUserServiceImpl implements TobyUserService {
         Integer i = 1;
 
         for (TobyUser tobyUser : tobyUserList) {
-            System.out.println("tobyUser -> "+tobyUser.getUserCode());
+            System.out.println("tobyUser -> " + tobyUser.getUserCode());
             tobyUser = updateUser(tobyUser);
             if (stageMap.containsKey(tobyUser.getMsg())) {
 
@@ -259,11 +269,11 @@ public class TobyUserServiceImpl implements TobyUserService {
                 proProductionStagesDTO.setTypeStage(0);
 
                 ProProductionStagesDTO x = proProductionStagesService.saveProProductionStage(proProductionStagesDTO, tobyUser);
-                
+
                 stageMap.put(x.getName(), x.getId());
-                
+
                 saveany(stageMap, tobyUser);
-                
+
             }
         }
     }
@@ -271,37 +281,51 @@ public class TobyUserServiceImpl implements TobyUserService {
     private void saveany(Map<String, Integer> stageMap, TobyUser tobyUser) {
         ProProductionStages proProductionStages = new ProProductionStages();
         TobyUserRole tobyUserRole = new TobyUserRole();
-        
+
         proProductionStages.setId(stageMap.get(tobyUser.getMsg()));
-        
+
         TobyUserProproduction tobyUserProproductionDTO = new TobyUserProproduction();
         tobyUserProproductionDTO.setUserId(tobyUser);
         tobyUserProproductionDTO.setProproductionId(proProductionStages);
-        
+
         TobyCompany tobyCompany = new TobyCompany();
         tobyCompany.setId(125);
         tobyUserProproductionDTO.setCompanyId(tobyCompany);
-        
+
         TobyUser user = new TobyUser();
         user.setId(201);
         tobyUserProproductionDTO.setCreatedBy(user);
-        
+
         Branch branch = new Branch();
         branch.setId(182);
         tobyUserProproductionDTO.setBranchId(branch);
-        
+
         tobyUserProproductionDTO.setCreationDate(new Date());
-        
+
         tobyUserProproductionService.updateTobyUserProproduction(tobyUserProproductionDTO, tobyUser);
-        
+
         tobyUserRole.setBranchId(branch);
         tobyUserRole.setCompanyId(tobyCompany);
         tobyUserRole.setCreatedBy(user);
         tobyUserRole.setCreationDate(new Date());
         tobyUserRole.setUserId(tobyUser);
         tobyUserRole.setRoleId(null);
-        
+
         tobyUserRoleService.addUserRole(tobyUserRole);
+    }
+
+    @Override
+    public List<TobyUserDTO> getUsersByInventoryId(Integer InventoryId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("InventoryId", InventoryId);
+        List<TobyUser> details = dao.findListByQuery("SELECT e.userId FROM TobyUserInventory e where e.invInventoryId.id = :InventoryId AND activeCrm = :1 ", params);
+        return returnTODTO(details, null);
+    }
+    
+      @Override
+    public TobyUser updateUser(Integer userId) {
+        TobyUser tobyUser = dao.findEntityById(TobyUser.class, userId);
+        return  tobyUser ;
     }
 
 }
