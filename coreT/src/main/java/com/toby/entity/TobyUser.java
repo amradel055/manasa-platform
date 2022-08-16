@@ -18,8 +18,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "toby_user")
 @NamedQueries({
-    @NamedQuery(name = "TobyUser.authenticate", query = "SELECT i FROM TobyUser i WHERE i.userCode = :userCode") , 
-})
+    @NamedQuery(name = "TobyUser.authenticate", query = "SELECT i FROM TobyUser i WHERE i.userCode = :userCode"),})
 public class TobyUser extends BaseEntity {
 
     @Basic(optional = false)
@@ -44,17 +43,18 @@ public class TobyUser extends BaseEntity {
 
     @Column(name = "master")
     private Integer master;
-    
+
     @Size(min = 1, max = 45)
     @Column(name = "residency_number")
     private String residencyNumber;
-    
-    
+
+    @Column(name = "active_crm")
+    private Boolean activeCrm;
 
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
-    private Branch branchId;    
-    
+    private Branch branchId;
+
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
     @ManyToOne
     private Employee employeeId;
@@ -230,6 +230,18 @@ public class TobyUser extends BaseEntity {
         this.employeeId = employeeId;
     }
 
-   
+    /**
+     * @return the activeCrm
+     */
+    public Boolean getActiveCrm() {
+        return activeCrm;
+    }
+
+    /**
+     * @param activeCrm the activeCrm to set
+     */
+    public void setActiveCrm(Boolean activeCrm) {
+        this.activeCrm = activeCrm;
+    }
 
 }

@@ -457,17 +457,17 @@
 
                         </f:facet>
                     </p:dataTable> 
-                    
-                    
+
+
                     <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
                         <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                         <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                     </p:confirmDialog>
 
                 </p:fieldset>
-                
-                
-                             <p:fieldset   legend="تفاصيل الشغل الخاصه بالعميل" >
+
+
+                <p:fieldset   legend="تفاصيل الشغل الخاصه بالعميل" >
 
 
 
@@ -490,9 +490,9 @@
 
                                  >
 
-                     
-                        
-                         <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px; text-align: right"  filterStyle="display:none" 
+
+
+                        <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px; text-align: right"  filterStyle="display:none" 
                                    filterBy="#{invInvoicePurchaseDetailTable.serial}" 
                                    filterMatchMode="contains" 
                                    headerText="#{userData.userDDs['INVOICE_NO']}"
@@ -500,27 +500,27 @@
                                    >
                             <p:outputLabel value="#{invInvoicePurchaseDetailTable.serial}"/>
                         </p:column>
-                        
-                          <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px; text-align: right"  filterStyle="display:none" 
-                                     filterBy="#{invInvoicePurchaseDetailTable.itemName}" 
+
+                        <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px; text-align: right"  filterStyle="display:none" 
+                                   filterBy="#{invInvoicePurchaseDetailTable.itemName}" 
                                    filterMatchMode="contains" 
                                    headerText="اسم الصنف"
                                    sortBy="#{invInvoicePurchaseDetailTable.itemName}"
                                    >
                             <p:outputLabel value="#{invInvoicePurchaseDetailTable.itemName}"/>
                         </p:column>
-                        
-                          <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px; text-align: right"  filterStyle="display:none" 
-                                     filterBy="#{invInvoicePurchaseDetailTable.quantity}" 
+
+                        <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px; text-align: right"  filterStyle="display:none" 
+                                   filterBy="#{invInvoicePurchaseDetailTable.quantity}" 
                                    filterMatchMode="contains" 
                                    headerText="الكمية"
                                    sortBy="#{invInvoicePurchaseDetailTable.quantity}"
                                    >
                             <p:outputLabel value="#{invInvoicePurchaseDetailTable.quantity}"/>
                         </p:column>
-                        
-                           <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px; text-align: right"  filterStyle="display:none" 
-                                     filterBy="#{invInvoicePurchaseDetailTable.cost}" 
+
+                        <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px; text-align: right"  filterStyle="display:none" 
+                                   filterBy="#{invInvoicePurchaseDetailTable.cost}" 
                                    filterMatchMode="contains" 
                                    headerText="السعر"
                                    sortBy="#{invInvoicePurchaseDetailTable.cost}"
@@ -532,15 +532,15 @@
 
                         </f:facet>
                     </p:dataTable> 
-                    
-                    
+
+
                     <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
                         <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                         <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                     </p:confirmDialog>
 
                 </p:fieldset>
-                
+
                 <p:fieldset  legend="البيانات"   style="margin-bottom:20px">
                     <p:dataTable  id="table"
                                   var="data"
@@ -689,45 +689,49 @@
 
                 <p:dialog class="dialogueCRM" id="dialogueCRM" header="إضافة شكوي جديدة" widgetVar="dlg1" minHeight="40">
                     <h:panelGrid id="panelDialogueCRM" > 
-                        
-                        
-                            <p:selectOneMenu id="inventory" value="#{customerTrackingMB.gallaryDTOSelect}"
-                                         converter="#{CustomerTrackingMB.gallaryDTOConverters}" 
-                                         style="float:right;width: 20%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
 
-                            <p:ajax listener="#{CustomerTrackingMB.loadGallaryList()}" update="form" />
-                            <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
 
-                            <f:selectItems value="#{CustomerTrackingMB.gallaryLists}" 
-                                           var="inventory" itemLabel="#{inventory.name}"
-                                           itemValue="#{inventory}"/> 
-                        </p:selectOneMenu>
-                        
-                        
-                        
-                        
-                        
-                        <p:commandButton id="t1"  style="z-index: 2;
-                                         margin-top: 3%;
-                                         color: #035c70!important; 
-                                         background-color: #{CustomerTrackingMB.crmEventDTO.type eq 0 ? '#CCCCCC!important' : '#223238'};
-                                         border: 1px solid #22323a!important;
-                                         background: #{CustomerTrackingMB.crmEventDTO.type eq 0 ? '#CCCCCC!important' : '#22323a'} 50% 50% repeat-x!important;"
-                                         value="إضافة مهمة" update="t1 t2"
-                                         title="إضافة مهمة"
-                                         class="addnewwidget" 
-                                         action="#{CustomerTrackingMB.updateTODOValue()}" />  
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <p:outputLabel style="width:104px;margin-right: 5%; margin-left: 5%"  value="المعارض" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:selectOneMenu id="inventory" value="#{CustomerTrackingMB.gallaryDTOSelect}"
+                                                 converter="#{CustomerTrackingMB.gallaryDTOConverters}" 
+                                                 style="float:right;width: 20%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
 
-                        <p:commandButton id="t2" style="z-index: 2;
-                                         margin-top: 3%;
-                                         color: #035c70!important; 
-                                         background-color: #{CustomerTrackingMB.crmEventDTO.type eq 1 ? '#CCCCCC!important' : '#223238'};
-                                         border: 1px solid #22323a!important;
-                                         background: #{CustomerTrackingMB.crmEventDTO.type eq 1 ? '#CCCCCC!important' : '#22323a'} 50% 50% repeat-x!important;"
-                                         value="إضافة حدث" update="t1 t2"
-                                         title="إضافة حدث"
-                                         class="addnewwidget" 
-                                         action="#{CustomerTrackingMB.updateEventValue()}" />
+                                    <p:ajax listener="#{CustomerTrackingMB.returnUsersList()}" update="users" />
+                                    <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
+
+                                    <f:selectItems value="#{CustomerTrackingMB.gallaryLists}" 
+                                                   var="inventory" itemLabel="#{inventory.name}"
+                                                   itemValue="#{inventory}"/> 
+                                </p:selectOneMenu>
+
+                            </h:panelGroup>
+                        </div>
+
+
+
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <p:outputLabel style="width:104px;margin-right: 5%; margin-left: 5%"  value="المستخدمين " />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:selectOneMenu id="users" value="#{CustomerTrackingMB.tobyUserDTO}"
+                                                 converter="#{CustomerTrackingMB.tobyUserDTOConverter}" 
+                                                 style="float:right;width: 20%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
+
+                                    <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
+                                    <f:selectItems value="#{CustomerTrackingMB.tobyUserDTOList}" 
+                                                   var="users" itemLabel="#{users.name}"
+                                                   itemValue="#{users}"/> 
+                                </p:selectOneMenu>
+
+                            </h:panelGroup>
+                        </div>
+
 
                         <div class="ui-g-12 ui-g-nopad"  >
                             <div class="ui-g">
@@ -746,93 +750,10 @@
 
                                 </div>
 
-
-
-
-                                <div class="ui-g-12 ui-md-6">
-                                    <h:panelGroup>
-                                        <h:panelGroup>
-                                            <p:outputLabel style="width: 103px;margin-right: 4%;" value="اسم المتابع"/>
-                                        </h:panelGroup>
-                                        <p:outputLabel id="assignedTo" style="width:50%!important "   value="#{CustomerTrackingMB.crmEventDTO.assignedTo}" />
-                                    </h:panelGroup>
-
-
-
-                                </div>
-                                <div class="ui-g-12 ui-md-6">
-                                    <h:panelGroup>
-                                        <h:panelGroup>
-                                            <p:outputLabel style="width: 103px;margin-right: 4%;margin-left: 4%;" value="اسم العميل"/>
-                                        </h:panelGroup>
-                                        <p:outputLabel id="customerName" style="width:50%!important "   value="#{CustomerTrackingMB.invOrganizationSiteDTO.name}" />
-                                    </h:panelGroup>
-                                </div>
-
-                                <div class="ui-g-12 ui-md-6" style="padding: 0px;">
-                                    <h:panelGroup>
-                                        <p:outputLabel style="margin-right: 5%;" for="datetime1" value="تاريخ  وتوقيت  البداية" />
-                                        <p:calendar id="datetime1" value="#{CustomerTrackingMB.crmEventDTO.startDate}" 
-                                                    pattern="MM/dd/yyyy HH:mm:ss" />
-
-                                    </h:panelGroup>
-                                </div>
-
-                                <div class="ui-g-12 ui-md-6" style="padding: 0px;">
-                                    <h:panelGroup>
-                                        <p:outputLabel style="margin-right: 5%;" for="datetime" value="تاريخ  وتوقيت  النهاية" />
-                                        <p:calendar id="datetime" value="#{CustomerTrackingMB.crmEventDTO.endDate}" 
-                                                    pattern="MM/dd/yyyy HH:mm:ss" />
-                                    </h:panelGroup>
-                                </div>
                                 <div class="ui-g-12 ui-md-6" style="padding: 0px;">
                                     <h:panelGroup >
                                         <h:panelGroup>
-                                            <p:outputLabel style="width:105px;margin-right: 5%"  value="المعرض " />
-                                        </h:panelGroup>
-                                        <h:panelGroup >
-                                            <p:autoComplete style="width:49%!important " 
-                                                            dropdown="true"
-                                                            converter="#{CustomerTrackingMB.gallaryDTOConverters}"
-                                                            value="#{CustomerTrackingMB.crmEventDTO.gallaryId}"
-                                                            var="gallery"
-                                                            itemLabel="#{gallery}" 
-                                                            itemValue="#{gallery.id}" 
-                                                            forceSelection="true" 
-                                                            completeMethod="#{CustomerTrackingMB.completeGalleryList}"
-                                                            >
-
-                                            </p:autoComplete>
-                                        </h:panelGroup>
-                                    </h:panelGroup>
-                                </div>
-
-                                <div class="ui-g-12 ui-md-6" style="padding: 0px;">
-                                    <h:panelGroup>
-                                        <h:panelGroup>
-                                            <p:outputLabel style="width:105px;margin-right: 5%"  value="الحاله" />
-                                        </h:panelGroup>
-                                        <h:panelGroup>
-                                            <p:autoComplete style="width:49%!important " 
-                                                            dropdown="true"
-                                                            converter="#{CustomerTrackingMB.eventStatusDTOconverter}"
-                                                            value="#{CustomerTrackingMB.crmEventDTO.status}"
-                                                            var="eventStatus"
-                                                            itemLabel="#{eventStatus}" 
-                                                            itemValue="#{eventStatus}" 
-                                                            forceSelection="true" 
-                                                            completeMethod="#{CustomerTrackingMB.completeEventStatus}"
-                                                            >
-
-                                            </p:autoComplete>
-                                        </h:panelGroup>
-                                    </h:panelGroup>
-                                </div>
-
-                                <div class="ui-g-12 ui-md-6" style="padding: 0px;">
-                                    <h:panelGroup >
-                                        <h:panelGroup>
-                                            <p:outputLabel style="width:105px;margin-right: 5%"  value="نوع المهمه / الحدث" />
+                                            <p:outputLabel style="width:105px;margin-right: 5%"  value="نوع الشكوي   " />
                                         </h:panelGroup>
                                         <h:panelGroup >
                                             <p:autoComplete style="width:49%!important " 

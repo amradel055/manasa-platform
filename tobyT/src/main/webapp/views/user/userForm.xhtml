@@ -110,14 +110,13 @@
                                          value="#{userFormBean.residencyNumber}"
                                          required="true" 
                                          requiredMessage="#{userData.userDDs['REQUIRED']}" >
-                                
+
                             </p:inputText>
 
 
                         </h:panelGroup>
 
                     </h:panelGroup>
-
 
                     <h:panelGroup>
 
@@ -162,7 +161,7 @@
 
                     <h:panelGroup>
 
-                     
+
                         <p:commandButton class="saveButton" 
                                          id="saveB" 
                                          title="#{userData.userDDs['SAVE']}"
@@ -176,13 +175,13 @@
                                          value="#{userData.userDDs['CANCEL']}" 
                                          icon="fa fa-fw fa-backward" 
                                          action="#{userFormBean.cancel}"   />
-                            
-                        
 
-                         
+
+
+
                     </h:panelGroup>
-                        
-                   
+
+
                 </h:panelGrid>
 
                 <p:blockUI block="pnl" trigger="saveB" animate="true" >

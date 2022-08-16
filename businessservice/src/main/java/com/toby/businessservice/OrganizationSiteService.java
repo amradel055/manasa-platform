@@ -9,6 +9,7 @@ import com.toby.businessservice.reports.searchBean.CrmLeadsSearchBean;
 import com.toby.businessservice.reports.searchBean.SupplierAccountSearchBean;
 import com.toby.businessservice.reports.searchBean.invOrganizationSiteSearchBean;
 import com.toby.dto.ChartDTO;
+import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.TobyUser;
@@ -50,7 +51,7 @@ public interface OrganizationSiteService {
     public InvOrganizationSite findOrganizationSiteById(Integer invOrganizationSiteId);
 
     public InvOrganizationSiteDTO findOrganizationSiteById(Integer invOrganizationSiteId, TobyUser tobyUser);
-    
+
     public InvOrganizationSite findOrganizationSiteByMobile(InvOrganizationSite invOrganizationSite);
 
     public List<InvOrganizationSite> getInvOrganizationSiteByCompanyId(Integer companyId);
@@ -139,7 +140,7 @@ public interface OrganizationSiteService {
 
     public List<InvOrganizationSiteDTO> getorganizationSiteByBranchIdDTOSmall(Integer branchId, boolean active, Integer type);
 
-    public InvOrganizationSiteDTO addNewCustomer(InvOrganizationSiteDTO invOrganizationSiteDTO, List<InvOrganizationSiteDTO> invOrganizationSiteDTOList, TobyUser tobyUser,Integer accountId);
+    public InvOrganizationSiteDTO addNewCustomer(InvOrganizationSiteDTO invOrganizationSiteDTO, List<InvOrganizationSiteDTO> invOrganizationSiteDTOList, TobyUser tobyUser, Integer accountId);
 
     public List<InvOrganizationSiteDTO> getorganizationSiteForOpenningBalanceDTO(Integer branchId, boolean active, Integer type);
 
@@ -196,29 +197,31 @@ public interface OrganizationSiteService {
     public ChartDTO getCountLeadByAssignedToChartBar(Integer branchId, Date fromDate, Date toDate);
 
     public ChartDTO getCountLeadByAssignedToANDContractTypeChartBar(Integer branchId, Date fromDate, Date toDate);
-    
+
     public String validateSaveLead(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser);
-    
+
     public String vaildationContacts(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser);
 
     public List<InvOrganizationSiteDTO> findOrganizationSiteDTOByContact(Integer branchId, String mobile, String email);
-    
+
     public InvOrganizationSiteDTO saveLead(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser);
-    
+
     public InvOrganizationSiteDTO findOrganizationSiteDTOById(Integer invOrganizationSiteId);
-    
+
     public Integer getNumberOfCustomerByBranchId(Integer branchId, Integer assignedTo, Integer createdBy, Date dateFrom, Date dateTo);
-    
+
     public Integer getNumberOfNewCustomerByBranchId(Integer branchId, Integer assignedTo, Integer createdBy, Date dateFrom, Date dateTo);
-    
+
     public ChartDTO getCountCustomerPerMonth(Integer branchId, Integer type, Integer dateFilter);
-    
-    public String validateSmallSaveLead(StringBuilder error , InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser);
-    
+
+    public String validateSmallSaveLead(StringBuilder error, InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser);
+
     public InvOrganizationSiteDTO saveSmallLead(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser);
-    
+
     public void saveOpenningBalance(BigDecimal value, String customerCode, String gallaryCode);
-    
-    public InvOrganizationSiteDTO getIDByCode(String code , TobyUser tobyUser , Integer gallaryId);
+
+    public InvOrganizationSiteDTO getIDByCode(String code, TobyUser tobyUser, Integer gallaryId);
+
+    public List<InvOrganizationSiteDTO> returnClientSales(List<InvInventoryDTO> invInventoryDTOList, Date dateFrom, Date dateTo, String value) ;
 
 }

@@ -24,6 +24,7 @@ import com.toby.dto.SymbolDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.Currency;
 import com.toby.entity.Employee;
+import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlAccount;
 import com.toby.entity.InvInventory;
 import com.toby.entity.InvOrganizationSite;
@@ -34,11 +35,13 @@ import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -467,7 +470,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSite.setMobile(invOrganizationSiteDTO.getMobile());
         invOrganizationSite.setFax(invOrganizationSiteDTO.getFax());
         invOrganizationSite.setId(invOrganizationSiteDTO.getId());
-        
+
         invOrganizationSite.setEmployer(invOrganizationSiteDTO.getEmployer());
         invOrganizationSite.setStreet(invOrganizationSiteDTO.getStreet());
         invOrganizationSite.setCity(invOrganizationSiteDTO.getCity());
@@ -499,7 +502,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSite.setShoulder(invOrganizationSiteDTO.getShoulder());
         invOrganizationSite.setStep(invOrganizationSiteDTO.getStep());
         invOrganizationSite.setCompanyName(invOrganizationSiteDTO.getCompanyName());
-          if (invOrganizationSiteDTO.getLearnAboutCompanyFrom()!= null) {
+        if (invOrganizationSiteDTO.getLearnAboutCompanyFrom() != null) {
             Symbol symbol = new Symbol();
             symbol.setId(invOrganizationSiteDTO.getLearnAboutCompanyFrom().getId());
             invOrganizationSite.setLearnAboutCompanyfrom(symbol);
@@ -685,7 +688,6 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             invOrganizationSiteDTO.setDelegatorId(inventoryDelegatorDTO);
 
         }
-       
 
         return invOrganizationSiteDTO;
     }
@@ -2777,6 +2779,44 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             return null;
         }
         return mapToDTO(detailses, tobyUser);
+    }
+
+    @Override
+    public List<InvOrganizationSiteDTO> returnClientSales(List<InvInventoryDTO> invInventoryDTOList, Date dateFrom, Date dateTo, String value) {
+        String dateFrom1 = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(dateFrom);
+        String dateTo1 = new SimpleDateFormat("yyyy-MM-dd  23:59:59").format(dateTo);
+        String gallary = returnGallaryString(invInventoryDTOList);
+        List<InvOrganizationSiteDTO> invOrganizationSiteDTOList = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        sql.append("select ios.code , ios.name , ios.mobile from inv_purchase_invoice ipi left join inv_organization_site ios on ios.id = ipi.organization_site_id where ipi.branch_id = " + invInventoryDTOList.get(0).getBranchId()
+                + " and ipi.galary_Id in (").append(gallary).append(") and ipi.date >= '").append(dateFrom1).append("' and ipi.date <= '").append(dateTo1).append("' group by ipi.organization_site_id having count(ipi.id) in(").append(value).append(")");
+        List<Object[]> res = dao.executeNativeQuery(sql.toString());
+        Iterator it = res.iterator();
+        while (it.hasNext()) {
+            Object[] line = (Object[]) it.next();
+            InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
+            invOrganizationSiteDTO.setCode((String) line[0]);
+            invOrganizationSiteDTO.setName((String) line[1]);
+            invOrganizationSiteDTO.setMobile((String) line[2]);
+
+            invOrganizationSiteDTOList.add(invOrganizationSiteDTO);
+        }
+        return invOrganizationSiteDTOList;
+    }
+
+    public String returnGallaryString(List<InvInventoryDTO> invInventoryDTOList) {
+        StringBuilder gallarySelected = null;
+        List<InvOrganizationSiteDTO> invOrganizationSiteDTOList = new ArrayList<>();
+        for (InvInventoryDTO invInventoryDTO : invInventoryDTOList) {
+            if (gallarySelected == null) {
+                gallarySelected = new StringBuilder();
+                gallarySelected.append(invInventoryDTO.getId());
+            } else {
+                gallarySelected.append(",");
+                gallarySelected.append(invInventoryDTO.getId());
+            }
+        }
+        return gallarySelected.toString();
     }
 
 }
