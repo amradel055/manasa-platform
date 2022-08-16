@@ -15,24 +15,12 @@ import java.util.Date;
 public class GeneralJournalDetailsDTO extends BaseEntityDTO {
     
      
-    private Integer serial; 
+   
     private GlAccountDTO glACCOUNTId; 
     private GlAccountDTO glAssistantAccount; 
     private CostCenterDTO costCenterId; 
-    private GlAdminUnitDTO adminUnitId; 
-    private BigDecimal debitAmount; 
-    private BigDecimal creditamount;  
-    private BigDecimal debitAmountLocal; 
-    private BigDecimal creditamountLocal; 
-    private String discribtion; 
+    private GlAdminUnitDTO adminUnitId;
     private GeneralJournalDTO generalJournalId; 
-    private Integer branchId; 
-    private BigDecimal rate; 
-    private CurrencyDTO currencyId;
-    private Integer companyId;
-    private Integer modifiedBy ; 
-    private Date modificationDate;
-    private TobyUserDTO created_By ;
     
     
     
@@ -41,6 +29,23 @@ public class GeneralJournalDetailsDTO extends BaseEntityDTO {
     private Integer adminUnit; 
     private Integer generalJournal; 
     private Integer currency;
+    private BigDecimal debitAmount; 
+    private BigDecimal creditamount;  
+    private BigDecimal debitAmountLocal; 
+    private BigDecimal creditamountLocal;
+    private Integer branchId; 
+    private BigDecimal rate; 
+    private CurrencyDTO currencyId;
+    private Integer companyId;
+    private Integer modifiedBy ; 
+    private Date modificationDate;
+    private TobyUserDTO created_By ;  
+    private Integer serial;  
+    private String discribtion; 
+    private String glAccountName;
+    private String glAccountNumber;
+    private String glCostCenterName;
+    private String glCostCenterNumber;
     
 
     @Override
@@ -339,6 +344,62 @@ public class GeneralJournalDetailsDTO extends BaseEntityDTO {
      */
     public void setCurrency(Integer currency) {
         this.currency = currency;
+    }
+
+    /**
+     * @return the glAccountName
+     */
+    public String getGlAccountName() {
+        return glAccountName;
+    }
+
+    /**
+     * @param glAccountName the glAccountName to set
+     */
+    public void setGlAccountName(String glAccountName) {
+        this.glAccountName = glAccountName;
+    }
+
+    /**
+     * @return the glAccountNumber
+     */
+    public String getGlAccountNumber() {
+        return glAccountNumber;
+    }
+
+    /**
+     * @param glAccountNumber the glAccountNumber to set
+     */
+    public void setGlAccountNumber(String glAccountNumber) {
+        this.glAccountNumber = glAccountNumber;
+    }
+
+    /**
+     * @return the glCostCenterName
+     */
+    public String getGlCostCenterName() {
+        return glCostCenterName;
+    }
+
+    /**
+     * @param glCostCenterName the glCostCenterName to set
+     */
+    public void setGlCostCenterName(String glCostCenterName) {
+        this.glCostCenterName = glCostCenterName;
+    }
+
+    /**
+     * @return the glCostCenterNumber
+     */
+    public String getGlCostCenterNumber() {
+        return glCostCenterNumber;
+    }
+
+    /**
+     * @param glCostCenterNumber the glCostCenterNumber to set
+     */
+    public void setGlCostCenterNumber(String glCostCenterNumber) {
+        this.glCostCenterNumber = glCostCenterNumber;
     }
  
 

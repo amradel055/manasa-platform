@@ -613,6 +613,15 @@
 
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
+                                <h:inputText  value="#{invPurchaseInvoiceFormDTOMB.organizationSiteId.name}" label="customerName" />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 100px" value=" الاسم "/>
+                            </div>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
                                 <h:inputText  value="#{invPurchaseInvoiceFormDTOMB.organizationSiteId.email}" label="Email" validatorMessage="الايميل غير صحيح">
                                     <f:validateRegex pattern="^([\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]){0,255}$" />
                                 </h:inputText>

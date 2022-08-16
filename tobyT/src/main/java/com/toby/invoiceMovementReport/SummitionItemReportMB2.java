@@ -177,17 +177,19 @@ public class SummitionItemReportMB2 extends Basic {
             Test test = new Test();
             List<Test> listTest = new ArrayList<>();
             Boolean update = Boolean.TRUE;
+
             for (InvInventoryDTO invInventoryDTO : getGallaryListSelected()) {
                 System.out.println(invInventoryDTO.getCode() + "   " + new Date());
                 listTest = new ArrayList<>();
-
+                List<InvInventoryDTO> gallaryListSelected = new ArrayList<>();
+                gallaryListSelected.add(invInventoryDTO);
                 summitionItemsView = new SummitionItemsView();
 
                 summitionItemsView.setName(invInventoryDTO.getName());
                 summitionItemsView.setCode(Integer.parseInt(invInventoryDTO.getCode()));
                 summitionItemsView.setRowType(1);
 
-                BigDecimal totalNotice = BigDecimal.ZERO;
+//                BigDecimal totalNotice = BigDecimal.ZERO;
                 BigDecimal totalPersentageNotice = BigDecimal.ZERO;
                 if (getUri().contains("summitionItemReportPro")) {
 //                    itemsViewForGallaryinner = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(invInventoryDTO.getId(), getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), null, null);
@@ -200,8 +202,8 @@ public class SummitionItemReportMB2 extends Basic {
                         itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantityNew(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), null, getProGroupListSelected(), getInvoiceType(), true);
                     }
                     update = Boolean.FALSE;
-                    totalNotice = invPurchaseInvoiceService_1.findNotice(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), dateFrom, dateTo, getGallaryListSelected());
-                    totalPersentageNotice = invPurchaseInvoiceService_1.findPersentageNotice(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), dateFrom, dateTo, getGallaryListSelected());
+//                    totalNotice = invPurchaseInvoiceService_1.findNotice(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), dateFrom, dateTo, getGallaryListSelected());
+                    totalPersentageNotice = invPurchaseInvoiceService_1.findPersentageNotice(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), dateFrom, dateTo, gallaryListSelected);
                 }
                 if (itemsViewForGallaryinner != null && !itemsViewForGallaryinner.isEmpty()) {
                     for (SummitionItemsView view : itemsViewForGallaryinner) {

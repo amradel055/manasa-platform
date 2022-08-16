@@ -19,6 +19,7 @@ public class GeneralJournalDTO extends BaseEntityDTO {
     private int generalNumber;
     private Date generalData;
     private SymbolDTO generalType;
+    private Integer generalTypeId;
     private String generalStatement;
     private Integer generalDecument;
     private String postFlagReview;
@@ -312,6 +313,20 @@ public class GeneralJournalDTO extends BaseEntityDTO {
      */
     public void setDetailDTOList(List<GeneralJournalDetailsDTO> detailDTOList) {
         this.detailDTOList = detailDTOList;
+    }
+
+    /**
+     * @return the generalTypeId
+     */
+    public Integer getGeneralTypeId() {
+        return generalTypeId;
+    }
+
+    /**
+     * @param generalTypeId the generalTypeId to set
+     */
+    public void setGeneralTypeId(Integer generalTypeId) {
+        this.generalTypeId = generalTypeId;
     }
 
 }

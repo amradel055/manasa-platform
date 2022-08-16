@@ -82,6 +82,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             entity.setLength(organizationSiteDTO.getLength());
             entity.setShoulder(organizationSiteDTO.getShoulder());
             entity.setStep(organizationSiteDTO.getStep());
+            entity.setName(organizationSiteDTO.getName());
             dao.updateEntity(entity);
         }
     }

@@ -642,6 +642,13 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
                 responseApi.setResposeId(8000);
                 responseApi.setMsg(error.toString());
             } else {
+                GlYearDTO glYearDTO = new GlYearDTO();
+                glYearDTO.setId(dTO.getGlYearId());
+                dTO.setGlYear(glYearDTO);
+                SymbolDTO generalType = new SymbolDTO();
+                generalType.setId(dTO.getGeneralTypeId());
+                generalType.setSerial(3);
+                dTO.setGeneralType(generalType);
                 GeneralJournalDTO head = addGeneralJournalDTO(dTO, tobyUser);
                 generaljournalDetailsServiceDTO.addGenDetalils(dTO.getDetailDTOList(), null, tobyUser, Boolean.TRUE, head.getId());
                 responseApi.setStatus(1000);
