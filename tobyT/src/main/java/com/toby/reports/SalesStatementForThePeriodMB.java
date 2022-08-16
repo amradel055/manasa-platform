@@ -30,6 +30,8 @@ public class SalesStatementForThePeriodMB extends Basic {
     private SalesStatementForThePeriod statementForThePeriod;
     private Boolean notZeroValue ;
     private Boolean zeroValue ;
+    private Boolean remain ;
+    private BigDecimal remainValue ;
 
     @EJB
     private ReportsService reportsService;
@@ -83,10 +85,21 @@ public class SalesStatementForThePeriodMB extends Basic {
                 }
                 setList(listBak);
             }
+            
             if(getZeroValue()){
                 List<SalesStatementForThePeriod> listBak = new ArrayList<>();
                 for( SalesStatementForThePeriod period : getList()){
                     if(period.getRemain().compareTo(BigDecimal.ZERO) != 1){
+                        listBak.add(period);
+                    }
+                }
+                setList(listBak);
+            }
+            
+            if(getRemain()){
+                List<SalesStatementForThePeriod> listBak = new ArrayList<>();
+                for( SalesStatementForThePeriod period : getList()){
+                    if(period.getRemain().compareTo(BigDecimal.ZERO) != 0 && period.getRemain().compareTo(getRemainValue()) != 1){
                         listBak.add(period);
                     }
                 }
@@ -216,6 +229,40 @@ public class SalesStatementForThePeriodMB extends Basic {
      */
     public void setZeroValue(Boolean zeroValue) {
         this.zeroValue = zeroValue;
+    }
+
+    /**
+     * @return the remain
+     */
+    public Boolean getRemain() {
+        if(remain == null){
+            remain = Boolean.FALSE;
+        }
+        return remain;
+    }
+
+    /**
+     * @param remain the remain to set
+     */
+    public void setRemain(Boolean remain) {
+        this.remain = remain;
+    }
+
+    /**
+     * @return the remainValue
+     */
+    public BigDecimal getRemainValue() {
+        if(remainValue == null){
+            remainValue = BigDecimal.ZERO;
+        }
+        return remainValue;
+    }
+
+    /**
+     * @param remainValue the remainValue to set
+     */
+    public void setRemainValue(BigDecimal remainValue) {
+        this.remainValue = remainValue;
     }
 
 }

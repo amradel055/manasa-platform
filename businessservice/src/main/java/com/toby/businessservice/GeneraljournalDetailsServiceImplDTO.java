@@ -150,6 +150,8 @@ public class GeneraljournalDetailsServiceImplDTO implements GeneraljournalDetail
             accountDTO.setStatus(entity.getGlACCOUNTId().getStatus());
             accountDTO.setShotCode(entity.getGlACCOUNTId().getShotCode());
             dTO.setGlACCOUNTId(accountDTO);
+            dTO.setGlAccountName(entity.getGlACCOUNTId().getName());
+            dTO.setGlAccountNumber(entity.getGlACCOUNTId().getAccNumber().toString());
         }
         if (entity.getGlAssistantAccount() != null && entity.getGlAssistantAccount().getId() != null) {
             GlAccountDTO accountDTO = new GlAccountDTO();
@@ -163,6 +165,8 @@ public class GeneraljournalDetailsServiceImplDTO implements GeneraljournalDetail
             costCenterDTO.setName(entity.getCostCenterId().getName());
             costCenterDTO.setCode(entity.getCostCenterId().getCode());
             dTO.setCostCenterId(costCenterDTO);
+            dTO.setGlCostCenterName(entity.getCostCenterId().getName());
+            dTO.setGlCostCenterNumber(entity.getCostCenterId().getCode().toString());
         }
         if (entity.getAdminUnitId() != null && entity.getAdminUnitId().getId() != null) {
             GlAdminUnitDTO glAdminUnitDTO = new GlAdminUnitDTO();
@@ -261,6 +265,7 @@ public class GeneraljournalDetailsServiceImplDTO implements GeneraljournalDetail
         }
 
         defaultData(entity, dTO, tobyUser);
+        
         return entity;
     }
 

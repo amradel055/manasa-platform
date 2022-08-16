@@ -335,6 +335,9 @@ public class SalesStatementForThePeriod {
      * @return the returnPurchaseValue
      */
     public BigDecimal getReturnPurchaseValue() {
+        if (returnPurchaseValue == null) {
+            returnPurchaseValue = BigDecimal.ZERO;
+        }
         return returnPurchaseValue;
     }
 
@@ -349,6 +352,9 @@ public class SalesStatementForThePeriod {
      * @return the noticeDebit
      */
     public BigDecimal getNoticeDebit() {
+        if (noticeDebit == null) {
+            noticeDebit = BigDecimal.ZERO;
+        }
         return noticeDebit;
     }
 
@@ -363,6 +369,9 @@ public class SalesStatementForThePeriod {
      * @return the noticeCredit
      */
     public BigDecimal getNoticeCredit() {
+        if (noticeCredit == null) {
+            noticeCredit = BigDecimal.ZERO;
+        }
         return noticeCredit;
     }
 
@@ -377,6 +386,9 @@ public class SalesStatementForThePeriod {
      * @return the cash
      */
     public BigDecimal getCash() {
+        if (cash == null) {
+            cash = BigDecimal.ZERO;
+        }
         return cash;
     }
 

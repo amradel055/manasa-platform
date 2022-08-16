@@ -140,7 +140,7 @@ public class invItemDataListMB extends BaseListBean implements Serializable {
                 InvItem item = itemDataService.findInvItem(itemDataEntityId);
                 List<InvDetailDTO> listNew = new ArrayList<>();
                 InvDetailDTO invDetailDTO = new InvDetailDTO();
-                invDetailDTO.setCost((item.getMaxpricemen().add(item.getMaxpricemen().multiply(new BigDecimal(0.15)))).setScale(3, BigDecimal.ROUND_UP));
+                invDetailDTO.setCost(new BigDecimal(((item.getMaxpricemen().add(item.getMaxpricemen().multiply(new BigDecimal(0.15)))).setScale(5, BigDecimal.ROUND_HALF_UP).stripTrailingZeros()).setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
                 invDetailDTO.setItemCode(item.getCode());
                 invDetailDTO.setItemName(item.getName());
                 if (item.getDiscountrate() != null && item.getDiscountrate().compareTo(BigDecimal.ZERO) == 1) {
