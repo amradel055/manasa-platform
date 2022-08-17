@@ -539,7 +539,6 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         dTO.setCloseLeadStatus(Boolean.TRUE);
         dTO.setGallaryId(entity.getGalleryId());
 
-
         return dTO;
     }
 
@@ -1292,21 +1291,36 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
     }
 
     @Override
-      public List<CrmEventDTO> findALLEventByCustomerId(Integer custumerId, Integer branchId){
+    public List<CrmEventDTO> findALLEventByCustomerId(Integer custumerId, Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("custumerId", custumerId);
         params.put("branchId", branchId);
         List<CrmEvent> crmEventList = dao.findListByQuery("SELECT e FROM CrmEvent e WHERE e.customerId.id = :custumerId AND e.branchId.id = :branchId AND e.deletedBy is null", params);
         return mapToDTOList(crmEventList);
-        }
-    
-        @Override
-        public List<CrmEventDTO> findALLEventByGalleryId(String GalleryIdList , Integer userId){
+    }
+
+    @Override
+    public List<CrmEventDTO> findALLEventByGalleryId(String GalleryIdList, Integer userId) {
         Map<String, Object> params = new HashMap<>();
 //        params.put("galleryid", GalleryIdList);
         params.put("userId", userId);
-        List<CrmEvent> crmEventList = dao.findListByQuery("SELECT e FROM CrmEvent e WHERE e.galleryId in( "+GalleryIdList +" ) And e.id not in ( Select n.eventId from UserNotifications n where n.userId = :userId ) AND e.deletedBy is null", params);
+        List<CrmEvent> crmEventList = dao.findListByQuery("SELECT e FROM CrmEvent e WHERE e.galleryId in( " + GalleryIdList + " ) And e.id not in ( Select n.eventId from UserNotifications n where n.userId = :userId ) AND e.deletedBy is null", params);
         return mapToDTOList(crmEventList);
-        }
+    }
+
+    @Override
+    public List<CrmEventDTO> findCrmEventList(Integer gallaryId, String customerCode, Integer createdBy, Integer assignedTo, Date dateTo, Date dateFrom, Integer eventType, Integer branchId, Integer type, boolean isDetail) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("gallaryId", gallaryId);
+        params.put("customerCode", customerCode);
+        params.put("createdBy", createdBy);
+        params.put("assignedTo", assignedTo);
+        params.put("dateTo", dateTo);
+        params.put("dateFrom", dateFrom);
+        params.put("eventType", eventType);
+        params.put("branchId", branchId);
+        List<CrmEvent> crmEventList = dao.findListByQuery("SELECT e FROM CrmEvent e WHERE e.galleryId = :gallaryId AND e.customerId.code = :customerCode AND e.createdBy.id = :createdBy AND e.endDate = :dateTo AND e.startDate = :dateFrom AND e.activityType =:eventType AND e.branchId.id = :branchId e.type = :type ", params);
+        return mapToDTOList(crmEventList);
+    }
 
 }

@@ -2819,4 +2819,14 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         return gallarySelected.toString();
     }
 
+    @Override
+    public InvOrganizationSiteDTO findOrganizationSiteDTOByCodeAndGallaryId(Integer branchId, String code, Integer gallaryId , TobyUser tobyUser) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        params.put("code", code);
+        params.put("gallaryId", gallaryId);
+        InvOrganizationSite invOrganizationSiteList = dao.findEntityByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.gallaryId.id =:gallaryId AND e.code = :code", params);
+        return mapToDTO(invOrganizationSiteList, tobyUser);
+    }
+
 }
