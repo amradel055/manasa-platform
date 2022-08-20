@@ -455,7 +455,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         try {
 //            if (getInvInvoiceDTO().getDiscHalala() != null
 //                    && getInvInvoiceDTO().getDiscHalala().compareTo(BigDecimal.ZERO) == 1) {
-                setInvInvoiceDTO(invGlobalService.recalcHeadValues(getInvInvoiceDTO()));
+            setInvInvoiceDTO(invGlobalService.recalcHeadValues(getInvInvoiceDTO()));
 //            }
 
         } catch (Exception e) {
@@ -696,6 +696,46 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                             detailDTO.setDiscount(new BigDecimal(25));
                         }
                     }
+                }
+
+            }
+
+        }
+        updateSummition(false);
+
+    }
+
+    public void backToSchoolOffer() {
+        checkDetailData();
+        for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
+            if (detailDTO.getItemsBarcodesDetail() == null && detailDTO.getItemsBarcodesDetailTrans() != null) {
+                detailDTO.setItemsBarcodesDetail(detailDTO.getItemsBarcodesDetailTrans());
+            }
+
+            if (detailDTO.getItemId() != null
+                    && detailDTO.getItemId().getProGroupId() != null
+                    && detailDTO.getItemId().getProGroupId().getId() != null) {
+
+                if (detailDTO.getItemId().getProGroupId().getId() == 6
+                        || detailDTO.getItemId().getProGroupId().getId() == 9
+                        || detailDTO.getItemId().getProGroupId().getId() == 10
+                        || detailDTO.getItemId().getProGroupId().getId() == 11
+                        || detailDTO.getItemId().getProGroupId().getId() == 12
+                        || detailDTO.getItemId().getProGroupId().getId() == 16
+                        || detailDTO.getItemId().getProGroupId().getId() == 20
+                        || detailDTO.getItemId().getProGroupId().getId() == 21
+                        || detailDTO.getItemId().getProGroupId().getId() == 22
+                        || detailDTO.getItemId().getProGroupId().getId() == 23
+                        || detailDTO.getItemId().getProGroupId().getId() == 24
+                        || detailDTO.getItemId().getProGroupId().getId() == 25
+                        || detailDTO.getItemId().getProGroupId().getId() == 26
+                        || detailDTO.getItemId().getProGroupId().getId() == 29
+                        || detailDTO.getItemId().getProGroupId().getId() == 34
+                        || detailDTO.getItemId().getProGroupId().getId() == 36
+                        || detailDTO.getItemId().getProGroupId().getId() == 38) {
+                    detailDTO.setDiscount(new BigDecimal(40));
+                } else if (detailDTO.getItemId().getProGroupId().getId() == 1 || detailDTO.getItemId().getProGroupId().getId() == 36) {
+                    detailDTO.setDiscount(new BigDecimal(25));
                 }
 
             }
