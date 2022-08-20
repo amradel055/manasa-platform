@@ -93,8 +93,7 @@ public interface CRMEventServiceDTO {
     
    public List<CrmEventDTO> findALLEventByGalleryId(String GalleryIdList , Integer userId);
    
-       public List<CrmEventDTO> findCrmEventList(Integer gallaryId, String customerCode, Integer createdBy, Integer assignedTo, Date dateTo, Date dateFrom, Integer eventType, Integer branchId, Integer type, boolean isDetail) ;
-
+public List<CrmEventDTO> findCrmEventList(Integer priorityId, Integer gallaryId, String customerCode, Integer createdBy, Integer assignedTo, Date dateTo, Date dateFrom, Integer eventType, Integer branchId, Integer type, boolean isDetail);
    
    
    

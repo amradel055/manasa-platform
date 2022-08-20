@@ -650,6 +650,14 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
                 generalType.setSerial(3);
                 dTO.setGeneralType(generalType);
                 GeneralJournalDTO head = addGeneralJournalDTO(dTO, tobyUser);
+                List<GeneralJournalDetailsDTO> generalJournalDetailsDTOList = new ArrayList<>();
+                GeneralJournalDTO generalJournalDTO = new GeneralJournalDTO();
+                    generalJournalDTO.setId(head.getId());
+                for(GeneralJournalDetailsDTO detailsDTO : dTO.getDetailDTOList()){
+                    detailsDTO.setGeneralJournalId(generalJournalDTO);
+                    generalJournalDetailsDTOList.add(detailsDTO);
+                }
+                dTO.setDetailDTOList(generalJournalDetailsDTOList);
                 generaljournalDetailsServiceDTO.addGenDetalils(dTO.getDetailDTOList(), null, tobyUser, Boolean.TRUE, head.getId());
                 responseApi.setStatus(1000);
                 responseApi.setResposeId(7000);
@@ -686,8 +694,13 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
             error.append("\n");
         }
 
-        if (dTO.getDocumentId() == null) {
+        if (dTO.getGeneralTypeId() == null) {
             error.append("يجب اختيار نوع المستند");
+            error.append("\n");
+        }
+        
+        if (dTO.getDetailDTOList() == null || dTO.getDetailDTOList().isEmpty()) {
+            error.append("يجب ادخال تفاصيل القيد");
             error.append("\n");
         }
 

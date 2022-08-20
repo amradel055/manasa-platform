@@ -1309,8 +1309,9 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
     }
 
     @Override
-    public List<CrmEventDTO> findCrmEventList(Integer gallaryId, String customerCode, Integer createdBy, Integer assignedTo, Date dateTo, Date dateFrom, Integer eventType, Integer branchId, Integer type, boolean isDetail) {
+    public List<CrmEventDTO> findCrmEventList(Integer priorityId, Integer gallaryId, String customerCode, Integer createdBy, Integer assignedTo, Date dateTo, Date dateFrom, Integer eventType, Integer branchId, Integer type, boolean isDetail) {
         Map<String, Object> params = new HashMap<>();
+        params.put("priorityId", priorityId);
         params.put("gallaryId", gallaryId);
         params.put("customerCode", customerCode);
         params.put("createdBy", createdBy);
@@ -1319,7 +1320,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         params.put("dateFrom", dateFrom);
         params.put("eventType", eventType);
         params.put("branchId", branchId);
-        List<CrmEvent> crmEventList = dao.findListByQuery("SELECT e FROM CrmEvent e WHERE e.galleryId = :gallaryId AND e.customerId.code = :customerCode AND e.createdBy.id = :createdBy AND e.endDate = :dateTo AND e.startDate = :dateFrom AND e.activityType =:eventType AND e.branchId.id = :branchId e.type = :type ", params);
+        List<CrmEvent> crmEventList = dao.findListByQuery("SELECT e FROM CrmEvent e WHERE e.priorityId.id = :priorityId AND e.galleryId = :gallaryId AND e.customerId.code = :customerCode AND e.createdBy.id = :createdBy AND e.endDate = :dateTo AND e.startDate = :dateFrom AND e.activityType =:eventType AND e.branchId.id = :branchId e.type = :type ", params);
         return mapToDTOList(crmEventList);
     }
 
