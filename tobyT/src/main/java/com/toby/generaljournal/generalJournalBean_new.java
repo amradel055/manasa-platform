@@ -1042,11 +1042,13 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
     public void edit() throws CloneNotSupportedException {
         try {
             if (glYearDTOSelection.getOpenning() == null || glYearDTOSelection.getOpenning() == 0) {
-                if (!isParentRowAdded()) {
-                    setParentRowAdded(true);
+//                if (!isParentRowAdded()) {
+//                    setParentRowAdded(true);
                     generalGeneralReset = (GeneralJournalDTO) selectedGeneralJournal.clone();
                     showMessageGeneral = Boolean.FALSE;
                     showMessageDetails = Boolean.FALSE;
+                    selectedGeneralJournal.setMarkEdit(Boolean.TRUE); 
+                    
 
                     if (selectedGeneralJournal.getGeneralDecument() != null) {
                         generalDocument = selectedGeneralJournal.getGeneralDecument();
@@ -1054,12 +1056,12 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
 
                     setSelectedDocumentsType(selectedGeneralJournal.getGeneralType().getId());
 
-                    setDataLazyModel(selectedGeneralJournal, false, true);
+//                    setDataLazyModel(selectedGeneralJournal, false, true);
 
-                } else {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب ادخال بيانات القيد اولا قبل ادخال قيد اخر"));
-                    showMessageGeneral = Boolean.TRUE;
-                }
+//                } else {
+//                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب ادخال بيانات القيد اولا قبل ادخال قيد اخر"));
+//                    showMessageGeneral = Boolean.TRUE;
+//                }
             } else {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا يمكن التعديل في سنة تم اغلاقها"));
                 showMessageGeneral = Boolean.TRUE;
@@ -1191,7 +1193,8 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
             journalnew.setSerial(0);
             journalnew.setIndex(getIndex());
             selectedGeneralJournal = journalnew;
-            setDataLazyModel(journalnew, true, false);
+            
+//            setDataLazyModel(journalnew, true, false);
 
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب ادخال بيانات القيد اولا قبل ادخال قيد اخر"));
@@ -1257,6 +1260,7 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
 
     public void search() {
         generalDTOList = generaljournalServiceDTO.getGeneralJournalDTOByBranchId(getSerial(), glYearDTOSelection, getUserData().getSelectedBranch());
+         setParentRowAdded(false);
     }
 
 //    public String addDetails() {

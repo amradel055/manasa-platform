@@ -21,6 +21,7 @@ public class CustomerBalances {
     private BigDecimal Balance;
     private BigDecimal openningBalance;
     private InvInventoryDTO gallerySelected;
+    private String invoiceRemain;
 
     /**
      * @return the clientCode
@@ -128,6 +129,20 @@ public class CustomerBalances {
      */
     public void setOpenningBalance(BigDecimal openningBalance) {
         this.openningBalance = openningBalance;
+    }
+
+    /**
+     * @return the invoiceRemain
+     */
+    public String getInvoiceRemain() {
+        return invoiceRemain;
+    }
+
+    /**
+     * @param invoiceRemain the invoiceRemain to set
+     */
+    public void setInvoiceRemain(String invoiceRemain) {
+        this.invoiceRemain = invoiceRemain;
     }
 
 }

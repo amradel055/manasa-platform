@@ -40,6 +40,7 @@ public class SalesStatementForThePeriod {
     private BigDecimal invNoticeValue;
     private BigDecimal returnPurchaseValue;
     private String galleryName;
+    private Integer organizationId;
 
     /**
      * @return the serial
@@ -397,6 +398,20 @@ public class SalesStatementForThePeriod {
      */
     public void setCash(BigDecimal cash) {
         this.cash = cash;
+    }
+
+    /**
+     * @return the organizationId
+     */
+    public Integer getOrganizationId() {
+        return organizationId;
+    }
+
+    /**
+     * @param organizationId the organizationId to set
+     */
+    public void setOrganizationId(Integer organizationId) {
+        this.organizationId = organizationId;
     }
 
 }

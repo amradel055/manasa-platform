@@ -616,6 +616,7 @@ public class ReportsServiceImpl implements ReportsService {
                 + "left join inv_organization_site ios on ios.id = ipi.organization_site_id left join inv_inventory iinv on iinv.id = ipi.galary_Id  \n"
                 + " where ipi.type = 4  ");
         appendGallery5(statementForThePeriod, sql);
+        appendOrganizationId(statementForThePeriod, sql);
         appendDate8(statementForThePeriod, sql);
         sql.append(" group by ipi.id order by ipi.galary_Id ");
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
@@ -997,6 +998,11 @@ public class ReportsServiceImpl implements ReportsService {
     private void appendGallery5(SalesStatementForThePeriod statementForThePeriod, StringBuilder query) {
         if (statementForThePeriod.getGallerySelected() != null) {
             query.append(" and ipi.galary_Id =  ").append(statementForThePeriod.getGallerySelected().getId());
+        }
+    }
+    private void appendOrganizationId(SalesStatementForThePeriod statementForThePeriod, StringBuilder query) {
+        if (statementForThePeriod.getOrganizationId() != null) {
+            query.append(" and ipi.organization_site_id =  ").append(statementForThePeriod.getOrganizationId());
         }
     }
 

@@ -3,7 +3,10 @@ package com.toby.reports;
 import com.toby.businessservice.ReportsService;
 import com.toby.toby.Basic;
 import com.toby.views.CustomerBalances;
+import com.toby.views.SalesStatementForThePeriod;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.ejb.EJB;
@@ -30,6 +33,23 @@ public class CustomerBalancesReport extends Basic {
 
     public void search() {
         setCustomerBalancesesList(reportsService.getCustomerBalances(customerBalances, getUserData().getUserBranch().getId()));
+        List<CustomerBalances> list = new ArrayList<>();
+        StringBuilder statement = null;
+        for (CustomerBalances customerBalances : getCustomerBalancesesList()) {
+            if (customerBalances.getBalance().compareTo(BigDecimal.ZERO) != 0) {
+                SalesStatementForThePeriod salesStatementForThePeriod = new SalesStatementForThePeriod();
+                salesStatementForThePeriod.setOrganizationId(salesStatementForThePeriod.getOrganizationId());
+                List<SalesStatementForThePeriod> thePeriods = reportsService.getSalesStatementForThePeriod(salesStatementForThePeriod);
+                statement = new StringBuilder();
+                for (SalesStatementForThePeriod forThePeriod : thePeriods) {
+                    if (forThePeriod.getRemain().compareTo(BigDecimal.ZERO) != 0) {
+                        statement.append(" ف ").append(forThePeriod.getSerial()).append(" ; ر ").append(forThePeriod.getRemain());
+                        customerBalances.setInvoiceRemain(statement.toString());
+                    }
+                }
+                list.add(customerBalances);
+            }
+        }
     }
 
     public void postProcessXLS(Object document) {
