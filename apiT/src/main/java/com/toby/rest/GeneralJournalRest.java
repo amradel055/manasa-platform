@@ -39,7 +39,7 @@ public class GeneralJournalRest {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addGeneralJournal(GeneralJournalDTO generalJournalDTO) {
         try {
-            TobyUser tobyUser = new TobyUser();
+        TobyUser tobyUser = new TobyUser();
             tobyUser.setId(generalJournalDTO.getCreatedBy());
             Branch branch = new Branch();
             branch.setId(generalJournalDTO.getBranchId());
