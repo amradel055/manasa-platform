@@ -148,7 +148,7 @@ public class ReportsServiceImpl implements ReportsService {
         dao.executeNativeQuery("select toby.sql_mode_function()");
         List<CustomerBalances> customerBalanceses = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT organization_code , organization_name , sum(exitt) as exitt , sum(adding) as adding , openning_balance \n"
+        sql.append("SELECT organization_code , organization_name , sum(exitt) as exitt , sum(adding) as adding , openning_balance , organization_site_id \n"
                 + "FROM toby.organization_site_statement_view \n"
                 + " ");
         sql.append(" where organization_type = 0 and branch_id = ").append(branchId);
@@ -163,6 +163,7 @@ public class ReportsServiceImpl implements ReportsService {
             customerBalances1.setDebit((BigDecimal) object[2]);
             customerBalances1.setCreditor((BigDecimal) object[3]);
             customerBalances1.setOpenningBalance((BigDecimal) object[4]);
+            customerBalances1.setOrganizationsiteId((Integer) object[5]);
             customerBalanceses.add(customerBalances1);
         }
         return customerBalanceses;

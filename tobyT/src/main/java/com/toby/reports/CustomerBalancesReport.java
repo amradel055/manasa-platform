@@ -38,7 +38,7 @@ public class CustomerBalancesReport extends Basic {
         for (CustomerBalances customerBalances : getCustomerBalancesesList()) {
             if (customerBalances.getBalance().compareTo(BigDecimal.ZERO) != 0) {
                 SalesStatementForThePeriod salesStatementForThePeriod = new SalesStatementForThePeriod();
-                salesStatementForThePeriod.setOrganizationId(salesStatementForThePeriod.getOrganizationId());
+                salesStatementForThePeriod.setOrganizationId(customerBalances.getOrganizationsiteId());
                 List<SalesStatementForThePeriod> thePeriods = reportsService.getSalesStatementForThePeriod(salesStatementForThePeriod);
                 statement = new StringBuilder();
                 for (SalesStatementForThePeriod forThePeriod : thePeriods) {
@@ -50,6 +50,7 @@ public class CustomerBalancesReport extends Basic {
                 list.add(customerBalances);
             }
         }
+        setCustomerBalancesesList(list);
     }
 
     public void postProcessXLS(Object document) {

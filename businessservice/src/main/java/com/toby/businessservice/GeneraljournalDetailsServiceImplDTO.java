@@ -66,9 +66,11 @@ public class GeneraljournalDetailsServiceImplDTO implements GeneraljournalDetail
                 fillSerial(journalDetails);
                 GeneralJournalDetails generalJournalDetails = null;
                 if (isAPI) {
-                    generalJournalDetails = mapFromDTO(journalDetails, tobyUser);
-                } else {
                     generalJournalDetails = mapFromDTOAPI(journalDetails, tobyUser, headId);
+
+                } else {
+                    generalJournalDetails = mapFromDTO(journalDetails, tobyUser);
+
                 }
                 gjd = dao.updateEntity(generalJournalDetails);
                 list.add(gjd);
@@ -265,7 +267,7 @@ public class GeneraljournalDetailsServiceImplDTO implements GeneraljournalDetail
         }
 
         defaultData(entity, dTO, tobyUser);
-        
+
         return entity;
     }
 
