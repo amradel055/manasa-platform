@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 
 /**
  *
@@ -46,17 +48,23 @@ public class TobyUserServiceImpl implements TobyUserService {
 
     @Override
     public TobyUser authenticateUser(String userCode, String password) {
-        Map<String, Object> params = new HashMap();
-        params.put("userCode", userCode);
-        System.out.println("userCode: " + userCode);
-        TobyUser user;
-        user = dao.findEntityByNamedQuery("TobyUser.authenticate", params);
+        TobyUser user = findUserByCode(userCode);
         System.out.println("user: " + user);
         if (user != null && user.getPassword().equals(password)) {
             return user;
         } else {
             return null;
         }
+    }
+
+    
+    public TobyUser findUserByCode(String userCode) {
+        Map<String, Object> params = new HashMap();
+        params.put("userCode", userCode);
+        System.out.println("userCode: " + userCode);
+        TobyUser user;
+        user = dao.findEntityByNamedQuery("TobyUser.authenticate", params);
+        return user;
     }
 
     @Override
@@ -321,11 +329,79 @@ public class TobyUserServiceImpl implements TobyUserService {
         List<TobyUser> details = dao.findListByQuery("SELECT e.userId FROM TobyUserInventory e where e.invInventoryId.id = :InventoryId AND activeCrm = :1 ", params);
         return returnTODTO(details, null);
     }
-    
-      @Override
+
+    @Override
     public TobyUser updateUser(Integer userId) {
         TobyUser tobyUser = dao.findEntityById(TobyUser.class, userId);
-        return  tobyUser ;
+        return tobyUser;
     }
+
+    @Override
+    public String save(String  userName, String oldPassword, String newUserPassword, String newPasswordConfirm) {
+        TobyUser tobyUser = findUserByCode(userName);
+        try {
+            if (validateOldPassword1(tobyUser, oldPassword) && validateNewPassword1(oldPassword, newUserPassword) && validateNewPasswordConfirm1(newPasswordConfirm, newUserPassword)) {
+                tobyUser.setPassword(newUserPassword);
+                updateUser(tobyUser);
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "SAVED"));
+            }
+
+            return "";
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public boolean validateOldPassword1(TobyUser tobyUser, String oldPassword) {
+        try {
+            validateOldPassword(tobyUser, oldPassword);
+
+            if (tobyUser.getMsg() != null && !"".equals(tobyUser.getMsg())) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", tobyUser.getMsg()));
+                return false;
+            }
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean validateNewPassword1(String oldPassword, String newUserPassword) {
+        try {
+            String msg = validateNewPassword(oldPassword, newUserPassword);
+
+            if (!"".equals(msg)) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", msg));
+                return false;
+            }
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean validateNewPasswordConfirm1(String newPasswordConfirm, String newUserPassword) {
+        try {
+
+            String msg = validateConfirmationPassword(newPasswordConfirm, newUserPassword);
+
+            if (!"".equals(msg)) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", msg));
+                return false;
+            }
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+ 
 
 }

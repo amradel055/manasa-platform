@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 package com.toby.rest;
-import com.toby.businessservice.ReportsService;
-import com.toby.views.CustomerBalances;
+import com.toby.businessservice.report.SupplierAccountService;
+import com.toby.dto.InvOrganizationSiteDTO;
+import com.toby.views.OrganizationSiteStatementView;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
@@ -24,18 +25,18 @@ import javax.ws.rs.core.MediaType;
 public class CustomerBalancesRest {
 
     @EJB
-    ReportsService reportsService;
+    SupplierAccountService supplierAccountService;
 
     @Transactional
     @Path("/customerBalanceList")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<CustomerBalances> customerBalancesList(CustomerBalances customerBalances, Integer branchId) {
-        List<CustomerBalances> customerBalancesesList = new ArrayList<>();
-        if (customerBalances != null) {
-         customerBalancesesList = reportsService.getCustomerBalances(customerBalances, branchId);
+    public List<OrganizationSiteStatementView> customerBalancesList(InvOrganizationSiteDTO invOrganizationSiteDTO) {
+        List<OrganizationSiteStatementView> statementViews = new ArrayList<>();
+        if (invOrganizationSiteDTO != null) {
+         statementViews = supplierAccountService.getStatementForOrganizationSite(invOrganizationSiteDTO.getId());
         }
-        return customerBalancesesList;
+        return statementViews;
     }
 }

@@ -65,4 +65,6 @@ public interface InvInventoryService {
 
     public List<InvInventoryDTO> findInventoryByBranch(Integer branchId, TobyUser tobyUser);
 
+    public List<InvInventoryDTO> findInventoryByBranchIdDTO(Integer branchId, TobyUser tobyUser);
+
 }

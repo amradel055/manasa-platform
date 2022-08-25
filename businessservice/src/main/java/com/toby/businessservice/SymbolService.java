@@ -79,9 +79,9 @@ public interface SymbolService {
     public List<Symbol> getAllNationalitiesByCompanyId(Integer companyId);
 
     public List<Symbol> getSpecialDocumentsTypes();
-    
+
     public Symbol getSpecialDocumentsTypes(Integer serial);
-    
+
     public Symbol getSymbolTypes(Integer serial);
 
     public Symbol findSymbol(Integer id);
@@ -140,8 +140,12 @@ public interface SymbolService {
     public List<SymbolDTO> getSymbolListByCompanyId(Integer companyId, Integer generalSymbolId);
 
     public List<SymbolDTO> getDeterminationPriceDTO(Integer companyId);
-    
+
     public List<Symbol> getAllworkTypeIdByCompanyId(Integer companyId);
-    
+
     public List<Symbol> getAllStoreRegionByCompanyId(Integer companyId);
+
+    public List<SymbolDTO> getCrmStatusByCompanyIdDTO(Integer companyId);
+
+    public List<SymbolDTO> getCrmPeriorityByCompanyIdDTO(Integer companyId);
 }
