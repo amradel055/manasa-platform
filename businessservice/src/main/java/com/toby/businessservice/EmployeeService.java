@@ -71,5 +71,5 @@ public interface EmployeeService {
 
     public List<EmployeeDTO> getAllEmployeesListByBranchID(Integer branchId);
 
-    public List<EmployeeDTO> getAllCRMEmployee();
+    public List<EmployeeDTO> getAllCRMEmployee(Integer branchId);
 }

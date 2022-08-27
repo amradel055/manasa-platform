@@ -555,10 +555,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<EmployeeDTO> getAllCRMEmployee() {
+    public List<EmployeeDTO> getAllCRMEmployee(Integer branchId) {
         Map<String, Object> params = new HashMap();
         params.put("activeCrm", Boolean.TRUE);
-        List<Employee> employeeList = dao.findListByQuery("SELECT user.employeeId FROM TobyUser user WHERE  user.employeeId IS Not NULL AND user.activeCrm = :activeCrm", params);
+        params.put("branchId", branchId);
+        List<Employee> employeeList = dao.findListByQuery("SELECT user.employeeId FROM TobyUser user WHERE user.branchId.id = :branchId  user.employeeId IS Not NULL AND user.activeCrm = :activeCrm", params);
         List<EmployeeDTO> list = returnListDTO(employeeList, Boolean.TRUE);
         return list;
     }

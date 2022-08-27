@@ -31,7 +31,7 @@ public class EmployeeRest {
     public List<EmployeeDTO> FindfindEmployeeList(EmployeeDTO employeeDTO) {
         List<EmployeeDTO> employeeDTOList = new ArrayList<>();
         if (employeeDTO.getCompanyId() != null) {
-            employeeDTOList = employeeService.getAllCRMEmployee();
+            employeeDTOList = employeeService.getAllCRMEmployee(employeeDTO.getBranchId());
         }
         return employeeDTOList;
     }
