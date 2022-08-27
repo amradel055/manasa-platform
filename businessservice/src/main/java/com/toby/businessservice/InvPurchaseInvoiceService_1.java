@@ -181,5 +181,7 @@ public interface InvPurchaseInvoiceService_1 {
     public void updateGallaryDelivery(Integer invoiceId);
     
      public InvInvoiceDTO convertInvPurchaseInvoiceToInvInvoice(InvInvoiceDTO invInvoiceDTO, Integer type);
+     
+     public List<InvInvoiceDTOApi> getALLInvPurchaseInvoiceDTOBYCustomerForWebSite(Integer type, Integer organizationId);
 
 }

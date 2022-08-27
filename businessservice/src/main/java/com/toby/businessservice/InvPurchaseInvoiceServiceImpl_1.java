@@ -4103,5 +4103,16 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invPurchaseInvoice.setDeliveryPlace(invInventory);
         dao.updateEntity(invPurchaseInvoice);
     }
+    
+    @Override
+    public List<InvInvoiceDTOApi> getALLInvPurchaseInvoiceDTOBYCustomerForWebSite(Integer type, Integer organizationId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("type", type);
+        params.put("organizationId", organizationId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT s FROM InvPurchaseInvoice s WHERE  s.type =:type AND s.organizationSiteId.id = :organizationId  order by s.serial DESC");
+        List<InvPurchaseInvoice> details = dao.findListByQuery(builder.toString(), params);
+        return mapToDTOAPIList(details);
+    }
 
 }

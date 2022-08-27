@@ -26,16 +26,16 @@ public interface EmployeeService {
     public List<EmployeeDTO> getAllEmployeesListByParentANDUserLogin(Integer employeeId);
 
     public List<Employee> getAllEmployeeListByCompanyId(Integer companyId);
-    
+
     public List<Integer> findEmployeeForMe(Integer employeeId);
-    
+
     public StringBuilder returnEmployeeList(Integer assignedTo, StringBuilder empIds);
 
     public List<Employee> getAllEmployeesListByBranchId(Integer branchId);
-    
+
     public List<EmployeeDTO> getAllEmployeesListByBranchIdDTO(Integer branchId);
-    
-    public  List<EmployeeDTO> getEmployeebyBranchId(Integer branchId , EmployeeReportSearchBean employeeReportSearchBean );
+
+    public List<EmployeeDTO> getEmployeebyBranchId(Integer branchId, EmployeeReportSearchBean employeeReportSearchBean);
 
     public EmployeeDTO findEmployeeId(Integer id);
 
@@ -59,15 +59,17 @@ public interface EmployeeService {
 
     public Boolean getAllEmployeesIsSuperVisor(Integer employeeId);
 
-    public List<EmployeeDTO> getAllEmployeesListByParentId(Integer companyId, Integer branchId, Integer parentId,boolean isActive);
+    public List<EmployeeDTO> getAllEmployeesListByParentId(Integer companyId, Integer branchId, Integer parentId, boolean isActive);
 
     public List<EmployeeDTO> getAllEmployeesListByParentAndchields(Integer branchId, Integer parentId);
 
     public List<Integer> getAllEmployeesListByParentAndchield(Integer branchId, Integer parentId);
-    
+
     public List<EmployeeDTO> getAllEmployeesListByCompanyIdAndBranchId(Integer companyId, Integer branchId);
-    
-    public EmployeeDTO findEmployeeByIDANDBranchID(Integer employeeId, Integer branchId );
-    
+
+    public EmployeeDTO findEmployeeByIDANDBranchID(Integer employeeId, Integer branchId);
+
     public List<EmployeeDTO> getAllEmployeesListByBranchID(Integer branchId);
+
+    public List<EmployeeDTO> getAllCRMEmployee();
 }

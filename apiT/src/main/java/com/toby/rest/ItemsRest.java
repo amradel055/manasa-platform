@@ -84,6 +84,28 @@ public class ItemsRest {
     }
     
     @Transactional
+    @Path("/customerInvoice")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findInvoiceCustomer(InvInvoiceDTOApi invoiceDTOApi) {
+        try {
+            if (invoiceDTOApi.getCustomerMobile() != null) {
+                List<InvInvoiceDTOApi> invInvoiceDTOs = invPurchaseInvoiceService_1.getALLInvPurchaseInvoiceDTOBYCustomerForWebSite(4,invoiceDTOApi.getCustomerId());
+                GenericEntity<List<InvInvoiceDTOApi>> list = new GenericEntity<List<InvInvoiceDTOApi>>(invInvoiceDTOs) {
+                };
+                return Response.ok(list).build();
+            } else {
+                invoiceDTOApi.setMsg("يجب اختيار عميل ");
+                return Response.ok(invoiceDTOApi).build();
+            }
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
+    
+    @Transactional
     @Path("/invoiceDetails")
     @POST
     @Produces(MediaType.APPLICATION_JSON)

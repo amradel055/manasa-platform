@@ -58,8 +58,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<Employee> list = dao.findListByQuery("SELECT d FROM Employee d WHERE d.branchId.id=:branchId", params);
         return list;
     }
+
     @Override
-    public List<EmployeeDTO> getAllEmployeesListByBranchIdDTO(Integer branchId){
+    public List<EmployeeDTO> getAllEmployeesListByBranchIdDTO(Integer branchId) {
         Map<String, Object> params = new HashMap();
         params.put("branchId", branchId);
         List<Employee> employeeDTOList = dao.findListByQuery("SELECT d FROM Employee d WHERE d.branchId.id=:branchId", params);
@@ -129,7 +130,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<EmployeeDTO> getAllEmployeesListByParentId(Integer companyId, Integer branchId, Integer parentId,boolean isActive) {
+    public List<EmployeeDTO> getAllEmployeesListByParentId(Integer companyId, Integer branchId, Integer parentId, boolean isActive) {
 
         Map<String, Object> params = new HashMap();
 
@@ -137,8 +138,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         params.put("companyId", companyId);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT d FROM Employee d WHERE d.companyId.id = :companyId AND  d.branchId.id = :branchId AND ");
-        if(isActive){
-        builder.append(" d.status = 1 AND ");
+        if (isActive) {
+            builder.append(" d.status = 1 AND ");
         }
         Boolean employeesIsSuperVisor = getAllEmployeesIsSuperVisor(parentId);
         if (employeesIsSuperVisor) {
@@ -152,7 +153,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             builder.append(" d.parentId.id = :parentId ");
         }
         List<Employee> list = dao.findListByQuery(builder.toString(), params);
-        return   returnListDTO(list, false);
+        return returnListDTO(list, false);
     }
 
     @Override
@@ -260,7 +261,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<Employee> list = dao.findListByQuery("SELECT i.employeeId FROM TobyUser i WHERE  i.employeeId.companyId.id = :companyId AND i.branchId.id = :branchId", params);
         return returnListDTO(list, false);
     }
-    
+
     @Override
     public List<EmployeeDTO> getAllEmployeesListByBranchID(Integer branchId) {
 
@@ -551,6 +552,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void deleteIdfromFellowsQualifications(Integer employeeId) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<EmployeeDTO> getAllCRMEmployee() {
+        Map<String, Object> params = new HashMap();
+        params.put("activeCrm", Boolean.TRUE);
+        List<Employee> employeeList = dao.findListByQuery("SELECT user.employeeId FROM TobyUser user WHERE  user.employeeId IS Not NULL AND user.activeCrm = :activeCrm", params);
+        List<EmployeeDTO> list = returnListDTO(employeeList, Boolean.TRUE);
+        return list;
     }
 
 }

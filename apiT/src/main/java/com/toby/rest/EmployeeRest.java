@@ -23,8 +23,6 @@ public class EmployeeRest {
     @EJB
     EmployeeService employeeService;
 
-   
-
     @Transactional
     @Path("/findEmployeeList")
     @POST
@@ -33,7 +31,7 @@ public class EmployeeRest {
     public List<EmployeeDTO> FindfindEmployeeList(EmployeeDTO employeeDTO) {
         List<EmployeeDTO> employeeDTOList = new ArrayList<>();
         if (employeeDTO.getCompanyId() != null) {
-            employeeDTOList = employeeService.getAllEmployeesListByCompanyId(employeeDTO.getCompanyId(),employeeDTO.getBranchId());
+            employeeDTOList = employeeService.getAllCRMEmployee();
         }
         return employeeDTOList;
     }
