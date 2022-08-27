@@ -5,10 +5,13 @@
  */
 package com.toby.rest;
 
-import com.toby.apiServices.AttributeDetailsService;
 import com.toby.businessservice.CRMEventServiceDTO;
+import com.toby.businessservice.EventResponseService;
 import com.toby.dto.CrmEventDTO;
+import com.toby.dto.EventResponseDTO;
 import com.toby.entity.TobyUser;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -24,8 +27,12 @@ import javax.ws.rs.core.Response;
  */
 @Path("/crmEvent")
 public class CrmEventRest {
+
     @EJB
     CRMEventServiceDTO cRMEventServiceDTO;
+
+    @EJB
+    EventResponseService eventResponseService;
 
     @Transactional
     @Path("/addCrm")
@@ -65,6 +72,76 @@ public class CrmEventRest {
         } catch (Exception e) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
+    }
+
+    @Transactional
+    @Path("/FindCrmEvent")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<CrmEventDTO> FindCrmEvent(CrmEventDTO crmEventDTO) {
+        List<CrmEventDTO> crmEventDTOList = new ArrayList<>();
+        if (crmEventDTO != null) {
+            crmEventDTOList = cRMEventServiceDTO.findCrmEventList(crmEventDTO.getPriority(), crmEventDTO.getGallaryId(), crmEventDTO.getCustomerId().getCode(), crmEventDTO.getCreatedBy(), crmEventDTO.getAssignedTo().getId(), crmEventDTO.getEndDate(), crmEventDTO.getStartDate(), crmEventDTO.getStatus().getId(), crmEventDTO.getBranchId());
+        }
+        return crmEventDTOList;
+    }
+
+    @Transactional
+    @Path("/FindResponseCrm")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<EventResponseDTO> FindResponseCrm(CrmEventDTO crmEventDTO) {
+        List<EventResponseDTO> crmEventDTOList = new ArrayList<>();
+        if (crmEventDTO.getId() != null) {
+            crmEventDTOList = eventResponseService.returnEventResponseDTOByEventId(crmEventDTO.getId());
+        }
+        return crmEventDTOList;
+    }
+
+    @Transactional
+    @Path("/FindCrmEventCount")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public CrmEventDTO FindCrmEventCount(CrmEventDTO crmEventDTO) {
+        Integer y = null;
+        if (crmEventDTO != null) {
+            y = cRMEventServiceDTO.findCountCrmEvent(crmEventDTO.getPriority(), crmEventDTO.getGallaryId(), crmEventDTO.getCustomerId().getCode(), crmEventDTO.getCreatedBy(), crmEventDTO.getAssignedTo().getId(), crmEventDTO.getEndDate(), crmEventDTO.getStartDate(), crmEventDTO.getStatus().getId(), crmEventDTO.getBranchId());
+        }
+        CrmEventDTO c = new CrmEventDTO();
+        c.setNumberOfEvent(y);
+        return c;
+    }
+
+    @Transactional
+    @Path("/FindALLCrmEvent")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<CrmEventDTO> FindALLCrmEvent(CrmEventDTO crmEventDTO) {
+        List<CrmEventDTO> crmEventDTOList = new ArrayList<>();
+        if (crmEventDTO != null) {
+            crmEventDTOList = cRMEventServiceDTO.findALLEventList(crmEventDTO.getBranchId());
+        }
+        return crmEventDTOList;
+    }
+
+    @Transactional
+    @Path("/FindALLCrmEventCount")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public CrmEventDTO FindALLCrmEventCount(CrmEventDTO crmEventDTO) {
+
+        Integer y = null;
+        if (crmEventDTO.getBranchId() != null) {
+            y = cRMEventServiceDTO.findALLCountEventList(crmEventDTO.getBranchId());
+        }
+        CrmEventDTO c = new CrmEventDTO();
+        c.setNumberOfEvent(y);
+        return c;
     }
 
 }

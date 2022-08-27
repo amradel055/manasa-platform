@@ -42,6 +42,8 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
     private GenericService genericService;
     @EJB
     private EmployeeService employeeService;
+    @EJB
+    private EventResponseService eventResponseService;
 
     @Override
     public synchronized CrmEventDTO save(CrmEventDTO crmEventDTO, TobyUser tobyUser) {
@@ -473,7 +475,9 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         dTO.setStartDate(entity.getStartDate());
         dTO.setStartTime(entity.getStartTime());
 //        dTO.setSubject(entity.getSubject());
-        dTO.setSubject(entity.getActivityType().getName());
+        if (entity.getActivityType() != null) {
+            dTO.setSubject(entity.getActivityType().getName());
+        }
         dTO.setBranchId(entity.getBranchId().getId());
         dTO.setType(entity.getType());
         dTO.setSerial(entity.getSerial());
@@ -1309,19 +1313,119 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
     }
 
     @Override
-    public List<CrmEventDTO> findCrmEventList(Integer priorityId, Integer gallaryId, String customerCode, Integer createdBy, Integer assignedTo, Date dateTo, Date dateFrom, Integer eventType, Integer branchId, Integer type, boolean isDetail) {
+    public List<CrmEventDTO> findCrmEventList(Integer priorityId, Integer gallaryId, String customerCode, Integer createdBy, Integer assignedTo, Date dateTo, Date dateFrom, Integer status, Integer branchId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("priorityId", priorityId);
-        params.put("gallaryId", gallaryId);
-        params.put("customerCode", customerCode);
-        params.put("createdBy", createdBy);
-        params.put("assignedTo", assignedTo);
-        params.put("dateTo", dateTo);
-        params.put("dateFrom", dateFrom);
-        params.put("eventType", eventType);
-        params.put("branchId", branchId);
-        List<CrmEvent> crmEventList = dao.findListByQuery("SELECT e FROM CrmEvent e WHERE e.priorityId.id = :priorityId AND e.galleryId = :gallaryId AND e.customerId.code = :customerCode AND e.createdBy.id = :createdBy AND e.endDate = :dateTo AND e.startDate = :dateFrom AND e.activityType =:eventType AND e.branchId.id = :branchId e.type = :type ", params);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("SELECT e FROM CrmEvent e WHERE ");
+        if (priorityId != null) {
+            params.put("priorityId", priorityId);
+            stringBuilder.append("e.priority.id = :priorityId ");
+        }
+        if (gallaryId != null) {
+            params.put("gallaryId", gallaryId);
+            stringBuilder.append("AND e.galleryId = :gallaryId ");
+        }
+        if (customerCode != null) {
+            params.put("customerCode", customerCode);
+            stringBuilder.append("AND e.customerId.code = :customerCode ");
+        }
+        if (createdBy != null) {
+            params.put("createdBy", createdBy);
+            stringBuilder.append("AND e.createdBy.id = :createdBy ");
+        }
+        if (assignedTo != null) {
+            params.put("assignedTo", assignedTo);
+            stringBuilder.append("AND e.assignedTo.id = :assignedTo ");
+        }
+        if (dateTo != null) {
+            params.put("dateTo", dateTo);
+            stringBuilder.append("AND e.endDate <= :dateTo ");
+        }
+        if (dateFrom != null) {
+            params.put("dateFrom", dateFrom);
+            stringBuilder.append("AND e.startDate >= :dateFrom ");
+        }
+        if (status != null) {
+            params.put("status", status);
+            stringBuilder.append("AND e.status.id =:status ");
+        }
+        if (branchId != null) {
+            params.put("branchId", branchId);
+            stringBuilder.append("AND e.branchId.id = :branchId ");
+        }
+
+        List<CrmEvent> crmEventList = dao.findListByQuery(stringBuilder.toString(), params);
         return mapToDTOList(crmEventList);
+    }
+
+    @Override
+    public Integer findCountCrmEvent(Integer priorityId, Integer gallaryId, String customerCode, Integer createdBy, Integer assignedTo, Date dateTo, Date dateFrom, Integer status, Integer branchId) {
+        Map<String, Object> params = new HashMap<>();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("SELECT count(e.id) FROM CrmEvent e WHERE ");
+        if (priorityId != null) {
+            params.put("priorityId", priorityId);
+            stringBuilder.append("e.priority.id = :priorityId ");
+        }
+        if (gallaryId != null) {
+            params.put("gallaryId", gallaryId);
+            stringBuilder.append("AND e.galleryId = :gallaryId ");
+        }
+        if (customerCode != null) {
+            params.put("customerCode", customerCode);
+            stringBuilder.append("AND e.customerId.code = :customerCode ");
+        }
+        if (createdBy != null) {
+            params.put("createdBy", createdBy);
+            stringBuilder.append("AND e.createdBy.id = :createdBy ");
+        }
+        if (assignedTo != null) {
+            params.put("assignedTo", assignedTo);
+            stringBuilder.append("AND e.assignedTo.id = :assignedTo ");
+        }
+        if (dateTo != null) {
+            params.put("dateTo", dateTo);
+            stringBuilder.append("AND e.endDate <= :dateTo ");
+        }
+        if (dateFrom != null) {
+            params.put("dateFrom", dateFrom);
+            stringBuilder.append("AND e.startDate >= :dateFrom ");
+        }
+        if (status != null) {
+            params.put("status", status);
+            stringBuilder.append("AND e.status.id =:status ");
+        }
+        if (branchId != null) {
+            params.put("branchId", branchId);
+            stringBuilder.append("AND e.branchId.id = :branchId ");
+        }
+
+        Long x = dao.findEntityByQuery(stringBuilder.toString(), params);
+        return x.intValue();
+    }
+
+    @Override
+    public CrmEventDTO findALLEvent(TobyUser tobyUser, Integer id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+        CrmEvent crmEvent = dao.findEntityByQuery("SELECT e FROM CrmEvent e WHERE e.id = :id ", params);
+        return initMapToDTO(crmEvent);
+    }
+
+    @Override
+    public List<CrmEventDTO> findALLEventList(Integer branchId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        List<CrmEvent> crmEventList = dao.findEntityByQuery("SELECT e FROM CrmEvent e WHERE e.branchId.id = :branchId ", params);
+        return returnListDTO(crmEventList);
+    }
+
+    @Override
+    public Integer findALLCountEventList(Integer branchId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        Long x = dao.findEntityByQuery("SELECT count(e.id) FROM CrmEvent e WHERE e.branchId.id = :branchId ", params);
+        return x.intValue();
     }
 
 }

@@ -7,6 +7,7 @@ package com.toby.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -60,6 +61,7 @@ public class CrmEventDTO extends BaseEntityDTO {
     private Boolean closeEvent;
     private Boolean closeLeadStatus;
     private Integer gallaryId;
+    private Integer crmType;
 
     public CrmEventDTO() {
     }
@@ -700,5 +702,25 @@ public class CrmEventDTO extends BaseEntityDTO {
     public void setGallaryId(Integer gallaryId) {
         this.gallaryId = gallaryId;
     }
+
+   
+
+ 
+
+    /**
+     * @return the crmType
+     */
+    public Integer getCrmType() {
+        return crmType;
+    }
+
+    /**
+     * @param crmType the crmType to set
+     */
+    public void setCrmType(Integer crmType) {
+        this.crmType = crmType;
+    }
+
+   
 
 }

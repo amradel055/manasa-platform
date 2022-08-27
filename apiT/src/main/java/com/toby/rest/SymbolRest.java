@@ -3,6 +3,7 @@ package com.toby.rest;
 import com.toby.businessservice.SymbolService;
 import com.toby.config.UserLoginData;
 import com.toby.dto.SymbolDTO;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.transaction.Transactional;
@@ -48,4 +49,29 @@ public class SymbolRest {
         }
     }
 
+    @Transactional
+    @Path("/crmStatus")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<SymbolDTO> findcrmStatus(SymbolDTO symbolDTO) {
+        List<SymbolDTO> symbolDTOList = new ArrayList<>();
+        if (symbolDTO.getCompanyId() != null) {
+            symbolDTOList = symbolService.getCrmStatusByCompanyIdDTO(symbolDTO.getCompanyId());
+        }
+        return symbolDTOList;
+    }
+
+    @Transactional
+    @Path("/crmPeriority")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<SymbolDTO> FindcrmPeriority(SymbolDTO symbolDTO) {
+        List<SymbolDTO> symbolDTOList = new ArrayList<>();
+        if (symbolDTO.getCompanyId() != null) {
+            symbolDTOList = symbolService.getCrmPeriorityByCompanyIdDTO(symbolDTO.getCompanyId());
+        }
+        return symbolDTOList;
+    }
 }

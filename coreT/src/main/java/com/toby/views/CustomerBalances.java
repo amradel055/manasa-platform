@@ -22,6 +22,7 @@ public class CustomerBalances {
     private BigDecimal openningBalance;
     private InvInventoryDTO gallerySelected;
     private String invoiceRemain;
+    private Integer branchId;
     private Integer organizationsiteId;
 
     /**
@@ -158,6 +159,20 @@ public class CustomerBalances {
      */
     public void setOrganizationsiteId(Integer organizationsiteId) {
         this.organizationsiteId = organizationsiteId;
+    }
+
+    /**
+     * @return the branchId
+     */
+    public Integer getBranchId() {
+        return branchId;
+    }
+
+    /**
+     * @param branchId the branchId to set
+     */
+    public void setBranchId(Integer branchId) {
+        this.branchId = branchId;
     }
 
 }

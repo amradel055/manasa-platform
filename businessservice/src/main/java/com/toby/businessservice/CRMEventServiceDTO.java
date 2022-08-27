@@ -89,12 +89,17 @@ public interface CRMEventServiceDTO {
 
     public List<CrmEventDTO> findALLEventBank(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters, CrmEventDTO crmEventDTOSearch, Integer type, Integer taskType);
 
-    public List<CrmEventDTO> findALLEventByCustomerId(Integer custumerId , Integer branchId);
-    
-   public List<CrmEventDTO> findALLEventByGalleryId(String GalleryIdList , Integer userId);
-   
-public List<CrmEventDTO> findCrmEventList(Integer priorityId, Integer gallaryId, String customerCode, Integer createdBy, Integer assignedTo, Date dateTo, Date dateFrom, Integer eventType, Integer branchId, Integer type, boolean isDetail);
-   
-   
-   
+    public List<CrmEventDTO> findALLEventByCustomerId(Integer custumerId, Integer branchId);
+
+    public List<CrmEventDTO> findALLEventByGalleryId(String GalleryIdList, Integer userId);
+
+    public List<CrmEventDTO> findCrmEventList(Integer priorityId, Integer gallaryId, String customerCode, Integer createdBy, Integer assignedTo, Date dateTo, Date dateFrom, Integer status, Integer branchId);
+
+    public CrmEventDTO findALLEvent(TobyUser tobyUser, Integer id);
+
+    public Integer findCountCrmEvent(Integer priorityId, Integer gallaryId, String customerCode, Integer createdBy, Integer assignedTo, Date dateTo, Date dateFrom, Integer status, Integer branchId);
+
+    public List<CrmEventDTO> findALLEventList(Integer branchId);
+
+    public Integer findALLCountEventList(Integer branchId);
 }
