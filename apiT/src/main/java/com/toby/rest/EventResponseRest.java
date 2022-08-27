@@ -5,10 +5,7 @@
  */
 package com.toby.rest;
 
-import com.toby.apiServices.AttributeDetailsService;
-import com.toby.businessservice.CRMEventServiceDTO;
 import com.toby.businessservice.EventResponseService;
-import com.toby.dto.CrmEventDTO;
 import com.toby.dto.EventResponseDTO;
 import com.toby.entity.TobyUser;
 import java.util.ArrayList;

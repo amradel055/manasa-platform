@@ -33,7 +33,7 @@ public class EmployeeRest {
     public List<EmployeeDTO> FindfindEmployeeList(EmployeeDTO employeeDTO) {
         List<EmployeeDTO> employeeDTOList = new ArrayList<>();
         if (employeeDTO.getCompanyId() != null) {
-            employeeDTOList = employeeService.getAllEmployeesListByCompanyId(employeeDTO.getCompanyId());
+            employeeDTOList = employeeService.getAllEmployeesListByCompanyId(employeeDTO.getCompanyId(),employeeDTO.getBranchId());
         }
         return employeeDTOList;
     }
