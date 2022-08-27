@@ -141,11 +141,15 @@ public interface SymbolService {
 
     public List<SymbolDTO> getDeterminationPriceDTO(Integer companyId);
 
-    public List<Symbol> getAllworkTypeIdByCompanyId(Integer companyId);
+    public List<SymbolDTO> getAllworkTypeIdByCompanyId(Integer companyId);
 
     public List<Symbol> getAllStoreRegionByCompanyId(Integer companyId);
 
     public List<SymbolDTO> getCrmStatusByCompanyIdDTO(Integer companyId);
 
     public List<SymbolDTO> getCrmPeriorityByCompanyIdDTO(Integer companyId);
+    
+    public List<SymbolDTO> getCrmLearnAboutFromByCompanyIdDTO(Integer companyId) ;
+    
+    public List<SymbolDTO> getCrmEventTypeFromByCompanyIdDTO(Integer companyId) ;
 }

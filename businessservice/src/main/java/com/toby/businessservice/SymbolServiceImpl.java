@@ -685,11 +685,13 @@ public class SymbolServiceImpl implements SymbolService {
     }
 
     @Override
-    public List<Symbol> getAllworkTypeIdByCompanyId(Integer companyId) {
-
+    public List<SymbolDTO> getAllworkTypeIdByCompanyId(Integer companyId) {
+        List<SymbolDTO> dTOList = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         params.put("companyId", companyId);
-        return dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=52 AND sym.companyId.id=:companyId", params);
+        List<Symbol> list = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=52 AND sym.companyId.id=:companyId", params);
+        returnListDTO(list, dTOList);
+        return dTOList;
     }
 
     @Override
@@ -716,6 +718,25 @@ public class SymbolServiceImpl implements SymbolService {
         List<SymbolDTO> dTOList = new ArrayList<>();
         params.put("companyId", companyId);
         List<Symbol> list = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.id = 59 AND sym.companyId.id=:companyId", params);
+        returnListDTO(list, dTOList);
+        return dTOList;
+    }
+
+    @Override
+    public List<SymbolDTO> getCrmLearnAboutFromByCompanyIdDTO(Integer companyId) {
+        Map<String, Object> params = new HashMap<>();
+        List<SymbolDTO> dTOList = new ArrayList<>();
+        params.put("companyId", companyId);
+        List<Symbol> list = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.id = 55 AND sym.companyId.id=:companyId", params);
+        returnListDTO(list, dTOList);
+        return dTOList;
+    }
+    @Override
+    public List<SymbolDTO> getCrmEventTypeFromByCompanyIdDTO(Integer companyId) {
+        Map<String, Object> params = new HashMap<>();
+        List<SymbolDTO> dTOList = new ArrayList<>();
+        params.put("companyId", companyId);
+        List<Symbol> list = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.id = 60 AND sym.companyId.id=:companyId", params);
         returnListDTO(list, dTOList);
         return dTOList;
     }

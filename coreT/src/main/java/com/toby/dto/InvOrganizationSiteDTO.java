@@ -100,6 +100,10 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
     private String city;
     private String country;
     private String jobNamed;
+    
+    
+    ////// API //////
+    private Integer gallaryIdAPI;
 
     public InvOrganizationSiteDTO() {
     }
@@ -1233,6 +1237,20 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
      */
     public void setJobNamed(String jobNamed) {
         this.jobNamed = jobNamed;
+    }
+
+    /**
+     * @return the gallaryIdAPI
+     */
+    public Integer getGallaryIdAPI() {
+        return gallaryIdAPI;
+    }
+
+    /**
+     * @param gallaryIdAPI the gallaryIdAPI to set
+     */
+    public void setGallaryIdAPI(Integer gallaryIdAPI) {
+        this.gallaryIdAPI = gallaryIdAPI;
     }
 
   

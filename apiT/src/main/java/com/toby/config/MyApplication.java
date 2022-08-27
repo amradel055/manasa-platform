@@ -6,7 +6,7 @@ import com.toby.rest.AttributeRest;
 import com.toby.rest.CangePasswordRest;
 import com.toby.rest.CostCenterRest;
 import com.toby.rest.CrmEventRest;
-import com.toby.rest.CustomerBalancesRest;
+import com.toby.rest.CustomerRest;
 import com.toby.rest.EmployeeRest;
 import com.toby.rest.GeneralJournalRest;
 import com.toby.rest.GlAccountRest;
@@ -51,7 +51,7 @@ public class MyApplication extends Application {
         resources.add(SymbolRest.class);
         resources.add(GeneralJournalRest.class);
         resources.add(CangePasswordRest.class);
-        resources.add(CustomerBalancesRest.class);
+        resources.add(CustomerRest.class);
         resources.add(SupplierCustomerRest.class);
         resources.add(CrmEventRest.class);
         resources.add(EmployeeRest.class);

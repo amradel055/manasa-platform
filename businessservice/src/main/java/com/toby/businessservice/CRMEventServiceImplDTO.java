@@ -96,34 +96,34 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
 
         if (crmEventDTO != null) {
 
-            if (crmEventDTO.getActivityType() == null) {
-                error.append("\n يجب اختيار نوع النشاط");
-            }
+//            if (crmEventDTO.getActivityType() == null) {
+//                error.append("\n يجب اختيار نوع النشاط");
+//            }
 //            if (crmEventDTO.getEndDate() == null) {
 //                error.append("\n يجب اختيار تاريخ النهايه");
 //            }
 
-            if (crmEventDTO.getStartDate() != null && crmEventDTO.getStartDate().before(new Date()) && !crmEventDTO.getNowDate() && crmEventDTO.getId() == null) {
-                Calendar calStartDate = Calendar.getInstance();
-                calStartDate.setTime(crmEventDTO.getStartDate());
-                calStartDate.set(Calendar.HOUR_OF_DAY, 0);
-                calStartDate.set(Calendar.MINUTE, 0);
-                calStartDate.set(Calendar.SECOND, 0);
-                calStartDate.set(Calendar.MILLISECOND, 0);
-
-                Calendar calNowDate = Calendar.getInstance();
-                calNowDate.setTime(new Date());
-                calNowDate.set(Calendar.HOUR_OF_DAY, 0);
-                calNowDate.set(Calendar.MINUTE, 0);
-                calNowDate.set(Calendar.SECOND, 0);
-                calNowDate.set(Calendar.MILLISECOND, 0);
-                if (calStartDate.getTime().before(calNowDate.getTime())) {
-                    error.append("\n لا يمكن اختيار تاريخ او وقت سابق");
-                }
-            }
-            if (crmEventDTO.getStartDate() == null && !crmEventDTO.getNowDate()) {
-                error.append("\n يجب اختيار تاريخ وتوقيت البدايه");
-            }
+//            if (crmEventDTO.getStartDate() != null && crmEventDTO.getStartDate().before(new Date()) && !crmEventDTO.getNowDate() && crmEventDTO.getId() == null) {
+//                Calendar calStartDate = Calendar.getInstance();
+//                calStartDate.setTime(crmEventDTO.getStartDate());
+//                calStartDate.set(Calendar.HOUR_OF_DAY, 0);
+//                calStartDate.set(Calendar.MINUTE, 0);
+//                calStartDate.set(Calendar.SECOND, 0);
+//                calStartDate.set(Calendar.MILLISECOND, 0);
+//
+//                Calendar calNowDate = Calendar.getInstance();
+//                calNowDate.setTime(new Date());
+//                calNowDate.set(Calendar.HOUR_OF_DAY, 0);
+//                calNowDate.set(Calendar.MINUTE, 0);
+//                calNowDate.set(Calendar.SECOND, 0);
+//                calNowDate.set(Calendar.MILLISECOND, 0);
+//                if (calStartDate.getTime().before(calNowDate.getTime())) {
+//                    error.append("\n لا يمكن اختيار تاريخ او وقت سابق");
+//                }
+//            }
+//            if (crmEventDTO.getStartDate() == null && !crmEventDTO.getNowDate()) {
+//                error.append("\n يجب اختيار تاريخ وتوقيت البدايه");
+//            }
 //            if (crmEventDTO.getEndTime() == null) {
 //                error.append("\n يجب اختيار توقيت للنهايه");
 //            }
@@ -136,12 +136,12 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
 //            if (crmEventDTO.getSubject() == null || crmEventDTO.getSubject().isEmpty()) {
 //                error.append("\n يجب ادخل اسم الموضوع");
 //            }
-            if (crmEventDTO.getActivityType() == null) {
-                error.append("\n يجب اختيار نوع النشاط");
-            }
-            if (crmEventDTO.getType() == null) {
-                error.append("\n يجب اختيار نوع العمليه");
-            }
+//            if (crmEventDTO.getActivityType() == null) {
+//                error.append("\n يجب اختيار نوع النشاط");
+//            }
+//            if (crmEventDTO.getType() == null) {
+//                error.append("\n يجب اختيار نوع العمليه");
+//            }
             if (crmEventDTO.getCustomerId() == null) {
                 error.append("\n يجب اختيار  عميل");
             }

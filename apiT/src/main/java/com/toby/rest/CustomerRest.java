@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 package com.toby.rest;
+
+import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.report.SupplierAccountService;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.views.OrganizationSiteStatementView;
@@ -21,22 +23,37 @@ import javax.ws.rs.core.MediaType;
  *
  * @author Lenovo
  */
-@Path("/customerBalance")
-public class CustomerBalancesRest {
+@Path("/customer")
+public class CustomerRest {
 
     @EJB
     SupplierAccountService supplierAccountService;
+    @EJB
+    OrganizationSiteService organizationSiteService;
 
     @Transactional
-    @Path("/customerBalanceList")
+    @Path("/customerBalance")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public List<OrganizationSiteStatementView> customerBalancesList(InvOrganizationSiteDTO invOrganizationSiteDTO) {
         List<OrganizationSiteStatementView> statementViews = new ArrayList<>();
         if (invOrganizationSiteDTO != null) {
-         statementViews = supplierAccountService.getStatementForOrganizationSite(invOrganizationSiteDTO.getId());
+            statementViews = supplierAccountService.getStatementForOrganizationSite(invOrganizationSiteDTO.getId());
         }
         return statementViews;
+    }
+
+    @Transactional
+    @Path("/customerDate")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public InvOrganizationSiteDTO customerDate(InvOrganizationSiteDTO invOrganizationSiteDTO) {
+        InvOrganizationSiteDTO siteDTO = new InvOrganizationSiteDTO();
+        if (invOrganizationSiteDTO != null) {
+            siteDTO = organizationSiteService.findOrganizationSiteDTOByCodeAndGallaryIdDTO(invOrganizationSiteDTO.getBranchId(), invOrganizationSiteDTO.getCode(), invOrganizationSiteDTO.getGallaryIdAPI());
+        }
+        return siteDTO;
     }
 }

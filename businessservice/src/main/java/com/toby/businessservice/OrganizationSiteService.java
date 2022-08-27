@@ -224,5 +224,5 @@ public interface OrganizationSiteService {
 
     public List<InvOrganizationSiteDTO> returnClientSales(List<InvInventoryDTO> invInventoryDTOList, Date dateFrom, Date dateTo, String value) ;
 
-     public InvOrganizationSiteDTO findOrganizationSiteDTOByCodeAndGallaryId(Integer branchId, String code, Integer gallaryId , TobyUser tobyUser) ;
+     public InvOrganizationSiteDTO findOrganizationSiteDTOByCodeAndGallaryIdDTO(Integer branchId, String code, Integer gallaryId);
 }

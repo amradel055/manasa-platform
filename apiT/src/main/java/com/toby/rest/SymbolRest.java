@@ -74,4 +74,43 @@ public class SymbolRest {
         }
         return symbolDTOList;
     }
+
+    @Transactional
+    @Path("/learnAboutFrom")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<SymbolDTO> FindcrmLearnAboutFrom(SymbolDTO symbolDTO) {
+        List<SymbolDTO> symbolDTOList = new ArrayList<>();
+        if (symbolDTO.getCompanyId() != null) {
+            symbolDTOList = symbolService.getCrmLearnAboutFromByCompanyIdDTO(symbolDTO.getCompanyId());
+        }
+        return symbolDTOList;
+    }
+
+    @Transactional
+    @Path("/workType")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<SymbolDTO> FindcrmWorkTypeSymbolDTO(SymbolDTO symbolDTO) {
+        List<SymbolDTO> symbolDTOList = new ArrayList<>();
+        if (symbolDTO.getCompanyId() != null) {
+            symbolDTOList = symbolService.getAllworkTypeIdByCompanyId(symbolDTO.getCompanyId());
+        }
+        return symbolDTOList;
+    }
+
+    @Transactional
+    @Path("/eventType")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<SymbolDTO> FindcrEventTypeSymbolDTO(SymbolDTO symbolDTO) {
+        List<SymbolDTO> symbolDTOList = new ArrayList<>();
+        if (symbolDTO.getCompanyId() != null) {
+            symbolDTOList = symbolService.getCrmEventTypeFromByCompanyIdDTO(symbolDTO.getCompanyId());
+        }
+        return symbolDTOList;
+    }
 }
