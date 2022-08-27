@@ -323,7 +323,7 @@
                             </p:commandButton>
                             <p:commandButton     class="saveButton"  
                                                  title="العرض"
-                                                 value="عودة المدارس" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0 }"
+                                                 value="عودة المدارس" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0 and false }"
                                                  icon="fa fa-fw fa-save" 
                                                  action="#{invPurchaseInvoiceFormDTOMB.backToSchoolOffer()}"
                                                  update="@form"

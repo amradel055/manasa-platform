@@ -2032,7 +2032,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         return returnListDTOForList(details);
     }
 
-        @Override
+    @Override
     public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(Integer type, Integer galaryId, Integer customerId) {
         Map<String, Object> params = new HashMap<>();
         params.put("type", type);
@@ -2440,23 +2440,35 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         return remain;
     }
 
+//    @Override
+//    public String findInvoiceStatus(Integer invPurchaseInvoiceId) {
+//        List<String> statusList = null;
+//        if (invPurchaseInvoiceId != null && invPurchaseInvoiceId > 0) {
+//            statusList = dao.executeNativeQuery("SELECT \n"
+//                    + "        (CASE\n"
+//                    + "            WHEN (pfd.`type` = 0) THEN 'تسليم للمشغل'\n"
+//                    + "            WHEN (pfd.`type` = 1) THEN 'فى الطريق'\n"
+//                    + "            WHEN (pfd.`type` = 2) THEN 'جاهز '\n"
+//                    + "            WHEN (pfd.`type` = 3) THEN 'تسليم للعميل'\n"
+//                    + "        END) AS `status` \n"
+//                    + "FROM toby.pro_factory_delivery pfd left join inv_purchase_invoice ipi on ipi.id = pfd.inv_purchase_invoice_id\n"
+//                    + "where inv_purchase_invoice_id = " + invPurchaseInvoiceId + "\n"
+//                    + "union all \n"
+//                    + "SELECT 'تسليم للعميل' AS `status` \n"
+//                    + "FROM inv_purchase_invoice ipi \n"
+//                    + "where id = " + invPurchaseInvoiceId + " and type = 1");
+//        }
+//        return (statusList != null && !statusList.isEmpty()) ? statusList.get(statusList.size() - 1) : "";
+//    }
     @Override
     public String findInvoiceStatus(Integer invPurchaseInvoiceId) {
         List<String> statusList = null;
         if (invPurchaseInvoiceId != null && invPurchaseInvoiceId > 0) {
-            statusList = dao.executeNativeQuery("SELECT \n"
-                    + "        (CASE\n"
-                    + "            WHEN (pfd.`type` = 0) THEN 'تسليم للمشغل'\n"
-                    + "            WHEN (pfd.`type` = 1) THEN 'فى الطريق'\n"
-                    + "            WHEN (pfd.`type` = 2) THEN 'جاهز '\n"
-                    + "            WHEN (pfd.`type` = 3) THEN 'تسليم للعميل'\n"
-                    + "        END) AS `status` \n"
-                    + "FROM toby.pro_factory_delivery pfd left join inv_purchase_invoice ipi on ipi.id = pfd.inv_purchase_invoice_id\n"
-                    + "where inv_purchase_invoice_id = " + invPurchaseInvoiceId + "\n"
-                    + "union all \n"
-                    + "SELECT 'تسليم للعميل' AS `status` \n"
-                    + "FROM inv_purchase_invoice ipi \n"
-                    + "where id = " + invPurchaseInvoiceId + " and type = 1");
+            String query = "select status from (SELECT (CASE WHEN (pfd.`type` = 0) THEN 'تسليم للمشغل' WHEN (pfd.`type` = 1) THEN 'فى الطريق' WHEN (pfd.`type` = 2) THEN 'جاهز ' WHEN (pfd.`type` = 3) THEN 'تسليم للعميل' END) AS `status` , pfd.date as date\n"
+                    + "FROM toby.pro_factory_delivery pfd left join inv_purchase_invoice ipi on ipi.id = pfd.inv_purchase_invoice_id where inv_purchase_invoice_id = " + invPurchaseInvoiceId + "  \n"
+                    + "union all  \n"
+                    + "SELECT 'تسليم للعميل' AS `status` , ipi.date as date  FROM inv_purchase_invoice ipi  where id = " + invPurchaseInvoiceId + " and type = 1 ) s order by date ";
+            statusList = dao.executeNativeQuery(query);
         }
         return (statusList != null && !statusList.isEmpty()) ? statusList.get(statusList.size() - 1) : "";
     }
