@@ -102,7 +102,6 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
 //            if (crmEventDTO.getEndDate() == null) {
 //                error.append("\n يجب اختيار تاريخ النهايه");
 //            }
-
 //            if (crmEventDTO.getStartDate() != null && crmEventDTO.getStartDate().before(new Date()) && !crmEventDTO.getNowDate() && crmEventDTO.getId() == null) {
 //                Calendar calStartDate = Calendar.getInstance();
 //                calStartDate.setTime(crmEventDTO.getStartDate());
@@ -142,8 +141,21 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
 //            if (crmEventDTO.getType() == null) {
 //                error.append("\n يجب اختيار نوع العمليه");
 //            }
+            if (crmEventDTO.getPriority() == null) {
+                error.append("\n يجب تحديد أولوية الشكوي ");
+            }
+            if (crmEventDTO.getAssignedTo() == null) {
+                error.append("\n يجب تحديد متابع ");
+            }
+            if (crmEventDTO.getStatus() == null) {
+                error.append("\n يجب تحديد حالة الشكوي ");
+            }
             if (crmEventDTO.getCustomerId() == null) {
                 error.append("\n يجب اختيار  عميل");
+            }
+
+            if (crmEventDTO.getDiscription() == null || crmEventDTO.getDiscription().isEmpty()) {
+                error.append("\n يجب كتابة نص للشكوي");
             }
         } else {
             error.append("لا يوجد تفاصيل");
@@ -381,12 +393,13 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         return mapToDTOList(crmEventList);
     }
 
+    @Override
     public synchronized void deleteCrmEventDTO(Integer crmEventDTOId, TobyUser tobyUser) {
         if (crmEventDTOId != null && crmEventDTOId > 0) {
-            CrmEvent crmEvent = dao.findEntityById(CrmEvent.class, crmEventDTOId);
-            crmEvent.setDeletedDate(new Date());
-            crmEvent.setDeletedBy(tobyUser);
-            dao.updateEntity(crmEvent);
+            dao.executeDeleteQuery("DELETE FROM EventResponse e WHERE a.eventId.id = " + crmEventDTOId);
+            CrmEvent crmEvent = new CrmEvent();
+            crmEvent.setId(crmEventDTOId);
+            dao.deleteEntity(crmEvent);
         }
     }
 
@@ -432,9 +445,6 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
     }
 
     private CrmEventDTO mapToDTO(CrmEventDTO crmEventDTO, CrmEvent entity) {
-        if (crmEventDTO == null) {
-            crmEventDTO = new CrmEventDTO();
-        }
         crmEventDTO = initMapToDTO(entity);
         return crmEventDTO;
     }
@@ -574,11 +584,11 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
 
         entity.setEndDate(dTO.getEndDate());
         entity.setEndTime(dTO.getEndTime());
-        entity.setStartDate(dTO.getStartDate());
+        entity.setStartDate(dTO.getStartDate() == null ? new Date() : dTO.getStartDate());
         entity.setStartTime(dTO.getStartTime());
 
         //    entity.setSubject(dTO.getSubject());
-        entity.setSubject(dTO.getActivityType().getName());
+        entity.setSubject(dTO.getActivityType() != null ? dTO.getActivityType().getName() : dTO.getSubject());
         entity.setType(dTO.getType());
         entity.setSerial(dTO.getSerial());
         entity.setRemark(dTO.getRemark());
@@ -806,7 +816,10 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
     public void deleteCrmEventDTOList(List<CrmEventDTO> list, TobyUser tobyUser) {
         if (list != null && !list.isEmpty()) {
             for (CrmEventDTO crmEventDTO : list) {
-                deleteCrmEventDTO(crmEventDTO.getId(), tobyUser);
+                if (crmEventDTO.getId() != null) {
+                    dao.executeDeleteQuery("DELETE FROM EventResponse e WHERE a.eventId.id = " + crmEventDTO.getId());
+                    deleteCrmEventDTO(crmEventDTO.getId(), tobyUser);
+                }
             }
         }
     }

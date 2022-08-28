@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "crm_event")
 @XmlRootElement
 public class CrmEvent extends BaseEntity {
+
     @Size(max = 100)
     @Column(name = "subject")
     private String subject;
@@ -58,20 +59,20 @@ public class CrmEvent extends BaseEntity {
     private Integer serial;
     @JoinColumn(name = "deleted_by", referencedColumnName = "id")
     @ManyToOne
-    private TobyUser deletedBy;  
-    
+    private TobyUser deletedBy;
+
     @Column(name = "deleted_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date deletedDate;
-    
+
     @Column(name = "send_notification")
     private Integer sendNotification;
     @Size(max = 100)
     @Column(name = "location")
-    private String location; 
+    private String location;
     @JoinColumn(name = "priority", referencedColumnName = "id")
     @ManyToOne
-    private Symbol priority; 
+    private Symbol priority;
     @Column(name = "visibility")
     private Integer visibility;
     @Column(name = "send_email")
@@ -93,15 +94,15 @@ public class CrmEvent extends BaseEntity {
     private BigDecimal notificationNumber;
     @Size(max = 100)
     @Column(name = "remark")
-    private String remark;    
+    private String remark;
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     @ManyToOne
-    private InvOrganizationSite customerId; 
+    private InvOrganizationSite customerId;
     @Column(name = "event_type")
     private Boolean eventType;
     @JoinColumn(name = "lead_status", referencedColumnName = "id")
     @ManyToOne
-    private Symbol leadStatus; 
+    private Symbol leadStatus;
     @Size(max = 100)
     @Column(name = "notification_title")
     private String notificationTitle;
@@ -115,9 +116,9 @@ public class CrmEvent extends BaseEntity {
     private Boolean closeNotification;
     @Column(name = "close_event")
     private Boolean closeEvent;
-       @Column(name = "gallery_id")
+    @Column(name = "gallery_id")
     private Integer galleryId;
-     
+
     public CrmEvent() {
     }
 
@@ -591,5 +592,5 @@ public class CrmEvent extends BaseEntity {
     public void setGalleryId(Integer galleryId) {
         this.galleryId = galleryId;
     }
-    
+
 }

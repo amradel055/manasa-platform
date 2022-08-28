@@ -1220,6 +1220,18 @@
                                 </p:submenu>
 
                             </p:submenu>
+                            <p:submenu id="hr_sm1000" label="الموارد البشرية" icon="&#xE8D2;"  rendered="#{userData.userScreens['hremployee'].view or userData.isAdmin}"
+                                       >
+                                <p:submenu id="hr_sm1001" label="البيانات الاساسية" icon="&#xE8D2;"
+                                           >
+                                    <p:menuitem id="hr_lnk1002" value= "إنشاء قسم" icon="&#xE8D2;" url="/faces/views/hrdeparment/DepartmentList.xhtml" 
+                                                rendered="#{userData.userScreens['hrdeparment'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="hr_lnk1003" value= " إنشاء موظف" icon="&#xE8D2;" url="/faces/views/hremployee/employeeList.xhtml" 
+                                                rendered="#{userData.userScreens['hremployee'].view or userData.isAdmin}"
+                                                />
+                                </p:submenu>
+                            </p:submenu>
                         </pm:menu>
                     </h:form>
                 </div>

@@ -24,7 +24,7 @@ public class EmployeeRest {
     EmployeeService employeeService;
 
     @Transactional
-    @Path("/findEmployeeList")
+    @Path("/findCRMEmployeeList")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)

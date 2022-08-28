@@ -5,6 +5,7 @@
  */
 package com.toby.toby;
 
+import com.toby.businessservice.CRMEventServiceDTO;
 import com.toby.businessservice.EmployeeService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import java.io.Serializable;
@@ -16,6 +17,7 @@ import com.toby.businessservice.SymbolService;
 import com.toby.converter.EmployeeDTOConverter;
 import com.toby.converter.SymbolDTOConverter;
 import com.toby.dto.CrmCustomerInterestedProductsDTO;
+import com.toby.dto.CrmEventDTO;
 import com.toby.dto.EmployeeDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
@@ -23,6 +25,7 @@ import com.toby.dto.SymbolDTO;
 import java.util.ArrayList;
 import java.util.Map;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -51,6 +54,20 @@ public class globalMB extends Basic implements Serializable {
     private String errorMsg;
     private LazyDataModel<InvInvoiceDTO> dataModel;
 
+    private CrmEventDTO crmEventDTO;
+
+    private String customerCode;
+
+    private Integer gallaryId;
+
+    private List<EmployeeDTO> crmEmployeeList;
+    private List<SymbolDTO> crmStatusEventList;
+    private List<SymbolDTO> crmPeriorityList;
+
+    private EmployeeDTOConverter crmEmployeeConverter;
+    private SymbolDTOConverter crmStatusEventConverter;
+    private SymbolDTOConverter crmPeriorityConverter;
+
     /**
      * Creates a new instance of LoginBean
      */
@@ -66,6 +83,9 @@ public class globalMB extends Basic implements Serializable {
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
 
+    @EJB
+    private CRMEventServiceDTO cRMEventServiceDTO;
+
     @PostConstruct
     public void init() {
 
@@ -78,6 +98,20 @@ public class globalMB extends Basic implements Serializable {
 
     public void reset() {
         invOrganizationSiteDTO = new InvOrganizationSiteDTO();
+    }
+
+    public void findCustomer() {
+        getCrmEventDTO().setCustomerId(organizationSiteService.findOrganizationSiteDTOByCodeAndGallaryIdDTO(getUserData().getUserBranch().getId(), getCustomerCode(), getGallaryId()));
+    }
+
+    public void saveEvent() {
+        setCrmEventDTO(cRMEventServiceDTO.save(getCrmEventDTO(), getUserData().getUser()));
+        if (getCrmEventDTO().getMsg() != null && !getCrmEventDTO().getMsg().isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getCrmEventDTO().getMsg()));
+        } else {
+
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), "تم الحفظ بنجاح"));
+        }
     }
 
     public String validateSaveLead(InvOrganizationSiteDTO invOrganizationSiteDTO) {
@@ -375,6 +409,141 @@ public class globalMB extends Basic implements Serializable {
      */
     public void setDataModel(LazyDataModel<InvInvoiceDTO> dataModel) {
         this.dataModel = dataModel;
+    }
+
+    /**
+     * @return the customerCode
+     */
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    /**
+     * @param customerCode the customerCode to set
+     */
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
+    }
+
+    /**
+     * @return the gallaryId
+     */
+    public Integer getGallaryId() {
+        return gallaryId;
+    }
+
+    /**
+     * @param gallaryId the gallaryId to set
+     */
+    public void setGallaryId(Integer gallaryId) {
+        this.gallaryId = gallaryId;
+    }
+
+    /**
+     * @return the crmEmployeeList
+     */
+    public List<EmployeeDTO> getCrmEmployeeList() {
+        if (crmEmployeeList == null || crmEmployeeList.isEmpty()) {
+            crmEmployeeList = employeeService.getAllCRMEmployee(getUserData().getUserBranch().getId());
+        }
+        return crmEmployeeList;
+    }
+
+    /**
+     * @param crmEmployeeList the crmEmployeeList to set
+     */
+    public void setCrmEmployeeList(List<EmployeeDTO> crmEmployeeList) {
+        this.crmEmployeeList = crmEmployeeList;
+    }
+
+    /**
+     * @return the crmStatusEventList
+     */
+    public List<SymbolDTO> getCrmStatusEventList() {
+        if (crmStatusEventList == null || crmStatusEventList.isEmpty()) {
+            crmStatusEventList = symbolService.getCrmStatusByCompanyIdDTO(getUserData().getCompany().getId());
+        }
+        return crmStatusEventList;
+    }
+
+    /**
+     * @param crmStatusEventList the crmStatusEventList to set
+     */
+    public void setCrmStatusEventList(List<SymbolDTO> crmStatusEventList) {
+        this.crmStatusEventList = crmStatusEventList;
+    }
+
+    /**
+     * @return the crmPeriorityList
+     */
+    public List<SymbolDTO> getCrmPeriorityList() {
+        if (crmPeriorityList == null || crmPeriorityList.isEmpty()) {
+            crmPeriorityList = symbolService.getCrmEventTypeFromByCompanyIdDTO(getUserData().getCompany().getId());
+        }
+        return crmPeriorityList;
+    }
+
+    /**
+     * @param crmPeriorityList the crmPeriorityList to set
+     */
+    public void setCrmPeriorityList(List<SymbolDTO> crmPeriorityList) {
+        this.crmPeriorityList = crmPeriorityList;
+    }
+
+    /**
+     * @return the crmEmployeeConverter
+     */
+    public EmployeeDTOConverter getCrmEmployeeConverter() {
+        return crmEmployeeConverter;
+    }
+
+    /**
+     * @param crmEmployeeConverter the crmEmployeeConverter to set
+     */
+    public void setCrmEmployeeConverter(EmployeeDTOConverter crmEmployeeConverter) {
+        this.crmEmployeeConverter = crmEmployeeConverter;
+    }
+
+    /**
+     * @return the crmStatusEventConverter
+     */
+    public SymbolDTOConverter getCrmStatusEventConverter() {
+        return crmStatusEventConverter;
+    }
+
+    /**
+     * @param crmStatusEventConverter the crmStatusEventConverter to set
+     */
+    public void setCrmStatusEventConverter(SymbolDTOConverter crmStatusEventConverter) {
+        this.crmStatusEventConverter = crmStatusEventConverter;
+    }
+
+    /**
+     * @return the crmPeriorityConverter
+     */
+    public SymbolDTOConverter getCrmPeriorityConverter() {
+        return crmPeriorityConverter;
+    }
+
+    /**
+     * @param crmPeriorityConverter the crmPeriorityConverter to set
+     */
+    public void setCrmPeriorityConverter(SymbolDTOConverter crmPeriorityConverter) {
+        this.crmPeriorityConverter = crmPeriorityConverter;
+    }
+
+    /**
+     * @return the crmEventDTO
+     */
+    public CrmEventDTO getCrmEventDTO() {
+        return crmEventDTO;
+    }
+
+    /**
+     * @param crmEventDTO the crmEventDTO to set
+     */
+    public void setCrmEventDTO(CrmEventDTO crmEventDTO) {
+        this.crmEventDTO = crmEventDTO;
     }
 
 }
