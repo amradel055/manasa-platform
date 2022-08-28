@@ -30,7 +30,7 @@ public class EmployeeRest {
     @Consumes(MediaType.APPLICATION_JSON)
     public List<EmployeeDTO> FindfindEmployeeList(EmployeeDTO employeeDTO) {
         List<EmployeeDTO> employeeDTOList = new ArrayList<>();
-        if (employeeDTO.getCompanyId() != null) {
+        if (employeeDTO.getBranchId() != null) {
             employeeDTOList = employeeService.getAllCRMEmployee(employeeDTO.getBranchId());
         }
         return employeeDTOList;

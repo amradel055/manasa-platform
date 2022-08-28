@@ -559,7 +559,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Map<String, Object> params = new HashMap();
         params.put("activeCrm", Boolean.TRUE);
         params.put("branchId", branchId);
-        List<Employee> employeeList = dao.findListByQuery("SELECT user.employeeId FROM TobyUser user WHERE user.branchId.id = :branchId  user.employeeId IS Not NULL AND user.activeCrm = :activeCrm", params);
+        List<Employee> employeeList = dao.findListByQuery("SELECT user.employeeId FROM TobyUser user WHERE user.branchId.id = :branchId AND  user.employeeId IS Not NULL AND user.activeCrm = :activeCrm", params);
         List<EmployeeDTO> list = returnListDTO(employeeList, Boolean.TRUE);
         return list;
     }
