@@ -707,7 +707,7 @@ public class SymbolServiceImpl implements SymbolService {
         Map<String, Object> params = new HashMap<>();
         List<SymbolDTO> dTOList = new ArrayList<>();
         params.put("companyId", companyId);
-        List<Symbol> list = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.id = 58 AND sym.companyId.id=:companyId", params);
+        List<Symbol> list = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.id = 61 AND sym.companyId.id=:companyId", params);
         returnListDTO(list, dTOList);
         return dTOList;
     }

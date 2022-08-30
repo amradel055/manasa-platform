@@ -1163,8 +1163,11 @@
                             </p:submenu>
                             <p:submenu id="sr_sm1000" label="CRM" icon="&#xE8D2;"  rendered="#{userData.userScreens['shiftingJournalsettings'].view or userData.isAdmin}"
                                        >
-                                <p:menuitem id="sr_lnk1000" value= "dashboard" icon="&#xE8D2;" url="/faces/views/crmDashboard/dashboard.xhtml" 
+                                <p:menuitem id="sr_lnk1000" value= "الرئيسية" icon="&#xE8D2;" url="/faces/views/crmDashboard/dashboard.xhtml" 
                                             rendered="#{userData.userScreens['crmDashboard'].view or userData.isAdmin}"
+                                            />
+                                <p:menuitem id="cr_lnk1000" value= "الشكاوي" icon="&#xE8D2;" url="/faces/views/crmTodoEvent/TodoEventList.xhtml" 
+                                                rendered="#{userData.userScreens['crmTodoEvent'].view or userData.isAdmin}"
                                             />
                                 <p:submenu id="sr_sm1001" label="CRM Main Data" icon="&#xE8D2;"
                                            >

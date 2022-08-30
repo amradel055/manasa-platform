@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.dto.EmployeeDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.entity.InvInventory;
 import com.toby.entity.TobyUser;
@@ -43,5 +44,7 @@ public interface TobyUserInventoryService {
     public List<InvInventoryDTO> getAllGallaryByUserAndBranch(TobyUser tobyUser);
     
     public List<InvInventoryDTO> getAllInventroisByUserAndBranchPerDTO(Integer userId, Integer branchId);
+    
+    public List<EmployeeDTO> getAllEmployeesByUserAndBranchPerDTO(Integer userId, Integer branchId);
 
 }

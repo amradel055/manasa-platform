@@ -119,7 +119,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         invInvoiceDTO.setSerial(entity.getSerial());
         invInvoiceDTO.setDate(entity.getDate());
         invInvoiceDTO.setIndex(entity.getSerial());
-        invInvoiceDTO.setRemarks(entity.getRemark());
+        invInvoiceDTO.setRemarks(entity.getInvPurchaseInvoiceId().getRemarks());
         invInvoiceDTO.setNumberOfToob(invoiceMovementReportService.summitionTob(entity.getInvPurchaseInvoiceId().getId()));
         if (entity.getInvPurchaseInvoiceId() != null) {
             invInvoiceDTO.setInvoiceSerial(entity.getInvPurchaseInvoiceId().getSerial());

@@ -550,7 +550,7 @@ public class UserFormBean extends BaseFormBean implements Serializable {
      */
     public List<EmployeeDTO> getEmployeeList() {
         if ((employeeList == null || employeeList.isEmpty()) && getUserData().getCompany() != null) {
-            employeeList = employeeService.getAllEmployeesListByCompanyId(getUserData().getCompany().getId(), getUserData().getUserBranch().getId());
+            employeeList = employeeService.getAllEmployeesListByBranchID(getUserData().getUserBranch().getId());
             setEmployeeConverter(new EmployeeDTOConverter(employeeList));
         }
         return employeeList;

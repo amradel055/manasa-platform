@@ -60,12 +60,14 @@ public class globalMB extends Basic implements Serializable {
 
     private Integer gallaryId;
 
+    private List<InvInvoiceDTO> customerInvoiceList;
+
     private List<EmployeeDTO> crmEmployeeList;
-    private List<SymbolDTO> crmStatusEventList;
+    private List<SymbolDTO> crmCRMTypeList;
     private List<SymbolDTO> crmPeriorityList;
 
     private EmployeeDTOConverter crmEmployeeConverter;
-    private SymbolDTOConverter crmStatusEventConverter;
+    private SymbolDTOConverter crmTypeConverter;
     private SymbolDTOConverter crmPeriorityConverter;
 
     /**
@@ -96,12 +98,26 @@ public class globalMB extends Basic implements Serializable {
         OpenDlg("dlg12add");
     }
 
+    public void showAddEventDialog() {
+        loadData();
+        OpenDlg("dlgeventadd");
+    }
+
     public void reset() {
         invOrganizationSiteDTO = new InvOrganizationSiteDTO();
     }
 
     public void findCustomer() {
-        getCrmEventDTO().setCustomerId(organizationSiteService.findOrganizationSiteDTOByCodeAndGallaryIdDTO(getUserData().getUserBranch().getId(), getCustomerCode(), getGallaryId()));
+        if (getGallaryId() != null && getCustomerCode() != null && !getCustomerCode().isEmpty()) {
+            getCrmEventDTO().setCustomerId(organizationSiteService.findOrganizationSiteDTOByCodeAndGallaryIdDTO(getUserData().getUserBranch().getId(), getCustomerCode(), getGallaryId()));
+            findCustomerInvoices();
+        }
+    }
+
+    public void findCustomerInvoices() {
+        if (getCrmEventDTO() != null && getCrmEventDTO().getCustomerId() != null && getCrmEventDTO().getCustomerId().getId() != null) {
+            setCustomerInvoiceList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(4, null, getCrmEventDTO().getCustomerId().getId()));
+        }
     }
 
     public void saveEvent() {
@@ -109,7 +125,7 @@ public class globalMB extends Basic implements Serializable {
         if (getCrmEventDTO().getMsg() != null && !getCrmEventDTO().getMsg().isEmpty()) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getCrmEventDTO().getMsg()));
         } else {
-
+            loadData();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), "تم الحفظ بنجاح"));
         }
     }
@@ -129,6 +145,13 @@ public class globalMB extends Basic implements Serializable {
             saveError(e, "InvPurchaseInvoiceListMB", "loadInventoryList");
         }
 
+    }
+
+    public void loadData() {
+        setCrmEventDTO(new CrmEventDTO());
+        getCrmEventDTO().setAssignedTo((getCrmEmployeeList() == null || getCrmEmployeeList().isEmpty()) ? null : getCrmEmployeeList().get(0));
+        getCrmEventDTO().setStatus((getCrmCRMTypeList() == null || getCrmCRMTypeList().isEmpty()) ? null : getCrmCRMTypeList().get(0));
+        getCrmEventDTO().setSymbolPriority((getCrmPeriorityList() == null || getCrmPeriorityList().isEmpty()) ? null : getCrmPeriorityList().get(0));
     }
 
     public void load() {
@@ -445,6 +468,7 @@ public class globalMB extends Basic implements Serializable {
     public List<EmployeeDTO> getCrmEmployeeList() {
         if (crmEmployeeList == null || crmEmployeeList.isEmpty()) {
             crmEmployeeList = employeeService.getAllCRMEmployee(getUserData().getUserBranch().getId());
+            setCrmEmployeeConverter(new EmployeeDTOConverter(employeeDTOList));
         }
         return crmEmployeeList;
     }
@@ -457,20 +481,21 @@ public class globalMB extends Basic implements Serializable {
     }
 
     /**
-     * @return the crmStatusEventList
+     * @return the crmCRMTypeList
      */
-    public List<SymbolDTO> getCrmStatusEventList() {
-        if (crmStatusEventList == null || crmStatusEventList.isEmpty()) {
-            crmStatusEventList = symbolService.getCrmStatusByCompanyIdDTO(getUserData().getCompany().getId());
+    public List<SymbolDTO> getCrmCRMTypeList() {
+        if (crmCRMTypeList == null || crmCRMTypeList.isEmpty()) {
+            crmCRMTypeList = symbolService.getCrmEventTypeFromByCompanyIdDTO(getUserData().getCompany().getId());
+            setCrmTypeConverter(new SymbolDTOConverter(crmCRMTypeList));
         }
-        return crmStatusEventList;
+        return crmCRMTypeList;
     }
 
     /**
-     * @param crmStatusEventList the crmStatusEventList to set
+     * @param crmCRMTypeList the crmCRMTypeList to set
      */
-    public void setCrmStatusEventList(List<SymbolDTO> crmStatusEventList) {
-        this.crmStatusEventList = crmStatusEventList;
+    public void setCrmCRMTypeList(List<SymbolDTO> crmCRMTypeList) {
+        this.crmCRMTypeList = crmCRMTypeList;
     }
 
     /**
@@ -479,6 +504,7 @@ public class globalMB extends Basic implements Serializable {
     public List<SymbolDTO> getCrmPeriorityList() {
         if (crmPeriorityList == null || crmPeriorityList.isEmpty()) {
             crmPeriorityList = symbolService.getCrmEventTypeFromByCompanyIdDTO(getUserData().getCompany().getId());
+            setCrmPeriorityConverter(new SymbolDTOConverter(crmPeriorityList));
         }
         return crmPeriorityList;
     }
@@ -505,17 +531,17 @@ public class globalMB extends Basic implements Serializable {
     }
 
     /**
-     * @return the crmStatusEventConverter
+     * @return the crmTypeConverter
      */
-    public SymbolDTOConverter getCrmStatusEventConverter() {
-        return crmStatusEventConverter;
+    public SymbolDTOConverter getCrmTypeConverter() {
+        return crmTypeConverter;
     }
 
     /**
-     * @param crmStatusEventConverter the crmStatusEventConverter to set
+     * @param crmTypeConverter the crmTypeConverter to set
      */
-    public void setCrmStatusEventConverter(SymbolDTOConverter crmStatusEventConverter) {
-        this.crmStatusEventConverter = crmStatusEventConverter;
+    public void setCrmTypeConverter(SymbolDTOConverter crmTypeConverter) {
+        this.crmTypeConverter = crmTypeConverter;
     }
 
     /**
@@ -536,6 +562,9 @@ public class globalMB extends Basic implements Serializable {
      * @return the crmEventDTO
      */
     public CrmEventDTO getCrmEventDTO() {
+        if (crmEventDTO == null) {
+            crmEventDTO = new CrmEventDTO();
+        }
         return crmEventDTO;
     }
 
@@ -544,6 +573,20 @@ public class globalMB extends Basic implements Serializable {
      */
     public void setCrmEventDTO(CrmEventDTO crmEventDTO) {
         this.crmEventDTO = crmEventDTO;
+    }
+
+    /**
+     * @return the customerInvoiceList
+     */
+    public List<InvInvoiceDTO> getCustomerInvoiceList() {
+        return customerInvoiceList;
+    }
+
+    /**
+     * @param customerInvoiceList the customerInvoiceList to set
+     */
+    public void setCustomerInvoiceList(List<InvInvoiceDTO> customerInvoiceList) {
+        this.customerInvoiceList = customerInvoiceList;
     }
 
 }

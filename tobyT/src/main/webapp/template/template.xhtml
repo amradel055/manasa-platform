@@ -39,15 +39,19 @@
                         <a href="#" title="اضافة عميل محتمل" >
                             <h:form>
                                 <p:commandButton    action="#{globalMB.showAddDialog}"    icon="fa fa-sign-out-alt"
-                                                    id="addProbCustomer" style="background-color:#0064bc;"  
+                                                    id="addProbCustomer" style="background-color:#0064bc;"   update=":crmdlgform:dlgeventadd"
                                                     />
                             </h:form>
                         </a>
                         <a href="#" title="Backup">
                             <i class="material-icons">&#xE864;</i>
                         </a>
-                        <a href="#" title="Bookmark">
-                            <i class="material-icons">&#xE866;</i>
+                        <a href="#" title="إضافة شكوي">
+                            <h:form>
+                                <p:commandButton    action="#{globalMB.showAddEventDialog}"    icon="fa fa-sign-out-alt"
+                                                    id="addEventCRM" style="background-color:#00ff66;"  
+                                                    />
+                            </h:form>
                         </a>
                         <a href="#" title="Logout" >
                             <h:form>
@@ -60,6 +64,7 @@
                 </div>
 
                 <div class="layout-content">
+                    <p:messages autoUpdate="true"  id="messagesdf" showDetail="true" closable="true" /> 
                     <ui:insert name="content"/>
                 </div>
 
@@ -83,7 +88,7 @@
         <h:outputStylesheet name="css/nanoscroller.css" library="serenity-layout" />
         <h:outputStylesheet name="css/ripple.css" library="serenity-layout" />
         <h:outputStylesheet name="css/layout-#{guestPreferences.layout}.css" library="serenity-layout" />
-        <h:form>
+        <h:form id="crmdlgform">
             <p:dialog class="dialogueCRM" header="إضافةعميل جديد"  id="dlg12add" widgetVar="dlg12add" minHeight="40" width="50%" >
                 <p:fieldset legend="تفاصيل العملاء المحتملين" style="margin-bottom:20px">
                     <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true" /> 
@@ -237,9 +242,7 @@
                                 <p:outputLabel style="width:104px;margin-right: 5%"  value="جهة العمل" />
                             </h:panelGroup>
                             <h:panelGroup>
-                                <p:inputText style="width:34%!important " 
-                                             value="#{globalMB.invOrganizationSiteDTO.employer}"
-                                             />
+                                <p:inputText style="width:34%!important " value="#{globalMB.invOrganizationSiteDTO.employer}" />
 
                             </h:panelGroup>
                         </div>
@@ -258,141 +261,173 @@
 
 
 
-            <p:dialog class="dialogueCRM" header="إضافة شكوى"  id="dlgeventadd" widgetVar="dlg12add" minHeight="40" width="50%" >
+            <p:dialog class="dialogueCRM" header="إضافة شكوى"  id="dlgeventadd" widgetVar="dlgeventadd" minHeight="40" width="50%"  dir="RTL"  >
+                <p:fieldset legend="  بيانات العميل" style="margin-bottom:20px" id="dlgeventaddsetcustomer" >
+
+                    <div class="ui-g-6 ui-md-6" >
+                        <div class="ui-g-12 ui-md-6" >
+                            <div class="ui-g-6 ui-md-6" >
+                                <p:outputLabel   id="employeeNameevent"  value="#{globalMB.crmEventDTO.customerId.name}"/>
+                            </div>
+                            <div class="ui-g-6 ui-md-6" >
+                                <p:outputLabel   value="الاسم" />
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <div class="ui-g-6 ui-md-6" >
+                                <p:outputLabel   id="mobileevent"  value="#{globalMB.crmEventDTO.customerId.mobile}"/>
+
+                            </div>
+                            <div class="ui-g-6 ui-md-6">
+                                <p:outputLabel   value="الموبايل" />
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" >
+
+                            <div class="ui-g-6 ui-md-6" >
+                                <p:outputLabel    id="employeeCode2event" value="#{globalMB.crmEventDTO.customerId.email}" />
+                            </div>
+                            <div class="ui-g-6 ui-md-6">
+                                <p:outputLabel  value="البريد الالكتروني" />
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="ui-g-6 ui-md-6" style="padding: 0px;">
+                        <div class="ui-g-12 ui-md-12" style="padding: 0px;">
+                            <div class="ui-g-6 ui-md-6" style="padding: 0px;">
+                                <p:selectOneMenu value="#{globalMB.gallaryId}"  effect="fold" >
+                                    <f:selectItem itemLabel="اختر فرع" itemValue=""/>
+                                    <f:selectItems value="#{globalMB.gallaryLists}" 
+                                                   var="inventory" itemLabel="#{inventory.name}"
+                                                   itemValue="#{inventory.id}"/> 
+                                    <p:ajax listener="#{globalMB.hishis()}" />
+                                </p:selectOneMenu>
+                            </div>
+                            <div class="ui-g-6 ui-md-6" style="padding: 0px;">
+                                <p:outputLabel style="width:99px;margin-right: 2.5%"  value="المعرض" />
+                            </div>
+
+                        </div>
+
+                        <div class="ui-g-12 ui-md-12" style="padding: 0px;">
+                            <div class="ui-g-6 ui-md-6" style="padding: 0px;">
+                                <p:inputText  style="width: 35%!important"  id="employeeCodeevent"  value="#{globalMB.customerCode}" >
+                                    <p:ajax listener="#{globalMB.findCustomer()}" update="dlgeventaddsetcustomer"  event="blur" />
+                                </p:inputText>
+                            </div>
+                            <div class="ui-g-6 ui-md-6" style="padding: 0px;">
+                                <p:outputLabel style="width:99px;margin-right: 2.5%"  value="كود العميل" />
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-12" style="padding: 0px;">
+                            <div class="ui-g-6 ui-md-6" style="padding: 0px;">
+                                <p:selectOneMenu value="#{globalMB.crmEventDTO.invoiceId}"  effect="fold" >
+                                    <f:selectItem itemLabel="اختر فاتورة" itemValue=""/>
+                                    <f:selectItems value="#{globalMB.customerInvoiceList}" 
+                                                   var="customerInvoice" itemLabel="#{customerInvoice.serial}"
+                                                   itemValue="#{customerInvoice.id}"/> 
+                                    <p:ajax listener="#{globalMB.hishis()}" />
+                                </p:selectOneMenu>
+                            </div>
+                            <div class="ui-g-6 ui-md-6" style="padding: 0px;">
+                                <p:outputLabel style="width:99px;margin-right: 2.5%"  value="المعرض" />
+                            </div>
+
+                        </div>
+                    </div>
+                </p:fieldset>
                 <p:fieldset legend="تفاصيل  الشكوى" style="margin-bottom:20px" id="dlgeventaddset" >
-                    <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true" /> 
-                    <div   class="ui-g-12 ui-g-nopad" style="padding: 0px;">
-                        <div class="ui-g-12 ui-md-12" style="padding: 0px;">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width:99px;margin-right: 2.5%"  value="المعرض" />
-                                </h:panelGroup>
-                                <h:panelGroup>
-                                    <p:selectOneMenu id="inventory" value="#{globalMB.gallaryId}"
-                                                     style="float:right;width: 20%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
-                                        <f:selectItems value="#{globalMB.gallaryLists}" 
-                                                       var="inventory" itemLabel="#{inventory.name}"
-                                                       itemValue="#{inventory.id}"/> 
-                                    </p:selectOneMenu>
-                                </h:panelGroup>
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-12" style="padding: 0px;">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width:99px;margin-right: 2.5%"  value="كود العميل" />
-                                </h:panelGroup>
-                                <h:panelGroup>
-                                    <p:inputText  style="width: 35%!important"  id="employeeCode"  value="#{globalMB.customerCode}" >
-                                        <p:ajax listener="#{globalMB.findCustomer()}" update="dlgeventaddset" />
-                                    </p:inputText>
-                                </h:panelGroup>
-                            </h:panelGroup>
-                        </div>
+
+                    <div   class="ui-g-6 ui-g-nopad" style="padding: 0px;">
+
 
                         <div class="ui-g-12 ui-md-6" style="padding: 0px;">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width:99px;margin-right: 5%"  value="الاسم" />
-                                </h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel  style="width: 35%!important"  id="employeeName"  value="#{globalMB.crmEventDTO.customerId.name}"/>
-                                </h:panelGroup>
-                            </h:panelGroup>
-                        </div>
 
-                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
-                            <h:panelGroup>
-                                <h:panelGroup>
-
-                                    <p:outputLabel style="width:98px; margin-right: 5%;"  value="الموبايل" />
-                                </h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel  style="width: 35%!important"  id="mobile"  value="#{globalMB.crmEventDTO.customerId.mobile}"/>
-                                </h:panelGroup>
-                            </h:panelGroup>
-                        </div>
-
-                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
-                            <h:panelGroup>
-                                <p:outputLabel style="width:99px;margin-right: 5%"  value="البريد الالكتروني" />
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <p:outputLabel  style="width: 35%!important"  id="employeeCode2" value="#{globalMB.crmEventDTO.customerId.email}" />
-                            </h:panelGroup>
-                        </div>
-
-                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
-                            <h:panelGroup>
-                                <p:outputLabel style="width:104px;margin-right: 5%"  value="المتابع" />
-                            </h:panelGroup>
-                            <h:panelGroup>
+                            <div class="ui-g-6 ui-md-6" style="padding: 0px;">
                                 <p:selectOneMenu value="#{globalMB.crmEventDTO.assignedTo}" converter="#{globalMB.crmEmployeeConverter}" effect="fold" >
-                                    <f:selectItems value="#{globalMB.crmEmployeeList}" var="employee" itemLabel="#{employee}" itemValue="#{employee}" />
+                                    <f:selectItems value="#{globalMB.crmEmployeeList}" var="employeeevent" itemLabel="#{employeeevent}" itemValue="#{employeeevent}" />
+                                    <p:ajax listener="#{globalMB.hishis()}" />
                                 </p:selectOneMenu>
-                            </h:panelGroup>
+                            </div>
+                            <div class="ui-g-6 ui-md-6" style="padding: 0px;">
+                                <p:outputLabel style="width:104px;margin-right: 5%"  value="المتابع" />
+                            </div>
                         </div>
 
 
                         <div class="ui-g-12 ui-md-6" style="padding: 0px;">
-                            <h:panelGroup>
+
+                            <div class="ui-g-6 ui-md-6" style="padding: 0px;">
+                                <p:selectOneMenu value="#{globalMB.crmEventDTO.crmType}" converter="#{globalMB.crmTypeConverter}" effect="fold" >
+                                    <f:selectItems value="#{globalMB.crmCRMTypeList}" var="statusevent" itemLabel="#{statusevent}" itemValue="#{statusevent}" />
+                                    <p:ajax listener="#{globalMB.hishis()}" />
+                                </p:selectOneMenu>
+                            </div>
+                            <div class="ui-g-6 ui-md-6" style="padding: 0px;">
                                 <p:outputLabel style="width:104px;margin-right: 5%"  value="نوع الشكاوي" />
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <p:selectOneMenu value="#{globalMB.crmEventDTO.status}" converter="#{globalMB.crmStatusEventConverter}" effect="fold" >
-                                    <f:selectItems value="#{globalMB.crmStatusEventList}" var="status" itemLabel="#{status}" itemValue="#{status}" />
-                                </p:selectOneMenu>
-                            </h:panelGroup>
+                            </div>
                         </div>
 
 
                         <div class="ui-g-12 ui-md-6" style="padding: 0px;">
-                            <h:panelGroup>
-                                <p:outputLabel style="width:104px;margin-right: 5%"  value="الأولوية" />
-                            </h:panelGroup>
-                            <h:panelGroup>
+
+                            <div class="ui-g-6 ui-md-6" style="padding: 0px;">
                                 <p:selectOneMenu value="#{globalMB.crmEventDTO.symbolPriority}" converter="#{globalMB.crmPeriorityConverter}" effect="fold" >
-                                    <f:selectItems value="#{globalMB.crmPeriorityList}" var="periority" itemLabel="#{periority}" itemValue="#{periority}" />
+                                    <f:selectItems value="#{globalMB.crmPeriorityList}" var="periorityevent" itemLabel="#{periorityevent}" itemValue="#{periorityevent}" />
+                                    <p:ajax listener="#{globalMB.hishis()}" />
                                 </p:selectOneMenu>
-                            </h:panelGroup>
+                            </div>
+                            <div class="ui-g-6 ui-md-6" style="padding: 0px;">
+                                <p:outputLabel style="width:104px;margin-right: 5%"  value="الأولوية" />
+                            </div>
                         </div>
 
 
-
-
+                    </div>
+                    <div   class="ui-g-6 ui-g-nopad" style="padding: 0px;">
                         <div class="ui-g-12 ui-md-6" style="padding: 0px;">
-                            <h:panelGroup>
-                                <p:outputLabel style="width:104px;margin-right: 5%"  value="عنوان الشكوي" />
-                            </h:panelGroup>
-                            <h:panelGroup>
+
+                            <div class="ui-g-6 ui-md-6" style="padding: 0px;">
                                 <p:inputText style="width:34%!important " 
                                              value="#{globalMB.crmEventDTO.subject}"
-                                             />
+                                             >
+                                    <p:ajax listener="#{globalMB.hishis()}" />
+                                </p:inputText>
 
-                            </h:panelGroup>
+                            </div>
+                            <div class="ui-g-6 ui-md-6" style="padding: 0px;">
+                                <p:outputLabel style="width:104px;margin-right: 5%"  value="عنوان الشكوي" />
+                            </div>
                         </div>
 
 
                         <div class="ui-g-12 ui-md-6" style="padding: 0px;">
-                            <h:panelGroup>
-                                <p:outputLabel style="width:104px;margin-right: 5%"  value="نص الشكوي" />
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <p:inputText style="width:34%!important " 
-                                             value="#{globalMB.crmEventDTO.discription}"
-                                             />
 
-                            </h:panelGroup>
+                            <div class="ui-g-6 ui-md-6" style="padding: 0px;">
+                                <p:inputTextarea style="width:34%!important " 
+                                                 value="#{globalMB.crmEventDTO.discription}"
+                                                 >
+                                    <p:ajax listener="#{globalMB.hishis()}" />
+                                </p:inputTextarea>
+                            </div>
+                            <div class="ui-g-6 ui-md-6" style="padding: 0px;">
+                                <p:outputLabel style="width:104px;margin-right: 5%"  value="نص الشكوي" />
+                            </div>
                         </div>
                     </div>
                 </p:fieldset>
                 <p:commandButton   class="saveButton"  
-                                   id="saveB" 
+                                   id="saveB2"  immediate="true"
                                    title="#{userData.userDDs['SAVE']}"
                                    value="#{userData.userDDs['SAVE']}" 
                                    style="color: #fff;"
-                                   action="#{globalMB.saveLead()}" 
-                                   update="@form" />
+                                   action="#{globalMB.saveEvent()}" 
+                                   update="dlgeventaddset dlgeventaddsetcustomer dlgeventadd" />
 
             </p:dialog>
         </h:form>

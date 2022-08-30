@@ -74,7 +74,7 @@ public class SalesStatementForThePeriodMB extends Basic {
             list = new ArrayList<>();
             for (InvInventoryDTO invInventoryDTO : getStatementForThePeriod().getGallaryListSelected()) {
                 getStatementForThePeriod().setGallerySelected(invInventoryDTO);
-                getList().addAll(reportsService.getSalesStatementForThePeriodForPay(getStatementForThePeriod()));
+                getList().addAll(reportsService.getSalesStatementForThePeriod(getStatementForThePeriod()));
             }
             if(getNotZeroValue()){
                 List<SalesStatementForThePeriod> listBak = new ArrayList<>();

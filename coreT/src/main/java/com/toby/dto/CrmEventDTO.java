@@ -7,7 +7,6 @@ package com.toby.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 /**
  *
@@ -61,7 +60,9 @@ public class CrmEventDTO extends BaseEntityDTO {
     private Boolean closeEvent;
     private Boolean closeLeadStatus;
     private Integer gallaryId;
-    private Integer crmType;
+    private SymbolDTO crmType;
+    private Integer invoiceId;
+    private SymbolDTO periority;
 
     public CrmEventDTO() {
     }
@@ -170,7 +171,7 @@ public class CrmEventDTO extends BaseEntityDTO {
      */
     public Integer getType() {
         if (type == null) {
-            type = 1;
+            type = 0;
         }
         return type;
     }
@@ -710,15 +711,43 @@ public class CrmEventDTO extends BaseEntityDTO {
     /**
      * @return the crmType
      */
-    public Integer getCrmType() {
+    public SymbolDTO getCrmType() {
         return crmType;
     }
 
     /**
      * @param crmType the crmType to set
      */
-    public void setCrmType(Integer crmType) {
+    public void setCrmType(SymbolDTO crmType) {
         this.crmType = crmType;
+    }
+
+    /**
+     * @return the invoiceId
+     */
+    public Integer getInvoiceId() {
+        return invoiceId;
+    }
+
+    /**
+     * @param invoiceId the invoiceId to set
+     */
+    public void setInvoiceId(Integer invoiceId) {
+        this.invoiceId = invoiceId;
+    }
+
+    /**
+     * @return the periority
+     */
+    public SymbolDTO getPeriority() {
+        return periority;
+    }
+
+    /**
+     * @param periority the periority to set
+     */
+    public void setPeriority(SymbolDTO periority) {
+        this.periority = periority;
     }
 
    

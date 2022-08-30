@@ -40,6 +40,7 @@ import com.toby.businessservice.PathService;
 import com.toby.businessservice.PrivilegeService;
 import com.toby.businessservice.TobyUserRoleService;
 import com.toby.core.UserDataDTO;
+import com.toby.dto.EmployeeDTO;
 import com.toby.dto.GlBankDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.entity.Branch;
@@ -113,6 +114,8 @@ public class LoginBean extends Basic implements Serializable {
     private TobyUserBankService tobyUserBankService;
     @EJB
     private ProProductionStagesService proProductionStagesService;
+    @EJB
+    private TobyUserInventoryService isagUserInventoryService;
     
      @EJB
     NotificationsService notificationsService;
@@ -330,6 +333,12 @@ public class LoginBean extends Basic implements Serializable {
             userData.setGlBankDTOList(glBankDTOList);
             if (glBankDTOList != null && glBankDTOList.size() > 0) {
                 userData.setGlBankDTODefault(glBankDTOList.get(0));
+            }
+            
+            List<EmployeeDTO> isagUserEmployeeDTO = isagUserInventoryService.getAllEmployeesByUserAndBranchPerDTO(userData.getUser().getId(), userData.getUserBranch().getId());
+            userData.setEmployeeDTOList(isagUserEmployeeDTO);
+            if (isagUserEmployeeDTO != null && isagUserEmployeeDTO.size() > 0) {
+                userData.setEmployeeDTODefault(isagUserEmployeeDTO.get(0));
             }
 
             List<InvInventoryDTO> tobyUserGallaryDTO = tobyUserInventoryService.getAllGallaryByUserAndBranch(userData.getUser());

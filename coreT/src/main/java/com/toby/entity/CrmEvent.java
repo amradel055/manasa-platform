@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class CrmEvent extends BaseEntity {
 
+
     @Size(max = 100)
     @Column(name = "subject")
     private String subject;
@@ -118,6 +119,11 @@ public class CrmEvent extends BaseEntity {
     private Boolean closeEvent;
     @Column(name = "gallery_id")
     private Integer galleryId;
+    @Column(name = "invoice_id")
+    private Integer invoiceId;
+    @JoinColumn(name = "crm_type", referencedColumnName = "id")
+    @ManyToOne
+    private Symbol crmType;
 
     public CrmEvent() {
     }
@@ -592,5 +598,35 @@ public class CrmEvent extends BaseEntity {
     public void setGalleryId(Integer galleryId) {
         this.galleryId = galleryId;
     }
+
+    /**
+     * @return the invoiceId
+     */
+    public Integer getInvoiceId() {
+        return invoiceId;
+    }
+
+    /**
+     * @param invoiceId the invoiceId to set
+     */
+    public void setInvoiceId(Integer invoiceId) {
+        this.invoiceId = invoiceId;
+    }
+
+    /**
+     * @return the crmType
+     */
+    public Symbol getCrmType() {
+        return crmType;
+    }
+
+    /**
+     * @param crmType the crmType to set
+     */
+    public void setCrmType(Symbol crmType) {
+        this.crmType = crmType;
+    }
+    
+    
 
 }

@@ -25,7 +25,7 @@
                                   action="exit" />
 
             </div>
-            <p:fieldset legend="إضافة مهمة / حدث" style="margin-bottom:20px">
+            <p:fieldset legend="إدارة الشكوى" style="margin-bottom:20px">
                 <div >
                     <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true"/>   
                 </div>
@@ -57,10 +57,6 @@
                                 <f:selectItem itemLabel="الكل" itemValue="1"  />
                                 <p:ajax  update="branchListForm" listener="#{crmEventListDTOMB.search()}" />
                             </p:selectOneRadio>
-                            <p:outputPanel style="margin-top: 0%;" >
-                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large; " />
-                                <p:inputText id="globalFilter" onkeyup="PF('bTable').filter()" style="width:25%" />
-                            </p:outputPanel>
                         </f:facet>
                         <p:column headerText="#" style="width: 1%;font-size: 1.8vh;text-align:right;border-radius: 0px;border-radius: 0px;">
                             <h:outputText value="#{index + 1}"  style="font-size: 1.5vh" />
@@ -82,27 +78,44 @@
                                     sortBy="#{branchTable.customerId.mobile}" >
                             <p:outputLabel value="#{branchTable.customerId.mobile}"  style="font-size: 1.5vh"/>
                         </p:column>
-<!--                        <p:column   headerText="البريد الالكتروني"
+                        <p:column   headerText="البريد الالكتروني"
+                                    style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;">
+                            <p:outputLabel value="#{branchTable.customerId.email}"  style="font-size: 1.5vh"/>
+                        </p:column>
+                        <p:column   headerText="الأولوية"
                                     style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
                                     filterStyle="display:none" 
-                                    filterBy="#/{branchTable.customerId.email}"
+                                    filterBy="#{branchTable.periority}"
                                     filterMatchMode="contains"  
-                                    sortBy="#/{branchTable.customerId.email}" >
-                            <p:outputLabel value="#/{branchTable.customerId.email}"  style="font-size: 1.5vh"/>
-                        </p:column>-->
-                        <p:column   headerText="نوع المهمه"
-                                    style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
-                                    filterStyle="display:none" 
-                                    filterBy="#{branchTable.activityType}"
-                                    filterMatchMode="contains"  
-                                    sortBy="#{branchTable.activityType}" >
+                                    sortBy="#{branchTable.periority}" >
                             <f:facet name="filter">
-                                <p:selectOneMenu  label="نوع المهمه" id="activityType" style="width:37%"
-                                                  converter="#{crmEventListDTOMB.activityTypeDTOconverter}"
-                                                  value="#{crmEventListDTOMB.crmEventDTOSearch.activityType}"  > 
+                                <p:selectOneMenu  label="الأولوية" id="periority" style="width:37%"
+                                                  converter="#{crmEventListDTOMB.priorityDTOconverter}"
+                                                  value="#{crmEventListDTOMB.crmEventDTOSearch.periority}"  > 
                                     <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
-                                    <f:selectItems  value="#{crmEventListDTOMB.activityTypeDTOList}" 
-                                                    var="activityType" itemLabel="#{activityType}" itemValue="#{activityType}" />
+                                    <f:selectItems  value="#{crmEventListDTOMB.priorityDTOList}" 
+                                                    var="periority" itemLabel="#{periority}" itemValue="#{periority}" />
+
+                                    <p:ajax update="branchListForm"
+                                            event="change"
+                                            listener="#{crmEventListDTOMB.search()}" />
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <p:outputLabel value="#{branchTable.activityType}"  style="font-size: 1.5vh"/>
+                        </p:column>
+                        <p:column   headerText="نوع الشكوي"
+                                    style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                    filterStyle="display:none" 
+                                    filterBy="#{branchTable.crmType}"
+                                    filterMatchMode="contains"  
+                                    sortBy="#{branchTable.crmType}" >
+                            <f:facet name="filter">
+                                <p:selectOneMenu  label="نوع الشكوي" id="crmType" style="width:37%"
+                                                  converter="#{crmEventListDTOMB.crmTypeConverter}"
+                                                  value="#{crmEventListDTOMB.crmEventDTOSearch.crmType}"  > 
+                                    <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
+                                    <f:selectItems  value="#{crmEventListDTOMB.crmTyprList}" 
+                                                    var="crmType" itemLabel="#{crmType}" itemValue="#{crmType}" />
 
                                     <p:ajax update="branchListForm"
                                             event="change"
@@ -123,6 +136,14 @@
                                            background-color: #8dcade;">
                                 <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
                             </p:outputLabel>
+                        </p:column>
+                        <p:column   headerText="العنوان"
+                                    style="width: 7vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                    filterStyle="display:none" 
+                                    filterBy="#{branchTable.subject}"
+                                    filterMatchMode="contains"  
+                                    sortBy="#{branchTable.subject}" >
+                            <p:outputLabel value="#{branchTable.subject}"  style="font-size: 1.5vh"/>
                         </p:column>
                         <p:column   headerText="الوصف"
                                     style="width: 23vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
@@ -152,15 +173,6 @@
                                 </p:selectOneMenu>
                             </f:facet>
                             <p:outputLabel value="#{branchTable.status}"  style="font-size: 1.5vh"/>
-                        </p:column>
-                        <p:column   headerText="حاله المهمه"
-                                    style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
-                                    filterStyle="display:none" 
-                                    filterBy="#{branchTable.closeEvent}"
-                                    filterMatchMode="contains"  
-                                    sortBy="#{branchTable.closeEvent}" >
-                           
-                            <p:outputLabel value="#{branchTable.closeEvent eq true ? 'مغلقه' :  'مفتوحه' }"  style="font-size: 1.5vh"/>
                         </p:column>
                         <p:column   headerText="المتابع"
                                     style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"

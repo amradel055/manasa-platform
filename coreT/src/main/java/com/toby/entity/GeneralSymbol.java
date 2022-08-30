@@ -43,6 +43,8 @@ public class GeneralSymbol extends BaseEntity {
     private String name;
     @Column(name = "serial")
     private Integer serial;
+    @Column(name = "active")
+    private Boolean active;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "generalSymbolId")
     private Set<Symbol> symbolSet;
 
@@ -101,6 +103,20 @@ public class GeneralSymbol extends BaseEntity {
     @Override
     public String toString() {
         return serial + " " + name;
+    }
+
+    /**
+     * @return the active
+     */
+    public Boolean getActive() {
+        return active;
+    }
+
+    /**
+     * @param active the active to set
+     */
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
 }

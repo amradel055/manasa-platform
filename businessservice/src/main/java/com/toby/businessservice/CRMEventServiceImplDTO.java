@@ -141,7 +141,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
 //            if (crmEventDTO.getType() == null) {
 //                error.append("\n يجب اختيار نوع العمليه");
 //            }
-            if (crmEventDTO.getPriority() == null) {
+            if (crmEventDTO.getPriority() == null && crmEventDTO.getSymbolPriority() == null) {
                 error.append("\n يجب تحديد أولوية الشكوي ");
             }
             if (crmEventDTO.getAssignedTo() == null) {
@@ -253,7 +253,6 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         params.put("branchId", branchId);
         List<CrmEvent> details = dao.findListByQuery("SELECT i FROM CrmEvent i WHERE i.branchId.id = :branchId", params);
         return mapToDTOList(details);
-
     }
 
     private void appendSerialTo(CrmEventsReportSearchBean crmEventsReportSearchBean, Map<String, Object> params, StringBuilder query) {
@@ -471,6 +470,22 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
             symbol.setIndex(entity.getStatus().getId());
             dTO.setStatus(symbol);
         }
+        if (entity.getPriority() != null) {
+            SymbolDTO symbol = new SymbolDTO();
+            symbol.setId(entity.getPriority().getId());
+            symbol.setName(entity.getPriority().getName());
+            symbol.setSerial(entity.getPriority().getSerial());
+            symbol.setIndex(entity.getPriority().getId());
+            dTO.setPeriority(symbol);
+        }
+        if (entity.getCrmType() != null) {
+            SymbolDTO symbol = new SymbolDTO();
+            symbol.setId(entity.getCrmType().getId());
+            symbol.setName(entity.getCrmType().getName());
+            symbol.setSerial(entity.getCrmType().getSerial());
+            symbol.setIndex(entity.getCrmType().getId());
+            dTO.setCrmType(symbol);
+        }
         if (entity.getAssignedTo() != null) {
             EmployeeDTO employee = new EmployeeDTO();
             employee.setId(entity.getAssignedTo().getId());
@@ -484,10 +499,12 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         dTO.setEndTime(entity.getEndTime());
         dTO.setStartDate(entity.getStartDate());
         dTO.setStartTime(entity.getStartTime());
-//        dTO.setSubject(entity.getSubject());
+        dTO.setSubject(entity.getSubject());
+
         if (entity.getActivityType() != null) {
             dTO.setSubject(entity.getActivityType().getName());
         }
+        
         dTO.setBranchId(entity.getBranchId().getId());
         dTO.setType(entity.getType());
         dTO.setSerial(entity.getSerial());
@@ -582,6 +599,12 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
             entity.setLeadStatus(symbol);
         }
 
+        if (dTO.getCrmType() != null && dTO.getCrmType().getId() != null) {
+            Symbol symbol = new Symbol();
+            symbol.setId(dTO.getLeadStatus().getId());
+            entity.setCrmType(symbol);
+        }
+
         entity.setEndDate(dTO.getEndDate());
         entity.setEndTime(dTO.getEndTime());
         entity.setStartDate(dTO.getStartDate() == null ? new Date() : dTO.getStartDate());
@@ -592,6 +615,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         entity.setType(dTO.getType());
         entity.setSerial(dTO.getSerial());
         entity.setRemark(dTO.getRemark());
+        entity.setInvoiceId(dTO.getInvoiceId());
 
         if (dTO.getCustomerId() != null && dTO.getCustomerId().getId() != null) {
             InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
@@ -614,6 +638,8 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
 
         if (dTO.getSymbolPriority() != null) {
             entity.setPriority(new Symbol(dTO.getSymbolPriority().getId()));
+        } else if (dTO.getPriority() != null) {
+            entity.setPriority(new Symbol(dTO.getPriority()));
         }
 
         if (dTO.getVisibility() != null) {
@@ -1111,6 +1137,11 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         if (crmEventDTOSearch != null && crmEventDTOSearch.getActivityType() != null) {
             filters.put("activityType", crmEventDTOSearch.getActivityType().getId());
             builder.append(" AND e.activityType.id = :activityType ");
+        }
+
+        if (crmEventDTOSearch != null && crmEventDTOSearch.getPeriority() != null) {
+            filters.put("activityType", crmEventDTOSearch.getPeriority().getId());
+            builder.append(" AND e.priority.id = :priority ");
         }
 
         if (crmEventDTOSearch != null && crmEventDTOSearch.getStatus() != null) {

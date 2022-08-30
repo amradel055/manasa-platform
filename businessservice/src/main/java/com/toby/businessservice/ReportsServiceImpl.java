@@ -685,7 +685,7 @@ public class ReportsServiceImpl implements ReportsService {
         StringBuilder sql = new StringBuilder();
         sql.append("select ipi.serial , ipi.date , ios.code , ios.name as iosName ,\n"
                 + "IFNULL(SUM(`ipid`.`net_after_discount_head`), 0) as total_net,\n"
-                + " ipi.id ,iinv.name as gallaryName \n"
+                + " ipi.id ,iinv.name as gallaryName ,IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) as net\n"
                 + "from inv_purchase_invoice ipi\n"
                 + "left join  inv_purchase_invoice_detail ipid on ipi.id = ipid.inv_purchase_invoice_id\n"
                 + "left join inv_organization_site ios on ios.id = ipi.organization_site_id "
@@ -704,10 +704,11 @@ public class ReportsServiceImpl implements ReportsService {
                 statementForThePeriod.setCode((String) object[2]);
                 statementForThePeriod.setName((String) object[3]);
                 statementForThePeriod.setTotalNet((BigDecimal) object[4]);
-                statementForThePeriod.setNet((statementForThePeriod.getTotalNet().multiply(new BigDecimal(1.15))).setScale(3, RoundingMode.HALF_UP));
+                statementForThePeriod.setNet((BigDecimal) object[7]);
                 statementForThePeriod.setInvoiceId((Integer) object[5]);
                 statementForThePeriod.setInvoiceStatus(invPurchaseInvoiceService.findInvoiceStatus(statementForThePeriod.getInvoiceId()));
                 statementForThePeriod.setPaid(invPurchaseInvoiceService.findPayed(statementForThePeriod.getInvoiceId()));
+                statementForThePeriod.setCash(statementForThePeriod.getPaid());
                 statementForThePeriod.setGalleryName((String) object[6]);
                 list.add(statementForThePeriod);
             }

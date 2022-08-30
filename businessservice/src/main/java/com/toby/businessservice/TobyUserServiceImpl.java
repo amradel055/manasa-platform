@@ -9,10 +9,10 @@ import com.toby.core.GenericDAO;
 import com.toby.dto.ProProductionStagesDTO;
 import com.toby.dto.TobyUserDTO;
 import com.toby.entity.Branch;
+import com.toby.entity.Employee;
 import com.toby.entity.ProProductionStages;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
-import com.toby.entity.TobyUserInventory;
 import com.toby.entity.TobyUserProproduction;
 import com.toby.entity.TobyUserRole;
 import java.math.BigDecimal;
@@ -402,6 +402,13 @@ public class TobyUserServiceImpl implements TobyUserService {
         }
     }
     
+    @Override
+    public List<Employee> getEmployeesByUserAndBranch(Integer userId, Integer branchId) {
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        params.put("userId", userId);
+        return dao.findListByQuery("SELECT e.employeeId FROM TobyUser e WHERE e.branchId.id = :branchId  AND e.id = :userId", params);
+    }
  
 
 }
