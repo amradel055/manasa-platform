@@ -577,7 +577,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy().getId());
         dTO.setCloseLeadStatus(Boolean.TRUE);
-        dTO.setGallaryId(entity.getGalleryId().getId());
+        dTO.setGallaryId(entity.getGalleryId() == null ? null : entity.getGalleryId().getId());
 
         return dTO;
     }
@@ -630,6 +630,11 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
             InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
             invOrganizationSite.setId(dTO.getCustomerId().getId());
             entity.setCustomerId(invOrganizationSite);
+            if (dTO.getGallaryId() == null && dTO.getCustomerId().getGallaryIdAPI() != null) {
+                InvInventory inventory = new InvInventory();
+                inventory.setId(dTO.getCustomerId().getGallaryIdAPI());
+                entity.setGalleryId(inventory);
+            }
         }
 
         if (dTO.getSendNotification() != null) {
@@ -1389,7 +1394,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         Map<String, Object> params = new HashMap<>();
 //        params.put("galleryid", GalleryIdList);
         params.put("userId", userId);
-        List<CrmEvent> crmEventList = dao.findListByQuery("SELECT e FROM CrmEvent e WHERE e.galleryId in( " + GalleryIdList + " ) And e.id not in ( Select n.eventId from UserNotifications n where n.userId = :userId ) AND e.deletedBy is null", params);
+        List<CrmEvent> crmEventList = dao.findListByQuery("SELECT e FROM CrmEvent e WHERE e.galleryId.id in( " + GalleryIdList + " ) And e.id not in ( Select n.eventId from UserNotifications n where n.userId = :userId ) AND e.deletedBy is null", params);
         return mapToDTOList(crmEventList);
     }
 
