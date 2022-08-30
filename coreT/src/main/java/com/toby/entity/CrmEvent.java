@@ -117,13 +117,14 @@ public class CrmEvent extends BaseEntity {
     private Boolean closeNotification;
     @Column(name = "close_event")
     private Boolean closeEvent;
-    @Column(name = "gallery_id")
-    private Integer galleryId;
     @Column(name = "invoice_id")
     private Integer invoiceId;
     @JoinColumn(name = "crm_type", referencedColumnName = "id")
     @ManyToOne
     private Symbol crmType;
+    @JoinColumn(name = "gallery_id", referencedColumnName = "id")
+    @ManyToOne
+    private InvInventory galleryId;
 
     public CrmEvent() {
     }
@@ -588,14 +589,14 @@ public class CrmEvent extends BaseEntity {
     /**
      * @return the galleryId
      */
-    public Integer getGalleryId() {
+    public InvInventory getGalleryId() {
         return galleryId;
     }
 
     /**
      * @param galleryId the galleryId to set
      */
-    public void setGalleryId(Integer galleryId) {
+    public void setGalleryId(InvInventory galleryId) {
         this.galleryId = galleryId;
     }
 

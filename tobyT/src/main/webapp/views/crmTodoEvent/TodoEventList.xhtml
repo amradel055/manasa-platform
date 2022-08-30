@@ -101,7 +101,7 @@
                                             listener="#{crmEventListDTOMB.search()}" />
                                 </p:selectOneMenu>
                             </f:facet>
-                            <p:outputLabel value="#{branchTable.activityType}"  style="font-size: 1.5vh"/>
+                            <p:outputLabel value="#{branchTable.periority}"  style="font-size: 1.5vh"/>
                         </p:column>
                         <p:column   headerText="نوع الشكوي"
                                     style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
@@ -122,7 +122,7 @@
                                             listener="#{crmEventListDTOMB.search()}" />
                                 </p:selectOneMenu>
                             </f:facet>
-                            <p:outputLabel value="#{branchTable.activityType}"  style="font-size: 1.5vh"/>
+                            <p:outputLabel value="#{branchTable.crmType}"  style="font-size: 1.5vh"/>
                         </p:column>
                         <p:column   headerText="تاريخ وتوقيت البدايه"
                                     style="width: 7vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
@@ -195,6 +195,25 @@
                             </f:facet>
                             <p:outputLabel value="#{branchTable.assignedTo}"  style="font-size: 1.5vh"/>
                         </p:column>
+                        <p:column   headerText="المعرض"
+                                    style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                    filterStyle="display:none" 
+                                    filterBy="#{branchTable.gallarySelected}"
+                                    filterMatchMode="contains"  
+                                    sortBy="#{branchTable.gallarySelected}" >
+                            <f:facet name="filter">
+                                <p:selectOneMenu value="#{crmEventListDTOMB.crmEventDTOSearch.gallaryId}"  effect="fold" >
+                                    <f:selectItem itemLabel="اختر فرع" itemValue=""/>
+                                    <f:selectItems value="#{crmEventListDTOMB.gallaryLists}" 
+                                                   var="inventory" itemLabel="#{inventory.name}"
+                                                   itemValue="#{inventory.id}"/> 
+                                    <p:ajax update="branchListForm"
+                                            event="change"
+                                            listener="#{crmEventListDTOMB.search()}" />
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <p:outputLabel value="#{branchTable.gallarySelected}"  style="font-size: 1.5vh"/>
+                        </p:column>
 
 
                         <p:column headerText="#{userData.userDDs['TRANSACTION']}"  style="width: 7vh;font-size: 1.8vh;text-align: center;border-radius: 0px;">
@@ -202,7 +221,7 @@
                                              title="#{userData.userDDs['EDIT']}" action="#{crmEventListDTOMB.goToEdit()}" rendered="#{userData.userScreens['crmTodoEvent'].edit or userData.isAdmin}">
                                 <f:setPropertyActionListener value="#{branchTable}"  target="#{crmEventListDTOMB.crmEventSelected}" />
                             </p:commandButton>
-                              <p:commandButton class="seditButtons" update="@form" icon="fa fa-fw fa-plus" style="background-color: #8E6D6F; border-radius: 3px;" 
+                            <p:commandButton class="seditButtons" update="@form" icon="fa fa-fw fa-plus" style="background-color: #8E6D6F; border-radius: 3px;" 
                                              title="اضافه مهمه" action="#{crmLeadsListMB.goToEdit()}" rendered="#{userData.userScreens['crmLeads'].edit or userData.isAdmin}">
                                 <f:setPropertyActionListener value="#{branchTable.customerId.id}"  target="#{crmLeadsListMB.leadSelected}" />
                             </p:commandButton>
