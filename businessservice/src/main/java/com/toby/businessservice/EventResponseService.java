@@ -20,7 +20,9 @@ public interface EventResponseService {
     public void save(EventResponseDTO eventResponseDTO, TobyUser tobyUser);
 
     public void delete(Integer eventResponseId);
-    
-    public List<EventResponseDTO> returnEventResponseDTOByEventId(Integer eventId) ;
+
+    public List<EventResponseDTO> returnEventResponseDTOByEventId(Integer eventId);
+
+    public List<EventResponseDTO> returnEventResponseDTO();
 
 }

@@ -13,6 +13,8 @@ public class EventResponseDTO extends BaseEntityDTO {
 
     private String comment;
     private Integer assignTo;
+    private String assignToName;
+
     private Integer eventId;
 
     @Override
@@ -81,5 +83,20 @@ public class EventResponseDTO extends BaseEntityDTO {
     public void setEventId(Integer eventId) {
         this.eventId = eventId;
     }
+
+    /**
+     * @return the assignToName
+     */
+    public String getAssignToName() {
+        return assignToName;
+    }
+
+    /**
+     * @param assignToName the assignToName to set
+     */
+    public void setAssignToName(String assignToName) {
+        this.assignToName = assignToName;
+    }
+
 
 }

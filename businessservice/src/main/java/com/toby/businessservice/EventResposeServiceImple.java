@@ -31,6 +31,8 @@ public class EventResposeServiceImple implements EventResponseService {
 
     private EventResponseDTO mapToDTO(EventResponse entity) {
         EventResponseDTO dTO = new EventResponseDTO();
+        dTO.setAssignto(entity.getAssignTo().getId());
+        dTO.setAssignToName(entity.getAssignTo().getName());
         dTO.setComment(entity.getComment());
         dTO.setId(entity.getId());
         dTO.setIndex(entity.getId());
@@ -99,7 +101,13 @@ public class EventResposeServiceImple implements EventResponseService {
         return returnListDTO(eventResponse);
     }
 
-  
+    @Override
+    public List<EventResponseDTO> returnEventResponseDTO() {
+        Map<String, Object> params = new HashMap<>();
+        List<EventResponse> eventResponse = dao.findListByQuery("SELECT e FROM EventResponse e ");
+        return returnListDTO(eventResponse);
+    }
+
     private List<EventResponseDTO> returnListDTO(List<EventResponse> list) {
         List<EventResponseDTO> eventResponseDTOList = new ArrayList<>();
         for (EventResponse entity : list) {

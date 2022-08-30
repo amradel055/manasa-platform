@@ -60,6 +60,7 @@ public class CrmEventDTO extends BaseEntityDTO {
     private Boolean closeEvent;
     private Boolean closeLeadStatus;
     private Integer gallaryId;
+    
     private SymbolDTO crmType;
     private Integer invoiceId;
     private SymbolDTO periority;
