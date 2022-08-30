@@ -28,6 +28,9 @@ public class CrmEventFormDTOMB extends CrmBasicDataForm {
     // EJBs
     @EJB
     private CRMEventServiceDTO cRMEventServiceDTO;
+    
+    
+    
 
     @Override
     @PostConstruct
