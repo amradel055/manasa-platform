@@ -12,10 +12,12 @@ import com.toby.dto.ChartDataDTO;
 import com.toby.dto.CrmEventDTO;
 import com.toby.dto.CrmEventEvaluationDTO;
 import com.toby.dto.EmployeeDTO;
+import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.SymbolDTO;
 import com.toby.entity.CrmEvent;
 import com.toby.entity.Employee;
+import com.toby.entity.InvInventory;
 import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.TobyUser;
 import com.toby.entity.Symbol;
@@ -494,6 +496,13 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
             dTO.setAssignedTo(employee);
             dTO.setActiveAssignedTo(Boolean.TRUE);
         }
+        if (entity.getGalleryId() != null) {
+            InvInventoryDTO inventoryDTO = new InvInventoryDTO();
+            inventoryDTO.setId(entity.getGalleryId().getId());
+            inventoryDTO.setName(entity.getGalleryId().getName());
+            inventoryDTO.setCode(entity.getGalleryId().getCode());
+            dTO.setGallarySelected(inventoryDTO);
+        }
 
         dTO.setEndDate(entity.getEndDate());
         dTO.setEndTime(entity.getEndTime());
@@ -504,7 +513,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         if (entity.getActivityType() != null) {
             dTO.setSubject(entity.getActivityType().getName());
         }
-        
+
         dTO.setBranchId(entity.getBranchId().getId());
         dTO.setType(entity.getType());
         dTO.setSerial(entity.getSerial());
@@ -568,7 +577,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy().getId());
         dTO.setCloseLeadStatus(Boolean.TRUE);
-        dTO.setGallaryId(entity.getGalleryId());
+        dTO.setGallaryId(entity.getGalleryId().getId());
 
         return dTO;
     }
@@ -670,7 +679,12 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         entity.setEventType(dTO.getEventType());
         entity.setBranchId(tobyUser.getBranchId());
         entity.setCompanyId(tobyUser.getCompanyId());
-        entity.setGalleryId(dTO.getGallaryId());
+        if (dTO.getGallaryId() != null) {
+            InvInventory inventory = new InvInventory();
+            inventory.setId(dTO.getGallaryId());
+            entity.setGalleryId(inventory);
+        }
+
         return entity;
     }
 
@@ -1140,8 +1154,17 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         }
 
         if (crmEventDTOSearch != null && crmEventDTOSearch.getPeriority() != null) {
-            filters.put("activityType", crmEventDTOSearch.getPeriority().getId());
+            filters.put("priority", crmEventDTOSearch.getPeriority().getId());
             builder.append(" AND e.priority.id = :priority ");
+        }
+
+        if (crmEventDTOSearch != null && crmEventDTOSearch.getGallaryId() != null) {
+            filters.put("galleryId", crmEventDTOSearch.getGallaryId());
+            builder.append(" AND e.galleryId = :galleryId ");
+        }
+        if (crmEventDTOSearch != null && crmEventDTOSearch.getCrmType() != null) {
+            filters.put("crmType", crmEventDTOSearch.getCrmType());
+            builder.append(" AND e.crmType.id = :crmType ");
         }
 
         if (crmEventDTOSearch != null && crmEventDTOSearch.getStatus() != null) {
@@ -1201,6 +1224,20 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
             if (crmEventDTOSearch != null && crmEventDTOSearch.getAssignedTo() != null) {
                 builder.append("  AND (e.assignedTo.id in ( ").append(crmEventDTOSearch.getAssignedTo().getId()).append(" ) ) ");
             }
+        }
+
+        if (crmEventDTOSearch != null && crmEventDTOSearch.getPeriority() != null) {
+            filters.put("priority", crmEventDTOSearch.getPeriority().getId());
+            builder.append(" AND e.priority.id = :priority ");
+        }
+
+        if (crmEventDTOSearch != null && crmEventDTOSearch.getGallaryId() != null) {
+            filters.put("galleryId", crmEventDTOSearch.getGallaryId());
+            builder.append(" AND e.galleryId = :galleryId ");
+        }
+        if (crmEventDTOSearch != null && crmEventDTOSearch.getCrmType() != null) {
+            filters.put("crmType", crmEventDTOSearch.getCrmType());
+            builder.append(" AND e.crmType.id = :crmType ");
         }
 
         if (crmEventDTOSearch != null && crmEventDTOSearch.getActivityType() != null) {

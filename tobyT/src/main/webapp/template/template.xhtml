@@ -91,7 +91,6 @@
         <h:form id="crmdlgform">
             <p:dialog class="dialogueCRM" header="إضافةعميل جديد"  id="dlg12add" widgetVar="dlg12add" minHeight="40" width="50%" >
                 <p:fieldset legend="تفاصيل العملاء المحتملين" style="margin-bottom:20px">
-                    <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true" /> 
                     <div   class="ui-g-12 ui-g-nopad" style="padding: 0px;">
                         <div class="ui-g">
                             <div class="ui-g-12 ui-md-12" style="padding: 0px;">
@@ -113,7 +112,7 @@
                                     </h:panelGroup>
                                     <h:panelGroup>
                                         <p:inputText  style="width: 35%!important"  id="employeeName"  value="#{globalMB.invOrganizationSiteDTO.name}">
-
+                                            <p:ajax listener="#{globalMB.hishis()}" />
                                         </p:inputText>
                                     </h:panelGroup>
                                 </h:panelGroup>
@@ -127,7 +126,7 @@
                                     </h:panelGroup>
                                     <h:panelGroup>
                                         <p:inputText  style="width: 35%!important"  id="mobile" validatorMessage="يجب ادخال هاتف صحيح"  value="#{globalMB.invOrganizationSiteDTO.mobile}">
-
+                                            <p:ajax listener="#{globalMB.hishis()}" />
                                         </p:inputText>
                                     </h:panelGroup>
                                 </h:panelGroup>
@@ -139,7 +138,7 @@
                                 </h:panelGroup>
                                 <h:panelGroup>
                                     <p:inputText  style="width: 35%!important"  id="employeeCode2" value="#{globalMB.invOrganizationSiteDTO.email}" validatorMessage="الايميل غير صحيح">
-
+                                        <p:ajax listener="#{globalMB.hishis()}" />
                                     </p:inputText>
                                 </h:panelGroup>
                             </div>
@@ -152,6 +151,7 @@
                                     </h:panelGroup>
                                     <h:panelGroup>
                                         <p:inputText  style="width: 35%!important"  id="companyName"  value="#{globalMB.invOrganizationSiteDTO.companyName}">
+                                            <p:ajax listener="#{globalMB.hishis()}" />
                                         </p:inputText>
                                     </h:panelGroup>
                                 </h:panelGroup>
@@ -174,7 +174,7 @@
                                                     forceSelection="true" 
                                                     completeMethod="#{globalMB.completeLearnAboutCompanyfrom}"
                                                     >
-
+                                        <p:ajax listener="#{globalMB.hishis()}" event="blur" />
                                     </p:autoComplete>
                                 </h:panelGroup>
                             </div>
@@ -190,6 +190,7 @@
                             </h:panelGroup>
                             <h:panelGroup>
                                 <p:inputText  style="width: 35%!important"  id="employeeCode4"  value="#{globalMB.invOrganizationSiteDTO.urlSite}">
+                                    <p:ajax listener="#{globalMB.hishis()}" />
                                 </p:inputText>
                             </h:panelGroup>
                         </div>
@@ -209,7 +210,7 @@
                                                 forceSelection="true" 
                                                 completeMethod="#{globalMB.completeWorkType}"
                                                 >
-
+                                    <p:ajax listener="#{globalMB.hishis()}" />
                                 </p:autoComplete>
                             </h:panelGroup>
                         </div>
@@ -220,7 +221,9 @@
                             <h:panelGroup>
                                 <p:inputText style="width:34%!important " 
                                              value="#{globalMB.invOrganizationSiteDTO.remark}"
-                                             />
+                                             >
+                                    <p:ajax listener="#{globalMB.hishis()}" />
+                                </p:inputText>
 
                             </h:panelGroup>
                         </div>
@@ -232,8 +235,9 @@
                             <h:panelGroup>
                                 <p:inputText style="width:34%!important " 
                                              value="#{globalMB.invOrganizationSiteDTO.street}"
-                                             />
-
+                                             >
+                                    <p:ajax listener="#{globalMB.hishis()}" />
+                                </p:inputText>
                             </h:panelGroup>
                         </div>
 
@@ -242,7 +246,9 @@
                                 <p:outputLabel style="width:104px;margin-right: 5%"  value="جهة العمل" />
                             </h:panelGroup>
                             <h:panelGroup>
-                                <p:inputText style="width:34%!important " value="#{globalMB.invOrganizationSiteDTO.employer}" />
+                                <p:inputText style="width:34%!important " value="#{globalMB.invOrganizationSiteDTO.employer}" >
+                                    <p:ajax listener="#{globalMB.hishis()}" />
+                                </p:inputText>
 
                             </h:panelGroup>
                         </div>
@@ -250,7 +256,7 @@
                     </div>
                 </p:fieldset>
                 <p:commandButton   class="saveButton"  
-                                   id="saveB" 
+                                   id="saveB"  immediate="true"
                                    title="#{userData.userDDs['SAVE']}"
                                    value="#{userData.userDDs['SAVE']}" 
                                    style="color: #fff;"
