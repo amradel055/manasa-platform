@@ -503,7 +503,7 @@ public class globalMB extends Basic implements Serializable {
      */
     public List<SymbolDTO> getCrmPeriorityList() {
         if (crmPeriorityList == null || crmPeriorityList.isEmpty()) {
-            crmPeriorityList = symbolService.getCrmEventTypeFromByCompanyIdDTO(getUserData().getCompany().getId());
+            crmPeriorityList = symbolService.getCrmPeriorityByCompanyIdDTO(getUserData().getCompany().getId());
             setCrmPeriorityConverter(new SymbolDTOConverter(crmPeriorityList));
         }
         return crmPeriorityList;

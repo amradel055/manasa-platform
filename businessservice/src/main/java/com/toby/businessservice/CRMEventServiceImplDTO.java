@@ -143,7 +143,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
 //            if (crmEventDTO.getType() == null) {
 //                error.append("\n يجب اختيار نوع العمليه");
 //            }
-            if (crmEventDTO.getPriority() == null && crmEventDTO.getSymbolPriority() == null) {
+            if (crmEventDTO.getPriority() == null || crmEventDTO.getSymbolPriority() == null) {
                 error.append("\n يجب تحديد أولوية الشكوي ");
             }
             if (crmEventDTO.getAssignedTo() == null) {
@@ -154,6 +154,9 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
             }
             if (crmEventDTO.getCustomerId() == null) {
                 error.append("\n يجب اختيار  عميل");
+            }
+            if (crmEventDTO.getSubject() == null) {
+                error.append("\n يجب كتابة  عنوان");
             }
 
             if (crmEventDTO.getDiscription() == null || crmEventDTO.getDiscription().isEmpty()) {

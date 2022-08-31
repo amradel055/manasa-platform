@@ -1,7 +1,11 @@
 package com.toby.rest;
 
 import com.toby.businessservice.InvInventoryService;
+import com.toby.businessservice.TobyUserInventoryService;
 import com.toby.dto.InvInventoryDTO;
+import com.toby.dto.TobyUserDTO;
+import com.toby.entity.Branch;
+import com.toby.entity.TobyUser;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
@@ -21,7 +25,7 @@ import javax.ws.rs.core.MediaType;
 public class InventoryRest {
 
     @EJB
-    InvInventoryService invInventoryService;
+    TobyUserInventoryService tobyUserInventoryService;
 
    
 
@@ -30,10 +34,16 @@ public class InventoryRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<InvInventoryDTO> FindfindInventoryList(InvInventoryDTO invInventoryDTO) {
+    public List<InvInventoryDTO> FindfindInventoryList(TobyUserDTO tobyUserDTO) {
         List<InvInventoryDTO> inventoryDTOList = new ArrayList<>();
-        if (invInventoryDTO.getBranchId() != null) {
-            inventoryDTOList = invInventoryService.findInventoryByBranchIdDTO(invInventoryDTO.getBranchId(),null);
+        if (tobyUserDTO.getId() != null && tobyUserDTO.getBranchId() != null) {
+            TobyUser tobyUser = new TobyUser();
+            tobyUser.setId(tobyUserDTO.getId());
+            Branch branch = new Branch();
+            branch.setId(tobyUserDTO.getBranchId());
+            tobyUser.setId(tobyUserDTO.getId());
+            tobyUser.setBranchId(branch);
+            inventoryDTOList = tobyUserInventoryService.getAllGallaryByUserAndBranch(tobyUser);
         }
         return inventoryDTOList;
     }

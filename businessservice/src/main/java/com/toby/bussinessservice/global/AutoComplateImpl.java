@@ -237,11 +237,8 @@ public class AutoComplateImpl implements AutoCompleteService {
             params.put("branchId", branchId);
             params.put("qeury", qeury);
             params.put("gallaryId", gallaryId);
-
             sql.append("SELECT e FROM InvOrganizationSite e WHERE e.id in (select i.organizationSiteId.id from InvPurchaseInvoice i where i.deliveryPlace.id = :gallaryId) AND e.branchId.id = :branchId AND ((:qeury is null OR e.name  like CONCAT('%',:qeury ,'%')) OR (:qeury is null OR e.code  like CONCAT('%',:qeury ,'%') )  OR (:qeury is null OR e.mobile  like CONCAT('%',:qeury ,'%') ) )");
-
             sql.append(" ORDER BY e.code");
-
             List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params, 0, 10);
             list = returnListDTO2(detailses);
             return list;

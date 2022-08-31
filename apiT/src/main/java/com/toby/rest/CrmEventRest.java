@@ -9,6 +9,7 @@ import com.toby.businessservice.CRMEventServiceDTO;
 import com.toby.businessservice.EventResponseService;
 import com.toby.dto.CrmEventDTO;
 import com.toby.dto.EventResponseDTO;
+import com.toby.entity.Branch;
 import com.toby.entity.TobyUser;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,9 +42,12 @@ public class CrmEventRest {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response AddCrmEvent(CrmEventDTO crmEventDTO) {
         try {
-            if (crmEventDTO != null) {
+            if(crmEventDTO != null) {
                 TobyUser tobyUser = new TobyUser();
                 tobyUser.setId(crmEventDTO.getCreatedBy());
+                Branch branch = new Branch();
+                branch.setId(crmEventDTO.getBranchId());
+                tobyUser.setBranchId(branch);
                 crmEventDTO = cRMEventServiceDTO.save(crmEventDTO, tobyUser);
             }
             return Response.ok(crmEventDTO).build();
