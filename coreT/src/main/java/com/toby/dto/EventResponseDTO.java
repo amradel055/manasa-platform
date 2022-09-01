@@ -14,6 +14,8 @@ public class EventResponseDTO extends BaseEntityDTO {
     private String comment;
     private Integer assignTo;
     private String assignToName;
+    
+    private EmployeeDTO assignedTo;
 
     private Integer eventId;
 
@@ -96,6 +98,20 @@ public class EventResponseDTO extends BaseEntityDTO {
      */
     public void setAssignToName(String assignToName) {
         this.assignToName = assignToName;
+    }
+
+    /**
+     * @return the assignedTo
+     */
+    public EmployeeDTO getAssignedTo() {
+        return assignedTo;
+    }
+
+    /**
+     * @param assignedTo the assignedTo to set
+     */
+    public void setAssignedTo(EmployeeDTO assignedTo) {
+        this.assignedTo = assignedTo;
     }
 
 

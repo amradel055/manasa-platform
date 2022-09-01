@@ -48,7 +48,7 @@
                     <div class="ui-g-12 ui-md-6" >
 
                         <div class="ui-g-6 ui-md-6" >
-                            <p:outputLabel    id="employeeCode2event" value="#{crmEventFormDTOMB.crmEventDTO.customerId.email}" />
+                            <p:outputLabel    id="email" value="#{crmEventFormDTOMB.crmEventDTO.customerId.email}" />
                         </div>
                         <div class="ui-g-6 ui-md-6">
                             <p:outputLabel  value="البريد الالكتروني" />
@@ -60,7 +60,7 @@
                 <div class="ui-g-6 ui-md-6" style="padding: 0px;">
                     <div class="ui-g-12 ui-md-12" style="padding: 0px;">
                         <div class="ui-g-6 ui-md-6" style="padding: 0px;">
-                            <p:outputLabel    id="employeeCode2event" value="#{crmEventFormDTOMB.crmEventDTO.gallarySelected.name}" />
+                            <p:outputLabel    id="gallarySelected" value="#{crmEventFormDTOMB.crmEventDTO.gallarySelected.name}" />
 
                         </div>
                         <div class="ui-g-6 ui-md-6" style="padding: 0px;">
@@ -71,7 +71,7 @@
 
                     <div class="ui-g-12 ui-md-12" style="padding: 0px;">
                         <div class="ui-g-6 ui-md-6" style="padding: 0px;">
-                            <p:outputLabel    id="employeeCode2event" value="#{crmEventFormDTOMB.crmEventDTO.customerId.code}" />
+                            <p:outputLabel    id="customerId" value="#{crmEventFormDTOMB.crmEventDTO.customerId.code}" />
 
                         </div>
                         <div class="ui-g-6 ui-md-6" style="padding: 0px;">
@@ -81,7 +81,7 @@
 
                     <div class="ui-g-12 ui-md-12" style="padding: 0px;">
                         <div class="ui-g-6 ui-md-6" style="padding: 0px;">
-                            <p:outputLabel    id="employeeCode2event" value="#{crmEventFormDTOMB.crmEventDTO.invoiceId}" />
+                            <p:outputLabel    id="invoiceId" value="#{crmEventFormDTOMB.crmEventDTO.invoiceId}" />
 
                         </div>
                         <div class="ui-g-6 ui-md-6" style="padding: 0px;">
@@ -100,7 +100,7 @@
                     <div class="ui-g-12 ui-md-6" style="padding: 0px;">
 
                         <div class="ui-g-6 ui-md-6" style="padding: 0px;">
-                            <p:outputLabel    id="employeeCode2event" value="#{crmEventFormDTOMB.crmEventDTO.assignedTo.name}" />
+                            <p:outputLabel    id="assignedTo" value="#{crmEventFormDTOMB.crmEventDTO.assignedTo.name}" />
 
                         </div>
                         <div class="ui-g-6 ui-md-6" style="padding: 0px;">
@@ -112,7 +112,7 @@
                     <div class="ui-g-12 ui-md-6" style="padding: 0px;">
 
                         <div class="ui-g-6 ui-md-6" style="padding: 0px;">
-                            <p:outputLabel    id="employeeCode2event" value="#{crmEventFormDTOMB.crmEventDTO.crmType.name}" />
+                            <p:outputLabel    id="crmType" value="#{crmEventFormDTOMB.crmEventDTO.crmType.name}" />
 
                         </div>
                         <div class="ui-g-6 ui-md-6" style="padding: 0px;">
@@ -124,7 +124,7 @@
                     <div class="ui-g-12 ui-md-6" style="padding: 0px;">
 
                         <div class="ui-g-6 ui-md-6" style="padding: 0px;">
-                            <p:outputLabel    id="employeeCode2event" value="#{crmEventFormDTOMB.crmEventDTO.symbolPriority.name}" />
+                            <p:outputLabel    id="symbolPriority" value="#{crmEventFormDTOMB.crmEventDTO.symbolPriority.name}" />
                         </div>
                         <div class="ui-g-6 ui-md-6" style="padding: 0px;">
                             <p:outputLabel style="width:104px;margin-right: 5%"  value="الأولوية" />
@@ -137,7 +137,7 @@
                     <div class="ui-g-12 ui-md-6" style="padding: 0px;">
 
                         <div class="ui-g-6 ui-md-6" style="padding: 0px;">
-                            <p:outputLabel    id="employeeCode2event" value="#{crmEventFormDTOMB.crmEventDTO.subject}" />
+                            <p:outputLabel    id="subject" value="#{crmEventFormDTOMB.crmEventDTO.subject}" />
 
                         </div>
                         <div class="ui-g-6 ui-md-6" style="padding: 0px;">
@@ -149,7 +149,7 @@
                     <div class="ui-g-12 ui-md-6" style="padding: 0px;">
 
                         <div class="ui-g-6 ui-md-6" style="padding: 0px;">
-                            <p:outputLabel    id="employeeCode2event" value="#{crmEventFormDTOMB.crmEventDTO.discription}" />
+                            <p:outputLabel    id="discription" value="#{crmEventFormDTOMB.crmEventDTO.discription}" />
 
                         </div>
                         <div class="ui-g-6 ui-md-6" style="padding: 0px;">
@@ -160,32 +160,32 @@
             </p:fieldset>
 
             <p:fieldset>
-                     <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                <div class="ui-g-12 ui-md-6" style="padding: 0px;">
 
-                            <div class="ui-g-6 ui-md-6" style="padding: 0px;">
-                                <p:selectOneMenu value="#{crmEventFormDTOMB.eventResponseDTO.assignedTo}" converter="#{globalMB.employeeDTOConverter}" effect="fold" >
-                                    <f:selectItems value="#{crmEventFormDTOMB.employeeDTOList}" var="employeeevent" itemLabel="#{employeeevent}" itemValue="#{employeeevent}" />
-                                 
-                                </p:selectOneMenu>
-                            </div>
-                            <div class="ui-g-6 ui-md-6" style="padding: 0px;">
-                                <p:outputLabel style="width:104px;margin-right: 5%"  value="المتابع" />
-                            </div>
-                        </div>
-                 <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                    <div class="ui-g-6 ui-md-6" style="padding: 0px;">
+                        <p:selectOneMenu value="#{crmEventFormDTOMB.eventResponseDTO.assignedTo}" converter="#{crmEventFormDTOMB.employeeDTOConverter}" effect="fold" >
+                            <f:selectItems value="#{crmEventFormDTOMB.employeeDTOList}" var="employeeevent" itemLabel="#{employeeevent}" itemValue="#{employeeevent}" />
+                            <p:ajax listener="#{crmEventFormDTOMB.hishis()}" />
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-6 ui-md-6" style="padding: 0px;">
+                        <p:outputLabel style="width:104px;margin-right: 5%"  value="المتابع" />
+                    </div>
+                </div>
+                <div class="ui-g-12 ui-md-6" style="padding: 0px;">
 
-                            <div class="ui-g-6 ui-md-6" style="padding: 0px;">
-                               <p:inputText style="width:34%!important " 
-                                            value="#{crmEventFormDTOMB.eventResponseDTO.comment}"
-                                             >
-                                </p:inputText>
-                            </div>
-                            <div class="ui-g-6 ui-md-6" style="padding: 0px;">
-                                <p:outputLabel style="width:104px;margin-right: 5%"  value="التعليق" />
-                            </div>
-                        </div>
-                
-                    <h:panelGroup>
+                    <div class="ui-g-6 ui-md-6" style="padding: 0px;">
+                        <p:inputText style="width:34%!important " 
+                                     value="#{crmEventFormDTOMB.eventResponseDTO.comment}"
+                                     >
+                        </p:inputText>
+                    </div>
+                    <div class="ui-g-6 ui-md-6" style="padding: 0px;">
+                        <p:outputLabel style="width:104px;margin-right: 5%"  value="التعليق" />
+                    </div>
+                </div>
+
+                <h:panelGroup>
                     <p:commandButton   class="saveButton"  
                                        id="saveB" 
                                        title="#{userData.userDDs['SAVE']}"
@@ -195,67 +195,65 @@
                                        update="@form"
                                        />
                 </h:panelGroup>
-                
-                
+
+
             </p:fieldset>
 
             <h:panelGrid id="pn1"   class="centerButtons col-md-12" columns="1"  style="margin-top: 2%">
 
 
-            
+
             </h:panelGrid>
-            <p:blockUI block="ScreenAddEditForm" trigger="saveB newN " animate="true" >
+            <p:blockUI block="ScreenAddEditForm" trigger="saveB " animate="true" >
 
                 <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
             </p:blockUI>
 
-            <p:dialog id="dialog1"  widgetVar="dlg12" >
-                <p:fieldset legend="تفاصيل الشكوي" style="margin-bottom:20px">
+            <p:fieldset legend="تفاصيل الشكوي" style="margin-bottom:20px">
 
-                    <p:dataTable id="activities"
-                                 widgetVar="activities"
-                                 style="margin-bottom:20px"
-                                 var="activities"
-                                 rowIndexVar="index" 
-                                 dir="rtl" 
-                                 emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
-                                 selectionMode="single"
-                                 sortBy="#{1}"
-                                 rowKey="#{activities.index}"
-                                 value="#{crmEventFormDTOMB.eventResponseDTOList}" >
+                <p:dataTable id="activities"
+                             widgetVar="activities"
+                             style="margin-bottom:20px"
+                             var="activities"
+                             rowIndexVar="index" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             selectionMode="single"
+                             sortBy="#{1}"
+                             rowKey="#{activities.index}"
+                             value="#{crmEventFormDTOMB.eventResponseDTOList}" >
 
-                        <p:column headerText="#" style="width: 4vh;text-align:center;border-radius: 0px" >
-                            <h:outputText value="#{index + 1}"  />
-                        </p:column>
+                    <p:column headerText="#" style="width: 4vh;text-align:center;border-radius: 0px" >
+                        <h:outputText value="#{index + 1}"  />
+                    </p:column>
 
-                        <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="subject" headerText="منشء الفاتورة" 
-                                  filterBy="#{activities.createdByName}" 
-                                  filterMatchMode="contains" 
-                                  sortBy="#{activities.createdByName}"
-                                  filterable="false">
-                            <p:outputLabel value="#{activities.createdByName}" />            
-                        </p:column>
-                        <p:column style="width: 8vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterStyle="display:none" 
-                                  filterBy="#{activities.assignToName}" 
-                                  filterMatchMode="contains"
-                                  headerText="المتابع"
-                                  sortBy="#{activities.assignToName}" 
-                                  >
-                            <p:outputLabel value="#{activities.assignToName}" >
-                            </p:outputLabel>                           
-                        </p:column>
-                        <p:column style="width: 8vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterStyle="display:none" 
-                                  filterBy="#{activities.comment}" 
-                                  filterMatchMode="contains"
-                                  headerText="التعليق"
-                                  sortBy="#{activities.comment}" 
-                                  >
-                            <p:outputLabel value="#{activities.comment}" >
-                            </p:outputLabel>                           
-                        </p:column>
-                    </p:dataTable>
-                </p:fieldset>
-            </p:dialog>
+                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="subject" headerText="منشء الشكوى" 
+                              filterBy="#{activities.createdByName}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{activities.createdByName}"
+                              filterable="false">
+                        <p:outputLabel value="#{activities.createdByName}" />            
+                    </p:column>
+                    <p:column style="width: 8vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterStyle="display:none" 
+                              filterBy="#{activities.assignToName}" 
+                              filterMatchMode="contains"
+                              headerText="المتابع"
+                              sortBy="#{activities.assignToName}" 
+                              >
+                        <p:outputLabel value="#{activities.assignToName}" >
+                        </p:outputLabel>                           
+                    </p:column>
+                    <p:column style="width: 8vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterStyle="display:none" 
+                              filterBy="#{activities.comment}" 
+                              filterMatchMode="contains"
+                              headerText="التعليق"
+                              sortBy="#{activities.comment}" 
+                              >
+                        <p:outputLabel value="#{activities.comment}" >
+                        </p:outputLabel>                           
+                    </p:column>
+                </p:dataTable>
+            </p:fieldset>
         </h:form>
     </ui:define>
 

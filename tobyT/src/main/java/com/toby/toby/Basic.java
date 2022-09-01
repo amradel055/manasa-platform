@@ -138,6 +138,10 @@ public class Basic implements Serializable {
     private List<InvInventoryDTO> inventoryListSelected;
     private InvInventoryDTO inventoryDTOSelect;
     private String inventoryIdList;
+    
+    private String customerCode;
+    
+    private Integer gallaryId;
 
     public boolean savedMeesage(String msg) {
 
@@ -1084,6 +1088,34 @@ public class Basic implements Serializable {
      */
     public void setInventoryIdList(String inventoryIdList) {
         this.inventoryIdList = inventoryIdList;
+    }
+
+    /**
+     * @return the customerCode
+     */
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    /**
+     * @param customerCode the customerCode to set
+     */
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
+    }
+
+    /**
+     * @return the gallaryId
+     */
+    public Integer getGallaryId() {
+        return gallaryId;
+    }
+
+    /**
+     * @param gallaryId the gallaryId to set
+     */
+    public void setGallaryId(Integer gallaryId) {
+        this.gallaryId = gallaryId;
     }
 
 }

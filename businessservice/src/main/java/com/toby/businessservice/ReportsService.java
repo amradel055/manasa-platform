@@ -56,8 +56,10 @@ public interface ReportsService {
     public List<CustomersHaveNoMovementFromTheDate> getCustomersHaveNoMovementFromTheDate(CustomersHaveNoMovementFromTheDate noMovementFromTheDate, Integer branchId);
 
     public List<ClientsByInvInventory> getClientsByInvInventory(ClientsByInvInventory invInventory, Integer branchId);
-    
+
     public List<CustomerBalancesDebtAge> getCustomerBalancesDebtAge(CustomerBalancesDebtAgeSearch customerBalancesDebtAge);
-    
-     public List<SalesStatementForThePeriod> getSalesStatementForThePeriodForPay(SalesStatementForThePeriod statementForThePeriod);
+
+    public List<SalesStatementForThePeriod> getSalesStatementForThePeriodForPay(SalesStatementForThePeriod statementForThePeriod);
+
+    public BigDecimal getValueOfInvoice(Integer invoiceId);
 }

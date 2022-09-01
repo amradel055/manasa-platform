@@ -62,7 +62,7 @@ public class CrmEventDTO extends BaseEntityDTO {
     private Integer gallaryId;
     
     private SymbolDTO crmType;
-    private Integer invoiceId;
+    private InvInvoiceDTO invoiceId;
     private SymbolDTO periority;
     private InvInventoryDTO gallarySelected;
 
@@ -727,14 +727,14 @@ public class CrmEventDTO extends BaseEntityDTO {
     /**
      * @return the invoiceId
      */
-    public Integer getInvoiceId() {
+    public InvInvoiceDTO getInvoiceId() {
         return invoiceId;
     }
 
     /**
      * @param invoiceId the invoiceId to set
      */
-    public void setInvoiceId(Integer invoiceId) {
+    public void setInvoiceId(InvInvoiceDTO invoiceId) {
         this.invoiceId = invoiceId;
     }
 

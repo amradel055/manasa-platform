@@ -48,10 +48,7 @@
                         >
 
                         <f:facet name="header" class="col-md-12">
-                            <p:commandButton icon="fa fa-plus" title="#{userData.userDDs['ADD']}" 
-                                             class="saddButton"
-                                             action="#{crmEventListDTOMB.goToAdd()}" 
-                                             style="float:right;margin: 0" rendered="#{userData.userScreens['crmTodoEvent'].add or userData.isAdmin}"/>
+                            
                             <p:selectOneRadio id="console" class="buttonsTop" rendered="#{crmEventListDTOMB.employeeIsSupervisor}" value="#{crmEventListDTOMB.dateType}" >
                                 <f:selectItem itemLabel="مهامى" itemValue="0"   />
                                 <f:selectItem itemLabel="الكل" itemValue="1"  />

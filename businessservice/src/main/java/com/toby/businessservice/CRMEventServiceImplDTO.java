@@ -13,12 +13,14 @@ import com.toby.dto.CrmEventDTO;
 import com.toby.dto.CrmEventEvaluationDTO;
 import com.toby.dto.EmployeeDTO;
 import com.toby.dto.InvInventoryDTO;
+import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.SymbolDTO;
 import com.toby.entity.CrmEvent;
 import com.toby.entity.Employee;
 import com.toby.entity.InvInventory;
 import com.toby.entity.InvOrganizationSite;
+import com.toby.entity.InvPurchaseInvoice;
 import com.toby.entity.TobyUser;
 import com.toby.entity.Symbol;
 import java.util.ArrayList;
@@ -480,6 +482,13 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
             symbol.setIndex(entity.getPriority().getId());
             dTO.setPeriority(symbol);
         }
+        if (entity.getInvoiceId() != null && entity.getInvoiceId().getId() != null) {
+//            InvPurchaseInvoice invoice = new InvPurchaseInvoice();
+            InvInvoiceDTO invoice = new InvInvoiceDTO();
+            invoice.setId(entity.getInvoiceId().getId());
+            invoice.setSerial(entity.getInvoiceId().getSerial());
+            dTO.setInvoiceId(invoice);
+        }
         if (entity.getCrmType() != null) {
             SymbolDTO symbol = new SymbolDTO();
             symbol.setId(entity.getCrmType().getId());
@@ -624,7 +633,11 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         entity.setType(dTO.getType());
         entity.setSerial(dTO.getSerial());
         entity.setRemark(dTO.getRemark());
-        entity.setInvoiceId(dTO.getInvoiceId());
+        if (dTO.getInvoiceId() != null && dTO.getInvoiceId().getId() != null) {
+            InvPurchaseInvoice invoice = new InvPurchaseInvoice();
+            invoice.setId(entity.getInvoiceId().getId());
+            entity.setInvoiceId(invoice);
+        }
 
         if (dTO.getCustomerId() != null && dTO.getCustomerId().getId() != null) {
             InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
@@ -1471,7 +1484,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         }
         if (dateTo != null) {
             params.put("dateTo", dateTo);
-            stringBuilder.append("AND e.endDate <= :dateTo ");
+            stringBuilder.append("AND e.startDate <= :dateTo ");
         }
         if (dateFrom != null) {
             params.put("dateFrom", dateFrom);

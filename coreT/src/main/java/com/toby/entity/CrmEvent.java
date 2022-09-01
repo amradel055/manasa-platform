@@ -117,14 +117,15 @@ public class CrmEvent extends BaseEntity {
     private Boolean closeNotification;
     @Column(name = "close_event")
     private Boolean closeEvent;
-    @Column(name = "invoice_id")
-    private Integer invoiceId;
     @JoinColumn(name = "crm_type", referencedColumnName = "id")
     @ManyToOne
     private Symbol crmType;
     @JoinColumn(name = "gallery_id", referencedColumnName = "id")
     @ManyToOne
     private InvInventory galleryId;
+    @JoinColumn(name = "invoice_id", referencedColumnName = "id")
+    @ManyToOne
+    private InvPurchaseInvoice invoiceId;
 
     public CrmEvent() {
     }
@@ -601,20 +602,6 @@ public class CrmEvent extends BaseEntity {
     }
 
     /**
-     * @return the invoiceId
-     */
-    public Integer getInvoiceId() {
-        return invoiceId;
-    }
-
-    /**
-     * @param invoiceId the invoiceId to set
-     */
-    public void setInvoiceId(Integer invoiceId) {
-        this.invoiceId = invoiceId;
-    }
-
-    /**
      * @return the crmType
      */
     public Symbol getCrmType() {
@@ -626,6 +613,20 @@ public class CrmEvent extends BaseEntity {
      */
     public void setCrmType(Symbol crmType) {
         this.crmType = crmType;
+    }
+
+    /**
+     * @return the invoiceId
+     */
+    public InvPurchaseInvoice getInvoiceId() {
+        return invoiceId;
+    }
+
+    /**
+     * @param invoiceId the invoiceId to set
+     */
+    public void setInvoiceId(InvPurchaseInvoice invoiceId) {
+        this.invoiceId = invoiceId;
     }
     
     

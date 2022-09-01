@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
 import com.toby.businessservice.OrganizationSiteService;
+import com.toby.businessservice.ReportsService;
 import com.toby.businessservice.SymbolService;
 import com.toby.businessservice.TobyUserService;
 import com.toby.bussinessservice.global.AutoCompleteService;
@@ -89,8 +90,8 @@ public class CustomerTrackingMB extends Basic implements Serializable {
     private List<TobyUserDTO> tobyUserDTOList;
 
     private TobyUserDTO tobyUserDTO;
-    
-    private TobyUserDTOConverter tobyUserDTOConverter ;
+
+    private TobyUserDTOConverter tobyUserDTOConverter;
 
     private InvDetailDTO invDetailDTO;
 
@@ -130,6 +131,8 @@ public class CustomerTrackingMB extends Basic implements Serializable {
     InvPurchaseInvoiceDetailsService invPurchaseInvoiceDetailsService;
     @EJB
     TobyUserService tobyUserService;
+    @EJB
+    ReportsService reportsService;
 
     public void returnUsersList() {
 
@@ -145,6 +148,9 @@ public class CustomerTrackingMB extends Basic implements Serializable {
     }
 
     public void search() {
+        if (getGallaryId() != null && getCustomerCode() != null && !getCustomerCode().isEmpty()) {
+            setInvOrganizationSiteDTO(organizationSiteService.findOrganizationSiteDTOByCodeAndGallaryIdDTO(getUserData().getUserBranch().getId(), getCustomerCode(), getGallaryId()));
+        }
         if (getInvOrganizationSiteDTO() != null && getInvOrganizationSiteDTO().getId() != null) {
             setListEveentMainScrren(new ArrayList<>());
             Integer type = 4;
@@ -154,7 +160,7 @@ public class CustomerTrackingMB extends Basic implements Serializable {
             }
             if (getInvInvoiceList() != null && !getInvInvoiceList().isEmpty()) {
                 setLastInvoiceDate(getInvInvoiceList().get(0).getDate());
-                setLastInvoiceValue(getInvInvoiceList().get(0).getValue());
+                setLastInvoiceValue(reportsService.getValueOfInvoice(getInvInvoiceList().get(0).getId()));
             }
         }
     }
@@ -646,8 +652,8 @@ public class CustomerTrackingMB extends Basic implements Serializable {
      * @return the tobyUserDTO
      */
     public TobyUserDTO getTobyUserDTO() {
-        if(tobyUserDTO == null){
-            setTobyUserDTO(new TobyUserDTO() );
+        if (tobyUserDTO == null) {
+            setTobyUserDTO(new TobyUserDTO());
         }
         return tobyUserDTO;
     }

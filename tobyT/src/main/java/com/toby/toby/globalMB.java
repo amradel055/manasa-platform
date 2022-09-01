@@ -15,6 +15,7 @@ import javax.ejb.EJB;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.SymbolService;
 import com.toby.converter.EmployeeDTOConverter;
+import com.toby.converter.InvInvoiceDTOConverter;
 import com.toby.converter.SymbolDTOConverter;
 import com.toby.dto.CrmCustomerInterestedProductsDTO;
 import com.toby.dto.CrmEventDTO;
@@ -40,7 +41,7 @@ import org.primefaces.model.SortOrder;
 @Named(value = "globalMB")
 @ViewScoped
 public class globalMB extends Basic implements Serializable {
-
+    
     private InvOrganizationSiteDTO invOrganizationSiteDTO;
     private Boolean errorMsgbool = Boolean.TRUE;
     private SymbolDTOConverter LearnAboutCompanyfromconverter;
@@ -53,73 +54,74 @@ public class globalMB extends Basic implements Serializable {
     private List<EmployeeDTO> employeeDTOList;
     private String errorMsg;
     private LazyDataModel<InvInvoiceDTO> dataModel;
-
+    
     private CrmEventDTO crmEventDTO;
-
-    private String customerCode;
-
-    private Integer gallaryId;
-
+    
+    
+    
     private List<InvInvoiceDTO> customerInvoiceList;
-
+    
     private List<EmployeeDTO> crmEmployeeList;
     private List<SymbolDTO> crmCRMTypeList;
     private List<SymbolDTO> crmPeriorityList;
-
+    
     private EmployeeDTOConverter crmEmployeeConverter;
     private SymbolDTOConverter crmTypeConverter;
     private SymbolDTOConverter crmPeriorityConverter;
+    
+    private InvInvoiceDTOConverter invInvoiceDTOConverter;
 
     /**
      * Creates a new instance of LoginBean
      */
     @EJB
     private OrganizationSiteService organizationSiteService;
-
+    
     @EJB
     private SymbolService symbolService;
-
+    
     @EJB
     EmployeeService employeeService;
-
+    
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
-
+    
     @EJB
     private CRMEventServiceDTO cRMEventServiceDTO;
-
+    
     @PostConstruct
     public void init() {
-
+        
         System.out.println("");
     }
-
+    
     public void showAddDialog() {
         OpenDlg("dlg12add");
     }
-
+    
     public void showAddEventDialog() {
         loadData();
         OpenDlg("dlgeventadd");
     }
-
+    
     public void reset() {
         invOrganizationSiteDTO = new InvOrganizationSiteDTO();
     }
-
+    
     public void findCustomer() {
         if (getGallaryId() != null && getCustomerCode() != null && !getCustomerCode().isEmpty()) {
             getCrmEventDTO().setCustomerId(organizationSiteService.findOrganizationSiteDTOByCodeAndGallaryIdDTO(getUserData().getUserBranch().getId(), getCustomerCode(), getGallaryId()));
             findCustomerInvoices();
         }
     }
-
+    
     public void findCustomerInvoices() {
         if (getCrmEventDTO() != null && getCrmEventDTO().getCustomerId() != null && getCrmEventDTO().getCustomerId().getId() != null) {
             setCustomerInvoiceList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(4, null, getCrmEventDTO().getCustomerId().getId()));
+            setInvInvoiceDTOConverter(new InvInvoiceDTOConverter(getCustomerInvoiceList()));
         }
     }
-
+    
     public void saveEvent() {
         setCrmEventDTO(cRMEventServiceDTO.save(getCrmEventDTO(), getUserData().getUser()));
         if (getCrmEventDTO().getMsg() != null && !getCrmEventDTO().getMsg().isEmpty()) {
@@ -129,12 +131,12 @@ public class globalMB extends Basic implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), "تم الحفظ بنجاح"));
         }
     }
-
+    
     public String validateSaveLead(InvOrganizationSiteDTO invOrganizationSiteDTO) {
         StringBuilder error = new StringBuilder();
         return organizationSiteService.validateSmallSaveLead(error, invOrganizationSiteDTO, getUserData().getUser());
     }
-
+    
     public void loadGallaryList() {
         try {
             if (getGallaryDTOSelect() != null && getGallaryDTOSelect().getId() != null && getGallaryDTOSelect().getId() > 0) {
@@ -144,23 +146,23 @@ public class globalMB extends Basic implements Serializable {
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceListMB", "loadInventoryList");
         }
-
+        
     }
-
+    
     public void loadData() {
         setCrmEventDTO(new CrmEventDTO());
         getCrmEventDTO().setAssignedTo((getCrmEmployeeList() == null || getCrmEmployeeList().isEmpty()) ? null : getCrmEmployeeList().get(0));
         getCrmEventDTO().setStatus((getCrmCRMTypeList() == null || getCrmCRMTypeList().isEmpty()) ? null : getCrmCRMTypeList().get(0));
         getCrmEventDTO().setSymbolPriority((getCrmPeriorityList() == null || getCrmPeriorityList().isEmpty()) ? null : getCrmPeriorityList().get(0));
     }
-
+    
     public void load() {
         try {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             setUserData((UserData) context.getSessionMap().get("userLogInData"));
             this.setDataModel(new LazyDataModel<InvInvoiceDTO>() {
                 private static final long serialVersionUID = 1L;
-
+                
                 @Override
                 public List<InvInvoiceDTO> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
                     Integer type = 0;
@@ -195,11 +197,11 @@ public class globalMB extends Basic implements Serializable {
             saveError(e, "InvPurchaseInvoiceListMB", "load");
         }
     }
-
+    
     public String saveLead() {
-
+        
         String error = validateSaveLead(getInvOrganizationSiteDTO());
-
+        
         if (error != null && !error.isEmpty()) {
             errorMessage(error);
             setErrorMsgbool(Boolean.TRUE);
@@ -219,19 +221,19 @@ public class globalMB extends Basic implements Serializable {
         }
         return "";
     }
-
+    
     public List<EmployeeDTO> completeEmployeeDTO(String query) {
         return AutoComplete.completeEmployeeDTO(query, getEmployeeDTOList(), getEmployeeDTOConverter());
     }
-
+    
     public List<SymbolDTO> completeLeadStatus(String query) {
         return AutoComplete.completeLeadStatus(query, getLeadStatusDTOList(), getLeadStatusDTOconverter());
     }
-
+    
     public List<SymbolDTO> completeLearnAboutCompanyfrom(String query) {
         return AutoComplete.completeSymbol(query, getLearnAboutCompanyfromDTOList(), getLearnAboutCompanyfromconverter());
     }
-
+    
     public List<SymbolDTO> completeWorkType(String query) {
         return AutoComplete.completeSymbol(query, getWorkTypeDTOList(), getJobConverter());
     }
@@ -435,34 +437,6 @@ public class globalMB extends Basic implements Serializable {
     }
 
     /**
-     * @return the customerCode
-     */
-    public String getCustomerCode() {
-        return customerCode;
-    }
-
-    /**
-     * @param customerCode the customerCode to set
-     */
-    public void setCustomerCode(String customerCode) {
-        this.customerCode = customerCode;
-    }
-
-    /**
-     * @return the gallaryId
-     */
-    public Integer getGallaryId() {
-        return gallaryId;
-    }
-
-    /**
-     * @param gallaryId the gallaryId to set
-     */
-    public void setGallaryId(Integer gallaryId) {
-        this.gallaryId = gallaryId;
-    }
-
-    /**
      * @return the crmEmployeeList
      */
     public List<EmployeeDTO> getCrmEmployeeList() {
@@ -589,4 +563,18 @@ public class globalMB extends Basic implements Serializable {
         this.customerInvoiceList = customerInvoiceList;
     }
 
+    /**
+     * @return the invInvoiceDTOConverter
+     */
+    public InvInvoiceDTOConverter getInvInvoiceDTOConverter() {
+        return invInvoiceDTOConverter;
+    }
+
+    /**
+     * @param invInvoiceDTOConverter the invInvoiceDTOConverter to set
+     */
+    public void setInvInvoiceDTOConverter(InvInvoiceDTOConverter invInvoiceDTOConverter) {
+        this.invInvoiceDTOConverter = invInvoiceDTOConverter;
+    }
+    
 }

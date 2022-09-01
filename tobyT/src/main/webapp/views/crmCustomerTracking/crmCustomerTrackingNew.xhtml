@@ -132,31 +132,40 @@
                     <div class="ui-g-8 ui-xl-8">
                         <p:fieldset legend=" متابعة بيانات العميل" style="margin-bottom:20px">
 
-                            <div class="ui-g-12 ui-md-6" style="padding: 0px;">
-                                <h:panelGroup>
-                                    <p:outputLabel style="width:104px;margin-right: 5%; margin-left: 5%"  value="العميل" />
-                                </h:panelGroup>
-                                <h:panelGroup>
-                                    <p:autoComplete style="width:34%!important " 
-                                                    dropdown="true"
-                                                    converter="#{CustomerTrackingMB.invOrganizationSiteDTOConverter}"
-                                                    value="#{CustomerTrackingMB.invOrganizationSiteDTO}"
-                                                    var="customer"
-                                                    itemLabel="#{customer}" 
-                                                    itemValue="#{customer}" 
-                                                    forceSelection="true" 
-                                                    completeMethod="#{CustomerTrackingMB.completeCustomerDTO}"
-                                                    >
-                                    </p:autoComplete>
-                                </h:panelGroup>
+                            <div class="ui-g-12 ui-md-12" style="padding: 0px;">
+                                <div class="ui-g-6 ui-md-6" style="padding: 0px;">
+                                    <p:selectOneMenu value="#{CustomerTrackingMB.gallaryId}"  effect="fold" >
+                                        <f:selectItem itemLabel="اختر فرع" itemValue=""/>
+                                        <f:selectItems value="#{CustomerTrackingMB.gallaryLists}" 
+                                                       var="inventory" itemLabel="#{inventory.name}"
+                                                       itemValue="#{inventory.id}"/> 
+                                        <p:ajax listener="#{CustomerTrackingMB.hishis()}" />
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-6 ui-md-6" style="padding: 0px;">
+                                    <p:outputLabel style="width:99px;margin-right: 2.5%"  value="المعرض" />
+                                </div>
+
+                            </div>
+
+                            <div class="ui-g-12 ui-md-12" style="padding: 0px;">
+                                <div class="ui-g-6 ui-md-6" style="padding: 0px;">
+                                    <p:inputText  style="width: 35%!important"  id="employeeCodeevent"  value="#{CustomerTrackingMB.customerCode}" />
+                                </div>
+                                <div class="ui-g-6 ui-md-6" style="padding: 0px;">
+                                    <p:outputLabel style="width:99px;margin-right: 2.5%"  value="كود العميل" />
+                                </div>
+                            </div>
+
+                            <div class="ui-g-12 ui-md-12" style="padding: 0px;" dir="LTR">
+                                <p:commandButton class="crmBtn" value="تفاصيل" action="#{CustomerTrackingMB.search}" update="@form" />
                             </div>
                         </p:fieldset> 
-                        <p:commandButton class="crmBtn" value="تفاصيل" action="#{CustomerTrackingMB.search}" update="@form" >
-                        </p:commandButton>
+
                     </div>
                     <div class="ui-g-4 ui-xl-4">
-                        <button class="plus"> + </button>
-                        <button class="crmBtn">شكوي عامة</button>
+                        <!--                        <button class="plus"> + </button>
+                                                <button class="crmBtn">شكوي عامة</button>-->
                     </div>
                 </div>   
 
@@ -343,7 +352,6 @@
 
                                  >
                         <p:ajax event="rowSelect" listener="#{CustomerTrackingMB.searchProductionStagesReport}" update="@form"  />
-                        <p:ajax event="rowSelect" listener="#{CustomerTrackingMB.returnListOfDetailList()}" update="@form"  />
 
                         <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px; text-align: right"  filterStyle="display:none" 
                                    filterBy="#{invInvoicePurchaseTable2.serial}" 
@@ -431,7 +439,7 @@
                         </p:column>
                         <p:column  style="width: 12vh;font-size: 1.8vh;text-align:center;border-radius: 0px;" headerText="#{userData.userDDs['TRANSACTION']}" >
                             <p:commandButton  
-                                update="@form" 
+                                update="@form" onclick="form.target = '_blank'"  ajax="false"
                                 class="smsearchButtons"
                                 icon="fa fa-fw fa-search-plus"  style="background-color: rgba(63, 81, 181, 0.88);border-radius: 3px;"
                                 title="#{userData.userDDs['VIEW']}" 
@@ -453,81 +461,6 @@
                             </p:commandButton>
 
                         </p:column>
-                        <f:facet name="footer"   >
-
-                        </f:facet>
-                    </p:dataTable> 
-
-
-                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-                        <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                        <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-                    </p:confirmDialog>
-
-                </p:fieldset>
-
-
-                <p:fieldset   legend="تفاصيل الشغل الخاصه بالعميل" >
-
-
-
-                    <p:dataTable id="invInvoicePurchaseDetailTable"
-                                 draggableColumns="true"
-                                 draggableRows="true"
-                                 var="invInvoicePurchaseDetailTable" 
-                                 widgetVar="invInvoicePurchaseDetailTable" 
-                                 rowIndexVar="index" 
-                                 value="#{CustomerTrackingMB.invDetailDTOList}"
-                                 paginator="true"
-                                 rows="10" 
-                                 selectionMode="single"
-                                 rowKey="#{invInvoicePurchaseDetailTable.serial}"
-                                 selection="#{CustomerTrackingMB.invDetailDTO}" 
-                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink}
-                                 {PreviousPageLink} {PageLinks} {NextPageLink}
-                                 {LastPageLink} {RowsPerPageDropdown}" 
-                                 emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" 
-
-                                 >
-
-
-
-                        <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px; text-align: right"  filterStyle="display:none" 
-                                   filterBy="#{invInvoicePurchaseDetailTable.serial}" 
-                                   filterMatchMode="contains" 
-                                   headerText="#{userData.userDDs['INVOICE_NO']}"
-                                   sortBy="#{invInvoicePurchaseDetailTable.serial}"
-                                   >
-                            <p:outputLabel value="#{invInvoicePurchaseDetailTable.serial}"/>
-                        </p:column>
-
-                        <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px; text-align: right"  filterStyle="display:none" 
-                                   filterBy="#{invInvoicePurchaseDetailTable.itemName}" 
-                                   filterMatchMode="contains" 
-                                   headerText="اسم الصنف"
-                                   sortBy="#{invInvoicePurchaseDetailTable.itemName}"
-                                   >
-                            <p:outputLabel value="#{invInvoicePurchaseDetailTable.itemName}"/>
-                        </p:column>
-
-                        <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px; text-align: right"  filterStyle="display:none" 
-                                   filterBy="#{invInvoicePurchaseDetailTable.quantity}" 
-                                   filterMatchMode="contains" 
-                                   headerText="الكمية"
-                                   sortBy="#{invInvoicePurchaseDetailTable.quantity}"
-                                   >
-                            <p:outputLabel value="#{invInvoicePurchaseDetailTable.quantity}"/>
-                        </p:column>
-
-                        <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px; text-align: right"  filterStyle="display:none" 
-                                   filterBy="#{invInvoicePurchaseDetailTable.cost}" 
-                                   filterMatchMode="contains" 
-                                   headerText="السعر"
-                                   sortBy="#{invInvoicePurchaseDetailTable.cost}"
-                                   >
-                            <p:outputLabel value="#{invInvoicePurchaseDetailTable.cost}"/>
-                        </p:column>
-
                         <f:facet name="footer"   >
 
                         </f:facet>

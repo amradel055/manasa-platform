@@ -1002,6 +1002,7 @@ public class ReportsServiceImpl implements ReportsService {
             query.append(" and ipi.galary_Id =  ").append(statementForThePeriod.getGallerySelected().getId());
         }
     }
+
     private void appendOrganizationId(SalesStatementForThePeriod statementForThePeriod, StringBuilder query) {
         if (statementForThePeriod.getOrganizationId() != null) {
             query.append(" and ipi.organization_site_id =  ").append(statementForThePeriod.getOrganizationId());
@@ -1050,4 +1051,19 @@ public class ReportsServiceImpl implements ReportsService {
         }
     }
 
+    @Override
+    public BigDecimal getValueOfInvoice(Integer invoiceId) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
+        StringBuilder sql = new StringBuilder();
+        sql.append("select IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) as net\n"
+                + "from inv_purchase_invoice ipi\n"
+                + " where ipi.id =   " + invoiceId);
+
+        sql.append(" group by ipi.id ");
+        List<BigDecimal> res = dao.executeNativeQuery(sql.toString());
+        if (res != null && !res.isEmpty() && res.get(0) != null) {
+            return res.get(0);
+        }
+        return BigDecimal.ZERO;
+    }
 }

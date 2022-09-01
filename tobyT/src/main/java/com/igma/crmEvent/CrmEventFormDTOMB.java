@@ -8,13 +8,13 @@ package com.igma.crmEvent;
 import com.toby.businessservice.CRMEventServiceDTO;
 import com.toby.businessservice.EmployeeService;
 import com.toby.businessservice.EventResponseService;
-import com.toby.converter.EmployeeDTOConverter;
-import com.toby.dto.EmployeeDTO;
 import com.toby.dto.EventResponseDTO;
 import com.toby.toby.CrmBasicDataForm;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
@@ -26,8 +26,8 @@ import javax.inject.Named;
 @ViewScoped
 public class CrmEventFormDTOMB extends CrmBasicDataForm {
 
-    private List<EmployeeDTO> crmEmployeeList;
-    private EmployeeDTOConverter employeeDTOConverter;
+//    private List<EmployeeDTO> crmEmployeeList;
+//    private EmployeeDTOConverter employeeDTOConverter;
     private EventResponseDTO eventResponseDTO;
     private List<EventResponseDTO> eventResponseDTOList;
 
@@ -39,7 +39,7 @@ public class CrmEventFormDTOMB extends CrmBasicDataForm {
     EmployeeService employeeService;
 
     @EJB
-    EventResponseService eventResponseService ;
+    EventResponseService eventResponseService;
 
     @Override
     @PostConstruct
@@ -57,7 +57,9 @@ public class CrmEventFormDTOMB extends CrmBasicDataForm {
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("EditcrmTaskDTO") && getUri() != null && !getUri().contains("main")) {
                 Integer crmEventDTOSelected = (Integer) getContext().getSessionMap().get("crmEventDTOSelected");
                 setCrmEventDTO(cRMEventServiceDTO.findById(crmEventDTOSelected));
-            } 
+                getEventResponseDTO().setAssignedTo((getEmployeeDTOList() == null || getEmployeeDTOList().isEmpty()) ? null : getEmployeeDTOList().get(0));
+                getEventResponseDTOList();
+            }
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "load");
         }
@@ -65,50 +67,55 @@ public class CrmEventFormDTOMB extends CrmBasicDataForm {
 
     @Override
     public String save() {
-        if(getEventResponseDTO() != null){
+        if (getEventResponseDTO() != null && getEventResponseDTO().getAssignedTo() != null && getEventResponseDTO().getAssignedTo().getId() != null
+                && getCrmEventDTO() != null && getCrmEventDTO().getId() != null && getEventResponseDTO().getComment() != null
+                && !getEventResponseDTO().getComment().isEmpty()) {
+            getEventResponseDTO().setEventId(getCrmEventDTO().getId());
+            getEventResponseDTO().setAssignto(getEventResponseDTO().getAssignedTo().getId());
             eventResponseService.save(getEventResponseDTO(), getUserData().getUser());
             setEventResponseDTOList(eventResponseService.returnEventResponseDTO());
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), "تم الحفظ بنجاح"));
         }
-        return  "" ;
-       
+        return "";
     }
 
     /**
      * @return the crmEmployeeList
      */
-    public List<EmployeeDTO> getCrmEmployeeList() {
-        if (crmEmployeeList == null || crmEmployeeList.isEmpty()) {
-            crmEmployeeList = employeeService.getAllCRMEmployee(getUserData().getUserBranch().getId());
-            setEmployeeDTOConverter(new EmployeeDTOConverter(crmEmployeeList));
-        }
-        return crmEmployeeList;
-    }
-
-    /**
-     * @param crmEmployeeList the crmEmployeeList to set
-     */
-    public void setCrmEmployeeList(List<EmployeeDTO> crmEmployeeList) {
-        this.crmEmployeeList = crmEmployeeList;
-    }
-
-    /**
-     * @return the employeeDTOConverter
-     */
-    public EmployeeDTOConverter getEmployeeDTOConverter() {
-        return employeeDTOConverter;
-    }
-
-    /**
-     * @param employeeDTOConverter the employeeDTOConverter to set
-     */
-    public void setEmployeeDTOConverter(EmployeeDTOConverter employeeDTOConverter) {
-        this.employeeDTOConverter = employeeDTOConverter;
-    }
-
+//    public List<EmployeeDTO> getCrmEmployeeList() {
+//        if (crmEmployeeList == null || crmEmployeeList.isEmpty()) {
+//            crmEmployeeList = employeeService.getAllCRMEmployee(getUserData().getUserBranch().getId());
+//            setEmployeeDTOConverter(new EmployeeDTOConverter(crmEmployeeList));
+//        }
+//        return crmEmployeeList;
+//    }
+//
+//    /**
+//     * @param crmEmployeeList the crmEmployeeList to set
+//     */
+//    public void setCrmEmployeeList(List<EmployeeDTO> crmEmployeeList) {
+//        this.crmEmployeeList = crmEmployeeList;
+//    }
+//    /**
+//     * @return the employeeDTOConverter
+//     */
+//    public EmployeeDTOConverter getEmployeeDTOConverter() {
+//        return employeeDTOConverter;
+//    }
+//
+//    /**
+//     * @param employeeDTOConverter the employeeDTOConverter to set
+//     */
+//    public void setEmployeeDTOConverter(EmployeeDTOConverter employeeDTOConverter) {
+//        this.employeeDTOConverter = employeeDTOConverter;
+//    }
     /**
      * @return the eventResponseDTO
      */
     public EventResponseDTO getEventResponseDTO() {
+        if (eventResponseDTO == null) {
+            eventResponseDTO = new EventResponseDTO();
+        }
         return eventResponseDTO;
     }
 
@@ -123,9 +130,7 @@ public class CrmEventFormDTOMB extends CrmBasicDataForm {
      * @return the eventResponseDTOList
      */
     public List<EventResponseDTO> getEventResponseDTOList() {
-        if(getEventResponseDTOList() != null){
-            setEventResponseDTOList(eventResponseService.returnEventResponseDTOByEventId(getCrmEventDTO().getId()));
-        }
+        setEventResponseDTOList(eventResponseService.returnEventResponseDTOByEventId(getCrmEventDTO().getId()));
         return eventResponseDTOList;
     }
 

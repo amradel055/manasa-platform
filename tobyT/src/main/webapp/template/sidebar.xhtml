@@ -1167,61 +1167,11 @@
                                             rendered="#{userData.userScreens['crmDashboard'].view or userData.isAdmin}"
                                             />
                                 <p:menuitem id="cr_lnk1000" value= "الشكاوي" icon="&#xE8D2;" url="/faces/views/crmTodoEvent/TodoEventList.xhtml" 
-                                                rendered="#{userData.userScreens['crmTodoEvent'].view or userData.isAdmin}"
+                                            rendered="#{userData.userScreens['crmTodoEvent'].view or userData.isAdmin}"
                                             />
-                                <p:submenu id="sr_sm1001" label="CRM Main Data" icon="&#xE8D2;"
-                                           >
-                                    <p:menuitem id="sr_lnk1001" value= "dashboardLeadsList" icon="&#xE8D2;" url="/faces/views/crmDashboardList/dashboardLeadsList.xhtml" 
-                                                rendered="#{userData.userScreens['crmDashboardList'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk1002" value= "بنك المهام و الاحداث" icon="&#xE8D2;" url="/faces/views/crmDashboardEventList/dashboardEventList.xhtml" 
-                                                rendered="#{userData.userScreens['crmDashboardEventList'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk1003" value= "تقييم اداء الموظفين" icon="&#xE8D2;" url="/faces/views/crmSalesReport/employeesSalesReport.xhtml" 
-                                                rendered="#{userData.userScreens['crmSalesReport'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk1004" value= "main" icon="&#xE8D2;" url="/faces/views/crm/main.xhtml" 
-                                                rendered="#{userData.userScreens['crm'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk1005" value= "الاعدادات" icon="&#xE8D2;" url="/faces/views/crmSetting/crmNotificationSetting.xhtml" 
-                                                rendered="#{userData.userScreens['crmSetting'].view or userData.isAdmin}"
-                                                />
-
-
-                                </p:submenu>
-                                <p:submenu id="sr_sm1002" label="CRM Movement" icon="&#xE8D2;"
-                                           >
-                                    <p:menuitem id="sr_lnk1007" value= "leadsList" icon="&#xE8D2;" url="/faces/views/crmLeads/leadsList.xhtml" 
-                                                rendered="#{userData.userScreens['crmLeads'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk1008" value= "TodoEventList" icon="&#xE8D2;" url="/faces/views/crmTodoEvent/TodoEventList.xhtml" 
-                                                rendered="#{userData.userScreens['crmTodoEvent'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk1009" value= "my calender" icon="&#xE8D2;" url="/faces/views/crmMyCalendar/main.xhtml" 
-                                                rendered="#{userData.userScreens['crmMyCalendar'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk10010" value= "تحويل العملاء" icon="&#xE8D2;" url="/faces/views/crmLeadsTransfer/transferLeads.xhtml" 
-                                                rendered="#{userData.userScreens['crmLeadsTransfer'].view or userData.isAdmin}"
-                                                />
-
-                                </p:submenu>
-                                <p:submenu id="sr_sm1003" label="CRM Reports" icon="&#xE8D2;"
-                                           >
-                                    <p:menuitem id="sr_lnk10011" value= "leads data reports" icon="&#xE8D2;" url="/faces/views/crmReports/leadsData.xhtml" 
-                                                rendered="#{userData.userScreens['leadsData'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk10012" value= "Event Reports" icon="&#xE8D2;" url="/faces/views/crmReports/eventsReport.xhtml" 
-                                                rendered="#{userData.userScreens['eventsReport'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk10013" value= "Customer Project Report" icon="&#xE8D2;" url="/faces/views/crmReports/customerProject.xhtml" 
-                                                rendered="#{userData.userScreens['customerProject'].view or userData.isAdmin}"
-                                                />  <p:menuitem id="sr_lnk10014" value= "Projects Customer" icon="&#xE8D2;" url="/faces/views/crmReports/projectsCustomer.xhtml" 
-                                                rendered="#{userData.userScreens['projectsCustomer'].view or userData.isAdmin}"
-                                                />
-
-
-                                </p:submenu>
-
+                                <p:menuitem id="cr_lnk2000" value= "متابعة عميل" icon="&#xE8D2;" url="/faces/views/crmCustomerTracking/crmCustomerTrackingNew.xhtml" 
+                                            rendered="#{userData.userScreens['crmTodoEvent'].view or userData.isAdmin}"
+                                            />
                             </p:submenu>
                             <p:submenu id="hr_sm1000" label="الموارد البشرية" icon="&#xE8D2;"  rendered="#{userData.userScreens['hremployee'].view or userData.isAdmin}"
                                        >

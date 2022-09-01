@@ -332,11 +332,11 @@
 
                         <div class="ui-g-12 ui-md-12" style="padding: 0px;">
                             <div class="ui-g-6 ui-md-6" style="padding: 0px;">
-                                <p:selectOneMenu value="#{globalMB.crmEventDTO.invoiceId}"  effect="fold" >
+                                <p:selectOneMenu value="#{globalMB.crmEventDTO.invoiceId}"  converter="#{globalMB.invInvoiceDTOConverter}"  effect="fold" >
                                     <f:selectItem itemLabel="اختر فاتورة" itemValue=""/>
-                                    <f:selectItems value="#{globalMB.customerInvoiceList}" 
+                                    <f:selectItems value="#{globalMB.customerInvoiceList}"  
                                                    var="customerInvoice" itemLabel="#{customerInvoice.serial}"
-                                                   itemValue="#{customerInvoice.id}"/> 
+                                                   itemValue="#{customerInvoice}"/> 
                                     <p:ajax listener="#{globalMB.hishis()}" />
                                 </p:selectOneMenu>
                             </div>
