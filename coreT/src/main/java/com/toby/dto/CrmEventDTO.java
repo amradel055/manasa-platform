@@ -22,7 +22,7 @@ public class CrmEventDTO extends BaseEntityDTO {
     private SymbolDTO activityType;
     private SymbolDTO status;
     private EmployeeDTO assignedTo;
-    private Integer type;
+    private Integer typee;
     private Integer serial;
     private Boolean sendNotification;
     private Integer notificationTimeType;
@@ -65,6 +65,8 @@ public class CrmEventDTO extends BaseEntityDTO {
     private InvInvoiceDTO invoiceId;
     private SymbolDTO periority;
     private InvInventoryDTO gallarySelected;
+    
+    private String customerCode;
 
     public CrmEventDTO() {
     }
@@ -169,20 +171,20 @@ public class CrmEventDTO extends BaseEntityDTO {
     }
 
     /**
-     * @return the type
+     * @return the typee
      */
-    public Integer getType() {
-        if (type == null) {
-            type = 0;
+    public Integer getTypee() {
+        if (typee == null) {
+            typee = 0;
         }
-        return type;
+        return typee;
     }
 
     /**
-     * @param type the type to set
+     * @param typee the typee to set
      */
-    public void setType(Integer type) {
-        this.type = type;
+    public void setTypee(Integer typee) {
+        this.typee = typee;
     }
 
     /**
@@ -764,6 +766,20 @@ public class CrmEventDTO extends BaseEntityDTO {
      */
     public void setGallarySelected(InvInventoryDTO gallarySelected) {
         this.gallarySelected = gallarySelected;
+    }
+
+    /**
+     * @return the customerCode
+     */
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    /**
+     * @param customerCode the customerCode to set
+     */
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
     }
 
    

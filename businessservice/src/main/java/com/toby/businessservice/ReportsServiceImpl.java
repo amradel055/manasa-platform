@@ -1054,16 +1054,22 @@ public class ReportsServiceImpl implements ReportsService {
     @Override
     public BigDecimal getValueOfInvoice(Integer invoiceId) {
         dao.executeNativeQuery("select toby.sql_mode_function()");
-        StringBuilder sql = new StringBuilder();
-        sql.append("select IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) as net\n"
-                + "from inv_purchase_invoice ipi\n"
-                + " where ipi.id =   " + invoiceId);
-
-        sql.append(" group by ipi.id ");
-        List<BigDecimal> res = dao.executeNativeQuery(sql.toString());
-        if (res != null && !res.isEmpty() && res.get(0) != null) {
-            return res.get(0);
+        List<BigDecimal> value = null;
+        if (invoiceId != null && invoiceId > 0) {
+            value = dao.executeNativeQuery("SELECT IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) from inv_purchase_invoice ipi left join  inv_purchase_invoice_detail ipid on ipi.id = ipid.inv_purchase_invoice_id where ipi.id =  " + invoiceId);
         }
-        return BigDecimal.ZERO;
+        return (value != null && !value.isEmpty()) ? (value.get(0)) : BigDecimal.ZERO;
+//        StringBuilder sql = new StringBuilder();
+//        sql.append("select IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) as net\n"
+//                + "from inv_purchase_invoice ipi\n"
+//                + " where ipi.id =   " + invoiceId);
+//
+//        sql.append(" group by ipi.id ");
+//        List<BigDecimal> res = dao.executeNativeQuery(sql.toString());
+//        if (res != null && !res.isEmpty() && res.get(0) != null) {
+//            return res.get(0);
+//        }
+//        return BigDecimal.ZERO;
+//    }
     }
 }

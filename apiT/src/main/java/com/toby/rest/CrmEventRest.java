@@ -5,6 +5,8 @@
  */
 package com.toby.rest;
 
+import com.toby.API.CRMEventSearchBean;
+import com.toby.API.CrmEventDTOAPI;
 import com.toby.businessservice.CRMEventServiceDTO;
 import com.toby.businessservice.EventResponseService;
 import com.toby.dto.CrmEventDTO;
@@ -42,7 +44,7 @@ public class CrmEventRest {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response AddCrmEvent(CrmEventDTO crmEventDTO) {
         try {
-            if(crmEventDTO != null) {
+            if (crmEventDTO != null) {
                 TobyUser tobyUser = new TobyUser();
                 tobyUser.setId(crmEventDTO.getCreatedBy());
                 Branch branch = new Branch();
@@ -61,7 +63,7 @@ public class CrmEventRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteEvent(CrmEventDTO crmEventDTO) {
+    public Response deleteEvent(CRMEventSearchBean crmEventDTO) {
         try {
 
             if (crmEventDTO.getId() != null) {
@@ -83,10 +85,10 @@ public class CrmEventRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<CrmEventDTO> FindCrmEvent(CrmEventDTO crmEventDTO) {
-        List<CrmEventDTO> crmEventDTOList = new ArrayList<>();
+    public List<CrmEventDTOAPI> FindCrmEvent(CRMEventSearchBean crmEventDTO) {
+        List<CrmEventDTOAPI> crmEventDTOList = new ArrayList<>();
         if (crmEventDTO != null) {
-            crmEventDTOList = cRMEventServiceDTO.findCrmEventList(crmEventDTO.getPriority(), crmEventDTO.getGallaryId(), crmEventDTO.getCustomerId().getCode(), crmEventDTO.getCreatedBy(), crmEventDTO.getAssignedTo().getId(), crmEventDTO.getEndDate(), crmEventDTO.getStartDate(), crmEventDTO.getStatus().getId(), crmEventDTO.getBranchId());
+            crmEventDTOList = cRMEventServiceDTO.findCrmEventListAPI(crmEventDTO.getPriorityId(), crmEventDTO.getGallaryId(), crmEventDTO.getCustomerCode(), crmEventDTO.getCreatedBy(), crmEventDTO.getAssignedTo(), crmEventDTO.getDateFrom(), crmEventDTO.getDateTo(), crmEventDTO.getStatus(), crmEventDTO.getBranchId());
         }
         return crmEventDTOList;
     }
@@ -96,7 +98,7 @@ public class CrmEventRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<EventResponseDTO> FindResponseCrm(CrmEventDTO crmEventDTO) {
+    public List<EventResponseDTO> FindResponseCrm(CRMEventSearchBean crmEventDTO) {
         List<EventResponseDTO> crmEventDTOList = new ArrayList<>();
         if (crmEventDTO.getId() != null) {
             crmEventDTOList = eventResponseService.returnEventResponseDTOByEventId(crmEventDTO.getId());
@@ -109,13 +111,13 @@ public class CrmEventRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public CrmEventDTO FindCrmEventCount(CrmEventDTO crmEventDTO) {
+    public CRMEventSearchBean FindCrmEventCount(CRMEventSearchBean crmEventDTO) {
         Integer y = null;
         if (crmEventDTO != null) {
-            y = cRMEventServiceDTO.findCountCrmEvent(crmEventDTO.getPriority(), crmEventDTO.getGallaryId(), crmEventDTO.getCustomerId().getCode(), crmEventDTO.getCreatedBy(), crmEventDTO.getAssignedTo().getId(), crmEventDTO.getEndDate(), crmEventDTO.getStartDate(), crmEventDTO.getStatus().getId(), crmEventDTO.getBranchId());
+            y = cRMEventServiceDTO.findCountCrmEvent(crmEventDTO.getPriorityId(), crmEventDTO.getGallaryId(), crmEventDTO.getCustomerCode(), crmEventDTO.getCreatedBy(), crmEventDTO.getAssignedTo(), crmEventDTO.getDateFrom(), crmEventDTO.getDateTo(), crmEventDTO.getStatus(), crmEventDTO.getBranchId());
         }
-        CrmEventDTO c = new CrmEventDTO();
-        c.setNumberOfEvent(y);
+        CRMEventSearchBean c = new CRMEventSearchBean();
+        c.setNumber(y);
         return c;
     }
 
@@ -124,7 +126,7 @@ public class CrmEventRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<CrmEventDTO> FindALLCrmEvent(CrmEventDTO crmEventDTO) {
+    public List<CrmEventDTO> FindALLCrmEvent(CRMEventSearchBean crmEventDTO) {
         List<CrmEventDTO> crmEventDTOList = new ArrayList<>();
         if (crmEventDTO != null) {
             crmEventDTOList = cRMEventServiceDTO.findALLEventList(crmEventDTO.getBranchId());
@@ -137,7 +139,7 @@ public class CrmEventRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public CrmEventDTO FindALLCrmEventCount(CrmEventDTO crmEventDTO) {
+    public CrmEventDTO FindALLCrmEventCount(CRMEventSearchBean crmEventDTO) {
 
         Integer y = null;
         if (crmEventDTO.getBranchId() != null) {

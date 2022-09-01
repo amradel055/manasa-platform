@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.CrmEventDTOAPI;
 import com.toby.businessservice.reports.searchBean.CrmEventsReportSearchBean;
 import com.toby.core.GenericDAO;
 import com.toby.dto.ChartDTO;
@@ -450,6 +451,19 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         return crmEventDTOList;
     }
 
+    private List<CrmEventDTOAPI> mapToDTOListAPI(List<CrmEvent> crmEventList) {
+        List<CrmEventDTOAPI> crmEventDTOList = new ArrayList<>();
+        if (crmEventList != null && !crmEventList.isEmpty()) {
+            int index = 0;
+            for (CrmEvent entity : crmEventList) {
+                index++;
+                CrmEventDTOAPI crmEventDTO = initMapToDTOAPI(entity);
+                crmEventDTOList.add(crmEventDTO);
+            }
+        }
+        return crmEventDTOList;
+    }
+
     private CrmEventDTO mapToDTO(CrmEventDTO crmEventDTO, CrmEvent entity) {
         crmEventDTO = initMapToDTO(entity);
         return crmEventDTO;
@@ -527,7 +541,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         }
 
         dTO.setBranchId(entity.getBranchId().getId());
-        dTO.setType(entity.getType());
+        dTO.setTypee(entity.getType());
         dTO.setSerial(entity.getSerial());
         if (entity.getSendNotification() != null) {
             dTO.setSendNotification(entity.getSendNotification() == 1);
@@ -594,6 +608,31 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         return dTO;
     }
 
+    private CrmEventDTOAPI initMapToDTOAPI(CrmEvent entity) {
+
+        CrmEventDTOAPI dTO = new CrmEventDTOAPI();
+        dTO.setId(entity.getId());
+
+        dTO.setActivityType(entity.getActivityType() == null ? null : entity.getActivityType().getName());
+        dTO.setStatus(entity.getStatus() == null ? null : entity.getStatus().getName());
+        dTO.setPeriority(entity.getPriority() == null ? null : entity.getPriority().getName());
+        dTO.setInvoiceId(entity.getInvoiceId() == null ? null : entity.getInvoiceId().getId());
+        dTO.setCrmType(entity.getCrmType() == null ? null : entity.getCrmType().getName());
+        dTO.setAssignedTo(entity.getAssignedTo() == null ? null : entity.getAssignedTo().getName());
+        dTO.setGallarySelected(entity.getGalleryId() == null ? null : entity.getGalleryId().getName());
+        dTO.setCustomerId(entity.getCustomerId() == null ? null : entity.getCustomerId().getName());
+
+        dTO.setSubject(entity.getSubject());
+
+        if (entity.getActivityType() != null) {
+            dTO.setSubject(entity.getActivityType().getName());
+        }
+
+        dTO.setSerial(entity.getSerial());
+
+        return dTO;
+    }
+
     private CrmEvent mapToEntity(CrmEventDTO dTO, TobyUser tobyUser) {
         CrmEvent entity = new CrmEvent();
 
@@ -633,7 +672,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
 
         //    entity.setSubject(dTO.getSubject());
         entity.setSubject(dTO.getActivityType() != null ? dTO.getActivityType().getName() : dTO.getSubject());
-        entity.setType(dTO.getType());
+        entity.setType(dTO.getTypee());
         entity.setSerial(dTO.getSerial());
         entity.setRemark(dTO.getRemark());
         if (dTO.getInvoiceId() != null && dTO.getInvoiceId().getId() != null) {
@@ -1404,6 +1443,14 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         List<CrmEvent> crmEventList = dao.findListByQuery("SELECT e FROM CrmEvent e WHERE e.customerId.id = :custumerId AND e.branchId.id = :branchId AND e.deletedBy is null", params);
         return mapToDTOList(crmEventList);
     }
+    @Override
+    public List<CrmEventDTO> findALLEventByInvoiceId(Integer invoiceId, Integer branchId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("invoiceId", invoiceId);
+        params.put("branchId", branchId);
+        List<CrmEvent> crmEventList = dao.findListByQuery("SELECT e FROM CrmEvent e WHERE e.invoiceId.id = :invoiceId AND e.branchId.id = :branchId AND e.deletedBy is null", params);
+        return mapToDTOList(crmEventList);
+    }
 
     @Override
     public List<CrmEventDTO> findALLEventByGalleryId(String GalleryIdList, Integer userId) {
@@ -1416,9 +1463,21 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
 
     @Override
     public List<CrmEventDTO> findCrmEventList(Integer priorityId, Integer gallaryId, String customerCode, Integer createdBy, Integer assignedTo, Date dateTo, Date dateFrom, Integer status, Integer branchId) {
+        List<CrmEvent> crmEventList = findData(branchId, priorityId, gallaryId, customerCode, createdBy, assignedTo, dateTo, dateFrom, status);
+        return mapToDTOList(crmEventList);
+    }
+
+    @Override
+    public List<CrmEventDTOAPI> findCrmEventListAPI(Integer priorityId, Integer gallaryId, String customerCode, Integer createdBy, Integer assignedTo, Date dateTo, Date dateFrom, Integer status, Integer branchId) {
+        List<CrmEvent> crmEventList = findData(branchId, priorityId, gallaryId, customerCode, createdBy, assignedTo, dateTo, dateFrom, status);
+        return mapToDTOListAPI(crmEventList);
+    }
+
+    private List<CrmEvent> findData(Integer branchId, Integer priorityId, Integer gallaryId, String customerCode, Integer createdBy, Integer assignedTo, Date dateTo, Date dateFrom, Integer status) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("SELECT e FROM CrmEvent e WHERE ");
+        params.put("branchId", branchId);
+        stringBuilder.append("SELECT e FROM CrmEvent e WHERE e.branchId.id  = :branchId ");
         if (priorityId != null) {
             params.put("priorityId", priorityId);
             stringBuilder.append("e.priority.id = :priorityId ");
@@ -1451,20 +1510,16 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
             params.put("status", status);
             stringBuilder.append("AND e.status.id =:status ");
         }
-        if (branchId != null) {
-            params.put("branchId", branchId);
-            stringBuilder.append("AND e.branchId.id = :branchId ");
-        }
-
         List<CrmEvent> crmEventList = dao.findListByQuery(stringBuilder.toString(), params);
-        return mapToDTOList(crmEventList);
+        return crmEventList;
     }
 
     @Override
     public Integer findCountCrmEvent(Integer priorityId, Integer gallaryId, String customerCode, Integer createdBy, Integer assignedTo, Date dateTo, Date dateFrom, Integer status, Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("SELECT count(e.id) FROM CrmEvent e WHERE ");
+        params.put("branchId", branchId);
+        stringBuilder.append("SELECT count(e.id) FROM CrmEvent e WHERE e.branchId.id  = :branchId ");
         if (priorityId != null) {
             params.put("priorityId", priorityId);
             stringBuilder.append("e.priority.id = :priorityId ");
@@ -1497,10 +1552,6 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
             params.put("status", status);
             stringBuilder.append("AND e.status.id =:status ");
         }
-        if (branchId != null) {
-            params.put("branchId", branchId);
-            stringBuilder.append("AND e.branchId.id = :branchId ");
-        }
 
         Long x = dao.findEntityByQuery(stringBuilder.toString(), params);
         return x.intValue();
@@ -1518,7 +1569,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
     public List<CrmEventDTO> findALLEventList(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
-        List<CrmEvent> crmEventList = dao.findEntityByQuery("SELECT e FROM CrmEvent e WHERE e.branchId.id = :branchId ", params);
+        List<CrmEvent> crmEventList = dao.findListByQuery("SELECT e FROM CrmEvent e WHERE e.branchId.id = :branchId ", params);
         return returnListDTO(crmEventList);
     }
 

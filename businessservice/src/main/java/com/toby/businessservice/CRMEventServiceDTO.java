@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.CrmEventDTOAPI;
 import com.toby.businessservice.reports.searchBean.CrmEventsReportSearchBean;
 import com.toby.dto.ChartDTO;
 import com.toby.dto.CrmEventDTO;
@@ -102,4 +103,8 @@ public interface CRMEventServiceDTO {
     public List<CrmEventDTO> findALLEventList(Integer branchId);
 
     public Integer findALLCountEventList(Integer branchId);
+
+    public List<CrmEventDTOAPI> findCrmEventListAPI(Integer priorityId, Integer gallaryId, String customerCode, Integer createdBy, Integer assignedTo, Date dateTo, Date dateFrom, Integer status, Integer branchId);
+
+    public List<CrmEventDTO> findALLEventByInvoiceId(Integer invoiceId, Integer branchId);
 }

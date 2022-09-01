@@ -104,11 +104,11 @@ public class CrmTasksFormDTOMB extends CrmBasicDataForm {
     }
 
     public void updateEventValue() {
-        getCrmEventDTO().setType(0);
+        getCrmEventDTO().setTypee(0);
     }
 
     public void updateTODOValue() {
-        getCrmEventDTO().setType(1);
+        getCrmEventDTO().setTypee(1);
     }
 
     /**

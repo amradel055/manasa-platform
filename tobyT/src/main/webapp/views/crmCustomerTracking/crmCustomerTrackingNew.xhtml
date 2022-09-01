@@ -447,17 +447,12 @@
                                 <f:setPropertyActionListener value="#{invInvoicePurchaseTable2}" 
                                                              target="#{invPurchaseInvoiceListDTOMB.invInvoiceDTOSelected}" />
                             </p:commandButton>
-
-
-
-                            <p:commandButton 
-                                class="sprintButtons"
-                                update="@form" onclick="form.target = '_blank'"  ajax="false"
-                                icon="fa fa-fw fa-print" style="background-color: rgb(0, 74, 128);border-radius: 3px;"
-                                title="print" 
-                                action="#{invPurchaseInvoiceListDTOMB.printList()}"  >
-                                <f:setPropertyActionListener value="#{invInvoicePurchaseTable2}" 
-                                                             target="#{invPurchaseInvoiceListDTOMB.invInvoiceDTOSelected}" />
+                            <p:commandButton  
+                                update="@form" 
+                                class="smsearchButtons"
+                                icon="fa fa-fw fa-search-plus"  style="background-color: rgba(63, 81, 181, 0.88);border-radius: 3px;"
+                                title="الشكوي" 
+                                action="#{CustomerTrackingMB.findCRMEventByInvoiceId()}"  >
                             </p:commandButton>
 
                         </p:column>
@@ -474,55 +469,7 @@
 
                 </p:fieldset>
 
-                <p:fieldset  legend="البيانات"   style="margin-bottom:20px">
-                    <p:dataTable  id="table"
-                                  var="data"
-                                  value="#{CustomerTrackingMB.invoiceProductionStagesReports}"
-                                  draggableColumns="true"
-                                  paginator="true"
-                                  widgetVar="data" 
-                                  rowIndexVar="index" 
-                                  emptyMessage="EMPTY_TABLE"
-                                  sortBy="#{data.invInvoice}"
-                                  rows="20"
-                                  >
-                        <p:headerRow>
-                            <p:column colspan="1" style="width: 15vh;font-size: 2vh;border-radius: 0px;" >
-                                <h:outputText value="عدد الثوب" />
-                            </p:column>
-                            <p:column colspan="5" style="width: 15vh;font-size: 2vh;border-radius: 0px;" >
-                                <h:outputText value="#{data.number}" />
-                            </p:column>
-                        </p:headerRow>
-                        <p:column headerText="#" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
-                            <h:outputText 
-                                value="#{index + 1}" />
-                        </p:column>
-                        <p:column headerText="التاريخ" style="width: 13vh;text-align: center!important;font-size: 2vh">
-                            <h:outputText value="#{data.date}">
-                                <f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss" />
-                            </h:outputText>
-                        </p:column>
-                        <p:column headerText="اسم الصنف" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
-                            <h:outputText value="#{data.productName}" />
-                        </p:column>
-                        <p:column headerText="الكمية" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
-                            <h:outputText value="#{data.quantity}" />
-                        </p:column>
-                        <p:column headerText="المرحلة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
-                            <h:outputText value="#{data.stage}" />
-                        </p:column>
-                        <p:column headerText="الموظف" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
-                            <h:outputText value="#{data.empName}" />
-                        </p:column>
-
-
-
-                    </p:dataTable>
-
-                </p:fieldset>
                 <p:fieldset>
-
                     <p:dataTable 
                         id="eventListFormtable"
                         var="eventListForm" 
@@ -615,158 +562,22 @@
                                     sortBy="#{eventListForm.assignedTo.name}" >
                             <p:outputLabel value="#{eventListForm.assignedTo.name}"  style="font-size: 1.5vh"/>
                         </p:column>
+                        <p:column  style="width: 12vh;font-size: 1.8vh;text-align:center;border-radius: 0px;" headerText="#{userData.userDDs['TRANSACTION']}" >
+                            <p:commandButton  
+                                update="@form" onclick="form.target = '_blank'"  ajax="false"
+                                class="smsearchButtons"
+                                icon="fa fa-fw fa-search-plus"  style="background-color: rgba(63, 81, 181, 0.88);border-radius: 3px;"
+                                title="#{userData.userDDs['VIEW']}" 
+                                action="#{CustomerTrackingMB.goToEdit()}"  >
+                                <f:setPropertyActionListener value="#{eventListForm}" 
+                                                             target="#{CustomerTrackingMB.crmEventDTOSelected}" />
+                            </p:commandButton>
+                            
 
+                        </p:column>
 
                     </p:dataTable>
                 </p:fieldset>
-
-                <p:dialog class="dialogueCRM" id="dialogueCRM" header="إضافة شكوي جديدة" widgetVar="dlg1" minHeight="40">
-                    <h:panelGrid id="panelDialogueCRM" > 
-
-
-                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
-                            <h:panelGroup>
-                                <p:outputLabel style="width:104px;margin-right: 5%; margin-left: 5%"  value="المعارض" />
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <p:selectOneMenu id="inventory" value="#{CustomerTrackingMB.gallaryDTOSelect}"
-                                                 converter="#{CustomerTrackingMB.gallaryDTOConverters}" 
-                                                 style="float:right;width: 20%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
-
-                                    <p:ajax listener="#{CustomerTrackingMB.returnUsersList()}" update="users" />
-                                    <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
-
-                                    <f:selectItems value="#{CustomerTrackingMB.gallaryLists}" 
-                                                   var="inventory" itemLabel="#{inventory.name}"
-                                                   itemValue="#{inventory}"/> 
-                                </p:selectOneMenu>
-
-                            </h:panelGroup>
-                        </div>
-
-
-
-
-                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
-                            <h:panelGroup>
-                                <p:outputLabel style="width:104px;margin-right: 5%; margin-left: 5%"  value="المستخدمين " />
-                            </h:panelGroup>
-                            <h:panelGroup>
-                                <p:selectOneMenu id="users" value="#{CustomerTrackingMB.tobyUserDTO}"
-                                                 converter="#{CustomerTrackingMB.tobyUserDTOConverter}" 
-                                                 style="float:right;width: 20%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
-
-                                    <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
-                                    <f:selectItems value="#{CustomerTrackingMB.tobyUserDTOList}" 
-                                                   var="users" itemLabel="#{users.name}"
-                                                   itemValue="#{users}"/> 
-                                </p:selectOneMenu>
-
-                            </h:panelGroup>
-                        </div>
-
-
-                        <div class="ui-g-12 ui-g-nopad"  >
-                            <div class="ui-g">
-
-                                <div class="ui-g-12 ui-md-6">
-
-                                    <h:panelGroup>
-                                        <h:panelGroup>
-                                            <p:outputLabel style="width: 98px;margin-right: 4%;" value="الموضوع"/>
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:inputText style="width: 52%!important" value="#{CustomerTrackingMB.crmEventDTO.subject}"/>
-                                        </h:panelGroup>
-                                    </h:panelGroup>
-
-                                </div>
-
-                                <div class="ui-g-12 ui-md-6" style="padding: 0px;">
-                                    <h:panelGroup >
-                                        <h:panelGroup>
-                                            <p:outputLabel style="width:105px;margin-right: 5%"  value="نوع الشكوي   " />
-                                        </h:panelGroup>
-                                        <h:panelGroup >
-                                            <p:autoComplete style="width:49%!important " 
-
-                                                            dropdown="true"
-                                                            converter="#{CustomerTrackingMB.activityTypeDTOconverter}"
-                                                            value="#{CustomerTrackingMB.crmEventDTO.activityType}"
-                                                            var="activityType"
-                                                            itemLabel="#{activityType}" 
-                                                            itemValue="#{activityType}" 
-                                                            forceSelection="true" 
-                                                            completeMethod="#{CustomerTrackingMB.completeActivityType}"
-                                                            >
-
-                                            </p:autoComplete>
-                                        </h:panelGroup>
-                                    </h:panelGroup>
-                                </div>
-
-                                <div>
-                                    <panelGrid class="centerButtons col-md-12">
-
-                                        <h:panelGroup>
-
-                                            <p:commandButton  class="saveButton" id="saveB" 
-                                                              title="#{userData.userDDs['SAVE']}" 
-                                                              value="#{userData.userDDs['SAVE']}" 
-                                                              style="color: #ecf0f1!important;;background-color: #009688!important;margin-left: 5px" 
-                                                              action="#{CustomerTrackingMB.saveEvent() }" 
-                                                              update="@form"
-                                                              >
-                                            </p:commandButton>
-
-                                            <p:commandButton  class="closeButton" id="cancelC" 
-                                                              title="#{userData.userDDs['CANCEL']}" 
-                                                              value="#{userData.userDDs['CANCEL']}" onclick="PF('dlg1').hide();" 
-                                                              style="color: #ecf0f1!important;background-color: #009688!important;margin-left: 5px" 
-                                                              >
-                                            </p:commandButton>
-
-                                            <p:commandButton  class="closeButton" id="resetEvent" 
-                                                              title="جديد" 
-                                                              value="جديد"  
-                                                              style="color: #ecf0f1!important;background-color: #009688!important;margin-left: 5px" 
-                                                              action="#{CustomerTrackingMB.resetEvent()}"
-                                                              update="panelDialogueCRM"
-
-                                                              > 
-                                            </p:commandButton>
-
-                                            <p:commandButton  class="fullButton" id="cancelC1" 
-                                                              title="استمارة كاملة" 
-                                                              value="استمارة كاملة" 
-
-                                                              actionListener="#{crmEventFormDTOMB.goToEvent()}"                                                      
-                                                              onclick="form.target = '_blank'"  ajax="false"
-                                                              style="color: #ecf0f1!important;background-color: #22323a!important;margin-left: 5px" 
-                                                              >
-                                            </p:commandButton>
-
-
-
-
-
-
-                                        </h:panelGroup>
-                                    </panelGrid>
-                                </div>
-
-                            </div>
-
-
-                        </div>
-
-                    </h:panelGrid> 
-                </p:dialog>
-
-
-
-
             </p:fieldset>
 
 

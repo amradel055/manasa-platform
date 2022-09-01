@@ -236,11 +236,11 @@ public abstract class CrmBasicDataForm extends BaseFormBean {
     }
 
     public void updateTODOValue() {
-        getCrmEventDTO().setType(1);
+        getCrmEventDTO().setTypee(1);
     }
 
     public void updateEventValue() {
-        getCrmEventDTO().setType(0);
+        getCrmEventDTO().setTypee(0);
     }
 
     public void fillEventsDTO(Integer customerId) {

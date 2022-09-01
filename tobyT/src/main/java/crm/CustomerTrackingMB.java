@@ -49,7 +49,7 @@ import org.primefaces.event.SelectEvent;
  */
 @Named(value = "CustomerTrackingMB")
 @ViewScoped
-public class CustomerTrackingMB extends Basic implements Serializable {
+public class CustomerTrackingMB extends CrmBasicDataForm implements Serializable {
 
     private InvOrganizationSiteDTO invOrganizationSiteDTO;
 
@@ -76,6 +76,8 @@ public class CustomerTrackingMB extends Basic implements Serializable {
     private Boolean employeeIsSupervisor = Boolean.FALSE;
 
     private CrmEventDTO crmEventDTO;
+
+    private CrmEventDTO crmEventDTOSelected;
 
     private SymbolDTOConverter activityTypeDTOconverter;
 
@@ -165,6 +167,19 @@ public class CustomerTrackingMB extends Basic implements Serializable {
         }
     }
 
+    public void findCRMEventByInvoiceId() {
+        setListEveentMainScrren(cRMEventServiceDTO.findALLEventByInvoiceId(getInvOrganizationSiteDTO().getId(), getUserData().getUserBranch().getId()));
+    }
+
+    public String goToEditCRMvent() {
+        try {
+            return goToEventEdit(getCrmEventDTOSelected().getId());
+        } catch (Exception e) {
+            saveError(e, "crmEventListDTOMB", "goToEdit");
+            return null;
+        }
+    }
+
     public void FillEventByCustomerId() {
 
     }
@@ -188,11 +203,11 @@ public class CustomerTrackingMB extends Basic implements Serializable {
     }
 
     public void updateTODOValue() {
-        getCrmEventDTO().setType(1);
+        getCrmEventDTO().setTypee(1);
     }
 
     public void updateEventValue() {
-        getCrmEventDTO().setType(0);
+        getCrmEventDTO().setTypee(0);
     }
 
     public void reset() {
@@ -677,6 +692,40 @@ public class CustomerTrackingMB extends Basic implements Serializable {
      */
     public void setTobyUserDTOConverter(TobyUserDTOConverter tobyUserDTOConverter) {
         this.tobyUserDTOConverter = tobyUserDTOConverter;
+    }
+
+    /**
+     * @return the crmEventDTOSelected
+     */
+    public CrmEventDTO getCrmEventDTOSelected() {
+        return crmEventDTOSelected;
+    }
+
+    /**
+     * @param crmEventDTOSelected the crmEventDTOSelected to set
+     */
+    public void setCrmEventDTOSelected(CrmEventDTO crmEventDTOSelected) {
+        this.crmEventDTOSelected = crmEventDTOSelected;
+    }
+
+    @Override
+    public String save() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void init() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void load() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getScreenName() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
