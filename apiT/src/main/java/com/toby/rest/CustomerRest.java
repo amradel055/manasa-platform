@@ -5,8 +5,11 @@
  */
 package com.toby.rest;
 
+import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.report.SupplierAccountService;
+import com.toby.bussinessservice.global.AutoCompleteService;
+import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.views.OrganizationSiteStatementView;
 import java.util.ArrayList;
@@ -17,7 +20,9 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -30,6 +35,10 @@ public class CustomerRest {
     SupplierAccountService supplierAccountService;
     @EJB
     OrganizationSiteService organizationSiteService;
+    @EJB
+    AutoCompleteService autoCompleteService;
+    @EJB
+    InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
 
     @Transactional
     @Path("/customerBalance")
@@ -56,4 +65,40 @@ public class CustomerRest {
         }
         return siteDTO;
     }
+
+    @Transactional
+    @Path("/findBy")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findCustomersByQuery(InvOrganizationSiteDTO dto){
+        try {
+            List<InvOrganizationSiteDTO> invOrganizationSiteDTOs = autoCompleteService.autoCompleteOrganizationSiteDTOAnotherBranchAnotherGallary(dto.getBranchId(), dto.getPhone(), dto.getGallaryIdAPI());
+            GenericEntity<List<InvOrganizationSiteDTO>> list = new GenericEntity<List<InvOrganizationSiteDTO>>(invOrganizationSiteDTOs) {
+            };
+            return Response.ok(list).build();
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
+
+    @Transactional
+    @Path("/findCustomerInvoicesBy")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findCustomersInvoicesByQuery(InvOrganizationSiteDTO dto) {
+        try {
+            List<InvInvoiceDTO> invoiceDTOs = invPurchaseInvoiceService_1.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(4, dto.getGallaryIdAPI(), dto.getId());
+            GenericEntity<List<InvInvoiceDTO>> list = new GenericEntity<List<InvInvoiceDTO>>(invoiceDTOs) {
+            };
+            return Response.ok(list).build();
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
+
+
 }
