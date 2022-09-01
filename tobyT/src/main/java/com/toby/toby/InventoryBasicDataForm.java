@@ -405,7 +405,6 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             context.getSessionMap().put("ScreenMode", "addGmSubscriptions");
             context.getSessionMap().put("typeActivity", 0);
             goToScreen();
-
             return "";
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceListMB", "goToAdd");
@@ -1362,7 +1361,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     public void editCustomer() {
 
 //        if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getId() != null) {
-        organizationSiteService.updateOrganizationSiteMobile(getOrganizationSiteId());
+        organizationSiteService.updateOrganizationSite(getOrganizationSiteId());
         getInvInvoiceDTO().setOrganizationSiteId(getOrganizationSiteId());
         savedMeesage("تم الحفظ بنجاح");
 //        }

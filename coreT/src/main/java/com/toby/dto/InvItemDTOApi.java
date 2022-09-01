@@ -19,6 +19,7 @@ public class InvItemDTOApi extends BaseEntityDTO {
     private String remarks;
     private String image;
     private Integer groupId;
+    private Integer inventoryId;
     private BigDecimal price;
     private List<AttributeDTO> atrributesList;
     private List<VariationDTO> variationsList;
@@ -133,6 +134,20 @@ public class InvItemDTOApi extends BaseEntityDTO {
      */
     public void setGroupId(Integer groupId) {
         this.groupId = groupId;
+    }
+
+    /**
+     * @return the inventoryId
+     */
+    public Integer getInventoryId() {
+        return inventoryId;
+    }
+
+    /**
+     * @param inventoryId the inventoryId to set
+     */
+    public void setInventoryId(Integer inventoryId) {
+        this.inventoryId = inventoryId;
     }
 
 }

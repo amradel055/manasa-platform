@@ -11,7 +11,11 @@ import com.toby.businessservice.report.SupplierAccountService;
 import com.toby.bussinessservice.global.AutoCompleteService;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
+import com.toby.entity.Branch;
+import com.toby.entity.TobyCompany;
+import com.toby.entity.TobyUser;
 import com.toby.views.OrganizationSiteStatementView;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
@@ -40,17 +44,46 @@ public class CustomerRest {
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
 
+    // رصيد العميل
     @Transactional
     @Path("/customerBalance")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<OrganizationSiteStatementView> customerBalancesList(InvOrganizationSiteDTO invOrganizationSiteDTO) {
+    public BigDecimal customerBalancesList(InvOrganizationSiteDTO invOrganizationSiteDTO) {
+        BigDecimal statementViews = BigDecimal.ZERO;
+        if (invOrganizationSiteDTO != null) {
+            statementViews = supplierAccountService.getAccountForOrganizationSite(invOrganizationSiteDTO.getId());
+        }
+        return statementViews;
+    }
+
+    // كشف حساب العميل
+    @Transactional
+    @Path("/statementForOrganizationSite")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<OrganizationSiteStatementView> statementForOrganizationSite(InvOrganizationSiteDTO invOrganizationSiteDTO) {
         List<OrganizationSiteStatementView> statementViews = new ArrayList<>();
         if (invOrganizationSiteDTO != null) {
             statementViews = supplierAccountService.getStatementForOrganizationSite(invOrganizationSiteDTO.getId());
         }
         return statementViews;
+    }
+
+    // البحث عن العميل بكوده او موبايله او جزء من اسمه
+    @Transactional
+    @Path("/listCustomerData")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<InvOrganizationSiteDTO> customerData(InvOrganizationSiteDTO invOrganizationSiteDTO) {
+        List<InvOrganizationSiteDTO> siteDTO = new ArrayList<>();
+        if (invOrganizationSiteDTO != null) {
+            siteDTO = autoCompleteService.autoCompleteOrganizationSiteDTO(invOrganizationSiteDTO.getBranchId(), Boolean.TRUE, 0, invOrganizationSiteDTO.getCode(), invOrganizationSiteDTO.getGallaryIdAPI());
+        }
+        return siteDTO;
     }
 
     @Transactional
@@ -71,7 +104,7 @@ public class CustomerRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response findCustomersByQuery(InvOrganizationSiteDTO dto){
+    public Response findCustomersByQuery(InvOrganizationSiteDTO dto) {
         try {
             List<InvOrganizationSiteDTO> invOrganizationSiteDTOs = autoCompleteService.autoCompleteOrganizationSiteDTOAnotherBranchAnotherGallary(dto.getBranchId(), dto.getPhone(), dto.getGallaryIdAPI());
             GenericEntity<List<InvOrganizationSiteDTO>> list = new GenericEntity<List<InvOrganizationSiteDTO>>(invOrganizationSiteDTOs) {
@@ -83,6 +116,7 @@ public class CustomerRest {
         }
     }
 
+    // فواتير العميل
     @Transactional
     @Path("/findCustomerInvoicesBy")
     @POST
@@ -100,5 +134,49 @@ public class CustomerRest {
         }
     }
 
+    @Transactional
+    @Path("/addNewCustomer")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addNewCustomer(InvOrganizationSiteDTO dto) {
+
+        try {
+
+            TobyUser user = new TobyUser();
+
+            user.setId(dto.getCreatedBy());
+
+            Branch branch = new Branch();
+            branch.setId(dto.getBranchId());
+            user.setBranchId(branch);
+
+            TobyCompany company = new TobyCompany();
+            company.setId(dto.getCompanyId());
+            user.setCompanyId(company);
+
+            dto = organizationSiteService.addNewCustomer(dto, null, user, dto.getAccountIdAPI());
+            return Response.ok(dto).build();
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.EXPECTATION_FAILED).build();
+        }
+    }
+
+    @Transactional
+    @Path("/updateCustomer")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateCustomer(InvOrganizationSiteDTO dto) {
+
+        try {
+            organizationSiteService.updateOrganizationSite(dto);
+            return Response.ok(dto).build();
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.EXPECTATION_FAILED).build();
+        }
+    }
 
 }

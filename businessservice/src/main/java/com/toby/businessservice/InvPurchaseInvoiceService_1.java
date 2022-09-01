@@ -183,5 +183,9 @@ public interface InvPurchaseInvoiceService_1 {
      public InvInvoiceDTO convertInvPurchaseInvoiceToInvInvoice(InvInvoiceDTO invInvoiceDTO, Integer type);
      
      public List<InvInvoiceDTOApi> getALLInvPurchaseInvoiceDTOBYCustomerForWebSite(Integer type, Integer organizationId);
+     
+     public InvInvoiceDTO findInvPurchaseInvoiceByserial(Integer serial);
+     
+     public ResponseApi SaveApiDeskTop(InvInvoiceDTOApi invInvoiceDTOApi);
 
 }

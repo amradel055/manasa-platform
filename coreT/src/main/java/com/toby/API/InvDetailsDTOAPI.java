@@ -19,6 +19,7 @@ public class InvDetailsDTOAPI  extends BaseEntityDTO{
     private BigDecimal price ;
     private String image ;
     private Integer groupId ;
+    private Integer inventoryId ;
     
     private Integer itemId;
     private BigDecimal net;
@@ -148,6 +149,20 @@ public class InvDetailsDTOAPI  extends BaseEntityDTO{
      */
     public void setNumber(BigDecimal number) {
         this.number = number;
+    }
+
+    /**
+     * @return the inventoryId
+     */
+    public Integer getInventoryId() {
+        return inventoryId;
+    }
+
+    /**
+     * @param inventoryId the inventoryId to set
+     */
+    public void setInventoryId(Integer inventoryId) {
+        this.inventoryId = inventoryId;
     }
 
 

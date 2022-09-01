@@ -20,6 +20,10 @@ public class InvInvoiceDTOApi extends BaseEntityDTO {
     private String invoiceNumber;
     private String remarks;
     private Integer customerId;
+    private Integer gallaryId;
+    private Integer discountType;
+    private Integer invDelegatorId;
+    private Integer invInventoryId;
     private List<InvDetailsDTOAPI> invoiceDetailApiList;
 
     /**
@@ -160,5 +164,61 @@ public class InvInvoiceDTOApi extends BaseEntityDTO {
      */
     public void setInvoiceDetailApiList(List<InvDetailsDTOAPI> invoiceDetailApiList) {
         this.invoiceDetailApiList = invoiceDetailApiList;
+    }
+
+    /**
+     * @return the gallaryId
+     */
+    public Integer getGallaryId() {
+        return gallaryId;
+    }
+
+    /**
+     * @param gallaryId the gallaryId to set
+     */
+    public void setGallaryId(Integer gallaryId) {
+        this.gallaryId = gallaryId;
+    }
+
+    /**
+     * @return the discountType
+     */
+    public Integer getDiscountType() {
+        return discountType;
+    }
+
+    /**
+     * @param discountType the discountType to set
+     */
+    public void setDiscountType(Integer discountType) {
+        this.discountType = discountType;
+    }
+
+    /**
+     * @return the invDelegatorId
+     */
+    public Integer getInvDelegatorId() {
+        return invDelegatorId;
+    }
+
+    /**
+     * @param invDelegatorId the invDelegatorId to set
+     */
+    public void setInvDelegatorId(Integer invDelegatorId) {
+        this.invDelegatorId = invDelegatorId;
+    }
+
+    /**
+     * @return the invInventoryId
+     */
+    public Integer getInvInventoryId() {
+        return invInventoryId;
+    }
+
+    /**
+     * @param invInventoryId the invInventoryId to set
+     */
+    public void setInvInventoryId(Integer invInventoryId) {
+        this.invInventoryId = invInventoryId;
     }
 }

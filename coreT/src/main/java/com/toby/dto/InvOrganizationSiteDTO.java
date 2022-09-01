@@ -104,6 +104,8 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
     
     ////// API //////
     private Integer gallaryIdAPI;
+    private Integer accountIdAPI;
+    
 
     public InvOrganizationSiteDTO() {
     }
@@ -1251,6 +1253,20 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
      */
     public void setGallaryIdAPI(Integer gallaryIdAPI) {
         this.gallaryIdAPI = gallaryIdAPI;
+    }
+
+    /**
+     * @return the accountIdAPI
+     */
+    public Integer getAccountIdAPI() {
+        return accountIdAPI;
+    }
+
+    /**
+     * @param accountIdAPI the accountIdAPI to set
+     */
+    public void setAccountIdAPI(Integer accountIdAPI) {
+        this.accountIdAPI = accountIdAPI;
     }
 
   

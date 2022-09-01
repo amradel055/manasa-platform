@@ -23,6 +23,7 @@ public class InventoryDelegatorDTO extends BaseEntityDTO {
     private BigDecimal targetSales;
     private BigDecimal commission;
     private InvInventoryDTO gallaryDTO;
+    private Integer gallaryIdAPI;
     
 
     public InventoryDelegatorDTO() {
@@ -135,6 +136,20 @@ public class InventoryDelegatorDTO extends BaseEntityDTO {
      */
     public void setGallaryDTO(InvInventoryDTO gallaryDTO) {
         this.gallaryDTO = gallaryDTO;
+    }
+
+    /**
+     * @return the gallaryIdAPI
+     */
+    public Integer getGallaryIdAPI() {
+        return gallaryIdAPI;
+    }
+
+    /**
+     * @param gallaryIdAPI the gallaryIdAPI to set
+     */
+    public void setGallaryIdAPI(Integer gallaryIdAPI) {
+        this.gallaryIdAPI = gallaryIdAPI;
     }
 
 }

@@ -8,6 +8,7 @@ package com.toby.rest;
 import com.toby.API.InvInvoiceDTOApi;
 import com.toby.API.ResponseApi;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
+import com.toby.dto.InvInvoiceDTO;
 import javax.ejb.EJB;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -37,4 +38,35 @@ public class SalesRest {
         }
     }
 
+    @Transactional
+    @Path("/saveDeskTop")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response saveDeskTop(InvInvoiceDTOApi invInvoiceDTOApi) {
+        try {
+            ResponseApi responseApi = invPurchaseInvoiceService_1.SaveApiDeskTop(invInvoiceDTOApi);
+            return Response.ok().entity(responseApi).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
+
+    @Transactional
+    @Path("findInvPurchaseInvoiceById")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public InvInvoiceDTO findInvPurchaseInvoiceById(InvInvoiceDTOApi dTO) {
+        return this.invPurchaseInvoiceService_1.findInvPurchaseInvoiceById(dTO.getId());
+    }
+
+    @Transactional
+    @Path("findInvPurchaseInvoiceByserial")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public InvInvoiceDTO findInvPurchaseInvoiceByserial(InvInvoiceDTOApi dTO) {
+        return this.invPurchaseInvoiceService_1.findInvPurchaseInvoiceByserial(dTO.getSerial());
+    }
 }

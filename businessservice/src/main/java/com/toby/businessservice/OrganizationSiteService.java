@@ -26,7 +26,7 @@ import javax.ejb.Remote;
 @Remote
 public interface OrganizationSiteService {
 
-    public void updateOrganizationSiteMobile(InvOrganizationSiteDTO organizationSiteDTO);
+    public void updateOrganizationSite(InvOrganizationSiteDTO organizationSiteDTO);
 
     public void updateOrganizationSiteCompany(InvOrganizationSiteDTO organizationSiteDTO);
 

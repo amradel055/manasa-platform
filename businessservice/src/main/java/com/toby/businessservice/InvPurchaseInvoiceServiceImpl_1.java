@@ -8,6 +8,7 @@ package com.toby.businessservice;
 import com.toby.API.InvDetailsDTOAPI;
 import com.toby.API.InvInvoiceDTOApi;
 import com.toby.API.ResponseApi;
+import com.toby.businessservice.report.SupplierAccountService;
 import com.toby.bussinessservice.global.AutoCompleteService;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
@@ -153,7 +154,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     @EJB
     private GeneraljournalService generaljournalService;
     @EJB
-    private InvInventoryService inventoryService;
+    private SupplierAccountService supplierAccountService;
     @EJB
     private GeneraljournalDetailsService generaljournalDetailsService;
 
@@ -658,6 +659,15 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             list.add(invoice);
         }
         return list;
+    }
+
+    @Override
+    public InvInvoiceDTO findInvPurchaseInvoiceByserial(Integer serial) {
+        Integer invoiceId = getInvoiceBySerial(serial);
+        if (invoiceId != null) {
+            return findInvPurchaseInvoiceById(invoiceId);
+        }
+        return null;
     }
 
     @Override
@@ -1487,6 +1497,56 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         return invoiceDTO;
 
     }
+    public InvInvoiceDTO mapToDTOApiDeskTop(InvInvoiceDTOApi invInvoiceDTOApi) {
+        InvInvoiceDTO invoiceDTO = new InvInvoiceDTO();
+        InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
+        invOrganizationSiteDTO.setId(invInvoiceDTOApi.getCustomerId());
+        invoiceDTO.setOrganizationSiteId(invOrganizationSiteDTO);
+
+        invoiceDTO.setDate(new Date());
+        CurrencyDTO currency = new CurrencyDTO();
+        currency.setId(110);
+        invoiceDTO.setCurrencyId(currency);
+        invoiceDTO.setRate(BigDecimal.ONE);
+        invoiceDTO.setPaymentType(1);
+        invoiceDTO.setDueperiod(invGlobalService.getDeliveryDaysByGalleryId(invInvoiceDTOApi.getGallaryId()));
+        invoiceDTO.setDueDate(invGlobalService.sumDateToDueDate(new Date(), new Date(), invoiceDTO.getDueperiod()));
+        invoiceDTO.setDiscount(BigDecimal.ZERO);
+        invoiceDTO.setDiscountType(invInvoiceDTOApi.getDiscountType());
+        invoiceDTO.setPostFlag(1);
+        invoiceDTO.setBranchId(invInvoiceDTOApi.getBranchId());
+        invoiceDTO.setCompanyId(invInvoiceDTOApi.getCompanyId());
+        invoiceDTO.setCreatedBy(invInvoiceDTOApi.getCreatedBy());
+        invoiceDTO.setType(4);
+        invoiceDTO.setRemarks(invInvoiceDTOApi.getRemarks());
+        InventoryDelegatorDTO delegatorDTO = new InventoryDelegatorDTO();
+        delegatorDTO.setId(invInvoiceDTOApi.getInvDelegatorId());
+        invoiceDTO.setInvDelegatorId(delegatorDTO);
+        InvInventoryDTO invInventory = new InvInventoryDTO();
+        invInventory.setId(invInvoiceDTOApi.getInvInventoryId());
+        invoiceDTO.setInvInventoryId(invInventory);
+        invoiceDTO.setTaxflag(true);
+        invoiceDTO.setTaxFlagFinal(false);
+        invoiceDTO.setPricetype(1);
+        InvInventoryDTO gallary = new InvInventoryDTO();
+        gallary.setId(invInvoiceDTOApi.getGallaryId());
+        invoiceDTO.setGallaryId(gallary);
+        invoiceDTO.setCompanyActivity(CompanyActivityClassEnum.RetailSaleForClothFactory);
+        invoiceDTO.setScreenName(ScreenNameClassEnum.PROWORKORDER);
+        invoiceDTO.setCreatedDate(new Date());
+        GlYear glYear = new GlYear();
+        glYear.setId(73);
+        invoiceDTO.setGlYearSelection(glYear);
+        invoiceDTO.setInventorySetupDTO(inventorySetupService.getInventoryByBranchIdDTO(invInvoiceDTOApi.getBranchId()));
+        if (invInvoiceDTOApi.getInvoiceDetailApiList() != null && !invInvoiceDTOApi.getInvoiceDetailApiList().isEmpty()) {
+            for (InvDetailsDTOAPI detailsDTOAPI : invInvoiceDTOApi.getInvoiceDetailApiList()) {
+                InvDetailDTO invDetailDTO = mapToDTOAPIDetailDeskTop(detailsDTOAPI);
+                invoiceDTO.getInvPurchaseInvoiceDetailList().add(invDetailDTO);
+            }
+        }
+        return invoiceDTO;
+
+    }
 
     public InvDetailDTO mapToDTOAPIDetail(InvDetailsDTOAPI detailsDTOAPI) {
         InvItem item = invItemService.findInvItem(detailsDTOAPI.getItemId());
@@ -1497,6 +1557,32 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invDetailDTO.setCostAvarage(item.getCostAverage());
         InvInventoryDTO inventoryDTO = new InvInventoryDTO();
         inventoryDTO.setId(45);
+        invDetailDTO.setInventoryDTO(inventoryDTO);
+        InvItemDTO itemDTO = new InvItemDTO();
+        itemDTO.setId(item.getId());
+        invDetailDTO.setItemId(itemDTO);
+        ItemsBarcodesDetailsView barcodesDetailsView = new ItemsBarcodesDetailsView();
+        barcodesDetailsView.setBarcode(item.getCode());
+        barcodesDetailsView.setCostAverage(item.getCostAverage());
+        barcodesDetailsView.setItemId(item.getId());
+        barcodesDetailsView.setMaxPriceMen(detailsDTOAPI.getPrice());
+        barcodesDetailsView.setProGroupId(item.getProGroupId().getId());
+        barcodesDetailsView.setUnitId(item.getUnitId().getId());
+        invDetailDTO.setItemsBarcodesDetail(barcodesDetailsView);
+        invDetailDTO.setNumber(detailsDTOAPI.getNumber());
+        invDetailDTO.setQuantity(item.getNumbermetersmen().multiply(detailsDTOAPI.getNumber()));
+        invDetailDTO.setQuantityOfOneUnit(item.getNumbermetersmen());
+        return invDetailDTO;
+    }
+    public InvDetailDTO mapToDTOAPIDetailDeskTop(InvDetailsDTOAPI detailsDTOAPI) {
+        InvItem item = invItemService.findInvItem(detailsDTOAPI.getItemId());
+        InvDetailDTO invDetailDTO = new InvDetailDTO();
+        invDetailDTO.setBarCode(item.getCode());
+        invDetailDTO.setCost(detailsDTOAPI.getPrice());
+        invDetailDTO.setNet(detailsDTOAPI.getNet());
+        invDetailDTO.setCostAvarage(item.getCostAverage());
+        InvInventoryDTO inventoryDTO = new InvInventoryDTO();
+        inventoryDTO.setId(detailsDTOAPI.getInventoryId());
         invDetailDTO.setInventoryDTO(inventoryDTO);
         InvItemDTO itemDTO = new InvItemDTO();
         itemDTO.setId(item.getId());
@@ -1526,6 +1612,31 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         tobyUser.setCompanyId(tobyCompany);
         Branch branch = new Branch();
         branch.setId(182);
+        tobyUser.setBranchId(branch);
+        invInvoiceDTO = save(invInvoiceDTO, tobyUser);
+        if (invInvoiceDTO.getMsg() == null || invInvoiceDTO.getMsg().isEmpty()) {
+            responseApi.setStatus(1000);
+            responseApi.setResposeId(7000);
+            responseApi.setMsg("تم طلب الفاتورة بنجاح");
+        } else {
+            responseApi.setStatus(2000);
+            responseApi.setResposeId(8000);
+            responseApi.setMsg(invInvoiceDTO.getMsg());
+        }
+        return responseApi;
+    }
+    
+    @Override
+    public ResponseApi SaveApiDeskTop(InvInvoiceDTOApi invInvoiceDTOApi) {
+        ResponseApi responseApi = new ResponseApi();
+        InvInvoiceDTO invInvoiceDTO = mapToDTOApiDeskTop(invInvoiceDTOApi);
+        TobyUser tobyUser = new TobyUser();
+        tobyUser.setId(invInvoiceDTOApi.getCreatedBy());
+        TobyCompany tobyCompany = new TobyCompany();
+        tobyCompany.setId(invInvoiceDTOApi.getCompanyId());
+        tobyUser.setCompanyId(tobyCompany);
+        Branch branch = new Branch();
+        branch.setId(invInvoiceDTOApi.getBranchId());
         tobyUser.setBranchId(branch);
         invInvoiceDTO = save(invInvoiceDTO, tobyUser);
         if (invInvoiceDTO.getMsg() == null || invInvoiceDTO.getMsg().isEmpty()) {
@@ -1830,6 +1941,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         dto.setOfferCopoun(entity.getOfferCopoun());
         dto.setGallaryDelivery(entity.getGallaryDelivery());
 
+        dto.setInvoiceStatus(findInvoiceStatus(entity.getId()));
+
         if (entity.getDeliveryPlace() != null) {
             InvInventoryDTO deliveryPlace = new InvInventoryDTO();
             deliveryPlace.setId(entity.getDeliveryPlace().getId());
@@ -1838,6 +1951,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
         if (entity.getOrganizationSiteId() != null) {
             dto.setOrganizationSiteId(mapToDTOSmallOrganizationSite(entity.getOrganizationSiteId()));// here kartha
+            dto.setAccountStatement(supplierAccountService.getAccountForOrganizationSite(entity.getOrganizationSiteId().getId()));
         }
         dto.setSupplierInvoiceNumber(entity.getSupplierInvoiceNumber());
         if (entity.getInvInventoryId() != null) {
@@ -4103,7 +4217,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invPurchaseInvoice.setDeliveryPlace(invInventory);
         dao.updateEntity(invPurchaseInvoice);
     }
-    
+
     @Override
     public List<InvInvoiceDTOApi> getALLInvPurchaseInvoiceDTOBYCustomerForWebSite(Integer type, Integer organizationId) {
         Map<String, Object> params = new HashMap<>();

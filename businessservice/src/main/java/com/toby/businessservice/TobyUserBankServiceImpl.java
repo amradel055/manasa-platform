@@ -7,10 +7,12 @@ package com.toby.businessservice;
 
 import com.toby.core.GenericDAO;
 import com.toby.dto.GlBankDTO;
+import com.toby.dto.GlPayDTO;
 import com.toby.entity.GlBank;
 import com.toby.entity.TobyUser;
 import com.toby.entity.TobyUserBank;
 import com.toby.entity.TobyUserRole;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -98,8 +100,8 @@ public class TobyUserBankServiceImpl implements TobyUserBankService {
         return dao.findListByQuery("SELECT e FROM GlBank e WHERE e.branchId.id = :branchId", params);
 
     }
-    
-     @Override
+
+    @Override
     public List<GlBank> getCashGlBankByBranchId(Integer branchId) {
 
         Map<String, Object> params = new HashMap();
@@ -199,6 +201,46 @@ public class TobyUserBankServiceImpl implements TobyUserBankService {
         }
 
         return returnListDTO(glBankList);
+    }
+
+    @Override
+    public List<GlPayDTO> getGlPayDTOForUserByTypeAndBranchIdPerDTO(Integer userId, Integer branchId, Integer type, Integer gallaryId) {
+
+        List<GlBank> glBankList = new ArrayList<>();
+
+        Map<String, Object> params = new HashMap();
+        params.put("userId", userId);
+        params.put("branchId", branchId);
+//        params.put("type", type);
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT i FROM TobyUserBank i LEFT JOIN i.bankId b WHERE i.userId.id =:userId AND i.branchId.id = :branchId ");
+
+        if (gallaryId != null) {
+            params.put("gallaryId", gallaryId);
+            query.append(" AND i.bankId.gallaryId.id = :gallaryId");
+        }
+
+        List<TobyUserBank> tobyUserBankList = dao.findListByQuery(query.toString(), params);
+
+        for (TobyUserBank tobyUserBank : tobyUserBankList) {
+            if (tobyUserBank.getBankId() != null) {
+                GlBank glBank = new GlBank();
+                glBank.setId(tobyUserBank.getBankId().getId());
+                glBank.setName(tobyUserBank.getBankId().getName());
+                glBank.setCode(tobyUserBank.getBankId().getCode());
+            }
+            glBankList.add(tobyUserBank.getBankId());
+        }
+
+        List<GlPayDTO> glPayDTOList = new ArrayList<>();
+        List<GlBankDTO> glBankDTOList = returnListDTO(glBankList);
+        for (GlBankDTO bankDTO : glBankDTOList) {
+            GlPayDTO glPayDTO = new GlPayDTO();
+            glPayDTO.setBank(bankDTO);
+            glPayDTO.setValue(BigDecimal.ZERO);
+            glPayDTOList.add(glPayDTO);
+        }
+        return glPayDTOList;
     }
 
     @Override

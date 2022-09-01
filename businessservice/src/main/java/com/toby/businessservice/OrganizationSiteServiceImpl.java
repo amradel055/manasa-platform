@@ -57,7 +57,7 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
  */
 @Stateless
 public class OrganizationSiteServiceImpl implements OrganizationSiteService {
-    
+
     @EJB
     private GenericDAO dao;
     @EJB
@@ -72,9 +72,9 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     private EmployeeService employeeService;
     @EJB
     private InvInventoryService invInventoryService;
-    
+
     @Override
-    public void updateOrganizationSiteMobile(InvOrganizationSiteDTO organizationSiteDTO) {
+    public void updateOrganizationSite(InvOrganizationSiteDTO organizationSiteDTO) {
         if (organizationSiteDTO != null && organizationSiteDTO.getId() != null) {
             InvOrganizationSite entity = dao.findEntityById(InvOrganizationSite.class, organizationSiteDTO.getId());
             entity.setMobile(organizationSiteDTO.getMobile());
@@ -86,7 +86,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             dao.updateEntity(entity);
         }
     }
-    
+
     @Override
     public void updateOrganizationSiteCompany(InvOrganizationSiteDTO organizationSiteDTO) {
         if (organizationSiteDTO != null && organizationSiteDTO.getId() != null) {
@@ -105,10 +105,10 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             dao.updateEntity(entity);
         }
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getDetailsByCustomerId(InvOrganizationSiteDTO organizationSiteDTO) {
-        
+
         List<InvOrganizationSiteDTO> organizationSiteDTOList = new ArrayList<>();
         String sql = " SELECT length,shoulder,step FROM toby.inv_organization_site\n"
                 + " where id = " + organizationSiteDTO.getId() + " ";
@@ -121,12 +121,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return organizationSiteDTOList;
     }
-    
+
     @Override
     public List<InvOrganizationSite> getInvOrganizationSiteByCompanyId(Integer companyId) {
         return dao.findEntityListByCompanyId(InvOrganizationSite.class, companyId);
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getInvOrganizationSiteByBranchId(TobyUser tobyUser) {
         Map<String, Object> params = new HashMap<>();
@@ -134,7 +134,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId ORDER BY e.code", params);
         return mapToDTOList(detailses, tobyUser);
     }
-    
+
     @Override
     public List<InvOrganizationSite> getInvOrganizationSiteByBranchIdPer(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
@@ -143,7 +143,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailsesReturn = retiveOrganizationSiteDate(detailses);
         return detailsesReturn;
     }
-    
+
     @Override
     public InvOrganizationSite addOrganizationSiteNew(InvOrganizationSite invOrganizationSite) {
         Map<String, Object> params = new HashMap<>();
@@ -159,7 +159,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return null;
     }
-    
+
     @Override
     public InvOrganizationSite findOrganizationSiteByMobile(InvOrganizationSite invOrganizationSite) {
         Map<String, Object> params = new HashMap<>();
@@ -167,38 +167,38 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         params.put("mobile", invOrganizationSite.getMobile());
 //        List<InvOrganizationSite> detailsesMobile = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.mobile = :mobile ORDER BY e.code", params);
         InvOrganizationSite detailsesCode = dao.findEntityByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.mobile = :mobile ORDER BY e.code", params);
-        
+
         return detailsesCode;
     }
-    
+
     @Override
     public InvOrganizationSite addOrganizationSite(InvOrganizationSite invOrganizationSite) {
         return dao.updateEntity(invOrganizationSite);
     }
-    
+
     @Override
     public InvOrganizationSite updateOrganizationSite(InvOrganizationSite invOrganizationSite) {
         return dao.updateEntity(invOrganizationSite);
     }
-    
+
     @Override
     public void deleteOrganizationSite(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser) {
         mapToEntity(invOrganizationSiteDTO, tobyUser);
         dao.deleteEntity(mapToEntity(invOrganizationSiteDTO, tobyUser));
     }
-    
+
     @Override
     public InvOrganizationSiteDTO findOrganizationSiteById(Integer invOrganizationSiteId, TobyUser tobyUser) {
         InvOrganizationSite invOrganizationSite = dao.findEntityById(InvOrganizationSite.class, invOrganizationSiteId);
         return mapToDTO(invOrganizationSite, tobyUser);
     }
-    
+
     @Override
     public InvOrganizationSite findOrganizationSiteById(Integer invOrganizationSiteId) {
         return dao.findEntityById(InvOrganizationSite.class, invOrganizationSiteId);
-        
+
     }
-    
+
     @Override
     public List<InvOrganizationSite> getSupplierByBranchId(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
@@ -206,7 +206,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND ((e.type = 1 OR e.type = 2) AND e.active = 1) ORDER BY e.code", params);
         return detailses;
     }
-    
+
     @Override
     public List<InvOrganizationSite> getSupplierByBranchIdForSupplierAccountReportMB(Integer branchId, Integer type) {
         Map<String, Object> params = new HashMap<>();
@@ -223,12 +223,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         //query.append("  AND e.active = 1) ORDER BY e.code ");
         query.append("  AND e.active = 1) ORDER BY e.id ");
-        
+
         detailses = dao.findListByQuery(query.toString(), params);
         List<InvOrganizationSite> detailsesReturn = retiveOrganizationSiteDate(detailses);
         return detailsesReturn;
     }
-    
+
     @Override
     public List<InvOrganizationSite> getSupplierByBranchIdForSupplierAccountReportMB(Integer branchId, Integer gallaryId, Integer type, SupplierAccountSearchBean supplierAccountSearchBean) {
         Map<String, Object> params = new HashMap<>();
@@ -243,17 +243,17 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         } else if (type == 4) {
             query.append(" (e.type = 4 ) ");
         }
-        
+
         if (supplierAccountSearchBean.getFromorganizationNameDTO() != null) {
             params.put("customerFrom", supplierAccountSearchBean.getFromorganizationNameDTO().getCode());
             query.append("AND (e.code >= :customerFrom)");
         }
-        
+
         if (supplierAccountSearchBean.getToorganizationNameDTO() != null) {
             params.put("customerTo", supplierAccountSearchBean.getToorganizationNameDTO().getCode());
             query.append("AND (e.code <= :customerTo)");
         }
-        
+
         if (gallaryId != null) {
             params.put("gallaryId", gallaryId);
             query.append("AND e.gallaryId.id = :gallaryId");
@@ -261,12 +261,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
         //query.append("  AND e.active = 1) ORDER BY e.code ");
         query.append("  AND e.active = 1) ORDER BY e.id ");
-        
+
         detailses = dao.findListByQuery(query.toString(), params);
         List<InvOrganizationSite> detailsesReturn = retiveOrganizationSiteDate(detailses);
         return detailsesReturn;
     }
-    
+
     private List<InvOrganizationSite> retiveOrganizationSiteDate(List<InvOrganizationSite> detailses) {
         List<InvOrganizationSite> detailsesReturn = new ArrayList<>();
         for (InvOrganizationSite detail : detailses) {
@@ -278,7 +278,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return detailsesReturn;
     }
-    
+
     @Override
     public List<InvOrganizationSite> getCustomerByBranchId(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
@@ -286,7 +286,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND ((e.type = 0 OR e.type = 2) AND e.active = 1) ORDER BY e.code", params);
         return detailses;
     }
-    
+
     @Override
     public List<InvOrganizationSite> getorganizationSiteByBranchIdForGlBankModule(Integer branchId, boolean active, Integer type, Integer type2) {
         Map<String, Object> params = new HashMap<>();
@@ -299,7 +299,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             sql.append(" AND e.active = 1 ");
         }
         sql.append(" )");
-        
+
         sql.append(" ORDER BY e.code");
         List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params);
         List<InvOrganizationSite> list = new ArrayList<>();
@@ -317,7 +317,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return list;
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getorganizationSiteByBranchIdForGlBankModule(Integer branchId, boolean active, Integer type, TobyUser tobyUser) {
         Map<String, Object> params = new HashMap<>();
@@ -329,13 +329,13 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             sql.append(" AND e.active = 1 ");
         }
         sql.append(" )");
-        
+
         sql.append(" ORDER BY e.code");
         List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params);
-        
+
         return mapToDTOList(detailses, null);
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getContractorByBranchIdForGlBankModuleDTO(Integer branchId, boolean active, Integer type, TobyUser tobyUser) {
         Map<String, Object> params = new HashMap<>();
@@ -347,21 +347,21 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             sql.append(" AND e.active = 1 ");
         }
         sql.append(" )");
-        
+
         sql.append(" ORDER BY e.code");
         List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params);
-        
+
         return mapToDTOList(detailses, tobyUser);
     }
-    
+
     @Override
     public List<InvOrganizationSite> getCustomerByBranchIdForReport(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type <> 1 AND e.active = 1 ORDER BY e.code", params);
-        
+
         MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
-        
+
         List<InvOrganizationSite> detailsesReturn = new ArrayList<>();
         for (InvOrganizationSite detail : detailses) {
 
@@ -398,47 +398,47 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
                     .exclude("modificationDate")
                     .exclude("creationDate")
                     .byDefault().register();
-            
+
             MapperFacade mapper = mapperFactory.getMapperFacade();
-            
+
             InvOrganizationSite dest = mapper.map(detail, InvOrganizationSite.class);
             detailsesReturn.add(dest);
         }
         return detailsesReturn;
     }
-    
+
     @Override
     public Boolean checkCodeExistence(InvOrganizationSite invOrganizationSite) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder query = new StringBuilder();
-        
+
         params.put("code", invOrganizationSite.getCode());
         params.put("branchId", invOrganizationSite.getBranchId().getId());
-        
+
         query.append("SELECT i FROM InvOrganizationSite i WHERE i.branchId.id = :branchId AND i.code = :code ");
-        
+
         if (invOrganizationSite.getType() != 2) {
             params.put("type", invOrganizationSite.getType());
             query.append(" AND i.type = :type");
         }
-        
+
         if (invOrganizationSite.getId() != null) {
             params.put("id", invOrganizationSite.getId());
             query.append(" AND i.id != :id");
         }
-        
+
         query.append(" ORDER BY i.code");
-        
+
         String q = query.toString();
-        
+
         List<InvOrganizationSite> organizationSites = dao.findListByQuery(q, params);
-        
+
         if (organizationSites != null && !organizationSites.isEmpty()) {
             return true;
         }
         return false;
     }
-    
+
     public List<InvOrganizationSiteDTO> getorganizationSiteByBranchIdDTO(TobyUser tobyUser, boolean active, Integer type) {
         List<InvOrganizationSiteDTO> list = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
@@ -450,19 +450,19 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             sql.append(" AND e.active = 1 ");
         }
         sql.append(" )");
-        
+
         sql.append(" ORDER BY e.code");
         List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params);
-        
+
         list = mapToDTOList(detailses, tobyUser);
         return list;
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getcontractorByBranchIdDTO(Integer branchId, boolean active) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     public InvOrganizationSite mapToEntity(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser) {
         InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
         invOrganizationSite.setAddress(invOrganizationSiteDTO.getAddress());
@@ -470,26 +470,26 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSite.setMobile(invOrganizationSiteDTO.getMobile());
         invOrganizationSite.setFax(invOrganizationSiteDTO.getFax());
         invOrganizationSite.setId(invOrganizationSiteDTO.getId());
-        
+
         invOrganizationSite.setEmployer(invOrganizationSiteDTO.getEmployer());
         invOrganizationSite.setStreet(invOrganizationSiteDTO.getStreet());
         invOrganizationSite.setCity(invOrganizationSiteDTO.getCity());
         invOrganizationSite.setCountry(invOrganizationSiteDTO.getCountry());
         invOrganizationSite.setJobNamed(invOrganizationSiteDTO.getJobNamed());
-        
+
         invOrganizationSite.setEmail(invOrganizationSiteDTO.getEmail());
         invOrganizationSite.setMarkDisable(invOrganizationSiteDTO.getMarkDisable());
         invOrganizationSite.setMarkEdit(invOrganizationSiteDTO.getMarkEdit());
-        
+
         invOrganizationSite.setName(invOrganizationSiteDTO.getName());
         invOrganizationSite.setType(invOrganizationSiteDTO.getType());
         invOrganizationSite.setActive(invOrganizationSiteDTO.getActive());
-        
+
         invOrganizationSite.setBalanceLimit(invOrganizationSiteDTO.getBalanceLimit());
-        
+
         invOrganizationSite.setContactPerson(invOrganizationSiteDTO.getContactPerson());
         invOrganizationSite.setDiscount(invOrganizationSiteDTO.getDiscount());
-        
+
         invOrganizationSite.setOpenBalanceCredit(invOrganizationSiteDTO.getOpenBalanceCredit());
         invOrganizationSite.setOpenBalanceDate(invOrganizationSiteDTO.getOpenBalanceDate());
         invOrganizationSite.setOpenBalanceDebit(invOrganizationSiteDTO.getOpenBalanceDebit());
@@ -507,13 +507,19 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             symbol.setId(invOrganizationSiteDTO.getLearnAboutCompanyFrom().getId());
             invOrganizationSite.setLearnAboutCompanyfrom(symbol);
         }
-        
+
+        if (invOrganizationSiteDTO.getGallaryIdAPI() != null) {
+            InvInventory invInventory = new InvInventory();
+            invInventory.setId(invOrganizationSiteDTO.getGallaryIdAPI());
+            invOrganizationSite.setGallaryId(invInventory);
+        }
+
         if (invOrganizationSiteDTO.getGallaryIdDTO() != null && invOrganizationSiteDTO.getGallaryIdDTO().getId() != null) {
             InvInventory invInventory = new InvInventory();
             invInventory.setId(invOrganizationSiteDTO.getGallaryIdDTO().getId());
             invOrganizationSite.setGallaryId(invInventory);
         }
-        
+
         if (invOrganizationSiteDTO.getParent() != null) {
             InvOrganizationSite organizationSite1 = new InvOrganizationSite();
             organizationSite1.setId(invOrganizationSiteDTO.getParent().getId());
@@ -524,46 +530,52 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             symbol.setId(invOrganizationSiteDTO.getRegionId().getId());
             invOrganizationSite.setRegionId(symbol);
         }
-        
+
         if (invOrganizationSiteDTO.getCountryId() != null) {
             Symbol symbol = new Symbol();
             symbol.setId(invOrganizationSiteDTO.getCountryId().getId());
             invOrganizationSite.setCountryId(symbol);
         }
-        
+
         if (invOrganizationSiteDTO.getContractorType() != null) {
             Symbol symbol = new Symbol();
             symbol.setId(invOrganizationSiteDTO.getContractorType().getId());
             invOrganizationSite.setContractorType(symbol);
         }
-        
+
+        if (invOrganizationSiteDTO.getAccountIdAPI() != null) {
+            GlAccount account = new GlAccount();
+            account.setId(invOrganizationSiteDTO.getAccountIdAPI());
+            invOrganizationSite.setAccountId(account);
+
+        }
         if (invOrganizationSiteDTO.getAccountId() != null) {
             GlAccount account = new GlAccount();
             account.setId(invOrganizationSiteDTO.getAccountId().getId());
             invOrganizationSite.setAccountId(account);
-            
+
         }
-        
+
         if (invOrganizationSiteDTO.getOfferCompanyDTO() != null) {
             OfferCompany offerCompany = new OfferCompany();
             offerCompany.setId(invOrganizationSiteDTO.getOfferCompanyDTO().getId());
             invOrganizationSite.setOfferCompanyId(offerCompany);
-            
+
         }
-        
+
         if (invOrganizationSiteDTO.getCurrencyId() != null) {
             Currency currency = new Currency();
             currency.setId(invOrganizationSiteDTO.getCurrencyId().getId());
             invOrganizationSite.setCurrencyId(currency);
         }
-        
+
         if (invOrganizationSiteDTO.getDelegatorId() != null) {
             InventoryDelegator inventoryDelegator = new InventoryDelegator();
             inventoryDelegator.setId(invOrganizationSiteDTO.getDelegatorId().getId());
             invOrganizationSite.setDelegatorId(inventoryDelegator);
-            
+
         }
-        
+
         if (invOrganizationSiteDTO.getCreatedBy() != null) {
             TobyUser user = new TobyUser();
             user.setId(invOrganizationSiteDTO.getCreatedBy());
@@ -576,7 +588,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
                 company.setId(invOrganizationSiteDTO.getCompanyId());
                 invOrganizationSite.setCompanyId(company);
             }
-            
+
             if (invOrganizationSiteDTO.getBranchId() != null) {
                 Branch branch = new Branch();
                 branch.setId(invOrganizationSiteDTO.getBranchId());
@@ -588,12 +600,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             invOrganizationSite.setCompanyId(tobyUser.getCompanyId());
             invOrganizationSite.setBranchId(tobyUser.getBranchId());
         }
-        
+
         return invOrganizationSite;
     }
-    
+
     public InvOrganizationSiteDTO mapToDTO(InvOrganizationSite invOrganizationSite, TobyUser tobyUser) {
-        
+
         InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
         invOrganizationSiteDTO.setCreatedBy(invOrganizationSite.getCreatedBy().getId());
         invOrganizationSiteDTO.setCreatedDate(invOrganizationSite.getCreationDate());
@@ -645,7 +657,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             symbolDTO.setSerial(invOrganizationSite.getRegionId().getSerial());
             invOrganizationSiteDTO.setRegionId(symbolDTO);
         }
-        
+
         if (invOrganizationSite.getCountryId() != null) {
             SymbolDTO symbolDTO = new SymbolDTO();
             symbolDTO.setId(invOrganizationSite.getCountryId().getId());
@@ -653,7 +665,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             symbolDTO.setSerial(invOrganizationSite.getCountryId().getSerial());
             invOrganizationSiteDTO.setCountryId(symbolDTO);
         }
-        
+
         if (invOrganizationSite.getContractorType() != null) {
             SymbolDTO symbolDTO = new SymbolDTO();
             symbolDTO.setId(invOrganizationSite.getContractorType().getId());
@@ -661,16 +673,16 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             symbolDTO.setSerial(invOrganizationSite.getContractorType().getSerial());
             invOrganizationSiteDTO.setContractorType(symbolDTO);
         }
-        
+
         if (invOrganizationSite.getAccountId() != null) {
             GlAccountDTO accountDTO = new GlAccountDTO();
             accountDTO.setId(invOrganizationSite.getAccountId().getId());
             accountDTO.setAccNumber(invOrganizationSite.getAccountId().getAccNumber());
             accountDTO.setName(invOrganizationSite.getAccountId().getName());
             invOrganizationSiteDTO.setAccountId(accountDTO);
-            
+
         }
-        
+
         if (invOrganizationSite.getCurrencyId() != null) {
             CurrencyDTO currencyDTO = new CurrencyDTO();
             currencyDTO.setId(invOrganizationSite.getCurrencyId().getId());
@@ -679,19 +691,19 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             currencyDTO.setSerial(invOrganizationSite.getCurrencyId().getSerial());
             invOrganizationSiteDTO.setCurrencyId(currencyDTO);
         }
-        
+
         if (invOrganizationSite.getDelegatorId() != null) {
             InventoryDelegatorDTO inventoryDelegatorDTO = new InventoryDelegatorDTO();
             inventoryDelegatorDTO.setId(invOrganizationSite.getDelegatorId().getId());
             inventoryDelegatorDTO.setCode(invOrganizationSite.getDelegatorId().getCode());
             inventoryDelegatorDTO.setName(invOrganizationSite.getDelegatorId().getName());
             invOrganizationSiteDTO.setDelegatorId(inventoryDelegatorDTO);
-            
+
         }
-        
+
         return invOrganizationSiteDTO;
     }
-    
+
     public List<InvOrganizationSiteDTO> mapToDTOList(List<InvOrganizationSite> invOrganizationSiteList, TobyUser tobyUser) {
         List<InvOrganizationSiteDTO> invPurchaseInvoiceDTOList = new ArrayList<>();
         for (InvOrganizationSite invOrganizationSite : invOrganizationSiteList) {
@@ -699,7 +711,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return invPurchaseInvoiceDTOList;
     }
-    
+
     public List<InvOrganizationSiteDTO> mapToDTOList1(List<InvOrganizationSite> invOrganizationSiteList, TobyUser tobyUser) {
         List<InvOrganizationSiteDTO> invPurchaseInvoiceDTOList = new ArrayList<>();
         for (InvOrganizationSite invOrganizationSite : invOrganizationSiteList) {
@@ -711,7 +723,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return invPurchaseInvoiceDTOList;
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getCustomerByBranchIdDTO(TobyUser tobyUser) {
         Map<String, Object> params = new HashMap<>();
@@ -719,16 +731,16 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND ((e.type = 0 OR e.type = 2) AND e.active = 1) ", params);
         return mapToDTOList(detailses, tobyUser);
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getSupplierDTOByBranchId(TobyUser tobyUser) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", tobyUser.getBranchId().getId());
         List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND ((e.type = 1 OR e.type = 2) AND e.active = 1) ORDER BY e.code", params);
         return mapToDTOList(detailses, tobyUser);
-        
+
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> findInvOrganizeSiteID(TobyUser tobyUser, Integer type, Integer active) {
         Map<String, Object> params = new HashMap<>();
@@ -742,15 +754,15 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         query.append(" ORDER BY e.code");
         List<InvOrganizationSite> detailses = dao.findListByQuery(query.toString(), params);
-        
+
         return mapToDTOList(detailses, tobyUser);
-        
+
     }
-    
+
     @Override
     public InvOrganizationSiteDTO addOrganizationSiteDTO(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser) {
         try {
-            
+
             invOrganizationSiteDTO.setMsg(null);
             String error = genralValidateDelivery(tobyUser, invOrganizationSiteDTO);
             if (error.isEmpty()) {
@@ -764,9 +776,9 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         } catch (Exception e) {
         }
         return invOrganizationSiteDTO;
-        
+
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getCustomerDTOByBranchId(Integer branchId, TobyUser tobyUser) {
         Map<String, Object> params = new HashMap<>();
@@ -774,20 +786,20 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND ((e.type = 0 OR e.type = 2) AND e.active = 1) ORDER BY e.code", params);
         return returnListDTO(detailses, tobyUser);
     }
-    
+
     private List<InvOrganizationSiteDTO> returnListDTO(List<InvOrganizationSite> list, TobyUser tobyUser) {
         List<InvOrganizationSiteDTO> DTOlist = new ArrayList();
         returnListDTO(list, DTOlist, tobyUser);
         return DTOlist;
     }
-    
+
     private void returnListDTO(List<InvOrganizationSite> list, List<InvOrganizationSiteDTO> dTOList, TobyUser tobyUser) {
         for (InvOrganizationSite guide : list) {
             dTOList.add(mapToDTO(guide, tobyUser));
         }
-        
+
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> findInvOrganizeSiteClient(TobyUser tobyUser) {
         Map<String, Object> params = new HashMap<>();
@@ -796,13 +808,13 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> invOrganizationSites = dao.findListByQuery("select i from InvOrganizationSite i where i.branchId.id = :branchId and i.type =0 ", params);
         return mapToDTOList(invOrganizationSites, tobyUser);
     }
-    
+
     @Override
     public void deleteOrganizationSiteDTO(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser) {
         InvOrganizationSite invOrganizationSite = mapFromDTO(invOrganizationSiteDTO, tobyUser);
         dao.deleteEntity(invOrganizationSite);
     }
-    
+
     @Override
     public String findMaxCodeForOrganizationSiteByBranchId(Integer branchId, Integer type) {
         Map<String, Object> params = new HashMap<>();
@@ -811,18 +823,18 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<String> detailses = dao.findListByQuery("SELECT max(e.code) FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND (e.type = :type  AND e.active = 1) ORDER BY e.code", params);
         return detailses.get(0);
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getCustomerByBranchIdForReportDTO(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type <> 1 AND e.active = 1 ORDER BY e.code", params);
         List<InvOrganizationSiteDTO> dTOList = new ArrayList<>();
-        
+
         returnListDTO(detailses, dTOList, Boolean.FALSE);
         return dTOList;
     }
-    
+
     public List<InvOrganizationSiteDTO> getorganizationSiteByBranchIdDTO(Integer branchId, boolean active, Integer type) {
         List<InvOrganizationSiteDTO> list = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
@@ -834,14 +846,14 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             sql.append(" AND e.active = 1 ");
         }
         sql.append(" )");
-        
+
         sql.append(" ORDER BY e.code");
         List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params);
-        
+
         returnListDTO(detailses, list, Boolean.FALSE);
         return list;
     }
-    
+
     public List<InvOrganizationSiteDTO> getorganizationSiteDTOByType(Integer branchId, Integer type, TobyUser tobyUser) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
@@ -849,7 +861,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> invOrganizationSites = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type =:type AND e.active = 1  ORDER BY e.code", params);
         return mapToDTOList(invOrganizationSites, tobyUser);
     }
-    
+
     @Override
     public Long getTotalRegistors(Integer branchId, Map<String, Object> filters, Integer type, Integer gallaryId) {
         filters.put("branchId", branchId);
@@ -859,10 +871,10 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         builder.append("SELECT count(i) FROM InvOrganizationSite i WHERE i.branchId.id = :branchId AND i.type = :type  AND   i.gallaryId.id = :gallaryId  ");
         appendFilter(filters, builder);
         Long details = dao.findEntityByQuery(builder.toString(), filters);
-        
+
         return details;
     }
-    
+
     public void appendFilter(Map<String, Object> filters, StringBuilder builder) {
         if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
             //OR ( i.parent.name  like CONCAT('%',:globalFilter ,'%'))
@@ -872,7 +884,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             filters.remove("globalFilter");
         }
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getALLCustomerDTOByBranchIdAndType(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters, Integer type, Integer gallaryId) {
         filters.put("branchId", branchId);
@@ -890,7 +902,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         returnListDTO(details, dTOList, Boolean.FALSE);
         return dTOList;
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getALLCustomerDTOByBranchIdAndTypeAndCode(String code, Integer branchId, Integer type, Integer gallaryId) {
         if (code != null && !code.isEmpty()) {
@@ -910,7 +922,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return null;
     }
-    
+
     private void initMapToDTO(InvOrganizationSiteDTO dTO, InvOrganizationSite entity, Boolean getCRMInformation) {
         dTO.setId(entity.getId());
         dTO.setCode(entity.getCode());
@@ -932,7 +944,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         dTO.setContactPerson(entity.getContactPerson());
         dTO.setPhone2(entity.getPhone2());
         dTO.setOpenBalanceDate(entity.getOpenBalanceDate());
-        
+
         if (entity.getAccountId() != null) {
             GlAccountDTO glAccountDTO = new GlAccountDTO();
             glAccountDTO.setId(entity.getAccountId().getId());
@@ -943,7 +955,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         if (entity.getGallaryId() != null) {
             dTO.setGallaryIdDTO(invInventoryService.maptoDTOSmall(null, entity.getGallaryId()));
         }
-        
+
         if (entity.getOfferCompanyId() != null) {
             OfferCompanyDTO offerCompanyDTO = new OfferCompanyDTO();
             offerCompanyDTO.setId(entity.getOfferCompanyId().getId());
@@ -952,7 +964,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             offerCompanyDTO.setDiscount(entity.getOfferCompanyId().getDiscount());
             dTO.setOfferCompanyDTO(offerCompanyDTO);
         }
-        
+
         if (entity.getCountryId() != null) {
             SymbolDTO symbolDTO = new SymbolDTO();
             symbolDTO.setId(entity.getCountryId().getId());
@@ -975,7 +987,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             organizationSiteDTO.setName(entity.getParent().getName());
             dTO.setParent(organizationSiteDTO);
         }
-        
+
         if (entity.getSupplierType() != null) {
             SymbolDTO symbolDTO = new SymbolDTO();
             symbolDTO.setId(entity.getSupplierType().getId());
@@ -990,7 +1002,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             symbolDTO.setName(entity.getContractorType().getName());
             dTO.setContractorType(symbolDTO);
         }
-        
+
         if (entity.getRegionId() != null) {
             SymbolDTO symbolDTO = new SymbolDTO();
             symbolDTO.setId(entity.getRegionId().getId());
@@ -1005,7 +1017,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             parent.setName(entity.getDelegatorId().getName());
             dTO.setDelegatorId(parent);
         }
-        
+
         if (entity.getLearnAboutCompanyfrom() != null) {
             SymbolDTO symbolDTO = new SymbolDTO();
             symbolDTO.setId(entity.getLearnAboutCompanyfrom().getId());
@@ -1017,21 +1029,21 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         if (getCRMInformation) {
             List<CrmEventDTO> crmEventDTOList = cRMEventServiceDTO.findALLCrmEventByCustomerId(entity.getId());
             dTO.setCrmEventDTOList(crmEventDTOList);
-            
+
             List<CrmCustomerInterestedProductsDTO> interestedProductsDTOList = cRMCustomerInterestedProductsServiceDTO.getCrmCustomerInterestedProductsByOrganizationSiteId(entity.getId());
             dTO.setCrmCustomerInterestedProductsDTOList(interestedProductsDTOList);
         }
-        
+
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy().getId());
         dTO.setBranchId(entity.getBranchId().getId());
         dTO.setCompanyId(entity.getCompanyId().getId());
     }
-    
+
     public InvOrganizationSite mapFromDTO(InvOrganizationSiteDTO dTO, TobyUser tobyUser) {
         InvOrganizationSite entity = new InvOrganizationSite();
-        
+
         entity.setId(dTO.getId());
         entity.setName(dTO.getName());
         entity.setCode(dTO.getCode());
@@ -1052,7 +1064,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         entity.setContactPerson(dTO.getContactPerson());
         entity.setPhone2(dTO.getPhone2());
         entity.setOpenBalanceDate(dTO.getOpenBalanceDate());
-        
+
         if (dTO.getAccountId() != null) {
             GlAccount glAccount = new GlAccount();
             glAccount.setId(dTO.getAccountId().getId());
@@ -1063,7 +1075,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             invInventory.setId(dTO.getGallaryIdDTO().getId());
             entity.setGallaryId(invInventory);
         }
-        
+
         if (dTO.getCountryId() != null) {
             Symbol symbol = new Symbol();
             symbol.setId(dTO.getCountryId().getId());
@@ -1110,19 +1122,19 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             entity.setCreationDate(dTO.getCreatedDate());
             entity.setModificationDate(new Date());
             entity.setModifiedBy(tobyUser);
-            
+
         }
         entity.setBranchId(tobyUser.getBranchId());
         entity.setCompanyId(tobyUser.getCompanyId());
         return entity;
     }
-    
+
     private List<InvOrganizationSiteDTO> returnListDTO(List<InvOrganizationSite> list) {
         List<InvOrganizationSiteDTO> DTOlist = new ArrayList();
         returnListDTO(list, DTOlist, Boolean.FALSE);
         return DTOlist;
     }
-    
+
     private List<InvOrganizationSite> returnListEntity(List<InvOrganizationSiteDTO> list, TobyUser tobyUser) {
         List<InvOrganizationSite> Entitylist = new ArrayList();
         for (InvOrganizationSiteDTO organizationSiteDTO : list) {
@@ -1130,7 +1142,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return Entitylist;
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getCustomerDTOByBranchId(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
@@ -1138,10 +1150,10 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND ((e.type = 0 OR e.type = 2) AND e.active = 1) ORDER BY e.code", params);
         return returnListDTO(detailses);
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getCustomerDTOFromAndTo(Integer branchId, invOrganizationSiteSearchBean organizationSiteSearchBean) {
-        
+
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         StringBuilder query = new StringBuilder();
@@ -1151,7 +1163,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailses = dao.findListByQuery(query.toString(), params);
         return returnListDTO(detailses);
     }
-    
+
     private void queryFrom(StringBuilder query, invOrganizationSiteSearchBean From, Map<String, Object> params) {
         if (From != null) {
             if (From.getFrominvOrganizationSiteDTO() != null) {
@@ -1164,7 +1176,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             }
         }
     }
-    
+
     private void queryTo(StringBuilder query, invOrganizationSiteSearchBean To, Map<String, Object> params) {
         if (To != null) {
             if (To.getToinvOrganizationSiteDTO() != null) {
@@ -1177,35 +1189,35 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             }
         }
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> AddDelegatorToCustomerDTO(List<InvOrganizationSiteDTO> invOrganizationSiteDTOList, TobyUser tobyUser) {
         List<InvOrganizationSiteDTO> dTO = new ArrayList();
         List<InvOrganizationSite> invOrganizationSiteList = returnListEntity(invOrganizationSiteDTOList, tobyUser);
         for (InvOrganizationSite organizationSite : invOrganizationSiteList) {
-            dTO.add(mapTODTO(null, updateOrganizationSite(organizationSite), Boolean.FALSE));
+            dTO.add(mapTODTO(null, OrganizationSiteServiceImpl.this.updateOrganizationSite(organizationSite), Boolean.FALSE));
         }
         return dTO;
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getInvOrganizationSiteByBranchIdPerDTO(Integer branchId, TobyUser tobyUser) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId ORDER BY e.code", params);
-        
+
         return mapToDTOList(detailses, tobyUser);
     }
-    
+
     @Override
     public InvOrganizationSiteDTO findOrganizationSiteByIdDTO(Integer invOrganizationSiteId) {
         InvOrganizationSite invOrganizationSite = dao.findEntityById(InvOrganizationSite.class, invOrganizationSiteId);
         return mapTODTO(null, invOrganizationSite, Boolean.FALSE);
     }
-    
+
     @Override
     public InvOrganizationSiteDTO saveInvOrganizationSiteDTO(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser) {
-        
+
         try {
             invOrganizationSiteDTO.setMsg(null);
             String error = genralValidate(tobyUser, invOrganizationSiteDTO);
@@ -1219,26 +1231,26 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         } catch (Exception e) {
         }
         return null;
-        
+
     }
-    
+
     public String genralValidate(TobyUser tobyUser, InvOrganizationSiteDTO invOrganizationSiteDTO) {
         StringBuilder errorMessage = new StringBuilder();
         if (!validateName(tobyUser, invOrganizationSiteDTO.getId(), invOrganizationSiteDTO.getName(), invOrganizationSiteDTO.getType())) {
             errorMessage.append("الاسم موجود");
-            
+
         }
         if (!validateCode(tobyUser, invOrganizationSiteDTO.getId(), invOrganizationSiteDTO.getCode(), invOrganizationSiteDTO.getType())) {
             errorMessage.append("الكود موجود");
         }
-        
+
         if (invOrganizationSiteDTO.getCurrencyId() == null) {
             errorMessage.append("يجب اختيار عمله");
         }
-        
+
         return errorMessage.toString();
     }
-    
+
     public String genralValidateDelivery(TobyUser tobyUser, InvOrganizationSiteDTO invOrganizationSiteDTO) {
         StringBuilder errorMessage = new StringBuilder();
 //        if (!validateName(tobyUser, invOrganizationSiteDTO.getId(), invOrganizationSiteDTO.getName(), invOrganizationSiteDTO.getType())) {
@@ -1250,10 +1262,10 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 //        }
         return errorMessage.toString();
     }
-    
+
     @Override
     public Boolean validateName(TobyUser tobyUser, Integer invOrganizationSiteDTOid, String name) {
-        
+
         StringBuilder quarry = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", tobyUser.getBranchId().getId());
@@ -1267,11 +1279,11 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         if (invOrganizationSiteList == null || invOrganizationSiteList.isEmpty()) {
             return true;
         } else {
-            
+
             return false;
         }
     }
-    
+
     @Override
     public Boolean validateName(TobyUser tobyUser, Integer invOrganizationSiteDTOid, String name, Integer type) {
         Map<String, Object> params = new HashMap<>();
@@ -1294,7 +1306,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
                 params.put("type", type);
                 query.append(" and i.type = :type ");
             }
-            
+
         }
         List<InvOrganizationSite> invOrganizationSiteList = dao.findListByQuery(query.toString(), params);
         if (invOrganizationSiteList.size() == 0) {
@@ -1303,31 +1315,31 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             return false;
         }
     }
-    
+
     @Override
     public Boolean validateCode(TobyUser tobyUser, Integer invOrganizationSiteDTOid, String code) {
-        
+
         StringBuilder quarry = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", tobyUser.getBranchId().getId());
-        
+
         params.put("code", code);
         quarry.append("SELECT i FROM InvOrganizationSite i where i.branchId.id = :branchId  and i.code = :code  ORDER BY i.code");
         if (invOrganizationSiteDTOid != null) {
             params.put("invOrganizationSiteDTOid", invOrganizationSiteDTOid);
             quarry.append("and i.id != :invOrganizationSiteDTOid");
-            
+
         }
         List<InvOrganizationSite> invOrganizationSiteList = dao.findListByQuery(quarry.toString(), params);
         if (invOrganizationSiteList == null || invOrganizationSiteList.isEmpty()) {
             return true;
         } else {
-            
+
             return false;
         }
-        
+
     }
-    
+
     @Override
     public Boolean validateCode(TobyUser tobyUser, Integer invOrganizationSiteDTOid, String code, Integer type) {
         Map<String, Object> params = new HashMap<>();
@@ -1339,7 +1351,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             params.put("invOrganizationSiteDTOid", invOrganizationSiteDTOid);
             query.append(" and i.id != :invOrganizationSiteDTOid ");
         }
-        
+
         if (type != null) {
             if (type == 0) {
                 query.append(" and (i.type = 0 or i.type = 2 ) ");
@@ -1352,16 +1364,16 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
                 query.append(" and i.type = :type ");
             }
         }
-        
+
         List<InvOrganizationSite> invOrganizationSiteList = dao.findListByQuery(query.toString(), params);
         if (invOrganizationSiteList.size() == 0) {
             return true;
         } else {
             return false;
         }
-        
+
     }
-    
+
     @Override
     public List<InvOrganizationSite> getContractorByBranchIdForGlBankModule(Integer branchId, boolean active, Integer type) {
         Map<String, Object> params = new HashMap<>();
@@ -1373,7 +1385,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             sql.append(" AND e.active = 1 ");
         }
         sql.append(" )");
-        
+
         sql.append(" ORDER BY e.code");
         List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params);
         List<InvOrganizationSite> list = new ArrayList<>();
@@ -1391,7 +1403,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return list;
     }
-    
+
     @Override
     public List<InvOrganizationSite> getorganizationSiteByBranchIdForGlBankModule(Integer branchId, boolean active, Integer type) {
         Map<String, Object> params = new HashMap<>();
@@ -1403,7 +1415,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             sql.append(" AND e.active = 1 ");
         }
         sql.append(" )");
-        
+
         sql.append(" ORDER BY e.code");
         List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params);
         List<InvOrganizationSite> list = new ArrayList<>();
@@ -1421,7 +1433,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return list;
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getorganizationSiteDTOByBranchIdForGlBankModule(TobyUser tobyUser, boolean active, Integer type) {
         Map<String, Object> params = new HashMap<>();
@@ -1433,12 +1445,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             sql.append(" AND e.active = 1 ");
         }
         sql.append(" )");
-        
+
         sql.append(" ORDER BY e.code");
         List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params);
         return mapToDTOList(detailses, tobyUser);
     }
-    
+
     @Override
     public List<InvOrganizationSite> getInvOrganizationSiteByBranchId(Integer BranchId) {
         Map<String, Object> params = new HashMap<>();
@@ -1446,12 +1458,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId ORDER BY e.code", params);
         return detailses;
     }
-    
+
     @Override
     public void deleteOrganizationSite(InvOrganizationSite invOrganizationSite) {
         dao.deleteEntity(invOrganizationSite);
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getSupplierByBranchIdDTO(Integer BranchId, TobyUser tobyUser) {
         Map<String, Object> params = new HashMap<>();
@@ -1459,7 +1471,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND ((e.type = 1 OR e.type = 2) AND e.active = 1) ORDER BY e.code", params);
         return mapToDTOList(detailses, tobyUser);
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getCustomerByBranchIdDTO(Integer branchId, TobyUser tobyUser) {
         Map<String, Object> params = new HashMap<>();
@@ -1467,7 +1479,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND ((e.type = 0 OR e.type = 2) AND e.active = 1) ORDER BY e.code", params);
         return mapToDTOList(detailses, tobyUser);
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getOrganizationDTOByBranchIdDTO(TobyUser tobyUser, Integer type) {
         Map<String, Object> params = new HashMap<>();
@@ -1483,10 +1495,10 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         query.append("ORDER BY e.code");
         List<InvOrganizationSite> detailses = dao.findListByQuery(query.toString(), params);
-        
+
         return mapToDTOList(detailses, tobyUser);
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getorganizationSiteByBranchIdDTOSmall(Integer branchId, boolean active, Integer type) {
         List<InvOrganizationSiteDTO> list = new ArrayList<>();
@@ -1495,52 +1507,52 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         params.put("branchId", branchId);
         appendOrganizationTypeAndActive(params, type, sql, active);
         List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params);
-        
+
         returnListDTOSmall(detailses, list);
         return list;
     }
-    
+
     private void appendOrganizationTypeAndActive(Map<String, Object> params, Integer type, StringBuilder sql, boolean active) {
         params.put("type", type);
         sql.append("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId ");
-        
+
         if (type == 0 || type == 1) {
             sql.append(" AND (e.type = :type OR e.type = 2) ");
         } else {
             sql.append(" AND e.type = :type  ");
         }
-        
+
         if (active) {
             sql.append(" AND e.active = 1 ");
         }
-        
+
         sql.append(" ORDER BY e.code");
     }
-    
+
     private void initMapToDTOSmall(InvOrganizationSiteDTO dTO, InvOrganizationSite entity) {
         dTO.setId(entity.getId());
         dTO.setCode(entity.getCode());
         dTO.setName(entity.getName());
     }
-    
+
     private void returnListDTOSmall(List<InvOrganizationSite> list, List<InvOrganizationSiteDTO> dTOList) {
         for (InvOrganizationSite guide : list) {
             dTOList.add(mapTODTOSmall(guide));
         }
-        
+
     }
-    
+
     private List<InvOrganizationSiteDTO> returnListDTOSmall(List<InvOrganizationSite> list) {
         List<InvOrganizationSiteDTO> DTOlist = new ArrayList();
         returnListDTOSmall(list, DTOlist);
         return DTOlist;
     }
-    
+
     @Override
     public InvOrganizationSiteDTO addNewCustomer(InvOrganizationSiteDTO invOrganizationSiteDTO, List<InvOrganizationSiteDTO> invOrganizationSiteDTOList, TobyUser tobyUser, Integer accountId) {
-        
+
         CurrencyDTO currencyDefault = currencyServiceDTO.getDefaultCurrenciesByCompanyId(tobyUser.getCompanyId().getId());
-        
+
         if (invOrganizationSiteDTO != null && invOrganizationSiteDTO.getName() != null && currencyDefault != null) {
             invOrganizationSiteDTO.setType(0);
             invOrganizationSiteDTO.setCurrencyId(currencyDefault);
@@ -1559,7 +1571,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             invOrganizationSiteDTO.setLength(invOrganizationSiteDTO.getLength());
             invOrganizationSiteDTO.setShoulder(invOrganizationSiteDTO.getShoulder());
             invOrganizationSiteDTO.setStep(invOrganizationSiteDTO.getStep());
-            
+
             invOrganizationSiteDTO = addOrganizationSiteDTO(invOrganizationSiteDTO, tobyUser);
             if (invOrganizationSiteDTOList == null) {
                 invOrganizationSiteDTOList = new ArrayList<>();
@@ -1568,7 +1580,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return invOrganizationSiteDTO;
     }
-    
+
     private synchronized <T> Integer getMaxGenericSerialForDetail(Integer branchId, Integer type) {
         StringBuilder query = new StringBuilder();
         query.append("SELECT max(CONVERT(code,UNSIGNED INTEGER)) FROM inv_organization_site i where type = ");
@@ -1582,7 +1594,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             return code + 1;
         }
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getorganizationSiteForOpenningBalanceDTO(Integer branchId, boolean active, Integer type) {
         Map<String, Object> params = new HashMap<>();
@@ -1590,17 +1602,17 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         params.put("branchId", branchId);
         params.put("type", type);
         sql.append("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId  ");
-        
+
         if (type == 0 || type == 1) {
             sql.append(" AND (e.type = :type OR e.type = 2) ");
         } else {
             sql.append(" AND e.type = :type  ");
         }
-        
+
         if (active) {
             sql.append(" AND e.active = 1 ");
         }
-        
+
         sql.append(" ORDER BY e.code");
         List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params);
         List<InvOrganizationSiteDTO> list = new ArrayList<>();
@@ -1616,7 +1628,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return list;
     }
-    
+
     @Override
     public InvOrganizationSite getInvOrganizationSiteBySerial(Integer branchId, String code) {
         Map<String, Object> params = new HashMap<>();
@@ -1625,7 +1637,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> list = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.code = :code ORDER BY e.code", params);
         return (list != null && !list.isEmpty()) ? list.get(0) : null;
     }
-    
+
     @Override
     public Map<String, String> findMobileOrganizationSite(Integer branchId) {
         Map<String, String> mobileMap = new HashMap<>();
@@ -1637,7 +1649,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return mobileMap;
     }
-    
+
     @Override
     public String saveOpenningBalance(List<InvOrganizationSiteDTO> invOrganizationSiteDTOList) {
         String error = null;
@@ -1655,7 +1667,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return error;
     }
-    
+
     public Boolean checkValueDate(InvOrganizationSiteDTO dto) {
         try {
             if ((dto.getOpenBalanceDebit() != null && dto.getOpenBalanceDebit().compareTo(BigDecimal.ZERO) == 1)
@@ -1669,13 +1681,13 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             return true;
         }
     }
-    
+
     public InvOrganizationSiteDTO mapTODTOSmall(InvOrganizationSite entity) {
         InvOrganizationSiteDTO dTO = new InvOrganizationSiteDTO();
         initMapToDTOSmall(dTO, entity);
         return dTO;
     }
-    
+
     @Override
     public InvOrganizationSiteDTO mapToDTOSmall(InvOrganizationSite invOrganizationSite) {
         InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
@@ -1711,7 +1723,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             offerCompanyDTO.setDiscount(invOrganizationSite.getOfferCompanyId().getDiscount());
             invOrganizationSiteDTO.setOfferCompanyDTO(offerCompanyDTO);
         }
-        
+
         if (invOrganizationSite.getGallaryId() != null) {
             InvInventoryDTO gallary = new InvInventoryDTO();
             gallary.setId(invOrganizationSite.getGallaryId().getId());
@@ -1722,11 +1734,11 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
                 costCenterDTO.setId(invOrganizationSite.getGallaryId().getCostCenterId().getId());
                 gallary.setCostCenterId(costCenterDTO);
             }
-            
+
             invOrganizationSiteDTO.setGallaryIdDTO(gallary);
             invOrganizationSiteDTO.setGallaryIdAPI(invOrganizationSite.getGallaryId().getId());
         }
-        
+
         if (invOrganizationSite.getAccountId() != null) {
             GlAccountDTO accountDTO = new GlAccountDTO();
             accountDTO.setAccNumber(invOrganizationSite.getAccountId().getAccNumber());
@@ -1737,16 +1749,16 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSiteDTO.setOpenBalanceCredit(invOrganizationSite.getOpenBalanceCredit());
         invOrganizationSiteDTO.setOpenBalanceDebit(invOrganizationSite.getOpenBalanceDebit());
         invOrganizationSiteDTO.setOpenBalanceDate(invOrganizationSite.getOpenBalanceDate());
-        
+
         return invOrganizationSiteDTO;
     }
-    
+
     @Override
     public InvOrganizationSiteDTO mapToDTOSmall(Integer invOrganizationSiteId) {
         InvOrganizationSite ios = dao.findEntityById(InvOrganizationSite.class, invOrganizationSiteId);
         return mapToDTOSmall(ios);
     }
-    
+
     @Override
     public InvOrganizationSiteDTO getCustomerBySerial(String serial) {
         Map<String, Object> params = new HashMap<>();
@@ -1760,7 +1772,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
     /////////////////// CRM //////////////////////////
     private void appendFilter2(Map<String, Object> filters, StringBuilder builder, InvOrganizationSiteDTO invOrganizationSiteDTOSearch, Integer type, Integer branchId) {
-        
+
         filters.put("branchId", branchId);
         filters.put("type", type);
         // CrmLeadsSearchBean crmLeadsSearchBean
@@ -1779,22 +1791,22 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             filters.put("AssignedTo", invOrganizationSiteDTOSearch.getAssignedTo().getId());
             builder.append(" AND i.assignedTo.id = :AssignedTo");
         }
-        
+
         if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getLearnAboutCompanyFrom() != null) {
             filters.put("LearnAboutCompanyfrom", invOrganizationSiteDTOSearch.getLearnAboutCompanyFrom().getId());
             builder.append(" AND l.id = :LearnAboutCompanyfrom");
         }
-        
+
         if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getProjectName() != null) {
             filters.put("projectName", invOrganizationSiteDTOSearch.getProjectName().getId());
             builder.append(" AND i.projectName.id = :projectName");
         }
-        
+
         if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getLeadStatus() != null) {
             filters.put("leadStatus", invOrganizationSiteDTOSearch.getLeadStatus().getId());
             builder.append(" AND i.leadStatus.id = :leadStatus");
         }
-        
+
         if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
             String filter = " and (i.code like CONCAT('%',:globalFilter ,'%')  OR i.mobile  like CONCAT('%',:globalFilter ,'%') OR i.name like CONCAT('%',:globalFilter ,'%') OR  i.assignedTo.name like CONCAT('%',:globalFilter ,'%') OR  i.leadStatus.name like CONCAT('%',:globalFilter ,'%') OR   FUNCTION('DATE_FORMAT',i.creationDate, '%d-%m-%Y') like CONCAT('%',:globalFilter ,'%')) ";
             String filter2 = "OR l.name like CONCAT('%',:globalFilter ,'%') ";
@@ -1804,69 +1816,69 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             filters.remove("globalFilter");
         }
     }
-    
+
     private void appendSourceTo(CrmLeadsSearchBean crmLeadsSearchBean, Map<String, Object> params, StringBuilder query) {
         if (crmLeadsSearchBean.getSourceListTo() != null) {
             params.put("sourceListTo", crmLeadsSearchBean.getSourceListTo().getSerial());
             query.append(" and i.LearnAboutCompanyfrom.serial <= :sourceListTo ");
-            
+
         }
     }
-    
+
     private void appendSourceFrom(CrmLeadsSearchBean crmLeadsSearchBean, Map<String, Object> params, StringBuilder query) {
         if (crmLeadsSearchBean.getSourceListFrom() != null) {
             params.put("sourceListFrom", crmLeadsSearchBean.getSourceListFrom().getSerial());
             query.append(" and i.LearnAboutCompanyfrom.serial >= :sourceListFrom ");
-            
+
         }
     }
-    
+
     private void appendEmpTo(CrmLeadsSearchBean crmLeadsSearchBean, Map<String, Object> params, StringBuilder query) {
         if (crmLeadsSearchBean.getEmpTo() != null) {
             params.put("empTo", crmLeadsSearchBean.getEmpTo().getCode());
             query.append(" and i.assignedTo.code <= :empTo ");
-            
+
         }
     }
-    
+
     private void appendEmpFrom(CrmLeadsSearchBean crmLeadsSearchBean, Map<String, Object> params, StringBuilder query) {
         if (crmLeadsSearchBean.getEmpFrom() != null) {
             params.put("empFrom", crmLeadsSearchBean.getEmpFrom().getCode());
             query.append(" and i.assignedTo.code >= :empFrom ");
-            
+
         }
     }
-    
+
     private void appendDateTo(CrmLeadsSearchBean crmLeadsSearchBean, Map<String, Object> params, StringBuilder query) {
         if (crmLeadsSearchBean.getDateTo() != null) {
             params.put("creationDateTo", crmLeadsSearchBean.getDateTo());
-            
+
             query.append(" and i.creationDate <= :creationDateTo");
         }
     }
-    
+
     private void appendDateFrom(CrmLeadsSearchBean crmLeadsSearchBean, Map<String, Object> params, StringBuilder query) {
         if (crmLeadsSearchBean.getDateFrom() != null) {
             params.put("creationDateFrom", crmLeadsSearchBean.getDateFrom());
-            
+
             query.append(" and i.creationDate >= :creationDateFrom");
         }
     }
-    
+
     private void appendCodeTo(CrmLeadsSearchBean crmLeadsSearchBean, Map<String, Object> params, StringBuilder query) {
         if (crmLeadsSearchBean.getCodeTo() != null) {
             params.put("codeTo", crmLeadsSearchBean.getCodeTo().getCode());
             query.append(" and i.code <= :codeTo");
         }
     }
-    
+
     private void appendCodeFrom(CrmLeadsSearchBean crmLeadsSearchBean, Map<String, Object> params, StringBuilder query) {
         if (crmLeadsSearchBean.getCodeFrom() != null) {
             params.put("codeFrom", crmLeadsSearchBean.getCodeFrom().getCode());
             query.append(" and i.code >= :codeFrom ");
         }
     }
-    
+
     private void appendFilter(Map<String, Object> filters, StringBuilder builder, InvOrganizationSiteDTO invOrganizationSiteDTOSearch, Integer assignedTo, Integer type) {
         StringBuilder empIds = new StringBuilder();
         if (type == 1) {
@@ -1880,42 +1892,42 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         filters.put("branchId", invOrganizationSiteDTOSearch.getBranchId());
         builder.append(" AND  i.assignedTo.id  IN ( ").append(empIds.toString()).append(" )  ");
-        
+
         if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getLearnAboutCompanyFrom() != null) {
             filters.put("LearnAboutCompanyfrom", invOrganizationSiteDTOSearch.getLearnAboutCompanyFrom().getId());
             builder.append(" AND l.id = :LearnAboutCompanyfrom");
         }
-        
+
         if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getProjectName() != null) {
             filters.put("projectName", invOrganizationSiteDTOSearch.getProjectName().getId());
             builder.append(" AND i.projectName.id = :projectName");
         }
-        
+
         if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getLeadStatus() != null) {
             filters.put("leadStatus", invOrganizationSiteDTOSearch.getLeadStatus().getId());
             builder.append(" AND i.leadStatus.id = :leadStatus");
         } else {
             builder.append("  AND i.leadStatus.serial != 0 ");
         }
-        
+
         if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
             String filter = " and (i.code like CONCAT('%',:globalFilter ,'%')  OR i.mobile  like CONCAT('%',:globalFilter ,'%') OR i.name like CONCAT('%',:globalFilter ,'%') OR i.assignedTo.name like CONCAT('%',:globalFilter ,'%')  OR i.leadStatus.name like CONCAT('%',:globalFilter ,'%') OR  FUNCTION('DATE_FORMAT',i.creationDate, '%d-%m-%Y') like CONCAT('%',:globalFilter ,'%')) ";
             String filter2 = "OR (l.name like CONCAT('%',:globalFilter ,'%') AND i.assignedTo.id  IN (" + empIds.toString() + ") )";
-            
+
             builder.append(filter);
             builder.append(filter2);
         } else {
             filters.remove("globalFilter");
         }
     }
-    
+
     private void returnListDTO(List<InvOrganizationSite> list, List<InvOrganizationSiteDTO> dTOList, Boolean getCRMInformation) {
         for (InvOrganizationSite guide : list) {
             dTOList.add(mapTODTO(null, guide, getCRMInformation));
         }
-        
+
     }
-    
+
     public InvOrganizationSiteDTO mapTODTO(InvOrganizationSiteDTO dTO, InvOrganizationSite entity, Boolean getCRMInformation) {
         if (dTO == null) {
             dTO = new InvOrganizationSiteDTO();
@@ -1923,18 +1935,18 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         initMapToDTO(dTO, entity, getCRMInformation);
         return dTO;
     }
-    
+
     private List<InvOrganizationSiteDTO> returnListDTO(List<InvOrganizationSite> list, Boolean cRMInformation) {
         List<InvOrganizationSiteDTO> DTOlist = new ArrayList();
         returnListDTO(list, DTOlist, cRMInformation);
         return DTOlist;
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getLeads(Integer branchId, Integer type, Date creationDateFrom, Date creationDateTo, String codeFrom, String codeTo) {
-        
+
         Map<String, Object> params = new HashMap<>();
-        
+
         params.put("branchId", branchId);
         params.put("type", type);
         params.put("codeFrom", codeFrom);
@@ -1942,18 +1954,18 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         params.put("creationDateFrom", creationDateFrom);
         params.put("creationDateTo", creationDateTo);
         List<InvOrganizationSite> details = dao.findListByQuery("select i from InvOrganizationSite i where i.type = :type and i.creationDate >= :creationDateFrom and i.creationDate <= :creationDateTo and i.branchId.id = :branchId and i.code >= :codeFrom and i.code <= :codeTo", params);
-        
+
         return returnListDTO(details, true);
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getLeads(Integer branchId, Integer type, CrmLeadsSearchBean crmLeadsSearchBean) {
-        
+
         Map<String, Object> params = new HashMap<>();
-        
+
         params.put("branchId", branchId);
         params.put("type", type);
-        
+
         StringBuilder query = new StringBuilder();
         query.append("select i from InvOrganizationSite i where i.type = :type and i.branchId.id = :branchId ");
         if (crmLeadsSearchBean != null) {
@@ -1966,12 +1978,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             appendSourceFrom(crmLeadsSearchBean, params, query);
             appendSourceTo(crmLeadsSearchBean, params, query);
         }
-        
+
         List<InvOrganizationSite> details = dao.findListByQuery(query.toString(), params);
-        
+
         return returnListDTO(details, true);
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> findALLCrmLeads(int first, int pageSize, String sortField, Boolean asc, Map<String, Object> filters, InvOrganizationSiteDTO invOrganizationSiteDTOSearch, Integer assignedTo, Integer type) {
         StringBuilder builder = new StringBuilder();
@@ -1981,7 +1993,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> leadsList = dao.findListByQuery(builder.toString(), filters, first, pageSize);
         return returnListDTO(leadsList, true);
     }
-    
+
     @Override
     public Long getTotalRegistors(Integer branchId, Map<String, Object> filters, InvOrganizationSiteDTO invOrganizationSiteDTOSearch, Integer assignedTo, Integer type) {
         StringBuilder builder = new StringBuilder();
@@ -1990,16 +2002,16 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         Long details = dao.findEntityByQuery(builder.toString(), filters);
         return details;
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> findLeadsList(InvOrganizationSiteDTO invOrganizationSiteDTOSearch, Integer assignedTo, Integer type) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder query = new StringBuilder();
         StringBuilder empIds = new StringBuilder();
-        
+
         query.append("SELECT i FROM InvOrganizationSite i where i.branchId.id=:branchId AND i.type = 5  ");
         params.put("branchId", invOrganizationSiteDTOSearch.getBranchId());
-        
+
         if (type == 1) {
             if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getAssignedTo() != null) {
                 empIds = employeeService.returnEmployeeList(invOrganizationSiteDTOSearch.getAssignedTo().getId(), empIds);
@@ -2009,19 +2021,19 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         } else {
             empIds.append(assignedTo);
         }
-        
+
         query.append(" AND  i.assignedTo.id  IN ( ").append(empIds.toString()).append(" )  ");
-        
+
         if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getLearnAboutCompanyFrom() != null) {
             params.put("LearnAboutCompanyfrom", invOrganizationSiteDTOSearch.getLearnAboutCompanyFrom().getId());
             query.append(" AND i.LearnAboutCompanyfrom.id = :LearnAboutCompanyfrom");
         }
-        
+
         if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getProjectName() != null) {
             params.put("projectName", invOrganizationSiteDTOSearch.getProjectName().getId());
             query.append(" AND i.projectName.id = :projectName");
         }
-        
+
         if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getLeadStatus() != null) {
             params.put("leadStatus", invOrganizationSiteDTOSearch.getLeadStatus().getId());
             query.append(" AND i.leadStatus.id = :leadStatus");
@@ -2030,40 +2042,40 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         query.append("  ORDER BY CAST(i.code SIGNED)   DESC ");
         List<InvOrganizationSite> leadsList = dao.findListByQuery(query.toString(), params);
-        
+
         return returnListDTO(leadsList, true);
-        
+
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> findAllLeadsList(InvOrganizationSiteDTO invOrganizationSiteDTOSearch) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder query = new StringBuilder();
-        
+
         query.append("SELECT i FROM InvOrganizationSite i where i.branchId.id=:branchId AND i.type = 5  ");
         params.put("branchId", invOrganizationSiteDTOSearch.getBranchId());
-        
+
         if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getLearnAboutCompanyFrom() != null) {
             params.put("LearnAboutCompanyfrom", invOrganizationSiteDTOSearch.getLearnAboutCompanyFrom().getId());
             query.append(" AND i.LearnAboutCompanyfrom.id = :LearnAboutCompanyfrom");
         }
-        
+
         if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getProjectName() != null) {
             params.put("projectName", invOrganizationSiteDTOSearch.getProjectName().getId());
             query.append(" AND i.projectName.id = :projectName");
         }
-        
+
         if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getLeadStatus() != null) {
             params.put("leadStatus", invOrganizationSiteDTOSearch.getLeadStatus().getId());
             query.append(" AND i.leadStatus.id = :leadStatus");
         }
-        
+
         query.append("  ORDER BY CAST(i.code SIGNED)   DESC ");
         List<InvOrganizationSite> leadsList = dao.findListByQuery(query.toString(), params);
-        
+
         return returnListDTO(leadsList, true);
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> findLeads(int first, int pageSize, String sortField, Boolean asc, Map<String, Object> filters, InvOrganizationSiteDTO invOrganizationSiteDTOSearch, Integer type, Integer branchId) {
         StringBuilder builder = new StringBuilder();
@@ -2072,7 +2084,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> leadsList = dao.findListByQuery(builder.toString(), filters, first, pageSize);
         return returnListDTO(leadsList, true);
     }
-    
+
     @Override
     public ChartDTO getCountCustomerByLearnAboutCompanyfrom(Integer branchId, Date dateFrom, Date dateTo) {
         dao.executeNativeQuery("select toby.sql_mode_function()");
@@ -2105,7 +2117,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         String title = "نسبه العملاء حسب المصدر ";
         return preperChartPie(detailses, title);
     }
-    
+
     @Override
     public ChartDTO getCountCustomerByleadStatus(Integer branchId, Date dateFrom, Date dateTo) {
         dao.executeNativeQuery("select toby.sql_mode_function()");
@@ -2138,7 +2150,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         String title = "نسبه العملاء حسب الحاله ";
         return preperChartPie(detailses, title);
     }
-    
+
     @Override
     public ChartDTO getCountCustomerByAssignedTo(Integer branchId, Date fromDate, Date toDate) {
         dao.executeNativeQuery("select toby.sql_mode_function()");
@@ -2152,7 +2164,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         String title = "نسبه العملاء حسب الموظف ";
         return preperChartPie(detailses, title);
     }
-    
+
     @Override
     public ChartDTO getCountCustomerByAssignedToAndStatus(Integer branchId, Integer status, Date fromDate, Date toDate) {
         dao.executeNativeQuery("select toby.sql_mode_function()");
@@ -2167,7 +2179,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         String title = "نسبه العملاء حسب الحاله للموظف ";
         return preperChartPie(detailses, title);
     }
-    
+
     @Override
     public ChartDTO getCountCustomerByProjectName(Integer branchId, Date dateFrom, Date dateTo) {
         Map<String, Object> params = new HashMap<>();
@@ -2200,7 +2212,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         String title = "نسبه العملاء حسب المشروع ";
         return preperChartPie(detailses, title);
     }
-    
+
     private ChartDTO preperChartPie(List<Object[]> details, String title) {
         ChartDTO chartDTO = new ChartDTO();
         int i = 0;
@@ -2217,7 +2229,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         chartDTO.setTitle(title);
         return chartDTO;
     }
-    
+
     private List<String> getColors() {
         List<String> colors = new ArrayList<>();
         colors.add("rgb(255, 99, 132)");//Red");
@@ -2227,7 +2239,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         colors.add("rgb(54, 162, 235)");//Blue
         return colors;
     }
-    
+
     private StringBuilder filterChartDate(Map<String, Object> filters, StringBuilder builder, Date fromDate, Date toDate) {
         Date maxDate = null;
         if ((fromDate != null || toDate != null) && (fromDate == null || toDate == null)) {
@@ -2238,12 +2250,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             builder.append(" AND e.creationDate BETWEEN :fromDate AND :maxDate ");
             filters.put("fromDate", fromDate);
         }
-        
+
         if (toDate != null && fromDate == null && maxDate != null) {
             builder.append(" AND e.creationDate BETWEEN :maxDate AND :toDate ");
             filters.put("toDate", toDate);
         }
-        
+
         if (fromDate != null && toDate != null) {
             builder.append(" AND e.creationDate BETWEEN :fromDate AND :toDate ");
             filters.put("fromDate", fromDate);
@@ -2251,14 +2263,14 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return builder;
     }
-    
+
     private Date getmaxCreationDate(Integer branchId, Integer type) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         params.put("type", type);
         return dao.findEntityByQuery("SELECT e.creationDate FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type = :type ", params);
     }
-    
+
     @Override
     public Integer getNumberOfCustomerByBranchIdAndAssignedTo(Integer branchId, Integer assignedTo, Integer createdBy) {
         Map<String, Object> params = new HashMap<>();
@@ -2270,21 +2282,21 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return 0;
     }
-    
+
     @Override
     public Integer getNumberOfNewCustomerByBranchIdAndAssignedTo(Integer branchId, Integer assignedTo, Integer createdBy) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         if (assignedTo != null) {
             params.put("assignedTo", assignedTo);
-            
+
             Long invOrganizationSiteCount = dao.findEntityByQuery("SELECT count(e) FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type = 5 AND e.assignedTo.id  = :assignedTo AND  e.leadStatus.serial = 1", params);
             //AND e.id NOT IN (SELECT c.customerId.id FROM CrmEvent c WHERE c.branchId.id = :branchId)
             return invOrganizationSiteCount.intValue();
         }
         return 0;
     }
-    
+
     @Override
     public Long getTotalRegistors(Map<String, Object> filters, InvOrganizationSiteDTO invOrganizationSiteDTOSearch, Integer type, Integer branchId) {
         StringBuilder builder = new StringBuilder();
@@ -2293,7 +2305,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         Long details = dao.findEntityByQuery(builder.toString(), filters);
         return details;
     }
-    
+
     @Override
     public synchronized String saveTransferLead(List<InvOrganizationSiteDTO> invOrganizationSiteDTOList, TobyUser tobyUser) {
         StringBuilder error = new StringBuilder();
@@ -2322,19 +2334,19 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
                     }
                 }
             }
-            
+
         } catch (Exception e) {
             error = new StringBuilder();
             error.append("حدث خطاء");
             dao.rollbackQuery();
         }
-        
+
         return error.toString();
     }
-    
+
     @Override
     public InvOrganizationSiteDTO getorganizationSiteByBranchIdAndCodeDTOSmall(Integer branchId, boolean active, Integer type, String code) {
-        
+
         Map<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
         params.put("branchId", branchId);
@@ -2342,28 +2354,28 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         InvOrganizationSite detailses = dao.findEntityByQuery(sql.toString(), params);
         return mapTODTOSmall(detailses);
     }
-    
+
     private void appendOrganizationTypeAndActiveAndCode(Map<String, Object> params, Integer type, StringBuilder sql, boolean active, String code) {
         params.put("type", type);
         params.put("code", code);
         sql.append("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId ");
-        
+
         if (type == 0 || type == 1) {
             sql.append(" AND (e.type = :type OR e.type = 2) ");
         } else {
             sql.append(" AND e.type = :type  ");
         }
-        
+
         if (active) {
             sql.append(" AND e.active = 1 ");
         }
-        
+
         sql.append(" AND e.code = :code");
     }
-    
+
     @Override
     public InvOrganizationSite getorganizationSiteByBranchIdAndCodeSmall(Integer branchId, boolean active, Integer type, String code) {
-        
+
         Map<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
         params.put("branchId", branchId);
@@ -2376,7 +2388,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         detailses = null;
         return invOrganizationSite;
     }
-    
+
     @Override
     public Boolean checknationalId(Integer branchId, String nationId) {
         Map<String, Object> params = new HashMap<>();
@@ -2390,7 +2402,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return Boolean.FALSE;
     }
-    
+
     @Override
     public ChartDTO getCountLeadByAssignedToChartBar(Integer branchId, Date fromDate, Date toDate) {
         dao.executeNativeQuery("select toby.sql_mode_function()");
@@ -2404,14 +2416,14 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         String title = "نسبه المهمات حسب الموظف ";
         return preperChart(detailses, "المهمه", "العدد", title);
     }
-    
+
     private ChartDTO preperChart(List<Object[]> details, String xLabel, String yLabel, String title) {
         Map<Object, Number> map = new HashMap<>();
         Set<String> setEmp = new HashSet<String>();
         List<ChartDataDTO> chartDataDTOList = new ArrayList<>();
         ChartDataDTO chartDataDTO = new ChartDataDTO();
         int max = 0;
-        
+
         for (Object[] detail : details) {
             setEmp.add(detail[0].toString());
             if (max < (((Number) detail[1]).intValue())) {
@@ -2437,7 +2449,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
                 }
             });
         });
-        
+
         ChartDTO chartDTO = new ChartDTO();
         chartDTO.setMax(max);
         chartDTO.setMin(0);
@@ -2448,7 +2460,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         chartDTO.setChartDataDTOList(chartDataDTOList);
         return chartDTO;
     }
-    
+
     @Override
     public ChartDTO getCountLeadByAssignedToANDContractTypeChartBar(Integer branchId, Date fromDate, Date toDate) {
         dao.executeNativeQuery("select toby.sql_mode_function()");
@@ -2462,18 +2474,18 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         String title = "عدد التعاقد لكل موظف ";
         return preperChart(detailses, "الموظف", "العدد", title);
     }
-    
+
     @Override
     public String validateSaveLead(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser) {
         StringBuilder error = new StringBuilder();
-        
+
         if (invOrganizationSiteDTO.getType() == 5 && invOrganizationSiteDTO.getEmployeeIsSupervisor()) {
             if (invOrganizationSiteDTO.getAssignedTo() == null && tobyUser.getEmployeeId() == null) {
                 error.append("\n اعطاء المستخدم لموظف معين");
             }
         }
         if (invOrganizationSiteDTO != null) {
-            
+
             if ((invOrganizationSiteDTO.getEmail() == null || invOrganizationSiteDTO.getEmail().isEmpty())) {
                 error.append("\nيجب تسجيل بيان للاتصال ");
             }
@@ -2495,13 +2507,13 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         } else {
             error.append("لا يوجد تفاصيل");
         }
-        
+
         return (error == null || error.toString().isEmpty()) ? null : error.toString();
     }
-    
+
     @Override
     public String validateSmallSaveLead(StringBuilder error, InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser) {
-        
+
         if (invOrganizationSiteDTO != null) {
             if (invOrganizationSiteDTO.getName() == null || invOrganizationSiteDTO.getName().isEmpty()) {
                 error.append("\n يجب تسجيل اسم العميل");
@@ -2509,14 +2521,14 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             if ((invOrganizationSiteDTO.getMobile() == null || invOrganizationSiteDTO.getMobile().isEmpty())) {
                 error.append("\nيجب تسجيل بيان للاتصال ");
             }
-            
+
         } else {
             error.append("لا يوجد تفاصيل");
         }
-        
+
         return (error == null || error.toString().isEmpty()) ? null : error.toString();
     }
-    
+
     @Override
     public synchronized InvOrganizationSiteDTO saveSmallLead(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser) {
         try {
@@ -2531,7 +2543,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
                         Integer code = getMaxGenericSerialForDetail(tobyUser.getBranchId().getId(), 5);
                         invOrganizationSite.setCode(code.toString());
                     }
-                    
+
                     invOrganizationSite = dao.updateEntity(invOrganizationSite);
                     invOrganizationSiteDTO = mapTODTO(invOrganizationSiteDTO, invOrganizationSite, true);
                 }
@@ -2542,10 +2554,10 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             invOrganizationSiteDTO.setMsg(e.toString());
             dao.rollbackQuery();
         }
-        
+
         return invOrganizationSiteDTO;
     }
-    
+
     @Override
     public String vaildationContacts(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser) {
         StringBuilder error = new StringBuilder();
@@ -2557,12 +2569,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return (error == null || error.toString().isEmpty()) ? null : error.toString();
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> findOrganizationSiteDTOByContact(Integer branchId, String mobile, String email) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
-        
+
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type = 5 ");
         if (mobile != null && email != null && !mobile.isEmpty() && !email.isEmpty()) {
@@ -2582,7 +2594,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailses = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(detailses, true);
     }
-    
+
     @Override
     public synchronized InvOrganizationSiteDTO saveLead(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser) {
         try {
@@ -2596,14 +2608,14 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
                         Integer code = getMaxGenericSerialForDetail(tobyUser.getBranchId().getId(), 5);
                         invOrganizationSite.setCode(code.toString());
                     }
-                    
+
                     invOrganizationSite = dao.updateEntity(invOrganizationSite);
 
                     // cRMCustomerInterestedProductsServiceDTO.deleteCrmCustomerInterestedProductDTOList(invOrganizationSiteDTO.getCrmCustomerInterestedProductsDTODeleteList(), tobyUser);
                     // cRMCustomerInterestedProductsServiceDTO.saveList(invOrganizationSiteDTO.getCrmCustomerInterestedProductsDTOList(), invOrganizationSite.getId(), tobyUser);
                     cRMEventServiceDTO.deleteCrmEventDTOList(invOrganizationSiteDTO.getCrmEventDTODeletedList(), tobyUser);
                     cRMEventServiceDTO.saveList(invOrganizationSiteDTO.getCrmEventDTOList(), invOrganizationSite.getId(), invOrganizationSite.getName(), invOrganizationSite.getAssignedTo().getId(), tobyUser);
-                    
+
                     invOrganizationSiteDTO = mapTODTO(invOrganizationSiteDTO, invOrganizationSite, true);
                 }
             } else {
@@ -2613,17 +2625,17 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             invOrganizationSiteDTO.setMsg(e.toString());
             dao.rollbackQuery();
         }
-        
+
         return invOrganizationSiteDTO;
     }
-    
+
     @Override
     public InvOrganizationSiteDTO findOrganizationSiteDTOById(Integer invOrganizationSiteId) {
         InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
         InvOrganizationSite invOrganizationSite = dao.findEntityById(InvOrganizationSite.class, invOrganizationSiteId);
         return mapTODTO(invOrganizationSiteDTO, invOrganizationSite, true);
     }
-    
+
     @Override
     public Integer getNumberOfCustomerByBranchId(Integer branchId, Integer assignedTo, Integer createdBy, Date dateFrom, Date dateTo) {
         Map<String, Object> params = new HashMap<>();
@@ -2646,7 +2658,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
                 calFrom.set(Calendar.MILLISECOND, 0);
                 params.put("dateFrom", calFrom.getTime());
                 builder.append(" AND  e.creationDate >= :dateFrom  ");
-                
+
             }
             if (dateTo != null) {
                 Calendar calTo = Calendar.getInstance();
@@ -2662,7 +2674,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             return invOrganizationSiteCount.intValue();
         }
     }
-    
+
     @Override
     public Integer getNumberOfNewCustomerByBranchId(Integer branchId, Integer assignedTo, Integer createdBy, Date dateFrom, Date dateTo) {
         Map<String, Object> params = new HashMap<>();
@@ -2685,7 +2697,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
                 calFrom.set(Calendar.MILLISECOND, 0);
                 params.put("dateFrom", calFrom.getTime());
                 builder.append(" AND  e.creationDate >= :dateFrom  ");
-                
+
             }
             if (dateTo != null) {
                 Calendar calTo = Calendar.getInstance();
@@ -2701,10 +2713,10 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             return invOrganizationSiteCount.intValue();
         }
     }
-    
+
     @Override
     public ChartDTO getCountCustomerPerMonth(Integer branchId, Integer type, Integer dateFilter) {
-        
+
         dao.executeNativeQuery("select toby.sql_mode_function()");
         StringBuilder builder = new StringBuilder();
         builder.append("select DATE_FORMAT(i.creation_date, ");
@@ -2725,7 +2737,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<Object[]> details = dao.executeNativeQuery(builder.toString());
         return preperChart(details);
     }
-    
+
     private ChartDTO preperChart(List<Object[]> details) {
         Map<Object, Number> map = new HashMap<>();
         List<ChartDataDTO> chartDataDTOList = new ArrayList<>();
@@ -2748,7 +2760,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         chartDTO.setChartDataDTOList(chartDataDTOList);
         return chartDTO;
     }
-    
+
     @Override
     public void saveOpenningBalance(BigDecimal value, String customerCode, String gallaryCode) {
         Map<String, Object> params = new HashMap<>();
@@ -2767,9 +2779,9 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             entity.setOpenBalanceDate(new Date());
             dao.saveEntity(entity);
         }
-        
+
     }
-    
+
     @Override
     public InvOrganizationSiteDTO getIDByCode(String code, TobyUser tobyUser, Integer gallaryId) {
         Map<String, Object> params = new HashMap<>();
@@ -2781,7 +2793,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return mapToDTO(detailses, tobyUser);
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> returnClientSales(List<InvInventoryDTO> invInventoryDTOList, Date dateFrom, Date dateTo, String value) {
         String dateFrom1 = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(dateFrom);
@@ -2799,12 +2811,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             invOrganizationSiteDTO.setCode((String) line[0]);
             invOrganizationSiteDTO.setName((String) line[1]);
             invOrganizationSiteDTO.setMobile((String) line[2]);
-            
+
             invOrganizationSiteDTOList.add(invOrganizationSiteDTO);
         }
         return invOrganizationSiteDTOList;
     }
-    
+
     public String returnGallaryString(List<InvInventoryDTO> invInventoryDTOList) {
         StringBuilder gallarySelected = null;
         List<InvOrganizationSiteDTO> invOrganizationSiteDTOList = new ArrayList<>();
@@ -2819,7 +2831,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return gallarySelected.toString();
     }
-    
+
     @Override
     public InvOrganizationSiteDTO findOrganizationSiteDTOByCodeAndGallaryIdDTO(Integer branchId, String code, Integer gallaryId) {
         if (branchId != null && gallaryId != null && code != null && !code.isEmpty()) {
@@ -2832,5 +2844,5 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return null;
     }
-    
+
 }
