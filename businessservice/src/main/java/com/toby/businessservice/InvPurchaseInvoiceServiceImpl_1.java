@@ -4236,7 +4236,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         if (serial != null && gallaryId != null && branchId != null) {
             InvPurchaseInvoice entity = findInvPurchaseInvoice(serial, 4, gallaryId, branchId);
             if (entity != null) {
-                mapToDTOAPI(entity);
+               return mapToDTOAPI(entity);
             }
         }
         return null;
