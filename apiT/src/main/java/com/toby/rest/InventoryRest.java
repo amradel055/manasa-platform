@@ -1,5 +1,7 @@
 package com.toby.rest;
 
+import com.toby.API.DueDateDTOAPI;
+import com.toby.businessservice.InvGlobalService;
 import com.toby.businessservice.InvInventoryService;
 import com.toby.businessservice.TobyUserInventoryService;
 import com.toby.bussinessservice.global.AutoCompleteService;
@@ -31,6 +33,8 @@ public class InventoryRest {
     AutoCompleteService autoCompleteService;
     @EJB
     InvInventoryService invInventoryService;
+    @EJB
+    InvGlobalService invGlobalService;
 
     @Transactional
     @Path("/findInventoryList")
@@ -103,5 +107,19 @@ public class InventoryRest {
             inventoryDTOList = invInventoryService.findInventoryByBranch(tobyUserDTO.getBranchId(), null);
         }
         return inventoryDTOList;
+    }
+
+    // استحقاق الفاتورة
+    @Transactional
+    @Path("/findDueDateDTOAPI")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public DueDateDTOAPI findDueDateDTOAPI(TobyUserDTO tobyUserDTO) {
+        DueDateDTOAPI dueDateDTOAPI = null;
+        if (tobyUserDTO.getId() != null && tobyUserDTO.getBranchId() != null) {
+            dueDateDTOAPI = invGlobalService.getDueDateDTOAPI(tobyUserDTO.getId());
+        }
+        return dueDateDTOAPI;
     }
 }

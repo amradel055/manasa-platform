@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.DueDateDTOAPI;
 import com.toby.common.Validation;
 import com.toby.core.GenericDAO;
 import com.toby.define.CompanyActivityClassEnum;
@@ -924,8 +925,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
     private InvDetailDTO findDataForItem(InvDetailDTO invDetailDTO, InvInvoiceDTO invInvoiceDTO, Integer offerType, Boolean findCost) {
         if (invInvoiceDTO.getCompanyActivity().equals(CompanyActivityClassEnum.RetailSaleForClothFactory)
                 && (ScreenNameClassEnum.INVSALESINVOICEFORM.equals(invInvoiceDTO.getScreenName())
-                || ScreenNameClassEnum.PROWORKORDER.equals(invInvoiceDTO.getScreenName()) 
-//                || ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(invInvoiceDTO.getScreenName())
+                || ScreenNameClassEnum.PROWORKORDER.equals(invInvoiceDTO.getScreenName()) //                || ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(invInvoiceDTO.getScreenName())
                 )) {
             ItemsBarcodesDetailsView barcodesDetailsView = invDetailDTO.getItemsBarcodesDetail();
 
@@ -1358,9 +1358,8 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 detailDTO.setCost(BigDecimal.ZERO);
                 detailDTO.setMsg("الصنف لا يوجد به كمية بالمخزن");
             }
-        } else if (
-//                ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)
-//                || 
+        } else if ( //                ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)
+                //                || 
                 ScreenNameClassEnum.INVUPDATE.equals(screenNameClassEnum)) {
             detailDTO.setAvailableQuantityRow(quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), false, null));
             detailDTO.setOldQuantity(detailDTO.getAvailableQuantityRow());
@@ -1632,6 +1631,14 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             deliveryDays = deliveryDaysByGalleryId;
         }
         return deliveryDays;
+    }
+
+    @Override
+    public DueDateDTOAPI getDueDateDTOAPI(Integer galleryId) {
+        DueDateDTOAPI dateDTOAPI = new DueDateDTOAPI();
+        dateDTOAPI.setDayNumber(getDeliveryDaysByGalleryId(galleryId));
+        dateDTOAPI.setDueDate(sumDateToDueDate(new Date(), new Date(), galleryId));
+        return dateDTOAPI;
     }
 
     @Override
