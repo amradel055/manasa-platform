@@ -5,6 +5,7 @@
  */
 package com.toby.rest;
 
+import com.toby.API.InvOrganizationSiteDTOAPI;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.report.SupplierAccountService;
@@ -139,7 +140,7 @@ public class CustomerRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addNewCustomer(InvOrganizationSiteDTO dto) {
+    public Response addNewCustomer(InvOrganizationSiteDTOAPI dto) {
 
         try {
 
@@ -155,8 +156,8 @@ public class CustomerRest {
             company.setId(dto.getCompanyId());
             user.setCompanyId(company);
 
-            dto = organizationSiteService.addNewCustomer(dto, null, user, dto.getAccountIdAPI());
-            return Response.ok(dto).build();
+            InvOrganizationSiteDTO dto1 = organizationSiteService.addNewCustomerAPI(dto, user, dto.getAccountIdAPI());
+            return Response.ok(dto1).build();
 
         } catch (Exception e) {
             return Response.status(Response.Status.EXPECTATION_FAILED).build();

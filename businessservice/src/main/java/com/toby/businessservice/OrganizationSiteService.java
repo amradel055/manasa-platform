@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.InvOrganizationSiteDTOAPI;
 import com.toby.businessservice.reports.searchBean.CrmLeadsSearchBean;
 import com.toby.businessservice.reports.searchBean.SupplierAccountSearchBean;
 import com.toby.businessservice.reports.searchBean.invOrganizationSiteSearchBean;
@@ -225,4 +226,6 @@ public interface OrganizationSiteService {
     public List<InvOrganizationSiteDTO> returnClientSales(List<InvInventoryDTO> invInventoryDTOList, Date dateFrom, Date dateTo, String value) ;
 
      public InvOrganizationSiteDTO findOrganizationSiteDTOByCodeAndGallaryIdDTO(Integer branchId, String code, Integer gallaryId);
+     
+     public InvOrganizationSiteDTO addNewCustomerAPI(InvOrganizationSiteDTOAPI invOrganizationSiteDTOAPI, TobyUser tobyUser, Integer accountId);
 }

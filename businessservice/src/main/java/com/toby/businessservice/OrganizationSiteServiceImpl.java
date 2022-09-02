@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.InvOrganizationSiteDTOAPI;
 import com.toby.businessservice.reports.searchBean.CrmLeadsSearchBean;
 import com.toby.businessservice.reports.searchBean.SupplierAccountSearchBean;
 import com.toby.businessservice.reports.searchBean.invOrganizationSiteSearchBean;
@@ -1577,6 +1578,34 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
                 invOrganizationSiteDTOList = new ArrayList<>();
             }
             invOrganizationSiteDTOList.add(0, invOrganizationSiteDTO);
+        }
+        return invOrganizationSiteDTO;
+    }
+
+    @Override
+    public InvOrganizationSiteDTO addNewCustomerAPI(InvOrganizationSiteDTOAPI invOrganizationSiteDTOAPI, TobyUser tobyUser, Integer accountId) {
+
+        CurrencyDTO currencyDefault = currencyServiceDTO.getDefaultCurrenciesByCompanyId(tobyUser.getCompanyId().getId());
+        InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
+        if (invOrganizationSiteDTOAPI != null && invOrganizationSiteDTOAPI.getName() != null && currencyDefault != null) {
+            invOrganizationSiteDTO.setType(0);
+            invOrganizationSiteDTO.setCurrencyId(currencyDefault);
+            invOrganizationSiteDTO.setActive(1);
+            Integer code = getMaxGenericSerialForDetail(tobyUser.getBranchId().getId(), 0);
+            GlAccountDTO glAccountDTO = new GlAccountDTO();
+            glAccountDTO.setId(accountId);
+            invOrganizationSiteDTO.setAccountId(glAccountDTO);
+            InventoryDelegatorDTO inventoryDelegatorDTO = new InventoryDelegatorDTO();
+            inventoryDelegatorDTO.setId(77);
+            invOrganizationSiteDTO.setDelegatorId(inventoryDelegatorDTO);
+            invOrganizationSiteDTO.setCode(code.toString());
+            invOrganizationSiteDTO.setMobile(invOrganizationSiteDTOAPI.getMobile());
+            invOrganizationSiteDTO.setEmail(invOrganizationSiteDTOAPI.getEmail());
+            invOrganizationSiteDTO.setLength(invOrganizationSiteDTOAPI.getLength());
+            invOrganizationSiteDTO.setShoulder(invOrganizationSiteDTOAPI.getShoulder());
+            invOrganizationSiteDTO.setStep(invOrganizationSiteDTOAPI.getStep());
+
+            invOrganizationSiteDTO = addOrganizationSiteDTO(invOrganizationSiteDTO, tobyUser);
         }
         return invOrganizationSiteDTO;
     }
