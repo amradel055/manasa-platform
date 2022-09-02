@@ -570,7 +570,7 @@ public class InvItemServiceImpl implements InvItemService {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         List<InvItem> details = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId  ORDER BY e.code", params);
-        return mapToDTOList(details, tobyUser);
+        return mapToDTOList(details);
     }
 
     @Override
@@ -772,7 +772,7 @@ public class InvItemServiceImpl implements InvItemService {
                 + " select q.itemId from QuantityItemsStore q "
                 + "where (q.inventoryId = :inventoryId and q.itemId is not null))   ORDER BY i.code", params);
 
-        return mapToDTOList(invItems, tobyUser);
+        return mapToDTOList(invItems);
     }
 
     @Override
@@ -1095,7 +1095,7 @@ public class InvItemServiceImpl implements InvItemService {
 
         List<InvItem> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
 
-        return mapToDTOList(details, tobyUser);
+        return mapToDTOList(details);
     }
 
     public void appendFilter(Map<String, Object> filters, Integer branchId, StringBuilder builder) {
@@ -1177,7 +1177,7 @@ public class InvItemServiceImpl implements InvItemService {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", tobyUser.getBranchId().getId());
         List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id =:branchId AND e.typeCat = 2", params);
-        return mapToDTOList(invItemList, tobyUser);
+        return mapToDTOList(invItemList);
     }
 
     @Override
@@ -1186,7 +1186,7 @@ public class InvItemServiceImpl implements InvItemService {
         params.put("branchId", tobyUser.getBranchId().getId());
         List<InvItem> detailses = dao.findListByQuery("SELECT i FROM InvItem i WHERE i.branchId.id = :branchId  ORDER BY i.code", params);
 
-        return mapToDTOList(detailses, tobyUser);
+        return mapToDTOList(detailses);
 
     }
 

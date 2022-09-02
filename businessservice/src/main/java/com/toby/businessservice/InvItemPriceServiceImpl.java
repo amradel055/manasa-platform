@@ -10,7 +10,6 @@ import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvItemDTO;
 import com.toby.dto.InvItemPriceDTO;
 import com.toby.entity.Branch;
-import com.toby.entity.InvBarcode;
 import com.toby.entity.InvInventory;
 import com.toby.entity.InvItem;
 import com.toby.entity.InvItemPrice;
@@ -94,7 +93,7 @@ public class InvItemPriceServiceImpl implements InvItemPriceService {
         }
 
         if (entity.getItemId() != null) {
-            InvItemDTO itemDTO = invItemService.mapToDTO(entity.getItemId(), null);
+            InvItemDTO itemDTO = invItemService.mapToDTO(entity.getItemId());
             dTO.setItemId(itemDTO);
         }
 

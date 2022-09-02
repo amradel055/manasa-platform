@@ -214,7 +214,7 @@ public class ProItemProductionStagesMB extends BaseListBean {
 
     public List<ProProductionStagesDTO> getProProductionStagesDTOList() {
         if (proProductionStagesDTOList == null || proProductionStagesDTOList.isEmpty()) {
-            proProductionStagesDTOList = proProductionStagesService.getAllProproductionStages(getUserData().getUser(),getUserData().getUserBranch().getId());
+            proProductionStagesDTOList = proProductionStagesService.getAllProproductionStages(getUserData().getUser(), getUserData().getUserBranch().getId());
             setProductionStagesDTOConverter(new ProProductionStagesDTOConverter(proProductionStagesDTOList));
         }
         return proProductionStagesDTOList;
@@ -226,9 +226,8 @@ public class ProItemProductionStagesMB extends BaseListBean {
 
     public List<InvItemDTO> getInvItemDTOs() {
         if (invItemDTOs == null || invItemDTOs.isEmpty()) {
-            invItemDTOs = invItemService.findInvItemDTOList(getUserData().getUser());
+            invItemDTOs = invItemService.findInvItemDTOList(getUserData().getUserBranch().getId());
         }
-
         return invItemDTOs;
     }
 
@@ -289,7 +288,7 @@ public class ProItemProductionStagesMB extends BaseListBean {
 
     public void setProItemProductionStageDTOConverter(ProItemProductionStageDTOConverter proItemProductionStageDTOConverter) {
         this.proItemProductionStageDTOConverter = proItemProductionStageDTOConverter;
-    }   
+    }
 
     /**
      * @return the index
@@ -310,7 +309,7 @@ public class ProItemProductionStagesMB extends BaseListBean {
      * @return the proGroupDTOList
      */
     public List<ProGroupDTO> getProGroupDTOList() {
-        if(proGroupDTOList == null || proGroupDTOList.isEmpty()){
+        if (proGroupDTOList == null || proGroupDTOList.isEmpty()) {
             proGroupDTOList = proGroupService.getallProGroupByBranchIdDTO(getUserData().getUserlogin());
         }
         return proGroupDTOList;
