@@ -374,7 +374,7 @@ public class InvItemServiceImpl implements InvItemService {
     public List<InvItemDTO> findInvItemDTOList(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
-        List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId and e.id >= 23148", params);
+        List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId ", params);
         return mapToDTOList(invItemList);
     }
 
