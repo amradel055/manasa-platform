@@ -170,7 +170,7 @@ public class CustomerRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateCustomer(InvOrganizationSiteDTO dto) {
+    public Response updateCustomer(InvOrganizationSiteDTOAPI dto) {
 
         try {
             organizationSiteService.updateOrganizationSite(dto);

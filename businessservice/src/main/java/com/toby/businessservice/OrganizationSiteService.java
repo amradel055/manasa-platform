@@ -29,6 +29,8 @@ public interface OrganizationSiteService {
 
     public void updateOrganizationSite(InvOrganizationSiteDTO organizationSiteDTO);
 
+    public void updateOrganizationSite(InvOrganizationSiteDTOAPI organizationSiteDTO);
+
     public void updateOrganizationSiteCompany(InvOrganizationSiteDTO organizationSiteDTO);
 
     public List<InvOrganizationSiteDTO> getDetailsByCustomerId(InvOrganizationSiteDTO organizationSiteDTO);
@@ -223,9 +225,9 @@ public interface OrganizationSiteService {
 
     public InvOrganizationSiteDTO getIDByCode(String code, TobyUser tobyUser, Integer gallaryId);
 
-    public List<InvOrganizationSiteDTO> returnClientSales(List<InvInventoryDTO> invInventoryDTOList, Date dateFrom, Date dateTo, String value) ;
+    public List<InvOrganizationSiteDTO> returnClientSales(List<InvInventoryDTO> invInventoryDTOList, Date dateFrom, Date dateTo, String value);
 
-     public InvOrganizationSiteDTO findOrganizationSiteDTOByCodeAndGallaryIdDTO(Integer branchId, String code, Integer gallaryId);
-     
-     public InvOrganizationSiteDTO addNewCustomerAPI(InvOrganizationSiteDTOAPI invOrganizationSiteDTOAPI, TobyUser tobyUser, Integer accountId);
+    public InvOrganizationSiteDTO findOrganizationSiteDTOByCodeAndGallaryIdDTO(Integer branchId, String code, Integer gallaryId);
+
+    public InvOrganizationSiteDTO addNewCustomerAPI(InvOrganizationSiteDTOAPI invOrganizationSiteDTOAPI, TobyUser tobyUser, Integer accountId);
 }

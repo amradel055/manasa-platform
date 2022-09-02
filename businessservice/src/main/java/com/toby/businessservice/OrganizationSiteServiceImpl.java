@@ -87,6 +87,19 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             dao.updateEntity(entity);
         }
     }
+    @Override
+    public void updateOrganizationSite(InvOrganizationSiteDTOAPI organizationSiteDTO) {
+        if (organizationSiteDTO != null && organizationSiteDTO.getId() != null) {
+            InvOrganizationSite entity = dao.findEntityById(InvOrganizationSite.class, organizationSiteDTO.getId());
+            entity.setMobile(organizationSiteDTO.getMobile());
+            entity.setEmail(organizationSiteDTO.getEmail());
+            entity.setLength(organizationSiteDTO.getLength());
+            entity.setShoulder(organizationSiteDTO.getShoulder());
+            entity.setStep(organizationSiteDTO.getStep());
+            entity.setName(organizationSiteDTO.getName());
+            dao.updateEntity(entity);
+        }
+    }
 
     @Override
     public void updateOrganizationSiteCompany(InvOrganizationSiteDTO organizationSiteDTO) {
