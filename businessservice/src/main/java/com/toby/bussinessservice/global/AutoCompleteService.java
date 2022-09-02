@@ -5,6 +5,7 @@
  */
 package com.toby.bussinessservice.global;
 
+import com.toby.API.InvOrganizationSiteDTOAPI;
 import com.toby.dto.CostCenterDTO;
 import com.toby.dto.GlAdminUnitDTO;
 import com.toby.dto.InvInventoryDTO;
@@ -52,5 +53,7 @@ public interface AutoCompleteService {
     public List<InvInventoryDTO> getGallaryByBranchId(Integer branchId, String qeury);
 
     public List<InvOrganizationSiteDTO> autoCompleteOrganizationSiteWitAssignedList(Integer branchId, boolean active, Integer type, String qeury, Integer assignedTo);
+    
+    public List<InvOrganizationSiteDTOAPI> autoCompleteOrganizationSiteDTOAPI(Integer branchId, boolean active, Integer type, String qeury, Integer gallaryId);
 
 }

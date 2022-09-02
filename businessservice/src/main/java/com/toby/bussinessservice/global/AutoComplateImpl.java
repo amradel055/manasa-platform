@@ -5,6 +5,7 @@
  */
 package com.toby.bussinessservice.global;
 
+import com.toby.API.InvOrganizationSiteDTOAPI;
 import com.toby.businessservice.EmployeeService;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.core.GenericDAO;
@@ -214,6 +215,19 @@ public class AutoComplateImpl implements AutoCompleteService {
 
     @Override
     public List<InvOrganizationSiteDTO> autoCompleteOrganizationSiteDTO(Integer branchId, boolean active, Integer type, String qeury, Integer gallaryId) {
+        List<InvOrganizationSite> detailses = findCustomerList(branchId, qeury, gallaryId, type, active);
+        List<InvOrganizationSiteDTO> list = returnListDTO2(detailses);
+        return list;
+    }
+
+    @Override
+    public List<InvOrganizationSiteDTOAPI> autoCompleteOrganizationSiteDTOAPI(Integer branchId, boolean active, Integer type, String qeury, Integer gallaryId) {
+        List<InvOrganizationSite> detailses = findCustomerList(branchId, qeury, gallaryId, type, active);
+        List<InvOrganizationSiteDTOAPI> list = returnListDTO2API(detailses);
+        return list;
+    }
+
+    private List<InvOrganizationSite> findCustomerList(Integer branchId, String qeury, Integer gallaryId, Integer type, boolean active) {
         List<InvOrganizationSiteDTO> list = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
@@ -224,8 +238,7 @@ public class AutoComplateImpl implements AutoCompleteService {
         }
         appendOrganizationTypeAndActive(params, type, sql, active, gallaryId);
         List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params, 0, 15);
-        list = returnListDTO2(detailses);
-        return list;
+        return detailses;
     }
 
     @Override
@@ -254,6 +267,14 @@ public class AutoComplateImpl implements AutoCompleteService {
         return DTOlist;
     }
 
+    private List<InvOrganizationSiteDTOAPI> returnListDTO2API(List<InvOrganizationSite> list) {
+        List<InvOrganizationSiteDTOAPI> DTOlist = new ArrayList();
+        for (InvOrganizationSite e : list) {
+            DTOlist.add(mapToDTOSmallAPI(e));
+        }
+        return DTOlist;
+    }
+
     public InvOrganizationSiteDTO mapToDTOSmall(InvOrganizationSite invOrganizationSite) {
         InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
         invOrganizationSiteDTO.setId(invOrganizationSite.getId());
@@ -274,8 +295,8 @@ public class AutoComplateImpl implements AutoCompleteService {
         invOrganizationSiteDTO.setCompanyName(invOrganizationSite.getCompanyName());
         invOrganizationSiteDTO.setEmployer(invOrganizationSite.getEmployer());
         invOrganizationSiteDTO.setJobNamed(invOrganizationSite.getJobNamed());
-        
-         if (invOrganizationSite.getLearnAboutCompanyfrom() != null) {
+
+        if (invOrganizationSite.getLearnAboutCompanyfrom() != null) {
             SymbolDTO symbolDTO = new SymbolDTO();
             symbolDTO.setId(invOrganizationSite.getLearnAboutCompanyfrom().getId());
             symbolDTO.setName(invOrganizationSite.getLearnAboutCompanyfrom().getName());
@@ -283,7 +304,6 @@ public class AutoComplateImpl implements AutoCompleteService {
             symbolDTO.setIndex(invOrganizationSite.getLearnAboutCompanyfrom().getId());
             invOrganizationSiteDTO.setLearnAboutCompanyFrom(symbolDTO);
         }
-        
 
         if (invOrganizationSite.getCurrencyId() != null) {
             CurrencyDTO currencyDTO = new CurrencyDTO();
@@ -328,6 +348,28 @@ public class AutoComplateImpl implements AutoCompleteService {
         invOrganizationSiteDTO.setOpenBalanceCredit(invOrganizationSite.getOpenBalanceCredit());
         invOrganizationSiteDTO.setOpenBalanceDebit(invOrganizationSite.getOpenBalanceDebit());
         invOrganizationSiteDTO.setOpenBalanceDate(invOrganizationSite.getOpenBalanceDate());
+
+        return invOrganizationSiteDTO;
+    }
+
+    public InvOrganizationSiteDTOAPI mapToDTOSmallAPI(InvOrganizationSite invOrganizationSite) {
+        InvOrganizationSiteDTOAPI invOrganizationSiteDTO = new InvOrganizationSiteDTOAPI();
+        invOrganizationSiteDTO.setId(invOrganizationSite.getId());
+        invOrganizationSiteDTO.setName(invOrganizationSite.getName());
+        invOrganizationSiteDTO.setCode(invOrganizationSite.getCode());
+        invOrganizationSiteDTO.setMobile(invOrganizationSite.getMobile());
+        invOrganizationSiteDTO.setLength(invOrganizationSite.getLength());
+        invOrganizationSiteDTO.setShoulder(invOrganizationSite.getShoulder());
+        invOrganizationSiteDTO.setStep(invOrganizationSite.getStep());
+        invOrganizationSiteDTO.setDiscount(invOrganizationSite.getDiscount());
+        invOrganizationSiteDTO.setEmail(invOrganizationSite.getEmail());
+        invOrganizationSiteDTO.setMobile(invOrganizationSite.getMobile());
+
+        invOrganizationSiteDTO.setOfferCompanyName(invOrganizationSite.getOfferCompanyId().getName());
+
+        invOrganizationSiteDTO.setGallaryIdAPI(invOrganizationSite.getGallaryId().getId());
+
+        invOrganizationSiteDTO.setAccountIdAPI(invOrganizationSite.getAccountId().getId());
 
         return invOrganizationSiteDTO;
     }
