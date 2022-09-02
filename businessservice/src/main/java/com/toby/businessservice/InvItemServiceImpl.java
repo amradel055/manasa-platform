@@ -200,7 +200,7 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public InvItemDTO mapToDTO(InvItem invItem, TobyUser tobyUser) {
+    public InvItemDTO mapToDTO(InvItem invItem) {
 
         InvItemDTO invItemDTO = new InvItemDTO();
         invItemDTO.setCreatedBy(invItem.getCreatedBy() != null ? invItem.getCreatedBy().getId() : null);
@@ -256,37 +256,6 @@ public class InvItemServiceImpl implements InvItemService {
         invItemDTO.setPriceType(invItem.getPriceType());
         invItemDTO.setIsOfferItemFinal(invItem.getIsOfferItemFinal());
 
-//        invItemDTO.setItem_natural(invItem.getItemNatural());
-        if (invItem.getOriginCountry() != null) {
-            SymbolDTO symbolDTO = new SymbolDTO();
-            symbolDTO.setId(invItem.getGroupId().getId());
-            symbolDTO.setName(invItem.getGroupId().getName());
-            invItemDTO.setOriginCountry(symbolDTO);
-        }
-        if (invItem.getPaintColor() != null) {
-            SymbolDTO symbolDTO = new SymbolDTO();
-            symbolDTO.setId(invItem.getGroupId().getId());
-            symbolDTO.setName(invItem.getGroupId().getName());
-            invItemDTO.setPaintColor(symbolDTO);
-        }
-        if (invItem.getStone() != null) {
-            SymbolDTO symbolDTO = new SymbolDTO();
-            symbolDTO.setId(invItem.getGroupId().getId());
-            symbolDTO.setName(invItem.getGroupId().getName());
-            invItemDTO.setStone(symbolDTO);
-        }
-        if (invItem.getAddon1() != null) {
-            SymbolDTO symbolDTO = new SymbolDTO();
-            symbolDTO.setId(invItem.getGroupId().getId());
-            symbolDTO.setName(invItem.getGroupId().getName());
-            invItemDTO.setAddon1(symbolDTO);
-        }
-        if (invItem.getAddon2() != null) {
-            SymbolDTO symbolDTO = new SymbolDTO();
-            symbolDTO.setId(invItem.getGroupId().getId());
-            symbolDTO.setName(invItem.getGroupId().getName());
-            invItemDTO.setAddon2(symbolDTO);
-        }
         if (invItem.getGroupId() != null) {
             InvGroupDTO invGroupDTO = new InvGroupDTO();
             invGroupDTO.setId(invItem.getGroupId().getId());
@@ -333,10 +302,10 @@ public class InvItemServiceImpl implements InvItemService {
         return invItemDTO;
     }
 
-    public List<InvItemDTO> mapToDTOList(List<InvItem> invItemList, TobyUser tobyUser) {
+    public List<InvItemDTO> mapToDTOList(List<InvItem> invItemList) {
         List<InvItemDTO> invItemDTOList = new ArrayList<>();
         for (InvItem invItem : invItemList) {
-            invItemDTOList.add(mapToDTO(invItem, tobyUser));
+            invItemDTOList.add(mapToDTO(invItem));
         }
         return invItemDTOList;
     }
@@ -402,11 +371,11 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public List<InvItemDTO> findInvItemDTOList(TobyUser tobyUser) {
+    public List<InvItemDTO> findInvItemDTOList(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("branchId", tobyUser.getBranchId().getId());
+        params.put("branchId", branchId);
         List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId ", params);
-        return mapToDTOList(invItemList, tobyUser);
+        return mapToDTOList(invItemList);
     }
 
     @Override
@@ -748,8 +717,7 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public Boolean validateCodeFromView(InvItem invItem
-    ) {
+    public Boolean validateCodeFromView(InvItem invItem) {
         Boolean result = true;
         Map<String, Object> params = new HashMap<>();
         StringBuilder query = new StringBuilder();
@@ -772,9 +740,7 @@ public class InvItemServiceImpl implements InvItemService {
         if (itemsBarcodesDetailsViews == null || itemsBarcodesDetailsViews.isEmpty()) {
             return false;
         }
-
         return result;
-
     }
 
     @Override

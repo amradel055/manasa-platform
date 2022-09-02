@@ -117,7 +117,7 @@ public class InventoryRest {
     @Consumes(MediaType.APPLICATION_JSON)
     public DueDateDTOAPI findDueDateDTOAPI(TobyUserDTO tobyUserDTO) {
         DueDateDTOAPI dueDateDTOAPI = null;
-        if (tobyUserDTO.getId() != null && tobyUserDTO.getBranchId() != null) {
+        if (tobyUserDTO.getId() != null ) {
             dueDateDTOAPI = invGlobalService.getDueDateDTOAPI(tobyUserDTO.getId());
         }
         return dueDateDTOAPI;

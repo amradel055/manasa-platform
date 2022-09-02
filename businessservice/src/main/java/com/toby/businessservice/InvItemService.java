@@ -26,7 +26,7 @@ import javax.ejb.Remote;
 @Remote
 public interface InvItemService {
 
-    public List<InvItemDTO> findInvItemDTOList(TobyUser tobyUser);
+    public List<InvItemDTO> findInvItemDTOList(Integer branchId);
 
     public List<InvItemDTO> invItemsReport(InvItemDTO invItemDTO, Integer branchId, Boolean isUsed, BigDecimal lastCost, Date dateFrom, Integer itemNatural);
 

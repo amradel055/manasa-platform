@@ -43,6 +43,28 @@ public class ItemsRest {
     QuantityItemsStoreByDateService quantityItemsStoreByDateService;
 
     @Transactional
+    @Path("/findAllItem")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findAllItem(InvItemDTO invItemDTO) {
+        try {
+            if (invItemDTO.getBranchId() != null) {
+                List<InvItemDTO> invItemDTOList = invItemService.findInvItemDTOList(invItemDTO.getBranchId());
+                GenericEntity<List<InvItemDTO>> list = new GenericEntity<List<InvItemDTO>>(invItemDTOList) {
+                };
+                return Response.ok(list).build();
+            } else {
+                invItemDTO.setMsg("يجب اختيار فرع ");
+                return Response.ok(invItemDTO).build();
+            }
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
+
+    @Transactional
     @Path("/groupItems")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
