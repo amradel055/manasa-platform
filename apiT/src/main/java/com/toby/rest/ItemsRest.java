@@ -15,7 +15,6 @@ import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvItemDTO;
 import com.toby.dto.InvItemDTOApi;
 import com.toby.entity.InvItem;
-import static com.toby.entity.InvUpdate_.inventoryId;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;

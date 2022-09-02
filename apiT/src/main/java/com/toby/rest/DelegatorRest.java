@@ -5,6 +5,7 @@
  */
 package com.toby.rest;
 
+import com.toby.API.InvInvoiceDTOApi;
 import com.toby.businessservice.InvDelegatorService;
 import com.toby.dto.InventoryDelegatorDTO;
 import java.util.List;
@@ -28,8 +29,8 @@ public class DelegatorRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<InventoryDelegatorDTO> findDelegatorByInventory(InventoryDelegatorDTO dTO) {
-        return this.invDelegatorService.getDelegatorByInventory(dTO.getGallaryIdAPI(), 1);
+    public List<InventoryDelegatorDTO> findDelegatorByInventory(InvInvoiceDTOApi dTO) {
+        return this.invDelegatorService.getDelegatorByInventory(dTO.getGallaryId(), 1);
     }
 
 }

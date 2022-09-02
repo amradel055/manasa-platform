@@ -107,7 +107,8 @@ public class CustomerRest {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response findCustomersByQuery(InvOrganizationSiteDTO dto) {
         try {
-            List<InvOrganizationSiteDTO> invOrganizationSiteDTOs = autoCompleteService.autoCompleteOrganizationSiteDTOAnotherBranchAnotherGallary(dto.getBranchId(), dto.getPhone(), dto.getGallaryIdAPI());
+//            List<InvOrganizationSiteDTO> invOrganizationSiteDTOs = autoCompleteService.autoCompleteOrganizationSiteDTOAnotherBranchAnotherGallary(dto.getBranchId(), dto.getPhone(), dto.getGallaryIdAPI());
+              List<InvOrganizationSiteDTO> invOrganizationSiteDTOs = autoCompleteService.autoCompleteOrganizationSiteDTO(dto.getBranchId(), Boolean.TRUE, 0, dto.getPhone(), dto.getGallaryIdAPI());
             GenericEntity<List<InvOrganizationSiteDTO>> list = new GenericEntity<List<InvOrganizationSiteDTO>>(invOrganizationSiteDTOs) {
             };
             return Response.ok(list).build();
