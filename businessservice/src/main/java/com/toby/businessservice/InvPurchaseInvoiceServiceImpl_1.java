@@ -168,13 +168,16 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     @Override
-    public Integer getInvoiceBySerial(Integer serial) {
+    public Integer getInvoiceBySerial(Integer serial, Integer gallaryId) {
         if (serial != null && serial > 0) {
             StringBuilder builder = new StringBuilder();
             builder.append(" select id from inv_purchase_invoice ").
                     append(" where serial = \n").
                     append(serial).
                     append(" and type = 4  and branch_id = 182 ");
+            if (gallaryId != null) {
+                builder.append(" and galary_Id = " + gallaryId);
+            }
             List<Integer> details = dao.executeNativeQuery(builder.toString());
             if (details != null && !details.isEmpty()) {
                 return details.get(0);
@@ -662,8 +665,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     @Override
-    public InvInvoiceDTO findInvPurchaseInvoiceByserial(Integer serial) {
-        Integer invoiceId = getInvoiceBySerial(serial);
+    public InvInvoiceDTO findInvPurchaseInvoiceByserial(Integer serial, Integer gallaryId) {
+        Integer invoiceId = getInvoiceBySerial(serial, gallaryId);
         if (invoiceId != null) {
             return findInvPurchaseInvoiceById(invoiceId);
         }
@@ -1497,6 +1500,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         return invoiceDTO;
 
     }
+
     public InvInvoiceDTO mapToDTOApiDeskTop(InvInvoiceDTOApi invInvoiceDTOApi) {
         InvInvoiceDTO invoiceDTO = new InvInvoiceDTO();
         InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
@@ -1574,6 +1578,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invDetailDTO.setQuantityOfOneUnit(item.getNumbermetersmen());
         return invDetailDTO;
     }
+
     public InvDetailDTO mapToDTOAPIDetailDeskTop(InvDetailsDTOAPI detailsDTOAPI) {
         InvItem item = invItemService.findInvItem(detailsDTOAPI.getItemId());
         InvDetailDTO invDetailDTO = new InvDetailDTO();
@@ -1625,7 +1630,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         return responseApi;
     }
-    
+
     @Override
     public ResponseApi SaveApiDeskTop(InvInvoiceDTOApi invInvoiceDTOApi) {
         ResponseApi responseApi = new ResponseApi();
@@ -2186,15 +2191,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     public InvInvoiceDTOApi mapToDTOAPI(InvPurchaseInvoice invoice) {
-        InvInvoiceDTOApi api = new InvInvoiceDTOApi();
-        api.setId(invoice.getId());
-        api.setInvoiceDate(invoice.getDate());
-        api.setCustomerName(invoice.getOrganizationSiteId().getName());
-        api.setStatus(invPurchaseInvoiceService.findInvoiceStatus(invoice.getId()));
-        api.setTakeDate(invoice.getDueDate());
-        api.setGallaryName(invoice.getInvInventoryId().getName());
-        api.setInvoiceNumber(invoice.getSerial().toString());
-        api.setRemarks(invoice.getRemarks());
+        InvInvoiceDTOApi api = initDataAPI(invoice);
         return api;
     }
 
@@ -4184,7 +4181,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     @Override
-    public InvInvoiceDTO getInvoiceBySerial(Integer branchId, Integer serial) {
+    public InvInvoiceDTO getInvoiceBySerial(Integer branchId, Integer serial, Integer gallaryId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         StringBuilder query = new StringBuilder();
@@ -4192,6 +4189,11 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         if (serial != null) {
             params.put("serial", serial);
             query.append(" AND e.serial = :serial AND e.type = 4 ");
+        }
+
+        if (gallaryId != null) {
+            params.put("gallaryId", gallaryId);
+            query.append(" AND e.galaryId.id = :gallaryId ");
         }
         InvPurchaseInvoice invPurchaseInvoice = dao.findEntityByQuery(query.toString(), params);
 
@@ -4227,6 +4229,109 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         builder.append("SELECT s FROM InvPurchaseInvoice s WHERE  s.type =:type AND s.organizationSiteId.id = :organizationId  order by s.serial DESC");
         List<InvPurchaseInvoice> details = dao.findListByQuery(builder.toString(), params);
         return mapToDTOAPIList(details);
+    }
+
+    @Override
+    public InvInvoiceDTOApi findInvPurchaseInvoiceByserialAPI(Integer serial, Integer gallaryId, Integer branchId) {
+        if (serial != null && gallaryId != null && branchId != null) {
+            InvPurchaseInvoice entity = findInvPurchaseInvoice(serial, 4, gallaryId, branchId);
+            if (entity != null) {
+                mapToDTOAPI(entity);
+            }
+        }
+        return null;
+    }
+
+    private InvInvoiceDTOApi initDataAPI(InvPurchaseInvoice entity) {
+        InvInvoiceDTOApi dto = new InvInvoiceDTOApi();
+        dto.setInvoiceDate(entity.getDate());
+        dto.setStatus(invPurchaseInvoiceService.findInvoiceStatus(entity.getId()));
+
+        dto.setInvoiceNumber(entity.getSerial().toString());
+
+        dto.setId(entity.getId());
+        dto.setSerial(entity.getSerial());
+        dto.setSerialTax(entity.getSerialTax());
+
+        dto.setDate(entity.getDate());
+        dto.setRemarks(entity.getRemarks());
+        dto.setDiscount(entity.getDiscount());
+        dto.setDiscountType(entity.getDiscountType());
+        dto.setDiscHalala(entity.getDiscHalala());
+        dto.setDueDate(entity.getDueDate());
+        dto.setDueperiod(entity.getDueperiod());
+        dto.setPricetype(entity.getPricetype());
+        dto.setProof(entity.getProof());
+        dto.setOfferCopoun(entity.getOfferCopoun());
+        dto.setGallaryDeliveryId(entity.getGallaryDelivery());
+
+        dto.setStatus(findInvoiceStatus(entity.getId()));
+
+        if (entity.getDeliveryPlace() != null) {
+            dto.setDeliveryPlaceId(entity.getDeliveryPlace().getId());
+            dto.setDeliveryPlaceName(entity.getDeliveryPlace().getName());
+        }
+
+        if (entity.getOrganizationSiteId() != null) {
+            dto.setCustomerId(entity.getOrganizationSiteId().getId());
+            dto.setCustomerName(entity.getOrganizationSiteId().getName());
+            dto.setCustomerCode(entity.getOrganizationSiteId().getCode());
+            dto.setCustomerEmail(entity.getOrganizationSiteId().getEmail());
+            dto.setCustomerMobile(entity.getOrganizationSiteId().getMobile());
+            dto.setLength(entity.getOrganizationSiteId().getLength());
+            dto.setShoulder(entity.getOrganizationSiteId().getShoulder());
+            dto.setStep(entity.getOrganizationSiteId().getStep());
+            dto.setCustomerOfferCompanyId(entity.getOrganizationSiteId().getOfferCompanyId() == null ? null : entity.getOrganizationSiteId().getOfferCompanyId().getName());
+            dto.setCustomerBalance(supplierAccountService.getAccountForOrganizationSite(entity.getOrganizationSiteId().getId()));
+        }
+
+        if (entity.getInvInventoryId() != null) {
+            dto.setInvInventoryId(entity.getInvInventoryId().getId());
+            dto.setInvInventoryName(entity.getInvInventoryId().getName());
+        }
+
+        if (entity.getGalaryId() != null) {
+            dto.setGallaryId(entity.getGalaryId().getId());
+            dto.setGallaryName(entity.getGalaryId().getName());
+        }
+
+        if (entity.getInvDelegatorId() != null) {
+            dto.setInvDelegatorId(entity.getInvDelegatorId().getId());
+            dto.setInvDelegatorName(entity.getInvDelegatorId().getName());
+        }
+
+        if (entity.getGlBankId() != null) {
+            dto.setGlBankId(entity.getGlBankId().getId());
+            dto.setGlBankName(entity.getGlBankId().getName());
+        }
+        if (entity.getDeliveryPlace() != null) {
+            dto.setDeliveryPlaceId(entity.getDeliveryPlace().getId());
+            dto.setDeliveryPlaceName(entity.getDeliveryPlace().getName());
+        }
+
+        dto.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
+        dto.setCreatedDate(entity.getCreationDate());
+        dto.setIndex(entity.getSerial());
+        dto.setCompanyId(entity.getCompanyId().getId() != null ? entity.getCompanyId().getId() : null);
+        dto.setCreatedByName(entity.getCreatedBy() != null ? entity.getCreatedBy().getName() : null);
+
+        List<InvDetailsDTOAPI> invPurchaseInvoiceDetailsListDTO = invPurchaseInvoiceDetailsService.getAllInvPurchaseInvoiceDetailListWebSite(entity.getId());
+
+        dto.setInvoiceDetailApiList(invPurchaseInvoiceDetailsListDTO);
+        return dto;
+    }
+
+    public InvPurchaseInvoice findInvPurchaseInvoice(Integer serial, Integer type, Integer gallaryId, Integer branchId) {
+        if (serial != null && type != null && gallaryId != null && branchId != null) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("serial", serial);
+            params.put("branchId", branchId);
+            params.put("gallaryId", gallaryId);
+            params.put("type", type);
+            List<InvPurchaseInvoice> details = dao.findListByQuery("SELECT e FROM InvPurchaseInvoice e WHERE e.serial = :serial AND e.branchId.id = :branchId AND e.type = :type AND e.galaryId.id = :gallaryId order by e.id desc", params);
+            return (details == null || details.isEmpty()) ? null : details.get(0);
+        }
+        return null;
     }
 
 }

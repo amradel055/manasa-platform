@@ -20,11 +20,20 @@ public class InvDetailsDTOAPI  extends BaseEntityDTO{
     private String image ;
     private Integer groupId ;
     private Integer inventoryId ;
+    private String inventoryName ;
     
     private Integer itemId;
     private BigDecimal net;
     private BigDecimal quantity;
     private BigDecimal number;
+    
+    private BigDecimal quantityOfOneUnit;
+    private BigDecimal availableQuantityRow;
+     private BigDecimal discountValue;
+     private BigDecimal discount;
+      private Integer proof;
+    
+    
     /**
      * @return the name
      */
@@ -163,6 +172,90 @@ public class InvDetailsDTOAPI  extends BaseEntityDTO{
      */
     public void setInventoryId(Integer inventoryId) {
         this.inventoryId = inventoryId;
+    }
+
+    /**
+     * @return the quantityOfOneUnit
+     */
+    public BigDecimal getQuantityOfOneUnit() {
+        return quantityOfOneUnit;
+    }
+
+    /**
+     * @param quantityOfOneUnit the quantityOfOneUnit to set
+     */
+    public void setQuantityOfOneUnit(BigDecimal quantityOfOneUnit) {
+        this.quantityOfOneUnit = quantityOfOneUnit;
+    }
+
+    /**
+     * @return the inventoryName
+     */
+    public String getInventoryName() {
+        return inventoryName;
+    }
+
+    /**
+     * @param inventoryName the inventoryName to set
+     */
+    public void setInventoryName(String inventoryName) {
+        this.inventoryName = inventoryName;
+    }
+
+    /**
+     * @return the availableQuantityRow
+     */
+    public BigDecimal getAvailableQuantityRow() {
+        return availableQuantityRow;
+    }
+
+    /**
+     * @param availableQuantityRow the availableQuantityRow to set
+     */
+    public void setAvailableQuantityRow(BigDecimal availableQuantityRow) {
+        this.availableQuantityRow = availableQuantityRow;
+    }
+
+    /**
+     * @return the discountValue
+     */
+    public BigDecimal getDiscountValue() {
+        return discountValue;
+    }
+
+    /**
+     * @param discountValue the discountValue to set
+     */
+    public void setDiscountValue(BigDecimal discountValue) {
+        this.discountValue = discountValue;
+    }
+
+    /**
+     * @return the discount
+     */
+    public BigDecimal getDiscount() {
+        return discount;
+    }
+
+    /**
+     * @param discount the discount to set
+     */
+    public void setDiscount(BigDecimal discount) {
+        this.discount = discount;
+    }
+
+    /**
+     * @return the proof
+     */
+    public Integer getProof() {
+        return proof;
+    }
+
+    /**
+     * @param proof the proof to set
+     */
+    public void setProof(Integer proof) {
+        this.proof = proof;
     }
 
 

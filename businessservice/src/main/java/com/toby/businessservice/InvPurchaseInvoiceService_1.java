@@ -35,12 +35,12 @@ import javax.ejb.Remote;
 @Remote
 public interface InvPurchaseInvoiceService_1 {
 
-    public Integer getInvoiceBySerial(Integer serial);
+    public Integer getInvoiceBySerial(Integer serial, Integer gallaryId);
 
     public Integer getInvoiceSerialById(Integer invoiceId);
 
     public InvInvoiceDTO findInvoiceBySerial(Integer serial);
-    
+
     public InvPurchaseInvoice findInvPurchaseInvoiceGallaryDelivery(Integer serial, Integer type, Integer branchId);
 
     public void updateInvoiceForsendCloth(Integer id, Integer sendCloth);
@@ -174,18 +174,20 @@ public interface InvPurchaseInvoiceService_1 {
 
     public ResponseApi SaveApi(InvInvoiceDTOApi invInvoiceDTOApi);
 
-    public InvInvoiceDTO getInvoiceBySerial(Integer branchId, Integer serial);
+    public InvInvoiceDTO getInvoiceBySerial(Integer branchId, Integer serial, Integer gallaryId);
 
     public void saveDeliveryPlace(Integer invoiceId, Integer deliverPlaceId);
 
     public void updateGallaryDelivery(Integer invoiceId);
-    
-     public InvInvoiceDTO convertInvPurchaseInvoiceToInvInvoice(InvInvoiceDTO invInvoiceDTO, Integer type);
-     
-     public List<InvInvoiceDTOApi> getALLInvPurchaseInvoiceDTOBYCustomerForWebSite(Integer type, Integer organizationId);
-     
-     public InvInvoiceDTO findInvPurchaseInvoiceByserial(Integer serial);
-     
-     public ResponseApi SaveApiDeskTop(InvInvoiceDTOApi invInvoiceDTOApi);
+
+    public InvInvoiceDTO convertInvPurchaseInvoiceToInvInvoice(InvInvoiceDTO invInvoiceDTO, Integer type);
+
+    public List<InvInvoiceDTOApi> getALLInvPurchaseInvoiceDTOBYCustomerForWebSite(Integer type, Integer organizationId);
+
+    public InvInvoiceDTO findInvPurchaseInvoiceByserial(Integer serial, Integer gallaryId);
+
+    public InvInvoiceDTOApi findInvPurchaseInvoiceByserialAPI(Integer serial, Integer gallaryId, Integer branchId);
+
+    public ResponseApi SaveApiDeskTop(InvInvoiceDTOApi invInvoiceDTOApi);
 
 }

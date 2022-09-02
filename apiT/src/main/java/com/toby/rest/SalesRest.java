@@ -45,8 +45,11 @@ public class SalesRest {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response saveDeskTop(InvInvoiceDTOApi invInvoiceDTOApi) {
         try {
-            ResponseApi responseApi = invPurchaseInvoiceService_1.SaveApiDeskTop(invInvoiceDTOApi);
-            return Response.ok().entity(responseApi).build();
+            if (invInvoiceDTOApi.getId() == null) {
+                ResponseApi responseApi = invPurchaseInvoiceService_1.SaveApiDeskTop(invInvoiceDTOApi);
+                return Response.ok().entity(responseApi).build();
+            }
+            return null;
         } catch (Exception e) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
@@ -66,7 +69,7 @@ public class SalesRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public InvInvoiceDTO findInvPurchaseInvoiceByserial(InvInvoiceDTOApi dTO) {
-        return this.invPurchaseInvoiceService_1.findInvPurchaseInvoiceByserial(dTO.getSerial());
+    public InvInvoiceDTOApi findInvPurchaseInvoiceByserial(InvInvoiceDTOApi dTO) {
+        return this.invPurchaseInvoiceService_1.findInvPurchaseInvoiceByserialAPI(dTO.getSerial(), dTO.getGallaryId(), dTO.getBranchId());
     }
 }

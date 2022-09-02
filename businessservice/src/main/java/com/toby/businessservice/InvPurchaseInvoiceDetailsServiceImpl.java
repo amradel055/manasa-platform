@@ -296,9 +296,9 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
     }
 
     @Override
-    public List<InvDetailsDTOAPI> getAllInvPurchaseInvoiceDetailListWebSite(InvInvoiceDTO dto) {
+    public List<InvDetailsDTOAPI> getAllInvPurchaseInvoiceDetailListWebSite(Integer invoiceId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("invPurchaseInvoiceId", dto.getId());
+        params.put("invPurchaseInvoiceId", invoiceId);
         List<InvPurchaseInvoiceDetail> details = dao.findListByQuery("SELECT e FROM InvPurchaseInvoiceDetail e WHERE e.invPurchaseInvoiceId.id = :invPurchaseInvoiceId", params);
         return mapToDTOAPIList(details);
     }
@@ -318,6 +318,16 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
         api.setCode(detail.getItemId().getCode());
         api.setName(detail.getItemId().getName());
         api.setPrice(detail.getCost());
+        api.setQuantity(detail.getQuantity());
+        api.setNumber(detail.getNumber());
+        api.setQuantityOfOneUnit(detail.getQuantityOfOneUnit());
+        api.setInventoryId(detail.getInvInventoryId().getId());
+        api.setInventoryName(detail.getInvInventoryId().getName());
+        api.setDiscountValue(detail.getDiscountValue());
+        api.setDiscount(detail.getDiscount());
+        api.setNet(detail.getNet());
+        api.setProof(detail.getProof());
+
         api.setImage(detail.getItemId().getImage());
         if (detail.getItemId().getGroupId() != null) {
             api.setGroupId(detail.getItemId().getGroupId().getId());
@@ -453,9 +463,9 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
             ItemsBarcodesDetailsView barcodesDetailsView = itemsBarcodeMap.get(itemBarcode);
             dTO.setItemsBarcodesDetail(barcodesDetailsView);
             dTO.setItemsBarcodesDetailTrans(dTO.getItemsBarcodesDetail());
-            if(dTO.getItemsBarcodesDetail() != null){
-            dTO.setItemName(dTO.getItemsBarcodesDetail().getName());
-            dTO.setItemCode(dTO.getItemsBarcodesDetail().getBarcode());
+            if (dTO.getItemsBarcodesDetail() != null) {
+                dTO.setItemName(dTO.getItemsBarcodesDetail().getName());
+                dTO.setItemCode(dTO.getItemsBarcodesDetail().getBarcode());
             }
             dTO.setScrewing(screwing);
             if (itemId != null && barcodesDetailsView != null && barcodesDetailsView.getPaintColor() != null) {
@@ -837,7 +847,5 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
         return galarysLIST;
 
     }
-
-  
 
 }

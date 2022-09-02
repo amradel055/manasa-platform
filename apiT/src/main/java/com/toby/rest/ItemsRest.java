@@ -117,7 +117,7 @@ public class ItemsRest {
     public Response findInvoiceDetailsForCustomerOldBuy(InvInvoiceDTO invoiceDTO) {
         try {
             if (invoiceDTO.getId() != null) {
-                List<InvDetailsDTOAPI> invInvoiceDTOs = invPurchaseInvoiceDetailsService.getAllInvPurchaseInvoiceDetailListWebSite(invoiceDTO);
+                List<InvDetailsDTOAPI> invInvoiceDTOs = invPurchaseInvoiceDetailsService.getAllInvPurchaseInvoiceDetailListWebSite(invoiceDTO.getId());
                 GenericEntity<List<InvDetailsDTOAPI>> list = new GenericEntity<List<InvDetailsDTOAPI>>(invInvoiceDTOs) {
                 };
                 return Response.ok(list).build();

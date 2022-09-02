@@ -5,25 +5,67 @@
  */
 package com.toby.API;
 
-import com.toby.dto.*;
+import com.toby.dto.BaseEntityDTO;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
 public class InvInvoiceDTOApi extends BaseEntityDTO {
 
+    /**
+     * @return the date
+     */
+    public Date getDate() {
+        return date;
+    }
+
+    /**
+     * @param date the date to set
+     */
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    private Integer customerId;
     private String customerName;
     private String customerMobile;
+
     private String gallaryName;
     private Date invoiceDate;
+    private Date date;
     private Date takeDate;
     private String status;
     private String invoiceNumber;
     private String remarks;
-    private Integer customerId;
     private Integer gallaryId;
     private Integer discountType;
     private Integer invDelegatorId;
     private Integer invInventoryId;
+
+    private String invDelegatorName;
+    private BigDecimal discount;
+    private BigDecimal discHalala;
+    private Date dueDate;
+    private Integer dueperiod;
+    private Integer pricetype;
+    private Integer proof;
+    private String offerCopoun;
+    private String gallaryDelivery;
+    private Integer gallaryDeliveryId;
+    private String deliveryPlaceName;
+    private Integer deliveryPlaceId;
+    private String customerCode;
+    private String customerEmail;
+    private String customerOfferCompanyId;
+    private BigDecimal length;
+    private BigDecimal shoulder;
+    private BigDecimal step;
+    private BigDecimal customerBalance;
+    private String invInventoryName;
+    private Integer glBankId;
+    private String glBankName;
+    private Integer serialTax;
+
     private List<InvDetailsDTOAPI> invoiceDetailApiList;
 
     /**
@@ -220,5 +262,327 @@ public class InvInvoiceDTOApi extends BaseEntityDTO {
      */
     public void setInvInventoryId(Integer invInventoryId) {
         this.invInventoryId = invInventoryId;
+    }
+
+    /**
+     * @return the serialTax
+     */
+    public Integer getSerialTax() {
+        return serialTax;
+    }
+
+    /**
+     * @param serialTax the serialTax to set
+     */
+    public void setSerialTax(Integer serialTax) {
+        this.serialTax = serialTax;
+    }
+
+    /**
+     * @return the invDelegatorName
+     */
+    public String getInvDelegatorName() {
+        return invDelegatorName;
+    }
+
+    /**
+     * @param invDelegatorName the invDelegatorName to set
+     */
+    public void setInvDelegatorName(String invDelegatorName) {
+        this.invDelegatorName = invDelegatorName;
+    }
+
+    /**
+     * @return the discount
+     */
+    public BigDecimal getDiscount() {
+        return discount;
+    }
+
+    /**
+     * @param discount the discount to set
+     */
+    public void setDiscount(BigDecimal discount) {
+        this.discount = discount;
+    }
+
+    /**
+     * @return the discHalala
+     */
+    public BigDecimal getDiscHalala() {
+        return discHalala;
+    }
+
+    /**
+     * @param discHalala the discHalala to set
+     */
+    public void setDiscHalala(BigDecimal discHalala) {
+        this.discHalala = discHalala;
+    }
+
+    /**
+     * @return the dueDate
+     */
+    public Date getDueDate() {
+        return dueDate;
+    }
+
+    /**
+     * @param dueDate the dueDate to set
+     */
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    /**
+     * @return the dueperiod
+     */
+    public Integer getDueperiod() {
+        return dueperiod;
+    }
+
+    /**
+     * @param dueperiod the dueperiod to set
+     */
+    public void setDueperiod(Integer dueperiod) {
+        this.dueperiod = dueperiod;
+    }
+
+    /**
+     * @return the pricetype
+     */
+    public Integer getPricetype() {
+        return pricetype;
+    }
+
+    /**
+     * @param pricetype the pricetype to set
+     */
+    public void setPricetype(Integer pricetype) {
+        this.pricetype = pricetype;
+    }
+
+    /**
+     * @return the proof
+     */
+    public Integer getProof() {
+        return proof;
+    }
+
+    /**
+     * @param proof the proof to set
+     */
+    public void setProof(Integer proof) {
+        this.proof = proof;
+    }
+
+    /**
+     * @return the offerCopoun
+     */
+    public String getOfferCopoun() {
+        return offerCopoun;
+    }
+
+    /**
+     * @param offerCopoun the offerCopoun to set
+     */
+    public void setOfferCopoun(String offerCopoun) {
+        this.offerCopoun = offerCopoun;
+    }
+
+    /**
+     * @return the gallaryDelivery
+     */
+    public String getGallaryDelivery() {
+        return gallaryDelivery;
+    }
+
+    /**
+     * @param gallaryDelivery the gallaryDelivery to set
+     */
+    public void setGallaryDelivery(String gallaryDelivery) {
+        this.gallaryDelivery = gallaryDelivery;
+    }
+
+    /**
+     * @return the gallaryDeliveryId
+     */
+    public Integer getGallaryDeliveryId() {
+        return gallaryDeliveryId;
+    }
+
+    /**
+     * @param gallaryDeliveryId the gallaryDeliveryId to set
+     */
+    public void setGallaryDeliveryId(Integer gallaryDeliveryId) {
+        this.gallaryDeliveryId = gallaryDeliveryId;
+    }
+
+    /**
+     * @return the deliveryPlaceName
+     */
+    public String getDeliveryPlaceName() {
+        return deliveryPlaceName;
+    }
+
+    /**
+     * @param deliveryPlaceName the deliveryPlaceName to set
+     */
+    public void setDeliveryPlaceName(String deliveryPlaceName) {
+        this.deliveryPlaceName = deliveryPlaceName;
+    }
+
+    /**
+     * @return the deliveryPlaceId
+     */
+    public Integer getDeliveryPlaceId() {
+        return deliveryPlaceId;
+    }
+
+    /**
+     * @param deliveryPlaceId the deliveryPlaceId to set
+     */
+    public void setDeliveryPlaceId(Integer deliveryPlaceId) {
+        this.deliveryPlaceId = deliveryPlaceId;
+    }
+
+    /**
+     * @return the customerCode
+     */
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    /**
+     * @param customerCode the customerCode to set
+     */
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
+    }
+
+    /**
+     * @return the customerEmail
+     */
+    public String getCustomerEmail() {
+        return customerEmail;
+    }
+
+    /**
+     * @param customerEmail the customerEmail to set
+     */
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
+    }
+
+    /**
+     * @return the length
+     */
+    public BigDecimal getLength() {
+        return length;
+    }
+
+    /**
+     * @param length the length to set
+     */
+    public void setLength(BigDecimal length) {
+        this.length = length;
+    }
+
+    /**
+     * @return the shoulder
+     */
+    public BigDecimal getShoulder() {
+        return shoulder;
+    }
+
+    /**
+     * @param shoulder the shoulder to set
+     */
+    public void setShoulder(BigDecimal shoulder) {
+        this.shoulder = shoulder;
+    }
+
+    /**
+     * @return the step
+     */
+    public BigDecimal getStep() {
+        return step;
+    }
+
+    /**
+     * @param step the step to set
+     */
+    public void setStep(BigDecimal step) {
+        this.step = step;
+    }
+
+    /**
+     * @return the customerBalance
+     */
+    public BigDecimal getCustomerBalance() {
+        return customerBalance;
+    }
+
+    /**
+     * @param customerBalance the customerBalance to set
+     */
+    public void setCustomerBalance(BigDecimal customerBalance) {
+        this.customerBalance = customerBalance;
+    }
+
+    /**
+     * @return the invInventoryName
+     */
+    public String getInvInventoryName() {
+        return invInventoryName;
+    }
+
+    /**
+     * @param invInventoryName the invInventoryName to set
+     */
+    public void setInvInventoryName(String invInventoryName) {
+        this.invInventoryName = invInventoryName;
+    }
+
+    /**
+     * @return the glBankId
+     */
+    public Integer getGlBankId() {
+        return glBankId;
+    }
+
+    /**
+     * @param glBankId the glBankId to set
+     */
+    public void setGlBankId(Integer glBankId) {
+        this.glBankId = glBankId;
+    }
+
+    /**
+     * @return the glBankName
+     */
+    public String getGlBankName() {
+        return glBankName;
+    }
+
+    /**
+     * @param glBankName the glBankName to set
+     */
+    public void setGlBankName(String glBankName) {
+        this.glBankName = glBankName;
+    }
+
+    /**
+     * @return the customerOfferCompanyId
+     */
+    public String getCustomerOfferCompanyId() {
+        return customerOfferCompanyId;
+    }
+
+    /**
+     * @param customerOfferCompanyId the customerOfferCompanyId to set
+     */
+    public void setCustomerOfferCompanyId(String customerOfferCompanyId) {
+        this.customerOfferCompanyId = customerOfferCompanyId;
     }
 }

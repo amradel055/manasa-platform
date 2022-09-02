@@ -41,7 +41,7 @@ public class InvPurchaseInvoiceDeliveryPalace extends Basic {
     }
 
     public void search() {
-        setInvInvoiceDTO(invPurchaseInvoiceService_1.getInvoiceBySerial(getUserData().getUserBranch().getId(), serial));
+        setInvInvoiceDTO(invPurchaseInvoiceService_1.getInvoiceBySerial(getUserData().getUserBranch().getId(), serial, null));
         if (getInvInvoiceDTO().getDeliveryPlace() != null) {
            getInvInvoiceDTO().setDeliveryPlace(getInvInvoiceDTO().getDeliveryPlace());
         }

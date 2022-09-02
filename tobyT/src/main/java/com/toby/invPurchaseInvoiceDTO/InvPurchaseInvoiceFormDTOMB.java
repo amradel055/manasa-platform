@@ -351,7 +351,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                 getInvInvoiceDTO().setSearchBySerial(getInvInvoiceDTOSelected().getSerial());
             }
             if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getSearchBySerial() != null && getInvInvoiceDTO().getSearchBySerial() > 0) {
-                Integer invoiceId = invPurchaseInvoiceService_1.getInvoiceBySerial(getInvInvoiceDTO().getSearchBySerial());
+                Integer invoiceId = invPurchaseInvoiceService_1.getInvoiceBySerial(getInvInvoiceDTO().getSearchBySerial(),getInvInvoiceDTO().getGallaryId().getId());
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
                 context.getSessionMap().put("invPurchaseInvoiceIdSeclected", invoiceId);
                 context.getSessionMap().put("ScreenMode", "editInvoice");
@@ -366,7 +366,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
     public void searchReturnInvoiceBySerial() {
         try {
             if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getSearchBySerial() != null && getInvInvoiceDTO().getSearchBySerial() > 0) {
-                Integer invoiceId = invPurchaseInvoiceService_1.getInvoiceBySerial(getInvInvoiceDTO().getSearchBySerial());
+                Integer invoiceId = invPurchaseInvoiceService_1.getInvoiceBySerial(getInvInvoiceDTO().getSearchBySerial(),getInvInvoiceDTO().getGallaryId().getId());
                 if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
                     findinvoice(invoiceId);
                 } else if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVRETURNSALESFORM)) {

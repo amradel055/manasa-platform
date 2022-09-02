@@ -53,7 +53,7 @@ public interface InvPurchaseInvoiceDetailsService {
 
     public List<InvDetailDTO> getAllInvPurchaseInvoiceDetailList(InvInvoiceDTO dto);
 
-    public List<InvDetailsDTOAPI> getAllInvPurchaseInvoiceDetailListWebSite(InvInvoiceDTO dto);
+    public List<InvDetailsDTOAPI> getAllInvPurchaseInvoiceDetailListWebSite(Integer invoiceId);
 
     public void deleteInvPurchaseInvoiceDetailListDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList);
 
