@@ -47,16 +47,16 @@ public class ItemsRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response findAllItem(InvItemDTO invItemDTO) {
+    public Response findAllItem(InvInvoiceDTOApi  invoiceDTOApi) {
         try {
-            if (invItemDTO.getBranchId() != null) {
-                List<InvItemDTO> invItemDTOList = invItemService.findInvItemDTOList(invItemDTO.getBranchId());
+            if (invoiceDTOApi.getBranchId() != null) {
+                List<InvItemDTO> invItemDTOList = invItemService.findInvItemDTOList(invoiceDTOApi.getBranchId());
                 GenericEntity<List<InvItemDTO>> list = new GenericEntity<List<InvItemDTO>>(invItemDTOList) {
                 };
                 return Response.ok(list).build();
             } else {
-                invItemDTO.setMsg("يجب اختيار فرع ");
-                return Response.ok(invItemDTO).build();
+                invoiceDTOApi.setMsg("يجب اختيار فرع ");
+                return Response.ok(invoiceDTOApi).build();
             }
 
         } catch (Exception e) {
