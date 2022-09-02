@@ -105,7 +105,7 @@ public class CustomerRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response findCustomersByQuery(InvOrganizationSiteDTO dto) {
+    public Response findCustomersByQuery(InvOrganizationSiteDTOAPI dto) {
         try {
 //            List<InvOrganizationSiteDTO> invOrganizationSiteDTOs = autoCompleteService.autoCompleteOrganizationSiteDTOAnotherBranchAnotherGallary(dto.getBranchId(), dto.getPhone(), dto.getGallaryIdAPI());
               List<InvOrganizationSiteDTO> invOrganizationSiteDTOs = autoCompleteService.autoCompleteOrganizationSiteDTO(dto.getBranchId(), Boolean.TRUE, 0, dto.getPhone(), dto.getGallaryIdAPI());
