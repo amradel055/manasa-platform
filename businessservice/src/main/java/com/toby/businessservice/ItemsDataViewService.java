@@ -34,6 +34,6 @@ public interface ItemsDataViewService {
 
     public InvItemDTO findInvItem(Integer invItemById, TobyUser tobyUser);
     
-    public List<ItemsDataView> getAllItemCardByInvStripSearchBeanNew(ItemCardReportSerachBean itemCardReportSerachBean, GlYear glYear);
+    public List<ItemsDataView> getAllItemCardByInvStripSearchBeanNew(ItemCardReportSerachBean itemCardReportSerachBean, GlYear glYear, Integer limitType);
 
 }

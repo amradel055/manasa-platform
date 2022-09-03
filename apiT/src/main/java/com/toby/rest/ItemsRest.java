@@ -16,7 +16,11 @@ import com.toby.dto.InvItemDTO;
 import com.toby.API.InvItemDTOApi;
 import com.toby.API.InvOrganizationSiteDTOAPI;
 import com.toby.businessservice.InvGlobalService;
+import com.toby.businessservice.ItemsDataViewService;
+import com.toby.businessservice.reports.searchBean.ItemCardReportSerachBean;
+import com.toby.entity.InvInventory;
 import com.toby.entity.InvItem;
+import com.toby.views.ItemsDataView;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +39,8 @@ public class ItemsRest {
 
     @EJB
     InvItemService invItemService;
+    @EJB
+    ItemsDataViewService itemsDataViewService;
 
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
@@ -91,7 +97,7 @@ public class ItemsRest {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public InvItemDTOApi findItemData(InvItemDTOApi invItemDTOApi) {
-        return invGlobalService.findItemData(invItemDTOApi.getId(), invItemDTOApi.getCustomerId(), invItemDTOApi.getPriceType(),invItemDTOApi.getInventoryId());
+        return invGlobalService.findItemData(invItemDTOApi.getId(), invItemDTOApi.getCustomerId(), invItemDTOApi.getPriceType(), invItemDTOApi.getInventoryId());
     }
 
     @Transactional
@@ -264,7 +270,7 @@ public class ItemsRest {
     public Response updateItem(InvItem invItem) {
         try {
             if (invItem.getId() != null) {
-                invItem = invItemService.updateInvItemWebSite(invItem);
+                invItemService.updateInvItemWebSite(invItem);
                 return Response.ok().entity("تم الحفظ بنجاح").build();
             } else {
                 return Response.ok().entity("يجب اختيار منتج ").build();
@@ -281,6 +287,24 @@ public class ItemsRest {
         }
 
         return invItemDTO;
+    }
+
+    @Transactional
+    @Path("/findItemMinimunLimit")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<ItemsDataView> findItemMinimunLimit(InvItemDTOApi invItemDTO) {
+        if (invItemDTO.getInventoryId() != null) {
+            ItemCardReportSerachBean itemCardReportSerachBean = new ItemCardReportSerachBean();
+            InvInventory inventoryFrom = new InvInventory();
+            inventoryFrom.setId(invItemDTO.getInventoryId());
+            itemCardReportSerachBean.setInventoryFrom(inventoryFrom);
+            itemCardReportSerachBean.setBranchId(invItemDTO.getBranchId());
+            List<ItemsDataView> list = itemsDataViewService.getAllItemCardByInvStripSearchBeanNew(itemCardReportSerachBean, null, 1);
+            return list;
+        }
+        return null;
     }
 
 }

@@ -29,40 +29,74 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "items_data_view")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "ItemsDataView.findAll", query = "SELECT i FROM ItemsDataView i"),
-    @NamedQuery(name = "ItemsDataView.findByRowNum", query = "SELECT i FROM ItemsDataView i WHERE i.rowNum = :rowNum"),
-    @NamedQuery(name = "ItemsDataView.findById", query = "SELECT i FROM ItemsDataView i WHERE i.id = :id"),
-    @NamedQuery(name = "ItemsDataView.findBySerial", query = "SELECT i FROM ItemsDataView i WHERE i.serial = :serial"),
-    @NamedQuery(name = "ItemsDataView.findByQty", query = "SELECT i FROM ItemsDataView i WHERE i.qty = :qty"),
-    @NamedQuery(name = "ItemsDataView.findByDate", query = "SELECT i FROM ItemsDataView i WHERE i.date = :date"),
-    @NamedQuery(name = "ItemsDataView.findByGroupId", query = "SELECT i FROM ItemsDataView i WHERE i.groupId = :groupId"),
-    @NamedQuery(name = "ItemsDataView.findByGroupName", query = "SELECT i FROM ItemsDataView i WHERE i.groupName = :groupName"),
-    @NamedQuery(name = "ItemsDataView.findByGroupCode", query = "SELECT i FROM ItemsDataView i WHERE i.groupCode = :groupCode"),
-    @NamedQuery(name = "ItemsDataView.findByItemName", query = "SELECT i FROM ItemsDataView i WHERE i.itemName = :itemName"),
-    @NamedQuery(name = "ItemsDataView.findByItemCode", query = "SELECT i FROM ItemsDataView i WHERE i.itemCode = :itemCode"),
-    @NamedQuery(name = "ItemsDataView.findBySellPrice", query = "SELECT i FROM ItemsDataView i WHERE i.sellPrice = :sellPrice"),
-    @NamedQuery(name = "ItemsDataView.findByItemBarcode", query = "SELECT i FROM ItemsDataView i WHERE i.itemBarcode = :itemBarcode"),
-    @NamedQuery(name = "ItemsDataView.findByItemUnitName", query = "SELECT i FROM ItemsDataView i WHERE i.itemUnitName = :itemUnitName"),
-    @NamedQuery(name = "ItemsDataView.findByDetailUnitName", query = "SELECT i FROM ItemsDataView i WHERE i.detailUnitName = :detailUnitName"),
-    @NamedQuery(name = "ItemsDataView.findByQtyin", query = "SELECT i FROM ItemsDataView i WHERE i.qtyin = :qtyin"),
-    @NamedQuery(name = "ItemsDataView.findByQtyout", query = "SELECT i FROM ItemsDataView i WHERE i.qtyout = :qtyout"),
-    @NamedQuery(name = "ItemsDataView.findByCostAverage", query = "SELECT i FROM ItemsDataView i WHERE i.costAverage = :costAverage"),
-    @NamedQuery(name = "ItemsDataView.findByScrewing", query = "SELECT i FROM ItemsDataView i WHERE i.screwing = :screwing"),
-    @NamedQuery(name = "ItemsDataView.findByItemId", query = "SELECT i FROM ItemsDataView i WHERE i.itemId = :itemId"),
-    @NamedQuery(name = "ItemsDataView.findByBranchId", query = "SELECT i FROM ItemsDataView i WHERE i.branchId = :branchId"),
-    @NamedQuery(name = "ItemsDataView.findByPostFlag", query = "SELECT i FROM ItemsDataView i WHERE i.postFlag = :postFlag"),
-    @NamedQuery(name = "ItemsDataView.findByInventoryId", query = "SELECT i FROM ItemsDataView i WHERE i.inventoryId = :inventoryId"),
-    @NamedQuery(name = "ItemsDataView.findByInventoryCode", query = "SELECT i FROM ItemsDataView i WHERE i.inventoryCode = :inventoryCode"),
-    @NamedQuery(name = "ItemsDataView.findByInventoryName", query = "SELECT i FROM ItemsDataView i WHERE i.inventoryName = :inventoryName"),
-    @NamedQuery(name = "ItemsDataView.findByOrganizationSiteId", query = "SELECT i FROM ItemsDataView i WHERE i.organizationSiteId = :organizationSiteId"),
-    @NamedQuery(name = "ItemsDataView.findByOrganizationCode", query = "SELECT i FROM ItemsDataView i WHERE i.organizationCode = :organizationCode"),
-    @NamedQuery(name = "ItemsDataView.findByOrganizationName", query = "SELECT i FROM ItemsDataView i WHERE i.organizationName = :organizationName"),
-    @NamedQuery(name = "ItemsDataView.findByOrganizationType", query = "SELECT i FROM ItemsDataView i WHERE i.organizationType = :organizationType"),
-    @NamedQuery(name = "ItemsDataView.findByOrganizationOpenBalanceDebit", query = "SELECT i FROM ItemsDataView i WHERE i.organizationOpenBalanceDebit = :organizationOpenBalanceDebit"),
-    @NamedQuery(name = "ItemsDataView.findByOrganizationOpenBalanceCredit", query = "SELECT i FROM ItemsDataView i WHERE i.organizationOpenBalanceCredit = :organizationOpenBalanceCredit"),
-    @NamedQuery(name = "ItemsDataView.findByOrganizationCurrencyId", query = "SELECT i FROM ItemsDataView i WHERE i.organizationCurrencyId = :organizationCurrencyId"),
-    @NamedQuery(name = "ItemsDataView.findByType", query = "SELECT i FROM ItemsDataView i WHERE i.type = :type"),
-    @NamedQuery(name = "ItemsDataView.findByScreenName", query = "SELECT i FROM ItemsDataView i WHERE i.screenName = :screenName"),
+    @NamedQuery(name = "ItemsDataView.findAll", query = "SELECT i FROM ItemsDataView i")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByRowNum", query = "SELECT i FROM ItemsDataView i WHERE i.rowNum = :rowNum")
+    ,
+    @NamedQuery(name = "ItemsDataView.findById", query = "SELECT i FROM ItemsDataView i WHERE i.id = :id")
+    ,
+    @NamedQuery(name = "ItemsDataView.findBySerial", query = "SELECT i FROM ItemsDataView i WHERE i.serial = :serial")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByQty", query = "SELECT i FROM ItemsDataView i WHERE i.qty = :qty")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByDate", query = "SELECT i FROM ItemsDataView i WHERE i.date = :date")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByGroupId", query = "SELECT i FROM ItemsDataView i WHERE i.groupId = :groupId")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByGroupName", query = "SELECT i FROM ItemsDataView i WHERE i.groupName = :groupName")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByGroupCode", query = "SELECT i FROM ItemsDataView i WHERE i.groupCode = :groupCode")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByItemName", query = "SELECT i FROM ItemsDataView i WHERE i.itemName = :itemName")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByItemCode", query = "SELECT i FROM ItemsDataView i WHERE i.itemCode = :itemCode")
+    ,
+    @NamedQuery(name = "ItemsDataView.findBySellPrice", query = "SELECT i FROM ItemsDataView i WHERE i.sellPrice = :sellPrice")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByItemBarcode", query = "SELECT i FROM ItemsDataView i WHERE i.itemBarcode = :itemBarcode")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByItemUnitName", query = "SELECT i FROM ItemsDataView i WHERE i.itemUnitName = :itemUnitName")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByDetailUnitName", query = "SELECT i FROM ItemsDataView i WHERE i.detailUnitName = :detailUnitName")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByQtyin", query = "SELECT i FROM ItemsDataView i WHERE i.qtyin = :qtyin")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByQtyout", query = "SELECT i FROM ItemsDataView i WHERE i.qtyout = :qtyout")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByCostAverage", query = "SELECT i FROM ItemsDataView i WHERE i.costAverage = :costAverage")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByScrewing", query = "SELECT i FROM ItemsDataView i WHERE i.screwing = :screwing")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByItemId", query = "SELECT i FROM ItemsDataView i WHERE i.itemId = :itemId")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByBranchId", query = "SELECT i FROM ItemsDataView i WHERE i.branchId = :branchId")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByPostFlag", query = "SELECT i FROM ItemsDataView i WHERE i.postFlag = :postFlag")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByInventoryId", query = "SELECT i FROM ItemsDataView i WHERE i.inventoryId = :inventoryId")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByInventoryCode", query = "SELECT i FROM ItemsDataView i WHERE i.inventoryCode = :inventoryCode")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByInventoryName", query = "SELECT i FROM ItemsDataView i WHERE i.inventoryName = :inventoryName")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByOrganizationSiteId", query = "SELECT i FROM ItemsDataView i WHERE i.organizationSiteId = :organizationSiteId")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByOrganizationCode", query = "SELECT i FROM ItemsDataView i WHERE i.organizationCode = :organizationCode")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByOrganizationName", query = "SELECT i FROM ItemsDataView i WHERE i.organizationName = :organizationName")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByOrganizationType", query = "SELECT i FROM ItemsDataView i WHERE i.organizationType = :organizationType")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByOrganizationOpenBalanceDebit", query = "SELECT i FROM ItemsDataView i WHERE i.organizationOpenBalanceDebit = :organizationOpenBalanceDebit")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByOrganizationOpenBalanceCredit", query = "SELECT i FROM ItemsDataView i WHERE i.organizationOpenBalanceCredit = :organizationOpenBalanceCredit")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByOrganizationCurrencyId", query = "SELECT i FROM ItemsDataView i WHERE i.organizationCurrencyId = :organizationCurrencyId")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByType", query = "SELECT i FROM ItemsDataView i WHERE i.type = :type")
+    ,
+    @NamedQuery(name = "ItemsDataView.findByScreenName", query = "SELECT i FROM ItemsDataView i WHERE i.screenName = :screenName")
+    ,
     @NamedQuery(name = "ItemsDataView.findByOperationType", query = "SELECT i FROM ItemsDataView i WHERE i.operationType = :operationType")})
 public class ItemsDataView implements Serializable {
 
@@ -86,12 +120,12 @@ public class ItemsDataView implements Serializable {
     private Integer rowNum;
     @Column(name = "id")
     private int id;
-    
+
     @Basic(optional = false)
-   
+
     @Column(name = "serial")
     private Integer serial;
-     @Column(name = "item_supplier_id")
+    @Column(name = "item_supplier_id")
     private Integer itemSupplierId;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "qty")
@@ -120,7 +154,7 @@ public class ItemsDataView implements Serializable {
     private String detailUnitName;
     @Basic(optional = false)
     @Column(name = "qtyin")
-     private BigDecimal qtyin;
+    private BigDecimal qtyin;
     @Basic(optional = false)
     @Column(name = "qtyout")
     private BigDecimal qtyout;
@@ -194,6 +228,12 @@ public class ItemsDataView implements Serializable {
     private String gallaryName;
     @Transient
     private String invoiceStatus;
+    @Transient
+    private BigDecimal maxmumAmount;
+    @Transient
+    private BigDecimal minimumAmount;
+    @Transient
+    private BigDecimal mustBuy;
 
     public ItemsDataView() {
     }
@@ -279,7 +319,7 @@ public class ItemsDataView implements Serializable {
     }
 
     public BigDecimal getSellPrice() {
-        if(sellPrice == null){
+        if (sellPrice == null) {
             sellPrice = BigDecimal.ZERO;
         }
         return sellPrice;
@@ -312,8 +352,6 @@ public class ItemsDataView implements Serializable {
     public void setDetailUnitName(String detailUnitName) {
         this.detailUnitName = detailUnitName;
     }
-
-  
 
     public BigDecimal getQtyout() {
         return qtyout;
@@ -471,7 +509,7 @@ public class ItemsDataView implements Serializable {
      * @return the balance
      */
     public BigDecimal getBalance() {
-        if(balance == null){
+        if (balance == null) {
             balance = BigDecimal.ZERO;
         }
         return balance;
@@ -525,7 +563,7 @@ public class ItemsDataView implements Serializable {
     public void setQtyin(BigDecimal qtyin) {
         this.qtyin = qtyin;
     }
-    
+
     public int getScreenCode() {
         return screenCode;
     }
@@ -533,6 +571,7 @@ public class ItemsDataView implements Serializable {
     public void setScreenCode(int screenCode) {
         this.screenCode = screenCode;
     }
+
     /**
      * @return the weightDetail
      */
@@ -579,6 +618,9 @@ public class ItemsDataView implements Serializable {
      * @return the totalQtyIn
      */
     public BigDecimal getTotalQtyIn() {
+        if (totalQtyIn == null) {
+            totalQtyIn = BigDecimal.ZERO;
+        }
         return totalQtyIn;
     }
 
@@ -593,6 +635,9 @@ public class ItemsDataView implements Serializable {
      * @return the totalQtyOut
      */
     public BigDecimal getTotalQtyOut() {
+        if (totalQtyOut == null) {
+            totalQtyOut = BigDecimal.ZERO;
+        }
         return totalQtyOut;
     }
 
@@ -630,5 +675,56 @@ public class ItemsDataView implements Serializable {
     public void setInvoiceStatus(String invoiceStatus) {
         this.invoiceStatus = invoiceStatus;
     }
-   
+
+    /**
+     * @return the maxmumAmount
+     */
+    public BigDecimal getMaxmumAmount() {
+        if (maxmumAmount == null) {
+            maxmumAmount = BigDecimal.ZERO;
+        }
+        return maxmumAmount;
+    }
+
+    /**
+     * @param maxmumAmount the maxmumAmount to set
+     */
+    public void setMaxmumAmount(BigDecimal maxmumAmount) {
+        this.maxmumAmount = maxmumAmount;
+    }
+
+    /**
+     * @return the minimumAmount
+     */
+    public BigDecimal getMinimumAmount() {
+        if (minimumAmount == null) {
+            minimumAmount = BigDecimal.ZERO;
+        }
+        return minimumAmount;
+    }
+
+    /**
+     * @param minimumAmount the minimumAmount to set
+     */
+    public void setMinimumAmount(BigDecimal minimumAmount) {
+        this.minimumAmount = minimumAmount;
+    }
+
+    /**
+     * @return the mustBuy
+     */
+    public BigDecimal getMustBuy() {
+        if (mustBuy == null) {
+            mustBuy = BigDecimal.ZERO;
+        }
+        return mustBuy;
+    }
+
+    /**
+     * @param mustBuy the mustBuy to set
+     */
+    public void setMustBuy(BigDecimal mustBuy) {
+        this.mustBuy = mustBuy;
+    }
+
 }

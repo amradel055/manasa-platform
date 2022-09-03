@@ -6,7 +6,6 @@
 package com.toby.reports;
 
 import com.toby.businessservice.TobyUserInventoryService;
-import com.toby.businessservice.report.InventoryStripReportService;
 import com.toby.businessservice.InvItemService;
 import com.toby.businessservice.ItemsDataViewService;
 import com.toby.businessservice.reports.searchBean.ItemCardReportSerachBean;
@@ -110,7 +109,7 @@ public class ItemCardReportMB extends BaseReportBean {
     public void search() {
         itemCardReportSerachBean.setInvItemTo(itemCardReportSerachBean.getInvItemForm());
         itemCardReportSerachBean.setInventoryTo(itemCardReportSerachBean.getInventoryFrom());
-        itemsDataViewList = itemsDataViewService.getAllItemCardByInvStripSearchBeanNew(itemCardReportSerachBean, getUserData().getGlYear());
+        itemsDataViewList = itemsDataViewService.getAllItemCardByInvStripSearchBeanNew(itemCardReportSerachBean, getUserData().getGlYear(), null);
         ItemCardReportEntity itemCardReport;
         BigDecimal balance = BigDecimal.ZERO;
         itemCardReportEntityList = new ArrayList<>();
@@ -141,7 +140,7 @@ public class ItemCardReportMB extends BaseReportBean {
             }
 
             // balance = balance.add(itemCardReport.getQtyin().subtract(itemCardReport.getQtyout()));
-           /* int tempItemId = 0;
+            /* int tempItemId = 0;
              if (tempItemId != itemsDataView.getItemId()) {
              balance = balance.add(itemsDataView.getOpeningBalance() != null ? itemsDataView.getOpeningBalance() : BigDecimal.ZERO);
              tempItemId = itemsDataView.getItemId();
@@ -173,7 +172,7 @@ public class ItemCardReportMB extends BaseReportBean {
 
         hashMap.put("UserName", getUserData().getUser().getName());
         hashMap.put("Branch", getUserData().getUserBranch().getNameAr());
-      //  hashMap.put("CompanyName", getUserData().getCompany().getName());
+        //  hashMap.put("CompanyName", getUserData().getCompany().getName());
 
         //  hashMap.put("CompanyLogo", getUserData().getImageReportPath());
         if (isFileExist(getUserData().getImageReportPath())) {

@@ -40,14 +40,14 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class ItemsDataViewServiceImpl implements ItemsDataViewService {
-
+    
     @EJB
     private GenericDAO dao;
     @EJB
     private InvBarcodeSevice invBarcodeSevice;
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
-
+    
     @Override
     public List<ItemsDataView> findItemsDataViewByBranchIdAndItemIdAndInventoryId(Integer branchId, Integer itemId) {
         Map<String, Object> params = new HashMap<>();
@@ -55,7 +55,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         params.put("itemId", itemId);
         return dao.findListByQuery("SELECT e FROM ItemsDataView e WHERE e.branchId = :branchId and e.itemId = :itemId and e.inventoryId != null", params);
     }
-
+    
     private List<ItemsDataView> prepareList(List<Object[]> res) {
         List<ItemsDataView> list = new ArrayList<>();
         ItemsDataView itemsDataView;
@@ -77,12 +77,12 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             itemsDataView.setInventoryId((Integer) object[14]);
             itemsDataView.setInventoryCode((String) object[15]);
             itemsDataView.setInventoryName((String) object[16]);
-
+            
             list.add(itemsDataView);
         }
         return list;
     }
-
+    
     public InvItemDTO mapToDTO(InvItem invItem, TobyUser tobyUser) {
         InvItemDTO invItemDTO = new InvItemDTO();
         invItemDTO.setCreatedBy(invItem.getCreatedBy() != null ? invItem.getCreatedBy().getId() : null);
@@ -179,7 +179,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             symbolDTO.setName(invItem.getAddon2().getName());
             invItemDTO.setAddon2(symbolDTO);
         }
-
+        
         if (invItem.getGroupId() != null) {
             InvGroupDTO invGroupDTO = new InvGroupDTO();
             invGroupDTO.setId(invItem.getGroupId().getId());
@@ -187,7 +187,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             invGroupDTO.setCode(invItem.getGroupId().getCode());
             invItemDTO.setGroupId(invGroupDTO);
         }
-
+        
         if (invItem.getProGroupId() != null) {
             ProGroupDTO proGroupDTO = new ProGroupDTO();
             proGroupDTO.setId(invItem.getProGroupId().getId());
@@ -195,21 +195,21 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             proGroupDTO.setSerial(invItem.getProGroupId().getSerial());
             invItemDTO.setProGroupId(proGroupDTO);
         }
-
+        
         invItemDTO.setInvBarcodeEntity(invBarcodeSevice.getInvBarcodeByInvItemId(invItem.getBranchId().getId(), invItem.getId(), tobyUser));
-
+        
         return invItemDTO;
     }
-
+    
     public InvItem mapToEntity(InvItemDTO invItemDTO, TobyUser tobyUser) {
-
+        
         InvItem invItem = new InvItem();
         invItem.setId(invItemDTO.getId());
         if (invItemDTO.getId() == null && invItemDTO.getSiteId() != null && invItemDTO.getSiteId().getId() != null && invItemDTO.getSiteId().getCode() != null) {
             invItem.setCode((findMaxItemCode(0, invItemDTO.getSiteId().getId(), invItemDTO.getSiteId().getCode())).toString());
         } else {
             invItem.setCode(invItemDTO.getCode());
-
+            
         }
         invItem.setContractPrice(invItemDTO.getContractPrice());
         invItem.setCostAverage(invItemDTO.getCostAverage());
@@ -312,7 +312,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             symbol.setName(invItemDTO.getAddon2().getName());
             invItem.setAddon2(symbol);
         }
-
+        
         if (invItemDTO.getGroupId() != null) {
             InvGroup invGroup = new InvGroup();
             invGroup.setId(invItemDTO.getGroupId().getId());
@@ -322,7 +322,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             invGroup.setId(56);
             invItem.setGroupId(invGroup);
         }
-
+        
         if (invItemDTO.getProGroupId() != null) {
             ProGroup proGroup = new ProGroup();
             proGroup.setId(invItemDTO.getProGroupId().getId());
@@ -330,7 +330,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             proGroup.setSerial(invItemDTO.getProGroupId().getSerial());
             invItem.setProGroupId(proGroup);
         }
-
+        
         if (invItemDTO.getCreatedBy() != null) {
             TobyUser user = new TobyUser();
             user.setId(invItemDTO.getCreatedBy());
@@ -343,7 +343,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 company.setId(invItemDTO.getCompanyId());
                 invItem.setCompanyId(company);
             }
-
+            
             if (invItemDTO.getBranchId() != null) {
                 Branch branch = new Branch();
                 branch.setId(invItemDTO.getBranchId());
@@ -355,11 +355,11 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             invItem.setCompanyId(tobyUser.getCompanyId());
             invItem.setBranchId(tobyUser.getBranchId());
         }
-
+        
         invItem.setIsOfferItem(invItemDTO.getIsOfferItem());
         return invItem;
     }
-
+    
     public List<InvItemDTO> mapToDTOList(List<InvItem> invItemList, TobyUser tobyUser) {
         List<InvItemDTO> invItemDTOList = new ArrayList<>();
         for (InvItem invItem : invItemList) {
@@ -367,48 +367,48 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         }
         return invItemDTOList;
     }
-
+    
     @Override
     public InvItemDTO addItemsData(InvItemDTO invItemDTO, TobyUser tobyUser) {
         InvItemDTO invItemDTO1 = new InvItemDTO();
         InvItem invItem = mapToEntity(invItemDTO, tobyUser);
         invItem = dao.updateEntity(invItem);
-
+        
         if (invItemDTO.getInvBarcodeDeletedList() != null) {
             invBarcodeSevice.deleteListInvBarcode(invItemDTO.getInvBarcodeDeletedList());
         }
-
+        
         if (invItemDTO.getInvBarcodeEntity() != null) {
             invBarcodeSevice.addListInvBarcode(invItemDTO.getInvBarcodeEntity(), tobyUser, invItem.getId());
         }
-
+        
         invItemDTO1 = mapToDTO(invItem, tobyUser);
         return invItemDTO1;
     }
-
+    
     @Override
     public BigDecimal findMaxItemCode(Integer settingType, Integer searchId, String searchCode) {
-
+        
         Map<String, Object> params = new HashMap<>();
         StringBuilder query = new StringBuilder();
-
+        
         params.put("id", searchId);
-
+        
         if (settingType == 0) {
             query.append("SELECT max(i.code) FROM InvItem i WHERE i.siteId.id = :id");
         } else if (settingType == 1) {
             query.append("SELECT max(i.code) FROM InvItem i WHERE i.groupId.id = :id");
         }
-
+        
         String q = query.toString();
-
+        
         List<String> invItems = dao.findListByQuery(q, params);
-
+        
         if (invItems == null || invItems.isEmpty()) {
             String ccode = searchId + "001";
             return new BigDecimal(ccode.trim());
         }
-
+        
         String code = invItems.get(invItems.size() - 1);
         if (code != null && !code.isEmpty()) {
             BigDecimal x = new BigDecimal(code.trim()).add(BigDecimal.ONE);
@@ -417,7 +417,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         String ccode = searchCode + "001";
         return new BigDecimal(ccode.trim());
     }
-
+    
     @Override
     public List<ItemsDataView> getAllInvStripListByInvStripSearchBean(InvItemSalesSearchBean invStripSearchBean) {
         dao.executeNativeQuery("select toby.sql_mode_function()");
@@ -445,12 +445,12 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + " AND IDV.inventoryId is not null AND IDV.groupId is not null"
                 + " AND IDV.itemName is not null  AND IDV.itemCode is not null AND IDV.itemUnitName is not null "
                 + " AND IDV.qtyin is not null  AND IDV.qtyout is not null AND IDV.costAverage is not null  ");
-
+        
         stringBuilder.append(appendDateinv(invStripSearchBean, params));
         stringBuilder.append(appendInventoryinv(invStripSearchBean, params));
         stringBuilder.append(appendGroupinv(invStripSearchBean, params));
         stringBuilder.append(appendSuplierinv(invStripSearchBean, params));
-
+        
         stringBuilder.append(" group by IDV.itemId, "
                 + " IDV.itemName, "
                 + " IDV.itemCode, "
@@ -460,40 +460,40 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + " IDV.inventoryId,"
                 + " IDV.inventoryCode,"
                 + " IDV.inventoryName,IDV.costAverage");
-
+        
         List<Object[]> res = dao.findListByQuery(stringBuilder.toString(), params);
-
+        
         List<ItemsDataView> details = prepareList(res);
-
+        
         return details;
     }
-
+    
     private String appendDateinv(InvItemSalesSearchBean invStripSearchBean, Map<String, Object> params) {
         StringBuilder appendQuery = new StringBuilder();
-
+        
         if (invStripSearchBean.getDateTo() != null) {
             params.put("dateTo", invStripSearchBean.getDateTo());
             appendQuery.append(" AND IDV.date <= :dateTo");
         }
-
+        
         return appendQuery.toString();
     }
-
+    
     private String appendInventoryinv(InvItemSalesSearchBean invStripSearchBean, Map<String, Object> params) {
         StringBuilder appendQuery = new StringBuilder();
-
+        
         if (invStripSearchBean.getInventoryFrom() != null) {
             params.put("inventoryCodeFrom", invStripSearchBean.getInventoryFrom().getId());
             appendQuery.append(" AND IDV.inventoryId >= :inventoryCodeFrom");
         }
-
+        
         if (invStripSearchBean.getInventoryTo() != null) {
             params.put("inventoryCodeTo", invStripSearchBean.getInventoryTo().getId());
             appendQuery.append(" AND IDV.inventoryId <= :inventoryCodeTo");
         }
         return appendQuery.toString();
     }
-
+    
     private String appendGroupinv(InvItemSalesSearchBean invStripSearchBean, Map<String, Object> params) {
         StringBuilder appendQuery = new StringBuilder();
 
@@ -511,35 +511,35 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         }
         return appendQuery.toString();
     }
-
+    
     private String appendSuplierinv(InvItemSalesSearchBean invStripSearchBean, Map<String, Object> params) {
         StringBuilder appendQuery = new StringBuilder();
-
+        
         if (invStripSearchBean.getSuplierFrom() != null) {
             params.put("suplierCodeFrom", invStripSearchBean.getSuplierFrom().getId());
             appendQuery.append(" AND IDV.organizationSiteId >= :suplierCodeFrom");
         }
-
+        
         if (invStripSearchBean.getSuplierTo() != null) {
             params.put("suplierCodeTo", invStripSearchBean.getSuplierTo().getId());
             appendQuery.append(" AND IDV.organizationSiteId <= :suplierCodeTo");
         }
-
+        
         return appendQuery.toString();
     }
-
+    
     @Override
-    public List<ItemsDataView> getAllItemCardByInvStripSearchBeanNew(ItemCardReportSerachBean itemCardReportSerachBean, GlYear glYear) {
+    public List<ItemsDataView> getAllItemCardByInvStripSearchBeanNew(ItemCardReportSerachBean itemCardReportSerachBean, GlYear glYear, Integer limitType) {
         dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", itemCardReportSerachBean.getBranchId());
-
+        
         StringBuilder stringBuilder = new StringBuilder();
         Map<Integer, BigDecimal> itemOpeningBalanceMap = new HashMap<>();
         Map<Integer, String> itemOpeningBalanceAfterAllDateMap = new HashMap<>();
         Map<Integer, BigDecimal> qtyInMap = new HashMap<>();
         Map<Integer, BigDecimal> qtyOutMap = new HashMap<>();
-        if (itemCardReportSerachBean.getDateFrom() != null && itemCardReportSerachBean.getDateFrom().after(glYear.getDateFrom())) {
+        if (itemCardReportSerachBean.getDateFrom() != null && glYear != null && itemCardReportSerachBean.getDateFrom().after(glYear.getDateFrom())) {
             stringBuilder.append("SELECT IDV.itemId, sum(COALESCE(IDV.qtyin * IDV.screwing,0))-sum(COALESCE(IDV.qtyout * IDV.screwing,0)),IDV.itemName"
                     + ",sum(COALESCE(IDV.qtyin * IDV.screwing,0)), sum(COALESCE(IDV.qtyout * IDV.screwing,0)) "
                     + " FROM ItemsDataView IDV WHERE IDV.branchId = :branchId "
@@ -547,16 +547,16 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                     + " AND IDV.inventoryId is not null AND IDV.groupId is not null"
                     + " AND IDV.itemName is not null AND IDV.itemCode is not null "
                     + " AND IDV.qtyin is not null  AND IDV.qtyout is not null ");
-
+            
             stringBuilder.append(appendGlYear(itemCardReportSerachBean, glYear, params));
             stringBuilder.append(appendTillDate(itemCardReportSerachBean, glYear, params));
             stringBuilder.append(appendInventory(itemCardReportSerachBean, params));
             stringBuilder.append(appendInvItem(itemCardReportSerachBean, params));
-
+            
             stringBuilder.append(" group by IDV.itemId ,IDV.itemName");
 //            stringBuilder.append(" order by IDV.itemId ,IDV.date ASC");
             List<Object[]> list = dao.findListByQuery(stringBuilder.toString(), params);
-
+            
             for (Object[] os : list) {
                 itemOpeningBalanceMap.put((Integer) os[0], (BigDecimal) os[1]);
                 itemOpeningBalanceAfterAllDateMap.put((Integer) os[0], (String) os[2]);
@@ -591,7 +591,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             String formatDateTo = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateTo());
             stringBuilder.append(" AND `iao`.`date` <= '").append(formatDateTo).append("23:59:59 '");
         }
-
+        
         stringBuilder.append(" AND `iao`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
                 + "    UNION ALL SELECT \n"
                 + "        IFNULL(`iaod`.`quantity`, 0) AS `qtyin`,\n"
@@ -633,11 +633,11 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `ipid`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-
+        
         if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
             stringBuilder.append(" AND `ipid`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
-
+        
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
             stringBuilder.append(" AND `ipi`.`date` >= '").append(formatDateFrom).append("00:00:00 '");
@@ -646,7 +646,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             String formatDateTo = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateTo());
             stringBuilder.append(" AND `ipi`.`date` <= '").append(formatDateTo).append("23:59:59 '");
         }
-
+        
         stringBuilder.append(" AND `ipi`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
                 + "    UNION ALL SELECT \n"
                 + "        0 AS `qtyin`,\n"
@@ -662,11 +662,11 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `ipid`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-
+        
         if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
             stringBuilder.append(" AND `ipid`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
-
+        
         if (itemCardReportSerachBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateFrom());
             stringBuilder.append(" AND `ipi`.`date` >= '").append(formatDateFrom).append("00:00:00 '");
@@ -689,7 +689,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `ird`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-
+        
         if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
             stringBuilder.append(" AND `ir`.`inv_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
@@ -716,7 +716,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `ipid`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-
+        
         if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
             stringBuilder.append(" AND `ipid`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
@@ -728,7 +728,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             String formatDateTo = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateTo());
             stringBuilder.append(" AND `ipi`.`date` <= '").append(formatDateTo).append("23:59:59 '");
         }
-
+        
         stringBuilder.append(" AND `ipi`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
                 + "    UNION ALL SELECT \n"
                 + "        IFNULL(`ipid`.`quantity`, 0) AS `qtyin`,\n"
@@ -744,7 +744,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `ipid`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-
+        
         if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
             stringBuilder.append(" AND `ipid`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
@@ -771,7 +771,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `itd`.`inv_item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-
+        
         if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
             stringBuilder.append(" AND `it`.`inv_from` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
@@ -798,7 +798,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `itd`.`inv_item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-
+        
         if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
             stringBuilder.append(" AND `it`.`inv_to` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
@@ -810,7 +810,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             String formatDateTo = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateTo());
             stringBuilder.append(" AND `it`.`transfer_date` <= '").append(formatDateTo).append("23:59:59 '");
         }
-
+        
         stringBuilder.append(" AND `it`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
                 + "    UNION ALL SELECT \n"
                 + "        `isd`.`difference` AS `qtyin`,\n"
@@ -825,7 +825,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `isd`.`inv_item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-
+        
         if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
             stringBuilder.append(" AND `is`.`inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
@@ -851,7 +851,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `iobid`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-
+        
         if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
             stringBuilder.append(" AND `iobi`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
@@ -865,11 +865,11 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         }
         stringBuilder.append(" AND `iobi`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
                 + "                   ");
-
+        
         stringBuilder.append(" ) IDV group by IDV.item_id order by IDV.item_id ASC");
-
+        
         List<Object[]> res2 = dao.executeNativeQuery(stringBuilder.toString());
-
+        
         Iterator it2 = res2.iterator();
         while (it2.hasNext()) {
             Object[] line = (Object[]) it2.next();
@@ -932,7 +932,9 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        1 AS `ScreenCode`,\n"
                 + "        FIND_SUPPLIER_OF_ITEM(`iaod`.`item_id`) AS `item_supplier_id`,\n"
                 + "        0 AS `disc_halala`,\n"
-                + "        '' AS `gallaryName`\n"
+                + "        '' AS `gallaryName`,\n"
+                + "        ii.minimum_amount AS `minimum_amount`,\n"
+                + "        ii.maxmum_amount AS `maxmum_amount`\n"
                 + "    FROM\n"
                 + "        (((((((`inv_addingorder` `iao`\n"
                 + "        LEFT JOIN `inv_addingorder_detail` `iaod` ON ((`iao`.`id` = `iaod`.`addingorder_id`)))\n"
@@ -948,7 +950,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `iaod`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-
+        
         if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
             stringBuilder.append(" AND `iao`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
@@ -960,7 +962,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             String formatDateTo = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateTo());
             stringBuilder.append(" AND `iao`.`date` <= '").append(formatDateTo).append("23:59:59 '");
         }
-
+        
         stringBuilder.append(" AND `iao`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
                 + "    UNION ALL SELECT \n"
                 + "        \n"
@@ -1012,7 +1014,9 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        2 AS `ScreenCode`,\n"
                 + "        FIND_SUPPLIER_OF_ITEM(`iaod`.`item_id`) AS `item_supplier_id`,\n"
                 + "        0 AS `disc_halala`,\n"
-                + "        '' AS `gallaryName`\n"
+                + "        '' AS `gallaryName`,\n"
+                + "        ii.minimum_amount AS `minimum_amount`,\n"
+                + "        ii.maxmum_amount AS `maxmum_amount`\n"
                 + "    FROM\n"
                 + "        (((((((`inv_inventory_transaction` `iao`\n"
                 + "        LEFT JOIN `inv_inventory_transaction_detail` `iaod` ON ((`iao`.`id` = `iaod`.`inventory_transaction_id`)))\n"
@@ -1028,7 +1032,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `iaod`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-
+        
         if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
             stringBuilder.append(" AND `iao`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
@@ -1091,7 +1095,9 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        3 AS `ScreenCode`,\n"
                 + "        FIND_SUPPLIER_OF_ITEM(`ipid`.`item_id`) AS `item_supplier_id`,\n"
                 + "        IFNULL(`ipi`.`disc_halala`, 0) AS `disc_halala`,\n"
-                + "        '' AS `gallaryName`\n"
+                + "        '' AS `gallaryName`,\n"
+                + "        ii.minimum_amount AS `minimum_amount`,\n"
+                + "        ii.maxmum_amount AS `maxmum_amount`\n"
                 + "    FROM\n"
                 + "        (((((((`inv_purchase_invoice` `ipi`\n"
                 + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
@@ -1107,7 +1113,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `ipid`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-
+        
         if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
             stringBuilder.append(" AND `ipid`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
@@ -1119,7 +1125,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             String formatDateTo = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateTo());
             stringBuilder.append(" AND `ipi`.`date` <= '").append(formatDateTo).append("23:59:59 '");
         }
-
+        
         stringBuilder.append(" AND `ipi`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
                 + "    UNION ALL SELECT \n"
                 + "        \n"
@@ -1171,7 +1177,9 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        4 AS `ScreenCode`,\n"
                 + "        FIND_SUPPLIER_OF_ITEM(`ipid`.`item_id`) AS `item_supplier_id`,\n"
                 + "        IFNULL(`ipi`.`disc_halala`, 0) AS `disc_halala`,\n"
-                + "        ini2.name AS `gallaryName`\n"
+                + "        ini2.name AS `gallaryName`,\n"
+                + "        ii.minimum_amount AS `minimum_amount`,\n"
+                + "        ii.maxmum_amount AS `maxmum_amount`\n"
                 + "    FROM\n"
                 + "        ((((((((`inv_purchase_invoice` `ipi`\n"
                 + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
@@ -1188,7 +1196,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `ipid`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-
+        
         if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
             stringBuilder.append(" AND `ipid`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
@@ -1251,7 +1259,9 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        5 AS `ScreenCode`,\n"
                 + "        FIND_SUPPLIER_OF_ITEM(`ird`.`item_id`) AS `item_supplier_id`,\n"
                 + "        0 AS `disc_halala`,\n"
-                + "        '' AS `gallaryName`\n"
+                + "        '' AS `gallaryName`,\n"
+                + "        ii.minimum_amount AS `minimum_amount`,\n"
+                + "        ii.maxmum_amount AS `maxmum_amount`\n"
                 + "    FROM\n"
                 + "        ((((((`inv_reservation` `ir`\n"
                 + "        LEFT JOIN `inv_reservation_detail` `ird` ON ((`ir`.`id` = `ird`.`reservation_id`)))\n"
@@ -1265,7 +1275,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `ird`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-
+        
         if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
             stringBuilder.append(" AND `ir`.`inv_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
@@ -1328,7 +1338,9 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        6 AS `ScreenCode`,\n"
                 + "        FIND_SUPPLIER_OF_ITEM(`ipid`.`item_id`) AS `item_supplier_id`,\n"
                 + "        IFNULL(`ipi`.`disc_halala`, 0) AS `disc_halala`,\n"
-                + "        '' AS `gallaryName`\n"
+                + "        '' AS `gallaryName`,\n"
+                + "        ii.minimum_amount AS `minimum_amount`,\n"
+                + "        ii.maxmum_amount AS `maxmum_amount`\n"
                 + "    FROM\n"
                 + "        (((((((`inv_purchase_invoice` `ipi`\n"
                 + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
@@ -1344,7 +1356,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `ipid`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-
+        
         if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
             stringBuilder.append(" AND `ipid`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
@@ -1356,7 +1368,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             String formatDateTo = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateTo());
             stringBuilder.append(" AND `ipi`.`date` <= '").append(formatDateTo).append("23:59:59 '");
         }
-
+        
         stringBuilder.append(" AND `ipi`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
                 + "    UNION ALL SELECT \n"
                 + "        \n"
@@ -1408,7 +1420,9 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        7 AS `ScreenCode`,\n"
                 + "        FIND_SUPPLIER_OF_ITEM(`ipid`.`item_id`) AS `item_supplier_id`,\n"
                 + "        IFNULL(`ipi`.`disc_halala`, 0) AS `disc_halala`,\n"
-                + "        '' AS `gallaryName`\n"
+                + "        '' AS `gallaryName`,\n"
+                + "        ii.minimum_amount AS `minimum_amount`,\n"
+                + "        ii.maxmum_amount AS `maxmum_amount`\n"
                 + "    FROM\n"
                 + "        (((((((`inv_purchase_invoice` `ipi`\n"
                 + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
@@ -1424,7 +1438,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `ipid`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-
+        
         if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
             stringBuilder.append(" AND `ipid`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
@@ -1487,7 +1501,9 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        8 AS `ScreenCode`,\n"
                 + "        FIND_SUPPLIER_OF_ITEM(`itd`.`inv_item_id`) AS `item_supplier_id`,\n"
                 + "        0 AS `disc_halala`,\n"
-                + "        '' AS `gallaryName`\n"
+                + "        '' AS `gallaryName`,\n"
+                + "        ii.minimum_amount AS `minimum_amount`,\n"
+                + "        ii.maxmum_amount AS `maxmum_amount`\n"
                 + "    FROM\n"
                 + "        ((((((`inv_transfer` `it`\n"
                 + "        LEFT JOIN `inv_transfer_detail` `itd` ON ((`it`.`id` = `itd`.`inv_transfer_id`)))\n"
@@ -1502,7 +1518,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `itd`.`inv_item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-
+        
         if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
             stringBuilder.append(" AND `it`.`inv_from` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
@@ -1565,7 +1581,9 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        9 AS `ScreenCode`,\n"
                 + "        FIND_SUPPLIER_OF_ITEM(`itd`.`inv_item_id`) AS `item_supplier_id`,\n"
                 + "        0 AS `disc_halala`,\n"
-                + "        '' AS `gallaryName`\n"
+                + "        '' AS `gallaryName`,\n"
+                + "        ii.minimum_amount AS `minimum_amount`,\n"
+                + "        ii.maxmum_amount AS `maxmum_amount`\n"
                 + "    FROM\n"
                 + "        ((((((`inv_transfer` `it`\n"
                 + "        LEFT JOIN `inv_transfer_detail` `itd` ON ((`it`.`id` = `itd`.`inv_transfer_id`)))\n"
@@ -1580,7 +1598,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `itd`.`inv_item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-
+        
         if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
             stringBuilder.append(" AND `it`.`inv_to` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
@@ -1592,7 +1610,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             String formatDateTo = new SimpleDateFormat("yyyy-MM-dd").format(itemCardReportSerachBean.getDateTo());
             stringBuilder.append(" AND `it`.`transfer_date` <= '").append(formatDateTo).append("23:59:59 '");
         }
-
+        
         stringBuilder.append(" AND `it`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
                 + "    UNION ALL SELECT \n"
                 + "        \n"
@@ -1644,7 +1662,9 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        10 AS `ScreenCode`,\n"
                 + "        FIND_SUPPLIER_OF_ITEM(`isd`.`inv_item_id`) AS `item_supplier_id`,\n"
                 + "        0 AS `disc_halala`,\n"
-                + "        '' AS `gallaryName`\n"
+                + "        '' AS `gallaryName`,\n"
+                + "        ii.minimum_amount AS `minimum_amount`,\n"
+                + "        ii.maxmum_amount AS `maxmum_amount`\n"
                 + "    FROM\n"
                 + "        ((((((`inv_update` `is`\n"
                 + "        LEFT JOIN `inv_update_detail` `isd` ON ((`is`.`id` = `isd`.`inv_update_id`)))\n"
@@ -1658,7 +1678,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `isd`.`inv_item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-
+        
         if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
             stringBuilder.append(" AND `is`.`inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
@@ -1721,7 +1741,9 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + "        11 AS `ScreenCode`,\n"
                 + "        FIND_SUPPLIER_OF_ITEM(`iobid`.`item_id`) AS `item_supplier_id`,\n"
                 + "        0 AS `disc_halala`,\n"
-                + "        '' AS `gallaryName`\n"
+                + "        '' AS `gallaryName`,\n"
+                + "        ii.minimum_amount AS `minimum_amount`,\n"
+                + "        ii.maxmum_amount AS `maxmum_amount`\n"
                 + "    FROM\n"
                 + "        ((((((`inv_openning_balance_item` `iobi`\n"
                 + "        LEFT JOIN `inv_openning_balance_item_detail` `iobid` ON ((`iobi`.`id` = `iobid`.`inv_openning_balance_item_id`)))\n"
@@ -1735,7 +1757,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getId() != null) {
             stringBuilder.append(" AND `iobid`.`item_id` = ").append(itemCardReportSerachBean.getInvItemForm().getId());
         }
-
+        
         if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getId() != null) {
             stringBuilder.append(" AND `iobi`.`inv_inventory_id` = ").append(itemCardReportSerachBean.getInventoryFrom().getId());
         }
@@ -1749,10 +1771,10 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         }
         stringBuilder.append(" AND `iobi`.`branch_id` = ").append(itemCardReportSerachBean.getBranchId()).append("  \n"
                 + "                                  ");
-
+        
         stringBuilder.append(" ) IDV order by IDV.item_id , IDV.date ASC");
         List<Object[]> res = dao.executeNativeQuery(stringBuilder.toString());
-
+        
         List<ItemsDataView> newList = new ArrayList<>();
         Iterator it = res.iterator();
         while (it.hasNext()) {
@@ -1794,10 +1816,12 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             itemsDataView.setScreenCode(((Long) line[45]).intValue());
             itemsDataView.setItemSupplierId((Integer) line[46]);
             itemsDataView.setGallaryName((String) line[48]);
-
+            itemsDataView.setMinimumAmount((BigDecimal) line[49]);
+            itemsDataView.setMaxmumAmount((BigDecimal) line[50]);
+            
             newList.add(itemsDataView);
         }
-
+        
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
         c.add(Calendar.DAY_OF_MONTH, -5);
@@ -1807,10 +1831,10 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             //i will set in organizationopenbalance credit and debit fields and use them as total value for qtyin and qty out
             dataView.setTotalQtyIn(qtyInMap.get(dataView.getItemId()));
             dataView.setTotalQtyOut(qtyOutMap.get(dataView.getItemId()));
-            if (dataView.getDate().after(diffrenceDate) && dataView.getScreenCode()== 4) {
+            if (dataView.getDate().after(diffrenceDate) && dataView.getScreenCode() == 4) {
                 dataView.setInvoiceStatus(invPurchaseInvoiceService_1.findInvoiceStatus(dataView.getId()));
-                if(dataView.getInvoiceStatus() == null || dataView.getInvoiceStatus().isEmpty()){
-                dataView.setInvoiceStatus("بالمعرض");
+                if (dataView.getInvoiceStatus() == null || dataView.getInvoiceStatus().isEmpty()) {
+                    dataView.setInvoiceStatus("بالمعرض");
                 }
             }
             if (itemOpeningBalanceAfterAllDateMap.containsKey(dataView.getItemId())) {
@@ -1827,7 +1851,23 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             idv.setOpeningBalance(itemOpeningBalanceMap.get(entry.getKey()));
             idv.setTotalQtyIn(qtyInMap.get(entry.getKey()));
             idv.setTotalQtyOut(qtyOutMap.get(entry.getKey()));
-            newList.add(idv);
+            if (limitType != null) {
+                BigDecimal balance = idv.getTotalQtyIn().subtract(idv.getTotalQtyOut());
+                ///     هجيب الاصناف اللى مفيش ليها كمية بالمخزن لحد الطلب
+                if (limitType == 1) {
+                    if (balance.compareTo(idv.getMinimumAmount()) == -1) {
+                        newList.add(idv);
+                    }
+                } else if (limitType == 2) {
+                    // هحسب الكمية اللى المتبقية اللى محتاجنها من الاصناف دي 
+                    if (balance.compareTo(idv.getMaxmumAmount()) == -1) {
+                        idv.setMustBuy(idv.getMaxmumAmount().subtract(balance));
+                        newList.add(idv);
+                    }
+                }
+            } else {
+                newList.add(idv);
+            }
         }
 
 //        TreeMap<Date,ItemsDataView> treeMap = new TreeMap<>();
@@ -1838,68 +1878,68 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
 //        itemsDataViewList = new ArrayList<ItemsDataView>(treeMap.values());
         return newList;
     }
-
+    
     @Override
     public InvItemDTO findInvItem(Integer invItemById, TobyUser tobyUser) {
         InvItem invItem = dao.findEntityById(InvItem.class, invItemById);
         return mapToDTO(invItem, tobyUser);
     }
-
+    
     private String appendGlYear(ItemCardReportSerachBean itemCardReportSerachBean, GlYear glYear, Map<String, Object> params) {
         StringBuilder appendQuery = new StringBuilder();
         if (itemCardReportSerachBean.getDateFrom() != null) {
             params.put("dateFrom", glYear.getDateFrom());
             appendQuery.append(" AND IDV.date >= :dateFrom");
         }
-
+        
         if (itemCardReportSerachBean.getDateTo() != null) {
             params.put("dateTo", itemCardReportSerachBean.getDateFrom());
             appendQuery.append(" AND IDV.date <= :dateTo");
         }
-
+        
         return appendQuery.toString();
     }
-
+    
     private String appendTillDate(ItemCardReportSerachBean itemCardReportSerachBean, GlYear glYear, Map<String, Object> params) {
         StringBuilder appendQuery = new StringBuilder();
         if (itemCardReportSerachBean.getDateFrom() != null) {
             params.put("dateTillFrom", itemCardReportSerachBean.getDateFrom());
         }
         appendQuery.append(" AND IDV.date < :dateTillFrom");
-
+        
         return appendQuery.toString();
     }
-
+    
     private String appendInventory(ItemCardReportSerachBean itemCardReportSerachBean, Map<String, Object> params) {
         StringBuilder appendQuery = new StringBuilder();
         if (itemCardReportSerachBean.getInventoryFrom() != null && itemCardReportSerachBean.getInventoryFrom().getCode() != null) {
             params.put("inventoryFrom", itemCardReportSerachBean.getInventoryFrom().getCode());
             appendQuery.append(" AND IDV.inventoryCode >= :inventoryFrom");
         }
-
+        
         if (itemCardReportSerachBean.getInventoryTo() != null && itemCardReportSerachBean.getInventoryTo().getCode() != null) {
             params.put("inventoryTo", itemCardReportSerachBean.getInventoryTo().getCode());
             appendQuery.append(" AND IDV.inventoryCode <= :inventoryTo");
         }
-
+        
         return appendQuery.toString();
     }
-
+    
     private String appendInvItem(ItemCardReportSerachBean itemCardReportSerachBean, Map<String, Object> params) {
         StringBuilder appendQuery = new StringBuilder();
         if (itemCardReportSerachBean.getInvItemForm() != null && itemCardReportSerachBean.getInvItemForm().getCode() != null) {
             params.put("itemCodeFrom", itemCardReportSerachBean.getInvItemForm().getCode());
             appendQuery.append(" AND IDV.itemCode >= :itemCodeFrom");
         }
-
+        
         if (itemCardReportSerachBean.getInvItemTo() != null && itemCardReportSerachBean.getInvItemTo().getCode() != null) {
             params.put("itemCodeTo", itemCardReportSerachBean.getInvItemTo().getCode());
             appendQuery.append(" AND IDV.itemCode <= :itemCodeTo");
         }
-
+        
         return appendQuery.toString();
     }
-
+    
     private String appendDate(ItemCardReportSerachBean itemCardReportSerachBean, Map<String, Object> params) {
         if (itemCardReportSerachBean.getDateTo() != null) {
             itemCardReportSerachBean.getDateTo().setHours(23);
@@ -1911,31 +1951,31 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             params.put("dateFrom", itemCardReportSerachBean.getDateFrom());
             appendQuery.append(" AND IDV.date >= :dateFrom");
         }
-
+        
         if (itemCardReportSerachBean.getDateTo() != null) {
             params.put("dateTo", itemCardReportSerachBean.getDateTo());
             appendQuery.append(" AND IDV.date <= :dateTo");
         }
-
+        
         return appendQuery.toString();
     }
-
+    
     private String appendInvoiceType(ItemCardReportSerachBean itemCardReportSerachBean, Map<String, Object> params) {
         StringBuilder appendQuery = new StringBuilder();
         if (itemCardReportSerachBean.getInvoiceType() != null) {
             params.put("invoiceType", itemCardReportSerachBean.getInvItemForm().getCode());
             appendQuery.append(" AND IDV.itemCode >= :itemCodeFrom");
         }
-
+        
         return appendQuery.toString();
     }
-
+    
     @Override
     public List<ItemsDataView> getAllItemCardByInvStripSearchBean(ItemCardReportSerachBean itemCardReportSerachBean, GlYear glYear) {
         dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", itemCardReportSerachBean.getBranchId());
-
+        
         StringBuilder stringBuilder = new StringBuilder();
         Map<Integer, BigDecimal> itemOpeningBalanceMap = new HashMap<>();
         Map<Integer, String> itemOpeningBalanceAfterAllDateMap = new HashMap<>();
@@ -1949,16 +1989,16 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                     + " AND IDV.inventoryId is not null AND IDV.groupId is not null"
                     + " AND IDV.itemName is not null AND IDV.itemCode is not null "
                     + " AND IDV.qtyin is not null  AND IDV.qtyout is not null ");
-
+            
             stringBuilder.append(appendGlYear(itemCardReportSerachBean, glYear, params));
             stringBuilder.append(appendTillDate(itemCardReportSerachBean, glYear, params));
             stringBuilder.append(appendInventory(itemCardReportSerachBean, params));
             stringBuilder.append(appendInvItem(itemCardReportSerachBean, params));
-
+            
             stringBuilder.append(" group by IDV.itemId ,IDV.itemName");
 //            stringBuilder.append(" order by IDV.itemId ,IDV.date ASC");
             List<Object[]> list = dao.findListByQuery(stringBuilder.toString(), params);
-
+            
             for (Object[] os : list) {
                 itemOpeningBalanceMap.put((Integer) os[0], (BigDecimal) os[1]);
                 itemOpeningBalanceAfterAllDateMap.put((Integer) os[0], (String) os[2]);
@@ -1967,7 +2007,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         //to add total qtyin and qtyout
         params = new HashMap<>();
         params.put("branchId", itemCardReportSerachBean.getBranchId());
-
+        
         stringBuilder = new StringBuilder();
         stringBuilder.append("SELECT IDV.itemId, sum(COALESCE(IDV.qtyin * IDV.screwing,0))-sum(COALESCE(IDV.qtyout * IDV.screwing,0)),IDV.itemName"
                 + ",sum(COALESCE(IDV.qtyin * IDV.screwing,0)), sum(COALESCE(IDV.qtyout * IDV.screwing,0)) "
@@ -1976,12 +2016,12 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + " AND IDV.inventoryId is not null AND IDV.groupId is not null"
                 + " AND IDV.itemName is not null AND IDV.itemCode is not null "
                 + " AND IDV.qtyin is not null  AND IDV.qtyout is not null ");
-
+        
         stringBuilder.append(appendGlYear(itemCardReportSerachBean, glYear, params));
         stringBuilder.append(appendDate(itemCardReportSerachBean, params));
         stringBuilder.append(appendInventory(itemCardReportSerachBean, params));
         stringBuilder.append(appendInvItem(itemCardReportSerachBean, params));
-
+        
         stringBuilder.append(" group by IDV.itemId ,IDV.itemName");
         stringBuilder.append(" order by IDV.itemId ASC, IDV.date ASC");
         List<Object[]> list2 = dao.findListByQuery(stringBuilder.toString(), params);
@@ -1989,7 +2029,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             qtyInMap.put((Integer) os[0], (BigDecimal) os[3]);
             qtyOutMap.put((Integer) os[0], (BigDecimal) os[4]);
         }
-
+        
         stringBuilder = new StringBuilder();
         params = new HashMap<>();
         params.put("branchId", itemCardReportSerachBean.getBranchId());
@@ -1998,15 +2038,15 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + " AND IDV.inventoryId is not null AND IDV.groupId is not null"
                 + " AND IDV.itemName is not null AND IDV.itemCode is not null "
                 + " AND IDV.qtyin is not null  AND IDV.qtyout is not null ");
-
+        
         stringBuilder.append(appendDate(itemCardReportSerachBean, params));
         stringBuilder.append(appendInventory(itemCardReportSerachBean, params));
         stringBuilder.append(appendInvItem(itemCardReportSerachBean, params));
-
+        
         stringBuilder.append(" order by IDV.itemId , IDV.date ASC");
-
+        
         List<ItemsDataView> itemsDataViewList = dao.findListByQuery(stringBuilder.toString(), params);
-
+        
         for (ItemsDataView dataView : itemsDataViewList) {
             dataView.setOpeningBalance(itemOpeningBalanceMap.get(dataView.getItemId()));
             //i will set in organizationopenbalance credit and debit fields and use them as total value for qtyin and qty out
@@ -2035,5 +2075,5 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
 //        itemsDataViewList = new ArrayList<ItemsDataView>(treeMap.values());
         return itemsDataViewList;
     }
-
+    
 }
