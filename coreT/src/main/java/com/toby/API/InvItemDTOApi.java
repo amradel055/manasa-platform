@@ -52,6 +52,7 @@ public class InvItemDTOApi {
     private Integer customerId;
     private BigDecimal discountRow;
     private BigDecimal availableQuantity;
+    private BigDecimal quantity;
 
     /**
      * @return the name
@@ -555,6 +556,20 @@ public class InvItemDTOApi {
      */
     public void setAvailableQuantity(BigDecimal availableQuantity) {
         this.availableQuantity = availableQuantity;
+    }
+
+    /**
+     * @return the quantity
+     */
+    public BigDecimal getQuantity() {
+        return quantity;
+    }
+
+    /**
+     * @param quantity the quantity to set
+     */
+    public void setQuantity(BigDecimal quantity) {
+        this.quantity = quantity;
     }
 
 }

@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.GeneralJournalDTOAPI;
 import com.toby.API.ResponseApi;
 import com.toby.bean.JournalDocumentArrangedReportBean;
 import com.toby.dto.TobyUserDTO;
@@ -191,6 +192,19 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
 
     @Override
     public synchronized GeneralJournalDTO addGeneralJournalDTO(GeneralJournalDTO generalJournalDTO, TobyUser tobyUser) {
+        GeneralJournal entity = addGeneralJournal(generalJournalDTO, tobyUser);
+        generalJournalDTO = mapTODTO(entity);
+        return generalJournalDTO;
+    }
+
+    @Override
+    public synchronized GeneralJournalDTOAPI addGeneralJournalDTOAPI(GeneralJournalDTO generalJournalDTO, TobyUser tobyUser) {
+        GeneralJournal entity = addGeneralJournal(generalJournalDTO, tobyUser);
+        GeneralJournalDTOAPI generalJournalDTOAPI = initMapToDTOAPI(entity);
+        return generalJournalDTOAPI;
+    }
+
+    private GeneralJournal addGeneralJournal(GeneralJournalDTO generalJournalDTO, TobyUser tobyUser) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", generalJournalDTO.getBranchId());
         params.put("companyId", generalJournalDTO.getCompanyId());
@@ -199,9 +213,7 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
         params1.put("generalType", generalJournalDTO.getGeneralType().getId());
         params1.put("glYear", generalJournalDTO.getGlYear().getId());
         params1.put("branchId", generalJournalDTO.getBranchId());
-
         Integer generaldocumet = dao.findEntityByQuery("SELECT MAX(g.generalDecument) FROM GeneralJournal g  WHERE g.glYear.id =:glYear AND g.generalType.id =:generalType and g.branchId.id =:branchId  ", params1);
-
         if (generaldocumet == null) {
             generaldocumet = 1;
 
@@ -226,11 +238,9 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
                 generalJournalDTO.setGeneralDecument(generaldocumet);
             }
         }
-
         GeneralJournal entity = mapFromDTO(generalJournalDTO, tobyUser);
         entity = dao.updateEntity(entity);
-        generalJournalDTO = mapTODTO(entity, false);
-        return generalJournalDTO;
+        return entity;
     }
 
     @Override
@@ -468,7 +478,7 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
     private List<GeneralJournalDTO> returnListDTO(List<GeneralJournal> list) {
         List<GeneralJournalDTO> dTOList = new ArrayList<>();
         for (GeneralJournal entity : list) {
-            dTOList.add(mapTODTO(entity, false));
+            dTOList.add(mapTODTO(entity));
         }
         return dTOList;
     }
@@ -481,11 +491,8 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
         return entityList;
     }
 
-    private GeneralJournalDTO mapTODTO(GeneralJournal entity, Boolean needDetail) {
+    private GeneralJournalDTO mapTODTO(GeneralJournal entity) {
         GeneralJournalDTO dTO = initMapToDTO(entity);
-        if (needDetail) {
-
-        }
         return dTO;
     }
 
@@ -538,6 +545,49 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
         tobyUserDTO.setCreatedDate(entity.getCreatedBy().getCreationDate());
         tobyUserDTO.setName(entity.getCreatedBy().getName());
         dTO.setCreated_by(tobyUserDTO);
+
+        return dTO;
+    }
+
+    private GeneralJournalDTOAPI initMapToDTOAPI(GeneralJournal entity) {
+
+        GeneralJournalDTOAPI dTO = new GeneralJournalDTOAPI();
+        dTO.setId(entity.getId());
+        dTO.setSerial(entity.getSerial());
+        if (entity.getGlYear() != null) {
+            dTO.setGlYearName(entity.getGlYear().getName());
+            dTO.setGlYearId(entity.getGlYear().getId());
+        }
+
+        if (entity.getGeneralType() != null) {
+            dTO.setGeneralTypeId(entity.getGeneralType().getId());
+            dTO.setGeneralTypeName(entity.getGeneralType().getName());
+        }
+
+        dTO.setGeneralData(entity.getGeneralData());
+        dTO.setGeneralDecument(entity.getGeneralDecument());
+        dTO.setGeneralStatement(entity.getGeneralStatement());
+        dTO.setGeneralNumber(entity.getGeneralNumber());
+        dTO.setPostFlagReview(entity.getPostFlagReview());
+        dTO.setSerial(entity.getSerial());
+        dTO.setMacId(entity.getMacId());
+        dTO.setBranchId(entity.getBranchId().getId());
+        dTO.setPost_flag(entity.isPost_flag());
+        dTO.setUserModifyAbility(entity.isUserModifyAbility());
+        if (entity.isPost_flag() && entity.getPostFlagReview() != null) {
+            dTO.setPostFlagReview("تمت مراجعته");
+        }
+
+        dTO.setIndex(entity.getId());
+        dTO.setCreatedDate(entity.getCreationDate());
+        dTO.setCreatedBy(entity.getCreatedBy().getId());
+
+        TobyUserDTO tobyUserDTO = new TobyUserDTO();
+        tobyUserDTO.setCreatedBy(entity.getCreatedBy().getId());
+        tobyUserDTO.setCreatedDate(entity.getCreatedBy().getCreationDate());
+
+        dTO.setCreatedByName(entity.getCreatedBy().getName());
+        dTO.setCreatedBy(entity.getCreatedBy().getId());
 
         return dTO;
     }
@@ -633,14 +683,14 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
     }
 
     @Override
-    public ResponseApi save(GeneralJournalDTO dTO, TobyUser tobyUser) {
+    public GeneralJournalDTOAPI save(GeneralJournalDTO dTO, TobyUser tobyUser) {
         try {
-            ResponseApi responseApi = new ResponseApi();
+            GeneralJournalDTOAPI head = new GeneralJournalDTOAPI();
             StringBuilder error = validateGeneralJournal(dTO);
             if (!error.toString().isEmpty()) {
-                responseApi.setStatus(2000);
-                responseApi.setResposeId(8000);
-                responseApi.setMsg(error.toString());
+//                head.getResponseApi().setStatus(2000);
+//                head.getResponseApi().setResposeId(8000);
+                head.setMsg(error.toString());
             } else {
                 GlYearDTO glYearDTO = new GlYearDTO();
                 glYearDTO.setId(dTO.getGlYearId());
@@ -649,21 +699,21 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
                 generalType.setId(dTO.getGeneralTypeId());
                 generalType.setSerial(3);
                 dTO.setGeneralType(generalType);
-                GeneralJournalDTO head = addGeneralJournalDTO(dTO, tobyUser);
+                head = addGeneralJournalDTOAPI(dTO, tobyUser);
                 List<GeneralJournalDetailsDTO> generalJournalDetailsDTOList = new ArrayList<>();
                 GeneralJournalDTO generalJournalDTO = new GeneralJournalDTO();
-                    generalJournalDTO.setId(head.getId());
-                for(GeneralJournalDetailsDTO detailsDTO : dTO.getDetailDTOList()){
+                generalJournalDTO.setId(head.getId());
+                for (GeneralJournalDetailsDTO detailsDTO : dTO.getDetailDTOList()) {
                     detailsDTO.setGeneralJournalId(generalJournalDTO);
                     generalJournalDetailsDTOList.add(detailsDTO);
                 }
                 dTO.setDetailDTOList(generalJournalDetailsDTOList);
-                generaljournalDetailsServiceDTO.addGenDetalils(dTO.getDetailDTOList(), null, tobyUser, Boolean.TRUE, head.getId());
-                responseApi.setStatus(1000);
-                responseApi.setResposeId(7000);
-                responseApi.setMsg("تم طلب  بنجاح");
+                head.setDetailDTOList(generaljournalDetailsServiceDTO.addGenDetalilsAPI(dTO.getDetailDTOList(), null, tobyUser, head.getId()));
+//                head.getResponseApi().setStatus(1000);
+//                head.getResponseApi().setResposeId(7000);
+                head.setMsg("تم طلب  بنجاح");
             }
-            return responseApi;
+            return head;
         } catch (Exception e) {
             return null;
         }
@@ -698,7 +748,7 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
             error.append("يجب اختيار نوع المستند");
             error.append("\n");
         }
-        
+
         if (dTO.getDetailDTOList() == null || dTO.getDetailDTOList().isEmpty()) {
             error.append("يجب ادخال تفاصيل القيد");
             error.append("\n");
@@ -731,6 +781,35 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
             builder.append(" order by e.creationDate DESC");
             List<GeneralJournal> details = dao.findListByQuery(builder.toString(), params);
             return returnListDTO(details);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public GeneralJournalDTOAPI getGeneralJournalDTOByBranchIdAndSerialAPI(Integer serial, Integer generalDocument, Integer yearId, Integer branchId) {
+        if (serial != null) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("branchId", branchId);
+            GlYear year = glYearService.findYear(yearId);
+            params.put("dateFrom", year.getDateFrom());
+            params.put("dateTo", year.getDateTo());
+
+            StringBuilder builder = new StringBuilder();
+            builder.append("SELECT e FROM GeneralJournal e WHERE e.branchId.id = :branchId AND e.generalData >= :dateFrom AND e.generalData <= :dateTo  ");
+            if (serial != null) {
+                params.put("serial", serial);
+                builder.append(" and (e.serial = :serial) ");
+            }
+
+            if (generalDocument != null) {
+                params.put("generalDocument", generalDocument);
+                builder.append(" and (e.generalDecument = :generalDocument) ");
+            }
+
+            builder.append(" order by e.creationDate DESC");
+            List<GeneralJournal> details = dao.findListByQuery(builder.toString(), params);
+            return (details != null && !details.isEmpty()) ? initMapToDTOAPI(details.get(0)) : null;
         } else {
             return null;
         }

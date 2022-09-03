@@ -87,4 +87,6 @@ public interface InvGlobalService {
     public BigDecimal calcItemQuantity(BigDecimal length, BigDecimal shoulder, BigDecimal step, Integer typeShow);
     
     public InvItemDTOApi findItemData(Integer itemId, Integer customerId , Integer priceType, Integer inventoryId);
+    
+    public InvItemDTOApi findItemPriceData(Integer itemId, Integer customerId, Integer priceType, Integer inventoryId);
 }

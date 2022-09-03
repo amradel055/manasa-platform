@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.GeneralJournalDetailsDTOAPI;
 import com.toby.entity.TobyUser;
 import com.toby.dto.GeneralJournalDetailsDTO;
 import java.math.BigDecimal;
@@ -24,6 +25,10 @@ public interface GeneraljournalDetailsServiceDTO {
     public Integer getMaxSerialByGeneral(Integer id);
 
     public List<GeneralJournalDetailsDTO> addGenDetalils(List<GeneralJournalDetailsDTO> details, List<GeneralJournalDetailsDTO> generalListDeleted, TobyUser tobyUser, Boolean isAPI,Integer headId);
+    
+    public List<GeneralJournalDetailsDTOAPI> addGenDetalilsAPI(List<GeneralJournalDetailsDTO> details, List<GeneralJournalDetailsDTO> generalListDeleted, TobyUser tobyUser, Integer headId);
 
     public BigDecimal getDebitAmountForGlAccount(Integer accountId, Integer costCenterId, Date dateFrom, Date dateTo);
+    
+    public List<GeneralJournalDetailsDTOAPI> getAllJournalDetailsForJorunalAPI(Integer id);
 }

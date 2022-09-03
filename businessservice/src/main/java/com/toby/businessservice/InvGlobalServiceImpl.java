@@ -1804,7 +1804,15 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             InvItem item = dao.findEntityById(InvItem.class, itemId);
             InvOrganizationSite customer = dao.findEntityById(InvOrganizationSite.class, customerId);
             InvItemDTOApi dTOApi = new InvItemDTOApi();
-            dTOApi.setQuantityOfUnit(calcItemQuantity(customer.getLength(), customer.getShoulder(), customer.getStep(), item.getItemNatural()));
+            if (item.getItemNatural() == null) {
+                dTOApi.setQuantityOfUnit(calcItemQuantity(customer.getLength(), customer.getShoulder(), customer.getStep(), item.getItemNatural()));
+            } else {
+                if (priceType == 1) {
+                    dTOApi.setQuantityOfUnit(item.getNumbermetersmen());
+                } else {
+                    dTOApi.setQuantityOfUnit(item.getNumbermetersyoung());
+                }
+            }
             dTOApi.setSellPrice(calFinalCost(item.getItemNatural(), priceType, item.getMaxpricemen(),
                     item.getMaxpriceyoung(), CompanyActivityClassEnum.RetailSaleForClothFactory, ScreenNameClassEnum.PROWORKORDER, item.getProGroupId() == null ? null : item.getProGroupId().getId(),
                     customer.getGallaryId() == null ? null : customer.getGallaryId().getInvName(), item.getCode(), item.getDiscountvalue(), dTOApi.getQuantityOfUnit(),
@@ -1813,6 +1821,25 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             dTOApi.setUnitName(item.getUnitId() == null ? "" : item.getUnitId().getName());
             dTOApi.setDiscountRow(calcDiscount(item.getProGroupId().getId(), item.getSiteId().getId(), item.getIsOfferItem(), customer.getDiscount(), customer.getOfferCompanyId() == null ? BigDecimal.ZERO : customer.getOfferCompanyId().getDiscount()));
             dTOApi.setAvailableQuantity(quantityItemsStoreByDateService.getQuantatyItemByinventory(inventoryId, item.getId(), false, null));
+            if (dTOApi.getAvailableQuantity().compareTo(dTOApi.getQuantityOfUnit()) == -1) {
+                dTOApi.setMsg("الكميةالمطلوبة غير موجوده");
+            }
+            return dTOApi;
+        }
+        return null;
+    }
+
+    @Override
+    public InvItemDTOApi findItemPriceData(Integer itemId, Integer customerId, Integer priceType, Integer inventoryId) {
+        if (itemId != null && customerId != null && priceType != null) {
+            InvItem item = dao.findEntityById(InvItem.class, itemId);
+            InvOrganizationSite customer = dao.findEntityById(InvOrganizationSite.class, customerId);
+            InvItemDTOApi dTOApi = new InvItemDTOApi();
+            dTOApi.setSellPrice(calFinalCost(item.getItemNatural(), priceType, item.getMaxpricemen(),
+                    item.getMaxpriceyoung(), CompanyActivityClassEnum.RetailSaleForClothFactory, ScreenNameClassEnum.PROWORKORDER, item.getProGroupId() == null ? null : item.getProGroupId().getId(),
+                    customer.getGallaryId() == null ? null : customer.getGallaryId().getInvName(), item.getCode(), item.getDiscountvalue(), dTOApi.getQuantityOfUnit(),
+                    item.getNumbermetersfreemen(), item.getNumbermetersfreeyoung(), customer.getDiscount(), customer.getOfferCompanyId() == null ? BigDecimal.ZERO : customer.getOfferCompanyId().getDiscount(),
+                    item.getIsOfferItem()));
             return dTOApi;
         }
         return null;
@@ -1838,4 +1865,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         }
         return BigDecimal.ZERO;
     }
+
+    
+
 }

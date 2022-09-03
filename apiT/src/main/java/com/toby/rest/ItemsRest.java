@@ -292,12 +292,11 @@ public class ItemsRest {
             inventoryFrom.setId(invItemDTO.getInventoryId());
             itemCardReportSerachBean.setInventoryFrom(inventoryFrom);
             itemCardReportSerachBean.setBranchId(invItemDTO.getBranchId());
-            List<ItemsDataView> list = itemsDataViewService.findQuantityItems(itemCardReportSerachBean,1);
+            List<ItemsDataView> list = itemsDataViewService.findQuantityItems(itemCardReportSerachBean, 1);
             return list;
         }
         return null;
-    }   
-    
+    }
 
     @Transactional
     @Path("/findItemData")
@@ -307,7 +306,14 @@ public class ItemsRest {
     public InvItemDTOApi findItemData(InvItemDTOApi invItemDTOApi) {
         return invGlobalService.findItemData(invItemDTOApi.getId(), invItemDTOApi.getCustomerId(), invItemDTOApi.getPriceType(), invItemDTOApi.getInventoryId());
     }
-    
-    
+
+    @Transactional
+    @Path("/findItemPrice")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public InvItemDTOApi findItemPrice(InvItemDTOApi invItemDTOApi) {
+        return invGlobalService.findItemPriceData(invItemDTOApi.getId(), invItemDTOApi.getCustomerId(), invItemDTOApi.getPriceType(), invItemDTOApi.getInventoryId());
+    }
 
 }

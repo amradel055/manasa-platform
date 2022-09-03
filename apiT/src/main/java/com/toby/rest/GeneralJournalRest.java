@@ -1,6 +1,7 @@
 package com.toby.rest;
 
-import com.toby.API.ResponseApi;
+import com.toby.API.GeneralJournalDTOAPI;
+import com.toby.API.GeneralJournalDetailsDTOAPI;
 import com.toby.businessservice.GeneraljournalDetailsServiceDTO;
 import com.toby.businessservice.GeneraljournalServiceDTO;
 import com.toby.dto.GeneralJournalDTO;
@@ -37,9 +38,9 @@ public class GeneralJournalRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addGeneralJournal(GeneralJournalDTO generalJournalDTO) {
+    public GeneralJournalDTOAPI addGeneralJournal(GeneralJournalDTO generalJournalDTO) {
         try {
-        TobyUser tobyUser = new TobyUser();
+            TobyUser tobyUser = new TobyUser();
             tobyUser.setId(generalJournalDTO.getCreatedBy());
             Branch branch = new Branch();
             branch.setId(generalJournalDTO.getBranchId());
@@ -47,10 +48,10 @@ public class GeneralJournalRest {
             TobyCompany company = new TobyCompany();
             company.setId(generalJournalDTO.getCompanyId());
             tobyUser.setCompanyId(company);
-            ResponseApi responseApi = generaljournalServiceDTO.save(generalJournalDTO, tobyUser);
-            return Response.ok(responseApi).build();
+            GeneralJournalDTOAPI responseApi = generaljournalServiceDTO.save(generalJournalDTO, tobyUser);
+            return responseApi;
         } catch (Exception e) {
-            return Response.status(Response.Status.FORBIDDEN).build();
+            return null;
         }
     }
 
@@ -59,7 +60,30 @@ public class GeneralJournalRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response findGeneralJournal(GeneralJournalDTO generalJournalDTO) {
+    public GeneralJournalDTOAPI findGeneralJournal(GeneralJournalDTO generalJournalDTO) {
+        try {
+            if (generalJournalDTO.getSerial() != null || generalJournalDTO.getGeneralDecument() != null) {
+                GeneralJournalDTOAPI entity = generaljournalServiceDTO.getGeneralJournalDTOByBranchIdAndSerialAPI(generalJournalDTO.getSerial(), generalJournalDTO.getGeneralDecument(), generalJournalDTO.getGlYearId(), generalJournalDTO.getBranchId());
+                List<GeneralJournalDetailsDTOAPI> detailList = generaljournalDetailsServiceDTO.getAllJournalDetailsForJorunalAPI(entity.getId());
+                entity.setDetailDTOList(detailList);
+                return entity;
+            } else {
+                GeneralJournalDTOAPI journalDTO = new GeneralJournalDTOAPI();
+                journalDTO.setMsg("branch or User id not found");
+                return journalDTO;
+            }
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Transactional
+    @Path("/findgeneraljournalList")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findGeneralJournalList(GeneralJournalDTO generalJournalDTO) {
         try {
             if (generalJournalDTO.getSerial() != null || generalJournalDTO.getGeneralDecument() != null) {
                 List<GeneralJournalDTO> journalDTOList = generaljournalServiceDTO.getGeneralJournalDTOByBranchIdAndSerial(generalJournalDTO.getSerial(), generalJournalDTO.getGeneralDecument(), generalJournalDTO.getGlYearId(), generalJournalDTO.getBranchId());

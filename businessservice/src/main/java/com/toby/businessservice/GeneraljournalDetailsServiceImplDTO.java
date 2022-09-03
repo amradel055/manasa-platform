@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.GeneralJournalDetailsDTOAPI;
 import com.toby.entity.TobyUser;
 import com.toby.core.GenericDAO;
 import com.toby.dto.CostCenterDTO;
@@ -51,6 +52,19 @@ public class GeneraljournalDetailsServiceImplDTO implements GeneraljournalDetail
     }
 
     @Override
+    public List<GeneralJournalDetailsDTOAPI> getAllJournalDetailsForJorunalAPI(Integer id) {
+        List<GeneralJournalDetailsDTOAPI> list = new ArrayList<>();
+        Map<String, Object> params = new HashMap();
+        params.put("journalId", id);
+        List<GeneralJournalDetails> detail = new ArrayList<>();
+        detail = dao.findListByQuery("SELECT d FROM GeneralJournalDetails d WHERE d.generalJournalId.id=:journalId", params);
+        for (GeneralJournalDetails entity : detail) {
+            list.add(initMapToDTOAPI(entity));
+        }
+        return list;
+    }
+
+    @Override
     public List<GeneralJournalDetailsDTO> addGenDetalils(List<GeneralJournalDetailsDTO> details, List<GeneralJournalDetailsDTO> generalListDeleted, TobyUser tobyUser, Boolean isAPI, Integer headId) {
         List<GeneralJournalDetails> list = new ArrayList<>();
         GeneralJournalDetails gjd;
@@ -90,6 +104,41 @@ public class GeneraljournalDetailsServiceImplDTO implements GeneraljournalDetail
     }
 
     @Override
+    public List<GeneralJournalDetailsDTOAPI> addGenDetalilsAPI(List<GeneralJournalDetailsDTO> details, List<GeneralJournalDetailsDTO> generalListDeleted, TobyUser tobyUser, Integer headId) {
+        List<GeneralJournalDetailsDTOAPI> list = new ArrayList<>();
+        GeneralJournalDetails gjd;
+        if (details != null && !details.isEmpty()) {
+            findTheMaximumSerial(details);
+            for (GeneralJournalDetailsDTO journalDetails : details) {
+                if (journalDetails.getCostCenterId() != null && journalDetails.getCostCenterId().getId() == -1) {
+                    journalDetails.setCostCenterId(null);
+                }
+                if (journalDetails.getAdminUnitId() != null && journalDetails.getAdminUnitId().getId() == -1) {
+                    journalDetails.setAdminUnitId(null);
+                }
+                fillSerial(journalDetails);
+                GeneralJournalDetails generalJournalDetails = mapFromDTOAPI(journalDetails, tobyUser, headId);
+
+                gjd = dao.updateEntity(generalJournalDetails);
+
+                GeneralJournalDetailsDTOAPI detailsDTOAPI = initMapToDTOAPI(gjd);
+                list.add(detailsDTOAPI);
+            }
+        }
+
+        if (generalListDeleted != null && !generalListDeleted.isEmpty()) {
+            for (GeneralJournalDetailsDTO journalDetails : generalListDeleted) {
+                if (journalDetails.getId() != null) {
+                    GeneralJournalDetails gjdEntity = mapFromDTO(journalDetails, tobyUser);
+                    dao.deleteEntity(gjdEntity);
+                }
+            }
+        }
+
+        return list;
+    }
+
+    @Override
     public Integer getMaxSerialByGeneral(Integer id) {
         Map<String, Object> params = new HashMap();
         params.put("journalId", id);
@@ -117,16 +166,13 @@ public class GeneraljournalDetailsServiceImplDTO implements GeneraljournalDetail
     private List<GeneralJournalDetailsDTO> returnListDTO(List<GeneralJournalDetails> list) {
         List<GeneralJournalDetailsDTO> dTOList = new ArrayList<>();
         for (GeneralJournalDetails entity : list) {
-            dTOList.add(mapTODTO(entity, false));
+            dTOList.add(mapTODTO(entity));
         }
         return dTOList;
     }
 
-    private GeneralJournalDetailsDTO mapTODTO(GeneralJournalDetails entity, Boolean needDetail) {
+    private GeneralJournalDetailsDTO mapTODTO(GeneralJournalDetails entity) {
         GeneralJournalDetailsDTO dTO = initMapToDTO(entity);
-        if (needDetail) {
-
-        }
         return dTO;
     }
 
@@ -189,6 +235,47 @@ public class GeneraljournalDetailsServiceImplDTO implements GeneraljournalDetail
             currencyDTO.setName(entity.getCurrencyId().getName());
             currencyDTO.setSerial(entity.getCurrencyId().getSerial());
             dTO.setCurrencyId(currencyDTO);
+        }
+
+        dTO.setBranchId(entity.getBranchId().getId());
+        dTO.setIndex(entity.getId());
+        dTO.setCreatedDate(entity.getCreationDate());
+        dTO.setCreatedBy(entity.getCreatedBy().getId());
+
+        return dTO;
+    }
+
+    private GeneralJournalDetailsDTOAPI initMapToDTOAPI(GeneralJournalDetails entity) {
+
+        GeneralJournalDetailsDTOAPI dTO = new GeneralJournalDetailsDTOAPI();
+        dTO.setId(entity.getId());
+
+        dTO.setSerial(entity.getSerial());
+        dTO.setDebitAmount(entity.getDebitAmount());
+        dTO.setCreditamount(entity.getCreditamount());
+        dTO.setDebitAmountLocal(entity.getDebitAmountLocal());
+        dTO.setCreditamountLocal(entity.getCreditamountLocal());
+        dTO.setDiscribtion(entity.getDiscribtion());
+        dTO.setRate(entity.getRate());
+
+        if (entity.getGlACCOUNTId() != null && entity.getGlACCOUNTId().getId() != null) {
+            dTO.setGlAccount(entity.getGlACCOUNTId().getId());
+            dTO.setGlAccountName(entity.getGlACCOUNTId().getName());
+            dTO.setGlAccountNumber(entity.getGlACCOUNTId().getAccNumber().toString());
+        }
+
+        if (entity.getCostCenterId() != null && entity.getCostCenterId().getId() != null) {
+            dTO.setCostCenter(entity.getCostCenterId().getId());
+            dTO.setGlCostCenterName(entity.getCostCenterId().getName());
+            dTO.setGlCostCenterNumber(entity.getCostCenterId().getCode().toString());
+        }
+
+        if (entity.getGeneralJournalId() != null && entity.getGeneralJournalId().getId() != null) {
+            dTO.setGeneralJournal(entity.getGeneralJournalId().getId());
+        }
+        if (entity.getCurrencyId() != null && entity.getCurrencyId().getId() != null) {
+            dTO.setCurrency(entity.getCurrencyId().getId());
+            dTO.setCurrencyName(entity.getCurrencyId().getName());
         }
 
         dTO.setBranchId(entity.getBranchId().getId());
