@@ -362,11 +362,11 @@ public class AutoComplateImpl implements AutoCompleteService {
         invOrganizationSiteDTO.setEmail(invOrganizationSite.getEmail());
         invOrganizationSiteDTO.setMobile(invOrganizationSite.getMobile());
 
-        invOrganizationSiteDTO.setOfferCompanyName(invOrganizationSite.getOfferCompanyId().getName());
+        invOrganizationSiteDTO.setOfferCompanyName(invOrganizationSite.getOfferCompanyId() == null ? "" : invOrganizationSite.getOfferCompanyId().getName());
 
-        invOrganizationSiteDTO.setGallaryIdAPI(invOrganizationSite.getGallaryId().getId());
+        invOrganizationSiteDTO.setGallaryIdAPI(invOrganizationSite.getGallaryId() == null ? null : invOrganizationSite.getGallaryId().getId());
 
-        invOrganizationSiteDTO.setAccountIdAPI(invOrganizationSite.getAccountId().getId());
+        invOrganizationSiteDTO.setAccountIdAPI(invOrganizationSite.getAccountId() == null ? null : invOrganizationSite.getAccountId().getId());
 
         return invOrganizationSiteDTO;
     }
