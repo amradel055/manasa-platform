@@ -107,9 +107,6 @@ public class AutoComplateImpl implements AutoCompleteService {
         }
 
         sql.append(" order by ii.code limit 30 ");
-//        appendItemsBarcodesDetailsViewBranchId(sql);
-//          List<ItemsBarcodesDetailsView>  list = dao.executeNativeQuery(sql.toString());
-//          return list;
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
         return convertToItemsBarcodesDetailsView(res);
     }

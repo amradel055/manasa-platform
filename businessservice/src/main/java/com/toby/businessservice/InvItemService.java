@@ -8,7 +8,7 @@ package com.toby.businessservice;
 import com.toby.businessservice.reports.searchBean.ItemMainDataByGroupSearchBean;
 import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.InvItemDTO;
-import com.toby.dto.InvItemDTOApi;
+import com.toby.API.InvItemDTOApi;
 import com.toby.entity.InvBarcode;
 import com.toby.entity.InvGroup;
 import com.toby.entity.InvItem;
@@ -123,4 +123,6 @@ public interface InvItemService {
     public InvItem findItemByCode(String code) ;
     
      public void updateByOffer(Integer invItem, Integer isOfferFinal);
+     
+     public List<InvItemDTOApi> findInvItemDTOListAPI(Integer branchId);
 }

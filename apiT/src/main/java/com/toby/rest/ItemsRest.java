@@ -13,7 +13,7 @@ import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.QuantityItemsStoreByDateService;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvItemDTO;
-import com.toby.dto.InvItemDTOApi;
+import com.toby.API.InvItemDTOApi;
 import com.toby.entity.InvItem;
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -47,11 +47,11 @@ public class ItemsRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response findAllItem(InvInvoiceDTOApi  invoiceDTOApi) {
+    public Response findAllItem(InvInvoiceDTOApi invoiceDTOApi) {
         try {
             if (invoiceDTOApi.getBranchId() != null) {
-                List<InvItemDTO> invItemDTOList = invItemService.findInvItemDTOList(invoiceDTOApi.getBranchId());
-                GenericEntity<List<InvItemDTO>> list = new GenericEntity<List<InvItemDTO>>(invItemDTOList) {
+                List<InvItemDTOApi> invItemDTOList = invItemService.findInvItemDTOListAPI(invoiceDTOApi.getBranchId());
+                GenericEntity<List<InvItemDTOApi>> list = new GenericEntity<List<InvItemDTOApi>>(invItemDTOList) {
                 };
                 return Response.ok(list).build();
             } else {
@@ -62,6 +62,15 @@ public class ItemsRest {
         } catch (Exception e) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
+    }
+
+    @Transactional
+    @Path("/findAllItem2")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<InvItemDTOApi> findAllItem2(InvInvoiceDTOApi invoiceDTOApi) {
+        return invItemService.findInvItemDTOListAPI(invoiceDTOApi.getBranchId());
     }
 
     @Transactional

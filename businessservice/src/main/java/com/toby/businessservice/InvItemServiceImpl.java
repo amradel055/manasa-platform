@@ -14,7 +14,7 @@ import com.toby.dto.AttributeDTO;
 import com.toby.dto.CurrencyDTO;
 import com.toby.dto.InvGroupDTO;
 import com.toby.dto.InvItemDTO;
-import com.toby.dto.InvItemDTOApi;
+import com.toby.API.InvItemDTOApi;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.ProGroupDTO;
 import com.toby.dto.SymbolDTO;
@@ -199,6 +199,34 @@ public class InvItemServiceImpl implements InvItemService {
         return invItem;
     }
 
+//    public InvItemDTOApi mapToDTOAPI(InvItem invItem) {
+//        InvItemDTOApi dto = new InvItemDTOApi();
+//        dto.setCode(invItem.getCode());
+//        dto.setId(invItem.getId());
+//        dto.setCostAverage(invItem.getCostAverage());
+//        dto.setName(invItem.getName());
+//        dto.setSellPrice(invItem.getSellPrice());
+//        dto.setUnitId(invItem.getUnitId().getId());
+//        dto.setMinPriceMen(invItem.getMinpricemen());
+//        dto.setMaxPriceMen(invItem.getMaxpricemen());
+//        dto.setMinPriceYoung(invItem.getMinpriceyoung());
+//        dto.setMaxPriceYoung(invItem.getMaxpriceyoung());
+//        dto.setDiscountrate(invItem.getDiscountrate());
+//        dto.setUnitName(invItem.getUnitId().getName());
+////            dto.setScrewing(new BigDecimal((Long) line[12]));
+//        dto.setIsInventoryItem(invItem.getIsInventoryItem());
+//        dto.setTypeShow(invItem.getTypeshow());
+//        dto.setProGroupId(invItem.getProGroupId().getId());
+//        dto.setNumberMetersYoung(invItem.getNumbermetersyoung());
+//        dto.setNumberMetersMen(invItem.getNumbermetersmen());
+//        dto.setNumberMetersFreeYoung(invItem.getNumbermetersfreeyoung());
+//        dto.setNumberMetersFreeMen(invItem.getNumbermetersfreemen());
+//        dto.setSupplierId(invItem.getSiteId().getName());
+//        dto.setItemType(invItem.getType());
+//        dto.setPrice_type(invItem.getPriceType());
+//        return dto;
+//    }
+
     @Override
     public InvItemDTO mapToDTO(InvItem invItem) {
 
@@ -309,6 +337,13 @@ public class InvItemServiceImpl implements InvItemService {
         }
         return invItemDTOList;
     }
+    public List<InvItemDTOApi> mapToDTOListAPI(List<InvItem> invItemList) {
+        List<InvItemDTOApi> invItemDTOList = new ArrayList<>();
+        for (InvItem invItem : invItemList) {
+            invItemDTOList.add(mapToDTOAPI(invItem));
+        }
+        return invItemDTOList;
+    }
 
     @Override
     public List<InvItemDTO> invItemsReport(InvItemDTO invItemDTO, Integer branchId, Boolean isUsed, BigDecimal lastCost, Date dateFrom, Integer itemNatural) {
@@ -374,8 +409,15 @@ public class InvItemServiceImpl implements InvItemService {
     public List<InvItemDTO> findInvItemDTOList(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
-        List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId and e.id >= 23148", params);
+        List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId ", params);
         return mapToDTOList(invItemList);
+    }
+    @Override
+    public List<InvItemDTOApi> findInvItemDTOListAPI(Integer branchId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId and e.id >= 23148", params);
+        return mapToDTOListAPI(invItemList);
     }
 
     @Override
@@ -537,6 +579,33 @@ public class InvItemServiceImpl implements InvItemService {
         api.setCode(invItem.getCode());
         api.setImage(invItem.getImage());
         api.setRemarks(invItem.getRemarks());
+        
+        
+        api.setCode(invItem.getCode());
+        api.setId(invItem.getId());
+        api.setCostAverage(invItem.getCostAverage());
+        api.setName(invItem.getName());
+        api.setSellPrice(invItem.getSellPrice());
+        api.setUnitId(invItem.getUnitId().getId());
+        api.setMinPriceMen(invItem.getMinpricemen());
+        api.setMaxPriceMen(invItem.getMaxpricemen());
+        api.setMinPriceYoung(invItem.getMinpriceyoung());
+        api.setMaxPriceYoung(invItem.getMaxpriceyoung());
+        api.setDiscountrate(invItem.getDiscountrate());
+        api.setUnitName(invItem.getUnitId().getName());
+//            dto.setScrewing(new BigDecimal((Long) line[12]));
+        api.setIsInventoryItem(invItem.getIsInventoryItem());
+        api.setTypeShow(invItem.getTypeshow());
+        api.setProGroupId(invItem.getProGroupId().getId());
+        api.setNumberMetersYoung(invItem.getNumbermetersyoung());
+        api.setNumberMetersMen(invItem.getNumbermetersmen());
+        api.setNumberMetersFreeYoung(invItem.getNumbermetersfreeyoung());
+        api.setNumberMetersFreeMen(invItem.getNumbermetersfreemen());
+        api.setSupplierId(invItem.getSiteId().getName());
+        api.setItemType(invItem.getType());
+        api.setPrice_type(invItem.getPriceType());
+        
+        
         AttributeDTO attributeDTO = new AttributeDTO();
         attributeDTO.setItemId(invItem.getId());
         api.setAtrributesList(attributeService.getAllAttributesByBranchIdAndItemId(attributeDTO));
