@@ -51,6 +51,7 @@ public class InvItemDTOApi {
     private List<VariationDTO> variationsList;
     private Integer customerId;
     private BigDecimal discountRow;
+    private BigDecimal availableQuantity;
 
     /**
      * @return the name
@@ -540,6 +541,20 @@ public class InvItemDTOApi {
      */
     public void setDiscountRow(BigDecimal discountRow) {
         this.discountRow = discountRow;
+    }
+
+    /**
+     * @return the availableQuantity
+     */
+    public BigDecimal getAvailableQuantity() {
+        return availableQuantity;
+    }
+
+    /**
+     * @param availableQuantity the availableQuantity to set
+     */
+    public void setAvailableQuantity(BigDecimal availableQuantity) {
+        this.availableQuantity = availableQuantity;
     }
 
 }

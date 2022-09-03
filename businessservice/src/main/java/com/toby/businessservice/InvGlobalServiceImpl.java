@@ -38,7 +38,7 @@ import javax.ejb.Stateless;
 public class InvGlobalServiceImpl implements InvGlobalService {
 
     @EJB
-    private QuantityItemsStoreByDateService quantityItemsStoreAddExitService;
+    private QuantityItemsStoreByDateService quantityItemsStoreByDateService;
     @EJB
     private GenericDAO dao;
     @EJB
@@ -800,7 +800,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                     || ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)
                     || ScreenNameClassEnum.INVRESERVATIONFORM.equals(screenNameClassEnum)) {
 //                BigDecimal avilableQuantity = quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), sellBuy);
-                BigDecimal avilableQuantity = quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), false, null);
+                BigDecimal avilableQuantity = quantityItemsStoreByDateService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), false, null);
                 avilableQuantity = avilableQuantity.add(detailDTO.getOriginQuantity());
                 detailDTO.setAvailableQuantityRow(avilableQuantity);
                 if (avilableQuantity.compareTo(detailDTO.getTotalQuantityWithScrewing()) < 0) {
@@ -1297,7 +1297,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 || ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)
                 || ScreenNameClassEnum.INVRETURNPURCHASEFORM.equals(screenNameClassEnum)) {
             detailDTO.setTotalQuantityWithScrewing(detailDTO.getQuantity().multiply(detailDTO.getScrewing()));
-            detailDTO.setAvailableQuantityRow(quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), false, null));
+            detailDTO.setAvailableQuantityRow(quantityItemsStoreByDateService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), false, null));
 //            detailDTO.setAvailableQuantityRow(quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), sellBuy));
 //            if ((detailDTO.getAvailableQuantityRow() == null || detailDTO.getAvailableQuantityRow().compareTo(BigDecimal.ZERO) < 1) && !sellNegative && !isEdit) {
             if ((detailDTO.getAvailableQuantityRow() == null || detailDTO.getAvailableQuantityRow().compareTo(BigDecimal.ZERO) < 1) && !isEdit) {
@@ -1310,7 +1310,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         } else if ( //                ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)
                 //                || 
                 ScreenNameClassEnum.INVUPDATE.equals(screenNameClassEnum)) {
-            detailDTO.setAvailableQuantityRow(quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), false, null));
+            detailDTO.setAvailableQuantityRow(quantityItemsStoreByDateService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), false, null));
             detailDTO.setOldQuantity(detailDTO.getAvailableQuantityRow());
             detailDTO.setOldQuantityBak(detailDTO.getAvailableQuantityRow());
 
@@ -1795,11 +1795,11 @@ public class InvGlobalServiceImpl implements InvGlobalService {
 
     private void findItemQuantity(InvInvoiceDTO invInvoiceDTO, ItemsBarcodesDetailsView barcodesDetailsView, InvDetailDTO invDetailDTO) {
         BigDecimal r5 = calcItemQuantity(invInvoiceDTO.getOrganizationSiteId().getLength(), invInvoiceDTO.getOrganizationSiteId().getShoulder(), invInvoiceDTO.getOrganizationSiteId().getStep(), barcodesDetailsView.getTypeShow());
-        invDetailDTO.setQuantityOfOneUnit(new BigDecimal(r5.setScale(2, RoundingMode.FLOOR).stripTrailingZeros().toPlainString()));
+        invDetailDTO.setQuantityOfOneUnit(r5);
     }
 
     @Override
-    public InvItemDTOApi findItemData(Integer itemId, Integer customerId, Integer priceType) {
+    public InvItemDTOApi findItemData(Integer itemId, Integer customerId, Integer priceType, Integer inventoryId) {
         if (itemId != null && customerId != null && priceType != null) {
             InvItem item = dao.findEntityById(InvItem.class, itemId);
             InvOrganizationSite customer = dao.findEntityById(InvOrganizationSite.class, customerId);
@@ -1812,6 +1812,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                     item.getIsOfferItem()));
             dTOApi.setUnitName(item.getUnitId() == null ? "" : item.getUnitId().getName());
             dTOApi.setDiscountRow(calcDiscount(item.getProGroupId().getId(), item.getSiteId().getId(), item.getIsOfferItem(), customer.getDiscount(), customer.getOfferCompanyId() == null ? BigDecimal.ZERO : customer.getOfferCompanyId().getDiscount()));
+            dTOApi.setAvailableQuantity(quantityItemsStoreByDateService.getQuantatyItemByinventory(inventoryId, item.getId(), false, null));
             return dTOApi;
         }
         return null;
@@ -1824,7 +1825,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         BigDecimal r3 = getStep(step, itemNatural);
         BigDecimal r4 = r2.max(r1);
         BigDecimal r5 = r4.max(r3);
-        return r5;
+        return new BigDecimal(r5.setScale(2, RoundingMode.FLOOR).stripTrailingZeros().toPlainString());
     }
 
     public BigDecimal calcDiscount(Integer proGroupId, Integer supplierId, Integer isOfferItem, BigDecimal customerDiscount, BigDecimal offerCompanycustomerDiscount) {

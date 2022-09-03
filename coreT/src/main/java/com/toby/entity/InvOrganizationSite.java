@@ -197,7 +197,6 @@ public class InvOrganizationSite extends BaseEntity {
     private String country;
     @Column(name = "job_named")
     private String jobNamed;
-    
 
     public InvOrganizationSite() {
     }
@@ -284,7 +283,7 @@ public class InvOrganizationSite extends BaseEntity {
     }
 
     public BigDecimal getDiscount() {
-        if(discount == null){
+        if (discount == null) {
             discount = BigDecimal.ZERO;
         }
         return discount;
@@ -510,6 +509,9 @@ public class InvOrganizationSite extends BaseEntity {
      * @return the length
      */
     public BigDecimal getLength() {
+        if (length == null) {
+            length = BigDecimal.ZERO;
+        }
         return length;
     }
 
@@ -524,6 +526,9 @@ public class InvOrganizationSite extends BaseEntity {
      * @return the shoulder
      */
     public BigDecimal getShoulder() {
+        if (shoulder == null) {
+            shoulder = BigDecimal.ZERO;
+        }
         return shoulder;
     }
 
@@ -538,6 +543,9 @@ public class InvOrganizationSite extends BaseEntity {
      * @return the step
      */
     public BigDecimal getStep() {
+        if (step == null) {
+            step = BigDecimal.ZERO;
+        }
         return step;
     }
 

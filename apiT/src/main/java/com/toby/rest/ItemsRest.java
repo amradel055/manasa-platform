@@ -91,7 +91,7 @@ public class ItemsRest {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public InvItemDTOApi findItemData(InvItemDTOApi invItemDTOApi) {
-        return invGlobalService.findItemData(invItemDTOApi.getId(), invItemDTOApi.getCustomerId(), invItemDTOApi.getPriceType());
+        return invGlobalService.findItemData(invItemDTOApi.getId(), invItemDTOApi.getCustomerId(), invItemDTOApi.getPriceType(),invItemDTOApi.getInventoryId());
     }
 
     @Transactional
