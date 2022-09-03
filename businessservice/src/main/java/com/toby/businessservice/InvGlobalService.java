@@ -6,6 +6,7 @@
 package com.toby.businessservice;
 
 import com.toby.API.DueDateDTOAPI;
+import com.toby.API.InvItemDTOApi;
 import com.toby.define.CompanyActivityClassEnum;
 import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.InvDetailDTO;
@@ -44,9 +45,9 @@ public interface InvGlobalService {
 
     public Boolean validatePrice(InvDetailDTO detailDTO);
 
-    public List<InvDetailDTO> updatePriceAndQuantityForDetail(InvInvoiceDTO invInvoiceDTO, Boolean findCost);
+    public List<InvDetailDTO> updatePriceAndQuantityForDetail(InvInvoiceDTO invInvoiceDTO);
 
-    public InvDetailDTO validateItems(InvDetailDTO detailDTO, InvInvoiceDTO invInvoiceDTO, Boolean findCost);
+    public InvDetailDTO validateItems(InvDetailDTO detailDTO, InvInvoiceDTO invInvoiceDTO);
 
     public Boolean validateQuantity(InvDetailDTO detailDTO, CompanyActivityClassEnum companyActivityClassEnum, ScreenNameClassEnum screenNameClassEnum);
 
@@ -56,7 +57,7 @@ public interface InvGlobalService {
 
     public InvDetailDTO validatePriceColumn(InvDetailDTO detailDTO);
 
-    public InvDetailDTO validateQuantityOfUnitColum(InvDetailDTO detailDTO, InvInvoiceDTO invInvoiceDTO, Boolean findCost);
+    public InvDetailDTO validateQuantityOfUnitColum(InvDetailDTO detailDTO, InvInvoiceDTO invInvoiceDTO);
 
     public InvDetailDTO validateQuantityColum(InvDetailDTO detailDTO, Boolean isload, ScreenNameClassEnum screenNameClassEnum, Boolean negativeSell, CompanyActivityClassEnum companyActivityClassEnum);
 
@@ -82,4 +83,8 @@ public interface InvGlobalService {
     public InvDetailDTO validateActualQuantityColumn(InvDetailDTO detailDTO);
 
     public DueDateDTOAPI getDueDateDTOAPI(Integer galleryId);
+    
+    public BigDecimal calcItemQuantity(BigDecimal length, BigDecimal shoulder, BigDecimal step, Integer typeShow);
+    
+    public InvItemDTOApi findItemData(Integer itemId, Integer customerId , Integer priceType);
 }

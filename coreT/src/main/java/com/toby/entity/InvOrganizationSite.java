@@ -284,6 +284,9 @@ public class InvOrganizationSite extends BaseEntity {
     }
 
     public BigDecimal getDiscount() {
+        if(discount == null){
+            discount = BigDecimal.ZERO;
+        }
         return discount;
     }
 

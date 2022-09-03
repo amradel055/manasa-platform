@@ -30,7 +30,7 @@ public class InvItemDTOApi {
     private Integer typeShow;
     private Integer isInventoryItem;
     private Integer itemType;
-    private Integer price_type;
+    private Integer priceType;
     private Integer unitId;
     private String unitName;
     private String supplierId;
@@ -46,8 +46,11 @@ public class InvItemDTOApi {
     private BigDecimal numberMetersMen;
     private BigDecimal numberMetersFreeYoung;
     private BigDecimal numberMetersFreeMen;
+    private BigDecimal quantityOfUnit;
     private List<AttributeDTO> atrributesList;
     private List<VariationDTO> variationsList;
+    private Integer customerId;
+    private BigDecimal discountRow;
 
     /**
      * @return the name
@@ -386,17 +389,17 @@ public class InvItemDTOApi {
     }
 
     /**
-     * @return the price_type
+     * @return the priceType
      */
-    public Integer getPrice_type() {
-        return price_type;
+    public Integer getPriceType() {
+        return priceType;
     }
 
     /**
-     * @param price_type the price_type to set
+     * @param priceType the priceType to set
      */
-    public void setPrice_type(Integer price_type) {
-        this.price_type = price_type;
+    public void setPriceType(Integer priceType) {
+        this.priceType = priceType;
     }
 
     /**
@@ -495,6 +498,48 @@ public class InvItemDTOApi {
      */
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    /**
+     * @return the quantityOfUnit
+     */
+    public BigDecimal getQuantityOfUnit() {
+        return quantityOfUnit;
+    }
+
+    /**
+     * @param quantityOfUnit the quantityOfUnit to set
+     */
+    public void setQuantityOfUnit(BigDecimal quantityOfUnit) {
+        this.quantityOfUnit = quantityOfUnit;
+    }
+
+    /**
+     * @return the customerId
+     */
+    public Integer getCustomerId() {
+        return customerId;
+    }
+
+    /**
+     * @param customerId the customerId to set
+     */
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
+    }
+
+    /**
+     * @return the discountRow
+     */
+    public BigDecimal getDiscountRow() {
+        return discountRow;
+    }
+
+    /**
+     * @param discountRow the discountRow to set
+     */
+    public void setDiscountRow(BigDecimal discountRow) {
+        this.discountRow = discountRow;
     }
 
 }

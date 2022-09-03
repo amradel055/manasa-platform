@@ -603,7 +603,7 @@ public class InvItemServiceImpl implements InvItemService {
         api.setNumberMetersFreeMen(invItem.getNumbermetersfreemen());
         api.setSupplierId(invItem.getSiteId().getName());
         api.setItemType(invItem.getType());
-        api.setPrice_type(invItem.getPriceType());
+        api.setPriceType(invItem.getPriceType());
         
         
         AttributeDTO attributeDTO = new AttributeDTO();

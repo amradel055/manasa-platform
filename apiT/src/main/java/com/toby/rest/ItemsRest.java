@@ -14,6 +14,8 @@ import com.toby.businessservice.QuantityItemsStoreByDateService;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvItemDTO;
 import com.toby.API.InvItemDTOApi;
+import com.toby.API.InvOrganizationSiteDTOAPI;
+import com.toby.businessservice.InvGlobalService;
 import com.toby.entity.InvItem;
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -36,7 +38,8 @@ public class ItemsRest {
 
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
-
+    @EJB
+    InvGlobalService invGlobalService;
     @EJB
     InvPurchaseInvoiceDetailsService invPurchaseInvoiceDetailsService;
     @EJB
@@ -71,6 +74,24 @@ public class ItemsRest {
     @Consumes(MediaType.APPLICATION_JSON)
     public List<InvItemDTOApi> findAllItem2(InvInvoiceDTOApi invoiceDTOApi) {
         return invItemService.findInvItemDTOListAPI(invoiceDTOApi.getBranchId());
+    }
+
+    @Transactional
+    @Path("/calcItemQuantity")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public BigDecimal calcItemQuantity(InvOrganizationSiteDTOAPI siteDTOAPI) {
+        return invGlobalService.calcItemQuantity(siteDTOAPI.getLength(), siteDTOAPI.getShoulder(), siteDTOAPI.getStep(), siteDTOAPI.getTypeShow());
+    }
+
+    @Transactional
+    @Path("/findItemData")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public InvItemDTOApi findItemData(InvItemDTOApi invItemDTOApi) {
+        return invGlobalService.findItemData(invItemDTOApi.getId(), invItemDTOApi.getCustomerId(), invItemDTOApi.getPriceType());
     }
 
     @Transactional

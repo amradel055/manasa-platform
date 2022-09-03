@@ -639,6 +639,9 @@ public class InvItem extends BaseEntity {
      * @return the maxpriceyoung
      */
     public BigDecimal getMaxpriceyoung() {
+        if(maxpriceyoung == null){
+            maxpriceyoung = BigDecimal.ZERO;
+        }
         return maxpriceyoung;
     }
 
@@ -653,6 +656,9 @@ public class InvItem extends BaseEntity {
      * @return the maxpricemen
      */
     public BigDecimal getMaxpricemen() {
+        if(maxpricemen == null){
+            maxpricemen = BigDecimal.ZERO;
+        }
         return maxpricemen;
     }
 
@@ -726,6 +732,9 @@ public class InvItem extends BaseEntity {
      * @return the numbermetersfreeyoung
      */
     public BigDecimal getNumbermetersfreeyoung() {
+        if(numbermetersfreeyoung == null){
+            numbermetersfreeyoung = BigDecimal.ZERO;
+        }
         return numbermetersfreeyoung;
     }
 
@@ -740,6 +749,9 @@ public class InvItem extends BaseEntity {
      * @return the numbermetersfreemen
      */
     public BigDecimal getNumbermetersfreemen() {
+        if(numbermetersfreemen == null){
+            numbermetersfreemen = BigDecimal.ZERO;
+        }
         return numbermetersfreemen;
     }
 

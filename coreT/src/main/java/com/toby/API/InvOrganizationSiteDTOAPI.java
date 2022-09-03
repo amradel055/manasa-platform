@@ -28,6 +28,7 @@ public class InvOrganizationSiteDTOAPI extends BaseEntityDTO {
     ////// API //////
     private Integer gallaryIdAPI;
     private Integer accountIdAPI;
+    private Integer typeShow;
     
 
     public InvOrganizationSiteDTOAPI() {
@@ -246,6 +247,20 @@ public class InvOrganizationSiteDTOAPI extends BaseEntityDTO {
      */
     public void setOfferCompanyName(String offerCompanyName) {
         this.offerCompanyName = offerCompanyName;
+    }
+
+    /**
+     * @return the typeShow
+     */
+    public Integer getTypeShow() {
+        return typeShow;
+    }
+
+    /**
+     * @param typeShow the typeShow to set
+     */
+    public void setTypeShow(Integer typeShow) {
+        this.typeShow = typeShow;
     }
 
   
