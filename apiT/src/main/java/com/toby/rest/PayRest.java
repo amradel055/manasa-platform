@@ -1,10 +1,14 @@
 package com.toby.rest;
 
+import com.toby.dto.GlPayDTO;
 import com.toby.root.PayDTO;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.URL;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.net.ssl.HttpsURLConnection;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -13,6 +17,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.io.IOUtils;
+
 //import sun.misc.IOUtils;
 
 /**
@@ -80,8 +85,7 @@ public class PayRest {
 	return IOUtils.toString(is);
 }
     
-
-    
+ 
     
 
 }

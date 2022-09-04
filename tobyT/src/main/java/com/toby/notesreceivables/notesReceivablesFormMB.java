@@ -831,6 +831,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
 
 //        localValue = valueSummary.multiply(glBankTransactionEntity.getRate() != null ? glBankTransactionEntity.getRate() : BigDecimal.ZERO);
     }
+    
 
     public String saveAll() {
         BigDecimal valueTotal = BigDecimal.ZERO;
