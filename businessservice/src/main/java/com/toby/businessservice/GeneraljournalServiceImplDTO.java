@@ -814,5 +814,6 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
             return null;
         }
     }
+    
 
 }

@@ -5,13 +5,13 @@
  */
 package com.toby.API;
 
-import com.toby.dto.BaseEntityDTO;
 import java.util.Date;
 
-public class DueDateDTOAPI extends BaseEntityDTO {
+public class DueDateDTOAPI extends BaseEntityDTOAPI {
 
     private Date dueDate;
     private Integer dayNumber;
+    private Integer show;
 
 
     /**
@@ -40,6 +40,20 @@ public class DueDateDTOAPI extends BaseEntityDTO {
      */
     public void setDayNumber(Integer dayNumber) {
         this.dayNumber = dayNumber;
+    }
+
+    /**
+     * @return the show
+     */
+    public Integer getShow() {
+        return show;
+    }
+
+    /**
+     * @param show the show to set
+     */
+    public void setShow(Integer show) {
+        this.show = show;
     }
 
 }

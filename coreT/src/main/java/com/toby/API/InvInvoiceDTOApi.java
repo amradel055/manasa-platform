@@ -5,12 +5,11 @@
  */
 package com.toby.API;
 
-import com.toby.dto.BaseEntityDTO;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-public class InvInvoiceDTOApi extends BaseEntityDTO {
+public class InvInvoiceDTOApi extends BaseEntityDTOAPI {
 
     /**
      * @return the date

@@ -5,14 +5,13 @@
  */
 package com.toby.API;
 
-import com.toby.dto.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * @author hq003
  */
-public class InvOrganizationSiteDTOAPI extends BaseEntityDTO {
+public class InvOrganizationSiteDTOAPI extends BaseEntityDTOAPI {
 
     private String code;
     private String name;

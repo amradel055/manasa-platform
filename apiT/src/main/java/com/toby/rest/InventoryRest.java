@@ -105,6 +105,9 @@ public class InventoryRest {
         List<InvInventoryDTO> inventoryDTOList = new ArrayList<>();
         if (tobyUserDTO.getId() != null && tobyUserDTO.getBranchId() != null) {
             inventoryDTOList = invInventoryService.findInventoryByBranch(tobyUserDTO.getBranchId(), null);
+            InvInventoryDTO inventoryDTO = new InvInventoryDTO();
+            inventoryDTO.setName("معرضي");
+            inventoryDTOList.add(0, inventoryDTO);
         }
         return inventoryDTOList;
     }

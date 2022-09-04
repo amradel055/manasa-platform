@@ -5,10 +5,8 @@
  */
 package com.toby.API;
 
-import com.toby.dto.BaseEntityDTO;
 
-
-public class ResponseApi extends BaseEntityDTO {
+public class ResponseApi extends BaseEntityDTOAPI {
 
     private String msg;
     private Integer resposeId;
