@@ -5,14 +5,13 @@
  */
 package com.toby.API;
 
-import com.toby.dto.*;
 import java.math.BigDecimal;
 
 /**
  *
  * @author Lenovo
  */
-public class InvDetailsDTOAPI  extends BaseEntityDTO{
+public class InvDetailsDTOAPI  extends BaseEntityDTOAPI{
     
     private String name ;
     private String code ;
