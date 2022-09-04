@@ -18,9 +18,10 @@ public class SummitionItemAPI extends BaseEntityDTOAPI {
     private Date dateFrom;
     private Date dateTo;
     private Integer gallaryId;
-    private Integer groupId;
+//    private Integer groupId;
+//    private List<Integer> proGroupListSelected;
 
-    private List<Integer> proGroupListSelected;
+    private List<SymbolDTOAPI> symbolDTOAPIList;
 
     /**
      * @return the dateFrom
@@ -50,21 +51,19 @@ public class SummitionItemAPI extends BaseEntityDTOAPI {
         this.dateTo = dateTo;
     }
 
-
-    /**
-     * @return the proGroupListSelected
-     */
-    public List<Integer> getProGroupListSelected() {
-        return proGroupListSelected;
-    }
-
-    /**
-     * @param proGroupListSelected the proGroupListSelected to set
-     */
-    public void setProGroupListSelected(List<Integer> proGroupListSelected) {
-        this.proGroupListSelected = proGroupListSelected;
-    }
-
+//    /**
+//     * @return the proGroupListSelected
+//     */
+//    public List<Integer> getProGroupListSelected() {
+//        return proGroupListSelected;
+//    }
+//
+//    /**
+//     * @param proGroupListSelected the proGroupListSelected to set
+//     */
+//    public void setProGroupListSelected(List<Integer> proGroupListSelected) {
+//        this.proGroupListSelected = proGroupListSelected;
+//    }
     /**
      * @return the gallaryId
      */
@@ -79,18 +78,31 @@ public class SummitionItemAPI extends BaseEntityDTOAPI {
         this.gallaryId = gallaryId;
     }
 
+//    /**
+//     * @return the groupId
+//     */
+//    public Integer getGroupId() {
+//        return groupId;
+//    }
+//
+//    /**
+//     * @param groupId the groupId to set
+//     */
+//    public void setGroupId(Integer groupId) {
+//        this.groupId = groupId;
+//    }
+
     /**
-     * @return the groupId
+     * @return the symbolDTOAPIList
      */
-    public Integer getGroupId() {
-        return groupId;
+    public List<SymbolDTOAPI> getSymbolDTOAPIList() {
+        return symbolDTOAPIList;
     }
 
     /**
-     * @param groupId the groupId to set
+     * @param symbolDTOAPIList the symbolDTOAPIList to set
      */
-    public void setGroupId(Integer groupId) {
-        this.groupId = groupId;
+    public void setSymbolDTOAPIList(List<SymbolDTOAPI> symbolDTOAPIList) {
+        this.symbolDTOAPIList = symbolDTOAPIList;
     }
-
 }
