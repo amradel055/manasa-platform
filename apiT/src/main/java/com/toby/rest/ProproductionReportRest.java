@@ -7,7 +7,9 @@ package com.toby.rest;
 
 import com.toby.API.InvInvoiceDTOApi;
 import com.toby.businessservice.InvoiceMovementReportService;
+import com.toby.businessservice.InvoiceProductionStagesReportService;
 import com.toby.views.InvoiceMovementReport;
+import com.toby.views.InvoiceProductionStagesReport;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.transaction.Transactional;
@@ -22,6 +24,8 @@ public class ProproductionReportRest {
 
     @EJB
     InvoiceMovementReportService invoiceMovementReportService;
+    @EJB
+    InvoiceProductionStagesReportService invoiceProductionStagesReportService;
 
     @Transactional
     @Path("/invoiceMovementReport")
@@ -31,7 +35,7 @@ public class ProproductionReportRest {
     public List<InvoiceMovementReport> invoiceMovementReport(InvInvoiceDTOApi invoiceDTOApi) {
         try {
             if (invoiceDTOApi.getSerial() != null && invoiceDTOApi.getBranchId() != null) {
-                List<InvoiceMovementReport> list = invoiceMovementReportService.searchReportAPI(invoiceDTOApi.getSerial(),invoiceDTOApi.getBranchId());
+                List<InvoiceMovementReport> list = invoiceMovementReportService.searchReportAPI(invoiceDTOApi.getSerial(),invoiceDTOApi.getGallaryId(),invoiceDTOApi.getBranchId());
                 return list;
             } else {
                 return null;
@@ -46,10 +50,10 @@ public class ProproductionReportRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<InvoiceMovementReport> invoiceProductionStages(InvInvoiceDTOApi invoiceDTOApi) {
+    public List<InvoiceProductionStagesReport> invoiceProductionStages(InvInvoiceDTOApi invoiceDTOApi) {
         try {
             if (invoiceDTOApi.getSerial() != null && invoiceDTOApi.getBranchId() != null) {
-                List<InvoiceMovementReport> list = invoiceMovementReportService.searchReportAPI(invoiceDTOApi.getSerial(),invoiceDTOApi.getBranchId());
+                List<InvoiceProductionStagesReport> list = invoiceProductionStagesReportService.searchReportAPI(invoiceDTOApi.getSerial(),invoiceDTOApi.getGallaryId(),invoiceDTOApi.getBranchId());
                 return list;
             } else {
                 return null;

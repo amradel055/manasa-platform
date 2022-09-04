@@ -8,6 +8,8 @@ import javax.ejb.Remote;
 @Remote
 public interface InvoiceProductionStagesReportService {
     
-    public List<InvoiceProductionStagesReport> searchReport(PrintProductionDTO productionDTO, Integer branchId);
+    public List<InvoiceProductionStagesReport> searchReport(PrintProductionDTO productionDTO , Integer branchId);
+    
+    public List<InvoiceProductionStagesReport> searchReportAPI(Integer serial, Integer gallaryId ,Integer branchId) ;
     
 }

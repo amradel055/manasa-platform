@@ -15,6 +15,6 @@ public interface InvoiceMovementReportService {
 
     public BigDecimal summitionTob(Integer id, Integer type);
 
-    public List<InvoiceMovementReport> searchReportAPI(Integer serial, Integer branchId);
+    public List<InvoiceMovementReport> searchReportAPI(Integer serial, Integer gallaryId , Integer branchId);
 
 }
