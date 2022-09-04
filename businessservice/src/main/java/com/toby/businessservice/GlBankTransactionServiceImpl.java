@@ -5,17 +5,22 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.GlBankTransactionAPI;
+import com.toby.API.GlPayDTOAPI;
 import com.toby.core.GenericDAO;
 import com.toby.dto.GlBankDTO;
 import com.toby.dto.GlBankTransactionDTO;
 import com.toby.dto.GlPayDTO;
 import com.toby.dto.InvInvoiceDTO;
+import com.toby.entity.Branch;
 import com.toby.entity.GeneralJournal;
 import com.toby.entity.GlBank;
 import com.toby.entity.GlBankTransaction;
 import com.toby.entity.GlBankTransactionDetail;
+import com.toby.entity.GlYear;
 import com.toby.entity.InvPurchaseInvoice;
 import com.toby.entity.Symbol;
+import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -788,6 +793,38 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
      */
     public void setValue(BigDecimal value) {
         this.value = value;
+    }
+    
+    
+    @Override
+    public GlBankTransactionAPI addCashAPI(GlBankTransactionAPI glBankTransactionAPI) {
+
+        TobyUser tobyUser1 = new TobyUser();
+        Branch branch = new Branch();
+        branch.setId(glBankTransactionAPI.getBranchId());
+        tobyUser1.setBranchId(branch);
+        TobyCompany tobyCompany = new TobyCompany();
+        tobyCompany.setId(glBankTransactionAPI.getCompanyId());
+        tobyUser1.setCompanyId(tobyCompany);
+        GlYear glYear = new GlYear();
+        glYear.setId(73);
+
+        List<GlPayDTOAPI> detailList = new ArrayList<>();
+        for (GlPayDTOAPI dTO : glBankTransactionAPI.getGlPayDTOAPIList()) {
+            if (dTO.getId() == null && glBankTransactionAPI.getDate() != null && glBankTransactionAPI.getCustomerId() != null && dTO.getBankId() != null && dTO.getInvoiceId() != null && dTO.getValue() != null && dTO.getValue().compareTo(BigDecimal.ZERO) == 1 ) {
+                GlBankDTO bankDTO = new GlBankDTO();
+                bankDTO.setId(dTO.getBankId());
+                GlBankTransaction bankTransaction = addCash(glBankTransactionAPI.getDate(), bankDTO, dTO.getInvoiceId(), BigDecimal.ONE
+                        , glBankTransactionAPI.getRemark(), dTO.getValue(), glBankTransactionAPI.getCustomerId(), glYear.getId() , tobyUser1);
+                dTO.setId(bankTransaction.getId());
+                dTO.setTransactionId(bankTransaction.getId());
+                dTO.setSerial(bankTransaction.getSerial());
+                detailList.add(dTO);
+            }
+        }
+        glBankTransactionAPI.setGlPayDTOAPIList(detailList);
+        
+        return glBankTransactionAPI;
     }
 
 }

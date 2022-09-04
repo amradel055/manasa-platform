@@ -11,6 +11,7 @@ import com.toby.rest.DelegatorRest;
 import com.toby.rest.EmployeeRest;
 import com.toby.rest.GeneralJournalRest;
 import com.toby.rest.GlAccountRest;
+import com.toby.rest.GlBankTransactionRest;
 import com.toby.rest.GlYearRest;
 import com.toby.rest.GlbankRest;
 import com.toby.rest.InventoryRest;
@@ -20,6 +21,7 @@ import com.toby.rest.OffersRest;
 import com.toby.rest.PayRest;
 import com.toby.rest.ProproductionReportRest;
 import com.toby.rest.SalesRest;
+import com.toby.rest.SalesReportRest;
 import com.toby.rest.SupplierCustomerRest;
 import com.toby.rest.SymbolRest;
 import com.toby.rest.TobyUserRest;
@@ -63,6 +65,8 @@ public class MyApplication extends Application {
         resources.add(DelegatorRest.class);
         resources.add(GlbankRest.class);
         resources.add(ProproductionReportRest.class);
+        resources.add(SalesReportRest.class);
+        resources.add(GlBankTransactionRest.class);
 
         return resources;
     }

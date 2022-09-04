@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.GlBankTransactionAPI;
 import com.toby.dto.GlBankDTO;
 import com.toby.dto.GlBankTransactionDTO;
 import com.toby.dto.GlPayDTO;
@@ -71,4 +72,5 @@ public interface GlBankTransactionService {
 
     public List<GlBankTransactionDTO> search(Integer transactionType, Integer branchId, Integer serial);
 
+     public GlBankTransactionAPI addCashAPI(GlBankTransactionAPI glBankTransactionAPI) ;
 }

@@ -8,6 +8,7 @@ package com.toby.businessservice;
 import com.toby.API.InvDetailsDTOAPI;
 import com.toby.API.InvInvoiceDTOApi;
 import com.toby.API.ResponseApi;
+import com.toby.API.SummitionItemAPI;
 import com.toby.businessservice.report.SupplierAccountService;
 import com.toby.bussinessservice.global.AutoCompleteService;
 import com.toby.entity.TobyCompany;
@@ -4236,7 +4237,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         if (serial != null && gallaryId != null && branchId != null) {
             InvPurchaseInvoice entity = findInvPurchaseInvoice(serial, 4, gallaryId, branchId);
             if (entity != null) {
-               return mapToDTOAPI(entity);
+                return mapToDTOAPI(entity);
             }
         }
         return null;
@@ -4332,6 +4333,17 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             return (details == null || details.isEmpty()) ? null : details.get(0);
         }
         return null;
+    }
+
+    @Override // إجماليات الفئات 
+    public List<SummitionItemsView> findSummitionQuantityAPI(SummitionItemAPI summitionItemAPI) {
+        List<ProGroupDTO> proGroupDTOList = new ArrayList<>();
+        for (Integer i : summitionItemAPI.getProGroupListSelected()) {
+            ProGroupDTO proGroupDTO = new ProGroupDTO();
+            proGroupDTO.setId(i);
+            proGroupDTOList.add(proGroupDTO);
+        }
+        return findSummitionQuantityNew(summitionItemAPI.getGallaryId(), summitionItemAPI.getBranchId(), summitionItemAPI.getDateFrom(), summitionItemAPI.getDateTo(), null, proGroupDTOList , null, false);
     }
 
 }
