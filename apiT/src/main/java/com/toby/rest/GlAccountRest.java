@@ -1,5 +1,6 @@
 package com.toby.rest;
 
+import com.toby.API.GlAccountDTOAPI;
 import com.toby.businessservice.GlAccountServiceDTO;
 import com.toby.config.UserLoginData;
 import com.toby.dto.GlAccountDTO;
@@ -30,7 +31,27 @@ public class GlAccountRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response findBranchGLAccountsActive(UserLoginData user) {
+    public List<GlAccountDTOAPI> findBranchGLAccountsActive(UserLoginData user) {
+        try {
+            if (user.getBranchId() != null) {
+                List<GlAccountDTOAPI> listDocument = glAccountServiceDTO.getBranchGLAccountsActiveAPI(user.getBranchId());
+                return listDocument;
+            } else {
+
+                return null;
+            }
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Transactional
+    @Path("/glaccountsactiveOld")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findBranchGLAccountsActiveOld(UserLoginData user) {
         try {
             if (user.getBranchId() != null) {
                 List<GlAccountDTO> listDocument = glAccountServiceDTO.getBranchGLAccountsActive(user.getBranchId());

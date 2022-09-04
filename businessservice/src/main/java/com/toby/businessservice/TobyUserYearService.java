@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.GlYearDTOAPI;
 import com.toby.dto.GlYearDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.GlYear;
@@ -50,5 +51,7 @@ public interface TobyUserYearService {
     public void deleteTobyUserYear(List<TobyUserYear> tobyUserYearList);
 
     public List<GlYearDTO> findYearDTOByUserId(Integer userId, Integer branchId);
+    
+    public List<GlYearDTOAPI> findYearDTOByUserIdAPI(Integer userId, Integer branchId);
 
 }

@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.SymbolDTOAPI;
 import com.toby.dto.SymbolDTO;
 import com.toby.entity.Symbol;
 import com.toby.entity.TobyUser;
@@ -122,6 +123,8 @@ public interface SymbolService {
 
     //goher-----------
     public List<SymbolDTO> getDocumentsTypesDTO(Integer companyId);
+    
+    public List<SymbolDTOAPI> getDocumentsTypesDTOAPI(Integer companyId);
 
     public SymbolDTO getSymbolDTO(Integer SymbolId);
 

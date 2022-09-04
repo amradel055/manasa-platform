@@ -1,5 +1,6 @@
 package com.toby.rest;
 
+import com.toby.API.CostCenterDTOAPI;
 import com.toby.businessservice.CostCenterServiceDTO;
 import com.toby.config.UserLoginData;
 import com.toby.dto.CostCenterDTO;
@@ -31,8 +32,29 @@ public class CostCenterRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response findCostCenter(UserLoginData user) {
-        try { 
+    public List<CostCenterDTOAPI> findCostCenter(UserLoginData user) {
+        try {
+            if (user.getBranchId() != null) {
+                List<CostCenterDTOAPI> listCostCenter = costCenterServiceDTO.getAllSubCostCenterByBranchIdActiveAPI(user.getBranchId());
+                return listCostCenter;
+            } else {
+                CostCenterDTOAPI dTO = new CostCenterDTOAPI();
+                dTO.setMsg("company id not found");
+                return null;
+            }
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Transactional
+    @Path("/costcenterlistOld")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findCostCenterOld(UserLoginData user) {
+        try {
             if (user.getBranchId() != null) {
                 List<CostCenterDTO> listCostCenter = costCenterServiceDTO.getAllSubCostCenterByBranchIdActive(user.getBranchId());
                 GenericEntity<List<CostCenterDTO>> list = new GenericEntity<List<CostCenterDTO>>(listCostCenter) {

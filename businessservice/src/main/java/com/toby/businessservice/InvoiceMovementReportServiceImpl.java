@@ -241,4 +241,12 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
         return "";
     }
 
+    @Override
+    public List<InvoiceMovementReport> searchReportAPI(Integer serial, Integer branchId) {
+        PrintProductionDTO printProductionDTO = new PrintProductionDTO();
+        printProductionDTO.setFromInvInvoice(serial);
+        printProductionDTO.setToInvInvoice(serial);
+        return searchReport(printProductionDTO, branchId, null);
+    }
+
 }

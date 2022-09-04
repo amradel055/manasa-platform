@@ -1,5 +1,6 @@
 package com.toby.rest;
 
+import com.toby.API.SymbolDTOAPI;
 import com.toby.businessservice.SymbolService;
 import com.toby.config.UserLoginData;
 import com.toby.dto.SymbolDTO;
@@ -31,7 +32,26 @@ public class SymbolRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response findDocumentsTypesDTO(UserLoginData user) {
+    public List<SymbolDTOAPI> findDocumentsTypesDTO(UserLoginData user) {
+        try {
+            if (user.getCompanyId() != null) {
+                List<SymbolDTOAPI> listDocument = symbolService.getDocumentsTypesDTOAPI(user.getCompanyId());
+                return listDocument;
+            } else {
+                return null;
+            }
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Transactional
+    @Path("/documentstypesOld")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findDocumentsTypesDTOOld(UserLoginData user) {
         try {
             if (user.getCompanyId() != null) {
                 List<SymbolDTO> listDocument = symbolService.getDocumentsTypesDTO(user.getCompanyId());

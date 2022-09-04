@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.GlAccountDTOAPI;
 import com.toby.dto.GlAccountDTO;
 import com.toby.entity.GlAccount;
 import java.util.List;
@@ -21,6 +22,8 @@ public interface GlAccountServiceDTO {
     public List<GlAccountDTO> getBranchGLAccountsActiveWithException(Integer branchId);
 
     public List<GlAccountDTO> getBranchGLAccountsActive(Integer branchId);
+    
+    public List<GlAccountDTOAPI> getBranchGLAccountsActiveAPI(Integer branchId);
 
     public GlAccountDTO findGlAccountDTO(Integer glAccount);
     

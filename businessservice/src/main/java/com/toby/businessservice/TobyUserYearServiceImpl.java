@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.GlYearDTOAPI;
 import com.toby.core.GenericDAO;
 import com.toby.dto.GlYearDTO;
 import com.toby.entity.Branch;
@@ -198,6 +199,31 @@ public class TobyUserYearServiceImpl implements TobyUserYearService {
         return yearList;
     }
 
+    @Override
+    public List<GlYearDTOAPI> findYearDTOByUserIdAPI(Integer userId, Integer branchId) {
+        List<GlYearDTOAPI> yearList = new ArrayList<>();
+        Map<String, Object> params = new HashMap();
+        params.put("userId", userId);
+        params.put("branchId", branchId);
+        Map<Integer, GlYearDTOAPI> glYearMap = new HashMap<>();
+
+        List<TobyUserYear> tobyUserYearList = dao.findListByQuery("SELECT u FROM TobyUserYear u  WHERE u.branchId.id = :branchId AND u.userId.id = :userId", params);
+        if (tobyUserYearList.isEmpty()) {
+            return null;
+        } else {
+            for (TobyUserYear tobyUserYear : tobyUserYearList) {
+                if (!glYearMap.containsKey(tobyUserYear.getYearId().getId())) {
+                    GlYearDTOAPI glYeardto = new GlYearDTOAPI();
+                    glYeardto = initMapToDTOAPI(tobyUserYear.getYearId());
+                    glYearMap.put(tobyUserYear.getYearId().getId(), glYeardto);
+//                    yearList.add(tobyUserYear.getYearId());
+                    yearList.add(glYeardto);
+                }
+            }
+        }
+        return yearList;
+    }
+
     private void returnListDTO(List<GlYear> list, List<GlYearDTO> dTOList) {
         for (GlYear glYear : list) {
             dTOList.add(mapTODTO(glYear, false));
@@ -227,6 +253,23 @@ public class TobyUserYearServiceImpl implements TobyUserYearService {
         dTO.setCreatedDate(glYear.getCreationDate());
         dTO.setCreatedBy(glYear.getCreatedBy().getId());
         dTO.setIndex(glYear.getId());
+    }
+
+    private GlYearDTOAPI initMapToDTOAPI(GlYear glYear) {
+        GlYearDTOAPI dTO = new GlYearDTOAPI();
+        dTO.setYear(glYear.getYear());
+        dTO.setDateFrom(glYear.getDateFrom());
+        dTO.setDateTo(glYear.getDateTo());
+        dTO.setName(glYear.getName());
+        dTO.setOpenning(glYear.getOpenning());
+        dTO.setIsDefault(glYear.getIsDefault());
+        dTO.setBranchId(glYear.getBranchId().getId());
+
+        dTO.setId(glYear.getId());
+        dTO.setCreatedDate(glYear.getCreationDate());
+        dTO.setCreatedBy(glYear.getCreatedBy().getId());
+        dTO.setIndex(glYear.getId());
+        return dTO;
     }
 
 }
