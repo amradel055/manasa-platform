@@ -20,6 +20,7 @@ import com.toby.rest.OffersDetailsRest;
 import com.toby.rest.OffersRest;
 import com.toby.rest.PayRest;
 import com.toby.rest.ProproductionReportRest;
+import com.toby.rest.PurchaseOfItemsBySupplierRest;
 import com.toby.rest.SalesRest;
 import com.toby.rest.SalesReportRest;
 import com.toby.rest.SupplierCustomerRest;
@@ -67,6 +68,7 @@ public class MyApplication extends Application {
         resources.add(ProproductionReportRest.class);
         resources.add(SalesReportRest.class);
         resources.add(GlBankTransactionRest.class);
+        resources.add(PurchaseOfItemsBySupplierRest.class);
 
         return resources;
     }

@@ -5,7 +5,9 @@
  */
 package com.toby.API;
 
+import com.toby.dto.InvInventoryDTO;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +21,12 @@ public class SummitionItemAPI extends BaseEntityDTOAPI {
     private Date dateTo;
     private Integer gallaryId;
     private Integer groupId;
+    private Integer invoiceType;
+    private Integer organizationType;
+    private List<InvInventoryDTO> gallaryList ;
+    private int frompaymentType;
+    private int topaymentType;
+    
 
     private List<Integer> proGroupListSelected;
 
@@ -49,7 +57,6 @@ public class SummitionItemAPI extends BaseEntityDTOAPI {
     public void setDateTo(Date dateTo) {
         this.dateTo = dateTo;
     }
-
 
     /**
      * @return the proGroupListSelected
@@ -92,5 +99,77 @@ public class SummitionItemAPI extends BaseEntityDTOAPI {
     public void setGroupId(Integer groupId) {
         this.groupId = groupId;
     }
+
+    /**
+     * @return the organizationType
+     */
+    public Integer getOrganizationType() {
+        return organizationType;
+    }
+
+    /**
+     * @param organizationType the organizationType to set
+     */
+    public void setOrganizationType(Integer organizationType) {
+        this.organizationType = organizationType;
+    }
+
+    /**
+     * @return the invoiceType
+     */
+    public Integer getInvoiceType() {
+        return invoiceType;
+    }
+
+    /**
+     * @param invoiceType the invoiceType to set
+     */
+    public void setInvoiceType(Integer invoiceType) {
+        this.invoiceType = invoiceType;
+    }
+
+    /**
+     * @return the gallaryList
+     */
+    public List<InvInventoryDTO> getGallaryList() {
+        return gallaryList;
+    }
+
+    /**
+     * @param gallaryList the gallaryList to set
+     */
+    public void setGallaryList(List<InvInventoryDTO> gallaryList) {
+        this.gallaryList = gallaryList;
+    }
+
+    /**
+     * @return the frompaymentType
+     */
+    public int getFrompaymentType() {
+        return frompaymentType;
+    }
+
+    /**
+     * @param frompaymentType the frompaymentType to set
+     */
+    public void setFrompaymentType(int frompaymentType) {
+        this.frompaymentType = frompaymentType;
+    }
+
+    /**
+     * @return the topaymentType
+     */
+    public int getTopaymentType() {
+        return topaymentType;
+    }
+
+    /**
+     * @param topaymentType the topaymentType to set
+     */
+    public void setTopaymentType(int topaymentType) {
+        this.topaymentType = topaymentType;
+    }
+
+ 
 
 }
