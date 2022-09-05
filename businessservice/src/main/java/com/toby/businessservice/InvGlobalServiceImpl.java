@@ -1823,10 +1823,6 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             dTOApi.setUnitName(item.getUnitId() == null ? "" : item.getUnitId().getName());
             dTOApi.setDiscountRow(calcDiscount(item.getProGroupId().getId(), item.getSiteId().getId(), item.getIsOfferItem(), customer.getDiscount(), customer.getOfferCompanyId() == null ? BigDecimal.ZERO : customer.getOfferCompanyId().getDiscount()));
             dTOApi.setAvailableQuantity(quantityItemsStoreByDateService.getQuantatyItemByinventory(inventoryId, item.getId(), false, null));
-            dTOApi.setMinPriceMen(item.getMinpricemen());
-            dTOApi.setMaxPriceMen(item.getMaxpricemen());
-            dTOApi.setMinPriceYoung(item.getMinpriceyoung());
-            dTOApi.setMaxPriceYoung(item.getMaxpriceyoung());
             if (dTOApi.getAvailableQuantity().compareTo(dTOApi.getQuantityOfUnit()) == -1) {
                 dTOApi.setMsg("الكميةالمطلوبة غير موجوده");
             }
