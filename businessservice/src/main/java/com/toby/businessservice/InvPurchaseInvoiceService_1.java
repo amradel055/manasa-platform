@@ -192,5 +192,7 @@ public interface InvPurchaseInvoiceService_1 {
     public ResponseApi SaveApiDeskTop(InvInvoiceDTOApi invInvoiceDTOApi);
     
      public List<SummitionItemsView> findSummitionQuantityAPI(SummitionItemAPI summitionItemAPI) ;
+     
+     public List<InvInvoiceDTOApi> findCustomerInvoice(Integer customerId);
 
 }

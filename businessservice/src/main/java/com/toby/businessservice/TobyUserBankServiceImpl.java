@@ -239,6 +239,7 @@ public class TobyUserBankServiceImpl implements TobyUserBankService {
             glPayDTO.setBank(bankDTO);
             glPayDTO.setValue(BigDecimal.ZERO);
             glPayDTO.setBankName(bankDTO.getName());
+            glPayDTO.setBankId(bankDTO.getId());
             glPayDTOList.add(glPayDTO);
         }
         return glPayDTOList;

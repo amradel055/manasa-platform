@@ -5,6 +5,7 @@
  */
 package com.toby.API;
 
+import com.toby.views.SalesStatementForThePeriod;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -64,8 +65,11 @@ public class InvInvoiceDTOApi extends BaseEntityDTOAPI {
     private Integer glBankId;
     private String glBankName;
     private Integer serialTax;
+    private BigDecimal net;
 
     private List<InvDetailsDTOAPI> invoiceDetailApiList;
+    
+    private SalesStatementForThePeriod salesStatementForThePeriod ;
 
     /**
      * @return the customerName
@@ -583,5 +587,33 @@ public class InvInvoiceDTOApi extends BaseEntityDTOAPI {
      */
     public void setCustomerOfferCompanyId(String customerOfferCompanyId) {
         this.customerOfferCompanyId = customerOfferCompanyId;
+    }
+
+    /**
+     * @return the net
+     */
+    public BigDecimal getNet() {
+        return net;
+    }
+
+    /**
+     * @param net the net to set
+     */
+    public void setNet(BigDecimal net) {
+        this.net = net;
+    }
+
+    /**
+     * @return the salesStatementForThePeriod
+     */
+    public SalesStatementForThePeriod getSalesStatementForThePeriod() {
+        return salesStatementForThePeriod;
+    }
+
+    /**
+     * @param salesStatementForThePeriod the salesStatementForThePeriod to set
+     */
+    public void setSalesStatementForThePeriod(SalesStatementForThePeriod salesStatementForThePeriod) {
+        this.salesStatementForThePeriod = salesStatementForThePeriod;
     }
 }

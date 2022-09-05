@@ -21,6 +21,7 @@ import com.toby.entity.InvInventory;
 import com.toby.entity.InvItem;
 import com.toby.entity.InvOrganizationSite;
 import com.toby.views.ItemsBarcodesDetailsView;
+import com.toby.views.SalesStatementForThePeriod;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
@@ -29,6 +30,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
@@ -1866,6 +1868,57 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         return BigDecimal.ZERO;
     }
 
-    
+    public SalesStatementForThePeriod invoiceFinanceData(Integer invoiceId) {
+        SalesStatementForThePeriod salesStatementForThePeriod = new SalesStatementForThePeriod();
+        BigDecimal net = findInvoiceValue(invoiceId);
+        BigDecimal noticeDebit = findnoticeDebit(invoiceId);
+        BigDecimal noticeCredit = findnoticeCredit(invoiceId);
+        BigDecimal details = finddetails(invoiceId);
+        BigDecimal detailsReturn = finddetailsReturn(invoiceId);
+        BigDecimal payment = details.subtract(detailsReturn);
+
+        salesStatementForThePeriod.setNet(net);
+        salesStatementForThePeriod.setInvNoticeValue(noticeCredit.subtract(noticeDebit));
+        salesStatementForThePeriod.setNoticeDebit(noticeDebit);
+        salesStatementForThePeriod.setNoticeCredit(noticeCredit);
+        salesStatementForThePeriod.setCash(payment);
+        return salesStatementForThePeriod;
+    }
+
+    public BigDecimal findInvoiceValue(Integer invoiceId) {
+        List<BigDecimal> noticeDebit = dao.executeNativeQuery("select IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) as net \n"
+                + "from inv_purchase_invoice ipi\n"
+                + "left join  inv_purchase_invoice_detail ipid on ipi.id = ipid.inv_purchase_invoice_id\n"
+                + " where ipi.id =  " + invoiceId);
+        return (noticeDebit != null && !noticeDebit.isEmpty()) ? noticeDebit.get(0) : BigDecimal.ZERO;
+    }
+
+    public BigDecimal findnoticeDebit(Integer invoiceId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("invPurchaseInvoiceId", invoiceId);
+        List<BigDecimal> noticeDebit = dao.findListByQuery("SELECT  sum(i.value)    FROM InvNotice i WHERE i.invInvoice.id = :invPurchaseInvoiceId AND i.type = 0 Group by i.invInvoice.id", params);
+        return (noticeDebit != null && !noticeDebit.isEmpty()) ? noticeDebit.get(0) : BigDecimal.ZERO;
+    }
+
+    public BigDecimal findnoticeCredit(Integer invoiceId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("invPurchaseInvoiceId", invoiceId);
+        List<BigDecimal> noticeCredit = dao.findListByQuery("SELECT  sum(i.value)    FROM InvNotice i WHERE i.invInvoice.id = :invPurchaseInvoiceId AND i.type in (1,4)  Group by i.invInvoice.id", params);
+        return (noticeCredit != null && !noticeCredit.isEmpty()) ? noticeCredit.get(0) : BigDecimal.ZERO;
+    }
+
+    public BigDecimal finddetails(Integer invoiceId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("invPurchaseInvoiceId", invoiceId);
+        List<BigDecimal> details = dao.findListByQuery("SELECT  sum(i.value)    FROM GlBankTransaction i WHERE i.invoiceId.id = :invPurchaseInvoiceId Group by i.invoiceId.id", params);
+        return (details != null && !details.isEmpty()) ? details.get(0) : BigDecimal.ZERO;
+    }
+
+    public BigDecimal finddetailsReturn(Integer invoiceId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("invPurchaseInvoiceId", invoiceId);
+        List<BigDecimal> detailsReturn = dao.findListByQuery("SELECT  sum(i.value)    FROM InvNotice i WHERE i.invInvoice.id = :invPurchaseInvoiceId AND i.type = 0 Group by i.invInvoice.id", params);
+        return (detailsReturn != null && !detailsReturn.isEmpty()) ? detailsReturn.get(0) : BigDecimal.ZERO;
+    }
 
 }

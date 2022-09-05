@@ -73,6 +73,7 @@ import com.toby.views.ClientsNoMovment;
 import com.toby.views.FactoryInvoiceStatus;
 import com.toby.views.ItemsBarcodesDetailsView;
 import com.toby.views.QuantityItemsStore;
+import com.toby.views.SalesStatementForThePeriod;
 import com.toby.views.SummitionItemsView;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -4344,8 +4345,26 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             groupDTO.setId(symbolDTOAPI.getId());
             proGroupDTOs.add(groupDTO);
         }
-        return findSummitionQuantityNew(summitionItemAPI.getGallaryId(), summitionItemAPI.getBranchId(), summitionItemAPI.getDateFrom(), summitionItemAPI.getDateTo(), null, proGroupDTOs , null, false);
+        return findSummitionQuantityNew(summitionItemAPI.getGallaryId(), summitionItemAPI.getBranchId(), summitionItemAPI.getDateFrom(), summitionItemAPI.getDateTo(), null, proGroupDTOs, null, false);
 //    }
 
-}
+    }
+
+    @Override
+    public List<InvInvoiceDTOApi> findCustomerInvoice(Integer customerId) {
+        List<InvInvoiceDTOApi> list = new ArrayList<>();
+        List<Object[]> res = dao.executeNativeQuery(" SELECT  ipi.id,ipi.serial , ipi.date, ipi.remarks , IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) as net from inv_purchase_invoice ipi left join  inv_purchase_invoice_detail ipid on ipi.id = ipid.inv_purchase_invoice_id where ipi.organization_site_id =  " + customerId);
+        for (Object[] object : res) {
+            InvInvoiceDTOApi invInvoiceDTO = new InvInvoiceDTOApi();
+            invInvoiceDTO.setId((Integer) object[0]);
+            invInvoiceDTO.setSerial((Integer) object[1]);
+            invInvoiceDTO.setDate((Date) object[2]);
+            invInvoiceDTO.setRemarks((String) object[3]);
+            invInvoiceDTO.setNet((BigDecimal) object[4]);
+            invInvoiceDTO.setSalesStatementForThePeriod(invGlobalService.invoiceFinanceData(invInvoiceDTO.getId()));
+            list.add(invInvoiceDTO);
+        }
+        return list;
+    }
+
 }

@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 public class GlPayDTO  {
 
     private GlBankDTO bank;
+    private Integer bankId;
     private String bankName;
     private BigDecimal value;
     private Integer invoiceId;
@@ -172,6 +173,20 @@ public class GlPayDTO  {
      */
     public void setTransactionId(Integer transactionId) {
         this.transactionId = transactionId;
+    }
+
+    /**
+     * @return the bankId
+     */
+    public Integer getBankId() {
+        return bankId;
+    }
+
+    /**
+     * @param bankId the bankId to set
+     */
+    public void setBankId(Integer bankId) {
+        this.bankId = bankId;
     }
 
     

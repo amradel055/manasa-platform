@@ -15,6 +15,7 @@ import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.entity.InvInventory;
 import com.toby.entity.InvItem;
 import com.toby.views.ItemsBarcodesDetailsView;
+import com.toby.views.SalesStatementForThePeriod;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -83,10 +84,12 @@ public interface InvGlobalService {
     public InvDetailDTO validateActualQuantityColumn(InvDetailDTO detailDTO);
 
     public DueDateDTOAPI getDueDateDTOAPI(Integer galleryId);
-    
+
     public BigDecimal calcItemQuantity(BigDecimal length, BigDecimal shoulder, BigDecimal step, Integer typeShow);
-    
-    public InvItemDTOApi findItemData(Integer itemId, Integer customerId , Integer priceType, Integer inventoryId);
-    
+
+    public InvItemDTOApi findItemData(Integer itemId, Integer customerId, Integer priceType, Integer inventoryId);
+
     public InvItemDTOApi findItemPriceData(Integer itemId, Integer customerId, Integer priceType, Integer inventoryId);
+
+    public SalesStatementForThePeriod invoiceFinanceData(Integer invoiceId);
 }

@@ -22,6 +22,8 @@ public class GlBankTransactionAPI extends BaseEntityDTOAPI {
     private BigDecimal customerBalance;
 
     private Integer customerId;
+    
+    private Integer customerName;
 
     private List<GlPayDTOAPI> glPayDTOAPIList;
 
@@ -93,6 +95,20 @@ public class GlBankTransactionAPI extends BaseEntityDTOAPI {
      */
     public void setGlPayDTOAPIList(List<GlPayDTOAPI> glPayDTOAPIList) {
         this.glPayDTOAPIList = glPayDTOAPIList;
+    }
+
+    /**
+     * @return the customerName
+     */
+    public Integer getCustomerName() {
+        return customerName;
+    }
+
+    /**
+     * @param customerName the customerName to set
+     */
+    public void setCustomerName(Integer customerName) {
+        this.customerName = customerName;
     }
 
 }

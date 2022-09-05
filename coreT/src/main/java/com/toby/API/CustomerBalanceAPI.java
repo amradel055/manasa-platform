@@ -5,39 +5,55 @@
  */
 package com.toby.API;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class CustomerBalanceAPI {
 
-    private Integer balance;
-    private List<CustomerInvoiceApi> invoicesList;
-
-    /**
-     * @return the balance
-     */
-    public Integer getBalance() {
-        return balance;
-    }
-
-    /**
-     * @param balance the balance to set
-     */
-    public void setBalance(Integer balance) {
-        this.balance = balance;
-    }
+    private BigDecimal balance;
+//    private List<CustomerInvoiceApi> invoicesList;
+    private List<InvInvoiceDTOApi> invoicesList;
 
     /**
      * @return the invoicesList
      */
-    public List<CustomerInvoiceApi> getInvoicesList() {
+    public List<InvInvoiceDTOApi> getInvoicesList() {
         return invoicesList;
     }
 
     /**
      * @param invoicesList the invoicesList to set
      */
-    public void setInvoicesList(List<CustomerInvoiceApi> invoicesList) {
+    public void setInvoicesList(List<InvInvoiceDTOApi> invoicesList) {
         this.invoicesList = invoicesList;
+    }
+
+//    /**
+//     * @return the invoicesList
+//     */
+//    public List<CustomerInvoiceApi> getInvoicesList() {
+//        return invoicesList;
+//    }
+//
+//    /**
+//     * @param invoicesList the invoicesList to set
+//     */
+//    public void setInvoicesList(List<CustomerInvoiceApi> invoicesList) {
+//        this.invoicesList = invoicesList;
+//    }
+
+    /**
+     * @return the balance
+     */
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    /**
+     * @param balance the balance to set
+     */
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 
 }
