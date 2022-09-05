@@ -5,6 +5,8 @@
  */
 package com.toby.rest;
 
+import com.toby.API.CustomerBalanceAPI;
+import com.toby.API.InvInvoiceDTOApi;
 import com.toby.API.InvOrganizationSiteDTOAPI;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.OrganizationSiteService;
@@ -133,6 +135,26 @@ public class CustomerRest {
 
         } catch (Exception e) {
             return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
+
+    // فواتير العميل مختصر
+    @Transactional
+    @Path("/findCustomerInvoicesData")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public CustomerBalanceAPI findCustomersInvoicesData(InvOrganizationSiteDTOAPI dto) {
+        try {
+            CustomerBalanceAPI customerBalanceAPI = new CustomerBalanceAPI();
+            List<InvInvoiceDTOApi> invoiceDTOs = invPurchaseInvoiceService_1.findCustomerInvoice(dto.getId());
+            customerBalanceAPI.setInvoicesList(invoiceDTOs);
+            customerBalanceAPI.setBalance(supplierAccountService.getAccountForOrganizationSite(dto.getId()));
+
+            return customerBalanceAPI;
+
+        } catch (Exception e) {
+            return null;
         }
     }
 
