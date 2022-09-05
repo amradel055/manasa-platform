@@ -3,6 +3,7 @@ package com.toby.config;
 import com.toby.rest.AttributeDetailsRest;
 import com.toby.rest.LoginRest;
 import com.toby.rest.AttributeRest;
+import com.toby.rest.BankBalanceRest;
 import com.toby.rest.CangePasswordRest;
 import com.toby.rest.CostCenterRest;
 import com.toby.rest.CrmEventRest;
@@ -69,6 +70,7 @@ public class MyApplication extends Application {
         resources.add(SalesReportRest.class);
         resources.add(GlBankTransactionRest.class);
         resources.add(PurchaseOfItemsBySupplierRest.class);
+        resources.add(BankBalanceRest.class);
 
         return resources;
     }

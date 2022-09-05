@@ -28,7 +28,7 @@ public class SalesReportRest {
     
     
     @Transactional
-    @Path("/saveSummition")
+    @Path("/findSummition")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)

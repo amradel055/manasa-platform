@@ -5,6 +5,8 @@
  */
 package com.toby.businessservice.report;
 
+import com.toby.API.CashAccountSettlementAPI;
+import com.toby.bean.BankBalanceReportBean;
 import com.toby.businessservice.GlBankService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.reports.searchBean.SubAccountSummarySearchBean;
@@ -1484,6 +1486,30 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
     }
 
     @Override
+    public CashAccountSettlementBean searchNewApi(CashAccountSettlementAPI cashAccountSettlementAPI) {
+        SubAccountSummarySearchBean subAccountSummarySearchBean = new SubAccountSummarySearchBean();
+        if (cashAccountSettlementAPI != null) {
+            subAccountSummarySearchBean.setDateFrom(cashAccountSettlementAPI.getDateFrom());
+            subAccountSummarySearchBean.setDateTo(cashAccountSettlementAPI.getDateTo());
+            subAccountSummarySearchBean.setType(cashAccountSettlementAPI.getDataType());
+            subAccountSummarySearchBean.setGlBankDTOListSelected(cashAccountSettlementAPI.getGlBankDTOListSelected());
+            subAccountSummarySearchBean.setGlYearSelected(cashAccountSettlementAPI.getGlYearSelected());
+            subAccountSummarySearchBean.setCurrencyType(0);
+            subAccountSummarySearchBean.setOrderBy(0);
+            if (cashAccountSettlementAPI.getGlBankDTOListSelected() != null) {
+                StringBuilder stringBuilder = new StringBuilder();
+                for (GlBankDTO bankDTO : cashAccountSettlementAPI.getGlBankDTOListSelected()) {
+                    stringBuilder.append(bankDTO.getId());
+                }
+                subAccountSummarySearchBean.setGlBankIdSelected(stringBuilder.toString());
+            }
+        }
+
+        return searchNew(subAccountSummarySearchBean);
+
+    }
+
+    @Override
     public List<CashAccountSettlment> findAllCashAccountSettlmentNew(SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
         List<CashAccountSettlment> list = new ArrayList<>();
         Map<String, Object> params = new HashMap();
@@ -1516,7 +1542,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         }
         return list;
     }
-    
+
     @Override
     public List<CashAccountSettlmentView> findAllCashAccountSettlmentNew1(SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
         List<CashAccountSettlmentView> list = new ArrayList<>();
@@ -2093,5 +2119,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
             }
         }
     }
+
+
 
 }

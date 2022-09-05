@@ -661,6 +661,48 @@ public class ReportsServiceImpl implements ReportsService {
         }
         return list;
     }
+    
+    public void invoiceFinanceData(Integer invoiceId){
+        SalesStatementForThePeriod salesStatementForThePeriod = new SalesStatementForThePeriod();
+        BigDecimal noticeDebit = findnoticeDebit(invoiceId);
+                BigDecimal noticeCredit = findnoticeCredit(invoiceId);
+                BigDecimal details = finddetails(invoiceId);
+                BigDecimal detailsReturn = finddetailsReturn(invoiceId);
+                BigDecimal payment = details.subtract(detailsReturn);
+
+//                BigDecimal noticeDebitValue = (noticeDebit != null && !noticeDebit.isEmpty()) ? noticeDebit.get(0) : BigDecimal.ZERO;
+//                BigDecimal noticeCreditValue = (noticeCredit != null && !noticeCredit.isEmpty()) ? noticeCredit.get(0) : BigDecimal.ZERO;
+
+//                statementForThePeriod.setInvNoticeValue(noticeCreditValue.subtract(noticeDebitValue));
+//                statementForThePeriod.setNoticeDebit(noticeDebitValue);
+//                statementForThePeriod.setNoticeCredit(noticeCreditValue);
+//                statementForThePeriod.setCash(payment);
+    }
+
+    public BigDecimal findnoticeDebit(Integer invoiceId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("invPurchaseInvoiceId", invoiceId);
+        List<BigDecimal> noticeDebit = dao.findListByQuery("SELECT  sum(i.value)    FROM InvNotice i WHERE i.invInvoice.id = :invPurchaseInvoiceId AND i.type = 0 Group by i.invInvoice.id", params);
+        return (noticeDebit != null && !noticeDebit.isEmpty()) ? noticeDebit.get(0) : BigDecimal.ZERO;
+    }
+    public BigDecimal findnoticeCredit(Integer invoiceId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("invPurchaseInvoiceId", invoiceId);
+        List<BigDecimal> noticeCredit = dao.findListByQuery("SELECT  sum(i.value)    FROM InvNotice i WHERE i.invInvoice.id = :invPurchaseInvoiceId AND i.type in (1,4)  Group by i.invInvoice.id", params);
+        return (noticeCredit != null && !noticeCredit.isEmpty()) ? noticeCredit.get(0) : BigDecimal.ZERO;
+    }
+    public BigDecimal finddetails(Integer invoiceId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("invPurchaseInvoiceId", invoiceId);
+        List<BigDecimal> details = dao.findListByQuery("SELECT  sum(i.value)    FROM GlBankTransaction i WHERE i.invoiceId.id = :invPurchaseInvoiceId Group by i.invoiceId.id", params);
+        return (details != null && !details.isEmpty()) ? details.get(0) : BigDecimal.ZERO;
+    }
+    public BigDecimal finddetailsReturn(Integer invoiceId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("invPurchaseInvoiceId", invoiceId);
+        List<BigDecimal> detailsReturn = dao.findListByQuery("SELECT  sum(i.value)    FROM InvNotice i WHERE i.invInvoice.id = :invPurchaseInvoiceId AND i.type = 0 Group by i.invInvoice.id", params);
+        return (detailsReturn != null && !detailsReturn.isEmpty()) ? detailsReturn.get(0) : BigDecimal.ZERO;
+    }
 
     public BigDecimal findInvNoticeValue(Integer invPurchaseInvoiceId) {
         List<BigDecimal> value = null;

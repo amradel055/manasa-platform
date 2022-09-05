@@ -9,6 +9,7 @@ import com.toby.API.InvDetailsDTOAPI;
 import com.toby.API.InvInvoiceDTOApi;
 import com.toby.API.ResponseApi;
 import com.toby.API.SummitionItemAPI;
+import com.toby.API.SymbolDTOAPI;
 import com.toby.businessservice.report.SupplierAccountService;
 import com.toby.bussinessservice.global.AutoCompleteService;
 import com.toby.entity.TobyCompany;
@@ -4337,13 +4338,14 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
     @Override // إجماليات الفئات 
     public List<SummitionItemsView> findSummitionQuantityAPI(SummitionItemAPI summitionItemAPI) {
-        List<ProGroupDTO> proGroupDTOList = new ArrayList<>();
-        for (Integer i : summitionItemAPI.getProGroupListSelected()) {
-            ProGroupDTO proGroupDTO = new ProGroupDTO();
-            proGroupDTO.setId(i);
-            proGroupDTOList.add(proGroupDTO);
+        List<ProGroupDTO> proGroupDTOs = new ArrayList<>();
+        for (SymbolDTOAPI symbolDTOAPI : summitionItemAPI.getSymbolDTOAPIList()) {
+            ProGroupDTO groupDTO = new ProGroupDTO();
+            groupDTO.setId(symbolDTOAPI.getId());
+            proGroupDTOs.add(groupDTO);
         }
-        return findSummitionQuantityNew(summitionItemAPI.getGallaryId(), summitionItemAPI.getBranchId(), summitionItemAPI.getDateFrom(), summitionItemAPI.getDateTo(), null, proGroupDTOList , null, false);
-    }
+        return findSummitionQuantityNew(summitionItemAPI.getGallaryId(), summitionItemAPI.getBranchId(), summitionItemAPI.getDateFrom(), summitionItemAPI.getDateTo(), null, proGroupDTOs , null, false);
+//    }
 
+}
 }

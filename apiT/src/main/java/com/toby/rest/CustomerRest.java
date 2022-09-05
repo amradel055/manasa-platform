@@ -51,7 +51,7 @@ public class CustomerRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public BigDecimal customerBalancesList(InvOrganizationSiteDTO invOrganizationSiteDTO) {
+    public BigDecimal customerBalancesList(InvOrganizationSiteDTOAPI invOrganizationSiteDTO) {
         BigDecimal statementViews = BigDecimal.ZERO;
         if (invOrganizationSiteDTO != null) {
             statementViews = supplierAccountService.getAccountForOrganizationSite(invOrganizationSiteDTO.getId());
@@ -124,7 +124,7 @@ public class CustomerRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response findCustomersInvoicesByQuery(InvOrganizationSiteDTO dto) {
+    public Response findCustomersInvoicesByQuery(InvOrganizationSiteDTOAPI dto) {
         try {
             List<InvInvoiceDTO> invoiceDTOs = invPurchaseInvoiceService_1.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(4, dto.getGallaryIdAPI(), dto.getId());
             GenericEntity<List<InvInvoiceDTO>> list = new GenericEntity<List<InvInvoiceDTO>>(invoiceDTOs) {

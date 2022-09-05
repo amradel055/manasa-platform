@@ -6,8 +6,6 @@
 package com.toby.API;
 
 import com.toby.dto.InvInventoryDTO;
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +26,7 @@ public class SummitionItemAPI extends BaseEntityDTOAPI {
     private int topaymentType;
     
 
-    private List<Integer> proGroupListSelected;
+    private List<SymbolDTOAPI> symbolDTOAPIList;
 
     /**
      * @return the dateFrom
@@ -59,20 +57,6 @@ public class SummitionItemAPI extends BaseEntityDTOAPI {
     }
 
     /**
-     * @return the proGroupListSelected
-     */
-    public List<Integer> getProGroupListSelected() {
-        return proGroupListSelected;
-    }
-
-    /**
-     * @param proGroupListSelected the proGroupListSelected to set
-     */
-    public void setProGroupListSelected(List<Integer> proGroupListSelected) {
-        this.proGroupListSelected = proGroupListSelected;
-    }
-
-    /**
      * @return the gallaryId
      */
     public Integer getGallaryId() {
@@ -86,18 +70,32 @@ public class SummitionItemAPI extends BaseEntityDTOAPI {
         this.gallaryId = gallaryId;
     }
 
+//    /**
+//     * @return the groupId
+//     */
+//    public Integer getGroupId() {
+//        return groupId;
+//    }
+//
+//    /**
+//     * @param groupId the groupId to set
+//     */
+//    public void setGroupId(Integer groupId) {
+//        this.groupId = groupId;
+//    }
+
     /**
-     * @return the groupId
+     * @return the symbolDTOAPIList
      */
-    public Integer getGroupId() {
-        return groupId;
+    public List<SymbolDTOAPI> getSymbolDTOAPIList() {
+        return symbolDTOAPIList;
     }
 
     /**
-     * @param groupId the groupId to set
+     * @param symbolDTOAPIList the symbolDTOAPIList to set
      */
-    public void setGroupId(Integer groupId) {
-        this.groupId = groupId;
+    public void setSymbolDTOAPIList(List<SymbolDTOAPI> symbolDTOAPIList) {
+        this.symbolDTOAPIList = symbolDTOAPIList;
     }
 
     /**

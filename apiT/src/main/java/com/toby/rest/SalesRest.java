@@ -47,6 +47,7 @@ public class SalesRest {
         try {
             if (invInvoiceDTOApi.getId() == null) {
                 ResponseApi responseApi = invPurchaseInvoiceService_1.SaveApiDeskTop(invInvoiceDTOApi);
+//                invPurchaseInvoiceService_1.completeTarhilInvoiceAfterSave(getInvInvoiceDTO(), getUserData().getUser());
                 return Response.ok().entity(responseApi).build();
             }
             return null;
