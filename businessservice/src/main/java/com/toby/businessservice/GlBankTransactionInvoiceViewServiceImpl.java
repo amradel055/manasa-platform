@@ -44,7 +44,8 @@ public class GlBankTransactionInvoiceViewServiceImpl implements GlBankTransactio
         params.put("branchId", tobyUser.getBranchId().getId());
         params.put("organizationSiteId", organizationSiteId);
         List<Object[]> res = dao.findListByQuery("SELECT i.invPurchaseInvoiceId.serial as serial ,i.invPurchaseInvoiceId.id as invoice_id ,"
-                + " i.invPurchaseInvoiceId.organizationSiteId.id as organization_site_id ,sum(i.netAfterDiscountHead) as valuet   FROM InvPurchaseInvoiceDetail i where i.invPurchaseInvoiceId.branchId.id =:branchId and i.invPurchaseInvoiceId.organizationSiteId.id =:organizationSiteId and i.invPurchaseInvoiceId.type = 4 group by i.invPurchaseInvoiceId.id ", params);
+                + " i.invPurchaseInvoiceId.organizationSiteId.id as organization_site_id ,IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0)  as valuet   FROM InvPurchaseInvoiceDetail i where i.invPurchaseInvoiceId.branchId.id =:branchId and i.invPurchaseInvoiceId.organizationSiteId.id =:organizationSiteId and i.invPurchaseInvoiceId.type = 4 group by i.invPurchaseInvoiceId.id ", params);
+//                + " i.invPurchaseInvoiceId.organizationSiteId.id as organization_site_id ,sum(i.netAfterDiscountHead) as valuet   FROM InvPurchaseInvoiceDetail i where i.invPurchaseInvoiceId.branchId.id =:branchId and i.invPurchaseInvoiceId.organizationSiteId.id =:organizationSiteId and i.invPurchaseInvoiceId.type = 4 group by i.invPurchaseInvoiceId.id ", params);
         return findGlBankTransactionInvoiceView(res);
     }
     
@@ -63,7 +64,8 @@ public class GlBankTransactionInvoiceViewServiceImpl implements GlBankTransactio
             if(value == null){
                 value = BigDecimal.ZERO;
             }
-            detailsIterated.setValue(value.multiply(new BigDecimal(1.15)));
+//            detailsIterated.setValue(value.multiply(new BigDecimal(1.15)));
+            detailsIterated.setValue(value);
             list.add(detailsIterated);
         }
         return list;
