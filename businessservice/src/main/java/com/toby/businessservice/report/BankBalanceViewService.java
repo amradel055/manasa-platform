@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice.report;
 
+import com.toby.API.BankBalanceReportAPI;
 import com.toby.API.CashAccountSettlementAPI;
 import com.toby.bean.BankBalanceReportBean;
 import com.toby.bean.BankBalanceReportSearchBean;
@@ -31,4 +32,5 @@ public interface BankBalanceViewService {
 
     public List<BankBalanceReportBean> searchNativeNew( SubAccountSummarySearchBean cashAccountSettlementSearchBean);
     
+      public List<BankBalanceReportBean> searchNativeAPI(BankBalanceReportAPI balanceReportAPI) ;
 }

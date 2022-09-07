@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice.report;
 
+import com.toby.API.BankBalanceReportAPI;
 import com.toby.API.CashAccountSettlementAPI;
 import com.toby.bean.BankBalanceReportBean;
 import com.toby.bean.BankBalanceReportSearchBean;
@@ -32,10 +33,10 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class BankBalanceViewServiceImpl implements BankBalanceViewService {
-    
+
     @EJB
     private GenericDAO dao;
-    
+
     @Override
     public List<BankBalanceView> getAllBankBalancesTransactions(Integer branchId, Date dateFrom, Date dateTo, Integer bankIdFrom, Integer bankIdTo) {
         Map<String, Object> params = new HashMap();
@@ -45,34 +46,34 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
         appendDateForQueryBuilder(queryBuilder, dateFrom, dateTo);
         addGlBankFromAndTo(queryBuilder, params, bankIdFrom, bankIdTo);
         List<BankBalanceView> data = dao.findListByQuery(queryBuilder.toString(), params);
-        
+
         return data;
     }
-    
+
     private void appendDateForQueryBuilder(StringBuilder queryBuilder, Date dateFrom, Date dateTo) {
         if (dateFrom != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(dateFrom);
             queryBuilder.append(" and bbv.date >= '").append(formatDateFrom).append(" 00-00-00'");
         }
-        
+
         if (dateTo != null) {
             String formatDateTo = new SimpleDateFormat("yyyy-MM-dd").format(dateTo);
             queryBuilder.append(" and bbv.date <= '").append(formatDateTo).append(" 23-59-59'");
         }
     }
-    
+
     private void addGlBankFromAndTo(StringBuilder sql, Map<String, Object> params, Integer bankIdFrom, Integer bankIdTo) {
         if (bankIdFrom != null && bankIdFrom > 0) {
             sql.append(" and bbv.bankIdFrom >= :bankIdFrom");
             params.put("bankIdFrom", bankIdFrom);
         }
-        
+
         if (bankIdTo != null && bankIdTo > 0) {
             sql.append(" and bbv.bankIdTo <= :bankIdTo");
             params.put("bankIdTo", bankIdTo);
         }
     }
-    
+
     @Override
     public List<BankBalanceView> getAllBankBalancesTransactionsByBankId(Integer branchId, Date dateTo, StringBuilder builder, Date dateFrom) {
         Map<String, Object> params = new HashMap();
@@ -85,10 +86,10 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
         appendBanksIdFromAndTo(queryBuilder, params, builder);
 //        queryBuilder.append(" and bbv.glYear = :glYear");
         List<BankBalanceView> data = dao.findListByQuery(queryBuilder.toString(), params);
-        
+
         return data;
     }
-    
+
     public List<BankBalanceView> getAllBankBalancesTransactionsByBankIdNew(BankBalanceReportSearchBean bankBalanceReportSearchBean) {
         Map<String, Object> params = new HashMap();
         params.put("branchId", bankBalanceReportSearchBean.getBranchId());
@@ -99,18 +100,18 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
         appendBanksIdFromAndToNew(queryBuilder, params, bankBalanceReportSearchBean.getBankBuilder());
 //        queryBuilder.append(" and bbv.glYear = :glYear");
         List<BankBalanceView> data = dao.findListByQuery(queryBuilder.toString(), params);
-        
+
         return data;
     }
-    
+
     public List<BankBalanceViewNew> getAllBankBalancesTransactionsByBankIdNativ(BankBalanceReportSearchBean bankBalanceReportSearchBean) {
-        
+
         dao.executeNativeQuery("select toby.sql_mode_function()");
         Integer branchId = bankBalanceReportSearchBean.getBranchId();
         String bankBuilder = bankBalanceReportSearchBean.getBankBuilder();
 //        String dateFrom = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(bankBalanceReportSearchBean.getDateFrom());
         String dateTo = new SimpleDateFormat("yyyy-MM-dd  23:59:59").format(bankBalanceReportSearchBean.getDateTo());
-        
+
         StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append("    SELECT \n"
                 + "\n"
@@ -254,9 +255,9 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
         List<Object[]> data = dao.executeNativeQuery(queryBuilder.toString());
         return returnBankBalanceData(data);
     }
-    
+
     public List<BankBalanceViewNew> getAllBankBalancesTransactionsByBankIdNativNew(SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
-        
+
         dao.executeNativeQuery("select toby.sql_mode_function()");
         Integer branchId = cashAccountSettlementSearchBean.getBranchId();
         String bankBuilder = cashAccountSettlementSearchBean.getBankBuilder();
@@ -403,12 +404,12 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
         List<Object[]> data = dao.executeNativeQuery(queryBuilder.toString());
         return returnBankBalanceData(data);
     }
-    
+
     private List<BankBalanceViewNew> returnBankBalanceData(List<Object[]> res) {
         List<BankBalanceViewNew> list = new ArrayList<>();
         BankBalanceViewNew bankBalanceViewNew = new BankBalanceViewNew();
         for (Object[] object : res) {
-            
+
             bankBalanceViewNew = new BankBalanceViewNew();
             bankBalanceViewNew.setDate((Date) object[0]);
             bankBalanceViewNew.setRemark(object[1] != null ? object[1].toString() : null);
@@ -432,26 +433,26 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
         }
         return list;
     }
-    
+
     private void appendBanksIdFromAndTo(StringBuilder sql, Map<String, Object> params, StringBuilder builder) {
         if (builder != null && builder.length() > 0) {
             sql.append(" and (bbv.bankIdFrom in (").append(builder).append(")");
             sql.append(" or bbv.bankIdTo in (").append(builder).append("))");
         }
     }
-    
+
     private void appendBanksIdFromAndToNew(StringBuilder sql, Map<String, Object> params, String bankBuilder) {
         if (bankBuilder != null && !bankBuilder.isEmpty()) {
             sql.append(" and (bbv.bankIdFrom in (").append(bankBuilder).append(")");
             sql.append(" or bbv.bankIdTo in (").append(bankBuilder).append("))");
         }
     }
-    
+
     private List<BankBalanceReportBean> test(List<BankBalanceView> bankBalanceViewList, BankBalanceReportSearchBean bankBalanceReportSearchBean) {
         List<BankBalanceReportBean> bankBalanceReportBeanList = new ArrayList<>();
         Map<Integer, BankBalanceReportBean> balanceViewMap = new HashMap<>();
         if (bankBalanceViewList != null && !bankBalanceViewList.isEmpty()) {
-            
+
             for (BankBalanceView balanceReportView : bankBalanceViewList) {
                 BankBalanceReportBean balanceReportBean;
                 if (balanceReportView.getBankIdTo() != null && bankBalanceReportSearchBean.getSerchedBanksSet().contains(balanceReportView.getBankIdTo())) {
@@ -481,13 +482,13 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                             balanceReportBean.setDebit(balanceReportView.getValueLocal() != null ? (balanceReportBean.getDebit().add(balanceReportView.getValueLocal())).setScale(2, RoundingMode.UP) : balanceReportBean.getDebit().setScale(2, RoundingMode.UP));
                         }
                     }
-                    
+
                     balanceReportBean.setBalance((balanceReportBean.getDebit().subtract(balanceReportBean.getCredit()).add(balanceReportBean.getPreviousBalance() != null ? balanceReportBean.getPreviousBalance() : BigDecimal.ZERO)).setScale(2, RoundingMode.UP));
                     //  addOpeneingBalanceToPreviousBalance(balanceReportBean.getAccountIdTo(), balanceReportBean);
                     balanceViewMap.put(balanceReportView.getBankIdTo(), balanceReportBean);
-                    
+
                 }
-                
+
                 if (balanceReportView.getBankIdFrom() != null && bankBalanceReportSearchBean.getSerchedBanksSet().contains(balanceReportView.getBankIdFrom())) {
                     balanceReportBean = new BankBalanceReportBean();
                     if (!balanceViewMap.containsKey(balanceReportView.getBankIdFrom())) {
@@ -511,7 +512,7 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                         if (bankBalanceReportSearchBean.getDateFrom() != null && balanceReportView.getDate().before(bankBalanceReportSearchBean.getDateFrom())) {
                             balanceReportBean.setBankFromBalance(balanceReportView.getValueLocal() == null ? balanceReportBean.getBankFromBalance().setScale(2, RoundingMode.UP) : (balanceReportView.getValueLocal().add(balanceReportBean.getBankFromBalance())).setScale(2, RoundingMode.UP));
                             balanceReportBean.setPreviousBalance((balanceReportBean.getBankToBalance().subtract(balanceReportBean.getBankFromBalance())).setScale(2, RoundingMode.UP));
-                            
+
                         } else {
                             balanceReportBean.setCredit(balanceReportView.getValueLocal() != null ? (balanceReportBean.getCredit().add(balanceReportView.getValueLocal()).setScale(2, RoundingMode.UP)) : balanceReportBean.getCredit().setScale(2, RoundingMode.UP));
                         }
@@ -519,19 +520,19 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                     balanceReportBean.setBalance((balanceReportBean.getDebit().subtract(balanceReportBean.getCredit()).add(balanceReportBean.getPreviousBalance() != null ? balanceReportBean.getPreviousBalance() : BigDecimal.ZERO)).setScale(2, RoundingMode.UP));
                     //  addOpeneingBalanceToPreviousBalance(balanceReportBean.getAccountIdFrom(), balanceReportBean);
                     balanceViewMap.put(balanceReportView.getBankIdFrom(), balanceReportBean);
-                    
+
                 }
             }
         }
         bankBalanceReportBeanList = new ArrayList<>(balanceViewMap.values());
         return bankBalanceReportBeanList;
     }
-    
+
     private List<BankBalanceReportBean> testNative(List<BankBalanceViewNew> bankBalanceViewList, BankBalanceReportSearchBean bankBalanceReportSearchBean) {
         List<BankBalanceReportBean> bankBalanceReportBeanList = new ArrayList<>();
         Map<Integer, BankBalanceReportBean> balanceViewMap = new HashMap<>();
         if (bankBalanceViewList != null && !bankBalanceViewList.isEmpty()) {
-            
+
             for (BankBalanceViewNew balanceReportView : bankBalanceViewList) {
                 BankBalanceReportBean balanceReportBean;
                 if (balanceReportView.getBankIdTo() != null && bankBalanceReportSearchBean.getSerchedBanksSet().contains(balanceReportView.getBankIdTo())) {
@@ -562,13 +563,13 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
 //                            balanceReportBean.setDebit(balanceReportView.getValueLocal() != null ? (balanceReportBean.getDebit().add(balanceReportView.getValueLocal())).setScale(2, RoundingMode.UP) : balanceReportBean.getDebit().setScale(2, RoundingMode.UP));
                         }
                     }
-                    
+
                     balanceReportBean.setBalance((balanceReportBean.getDebit().subtract(balanceReportBean.getCredit()).add(balanceReportBean.getPreviousBalance() != null ? balanceReportBean.getPreviousBalance() : BigDecimal.ZERO)).setScale(2, RoundingMode.UP));
                     //  addOpeneingBalanceToPreviousBalance(balanceReportBean.getAccountIdTo(), balanceReportBean);
                     balanceViewMap.put(balanceReportView.getBankIdTo(), balanceReportBean);
-                    
+
                 }
-                
+
                 if (balanceReportView.getBankIdFrom() != null && bankBalanceReportSearchBean.getSerchedBanksSet().contains(balanceReportView.getBankIdFrom())) {
                     balanceReportBean = new BankBalanceReportBean();
                     if (!balanceViewMap.containsKey(balanceReportView.getBankIdFrom())) {
@@ -594,7 +595,7 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                             balanceReportBean.setBankFromBalance(balanceReportView.getValueLocal() == null ? balanceReportBean.getBankFromBalance().setScale(2, RoundingMode.UP) : (balanceReportView.getValueLocal().add(balanceReportBean.getBankFromBalance())).setScale(2, RoundingMode.UP));
 //                            balanceReportBean.setPreviousBalance((balanceReportBean.getBankToBalance().subtract(balanceReportBean.getBankFromBalance())).setScale(2, RoundingMode.UP));
                             balanceReportBean.setPreviousBalance((balanceReportBean.getBankFromBalance().subtract(balanceReportBean.getBankToBalance())).setScale(2, RoundingMode.UP));
-                            
+
                         } else {
                             balanceReportBean.setDebit(balanceReportView.getValueLocal() != null ? (balanceReportBean.getDebit().add(balanceReportView.getValueLocal())).setScale(2, RoundingMode.UP) : balanceReportBean.getDebit().setScale(2, RoundingMode.UP));
 //                            balanceReportBean.setCredit(balanceReportView.getValueLocal() != null ? (balanceReportBean.getCredit().add(balanceReportView.getValueLocal()).setScale(2, RoundingMode.UP)) : balanceReportBean.getCredit().setScale(2, RoundingMode.UP));
@@ -603,19 +604,19 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                     balanceReportBean.setBalance((balanceReportBean.getDebit().subtract(balanceReportBean.getCredit()).add(balanceReportBean.getPreviousBalance() != null ? balanceReportBean.getPreviousBalance() : BigDecimal.ZERO)).setScale(2, RoundingMode.UP));
                     //  addOpeneingBalanceToPreviousBalance(balanceReportBean.getAccountIdFrom(), balanceReportBean);
                     balanceViewMap.put(balanceReportView.getBankIdFrom(), balanceReportBean);
-                    
+
                 }
             }
         }
         bankBalanceReportBeanList = new ArrayList<>(balanceViewMap.values());
         return bankBalanceReportBeanList;
     }
-    
+
     private List<BankBalanceReportBean> testNativeNew(List<BankBalanceViewNew> bankBalanceViewList, SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
         List<BankBalanceReportBean> bankBalanceReportBeanList = new ArrayList<>();
         Map<Integer, BankBalanceReportBean> balanceViewMap = new HashMap<>();
         if (bankBalanceViewList != null && !bankBalanceViewList.isEmpty()) {
-            
+
             for (BankBalanceViewNew balanceReportView : bankBalanceViewList) {
                 BankBalanceReportBean balanceReportBean;
                 if (balanceReportView.getBankIdTo() != null && cashAccountSettlementSearchBean.getSerchedBanksSet().contains(balanceReportView.getBankIdTo())) {
@@ -647,13 +648,13 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                             balanceReportBean.setDebit(balanceReportView.getValueLocal() != null ? (balanceReportBean.getDebit().add(balanceReportView.getValueLocal())).setScale(2, RoundingMode.UP) : balanceReportBean.getDebit().setScale(2, RoundingMode.UP));
                         }
                     }
-                    
+
                     balanceReportBean.setBalance((balanceReportBean.getDebit().subtract(balanceReportBean.getCredit()).add(balanceReportBean.getPreviousBalance() != null ? balanceReportBean.getPreviousBalance() : BigDecimal.ZERO)).setScale(2, RoundingMode.UP));
                     //  addOpeneingBalanceToPreviousBalance(balanceReportBean.getAccountIdTo(), balanceReportBean);
                     balanceViewMap.put(balanceReportView.getBankIdTo(), balanceReportBean);
-                    
+
                 }
-                
+
                 if (balanceReportView.getBankIdFrom() != null && cashAccountSettlementSearchBean.getSerchedBanksSet().contains(balanceReportView.getBankIdFrom())) {
                     balanceReportBean = new BankBalanceReportBean();
                     if (!balanceViewMap.containsKey(balanceReportView.getBankIdFrom())) {
@@ -679,7 +680,7 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                         if (cashAccountSettlementSearchBean.getDateFrom() != null && balanceReportView.getDate().before(cashAccountSettlementSearchBean.getDateFrom())) {
                             balanceReportBean.setBankFromBalance(balanceReportView.getValueLocal() == null ? balanceReportBean.getBankFromBalance().setScale(2, RoundingMode.UP) : (balanceReportView.getValueLocal().add(balanceReportBean.getBankFromBalance())).setScale(2, RoundingMode.UP));
                             balanceReportBean.setPreviousBalance((balanceReportBean.getBankToBalance().subtract(balanceReportBean.getBankFromBalance())).setScale(2, RoundingMode.UP));
-                            
+
                         } else {
                             balanceReportBean.setCredit(balanceReportView.getValueLocal() != null ? (balanceReportBean.getCredit().add(balanceReportView.getValueLocal()).setScale(2, RoundingMode.UP)) : balanceReportBean.getCredit().setScale(2, RoundingMode.UP));
                         }
@@ -687,14 +688,14 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                     balanceReportBean.setBalance((balanceReportBean.getDebit().subtract(balanceReportBean.getCredit()).add(balanceReportBean.getPreviousBalance() != null ? balanceReportBean.getPreviousBalance() : BigDecimal.ZERO)).setScale(2, RoundingMode.UP));
                     //  addOpeneingBalanceToPreviousBalance(balanceReportBean.getAccountIdFrom(), balanceReportBean);
                     balanceViewMap.put(balanceReportView.getBankIdFrom(), balanceReportBean);
-                    
+
                 }
             }
         }
         bankBalanceReportBeanList = new ArrayList<>(balanceViewMap.values());
         return bankBalanceReportBeanList;
     }
-    
+
     @Override
     public List<BankBalanceReportBean> search(BankBalanceReportSearchBean bankBalanceReportSearchBean) {
         List<BankBalanceReportBean> list = null;
@@ -715,7 +716,7 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
         }
         return list;
     }
-    
+
     @Override
     public List<BankBalanceReportBean> searchNative(BankBalanceReportSearchBean bankBalanceReportSearchBean) {
         List<BankBalanceReportBean> list = null;
@@ -736,7 +737,7 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
         }
         return list;
     }
-    
+
     @Override
     public List<BankBalanceReportBean> searchNativeNew(SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
         List<BankBalanceReportBean> list = null;
@@ -757,5 +758,17 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
         }
         return list;
     }
-}
 
+    @Override
+    public List<BankBalanceReportBean> searchNativeAPI(BankBalanceReportAPI balanceReportAPI) {
+        BankBalanceReportSearchBean bankBalanceReportSearchBean = new BankBalanceReportSearchBean();
+        if (balanceReportAPI != null) {
+            bankBalanceReportSearchBean.setDateFrom(balanceReportAPI.getDateFrom());
+            bankBalanceReportSearchBean.setDateTo(balanceReportAPI.getDateTo());
+            bankBalanceReportSearchBean.setGlBankList(balanceReportAPI.getGlBankDTOList());
+            bankBalanceReportSearchBean.setBranchId(balanceReportAPI.getBranchId());
+        }
+
+        return searchNative(bankBalanceReportSearchBean);
+    }
+}
