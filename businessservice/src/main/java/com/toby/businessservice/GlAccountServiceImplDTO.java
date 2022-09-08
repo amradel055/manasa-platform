@@ -53,7 +53,7 @@ public class GlAccountServiceImplDTO implements GlAccountServiceDTO {
         Map<String, Object> params = new HashMap();
         params.put("branchId", branchId);
         List<GlAccount> glAccount = new ArrayList<>();
-        glAccount = dao.findListByQuery("SELECT acc FROM GlAccount acc WHERE acc.branchId.id=:branchId AND acc.status=1  ORDER BY acc.accNumber ASC ", params);
+        glAccount = dao.findListByQuery("SELECT acc FROM GlAccount acc WHERE acc.branchId.id=:branchId AND acc.status=1 AND acc.type = 1 ORDER BY acc.accNumber ASC ", params);
         return returnListDTOAPI(glAccount);
     }
     

@@ -75,8 +75,11 @@ import com.toby.views.FactoryInvoiceStatus;
 import com.toby.views.ItemsBarcodesDetailsView;
 import com.toby.views.QuantityItemsStore;
 import com.toby.views.SummitionItemsView;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -89,6 +92,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -1506,7 +1510,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
     }
 
-    public InvInvoiceDTOApi mapToDTOApiDeskTop(InvInvoiceDTO dto, Boolean isSave) {
+    public InvInvoiceDTOApi mapToDTOApiDeskTop(InvInvoiceDTO dto, Boolean isSave) throws IOException {
 
         InvInvoiceDTOApi dtoAPI = new InvInvoiceDTOApi();
 
@@ -1540,6 +1544,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         dtoAPI.setTotalNetAfterDiscount(dto.getTotalNetAfterDiscount());
         dtoAPI.setFinalNet(dto.getFinalNet());
         dtoAPI.setTaxvalue(dto.getTaxvalue());
+
+        InvInventory gallaryId = dao.findEntityById(InvInventory.class, dto.getGallaryId().getId());
+        dtoAPI.setQrCode(printQRCode(dto.getDate(), gallaryId.getSellerName(), gallaryId.getSellerName(), dto.getFinalNet(), dto.getTaxvalue(), gallaryId.getId()));
 
         return dtoAPI;
 
@@ -1710,7 +1717,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         branch.setId(invInvoiceDTOApi.getBranchId());
         tobyUser.setBranchId(branch);
         invInvoiceDTO = save(invInvoiceDTO, tobyUser);
-        InvInvoiceDTOApi res = mapToDTOApiDeskTop(invInvoiceDTO, Boolean.TRUE);
+        InvInvoiceDTOApi res = null;
+        try {
+            res = mapToDTOApiDeskTop(invInvoiceDTO, Boolean.TRUE);
+        } catch (IOException ex) {
+            Logger.getLogger(InvPurchaseInvoiceServiceImpl_1.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (invInvoiceDTO.getMsg() == null || invInvoiceDTO.getMsg().isEmpty()) {
             invInvoiceDTO.setStatus(1000);
 //            invInvoiceDTO.setResponseApi(7000);
@@ -2282,12 +2294,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 + " left join inv_inventory invi on invi.id = s.galary_Id "
                 + " left join inv_organization_site ios on ios.id = s.organization_site_id "
                 + " WHERE s.branch_id = ").append(branchId).append(
-                        " AND  s.type = ").append(printProductionDTO.getInvoiceStatus()).append(
-                        " AND s.id not in (SELECT p.inv_purchase_invoice_id from pro_factory_delivery p )  \n"
-                        + " AND  s.galary_Id IN (").append(gallarySelected).append(" )  AND   s.date >= '"
-                        + formatDateFrom.format(printProductionDTO.getFromDate()) + "'"
-                        + " AND   s.date <= '" + formatDateTo.format(printProductionDTO.getToDate()) + "'"
-                        + " order by s.serial");
+                " AND  s.type = ").append(printProductionDTO.getInvoiceStatus()).append(
+                " AND s.id not in (SELECT p.inv_purchase_invoice_id from pro_factory_delivery p )  \n"
+                + " AND  s.galary_Id IN (").append(gallarySelected).append(" )  AND   s.date >= '"
+                + formatDateFrom.format(printProductionDTO.getFromDate()) + "'"
+                + " AND   s.date <= '" + formatDateTo.format(printProductionDTO.getToDate()) + "'"
+                + " order by s.serial");
 
         List<Object[]> res = dao.executeNativeQuery(builder.toString());
 
@@ -3181,7 +3193,11 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     dto.setSerial(invPurchaseInvoice.getSerial());
                     dto.setSerialTax(invPurchaseInvoice.getSerialTax());
                 }
-              api =  mapToDTOApiDeskTop(dto, Boolean.TRUE);
+                try {
+                    api = mapToDTOApiDeskTop(dto, Boolean.TRUE);
+                } catch (IOException ex) {
+                    Logger.getLogger(InvPurchaseInvoiceServiceImpl_1.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             return api;
         } catch (CloneNotSupportedException ex) {
@@ -4600,6 +4616,44 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             list.add(invInvoiceDTO);
         }
         return list;
+    }
+
+    private static final TimeZone utc = TimeZone.getTimeZone("UTC");
+    private static final SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+    @Override
+    public String printQRCode(Date invoiceDate, String sellerName, String sallerTRN, BigDecimal finalNet, BigDecimal VATTotalValue,
+            Integer gallaryId) throws UnsupportedEncodingException, IOException {
+        isoFormatter.setTimeZone(utc);
+        String date = isoFormatter.format(invoiceDate);
+        String invoiceDateTime = date;
+        String totalWithVAT = finalNet.toString();
+        String VATTotal = VATTotalValue.toString();
+
+        byte[] tag1Hex = sellerName.getBytes("UTF-8");
+        sellerName = new String(tag1Hex, StandardCharsets.UTF_8);
+        String L1 = Integer.toHexString(sellerName.length());
+        String L2 = Integer.toHexString(sallerTRN.length());
+        String L3 = Integer.toHexString(invoiceDateTime.length());
+        String L4 = Integer.toHexString(totalWithVAT.length());
+        String L5 = Integer.toHexString(VATTotal.length());
+
+        String hex = "01" + ((L1.length() == 1) ? ("0" + L1) : L1) + hex(sellerName)
+                + "02" + ((L2.length() == 1) ? ("0" + L2) : L2) + hex(sallerTRN)
+                + "03" + ((L3.length() == 1) ? ("0" + L3) : L3) + hex(invoiceDateTime)
+                + "04" + ((L4.length() == 1) ? ("0" + L4) : L4) + hex(totalWithVAT)
+                + "05" + ((L5.length() == 1) ? ("0" + L5) : L5) + hex(VATTotal);
+
+        return hex;
+    }
+
+    public String hex(String string) {
+        char[] ch = string.toCharArray();
+        StringBuilder result = new StringBuilder();
+        for (char c : ch) {
+            result.append(Integer.toHexString(c));
+        }
+        return result.toString();
     }
 
 }
