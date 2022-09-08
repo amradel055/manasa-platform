@@ -23,6 +23,8 @@ import com.toby.entity.InventorySetup;
 import com.toby.views.ClientsNoMovment;
 import com.toby.views.FactoryInvoiceStatus;
 import com.toby.views.SummitionItemsView;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -198,5 +200,8 @@ public interface InvPurchaseInvoiceService_1 {
     public InvInvoiceDTOApi tarhilSalesAPI(InvInvoiceDTO dto);
 
     public InvInvoiceDTO mapToDTOApiDeskTop(InvInvoiceDTOApi invInvoiceDTOApi, Boolean isSave);
+    
+    public String printQRCode(Date invoiceDate ,String sellerName ,String sallerTRN ,BigDecimal finalNet ,BigDecimal VATTotalValue ,
+            Integer gallaryId) throws UnsupportedEncodingException, IOException ;
 
 }

@@ -54,6 +54,7 @@ public class InvInvoiceDTOApi extends BaseEntityDTOAPI {
     private String glBankName;
     private Integer serialTax;
     private BigDecimal net;
+    private String qrCode;
 
     private List<InvDetailsDTOAPI> invoiceDetailApiList;
     
@@ -682,5 +683,19 @@ public class InvInvoiceDTOApi extends BaseEntityDTOAPI {
      */
     public void setTaxvalue(BigDecimal taxvalue) {
         this.taxvalue = taxvalue;
+    }
+
+    /**
+     * @return the qrCode
+     */
+    public String getQrCode() {
+        return qrCode;
+    }
+
+    /**
+     * @param qrCode the qrCode to set
+     */
+    public void setQrCode(String qrCode) {
+        this.qrCode = qrCode;
     }
 }
