@@ -820,6 +820,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
                 dTO.setTransactionId(bankTransaction.getId());
                 dTO.setSerial(bankTransaction.getSerial());
                 detailList.add(dTO);
+                tarhilglBankTransaction(bankTransaction.getId(), bankTransaction);
             }
         }
         glBankTransactionAPI.setGlPayDTOAPIList(detailList);
