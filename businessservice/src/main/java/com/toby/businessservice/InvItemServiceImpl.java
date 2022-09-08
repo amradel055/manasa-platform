@@ -419,6 +419,14 @@ public class InvItemServiceImpl implements InvItemService {
         List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId and e.id >= 23148", params);
         return mapToDTOListAPI(invItemList);
     }
+    
+    @Override
+    public List<InvItemDTOApi> findInvItemDTOListAPINew(Integer branchId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId ", params);
+        return mapToDTOListAPI(invItemList);
+    }
 
     @Override
     public Map<String, String> findInvItemDTOMap(Integer branchId) {
@@ -591,30 +599,30 @@ public class InvItemServiceImpl implements InvItemService {
         api.setMaxPriceMen(invItem.getMaxpricemen());
         api.setMinPriceYoung(invItem.getMinpriceyoung());
         api.setMaxPriceYoung(invItem.getMaxpriceyoung());
-        api.setDiscountrate(invItem.getDiscountrate());
+//        api.setDiscountrate(invItem.getDiscountrate());
         api.setUnitName(invItem.getUnitId().getName());
 //            dto.setScrewing(new BigDecimal((Long) line[12]));
         api.setIsInventoryItem(invItem.getIsInventoryItem());
         api.setTypeShow(invItem.getTypeshow());
-        api.setProGroupId(invItem.getProGroupId().getId());
+        api.setProGroupId(invItem.getProGroupId() == null ? null : invItem.getProGroupId().getId());
         api.setNumberMetersYoung(invItem.getNumbermetersyoung());
         api.setNumberMetersMen(invItem.getNumbermetersmen());
         api.setNumberMetersFreeYoung(invItem.getNumbermetersfreeyoung());
         api.setNumberMetersFreeMen(invItem.getNumbermetersfreemen());
-        api.setSupplierId(invItem.getSiteId().getName());
+        api.setSupplierId(invItem.getSiteId() == null ? null : invItem.getSiteId().getName());
         api.setItemType(invItem.getType());
         api.setPriceType(invItem.getPriceType());
         
         
-        AttributeDTO attributeDTO = new AttributeDTO();
-        attributeDTO.setItemId(invItem.getId());
-        api.setAtrributesList(attributeService.getAllAttributesByBranchIdAndItemId(attributeDTO));
-
-        VariationDTO variationDTO = new VariationDTO();
-        variationDTO.setBranchId(api.getBranchId());
-        variationDTO.setCompanyId(api.getCompanyId());
-        variationDTO.setItemId(invItem.getId());
-        api.setVariationsList(variationProductService.getAllVariationByCompanyIdAndBranchId(variationDTO));
+//        AttributeDTO attributeDTO = new AttributeDTO();
+//        attributeDTO.setItemId(invItem.getId());
+//        api.setAtrributesList(attributeService.getAllAttributesByBranchIdAndItemId(attributeDTO));
+//
+//        VariationDTO variationDTO = new VariationDTO();
+//        variationDTO.setBranchId(api.getBranchId());
+//        variationDTO.setCompanyId(api.getCompanyId());
+//        variationDTO.setItemId(invItem.getId());
+//        api.setVariationsList(variationProductService.getAllVariationByCompanyIdAndBranchId(variationDTO));
         return api;
     }
 

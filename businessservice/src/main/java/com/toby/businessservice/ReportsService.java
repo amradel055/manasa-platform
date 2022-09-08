@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.BankBalanceReportAPI;
 import com.toby.views.ClientsByInvInventory;
 import com.toby.views.CompanyInvoicesWithoutSewing;
 import com.toby.views.CustomerBalances;
@@ -62,4 +63,10 @@ public interface ReportsService {
     public List<SalesStatementForThePeriod> getSalesStatementForThePeriodForPay(SalesStatementForThePeriod statementForThePeriod);
 
     public BigDecimal getValueOfInvoice(Integer invoiceId);
+
+    public List<SalesReportByValueAded> getSalesReportByValueAdedAPI(BankBalanceReportAPI bankBalanceReportAPI);
+
+    public List<SalesReportByValueAdedDetails> getSalesReportByValueAdedDetailsAPI(BankBalanceReportAPI bankBalanceReportAPI);
+
+    public List<CustomerBalances> getCustomerBalancesAPI(BankBalanceReportAPI bankBalanceReportAPI);
 }

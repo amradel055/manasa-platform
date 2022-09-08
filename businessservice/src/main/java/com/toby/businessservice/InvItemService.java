@@ -125,4 +125,6 @@ public interface InvItemService {
      public void updateByOffer(Integer invItem, Integer isOfferFinal);
      
      public List<InvItemDTOApi> findInvItemDTOListAPI(Integer branchId);
+     
+     public List<InvItemDTOApi> findInvItemDTOListAPINew(Integer branchId);
 }

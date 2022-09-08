@@ -1806,7 +1806,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             InvItem item = dao.findEntityById(InvItem.class, itemId);
             InvOrganizationSite customer = dao.findEntityById(InvOrganizationSite.class, customerId);
             InvItemDTOApi dTOApi = new InvItemDTOApi();
-            if (item.getItemNatural() == null) {
+            if (item.getItemNatural() != null) {
                 dTOApi.setQuantityOfUnit(calcItemQuantity(customer.getLength(), customer.getShoulder(), customer.getStep(), item.getItemNatural()));
             } else {
                 if (priceType == 1) {
@@ -1822,9 +1822,11 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                     item.getIsOfferItem()));
             dTOApi.setUnitName(item.getUnitId() == null ? "" : item.getUnitId().getName());
             dTOApi.setDiscountRow(calcDiscount(item.getProGroupId().getId(), item.getSiteId().getId(), item.getIsOfferItem(), customer.getDiscount(), customer.getOfferCompanyId() == null ? BigDecimal.ZERO : customer.getOfferCompanyId().getDiscount()));
-            dTOApi.setAvailableQuantity(quantityItemsStoreByDateService.getQuantatyItemByinventory(inventoryId, item.getId(), false, null));
-            if (dTOApi.getAvailableQuantity().compareTo(dTOApi.getQuantityOfUnit()) == -1) {
-                dTOApi.setMsg("الكميةالمطلوبة غير موجوده");
+            if (item.getProGroupId() != null && item.getProGroupId().getId() == 1) {
+                dTOApi.setAvailableQuantity(quantityItemsStoreByDateService.getQuantatyItemByinventory(inventoryId, item.getId(), false, null));
+                if (dTOApi.getAvailableQuantity().compareTo(dTOApi.getQuantityOfUnit()) == -1) {
+                    dTOApi.setMsg("الكميةالمطلوبة غير موجوده");
+                }
             }
             return dTOApi;
         }

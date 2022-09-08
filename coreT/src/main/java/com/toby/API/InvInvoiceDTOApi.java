@@ -12,19 +12,6 @@ import java.util.List;
 
 public class InvInvoiceDTOApi extends BaseEntityDTOAPI {
 
-    /**
-     * @return the date
-     */
-    public Date getDate() {
-        return date;
-    }
-
-    /**
-     * @param date the date to set
-     */
-    public void setDate(Date date) {
-        this.date = date;
-    }
 
     private Integer customerId;
     private String customerName;
@@ -45,6 +32,7 @@ public class InvInvoiceDTOApi extends BaseEntityDTOAPI {
     private String invDelegatorName;
     private BigDecimal discount;
     private BigDecimal discHalala;
+    
     private Date dueDate;
     private Integer dueperiod;
     private Integer pricetype;
@@ -69,7 +57,16 @@ public class InvInvoiceDTOApi extends BaseEntityDTOAPI {
 
     private List<InvDetailsDTOAPI> invoiceDetailApiList;
     
+    private List<GlPayDTOAPI> glPayDTOList ; 
+    
     private SalesStatementForThePeriod salesStatementForThePeriod ;
+    
+    
+    
+    
+    private BigDecimal totalNetAfterDiscount;
+    private BigDecimal finalNet;
+    private BigDecimal taxvalue;
 
     /**
      * @return the customerName
@@ -615,5 +612,75 @@ public class InvInvoiceDTOApi extends BaseEntityDTOAPI {
      */
     public void setSalesStatementForThePeriod(SalesStatementForThePeriod salesStatementForThePeriod) {
         this.salesStatementForThePeriod = salesStatementForThePeriod;
+    }
+
+    /**
+     * @return the glPayDTOList
+     */
+    public List<GlPayDTOAPI> getGlPayDTOList() {
+        return glPayDTOList;
+    }
+
+    /**
+     * @param glPayDTOList the glPayDTOList to set
+     */
+    public void setGlPayDTOList(List<GlPayDTOAPI> glPayDTOList) {
+        this.glPayDTOList = glPayDTOList;
+    }
+    
+    /**
+     * @return the date
+     */
+    public Date getDate() {
+        return date;
+    }
+
+    /**
+     * @param date the date to set
+     */
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    /**
+     * @return the totalNetAfterDiscount
+     */
+    public BigDecimal getTotalNetAfterDiscount() {
+        return totalNetAfterDiscount;
+    }
+
+    /**
+     * @param totalNetAfterDiscount the totalNetAfterDiscount to set
+     */
+    public void setTotalNetAfterDiscount(BigDecimal totalNetAfterDiscount) {
+        this.totalNetAfterDiscount = totalNetAfterDiscount;
+    }
+
+    /**
+     * @return the finalNet
+     */
+    public BigDecimal getFinalNet() {
+        return finalNet;
+    }
+
+    /**
+     * @param finalNet the finalNet to set
+     */
+    public void setFinalNet(BigDecimal finalNet) {
+        this.finalNet = finalNet;
+    }
+
+    /**
+     * @return the taxvalue
+     */
+    public BigDecimal getTaxvalue() {
+        return taxvalue;
+    }
+
+    /**
+     * @param taxvalue the taxvalue to set
+     */
+    public void setTaxvalue(BigDecimal taxvalue) {
+        this.taxvalue = taxvalue;
     }
 }

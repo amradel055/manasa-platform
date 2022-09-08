@@ -72,6 +72,28 @@ public class ItemsRest {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
+    
+    @Transactional
+    @Path("/findAllItemNew")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findAllItemNew(InvInvoiceDTOApi invoiceDTOApi) {
+        try {
+            if (invoiceDTOApi.getBranchId() != null) {
+                List<InvItemDTOApi> invItemDTOList = invItemService.findInvItemDTOListAPINew(invoiceDTOApi.getBranchId());
+                GenericEntity<List<InvItemDTOApi>> list = new GenericEntity<List<InvItemDTOApi>>(invItemDTOList) {
+                };
+                return Response.ok(list).build();
+            } else {
+                invoiceDTOApi.setMsg("يجب اختيار فرع ");
+                return Response.ok(invoiceDTOApi).build();
+            }
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
 
     @Transactional
     @Path("/findAllItem2")
@@ -79,7 +101,7 @@ public class ItemsRest {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public List<InvItemDTOApi> findAllItem2(InvInvoiceDTOApi invoiceDTOApi) {
-        return invItemService.findInvItemDTOListAPI(invoiceDTOApi.getBranchId());
+        return invItemService.findInvItemDTOListAPINew(invoiceDTOApi.getBranchId());
     }
 
     @Transactional

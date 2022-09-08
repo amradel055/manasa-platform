@@ -27,56 +27,31 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "inv_item")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "InvItem.findAll", query = "SELECT i FROM InvItem i")
-    ,
-    @NamedQuery(name = "InvItem.findById", query = "SELECT i FROM InvItem i WHERE i.id = :id")
-    ,
-    @NamedQuery(name = "InvItem.findByCode", query = "SELECT i FROM InvItem i WHERE i.code = :code")
-    ,
-    @NamedQuery(name = "InvItem.findByName", query = "SELECT i FROM InvItem i WHERE i.name = :name")
-    ,
-    @NamedQuery(name = "InvItem.findByNameen", query = "SELECT i FROM InvItem i WHERE i.nameen = :nameen")
-    ,
-    @NamedQuery(name = "InvItem.findByTypeCat", query = "SELECT i FROM InvItem i WHERE i.typeCat = :typeCat")
-    ,
-    @NamedQuery(name = "InvItem.findBySellPrice", query = "SELECT i FROM InvItem i WHERE i.sellPrice = :sellPrice")
-    ,
-    @NamedQuery(name = "InvItem.findByUndirectCost", query = "SELECT i FROM InvItem i WHERE i.undirectCost = :undirectCost")
-    ,
-    @NamedQuery(name = "InvItem.findByRemarks", query = "SELECT i FROM InvItem i WHERE i.remarks = :remarks")
-    ,
-    @NamedQuery(name = "InvItem.findByStatusCat", query = "SELECT i FROM InvItem i WHERE i.statusCat = :statusCat")
-    ,
-    @NamedQuery(name = "InvItem.findByContractPrice", query = "SELECT i FROM InvItem i WHERE i.contractPrice = :contractPrice")
-    ,
-    @NamedQuery(name = "InvItem.findByStorageLocation", query = "SELECT i FROM InvItem i WHERE i.storageLocation = :storageLocation")
-    ,
-    @NamedQuery(name = "InvItem.findByNickname", query = "SELECT i FROM InvItem i WHERE i.nickname = :nickname")
-    ,
-    @NamedQuery(name = "InvItem.findByMinimumAmount", query = "SELECT i FROM InvItem i WHERE i.minimumAmount = :minimumAmount")
-    ,
-    @NamedQuery(name = "InvItem.findByMaxmumAmount", query = "SELECT i FROM InvItem i WHERE i.maxmumAmount = :maxmumAmount")
-    ,
-    @NamedQuery(name = "InvItem.findByLastCost", query = "SELECT i FROM InvItem i WHERE i.lastCost = :lastCost")
-    ,
-    @NamedQuery(name = "InvItem.findByCostAverage", query = "SELECT i FROM InvItem i WHERE i.costAverage = :costAverage")
-    ,
-    @NamedQuery(name = "InvItem.findByDateCreateCat", query = "SELECT i FROM InvItem i WHERE i.dateCreateCat = :dateCreateCat")
-    ,
-    @NamedQuery(name = "InvItem.findByOpeningCost", query = "SELECT i FROM InvItem i WHERE i.openingCost = :openingCost")
-    ,
-    @NamedQuery(name = "InvItem.findByStoresQuality", query = "SELECT i FROM InvItem i WHERE i.storesQuality = :storesQuality")
-    ,
-    @NamedQuery(name = "InvItem.findByImage", query = "SELECT i FROM InvItem i WHERE i.image = :image")
-    ,
-    @NamedQuery(name = "InvItem.findByWeightPackage", query = "SELECT i FROM InvItem i WHERE i.weightPackage = :weightPackage")
-    ,
-    @NamedQuery(name = "InvItem.findByCreationDate", query = "SELECT i FROM InvItem i WHERE i.creationDate = :creationDate")
-    ,
-    @NamedQuery(name = "InvItem.findByModificationDate", query = "SELECT i FROM InvItem i WHERE i.modificationDate = :modificationDate")
-    ,
-    @NamedQuery(name = "InvItem.findByIssell", query = "SELECT i FROM InvItem i WHERE i.issell = :issell")
-    ,
+    @NamedQuery(name = "InvItem.findAll", query = "SELECT i FROM InvItem i"),
+    @NamedQuery(name = "InvItem.findById", query = "SELECT i FROM InvItem i WHERE i.id = :id"),
+    @NamedQuery(name = "InvItem.findByCode", query = "SELECT i FROM InvItem i WHERE i.code = :code"),
+    @NamedQuery(name = "InvItem.findByName", query = "SELECT i FROM InvItem i WHERE i.name = :name"),
+    @NamedQuery(name = "InvItem.findByNameen", query = "SELECT i FROM InvItem i WHERE i.nameen = :nameen"),
+    @NamedQuery(name = "InvItem.findByTypeCat", query = "SELECT i FROM InvItem i WHERE i.typeCat = :typeCat"),
+    @NamedQuery(name = "InvItem.findBySellPrice", query = "SELECT i FROM InvItem i WHERE i.sellPrice = :sellPrice"),
+    @NamedQuery(name = "InvItem.findByUndirectCost", query = "SELECT i FROM InvItem i WHERE i.undirectCost = :undirectCost"),
+    @NamedQuery(name = "InvItem.findByRemarks", query = "SELECT i FROM InvItem i WHERE i.remarks = :remarks"),
+    @NamedQuery(name = "InvItem.findByStatusCat", query = "SELECT i FROM InvItem i WHERE i.statusCat = :statusCat"),
+    @NamedQuery(name = "InvItem.findByContractPrice", query = "SELECT i FROM InvItem i WHERE i.contractPrice = :contractPrice"),
+    @NamedQuery(name = "InvItem.findByStorageLocation", query = "SELECT i FROM InvItem i WHERE i.storageLocation = :storageLocation"),
+    @NamedQuery(name = "InvItem.findByNickname", query = "SELECT i FROM InvItem i WHERE i.nickname = :nickname"),
+    @NamedQuery(name = "InvItem.findByMinimumAmount", query = "SELECT i FROM InvItem i WHERE i.minimumAmount = :minimumAmount"),
+    @NamedQuery(name = "InvItem.findByMaxmumAmount", query = "SELECT i FROM InvItem i WHERE i.maxmumAmount = :maxmumAmount"),
+    @NamedQuery(name = "InvItem.findByLastCost", query = "SELECT i FROM InvItem i WHERE i.lastCost = :lastCost"),
+    @NamedQuery(name = "InvItem.findByCostAverage", query = "SELECT i FROM InvItem i WHERE i.costAverage = :costAverage"),
+    @NamedQuery(name = "InvItem.findByDateCreateCat", query = "SELECT i FROM InvItem i WHERE i.dateCreateCat = :dateCreateCat"),
+    @NamedQuery(name = "InvItem.findByOpeningCost", query = "SELECT i FROM InvItem i WHERE i.openingCost = :openingCost"),
+    @NamedQuery(name = "InvItem.findByStoresQuality", query = "SELECT i FROM InvItem i WHERE i.storesQuality = :storesQuality"),
+    @NamedQuery(name = "InvItem.findByImage", query = "SELECT i FROM InvItem i WHERE i.image = :image"),
+    @NamedQuery(name = "InvItem.findByWeightPackage", query = "SELECT i FROM InvItem i WHERE i.weightPackage = :weightPackage"),
+    @NamedQuery(name = "InvItem.findByCreationDate", query = "SELECT i FROM InvItem i WHERE i.creationDate = :creationDate"),
+    @NamedQuery(name = "InvItem.findByModificationDate", query = "SELECT i FROM InvItem i WHERE i.modificationDate = :modificationDate"),
+    @NamedQuery(name = "InvItem.findByIssell", query = "SELECT i FROM InvItem i WHERE i.issell = :issell"),
     @NamedQuery(name = "InvItem.findByIspurchase", query = "SELECT i FROM InvItem i WHERE i.ispurchase = :ispurchase")})
 public class InvItem extends BaseEntity {
 
@@ -625,6 +600,9 @@ public class InvItem extends BaseEntity {
      * @return the discountvalue
      */
     public BigDecimal getDiscountvalue() {
+        if (discountvalue == null) {
+            discountvalue = BigDecimal.ZERO;
+        }
         return discountvalue;
     }
 
@@ -639,7 +617,7 @@ public class InvItem extends BaseEntity {
      * @return the maxpriceyoung
      */
     public BigDecimal getMaxpriceyoung() {
-        if(maxpriceyoung == null){
+        if (maxpriceyoung == null) {
             maxpriceyoung = BigDecimal.ZERO;
         }
         return maxpriceyoung;
@@ -656,7 +634,7 @@ public class InvItem extends BaseEntity {
      * @return the maxpricemen
      */
     public BigDecimal getMaxpricemen() {
-        if(maxpricemen == null){
+        if (maxpricemen == null) {
             maxpricemen = BigDecimal.ZERO;
         }
         return maxpricemen;
@@ -732,7 +710,7 @@ public class InvItem extends BaseEntity {
      * @return the numbermetersfreeyoung
      */
     public BigDecimal getNumbermetersfreeyoung() {
-        if(numbermetersfreeyoung == null){
+        if (numbermetersfreeyoung == null) {
             numbermetersfreeyoung = BigDecimal.ZERO;
         }
         return numbermetersfreeyoung;
@@ -749,7 +727,7 @@ public class InvItem extends BaseEntity {
      * @return the numbermetersfreemen
      */
     public BigDecimal getNumbermetersfreemen() {
-        if(numbermetersfreemen == null){
+        if (numbermetersfreemen == null) {
             numbermetersfreemen = BigDecimal.ZERO;
         }
         return numbermetersfreemen;

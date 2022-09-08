@@ -43,7 +43,7 @@ public class BaseEntityDTO implements Serializable, Cloneable {
 
     private String createdByCode;   
     
-    private ResponseApi responseApi;
+//    private ResponseApi responseApi;
 
     public Integer getId() {
         return id;
@@ -251,17 +251,17 @@ public class BaseEntityDTO implements Serializable, Cloneable {
     /**
      * @return the responseApi
      */
-    public ResponseApi getResponseApi() {
-        if(responseApi == null){
-            responseApi = new  ResponseApi();
-        }
-        return responseApi;
-    }
-
-    /**
-     * @param responseApi the responseApi to set
-     */
-    public void setResponseApi(ResponseApi responseApi) {
-        this.responseApi = responseApi;
-    }
+//    public ResponseApi getResponseApi() {
+//        if(responseApi == null){
+//            responseApi = new  ResponseApi();
+//        }
+//        return responseApi;
+//    }
+//
+//    /**
+//     * @param responseApi the responseApi to set
+//     */
+//    public void setResponseApi(ResponseApi responseApi) {
+//        this.responseApi = responseApi;
+//    }
 }

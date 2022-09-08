@@ -5,6 +5,7 @@
  */
 package com.toby.rest;
 
+import com.toby.API.BankBalanceReportAPI;
 import com.toby.API.CashAccountSettlementAPI;
 import com.toby.bean.BankBalanceReportBean;
 import com.toby.businessservice.report.BankBalanceViewService;
@@ -27,6 +28,9 @@ public class BankBalanceRest {
     @EJB
     private CashAccountSettlmentService cashAccountSettlmentService;
 
+    @EJB
+    private BankBalanceViewService bankBalanceViewService;
+
     @Transactional
     @Path("/BankBalanceSettlement")
     @POST
@@ -38,6 +42,16 @@ public class BankBalanceRest {
             cashAccountSettlementBean = cashAccountSettlmentService.searchNewApi(cashAccountSettlementAPI);
         }
         return cashAccountSettlementBean.getCashAccountSettlementReports();
+
+    }
+
+    @Transactional
+    @Path("/findBankBalance")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<BankBalanceReportBean> findBankBalance(BankBalanceReportAPI bankBalanceReportAPI) {
+        return bankBalanceViewService.searchNativeAPI(bankBalanceReportAPI);
 
     }
 

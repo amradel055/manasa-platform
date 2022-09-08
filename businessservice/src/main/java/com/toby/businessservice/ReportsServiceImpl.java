@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.BankBalanceReportAPI;
 import com.toby.bussinessservice.global.Utility;
 import com.toby.core.GenericDAO;
 import com.toby.dto.InvInventoryDTO;
@@ -661,7 +662,7 @@ public class ReportsServiceImpl implements ReportsService {
         }
         return list;
     }
-    
+
     public BigDecimal findInvNoticeValue(Integer invPurchaseInvoiceId) {
         List<BigDecimal> value = null;
         if (invPurchaseInvoiceId != null && invPurchaseInvoiceId > 0) {
@@ -1072,4 +1073,45 @@ public class ReportsServiceImpl implements ReportsService {
 //        return BigDecimal.ZERO;
 //    }
     }
+
+    @Override  // بيان الفواتير حسب الضريبة 
+    public List<SalesReportByValueAded> getSalesReportByValueAdedAPI(BankBalanceReportAPI bankBalanceReportAPI) {
+        List<SalesReportByValueAded> salesReportByValueAdedList = new ArrayList<>();
+
+        SalesReportByValueAded salesReportByValueAded = new SalesReportByValueAded();
+        for (InvInventoryDTO inventoryDTO : bankBalanceReportAPI.getInvInventoryDTOList()) {
+            salesReportByValueAded.setDateFrom(bankBalanceReportAPI.getDateFrom());
+            salesReportByValueAded.setDateTo(bankBalanceReportAPI.getDateTo());
+            salesReportByValueAded.setGallerySelected(inventoryDTO);
+            List<SalesReportByValueAded> valueAdedList = getSalesReportByValueAded(salesReportByValueAded, bankBalanceReportAPI.getBranchId());
+            salesReportByValueAdedList.addAll(valueAdedList);
+        }
+
+        return salesReportByValueAdedList;
+    }
+
+    @Override
+    public List<SalesReportByValueAdedDetails> getSalesReportByValueAdedDetailsAPI(BankBalanceReportAPI bankBalanceReportAPI) {
+        List<SalesReportByValueAdedDetails> salesReportByValueAdedDetailseList = new ArrayList<>();
+        SalesReportByValueAded salesReportByValueAded = new SalesReportByValueAded();
+        salesReportByValueAded.setDateFrom(bankBalanceReportAPI.getDateFrom());
+        salesReportByValueAded.setDateTo(bankBalanceReportAPI.getDateTo());
+        for (InvInventoryDTO invInventoryDTO : bankBalanceReportAPI.getInvInventoryDTOList()) {
+            salesReportByValueAded.setGallerySelected(invInventoryDTO);
+            List<SalesReportByValueAdedDetails> list = getSalesReportByValueAdedDetails(salesReportByValueAded, bankBalanceReportAPI.getBranchId());
+            salesReportByValueAdedDetailseList.addAll(list);
+        }
+
+        return salesReportByValueAdedDetailseList;
+    }
+
+    @Override
+    public List<CustomerBalances> getCustomerBalancesAPI(BankBalanceReportAPI bankBalanceReportAPI) {
+        CustomerBalances customerBalances = new CustomerBalances();
+        if (bankBalanceReportAPI != null) {
+            customerBalances.setGallerySelected(bankBalanceReportAPI.getGallarySellected());
+        }
+        return getCustomerBalances(customerBalances, bankBalanceReportAPI.getBranchId());
+    }
+
 }
