@@ -18,7 +18,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/sales")
+@Path("/sales/")
 public class SalesRest {
 
     @EJB
@@ -43,16 +43,33 @@ public class SalesRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response saveDeskTop(InvInvoiceDTOApi invInvoiceDTOApi) {
+    public InvInvoiceDTOApi saveDeskTop(InvInvoiceDTOApi invInvoiceDTOApi) {
         try {
-            if (invInvoiceDTOApi.getId() == null) {
-                ResponseApi responseApi = invPurchaseInvoiceService_1.SaveApiDeskTop(invInvoiceDTOApi);
-//                invPurchaseInvoiceService_1.completeTarhilInvoiceAfterSave(getInvInvoiceDTO(), getUserData().getUser());
-                return Response.ok().entity(responseApi).build();
+            if (invInvoiceDTOApi.getId() == null && invInvoiceDTOApi.getCustomerId() != null && invInvoiceDTOApi.getGallaryId() != null) {
+                InvInvoiceDTOApi invoiceDTO = invPurchaseInvoiceService_1.SaveApiDeskTop(invInvoiceDTOApi);
+                return invoiceDTO;
             }
             return null;
         } catch (Exception e) {
-            return Response.status(Response.Status.FORBIDDEN).build();
+            return null;
+        }
+    }
+
+    @Transactional
+    @Path("/tarhilSalesAPI")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public InvInvoiceDTOApi tarhilSalesAPI(InvInvoiceDTOApi invInvoiceDTOApi) {
+        try {
+            if (invInvoiceDTOApi.getId() == null && invInvoiceDTOApi.getCustomerId() != null && invInvoiceDTOApi.getGallaryId() != null) {
+                InvInvoiceDTO invInvoiceDTO = invPurchaseInvoiceService_1.mapToDTOApiDeskTop(invInvoiceDTOApi, false);
+               InvInvoiceDTOApi invInvoiceDTOAPI = invPurchaseInvoiceService_1.tarhilSalesAPI(invInvoiceDTO);
+                return invInvoiceDTOAPI;
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
         }
     }
 

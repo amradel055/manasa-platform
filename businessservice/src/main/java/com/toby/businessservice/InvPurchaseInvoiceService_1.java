@@ -189,10 +189,14 @@ public interface InvPurchaseInvoiceService_1 {
 
     public InvInvoiceDTOApi findInvPurchaseInvoiceByserialAPI(Integer serial, Integer gallaryId, Integer branchId);
 
-    public ResponseApi SaveApiDeskTop(InvInvoiceDTOApi invInvoiceDTOApi);
-    
-     public List<SummitionItemsView> findSummitionQuantityAPI(SummitionItemAPI summitionItemAPI) ;
-     
-     public List<InvInvoiceDTOApi> findCustomerInvoice(Integer customerId);
+    public InvInvoiceDTOApi SaveApiDeskTop(InvInvoiceDTOApi invInvoiceDTOApi);
+
+    public List<SummitionItemsView> findSummitionQuantityAPI(SummitionItemAPI summitionItemAPI);
+
+    public List<InvInvoiceDTOApi> findCustomerInvoice(Integer customerId);
+
+    public InvInvoiceDTOApi tarhilSalesAPI(InvInvoiceDTO dto);
+
+    public InvInvoiceDTO mapToDTOApiDeskTop(InvInvoiceDTOApi invInvoiceDTOApi, Boolean isSave);
 
 }

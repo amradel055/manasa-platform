@@ -529,6 +529,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             InvInventory invInventory = new InvInventory();
             invInventory.setId(invOrganizationSiteDTO.getGallaryIdAPI());
             invOrganizationSite.setGallaryId(invInventory);
+            if (invOrganizationSiteDTO.getAccountIdAPI() == null) {
+                GlAccount account = new GlAccount();
+                InvInventory inventory = dao.findEntityById(InvInventory.class, invOrganizationSiteDTO.getGallaryIdAPI());
+                account.setId((inventory != null && inventory.getCustomerAccount() != null) ? inventory.getCustomerAccount().getId() : null);
+                invOrganizationSite.setAccountId(account);
+            }
         }
 
         if (invOrganizationSiteDTO.getGallaryIdDTO() != null && invOrganizationSiteDTO.getGallaryIdDTO().getId() != null) {
@@ -1566,7 +1572,8 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     }
 
     @Override
-    public InvOrganizationSiteDTO addNewCustomer(InvOrganizationSiteDTO invOrganizationSiteDTO, List<InvOrganizationSiteDTO> invOrganizationSiteDTOList, TobyUser tobyUser, Integer accountId) {
+    public InvOrganizationSiteDTO addNewCustomer(InvOrganizationSiteDTO invOrganizationSiteDTO, List<InvOrganizationSiteDTO> invOrganizationSiteDTOList,
+            TobyUser tobyUser, Integer accountId) {
 
         CurrencyDTO currencyDefault = currencyServiceDTO.getDefaultCurrenciesByCompanyId(tobyUser.getCompanyId().getId());
 

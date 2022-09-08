@@ -163,7 +163,35 @@ public class CustomerRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addNewCustomer(InvOrganizationSiteDTOAPI dto) {
+    public InvOrganizationSiteDTO addNewCustomer(InvOrganizationSiteDTOAPI dto) {
+
+        try {
+
+            TobyUser user = new TobyUser();
+
+            user.setId(dto.getCreatedBy());
+
+            Branch branch = new Branch();
+            branch.setId(dto.getBranchId());
+            user.setBranchId(branch);
+
+            TobyCompany company = new TobyCompany();
+            company.setId(dto.getCompanyId());
+            user.setCompanyId(company);
+
+            InvOrganizationSiteDTO dto1 = organizationSiteService.addNewCustomerAPI(dto, user, dto.getAccountIdAPI());
+            return dto1;
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    @Transactional
+    @Path("/addNewCustomerOld")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addNewCustomerOld(InvOrganizationSiteDTOAPI dto) {
 
         try {
 
