@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.BankBalanceReportAPI;
 import com.toby.API.InvInvoiceDTOApi;
 import com.toby.API.ResponseApi;
 import com.toby.API.SummitionItemAPI;
@@ -190,9 +191,11 @@ public interface InvPurchaseInvoiceService_1 {
     public InvInvoiceDTOApi findInvPurchaseInvoiceByserialAPI(Integer serial, Integer gallaryId, Integer branchId);
 
     public ResponseApi SaveApiDeskTop(InvInvoiceDTOApi invInvoiceDTOApi);
-    
-     public List<SummitionItemsView> findSummitionQuantityAPI(SummitionItemAPI summitionItemAPI) ;
-     
-     public List<InvInvoiceDTOApi> findCustomerInvoice(Integer customerId);
+
+    public List<SummitionItemsView> findSummitionQuantityAPI(SummitionItemAPI summitionItemAPI);
+
+    public List<InvInvoiceDTOApi> findCustomerInvoice(Integer customerId);
+
+    public List<ClientsNoMovment> findClientsNoMovmentAPI(BankBalanceReportAPI bankBalanceReportAPI);
 
 }

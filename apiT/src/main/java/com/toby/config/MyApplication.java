@@ -5,6 +5,7 @@ import com.toby.rest.LoginRest;
 import com.toby.rest.AttributeRest;
 import com.toby.rest.BankBalanceRest;
 import com.toby.rest.CangePasswordRest;
+import com.toby.rest.ClientNoMovementRest;
 import com.toby.rest.CostCenterRest;
 import com.toby.rest.CrmEventRest;
 import com.toby.rest.CustomerBalanceRest;
@@ -23,6 +24,7 @@ import com.toby.rest.OffersRest;
 import com.toby.rest.PayRest;
 import com.toby.rest.ProproductionReportRest;
 import com.toby.rest.PurchaseOfItemsBySupplierRest;
+import com.toby.rest.ReportsRest;
 import com.toby.rest.SalesRest;
 import com.toby.rest.SalesReportRest;
 import com.toby.rest.SalesReportValueAdedRest;
@@ -75,6 +77,8 @@ public class MyApplication extends Application {
         resources.add(BankBalanceRest.class);
         resources.add(SalesReportValueAdedRest.class);
         resources.add(CustomerBalanceRest.class);
+        resources.add(ClientNoMovementRest.class);
+        resources.add(ReportsRest.class);
 
         return resources;
     }

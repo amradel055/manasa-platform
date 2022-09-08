@@ -21,6 +21,8 @@ public class BankBalanceReportAPI extends BaseEntityDTOAPI {
     private List<GlBankDTO> glBankDTOList;
     private List<InvInventoryDTO> invInventoryDTOList;
     private InvInventoryDTO gallarySellected;
+    private Integer invType;
+
 
     /**
      * @return the dateFrom
@@ -90,6 +92,20 @@ public class BankBalanceReportAPI extends BaseEntityDTOAPI {
      */
     public void setGallarySellected(InvInventoryDTO gallarySellected) {
         this.gallarySellected = gallarySellected;
+    }
+
+    /**
+     * @return the invType
+     */
+    public Integer getInvType() {
+        return invType;
+    }
+
+    /**
+     * @param invType the invType to set
+     */
+    public void setInvType(Integer invType) {
+        this.invType = invType;
     }
 
 }

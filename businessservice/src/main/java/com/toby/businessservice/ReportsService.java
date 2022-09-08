@@ -69,4 +69,10 @@ public interface ReportsService {
     public List<SalesReportByValueAdedDetails> getSalesReportByValueAdedDetailsAPI(BankBalanceReportAPI bankBalanceReportAPI);
 
     public List<CustomerBalances> getCustomerBalancesAPI(BankBalanceReportAPI bankBalanceReportAPI);
+
+    public List<CustomerBalancesDebtAge> getCustomerBalancesDebtAgeAPI(BankBalanceReportAPI bankBalanceReportAPI);
+
+    public List<CompanyInvoicesWithoutSewing> getCompanyInvoicesWithoutSewingAPI(BankBalanceReportAPI bankBalanceReportAPI);
+
+    public List<ItemBalancesStatement> getItemBalancesStatementAPI(BankBalanceReportAPI bankBalanceReportAPI);
 }

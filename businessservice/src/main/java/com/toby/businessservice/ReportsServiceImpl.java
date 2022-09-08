@@ -1114,4 +1114,37 @@ public class ReportsServiceImpl implements ReportsService {
         return getCustomerBalances(customerBalances, bankBalanceReportAPI.getBranchId());
     }
 
+    @Override
+    public List<CustomerBalancesDebtAge> getCustomerBalancesDebtAgeAPI(BankBalanceReportAPI bankBalanceReportAPI) {
+        CustomerBalancesDebtAgeSearch customerBalancesDebtAgeSearch = new CustomerBalancesDebtAgeSearch();
+        if (bankBalanceReportAPI != null) {
+            customerBalancesDebtAgeSearch.setDateToSearch(bankBalanceReportAPI.getDateFrom());
+            customerBalancesDebtAgeSearch.setGallary(bankBalanceReportAPI.getGallarySellected());
+        }
+        return getCustomerBalancesDebtAge(customerBalancesDebtAgeSearch);
+    }
+
+    @Override
+    public List<CompanyInvoicesWithoutSewing> getCompanyInvoicesWithoutSewingAPI(BankBalanceReportAPI bankBalanceReportAPI) {
+        CompanyInvoicesWithoutSewing companyInvoicesWithoutSewing = new CompanyInvoicesWithoutSewing();
+        if (bankBalanceReportAPI != null) {
+            companyInvoicesWithoutSewing.setDateFrom(bankBalanceReportAPI.getDateFrom());
+            companyInvoicesWithoutSewing.setDateTo(bankBalanceReportAPI.getDateTo());
+        }
+        return getCompanyInvoicesWithoutSewing(companyInvoicesWithoutSewing, bankBalanceReportAPI.getBranchId());
+    }
+
+    @Override
+    public List<ItemBalancesStatement> getItemBalancesStatementAPI(BankBalanceReportAPI bankBalanceReportAPI) {
+
+        ItemBalancesStatement itemBalancesStatement = new ItemBalancesStatement();
+
+        if (itemBalancesStatement != null) {
+            itemBalancesStatement.setDateFrom(bankBalanceReportAPI.getDateFrom());
+            itemBalancesStatement.setDateTo(bankBalanceReportAPI.getDateTo());
+
+        }
+        return getItemBalancesStatement(itemBalancesStatement, bankBalanceReportAPI.getBranchId());
+    }
+
 }

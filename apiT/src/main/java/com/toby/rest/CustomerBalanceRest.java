@@ -8,6 +8,7 @@ package com.toby.rest;
 import com.toby.API.BankBalanceReportAPI;
 import com.toby.businessservice.ReportsService;
 import com.toby.views.CustomerBalances;
+import com.toby.views.CustomerBalancesDebtAge;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.transaction.Transactional;
@@ -34,5 +35,17 @@ public class CustomerBalanceRest {
         return reportsService.getCustomerBalancesAPI(bankBalanceReportAPI);
 
     }
+    
+    
+  @Transactional
+    @Path("/findCustomerBalanceDeptAge")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<CustomerBalancesDebtAge> findCustomerBalanceDeptAge(BankBalanceReportAPI bankBalanceReportAPI) {
+        return reportsService.getCustomerBalancesDebtAgeAPI(bankBalanceReportAPI);
+    }
+    
+    
 
 }
