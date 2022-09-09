@@ -71,6 +71,9 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.primefaces.context.RequestContext;
 
+
+
+
 /**
  *
  * @author FreeComp
@@ -354,6 +357,21 @@ public class Basic implements Serializable {
         }
         return userlogin;
     }
+    
+    
+
+    public void sendSms(String mobile, String sender, String message, String username, String password) {
+        try {
+            String language = "2";
+            StringBuilder json = new StringBuilder();
+            json.append("[{\"user\":\"").append(username).append("\",\"pwd\":\"").append(password).append("\",\"number\":\"").append(mobile).append("\",\"msg\":\"").append(message);
+            json.append("\",\"sender\":\"SMSAlert\",\"language\":\"Unicode\"}]");
+            callApiPostBasic("http://mshastra.com/sendsms_api_json.aspx", null, null, json.toString(), null, HttpMethode.POST);
+        } catch (Exception e) {
+            System.out.println("Error SMS " + e);
+//            return "Error " + e;
+        }
+    }
 
     public String callApiPostBasic(String url, String userName, String password, String jsonInputString, Map<String, Object> LinkParams, HttpMethode httpMethode) {
         try {
@@ -449,19 +467,6 @@ public class Basic implements Serializable {
 
         } catch (MessagingException mex) {
             mex.printStackTrace();
-        }
-    }
-
-    public void sendSms(String mobile, String sender, String message, String username, String password) {
-        try {
-            String language = "2";
-            StringBuilder json = new StringBuilder();
-            json.append("[{\"user\":\"").append(username).append("\",\"pwd\":\"").append(password).append("\",\"number\":\"").append(mobile).append("\",\"msg\":\"").append(message);
-            json.append("\",\"sender\":\"SMSAlert\",\"language\":\"Unicode\"}]");
-            callApiPostBasic("http://mshastra.com/sendsms_api_json.aspx", null, null, json.toString(), null, HttpMethode.POST);
-        } catch (Exception e) {
-            System.out.println("Error SMS " + e);
-//            return "Error " + e;
         }
     }
 

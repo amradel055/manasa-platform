@@ -26,6 +26,11 @@
             <artifactId>businessserviceT</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.toby</groupId>
+            <artifactId>toby</artifactId>
+            <version>1.0</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
         <dependency>
             <groupId>javax.ws.rs</groupId>
