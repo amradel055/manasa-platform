@@ -99,6 +99,7 @@ public class GeneralImp implements GeneralService {
             }
             aPIDataDTO.setName(tobyUser.getName());
             aPIDataDTO.setId(tobyUser.getId());
+            aPIDataDTO.setGalleryId(65);
             apiLoginDTO.setData(aPIDataDTO);
         }
 

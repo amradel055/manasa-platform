@@ -1545,6 +1545,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
         InvInventory gallaryId = dao.findEntityById(InvInventory.class, dto.getGallaryId().getId());
         dtoAPI.setQrCode(printQRCode(dto.getDate(), gallaryId.getSellerName(), gallaryId.getSellerName(), dto.getFinalNet(), dto.getTaxvalue(), gallaryId.getId()));
+        dtoAPI.setDaribaValue(gallaryId.getDaribaValue());
+        dtoAPI.setSegilValue(gallaryId.getSegilValue());
+        dtoAPI.setPayed(dto.getPayed());
 
         return dtoAPI;
 
@@ -1616,6 +1619,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 glPayDTO.setBankId(glPayDTOAPI.getBankId());
                 glPayDTO.setBank(glBankService.findGlBankDTO(glPayDTOAPI.getBankId()));
                 glPayDTOList.add(glPayDTO);
+                invoiceDTO.setPayed(invoiceDTO.getPayed().add(glPayDTOAPI.getValue()));
             }
             invoiceDTO.setGlPayDTOList(glPayDTOList);
         }
@@ -3193,6 +3197,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 }
                 try {
                     api = mapToDTOApiDeskTop(dto, Boolean.TRUE);
+                    api.setPayed(dto.getPayed());
                 } catch (IOException ex) {
                     Logger.getLogger(InvPurchaseInvoiceServiceImpl_1.class.getName()).log(Level.SEVERE, null, ex);
                 }

@@ -55,6 +55,8 @@ public class InvInvoiceDTOApi extends BaseEntityDTOAPI {
     private Integer serialTax;
     private BigDecimal net;
     private String qrCode;
+    private String daribaValue;
+    private String segilValue;
 
     private List<InvDetailsDTOAPI> invoiceDetailApiList;
     
@@ -68,6 +70,7 @@ public class InvInvoiceDTOApi extends BaseEntityDTOAPI {
     private BigDecimal totalNetAfterDiscount;
     private BigDecimal finalNet;
     private BigDecimal taxvalue;
+    private BigDecimal payed;
 
     /**
      * @return the customerName
@@ -697,5 +700,47 @@ public class InvInvoiceDTOApi extends BaseEntityDTOAPI {
      */
     public void setQrCode(String qrCode) {
         this.qrCode = qrCode;
+    }
+
+    /**
+     * @return the daribaValue
+     */
+    public String getDaribaValue() {
+        return daribaValue;
+    }
+
+    /**
+     * @param daribaValue the daribaValue to set
+     */
+    public void setDaribaValue(String daribaValue) {
+        this.daribaValue = daribaValue;
+    }
+
+    /**
+     * @return the segilValue
+     */
+    public String getSegilValue() {
+        return segilValue;
+    }
+
+    /**
+     * @param segilValue the segilValue to set
+     */
+    public void setSegilValue(String segilValue) {
+        this.segilValue = segilValue;
+    }
+
+    /**
+     * @return the payed
+     */
+    public BigDecimal getPayed() {
+        return payed;
+    }
+
+    /**
+     * @param payed the payed to set
+     */
+    public void setPayed(BigDecimal payed) {
+        this.payed = payed;
     }
 }
