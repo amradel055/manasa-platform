@@ -97,6 +97,18 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.toby.define.HttpMethode;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import javax.ws.rs.core.HttpHeaders;
+import java.util.Base64;
+import java.io.OutputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import org.apache.commons.lang.StringEscapeUtils;
+import java.util.LinkedHashMap;
+
 /**
  *
  * @author WIN7
@@ -1519,6 +1531,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         dtoAPI.setCustomerCode(dto.getOrganizationSiteId() == null ? null : dto.getOrganizationSiteId().getCode());
 
         dtoAPI.setDate(new Date());
+        dtoAPI.setId(dto.getId());
+        dtoAPI.setSerial(dto.getSerial());
         CurrencyDTO currency = new CurrencyDTO();
         currency.setId(110);
         dtoAPI.setDiscount(BigDecimal.ZERO);
@@ -1561,6 +1575,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invOrganizationSiteDTO.setId(invInvoiceDTOApi.getCustomerId());
         invoiceDTO.setOrganizationSiteId(invOrganizationSiteDTO);
 
+        invoiceDTO.setId(invInvoiceDTOApi.getId());
         invoiceDTO.setDate(new Date());
         CurrencyDTO currency = new CurrencyDTO();
         currency.setId(110);
@@ -2296,12 +2311,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 + " left join inv_inventory invi on invi.id = s.galary_Id "
                 + " left join inv_organization_site ios on ios.id = s.organization_site_id "
                 + " WHERE s.branch_id = ").append(branchId).append(
-                " AND  s.type = ").append(printProductionDTO.getInvoiceStatus()).append(
-                " AND s.id not in (SELECT p.inv_purchase_invoice_id from pro_factory_delivery p )  \n"
-                + " AND  s.galary_Id IN (").append(gallarySelected).append(" )  AND   s.date >= '"
-                + formatDateFrom.format(printProductionDTO.getFromDate()) + "'"
-                + " AND   s.date <= '" + formatDateTo.format(printProductionDTO.getToDate()) + "'"
-                + " order by s.serial");
+                        " AND  s.type = ").append(printProductionDTO.getInvoiceStatus()).append(
+                        " AND s.id not in (SELECT p.inv_purchase_invoice_id from pro_factory_delivery p )  \n"
+                        + " AND  s.galary_Id IN (").append(gallarySelected).append(" )  AND   s.date >= '"
+                        + formatDateFrom.format(printProductionDTO.getFromDate()) + "'"
+                        + " AND   s.date <= '" + formatDateTo.format(printProductionDTO.getToDate()) + "'"
+                        + " order by s.serial");
 
         List<Object[]> res = dao.executeNativeQuery(builder.toString());
 
@@ -3197,6 +3212,15 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 }
                 try {
                     api = mapToDTOApiDeskTop(dto, Boolean.TRUE);
+                    StringBuilder message = new StringBuilder();
+                    message.append("عميلنا العزيز ، شكراً لتسوقك تمت عملية شراء رقم ");
+                    message.append(dto.getSerial());
+                    message.append(" المدفوع ");
+                    message.append(dto.getPayed());
+                    message.append("\n");
+                    message.append("نسعد بتلقي تقييمكم عن الخدمة المقدمة لكم من برنس  \n");
+                    message.append(" https://forms.gle/jARVyTyhGMT9MQRi7 ");
+                    sendSms(dto.getCustomerMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
                     api.setPayed(dto.getPayed());
                 } catch (IOException ex) {
                     Logger.getLogger(InvPurchaseInvoiceServiceImpl_1.class.getName()).log(Level.SEVERE, null, ex);
@@ -4657,6 +4681,89 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             result.append(Integer.toHexString(c));
         }
         return result.toString();
+    }
+
+    public void sendSms(String mobile, String sender, String message, String username, String password) {
+        try {
+            String language = "2";
+            StringBuilder json = new StringBuilder();
+            json.append("[{\"user\":\"").append(username).append("\",\"pwd\":\"").append(password).append("\",\"number\":\"").append(mobile).append("\",\"msg\":\"").append(message);
+            json.append("\",\"sender\":\"SMSAlert\",\"language\":\"Unicode\"}]");
+            callApiPostBasic("http://mshastra.com/sendsms_api_json.aspx", null, null, json.toString(), null, HttpMethode.POST);
+        } catch (Exception e) {
+            System.out.println("Error SMS " + e);
+//            return "Error " + e;
+        }
+    }
+
+    public String callApiPostBasic(String url, String userName, String password, String jsonInputString, Map<String, Object> LinkParams, HttpMethode httpMethode) {
+        try {
+            String auth = userName + ":" + password;
+            String link = url;
+            if (LinkParams != null) {
+                link = link + getParamsString(LinkParams);
+            }
+            URL url1 = new URL(link);
+            HttpURLConnection conn = (HttpURLConnection) url1.openConnection();
+
+            conn.setRequestMethod(httpMethode.name());
+            conn.setRequestProperty("Content-Type", "application/json; utf-8");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+            conn.setDoOutput(true);
+            if (userName != null && password != null) {
+                conn.setRequestProperty(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString((auth).getBytes()));
+            }
+            if (jsonInputString != null && !jsonInputString.isEmpty()) {
+                try (OutputStream os = conn.getOutputStream()) {
+                    byte[] input = jsonInputString.getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                    os.close();
+                }
+            }
+
+            BufferedReader br;
+            String strCurrentLine;
+            StringBuilder json = new StringBuilder();
+
+            br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            while ((strCurrentLine = br.readLine()) != null) {
+                json.append(strCurrentLine);
+            }
+
+            br.close();
+            conn.disconnect();
+            String result = StringEscapeUtils.unescapeJava(json.toString());
+            result = result.replaceAll("null", "\"null\"");
+            result.replaceAll("\"\"", "\"null\"");
+            return result.replaceAll("(?<=[^{,:])\\\"(?![},:])(?!$)", "\'");//((?<!^)\")(?<!$)
+        } catch (Exception ex) {
+//            Logger.getLogger(Basic.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    private String getParamsString(Map<String, Object> params) {
+        try {
+            StringBuilder result = new StringBuilder();
+            Map<String, Object> param = new LinkedHashMap<>();
+            param.putAll(params);
+
+            for (Map.Entry<String, Object> entry : param.entrySet()) {
+                result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+                result.append("=");
+                result.append(URLEncoder.encode(entry.getValue().toString(), "UTF-8"));
+                result.append("&");
+            }
+
+            String resultString = result.toString();
+            return resultString.length() > 0
+                    ? resultString.substring(0, resultString.length() - 1)
+                    : resultString;
+        } catch (Exception ex) {
+//            Logger.getLogger(Basic.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
 }

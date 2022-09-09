@@ -9,7 +9,6 @@ import com.toby.API.InvInvoiceDTOApi;
 import com.toby.API.ResponseApi;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.dto.InvInvoiceDTO;
-import javax.ejb.EJB;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -17,6 +16,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ejb.EJB;
+
 
 @Path("/sales/")
 public class SalesRest {
@@ -62,9 +63,9 @@ public class SalesRest {
     @Consumes(MediaType.APPLICATION_JSON)
     public InvInvoiceDTOApi tarhilSalesAPI(InvInvoiceDTOApi invInvoiceDTOApi) {
         try {
-            if (invInvoiceDTOApi.getId() == null && invInvoiceDTOApi.getCustomerId() != null && invInvoiceDTOApi.getGallaryId() != null) {
+            if (invInvoiceDTOApi.getId() != null && invInvoiceDTOApi.getCustomerId() != null && invInvoiceDTOApi.getGallaryId() != null) {
                 InvInvoiceDTO invInvoiceDTO = invPurchaseInvoiceService_1.mapToDTOApiDeskTop(invInvoiceDTOApi, false);
-               InvInvoiceDTOApi invInvoiceDTOAPI = invPurchaseInvoiceService_1.tarhilSalesAPI(invInvoiceDTO);
+                InvInvoiceDTOApi invInvoiceDTOAPI = invPurchaseInvoiceService_1.tarhilSalesAPI(invInvoiceDTO);
                 return invInvoiceDTOAPI;
             }
             return null;
