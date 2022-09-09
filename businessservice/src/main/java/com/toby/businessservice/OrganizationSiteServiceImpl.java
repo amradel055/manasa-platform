@@ -524,6 +524,13 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             symbol.setId(invOrganizationSiteDTO.getLearnAboutCompanyFrom().getId());
             invOrganizationSite.setLearnAboutCompanyfrom(symbol);
         }
+        
+        if (invOrganizationSiteDTO.getAccountIdAPI() != null) {
+            GlAccount account = new GlAccount();
+            account.setId(invOrganizationSiteDTO.getAccountIdAPI());
+            invOrganizationSite.setAccountId(account);
+
+        }
 
         if (invOrganizationSiteDTO.getGallaryIdAPI() != null) {
             InvInventory invInventory = new InvInventory();
@@ -566,12 +573,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             invOrganizationSite.setContractorType(symbol);
         }
 
-        if (invOrganizationSiteDTO.getAccountIdAPI() != null) {
-            GlAccount account = new GlAccount();
-            account.setId(invOrganizationSiteDTO.getAccountIdAPI());
-            invOrganizationSite.setAccountId(account);
-
-        }
+        
         if (invOrganizationSiteDTO.getAccountId() != null) {
             GlAccount account = new GlAccount();
             account.setId(invOrganizationSiteDTO.getAccountId().getId());
@@ -1628,6 +1630,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             invOrganizationSiteDTO.setLength(invOrganizationSiteDTOAPI.getLength());
             invOrganizationSiteDTO.setShoulder(invOrganizationSiteDTOAPI.getShoulder());
             invOrganizationSiteDTO.setStep(invOrganizationSiteDTOAPI.getStep());
+            invOrganizationSiteDTO.setGallaryIdAPI(invOrganizationSiteDTOAPI.getGallaryIdAPI());
 
             invOrganizationSiteDTO = addOrganizationSiteDTO(invOrganizationSiteDTO, tobyUser);
         }

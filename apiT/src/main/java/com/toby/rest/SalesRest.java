@@ -62,7 +62,7 @@ public class SalesRest {
     @Consumes(MediaType.APPLICATION_JSON)
     public InvInvoiceDTOApi tarhilSalesAPI(InvInvoiceDTOApi invInvoiceDTOApi) {
         try {
-            if (invInvoiceDTOApi.getId() == null && invInvoiceDTOApi.getCustomerId() != null && invInvoiceDTOApi.getGallaryId() != null) {
+            if (invInvoiceDTOApi.getId() != null && invInvoiceDTOApi.getCustomerId() != null && invInvoiceDTOApi.getGallaryId() != null) {
                 InvInvoiceDTO invInvoiceDTO = invPurchaseInvoiceService_1.mapToDTOApiDeskTop(invInvoiceDTOApi, false);
                InvInvoiceDTOApi invInvoiceDTOAPI = invPurchaseInvoiceService_1.tarhilSalesAPI(invInvoiceDTO);
                 return invInvoiceDTOAPI;

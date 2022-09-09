@@ -391,12 +391,6 @@ public class Basic implements Serializable {
                 json.append(strCurrentLine);
             }
 
-//             if (conn.getResponseCode() == 200) { } else {
-//                br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-//                while ((strCurrentLine = br.readLine()) != null) {
-//                    json.append(strCurrentLine);
-//                }
-//            }
             br.close();
             conn.disconnect();
             String result = StringEscapeUtils.unescapeJava(json.toString());
@@ -461,62 +455,11 @@ public class Basic implements Serializable {
 
     public void sendSms(String mobile, String sender, String message, String username, String password) {
         try {
-//            String username = ;
-//            String password = ;
             String language = "2";
             StringBuilder json = new StringBuilder();
             json.append("[{\"user\":\"").append(username).append("\",\"pwd\":\"").append(password).append("\",\"number\":\"").append(mobile).append("\",\"msg\":\"").append(message);
             json.append("\",\"sender\":\"SMSAlert\",\"language\":\"Unicode\"}]");
             callApiPostBasic("http://mshastra.com/sendsms_api_json.aspx", null, null, json.toString(), null, HttpMethode.POST);
-//            return 
-
-//
-//            String requestUrl = "https://mshastra.com/sendurl.aspx?"
-////                    + "user=20099319"
-////                    + "&pwd=0564933202"
-////                    + "&senderid=SMSAlert"
-////                    + "&mobileno=966564933202"
-////                    + "&msgtext=HelloFromAmr"
-////                    + "&priority=High"
-////                    + "&CountryCode=ALL";
-//                    + "user=" + URLEncoder.encode("20099319", "UTF-8")
-//                    + "&pwd=" + URLEncoder.encode("0564933202", "UTF-8")
-//                    + "&senderid=" + URLEncoder.encode("SMSAlert", "UTF-8")
-//                    + "&mobileno=" + URLEncoder.encode("966564933202", "UTF-8")
-//                    + "&msgtext=" + URLEncoder.encode("HelloFromAmr", "UTF-8")
-//                    + "&priority=" + URLEncoder.encode("High", "UTF-8")
-//                    + "&CountryCode=" + URLEncoder.encode("ALL", "UTF-8");
-////            String requestUrl = "https://mshastra.com/sendurl.aspx/?"
-////                    + "user=" + URLEncoder.encode("20099319", "UTF-8")
-////                    + "&pwd=" + URLEncoder.encode("0564933202", "UTF-8")
-////                    //                    + "&language=" + URLEncoder.encode(language, "UTF-8")
-////                    + "&senderid=" + URLEncoder.encode(sender, "UTF-8")
-////                    + "&mobileno=" + URLEncoder.encode("0201015926792", "UTF-8")
-////                    + "&msgtext=" + URLEncoder.encode(message, "UTF-8")
-////                    + "&CountryCode=" + URLEncoder.encode("ALL", "UTF-8");
-//
-//            URL url = new URL(requestUrl);
-//            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//            conn.setRequestMethod("GET");
-//            conn.setDoOutput(true);
-//            conn.setDoInput(true);
-//            conn.setUseCaches(true);
-//            conn.connect();
-//            
-////            conn.setRequestMethod("POST");
-////            conn.setRequestProperty("Content-Length", Integer.toString(requestUrl.length()));
-////            conn.getOutputStream().write(requestUrl.getBytes("UTF-8")); // here
-//            final BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//            final StringBuffer stringBuffer = new StringBuffer();
-//            String line;
-//            while ((line = rd.readLine()) != null) {
-//                stringBuffer.append(line);
-//            }
-//            rd.close();
-//            System.out.println(conn.getResponseMessage());
-//
-//            conn.disconnect();
-//            return conn.getResponseMessage();
         } catch (Exception e) {
             System.out.println("Error SMS " + e);
 //            return "Error " + e;

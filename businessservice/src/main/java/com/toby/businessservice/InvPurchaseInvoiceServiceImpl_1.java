@@ -1560,6 +1560,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invOrganizationSiteDTO.setId(invInvoiceDTOApi.getCustomerId());
         invoiceDTO.setOrganizationSiteId(invOrganizationSiteDTO);
 
+        invoiceDTO.setId(invInvoiceDTOApi.getId());
         invoiceDTO.setDate(new Date());
         CurrencyDTO currency = new CurrencyDTO();
         currency.setId(110);
