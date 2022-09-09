@@ -371,8 +371,7 @@ public class Basic implements Serializable {
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
             conn.setDoOutput(true);
             if (userName != null && password != null) {
-                conn.setRequestProperty(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString(
-                        (auth).getBytes()));
+                conn.setRequestProperty(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString((auth).getBytes()));
             }
             if (jsonInputString != null && !jsonInputString.isEmpty()) {
                 try (OutputStream os = conn.getOutputStream()) {
