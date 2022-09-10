@@ -723,8 +723,8 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
         List<InvDetailDTO> list = new ArrayList<>();
         if (invPurchaseInvoiceDetailList != null && !invPurchaseInvoiceDetailList.isEmpty()) {
             error = invGlobalService.validateSave(invPurchaseInvoiceDetailList, invInvoiceDTO.getInvInventoryId().getId(),
-                    invInvoiceDTO.getScreenName(), invInvoiceDTO.getInventorySetupDTO().getNegativeSell(),
-                    (invInvoiceDTO.getLoadedSerial() != null), invInvoiceDTO.getInventorySetupDTO().getSellBuy(), invInvoiceDTO.getCompanyActivity());
+                    invInvoiceDTO.getScreenName(), invInvoiceDTO.getInventorySetupDTO() == null ? false : invInvoiceDTO.getInventorySetupDTO().getNegativeSell(),
+                    (invInvoiceDTO.getLoadedSerial() != null), invInvoiceDTO.getInventorySetupDTO()==null? false : invInvoiceDTO.getInventorySetupDTO().getSellBuy(), invInvoiceDTO.getCompanyActivity());
             if (error != null && !error.isEmpty()) {
                 InvDetailDTO dTO = new InvDetailDTO();
                 dTO.setMsg(error);

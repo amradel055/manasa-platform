@@ -24,6 +24,8 @@ import com.toby.entity.InventorySetup;
 import com.toby.views.ClientsNoMovment;
 import com.toby.views.FactoryInvoiceStatus;
 import com.toby.views.SummitionItemsView;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -190,12 +192,20 @@ public interface InvPurchaseInvoiceService_1 {
 
     public InvInvoiceDTOApi findInvPurchaseInvoiceByserialAPI(Integer serial, Integer gallaryId, Integer branchId);
 
-    public ResponseApi SaveApiDeskTop(InvInvoiceDTOApi invInvoiceDTOApi);
+    public InvInvoiceDTOApi SaveApiDeskTop(InvInvoiceDTOApi invInvoiceDTOApi);
 
     public List<SummitionItemsView> findSummitionQuantityAPI(SummitionItemAPI summitionItemAPI);
 
     public List<InvInvoiceDTOApi> findCustomerInvoice(Integer customerId);
 
-    public List<ClientsNoMovment> findClientsNoMovmentAPI(BankBalanceReportAPI bankBalanceReportAPI);
+    public InvInvoiceDTOApi tarhilSalesAPI(InvInvoiceDTO dto);
 
+    public InvInvoiceDTO mapToDTOApiDeskTop(InvInvoiceDTOApi invInvoiceDTOApi, Boolean isSave);
+    
+    public String printQRCode(Date invoiceDate ,String sellerName ,String sallerTRN ,BigDecimal finalNet ,BigDecimal VATTotalValue ,
+            Integer gallaryId) throws UnsupportedEncodingException, IOException ;
+
+    
+    public List<ClientsNoMovment> findClientsNoMovmentAPI(BankBalanceReportAPI bankBalanceReportAPI)  ;
+     
 }
