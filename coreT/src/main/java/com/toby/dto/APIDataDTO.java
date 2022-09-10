@@ -18,6 +18,7 @@ public class APIDataDTO {
     private Integer branchSelected;
     private Integer companySelected;
     private Integer galleryId;
+    private Integer accountIdAPI;
     private String mobile ;
     private List<APIBranchDTO> branchList;
 
@@ -117,6 +118,20 @@ public class APIDataDTO {
      */
     public void setGalleryId(Integer galleryId) {
         this.galleryId = galleryId;
+    }
+
+    /**
+     * @return the accountIdAPI
+     */
+    public Integer getAccountIdAPI() {
+        return accountIdAPI;
+    }
+
+    /**
+     * @param accountIdAPI the accountIdAPI to set
+     */
+    public void setAccountIdAPI(Integer accountIdAPI) {
+        this.accountIdAPI = accountIdAPI;
     }
 
 }
