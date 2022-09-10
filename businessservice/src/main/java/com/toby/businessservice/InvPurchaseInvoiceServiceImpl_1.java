@@ -3198,10 +3198,10 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 branch.setId(dto.getBranchId());
                 tobyUser.setBranchId(branch);
 
-                GeneralJournal generalJournal = tarhilSales(73, dto.getGallaryName(), dto.getSerial(), dto.getDate(), dto.getId(),
+                GeneralJournal generalJournal = tarhilSales(73, gallary.getName(), dto.getSerial(), dto.getDate(), dto.getId(),
                         dto.getFinalNet(), invOrganizationSite.getAccountId().getId(),
                         gallary.getCostCenterId().getId(), gallary.getRunningAccount().getId(),
-                        tobyUser, params, dto.getTotalNetAfterDiscount(), dto.getTaxvalue());
+                        tobyUser, params, dto.getTotalNetAfterDiscount(), dto.getTaxValue());
 
                 if (generalJournal != null) {
                     invPurchaseInvoice.setPostFlag(1);
