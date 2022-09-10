@@ -1136,8 +1136,9 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
 
         if (glBankDTO != null && glBankDTO.getAccountId() != null) {
             GlAccount accountDebitId = new GlAccount();
+            GlBank bank = dao.findEntityById(GlBank.class, glBankDTO.getId());
             accountDebitId.setId(glBankDTO.getAccountId());
-            entity.setAccountDebitId(accountDebitId);
+            entity.setAccountDebitId(bank.getAccountId());
         }
 
         if (invOrganizationId != null) {
