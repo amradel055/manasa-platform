@@ -1134,10 +1134,10 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
     public GlBankTransactionDetail mapToEntityDetailFromInvSales(GlBankDTO glBankDTO, Integer invOrganizationId, Integer glBankTransactionId, GlBankDTO bankDTO, String remarks, BigDecimal value, TobyUser tobyUser) {
         GlBankTransactionDetail entity = new GlBankTransactionDetail();
 
-        if (glBankDTO != null && glBankDTO.getAccountId() != null) {
-            GlAccount accountDebitId = new GlAccount();
+        if (glBankDTO != null && glBankDTO.getId() != null) {
+//            GlAccount accountDebitId = new GlAccount();
             GlBank bank = dao.findEntityById(GlBank.class, glBankDTO.getId());
-            accountDebitId.setId(glBankDTO.getAccountId());
+//            accountDebitId.setId(glBankDTO.getAccountId());
             entity.setAccountDebitId(bank.getAccountId());
         }
 
