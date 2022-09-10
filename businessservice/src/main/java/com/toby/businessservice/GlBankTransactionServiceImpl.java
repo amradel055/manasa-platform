@@ -726,7 +726,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         return glBankTransaction;
     }
     
-    @Override
+    @Override    
     public List<GlPayDTO> addCash(List<GlPayDTO> glPayDTOList, Date date, BigDecimal rate, String remarks, Integer invOrganizationId, Integer glYearId, TobyUser tobyUser) {
         for (GlPayDTO dTO : glPayDTOList) {
             if (dTO.getId() == null && date != null && dTO.getBank() != null && dTO.getBank().getId() != null && dTO.getInvoiceId() != null && dTO.getValue() != null && rate != null && dTO.getValue().compareTo(BigDecimal.ZERO) == 1 && invOrganizationId != null && tobyUser != null) {
@@ -820,7 +820,8 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
                 dTO.setTransactionId(bankTransaction.getId());
                 dTO.setSerial(bankTransaction.getSerial());
                 detailList.add(dTO);
-                tarhilglBankTransaction(bankTransaction.getId(), bankTransaction);
+                glBankTransactionDetailsService.tarhilAfterSave(bankTransaction.getId(), tobyUser1);
+//                tarhilglBankTransaction(bankTransaction.getId(), bankTransaction);
             }
         }
         glBankTransactionAPI.setGlPayDTOAPIList(detailList);

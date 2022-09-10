@@ -1107,7 +1107,7 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
 //        tarhil(bankTransactionDetail, tobyUser);
     }
 
-    @Override
+    @Override  
     public GlBankTransactionDTO tarhilAfterSave(Integer glBankTransactionId, TobyUser tobyUser) {
         Map<String, Object> params20 = new HashMap<>();
         GlBankTransactionDTO glBankTransaction = new GlBankTransactionDTO();
