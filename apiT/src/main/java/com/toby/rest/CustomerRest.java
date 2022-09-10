@@ -163,10 +163,10 @@ public class CustomerRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public InvOrganizationSiteDTO addNewCustomer(InvOrganizationSiteDTOAPI dto) {
+    public InvOrganizationSiteDTOAPI addNewCustomer(InvOrganizationSiteDTOAPI dto) {
 
         try {
-
+            InvOrganizationSiteDTOAPI invOrganizationSiteDTOAPI = new InvOrganizationSiteDTOAPI();
             TobyUser user = new TobyUser();
 
             user.setId(dto.getCreatedBy());
@@ -180,7 +180,10 @@ public class CustomerRest {
             user.setCompanyId(company);
 
             InvOrganizationSiteDTO dto1 = organizationSiteService.addNewCustomerAPI(dto, user, dto.getAccountIdAPI());
-            return dto1;
+            
+            invOrganizationSiteDTOAPI.setId(dto1.getId());
+            
+            return invOrganizationSiteDTOAPI;
 
         } catch (Exception e) {
             return null;

@@ -1107,7 +1107,7 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
 //        tarhil(bankTransactionDetail, tobyUser);
     }
 
-    @Override
+    @Override  
     public GlBankTransactionDTO tarhilAfterSave(Integer glBankTransactionId, TobyUser tobyUser) {
         Map<String, Object> params20 = new HashMap<>();
         GlBankTransactionDTO glBankTransaction = new GlBankTransactionDTO();
@@ -1134,10 +1134,11 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
     public GlBankTransactionDetail mapToEntityDetailFromInvSales(GlBankDTO glBankDTO, Integer invOrganizationId, Integer glBankTransactionId, GlBankDTO bankDTO, String remarks, BigDecimal value, TobyUser tobyUser) {
         GlBankTransactionDetail entity = new GlBankTransactionDetail();
 
-        if (glBankDTO != null && glBankDTO.getAccountId() != null) {
-            GlAccount accountDebitId = new GlAccount();
-            accountDebitId.setId(glBankDTO.getAccountId());
-            entity.setAccountDebitId(accountDebitId);
+        if (glBankDTO != null && glBankDTO.getId() != null) {
+//            GlAccount accountDebitId = new GlAccount();
+            GlBank bank = dao.findEntityById(GlBank.class, glBankDTO.getId());
+//            accountDebitId.setId(glBankDTO.getAccountId());
+            entity.setAccountDebitId(bank.getAccountId());
         }
 
         if (invOrganizationId != null) {

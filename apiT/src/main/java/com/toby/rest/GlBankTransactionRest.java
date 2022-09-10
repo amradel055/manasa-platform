@@ -43,7 +43,7 @@ public class GlBankTransactionRest {
         TobyCompany tobyCompany = new TobyCompany();
         tobyCompany.setId(glBankTransactionAPI.getCompanyId());
         tobyUser1.setCompanyId(tobyCompany);
-        glBankTransactionDetailsService.tarhilAfterSave(bankTransactionAPI.getId(), tobyUser1);
+        
         return bankTransactionAPI;
     }
 
