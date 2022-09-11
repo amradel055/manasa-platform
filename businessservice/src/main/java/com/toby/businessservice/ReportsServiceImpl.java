@@ -1185,10 +1185,60 @@ public class ReportsServiceImpl implements ReportsService {
                 list = getSalesStatementForThePeriod(salesStatementForThePeriod);
                 salesStatementForThePeriodList.addAll(list);
             }
+            if (bankBalanceReportAPI.getNotZeroValue()) {
+                List<SalesStatementForThePeriod> listBak = new ArrayList<>();
+                for (SalesStatementForThePeriod period : salesStatementForThePeriodList) {
+                    if (period.getRemain().compareTo(BigDecimal.ZERO) == 1) {
+                        listBak.add(period);
+                    }
+                }
+                salesStatementForThePeriodList = listBak;
+            }
+
+            if (bankBalanceReportAPI.getZeroValue()) {
+                List<SalesStatementForThePeriod> listBak = new ArrayList<>();
+                for (SalesStatementForThePeriod period : salesStatementForThePeriodList) {
+                    if (period.getRemain().compareTo(BigDecimal.ZERO) != 1) {
+                        listBak.add(period);
+                    }
+                }
+                salesStatementForThePeriodList = listBak;
+            }
+
+            if (bankBalanceReportAPI.getRemain()) {
+                List<SalesStatementForThePeriod> listBak = new ArrayList<>();
+                for (SalesStatementForThePeriod period : salesStatementForThePeriodList) {
+                    if (period.getRemain().compareTo(BigDecimal.ZERO) != 0 && period.getRemain().compareTo(bankBalanceReportAPI.getRemainValue()) != 1) {
+                        listBak.add(period);
+                    }
+                }
+                salesStatementForThePeriodList = listBak;
+            }
 
         }
-
         return salesStatementForThePeriodList;
     }
+//
+//    @Override
+//    public List<SalesStatementForThePeriod> getSalesStatementForThePeriodAPI(BankBalanceReportAPI bankBalanceReportAPI) {
+//        SalesStatementForThePeriod salesStatementForThePeriod = new SalesStatementForThePeriod();
+//        List<SalesStatementForThePeriod> salesStatementForThePeriodList = new ArrayList<>();
+//        if (bankBalanceReportAPI != null) {
+//            salesStatementForThePeriod.setDateFrom(bankBalanceReportAPI.getDateFrom());
+//            salesStatementForThePeriod.setGallaryListSelected(bankBalanceReportAPI.getInvInventoryDTOList());
+//            salesStatementForThePeriod.setSerial(0);
+//            salesStatementForThePeriod.setInvoiceId(0);
+//            for (InvInventoryDTO inventoryDTO : bankBalanceReportAPI.getInvInventoryDTOList()) {
+//                List<SalesStatementForThePeriod> list = new ArrayList<>();
+//                salesStatementForThePeriod.setGallerySelected(inventoryDTO);
+//                list = getSalesStatementForThePeriod(salesStatementForThePeriod);
+//                salesStatementForThePeriodList.addAll(list);
+//
+//            }
+//
+//        }
+//
+//        return salesStatementForThePeriodList;
+//    }
 
 }

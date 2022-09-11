@@ -80,4 +80,5 @@ public interface ReportsService {
     public List<ProfitOfItemsSold> getProfitOfItemsSoldAPI(ItemsDataAPI itemsDataAPI, Integer invTpe, Integer branchId, Integer invoiceType);
     
      public List<SalesStatementForThePeriod> getSalesStatementForThePeriodAPI(BankBalanceReportAPI bankBalanceReportAPI) ;
+
 }
