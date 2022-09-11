@@ -6,6 +6,7 @@
 package com.toby.businessservice;
 
 import com.toby.API.BankBalanceReportAPI;
+import com.toby.API.ItemsDataAPI;
 import com.toby.views.ClientsByInvInventory;
 import com.toby.views.CompanyInvoicesWithoutSewing;
 import com.toby.views.CustomerBalances;
@@ -75,4 +76,8 @@ public interface ReportsService {
     public List<CompanyInvoicesWithoutSewing> getCompanyInvoicesWithoutSewingAPI(BankBalanceReportAPI bankBalanceReportAPI);
 
     public List<ItemBalancesStatement> getItemBalancesStatementAPI(BankBalanceReportAPI bankBalanceReportAPI);
+
+    public List<ProfitOfItemsSold> getProfitOfItemsSoldAPI(ItemsDataAPI itemsDataAPI, Integer invTpe, Integer branchId, Integer invoiceType);
+    
+     public List<SalesStatementForThePeriod> getSalesStatementForThePeriodAPI(BankBalanceReportAPI bankBalanceReportAPI) ;
 }

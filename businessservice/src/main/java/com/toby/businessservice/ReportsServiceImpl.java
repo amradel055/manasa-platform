@@ -6,6 +6,7 @@
 package com.toby.businessservice;
 
 import com.toby.API.BankBalanceReportAPI;
+import com.toby.API.ItemsDataAPI;
 import com.toby.bussinessservice.global.Utility;
 import com.toby.core.GenericDAO;
 import com.toby.dto.InvInventoryDTO;
@@ -1145,6 +1146,49 @@ public class ReportsServiceImpl implements ReportsService {
 
         }
         return getItemBalancesStatement(itemBalancesStatement, bankBalanceReportAPI.getBranchId());
+    }
+
+    @Override
+    public List<ProfitOfItemsSold> getProfitOfItemsSoldAPI(ItemsDataAPI itemsDataAPI, Integer invTpe, Integer branchId, Integer invoiceType) {
+
+        ProfitOfItemsSold profitOfItemsSold = new ProfitOfItemsSold();
+        if (itemsDataAPI != null) {
+            if (itemsDataAPI.getInvType() != null) {
+                invTpe = itemsDataAPI.getInvType();
+            }
+            if (itemsDataAPI.getInvoiceType() != null) {
+                invoiceType = itemsDataAPI.getInvoiceType();
+            }
+            profitOfItemsSold.setGallarySelected(itemsDataAPI.getInvInventoryDTOList());
+            profitOfItemsSold.setGroupDTOSelected(itemsDataAPI.getProGroupDTOList());
+            branchId = itemsDataAPI.getBranchId();
+            profitOfItemsSold.setItemCode(itemsDataAPI.getItemCode());
+
+        }
+
+        return getProfitOfItemsSold(profitOfItemsSold, branchId, invTpe, invoiceType);
+    }
+
+    @Override
+    public List<SalesStatementForThePeriod> getSalesStatementForThePeriodAPI(BankBalanceReportAPI bankBalanceReportAPI) {
+        SalesStatementForThePeriod salesStatementForThePeriod = new SalesStatementForThePeriod();
+        List<SalesStatementForThePeriod> salesStatementForThePeriodList = new ArrayList<>();
+        salesStatementForThePeriod.setDateFrom(bankBalanceReportAPI.getDateFrom());
+        salesStatementForThePeriod.setDateTo(bankBalanceReportAPI.getDateTo());
+        salesStatementForThePeriod.setGallaryListSelected(bankBalanceReportAPI.getInvInventoryDTOList());
+        salesStatementForThePeriod.setSerial(0);
+        salesStatementForThePeriod.setInvoiceId(0);
+        if (bankBalanceReportAPI != null) {
+            for (InvInventoryDTO invInventoryDTO : bankBalanceReportAPI.getInvInventoryDTOList()) {
+                List<SalesStatementForThePeriod> list = new ArrayList<>();
+                salesStatementForThePeriod.setGallerySelected(invInventoryDTO);
+                list = getSalesStatementForThePeriod(salesStatementForThePeriod);
+                salesStatementForThePeriodList.addAll(list);
+            }
+
+        }
+
+        return salesStatementForThePeriodList;
     }
 
 }

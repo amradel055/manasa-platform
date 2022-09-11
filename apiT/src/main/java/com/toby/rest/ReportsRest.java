@@ -4,13 +4,13 @@
  * and open the template in the editor.
  */
 package com.toby.rest;
-
 import com.toby.API.BankBalanceReportAPI;
 import com.toby.businessservice.ReportsService;
 import com.toby.businessservice.report.PurchaseOfItemsBySuppliersReportService;
 import com.toby.views.CompanyInvoicesWithoutSewing;
 import com.toby.views.ItemBalancesStatement;
 import com.toby.views.SalesOfItemsByCompany;
+import com.toby.views.SalesStatementForThePeriod;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.transaction.Transactional;
@@ -54,6 +54,15 @@ public class ReportsRest {
     @Consumes(MediaType.APPLICATION_JSON)
     public List<SalesOfItemsByCompany> salesOfItemByCompany(BankBalanceReportAPI bankBalanceReportAPI) {
         return purchaseOfItemsBySuppliersReportService.getAllSalesOfItemsByCompanyAPI(bankBalanceReportAPI);
+    }
+
+    @Transactional
+    @Path("/FindSalesForPeriod")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<SalesStatementForThePeriod> FindSalesForPeriod(BankBalanceReportAPI bankBalanceReportAPI) {
+        return reportsService.getSalesStatementForThePeriodAPI(bankBalanceReportAPI);
     }
 
 }

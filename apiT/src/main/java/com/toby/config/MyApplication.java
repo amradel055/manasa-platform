@@ -1,5 +1,6 @@
 package com.toby.config;
 
+import com.toby.API.ItemsDataAPI;
 import com.toby.rest.AttributeDetailsRest;
 import com.toby.rest.LoginRest;
 import com.toby.rest.AttributeRest;
@@ -17,11 +18,13 @@ import com.toby.rest.GlAccountRest;
 import com.toby.rest.GlBankTransactionRest;
 import com.toby.rest.GlYearRest;
 import com.toby.rest.GlbankRest;
+import com.toby.rest.GroupDTORest;
 import com.toby.rest.InventoryRest;
 import com.toby.rest.ItemsRest;
 import com.toby.rest.OffersDetailsRest;
 import com.toby.rest.OffersRest;
 import com.toby.rest.PayRest;
+import com.toby.rest.ProfitOfItemsRest;
 import com.toby.rest.ProproductionReportRest;
 import com.toby.rest.PurchaseOfItemsBySupplierRest;
 import com.toby.rest.ReportsRest;
@@ -79,6 +82,8 @@ public class MyApplication extends Application {
         resources.add(CustomerBalanceRest.class);
         resources.add(ClientNoMovementRest.class);
         resources.add(ReportsRest.class);
+        resources.add(GroupDTORest.class);
+        resources.add(ProfitOfItemsRest.class);
 
         return resources;
     }
