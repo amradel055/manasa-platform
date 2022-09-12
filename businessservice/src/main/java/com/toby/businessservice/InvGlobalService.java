@@ -89,7 +89,7 @@ public interface InvGlobalService {
 
     public InvItemDTOApi findItemData(Integer itemId, Integer customerId, Integer priceType, Integer inventoryId);
 
-    public InvItemDTOApi findItemPriceData(Integer itemId, Integer customerId, Integer priceType, Integer inventoryId);
+    public InvItemDTOApi findItemPriceData(Integer itemId, Integer customerId, Integer priceType, Integer inventoryId,BigDecimal quantityOfUnit);
 
     public SalesStatementForThePeriod invoiceFinanceData(Integer invoiceId);
 }

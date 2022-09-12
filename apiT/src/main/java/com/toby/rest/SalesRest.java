@@ -5,10 +5,12 @@
  */
 package com.toby.rest;
 
+import com.toby.API.InvDetailsDTOAPI;
 import com.toby.API.InvInvoiceDTOApi;
 import com.toby.API.ResponseApi;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.dto.InvInvoiceDTO;
+import java.util.List;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -40,6 +42,41 @@ public class SalesRest {
     }
 
     @Transactional
+    @Path("/offerone")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<InvDetailsDTOAPI>  offerone(InvInvoiceDTOApi invInvoiceDTOApi) {
+        try {
+            if (invInvoiceDTOApi.getInvoiceDetailApiList() != null && !invInvoiceDTOApi.getInvoiceDetailApiList().isEmpty()) {
+                List<InvDetailsDTOAPI> list = invPurchaseInvoiceService_1.offer999Les16Les20Only(invInvoiceDTOApi.getInvoiceDetailApiList());
+                return list;
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    
+    @Transactional
+    @Path("/offeroneNew")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<InvDetailsDTOAPI>  offerone(List<InvDetailsDTOAPI> invoiceDetailApiList) {
+        try {
+            if (invoiceDetailApiList != null && !invoiceDetailApiList.isEmpty()) {
+                List<InvDetailsDTOAPI> invoiceDTO = invPurchaseInvoiceService_1.offer999Les16Les20Only(invoiceDetailApiList);
+                return invoiceDTO;
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    @Transactional
     @Path("/saveDeskTop")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -64,6 +101,7 @@ public class SalesRest {
     public InvInvoiceDTOApi tarhilSalesAPI(InvInvoiceDTOApi invInvoiceDTOApi) {
         try {
             if (invInvoiceDTOApi.getId() != null && invInvoiceDTOApi.getCustomerId() != null && invInvoiceDTOApi.getGallaryId() != null) {
+                invPurchaseInvoiceService_1.updateTarhil(invInvoiceDTOApi.getId());
                 InvInvoiceDTO invInvoiceDTO = invPurchaseInvoiceService_1.mapToDTOApiDeskTop(invInvoiceDTOApi, false);
                 InvInvoiceDTOApi invInvoiceDTOAPI = invPurchaseInvoiceService_1.tarhilSalesAPI(invInvoiceDTO);
                 return invInvoiceDTOAPI;

@@ -109,6 +109,7 @@ public class GeneralImp implements GeneralService {
             if (gallaryList != null && !gallaryList.isEmpty()) {
                 aPIDataDTO.setGalleryId(gallaryList.get(0).getId());
                 aPIDataDTO.setAccountIdAPI(gallaryList.get(0).getCustomerAccount().getId());
+                aPIDataDTO.setGalleryName(gallaryList.get(0).getName());
             }
             aPIDataDTO.setName(tobyUser.getName());
             aPIDataDTO.setId(tobyUser.getId());

@@ -11,28 +11,32 @@ import java.math.BigDecimal;
  *
  * @author Lenovo
  */
-public class InvDetailsDTOAPI  extends BaseEntityDTOAPI{
-    
-    private String name ;
-    private String code ;
-    private BigDecimal price ;
-    private String image ;
-    private Integer groupId ;
-    private Integer inventoryId ;
-    private String inventoryName ;
-    
+public class InvDetailsDTOAPI extends BaseEntityDTOAPI {
+
+    private String name;
+    private String code;
+    private BigDecimal price;
+    private String image;
+    private Integer groupId;
+    private Integer inventoryId;
+    private String inventoryName;
+    private String inventoryCode;
+    private String unitName;
+
     private Integer itemId;
     private BigDecimal net;
     private BigDecimal quantity;
     private BigDecimal number;
-    
+
     private BigDecimal quantityOfOneUnit;
     private BigDecimal availableQuantityRow;
-     private BigDecimal discountValue;
-     private BigDecimal discount;
-      private Integer proof;
-    
-    
+    private BigDecimal discountValue;
+    private BigDecimal discount;
+    private Integer proof;
+    private Integer progroupId;
+    private Integer typeShow;
+    private BigDecimal lastCost;
+
     /**
      * @return the name
      */
@@ -257,6 +261,74 @@ public class InvDetailsDTOAPI  extends BaseEntityDTOAPI{
         this.proof = proof;
     }
 
+    /**
+     * @return the progroupId
+     */
+    public Integer getProgroupId() {
+        return progroupId;
+    }
 
+    /**
+     * @param progroupId the progroupId to set
+     */
+    public void setProgroupId(Integer progroupId) {
+        this.progroupId = progroupId;
+    }
+
+    /**
+     * @return the typeShow
+     */
+    public Integer getTypeShow() {
+        return typeShow;
+    }
+
+    /**
+     * @param typeShow the typeShow to set
+     */
+    public void setTypeShow(Integer typeShow) {
+        this.typeShow = typeShow;
+    }
+
+    /**
+     * @return the lastCost
+     */
+    public BigDecimal getLastCost() {
+        return lastCost;
+    }
+
+    /**
+     * @param lastCost the lastCost to set
+     */
+    public void setLastCost(BigDecimal lastCost) {
+        this.lastCost = lastCost;
+    }
+
+    /**
+     * @return the unitName
+     */
+    public String getUnitName() {
+        return unitName;
+    }
+
+    /**
+     * @param unitName the unitName to set
+     */
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
+    }
+
+    /**
+     * @return the inventoryCode
+     */
+    public String getInventoryCode() {
+        return inventoryCode;
+    }
+
+    /**
+     * @param inventoryCode the inventoryCode to set
+     */
+    public void setInventoryCode(String inventoryCode) {
+        this.inventoryCode = inventoryCode;
+    }
 
 }
