@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice.report;
 
+import com.toby.API.BankBalanceReportAPI;
 import com.toby.API.SummitionItemAPI;
 import com.toby.businessservice.InvoiceMovementReportService;
 import com.toby.businessservice.reports.searchBean.PurchaseOfItemsBySuppliersSearchBean;
@@ -275,7 +276,6 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
 
     }
 
-   
     private void appendSupplier(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean, StringBuilder stringBuilder, Map<String, Object> params) {
 
         if (purchaseOfItemsBySuppliersSearchBean.getFromorganizationName() != null) {
@@ -361,7 +361,6 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
 
     }
 
-   
     private void appendInventoryNew(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean, StringBuilder stringBuilder, Map<String, Object> params) {
 
         if (purchaseOfItemsBySuppliersSearchBean.getFromInventoryName() != null) {
@@ -818,6 +817,24 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
 
         }
         return getAllPurchaseOfItemsBySuppliersSearchBeanNew(purchaseOfItemsBySuppliersSearchBean, invoiceType);
+    }
+
+    @Override
+    public List<SalesOfItemsByCompany> getAllSalesOfItemsByCompanyAPI(BankBalanceReportAPI bankBalanceReportAPI) {
+        List<SalesOfItemsByCompany> salesOfItemsByCompanyList = new ArrayList<>();
+        PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean = new PurchaseOfItemsBySuppliersSearchBean();
+        if (bankBalanceReportAPI != null) {
+            for (InvInventoryDTO invInventoryDTO : bankBalanceReportAPI.getInvInventoryDTOList()) {
+                purchaseOfItemsBySuppliersSearchBean.setDateFrom(bankBalanceReportAPI.getDateFrom());
+                purchaseOfItemsBySuppliersSearchBean.setDateTo(bankBalanceReportAPI.getDateTo());
+                purchaseOfItemsBySuppliersSearchBean.setBranchId(bankBalanceReportAPI.getBranchId());
+                purchaseOfItemsBySuppliersSearchBean.setFromInventoryDTOName(invInventoryDTO);
+
+                salesOfItemsByCompanyList = getAllSalesOfItemsByCompany(purchaseOfItemsBySuppliersSearchBean);
+            }
+
+        }
+        return salesOfItemsByCompanyList;
     }
 
 }

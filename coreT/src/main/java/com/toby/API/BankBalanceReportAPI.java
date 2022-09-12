@@ -7,6 +7,7 @@ package com.toby.API;
 
 import com.toby.dto.GlBankDTO;
 import com.toby.dto.InvInventoryDTO;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +22,12 @@ public class BankBalanceReportAPI extends BaseEntityDTOAPI {
     private List<GlBankDTO> glBankDTOList;
     private List<InvInventoryDTO> invInventoryDTOList;
     private InvInventoryDTO gallarySellected;
+    private Integer invType;
+
+    private Boolean notZeroValue;
+    private Boolean zeroValue;
+    private Boolean remain;
+    private BigDecimal remainValue;
 
     /**
      * @return the dateFrom
@@ -90,6 +97,88 @@ public class BankBalanceReportAPI extends BaseEntityDTOAPI {
      */
     public void setGallarySellected(InvInventoryDTO gallarySellected) {
         this.gallarySellected = gallarySellected;
+    }
+
+    /**
+     * @return the invType
+     */
+    public Integer getInvType() {
+        return invType;
+    }
+
+    /**
+     * @param invType the invType to set
+     */
+    public void setInvType(Integer invType) {
+        this.invType = invType;
+    }
+
+    /**
+     * @return the notZeroValue
+     */
+    public Boolean getNotZeroValue() {
+        if (notZeroValue == null) {
+            notZeroValue = Boolean.FALSE;
+        }
+        return notZeroValue;
+    }
+
+    /**
+     * @param notZeroValue the notZeroValue to set
+     */
+    public void setNotZeroValue(Boolean notZeroValue) {
+        this.notZeroValue = notZeroValue;
+    }
+
+    /**
+     * @return the zeroValue
+     */
+    public Boolean getZeroValue() {
+        if (zeroValue == null) {
+            zeroValue = Boolean.FALSE;
+        }
+        return zeroValue;
+    }
+
+    /**
+     * @param zeroValue the zeroValue to set
+     */
+    public void setZeroValue(Boolean zeroValue) {
+        this.zeroValue = zeroValue;
+    }
+
+    /**
+     * @return the remain
+     */
+    public Boolean getRemain() {
+        if (remain == null) {
+            remain = Boolean.FALSE;
+        }
+        return remain;
+    }
+
+    /**
+     * @param remain the remain to set
+     */
+    public void setRemain(Boolean remain) {
+        this.remain = remain;
+    }
+
+    /**
+     * @return the remainValue
+     */
+    public BigDecimal getRemainValue() {
+        if (remainValue == null) {
+            remainValue = BigDecimal.ZERO;
+        }
+        return remainValue;
+    }
+
+    /**
+     * @param remainValue the remainValue to set
+     */
+    public void setRemainValue(BigDecimal remainValue) {
+        this.remainValue = remainValue;
     }
 
 }

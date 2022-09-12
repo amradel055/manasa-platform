@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.BankBalanceReportAPI;
 import com.toby.API.InvInvoiceDTOApi;
 import com.toby.API.ResponseApi;
 import com.toby.API.SummitionItemAPI;
@@ -204,4 +205,7 @@ public interface InvPurchaseInvoiceService_1 {
     public String printQRCode(Date invoiceDate ,String sellerName ,String sallerTRN ,BigDecimal finalNet ,BigDecimal VATTotalValue ,
             Integer gallaryId) throws UnsupportedEncodingException, IOException ;
 
+    
+    public List<ClientsNoMovment> findClientsNoMovmentAPI(BankBalanceReportAPI bankBalanceReportAPI)  ;
+     
 }

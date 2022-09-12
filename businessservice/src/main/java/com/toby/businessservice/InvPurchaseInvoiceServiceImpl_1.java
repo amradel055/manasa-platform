@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.BankBalanceReportAPI;
 import com.toby.API.GlPayDTOAPI;
 import com.toby.API.InvDetailsDTOAPI;
 import com.toby.API.InvInvoiceDTOApi;
@@ -4681,6 +4682,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             result.append(Integer.toHexString(c));
         }
         return result.toString();
+    }
+    
+     @Override
+    public List<ClientsNoMovment> findClientsNoMovmentAPI(BankBalanceReportAPI bankBalanceReportAPI) {
+        return findClientsNoMovment(bankBalanceReportAPI.getBranchId(), bankBalanceReportAPI.getGallarySellected().getId(), bankBalanceReportAPI.getDateFrom(), bankBalanceReportAPI.getInvType());
+
     }
 
     public void sendSms(String mobile, String sender, String message, String username, String password) {

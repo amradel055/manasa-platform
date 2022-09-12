@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice.report;
 
+import com.toby.API.SupplierDataAPI;
 import com.toby.businessservice.reports.searchBean.SupplierDataReportSearchBean;
 import com.toby.entity.InvOrganizationSite;
 
@@ -18,8 +19,8 @@ import javax.ejb.Remote;
 @Remote
 public interface SupplierDataServiceReport {
 
-   public List<InvOrganizationSite> getAllSupplierDataReportSearchBean(SupplierDataReportSearchBean supplierDataReportSearchBean);
-  
+    public List<InvOrganizationSite> getAllSupplierDataReportSearchBean(SupplierDataReportSearchBean supplierDataReportSearchBean);
 
+    public List<InvOrganizationSite> getAllSupplierDataReportSearchBeanAPI(SupplierDataAPI supplierDataAPI);
 
 }

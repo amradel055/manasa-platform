@@ -4,8 +4,11 @@
  * and open the template in the editor.
  */
 package com.toby.rest;
+import com.toby.API.SupplierDataAPI;
 import com.toby.businessservice.report.SupplierAccountService;
+import com.toby.businessservice.report.SupplierDataServiceReport;
 import com.toby.businessservice.reports.searchBean.SupplierAccountSearchBean;
+import com.toby.entity.InvOrganizationSite;
 import com.toby.views.OrganizationSiteStatementView;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +29,9 @@ public class SupplierCustomerRest {
 
     @EJB
     SupplierAccountService supplierAccountService;
+        @EJB
+        SupplierDataServiceReport supplierDataServiceReport;
+
 
     @Transactional
     @Path("/supplierAcountList")
@@ -38,5 +44,18 @@ public class SupplierCustomerRest {
          organizationSiteStatementViewList = supplierAccountService.getAllOpeningBalanceBeforeBalanceBySearchBean(supplierAccountSearchBean);
         }
         return organizationSiteStatementViewList ;
+    }
+    
+    @Transactional
+    @Path("/findSupplierData")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<InvOrganizationSite> findSupplierData(SupplierDataAPI supplierDataAPI) {
+        List<InvOrganizationSite> organizationSiteList = new ArrayList<>();
+        if (supplierDataAPI != null) {
+         organizationSiteList = supplierDataServiceReport.getAllSupplierDataReportSearchBeanAPI(supplierDataAPI);
+        }
+        return organizationSiteList ;
     }
 }
