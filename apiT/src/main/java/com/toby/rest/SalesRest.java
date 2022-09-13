@@ -8,8 +8,10 @@ package com.toby.rest;
 import com.toby.API.InvDetailsDTOAPI;
 import com.toby.API.InvInvoiceDTOApi;
 import com.toby.API.ResponseApi;
+import com.toby.businessservice.InvInventoryService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.dto.InvInvoiceDTO;
+import com.toby.entity.InvInventory;
 import java.util.List;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -20,12 +22,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ejb.EJB;
 
-
 @Path("/sales/")
 public class SalesRest {
 
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
+    @EJB
+    InvInventoryService inventoryService;
 
     @Transactional
     @Path("/save")
@@ -46,25 +49,30 @@ public class SalesRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<InvDetailsDTOAPI>  offerone(InvInvoiceDTOApi invInvoiceDTOApi) {
+    public List<InvDetailsDTOAPI> offerone(InvInvoiceDTOApi invInvoiceDTOApi) {
         try {
             if (invInvoiceDTOApi.getInvoiceDetailApiList() != null && !invInvoiceDTOApi.getInvoiceDetailApiList().isEmpty()) {
-                List<InvDetailsDTOAPI> list = invPurchaseInvoiceService_1.offer999Les16Les20Only(invInvoiceDTOApi.getInvoiceDetailApiList());
-                return list;
+                if (invInvoiceDTOApi.getGalleryType() != null && invInvoiceDTOApi.getGalleryType() == 1) {
+                    List<InvDetailsDTOAPI> list = invPurchaseInvoiceService_1.offer999Les16Les20Only(invInvoiceDTOApi.getInvoiceDetailApiList());
+                    return list;
+                }else if(invInvoiceDTOApi.getGalleryType() != null && invInvoiceDTOApi.getGalleryType() == 1){
+//                    List<InvDetailsDTOAPI> list = invPurchaseInvoiceService_1.offer999Les16Les20Only(invInvoiceDTOApi.getInvoiceDetailApiList());
+//                    return list;
+                }
+                return invInvoiceDTOApi.getInvoiceDetailApiList();
             }
             return null;
         } catch (Exception e) {
             return null;
         }
     }
-    
-    
+
     @Transactional
     @Path("/offeroneNew")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<InvDetailsDTOAPI>  offerone(List<InvDetailsDTOAPI> invoiceDetailApiList) {
+    public List<InvDetailsDTOAPI> offerone(List<InvDetailsDTOAPI> invoiceDetailApiList) {
         try {
             if (invoiceDetailApiList != null && !invoiceDetailApiList.isEmpty()) {
                 List<InvDetailsDTOAPI> invoiceDTO = invPurchaseInvoiceService_1.offer999Les16Les20Only(invoiceDetailApiList);
@@ -75,7 +83,7 @@ public class SalesRest {
             return null;
         }
     }
-    
+
     @Transactional
     @Path("/saveDeskTop")
     @POST

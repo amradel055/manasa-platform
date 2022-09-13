@@ -24,6 +24,7 @@ public class InvInvoiceDTOApi extends BaseEntityDTOAPI {
     private String invoiceNumber;
     private String remarks;
     private Integer gallaryId;
+    private Integer galleryType;
     private Integer discountType;
     private Integer invDelegatorId;
     private Integer invInventoryId;
@@ -814,5 +815,19 @@ public class InvInvoiceDTOApi extends BaseEntityDTOAPI {
      */
     public void setTotalNet(BigDecimal totalNet) {
         this.totalNet = totalNet;
+    }
+
+    /**
+     * @return the galleryType
+     */
+    public Integer getGalleryType() {
+        return galleryType;
+    }
+
+    /**
+     * @param galleryType the galleryType to set
+     */
+    public void setGalleryType(Integer galleryType) {
+        this.galleryType = galleryType;
     }
 }

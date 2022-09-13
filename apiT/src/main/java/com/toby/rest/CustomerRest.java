@@ -182,6 +182,7 @@ public class CustomerRest {
             InvOrganizationSiteDTO dto1 = organizationSiteService.addNewCustomerAPI(dto, user, dto.getAccountIdAPI());
             
             invOrganizationSiteDTOAPI.setId(dto1.getId());
+            invOrganizationSiteDTOAPI.setCode(dto1.getCode());
             
             return invOrganizationSiteDTOAPI;
 

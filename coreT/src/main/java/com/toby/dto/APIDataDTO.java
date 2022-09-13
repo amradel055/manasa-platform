@@ -21,6 +21,7 @@ public class APIDataDTO {
     private Integer accountIdAPI;
     private String mobile ;
     private String galleryName ;
+    private Integer galleryType;
     private List<APIBranchDTO> branchList;
 
     /**
@@ -147,6 +148,20 @@ public class APIDataDTO {
      */
     public void setGalleryName(String galleryName) {
         this.galleryName = galleryName;
+    }
+
+    /**
+     * @return the galleryType
+     */
+    public Integer getGalleryType() {
+        return galleryType;
+    }
+
+    /**
+     * @param galleryType the galleryType to set
+     */
+    public void setGalleryType(Integer galleryType) {
+        this.galleryType = galleryType;
     }
 
 }

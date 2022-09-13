@@ -1866,36 +1866,36 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     @Override
     public InvInvoiceDTO save(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) {
         try {
-            invInvoiceDTO = validateSave(invInvoiceDTO);
+            invInvoiceDTO = validateSave(invInvoiceDTO); System.err.println("1 -> "+new Date());
             InvPurchaseInvoice invPurchaseInvoice;
-            if (invInvoiceDTO != null && (invInvoiceDTO.getMsg() == null || invInvoiceDTO.getMsg().isEmpty())) {
-                invPurchaseInvoice = mapToEntity(invInvoiceDTO, tobyUser);
+            if (invInvoiceDTO != null && (invInvoiceDTO.getMsg() == null || invInvoiceDTO.getMsg().isEmpty())) {  System.err.println("2 -> "+new Date());
+                invPurchaseInvoice = mapToEntity(invInvoiceDTO, tobyUser);  System.err.println("3 -> "+new Date());
                 if (invPurchaseInvoice.getId() != null) {
-                    Integer tarhilIdOld = invPurchaseInvoice.getGeneralJournalId() == null ? null : invPurchaseInvoice.getGeneralJournalId().getId();
+                    Integer tarhilIdOld = invPurchaseInvoice.getGeneralJournalId() == null ? null : invPurchaseInvoice.getGeneralJournalId().getId();  System.err.println("4 -> "+new Date());
                     invPurchaseInvoice.setPostFlag(0);
                     invPurchaseInvoice.setGeneralJournalId(null);
                     invPurchaseInvoice = dao.updateEntity(invPurchaseInvoice);
-                    if (tarhilIdOld != null) {
+                    if (tarhilIdOld != null) {  System.err.println("5 -> "+new Date());
                         generaljournalService.deleteGeneralJournal(tarhilIdOld);
                     }
                 } else {
-                    invPurchaseInvoice = dao.updateEntity(invPurchaseInvoice);
+                    invPurchaseInvoice = dao.updateEntity(invPurchaseInvoice);  System.err.println("6 -> "+new Date());
                     invInvoiceDTO.setId(invPurchaseInvoice.getId());
-                    payCash(invInvoiceDTO.getGlPayDTOList(), invInvoiceDTO.getDate(), invPurchaseInvoice.getId(), invPurchaseInvoice.getRate(), invPurchaseInvoice.getRemarks(), invPurchaseInvoice.getOrganizationSiteId().getId(), invInvoiceDTO.getGlYearSelection().getId(), tobyUser);
+                    payCash(invInvoiceDTO.getGlPayDTOList(), invInvoiceDTO.getDate(), invPurchaseInvoice.getId(), invPurchaseInvoice.getRate(), invPurchaseInvoice.getRemarks(), invPurchaseInvoice.getOrganizationSiteId().getId(), invInvoiceDTO.getGlYearSelection().getId(), tobyUser);  System.err.println("7 -> "+new Date());
                 }
-                invPurchaseInvoiceDetailsService.deleteInvPurchaseInvoiceDetailListDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailsDeletedList());
-                List<InvDetailDTO> listDetail = invPurchaseInvoiceDetailsService.addInvPurchaseInvoiceDetailsDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailList(), invInvoiceDTO, tobyUser);
-                invInvoiceDTO.setInvPurchaseInvoiceId(invPurchaseInvoice.getId());
-                if (invPurchaseInvoice.getId() == null) {
-                    invAddingOrderService.save(invInvoiceDTO, tobyUser);
+                invPurchaseInvoiceDetailsService.deleteInvPurchaseInvoiceDetailListDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailsDeletedList());  System.err.println("8 -> "+new Date());
+                List<InvDetailDTO> listDetail = invPurchaseInvoiceDetailsService.addInvPurchaseInvoiceDetailsDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailList(), invInvoiceDTO, tobyUser); System.err.println("9 -> "+new Date());
+                invInvoiceDTO.setInvPurchaseInvoiceId(invPurchaseInvoice.getId()); System.err.println("10 -> "+new Date());
+                if (invPurchaseInvoice.getId() == null) { System.err.println("11 -> "+new Date());
+                    invAddingOrderService.save(invInvoiceDTO, tobyUser); System.err.println("12 -> "+new Date());
                 }
-                if (listDetail.get(0).getMsg() != null && !listDetail.get(0).getMsg().isEmpty()) {
+                if (listDetail.get(0).getMsg() != null && !listDetail.get(0).getMsg().isEmpty()) { System.err.println("13 -> "+new Date());
                     invInvoiceDTO.setMsg(listDetail.get(0).getMsg());
                     dao.rollbackQuery();
                 } else {
-                    invInvoiceDTO.setId(invPurchaseInvoice.getId());
+                    invInvoiceDTO.setId(invPurchaseInvoice.getId()); System.err.println("14 -> "+new Date());
                     invInvoiceDTO.setSerial(invPurchaseInvoice.getSerial());
-                    invInvoiceDTO.setInvPurchaseInvoiceDetailList(listDetail);
+                    invInvoiceDTO.setInvPurchaseInvoiceDetailList(listDetail); System.err.println("15 -> "+new Date());
 //                    invInvoiceDTO = mapToDTO(invPurchaseInvoice, invInvoiceDTO, false); 
 //                    invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO,false);
                 }
@@ -1906,7 +1906,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invInvoiceDTO.setMsg(e.toString());
             dao.rollbackQuery();
         }
-
+ System.err.println("16 -> "+new Date());
         return invInvoiceDTO;
     }
 
