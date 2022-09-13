@@ -202,14 +202,14 @@ public interface InvPurchaseInvoiceService_1 {
     public InvInvoiceDTOApi tarhilSalesAPI(InvInvoiceDTO dto);
 
     public InvInvoiceDTO mapToDTOApiDeskTop(InvInvoiceDTOApi invInvoiceDTOApi, Boolean isSave);
-    
-    public String printQRCode(Date invoiceDate ,String sellerName ,String sallerTRN ,BigDecimal finalNet ,BigDecimal VATTotalValue) throws UnsupportedEncodingException, IOException ;
-    
-    public void updateTarhil(Integer invoiceId);
-    
-    public List<InvDetailsDTOAPI> offer999Les16Les20Only(List<InvDetailsDTOAPI> detailList) ;
 
-    
-    public List<ClientsNoMovment> findClientsNoMovmentAPI(BankBalanceReportAPI bankBalanceReportAPI)  ;
-     
+    public String printQRCode(Date invoiceDate, String sellerName, String sallerTRN, BigDecimal finalNet, BigDecimal VATTotalValue) throws UnsupportedEncodingException, IOException;
+
+    public void updateTarhil(Integer invoiceId);
+
+    public List<InvDetailsDTOAPI> offer999Les16Les20Only(List<InvDetailsDTOAPI> detailList);
+
+    public List<ClientsNoMovment> findClientsNoMovmentAPI(BankBalanceReportAPI bankBalanceReportAPI);
+
+    public List<InvDetailsDTOAPI> offer999Les16Les20OnlyPrinceTwo(List<InvDetailsDTOAPI> detailList);
 }

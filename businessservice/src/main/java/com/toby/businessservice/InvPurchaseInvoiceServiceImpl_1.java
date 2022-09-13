@@ -1617,11 +1617,11 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         InvInventoryDTO gallary = new InvInventoryDTO();
         gallary.setId(invInvoiceDTOApi.getGallaryId());
         invoiceDTO.setGallaryId(gallary);
-        if(invInvoiceDTOApi.getGallaryDeliveryId() != null){
+        if (invInvoiceDTOApi.getGallaryDeliveryId() != null) {
 //        InvInventoryDTO gallaryDelivery = new InvInventoryDTO();
 //        gallaryDelivery.setId(invInvoiceDTOApi.getGallaryId());
-        invoiceDTO.setGallaryDelivery(invInvoiceDTOApi.getGallaryDeliveryId());
-        invoiceDTO.setGallaryDeliveryShow(invInvoiceDTOApi.getGallaryDeliveryId());
+            invoiceDTO.setGallaryDelivery(invInvoiceDTOApi.getGallaryDeliveryId());
+            invoiceDTO.setGallaryDeliveryShow(invInvoiceDTOApi.getGallaryDeliveryId());
         }
         invoiceDTO.setCompanyActivity(CompanyActivityClassEnum.RetailSaleForClothFactory);
         invoiceDTO.setScreenName(ScreenNameClassEnum.PROWORKORDER);
@@ -1825,6 +1825,129 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     @Override
+    public List<InvDetailsDTOAPI> offer999Les16Les20OnlyPrinceTwo(List<InvDetailsDTOAPI> detailList) {
+        List<InvDetailsDTOAPI> list = new ArrayList<>();
+        int numbertotal = 0;
+        int numberone = 0;
+        int numbertwo = 0;
+        for (InvDetailsDTOAPI detailDTO : detailList) {
+
+            if (detailDTO.getItemId() != null
+                    && detailDTO.getProgroupId() != null && detailDTO.getProgroupId() == 1) {
+                if (detailDTO.getTypeShow() == 1) {
+                    if ((detailDTO.getLastCost().compareTo(BigDecimal.valueOf(16.67)) != 1)
+                            || (detailDTO.getCode().equals("035142"))
+                            || (detailDTO.getCode().equals("035143"))
+                            || (detailDTO.getCode().equals("035157"))
+                            || (detailDTO.getCode().equals("15094"))
+                            || (detailDTO.getCode().equals("012214"))
+                            || (detailDTO.getCode().equals("012215"))
+                            || (detailDTO.getCode().equals("004430"))
+                            || (detailDTO.getCode().equals("047238"))
+                            || (detailDTO.getCode().equals("004210"))
+                            || (detailDTO.getCode().equals("053012"))
+                            || (detailDTO.getCode().equals("001029"))) {
+                        numberone = numberone + detailDTO.getNumber().intValue();
+                        numbertotal = numbertotal + detailDTO.getNumber().intValue();
+                    } else if (detailDTO.getLastCost().compareTo(BigDecimal.valueOf(16.5)) != -1 && detailDTO.getLastCost().compareTo(BigDecimal.valueOf(28)) != 1) {
+                        numbertwo = numbertwo + detailDTO.getNumber().intValue();
+                        numbertotal = numbertotal + detailDTO.getNumber().intValue();
+                    }
+                } else if (detailDTO.getTypeShow() == 2) {
+                    if ((detailDTO.getLastCost().compareTo(BigDecimal.valueOf(20)) != 1)
+                            || (detailDTO.getCode().equals("035142"))
+                            || (detailDTO.getCode().equals("035143"))
+                            || (detailDTO.getCode().equals("035157"))
+                            || (detailDTO.getCode().equals("15094"))
+                            || (detailDTO.getCode().equals("012214"))
+                            || (detailDTO.getCode().equals("012215"))
+                            || (detailDTO.getCode().equals("004430"))
+                            || (detailDTO.getCode().equals("047238"))
+                            || (detailDTO.getCode().equals("004210"))
+                            || (detailDTO.getCode().equals("053012"))
+                            || (detailDTO.getCode().equals("001029"))) {
+                        numberone = numberone + detailDTO.getNumber().intValue();
+                        numbertotal = numbertotal + detailDTO.getNumber().intValue();
+                    } else if (detailDTO.getLastCost().compareTo(BigDecimal.valueOf(21)) != -1 && detailDTO.getLastCost().compareTo(BigDecimal.valueOf(40)) != 1) {
+                        numbertwo = numbertwo + detailDTO.getNumber().intValue();
+                        numbertotal = numbertotal + detailDTO.getNumber().intValue();
+                    }
+                }
+            }
+        }
+
+        for (InvDetailsDTOAPI detailDTO : detailList) {
+
+            if (detailDTO.getItemId() != null
+                    && detailDTO.getProgroupId() != null) {
+                if (detailDTO.getProgroupId() == 6
+                        || detailDTO.getProgroupId() == 11
+                        || detailDTO.getProgroupId() == 12
+                        || detailDTO.getProgroupId() == 16
+                        || detailDTO.getProgroupId() == 20
+                        || detailDTO.getProgroupId() == 22
+                        || detailDTO.getProgroupId() == 24
+                        || detailDTO.getProgroupId() == 25
+                        || detailDTO.getProgroupId() == 27
+                        || detailDTO.getProgroupId() == 28
+                        || detailDTO.getProgroupId() == 9
+                        || detailDTO.getProgroupId() == 21
+                        || detailDTO.getProgroupId() == 29) {
+                    detailDTO.setDiscount(new BigDecimal(30));
+                } else if (detailDTO.getProgroupId() == 1) {
+                    if (numbertotal == 2 && numbertwo == 2) {
+                        detailDTO.setPrice(new BigDecimal(431.3043));
+                        detailDTO.setDiscount(BigDecimal.ZERO);
+                    } else if (numbertotal > 2) {
+                        if (detailDTO.getTypeShow() == 1) {
+                            if ((detailDTO.getLastCost().compareTo(BigDecimal.valueOf(16.67)) != 1)
+                                    || (detailDTO.getCode().equals("035142"))
+                                    || (detailDTO.getCode().equals("035143"))
+                                    || (detailDTO.getCode().equals("035157"))
+                                    || (detailDTO.getCode().equals("15094"))
+                                    || (detailDTO.getCode().equals("012214"))
+                                    || (detailDTO.getCode().equals("012215"))
+                                    || (detailDTO.getCode().equals("004430"))
+                                    || (detailDTO.getCode().equals("047238"))
+                                    || (detailDTO.getCode().equals("004210"))
+                                    || (detailDTO.getCode().equals("053012"))
+                                    || (detailDTO.getCode().equals("001029"))) {
+                                detailDTO.setPrice(new BigDecimal(287.536));
+                            } else if (detailDTO.getLastCost().compareTo(BigDecimal.valueOf(16.5)) != -1 
+                                    && detailDTO.getLastCost().compareTo(BigDecimal.valueOf(28)) != 1) {
+                                detailDTO.setPrice(new BigDecimal(431.3043));
+                            }
+                            detailDTO.setDiscount(BigDecimal.ZERO);
+                        } else if (detailDTO.getTypeShow() == 2) {
+                            if ((detailDTO.getLastCost().compareTo(BigDecimal.valueOf(20)) != 1)
+                                    || (detailDTO.getCode().equals("035142"))
+                                    || (detailDTO.getCode().equals("035143"))
+                                    || (detailDTO.getCode().equals("035157"))
+                                    || (detailDTO.getCode().equals("15094"))
+                                    || (detailDTO.getCode().equals("012214"))
+                                    || (detailDTO.getCode().equals("012215"))
+                                    || (detailDTO.getCode().equals("004430"))
+                                    || (detailDTO.getCode().equals("047238"))
+                                    || (detailDTO.getCode().equals("004210"))
+                                    || (detailDTO.getCode().equals("053012"))
+                                    || (detailDTO.getCode().equals("001029"))) {
+                                detailDTO.setPrice(new BigDecimal(287.536));
+                            } else if (detailDTO.getLastCost().compareTo(BigDecimal.valueOf(16.5)) != -1 
+                                    && detailDTO.getLastCost().compareTo(BigDecimal.valueOf(28)) != 1) {
+                                detailDTO.setPrice(new BigDecimal(431.3043));
+                            }
+                            detailDTO.setDiscount(BigDecimal.ZERO);
+                        }
+                    }
+                }
+                detailDTO.setNet((detailDTO.getPrice().subtract(detailDTO.getPrice().multiply(detailDTO.getDiscount().divide(new BigDecimal(100))))).multiply(detailDTO.getNumber()));
+            }
+            list.add(detailDTO);
+        }
+        return list;
+    }
+
+    @Override
     public InvInvoiceDTOApi SaveApiDeskTop(InvInvoiceDTOApi invInvoiceDTOApi) {
         InvInvoiceDTO invInvoiceDTO = mapToDTOApiDeskTop(invInvoiceDTOApi, true);
         TobyUser tobyUser = new TobyUser();
@@ -1867,36 +1990,51 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     @Override
     public InvInvoiceDTO save(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) {
         try {
-            invInvoiceDTO = validateSave(invInvoiceDTO); System.err.println("1 -> "+new Date());
+            invInvoiceDTO = validateSave(invInvoiceDTO);
+            System.err.println("1 -> " + new Date());
             InvPurchaseInvoice invPurchaseInvoice;
-            if (invInvoiceDTO != null && (invInvoiceDTO.getMsg() == null || invInvoiceDTO.getMsg().isEmpty())) {  System.err.println("2 -> "+new Date());
-                invPurchaseInvoice = mapToEntity(invInvoiceDTO, tobyUser);  System.err.println("3 -> "+new Date());
+            if (invInvoiceDTO != null && (invInvoiceDTO.getMsg() == null || invInvoiceDTO.getMsg().isEmpty())) {
+                System.err.println("2 -> " + new Date());
+                invPurchaseInvoice = mapToEntity(invInvoiceDTO, tobyUser);
+                System.err.println("3 -> " + new Date());
                 if (invPurchaseInvoice.getId() != null) {
-                    Integer tarhilIdOld = invPurchaseInvoice.getGeneralJournalId() == null ? null : invPurchaseInvoice.getGeneralJournalId().getId();  System.err.println("4 -> "+new Date());
+                    Integer tarhilIdOld = invPurchaseInvoice.getGeneralJournalId() == null ? null : invPurchaseInvoice.getGeneralJournalId().getId();
+                    System.err.println("4 -> " + new Date());
                     invPurchaseInvoice.setPostFlag(0);
                     invPurchaseInvoice.setGeneralJournalId(null);
                     invPurchaseInvoice = dao.updateEntity(invPurchaseInvoice);
-                    if (tarhilIdOld != null) {  System.err.println("5 -> "+new Date());
+                    if (tarhilIdOld != null) {
+                        System.err.println("5 -> " + new Date());
                         generaljournalService.deleteGeneralJournal(tarhilIdOld);
                     }
                 } else {
-                    invPurchaseInvoice = dao.updateEntity(invPurchaseInvoice);  System.err.println("6 -> "+new Date());
+                    invPurchaseInvoice = dao.updateEntity(invPurchaseInvoice);
+                    System.err.println("6 -> " + new Date());
                     invInvoiceDTO.setId(invPurchaseInvoice.getId());
-                    payCash(invInvoiceDTO.getGlPayDTOList(), invInvoiceDTO.getDate(), invPurchaseInvoice.getId(), invPurchaseInvoice.getRate(), invPurchaseInvoice.getRemarks(), invPurchaseInvoice.getOrganizationSiteId().getId(), invInvoiceDTO.getGlYearSelection().getId(), tobyUser);  System.err.println("7 -> "+new Date());
+                    payCash(invInvoiceDTO.getGlPayDTOList(), invInvoiceDTO.getDate(), invPurchaseInvoice.getId(), invPurchaseInvoice.getRate(), invPurchaseInvoice.getRemarks(), invPurchaseInvoice.getOrganizationSiteId().getId(), invInvoiceDTO.getGlYearSelection().getId(), tobyUser);
+                    System.err.println("7 -> " + new Date());
                 }
-                invPurchaseInvoiceDetailsService.deleteInvPurchaseInvoiceDetailListDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailsDeletedList());  System.err.println("8 -> "+new Date());
-                List<InvDetailDTO> listDetail = invPurchaseInvoiceDetailsService.addInvPurchaseInvoiceDetailsDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailList(), invInvoiceDTO, tobyUser); System.err.println("9 -> "+new Date());
-                invInvoiceDTO.setInvPurchaseInvoiceId(invPurchaseInvoice.getId()); System.err.println("10 -> "+new Date());
-                if (invPurchaseInvoice.getId() == null) { System.err.println("11 -> "+new Date());
-                    invAddingOrderService.save(invInvoiceDTO, tobyUser); System.err.println("12 -> "+new Date());
+                invPurchaseInvoiceDetailsService.deleteInvPurchaseInvoiceDetailListDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailsDeletedList());
+                System.err.println("8 -> " + new Date());
+                List<InvDetailDTO> listDetail = invPurchaseInvoiceDetailsService.addInvPurchaseInvoiceDetailsDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailList(), invInvoiceDTO, tobyUser);
+                System.err.println("9 -> " + new Date());
+                invInvoiceDTO.setInvPurchaseInvoiceId(invPurchaseInvoice.getId());
+                System.err.println("10 -> " + new Date());
+                if (invPurchaseInvoice.getId() == null) {
+                    System.err.println("11 -> " + new Date());
+                    invAddingOrderService.save(invInvoiceDTO, tobyUser);
+                    System.err.println("12 -> " + new Date());
                 }
-                if (listDetail.get(0).getMsg() != null && !listDetail.get(0).getMsg().isEmpty()) { System.err.println("13 -> "+new Date());
+                if (listDetail.get(0).getMsg() != null && !listDetail.get(0).getMsg().isEmpty()) {
+                    System.err.println("13 -> " + new Date());
                     invInvoiceDTO.setMsg(listDetail.get(0).getMsg());
                     dao.rollbackQuery();
                 } else {
-                    invInvoiceDTO.setId(invPurchaseInvoice.getId()); System.err.println("14 -> "+new Date());
+                    invInvoiceDTO.setId(invPurchaseInvoice.getId());
+                    System.err.println("14 -> " + new Date());
                     invInvoiceDTO.setSerial(invPurchaseInvoice.getSerial());
-                    invInvoiceDTO.setInvPurchaseInvoiceDetailList(listDetail); System.err.println("15 -> "+new Date());
+                    invInvoiceDTO.setInvPurchaseInvoiceDetailList(listDetail);
+                    System.err.println("15 -> " + new Date());
 //                    invInvoiceDTO = mapToDTO(invPurchaseInvoice, invInvoiceDTO, false); 
 //                    invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO,false);
                 }
@@ -1907,7 +2045,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invInvoiceDTO.setMsg(e.toString());
             dao.rollbackQuery();
         }
- System.err.println("16 -> "+new Date());
+        System.err.println("16 -> " + new Date());
         return invInvoiceDTO;
     }
 
@@ -2413,12 +2551,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 + " left join inv_inventory invi on invi.id = s.galary_Id "
                 + " left join inv_organization_site ios on ios.id = s.organization_site_id "
                 + " WHERE s.branch_id = ").append(branchId).append(
-                        " AND  s.type = ").append(printProductionDTO.getInvoiceStatus()).append(
-                        " AND s.id not in (SELECT p.inv_purchase_invoice_id from pro_factory_delivery p )  \n"
-                        + " AND  s.galary_Id IN (").append(gallarySelected).append(" )  AND   s.date >= '"
-                        + formatDateFrom.format(printProductionDTO.getFromDate()) + "'"
-                        + " AND   s.date <= '" + formatDateTo.format(printProductionDTO.getToDate()) + "'"
-                        + " order by s.serial");
+                " AND  s.type = ").append(printProductionDTO.getInvoiceStatus()).append(
+                " AND s.id not in (SELECT p.inv_purchase_invoice_id from pro_factory_delivery p )  \n"
+                + " AND  s.galary_Id IN (").append(gallarySelected).append(" )  AND   s.date >= '"
+                + formatDateFrom.format(printProductionDTO.getFromDate()) + "'"
+                + " AND   s.date <= '" + formatDateTo.format(printProductionDTO.getToDate()) + "'"
+                + " order by s.serial");
 
         List<Object[]> res = dao.executeNativeQuery(builder.toString());
 
@@ -4649,8 +4787,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         dto.setGallaryDeliveryId(entity.getGallaryDelivery());
 
         dto.setStatus(findInvoiceStatus(entity.getId()));
-        
-        if(dto.getStatus() == null || dto.getStatus().isEmpty()){
+
+        if (dto.getStatus() == null || dto.getStatus().isEmpty()) {
             dto.setStatus("بالمعرض");
         }
 
@@ -4708,13 +4846,13 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         dto.setCreatedByName(entity.getCreatedBy() != null ? entity.getCreatedBy().getName() : null);
 
         dto.setSalesStatementForThePeriod(invGlobalService.invoiceFinanceData(entity.getId()));
-        
+
         dto.setTaxvalue((dto.getSalesStatementForThePeriod().getTotalAfterDiscount()).multiply(new BigDecimal(15)).divide(new BigDecimal(100), 3));
         dto.setDiscHalala(dto.getDiscHalala());
         dto.setDiscount(dto.getDiscount());
         dto.setTotalNet(dto.getSalesStatementForThePeriod().getTotalNet());
         BigDecimal discountValue = BigDecimal.ZERO;
-        if(entity.getDiscountType() == 0){
+        if (entity.getDiscountType() == 0) {
             discountValue = entity.getDiscount();
         }
 //        else if(entity.getDiscountType() == 1){
@@ -4723,7 +4861,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         dto.setTotalNetAfterDiscount(dto.getTotalNet().subtract(dto.getDiscHalala().subtract(discountValue)));
         dto.setFinalNet(dto.getSalesStatementForThePeriod().getNet());
         dto.setPayed(dto.getSalesStatementForThePeriod().getPaid());
-        dto.setRemain(dto.getSalesStatementForThePeriod().getRemain());        
+        dto.setRemain(dto.getSalesStatementForThePeriod().getRemain());
         dto.setNoticeCredit(dto.getSalesStatementForThePeriod().getNoticeCredit());
         dto.setNoticeDebit(dto.getSalesStatementForThePeriod().getNoticeDebit());
         dto.setReturnPurchaseValue(dto.getSalesStatementForThePeriod().getReturnPurchaseValue());
@@ -4734,7 +4872,6 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         } catch (IOException ex) {
             Logger.getLogger(InvPurchaseInvoiceServiceImpl_1.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
 
         List<InvDetailsDTOAPI> invPurchaseInvoiceDetailsListDTO = invPurchaseInvoiceDetailsService.getAllInvPurchaseInvoiceDetailListWebSite(entity.getId());
 
@@ -4820,8 +4957,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         return result.toString();
     }
-    
-     @Override
+
+    @Override
     public List<ClientsNoMovment> findClientsNoMovmentAPI(BankBalanceReportAPI bankBalanceReportAPI) {
         return findClientsNoMovment(bankBalanceReportAPI.getBranchId(), bankBalanceReportAPI.getGallarySellected().getId(), bankBalanceReportAPI.getDateFrom(), bankBalanceReportAPI.getInvType());
 

@@ -354,6 +354,14 @@
                                                  update="@form"
                                                  >
                             </p:commandButton>
+                            <p:commandButton     class="saveButton"  
+                                                 title="العرض"
+                                                 value="عرض البرنس "  rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0 and true }"
+                                                 icon="fa fa-fw fa-save"  
+                                                 action="#{invPurchaseInvoiceFormDTOMB.offer999Les16Les20OnlyPrinceTwo()}"
+                                                 update="@form"
+                                                 >
+                            </p:commandButton>
                             <p:commandButton  class="saveButton"  
                                               title="العرض"
                                               value="عرض الخصم 991" 

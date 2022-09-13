@@ -11,7 +11,6 @@ import com.toby.API.ResponseApi;
 import com.toby.businessservice.InvInventoryService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.dto.InvInvoiceDTO;
-import com.toby.entity.InvInventory;
 import java.util.List;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -55,9 +54,9 @@ public class SalesRest {
                 if (invInvoiceDTOApi.getGalleryType() != null && invInvoiceDTOApi.getGalleryType() == 1) {
                     List<InvDetailsDTOAPI> list = invPurchaseInvoiceService_1.offer999Les16Les20Only(invInvoiceDTOApi.getInvoiceDetailApiList());
                     return list;
-                }else if(invInvoiceDTOApi.getGalleryType() != null && invInvoiceDTOApi.getGalleryType() == 1){
-//                    List<InvDetailsDTOAPI> list = invPurchaseInvoiceService_1.offer999Les16Les20Only(invInvoiceDTOApi.getInvoiceDetailApiList());
-//                    return list;
+                } else if (invInvoiceDTOApi.getGalleryType() != null && invInvoiceDTOApi.getGalleryType() == 1) {
+                    List<InvDetailsDTOAPI> list = invPurchaseInvoiceService_1.offer999Les16Les20OnlyPrinceTwo(invInvoiceDTOApi.getInvoiceDetailApiList());
+                    return list;
                 }
                 return invInvoiceDTOApi.getInvoiceDetailApiList();
             }
