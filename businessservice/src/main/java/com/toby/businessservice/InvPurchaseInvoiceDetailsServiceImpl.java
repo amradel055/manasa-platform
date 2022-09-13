@@ -327,6 +327,10 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
         api.setDiscount(detail.getDiscount());
         api.setNet(detail.getNet());
         api.setProof(detail.getProof());
+        api.setUnitName(detail.getUnitId() == null ? "" : detail.getUnitId().getName());
+        api.setInventoryName(detail.getInvInventoryId().getName());
+        api.setInventoryCode(detail.getInvInventoryId().getCode());
+        api.setInventoryId(detail.getInvInventoryId().getId());
 
         api.setImage(detail.getItemId().getImage());
         if (detail.getItemId().getGroupId() != null) {

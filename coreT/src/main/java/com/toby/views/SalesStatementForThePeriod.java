@@ -36,6 +36,7 @@ public class SalesStatementForThePeriod {
     private BigDecimal noticeCredit;
     private BigDecimal totalBeforeTax;
     private BigDecimal totalAfterTax;
+    private BigDecimal totalAfterDiscount;
     private BigDecimal tax;
     private BigDecimal invNoticeValue;
     private BigDecimal returnPurchaseValue;
@@ -412,6 +413,23 @@ public class SalesStatementForThePeriod {
      */
     public void setOrganizationId(Integer organizationId) {
         this.organizationId = organizationId;
+    }
+
+    /**
+     * @return the totalAfterDiscount
+     */
+    public BigDecimal getTotalAfterDiscount() {
+        if(totalAfterDiscount == null){
+            totalAfterDiscount = BigDecimal.ZERO;
+        }
+        return totalAfterDiscount;
+    }
+
+    /**
+     * @param totalAfterDiscount the totalAfterDiscount to set
+     */
+    public void setTotalAfterDiscount(BigDecimal totalAfterDiscount) {
+        this.totalAfterDiscount = totalAfterDiscount;
     }
 
 }

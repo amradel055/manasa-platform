@@ -1588,7 +1588,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
     public DueDateDTOAPI getDueDateDTOAPI(Integer galleryId) {
         DueDateDTOAPI dateDTOAPI = new DueDateDTOAPI();
         dateDTOAPI.setDayNumber(getDeliveryDaysByGalleryId(galleryId));
-        dateDTOAPI.setDueDate(sumDateToDueDate(new Date(), new Date(), galleryId));
+        dateDTOAPI.setDueDate(sumDateToDueDate(new Date(), new Date(), dateDTOAPI.getDayNumber()));
         return dateDTOAPI;
     }
 
@@ -1822,7 +1822,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                     item.getIsOfferItem()));
             dTOApi.setUnitName(item.getUnitId() == null ? "" : item.getUnitId().getName());
             dTOApi.setDiscountRow(calcDiscount(item.getProGroupId().getId(), item.getSiteId().getId(), item.getIsOfferItem(), customer.getDiscount(), customer.getOfferCompanyId() == null ? BigDecimal.ZERO : customer.getOfferCompanyId().getDiscount()));
-            if (item.getProGroupId() != null && item.getProGroupId().getId() == 1) {
+            if (item.getIsInventoryItem() != null && item.getIsInventoryItem() == 1) {
                 dTOApi.setAvailableQuantity(quantityItemsStoreByDateService.getQuantatyItemByinventory(inventoryId, item.getId(), false, null));
                 if (dTOApi.getAvailableQuantity().compareTo(dTOApi.getQuantityOfUnit()) == -1) {
                     dTOApi.setMsg("الكميةالمطلوبة غير موجوده");
@@ -1834,14 +1834,14 @@ public class InvGlobalServiceImpl implements InvGlobalService {
     }
 
     @Override
-    public InvItemDTOApi findItemPriceData(Integer itemId, Integer customerId, Integer priceType, Integer inventoryId) {
+    public InvItemDTOApi findItemPriceData(Integer itemId, Integer customerId, Integer priceType, Integer inventoryId,BigDecimal quantityOfUnit) {
         if (itemId != null && customerId != null && priceType != null) {
             InvItem item = dao.findEntityById(InvItem.class, itemId);
             InvOrganizationSite customer = dao.findEntityById(InvOrganizationSite.class, customerId);
             InvItemDTOApi dTOApi = new InvItemDTOApi();
             dTOApi.setSellPrice(calFinalCost(item.getItemNatural(), priceType, item.getMaxpricemen(),
                     item.getMaxpriceyoung(), CompanyActivityClassEnum.RetailSaleForClothFactory, ScreenNameClassEnum.PROWORKORDER, item.getProGroupId() == null ? null : item.getProGroupId().getId(),
-                    customer.getGallaryId() == null ? null : customer.getGallaryId().getInvName(), item.getCode(), item.getDiscountvalue(), dTOApi.getQuantityOfUnit(),
+                    customer.getGallaryId() == null ? null : customer.getGallaryId().getInvName(), item.getCode(), item.getDiscountvalue(), quantityOfUnit,
                     item.getNumbermetersfreemen(), item.getNumbermetersfreeyoung(), customer.getDiscount(), customer.getOfferCompanyId() == null ? BigDecimal.ZERO : customer.getOfferCompanyId().getDiscount(),
                     item.getIsOfferItem()));
             return dTOApi;
@@ -1878,8 +1878,11 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         BigDecimal details = finddetails(invoiceId);
         BigDecimal detailsReturn = finddetailsReturn(invoiceId);
         BigDecimal payment = details.subtract(detailsReturn);
+        BigDecimal totalNet = findtotalNet(invoiceId);
 
+        salesStatementForThePeriod.setTotalNet(totalNet);
         salesStatementForThePeriod.setNet(net);
+        
         salesStatementForThePeriod.setInvNoticeValue(noticeCredit.subtract(noticeDebit));
         salesStatementForThePeriod.setNoticeDebit(noticeDebit);
         salesStatementForThePeriod.setNoticeCredit(noticeCredit);
@@ -1889,6 +1892,14 @@ public class InvGlobalServiceImpl implements InvGlobalService {
 
     public BigDecimal findInvoiceValue(Integer invoiceId) {
         List<BigDecimal> noticeDebit = dao.executeNativeQuery("select IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) as net \n"
+                + "from inv_purchase_invoice ipi\n"
+                + "left join  inv_purchase_invoice_detail ipid on ipi.id = ipid.inv_purchase_invoice_id\n"
+                + " where ipi.id =  " + invoiceId);
+        return (noticeDebit != null && !noticeDebit.isEmpty()) ? noticeDebit.get(0) : BigDecimal.ZERO;
+    }
+    
+    public BigDecimal findtotalNet(Integer invoiceId) {
+        List<BigDecimal> noticeDebit = dao.executeNativeQuery("select SUM(IFNULL(`net`, 0)) as net \n"
                 + "from inv_purchase_invoice ipi\n"
                 + "left join  inv_purchase_invoice_detail ipid on ipi.id = ipid.inv_purchase_invoice_id\n"
                 + " where ipi.id =  " + invoiceId);

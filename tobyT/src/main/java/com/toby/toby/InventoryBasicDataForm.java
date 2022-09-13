@@ -5,6 +5,7 @@
  */
 package com.toby.toby;
 
+import com.toby.API.InvDetailsDTOAPI;
 import com.toby.businessservice.TobyUserInventoryService;
 import com.toby.businessservice.CostCenterService;
 import com.toby.businessservice.CurrencyService;
@@ -853,6 +854,97 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                                 || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("053012"))
                                 || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("001029"))) {
                             detailDTO.setCost(new BigDecimal(257.39).setScale(3, RoundingMode.UP));
+                            detailDTO.setDiscount(BigDecimal.ZERO);
+                            zeroDiscount();
+                        }
+                    }
+                    specialItems(detailDTO);
+                }
+            }
+            detailDTO.setCostBak(detailDTO.getCost());
+            InvDetailDTO detailDTONew = invGlobalService.calcRowAfterCalcTotal(invGlobalService.calcRowTotal(getInvInvoiceDTO().getScreenName(), detailDTO.getNumber(), detailDTO.getCost(), null), detailDTO.getDiscount(), detailDTO);
+            replacedetail(detailDTONew);
+        }
+        updateSummitionSmall();
+    }
+   
+    public void offer999Les16Les20OnlyOne() {
+        checkDetailData();
+        int number1 = 0;
+        for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
+
+            if (detailDTO.getItemId() != null
+                    && detailDTO.getItemId().getProGroupId() != null && detailDTO.getItemId().getProGroupId().getId() == 1) {
+                number1 = number1 + detailDTO.getNumber().intValue();
+            }
+        }
+        for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
+            if (detailDTO.getItemsBarcodesDetail() == null && detailDTO.getItemsBarcodesDetailTrans() != null) {
+                detailDTO.setItemsBarcodesDetail(detailDTO.getItemsBarcodesDetailTrans());
+            }
+
+            detailDTO.setIndexSerial(1);
+
+            if (detailDTO.getItemId() != null
+                    && detailDTO.getItemId().getProGroupId() != null
+                    && detailDTO.getItemId().getProGroupId().getId() != null) {
+
+                if (detailDTO.getItemId().getProGroupId().getId() == 6
+                        || detailDTO.getItemId().getProGroupId().getId() == 11
+                        || detailDTO.getItemId().getProGroupId().getId() == 12
+                        || detailDTO.getItemId().getProGroupId().getId() == 16
+                        || detailDTO.getItemId().getProGroupId().getId() == 20
+                        || detailDTO.getItemId().getProGroupId().getId() == 22
+                        || detailDTO.getItemId().getProGroupId().getId() == 24
+                        || detailDTO.getItemId().getProGroupId().getId() == 25
+                        || detailDTO.getItemId().getProGroupId().getId() == 27
+                        || detailDTO.getItemId().getProGroupId().getId() == 28
+                        || detailDTO.getItemId().getProGroupId().getId() == 9
+                        || detailDTO.getItemId().getProGroupId().getId() == 21
+                        || detailDTO.getItemId().getProGroupId().getId() == 29) {
+                    detailDTO.setDiscount(new BigDecimal(40));
+                } else if (detailDTO.getItemId().getProGroupId().getId() == 1) {
+                    if (detailDTO.getItemsBarcodesDetail().getTypeShow() == 1) {
+                        if ((detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(16.67)) != 1)
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("035142"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("035143"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("035157"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("15094"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("012214"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("012215"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("004430"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("047238"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("004210"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("053012"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("001029"))) {
+                            if (number1 < 4) {
+                                detailDTO.setCost(new BigDecimal(257.3914));
+                            } else {
+                                detailDTO.setCost(new BigDecimal(250));
+                            }
+//                            detailDTO.setCost(new BigDecimal(257.39));
+                            detailDTO.setDiscount(BigDecimal.ZERO);
+                            zeroDiscount();
+                        }
+                    } else if (detailDTO.getItemsBarcodesDetail().getTypeShow() == 2) {
+                        if ((detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(20)) != 1)
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("035142"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("035143"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("035157"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("15094"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("012214"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("012215"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("004430"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("047238"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("004210"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("053012"))
+                                || (detailDTO.getItemsBarcodesDetail().getBarcode().equals("001029"))) {
+                            if (number1 < 4) {
+                                detailDTO.setCost(new BigDecimal(257.3914));
+                            } else {
+                                detailDTO.setCost(new BigDecimal(250));
+                            }
+//                            detailDTO.setCost(new BigDecimal(257.39).setScale(3, RoundingMode.UP));
                             detailDTO.setDiscount(BigDecimal.ZERO);
                             zeroDiscount();
                         }

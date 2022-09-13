@@ -12,7 +12,6 @@ import java.util.List;
 
 public class InvInvoiceDTOApi extends BaseEntityDTOAPI {
 
-
     private Integer customerId;
     private String customerName;
     private String customerMobile;
@@ -25,6 +24,7 @@ public class InvInvoiceDTOApi extends BaseEntityDTOAPI {
     private String invoiceNumber;
     private String remarks;
     private Integer gallaryId;
+    private Integer galleryType;
     private Integer discountType;
     private Integer invDelegatorId;
     private Integer invInventoryId;
@@ -32,7 +32,7 @@ public class InvInvoiceDTOApi extends BaseEntityDTOAPI {
     private String invDelegatorName;
     private BigDecimal discount;
     private BigDecimal discHalala;
-    
+
     private Date dueDate;
     private Integer dueperiod;
     private Integer pricetype;
@@ -59,18 +59,21 @@ public class InvInvoiceDTOApi extends BaseEntityDTOAPI {
     private String segilValue;
 
     private List<InvDetailsDTOAPI> invoiceDetailApiList;
-    
-    private List<GlPayDTOAPI> glPayDTOList ; 
-    
-    private SalesStatementForThePeriod salesStatementForThePeriod ;
-    
-    
-    
-    
+
+    private List<GlPayDTOAPI> glPayDTOList;
+
+    private SalesStatementForThePeriod salesStatementForThePeriod;
+
     private BigDecimal totalNetAfterDiscount;
     private BigDecimal finalNet;
     private BigDecimal taxvalue;
     private BigDecimal payed;
+    private BigDecimal remain;
+
+    private BigDecimal noticeDebit;
+    private BigDecimal noticeCredit;
+    private BigDecimal returnPurchaseValue;
+    private BigDecimal totalNet;
 
     /**
      * @return the customerName
@@ -631,7 +634,7 @@ public class InvInvoiceDTOApi extends BaseEntityDTOAPI {
     public void setGlPayDTOList(List<GlPayDTOAPI> glPayDTOList) {
         this.glPayDTOList = glPayDTOList;
     }
-    
+
     /**
      * @return the date
      */
@@ -742,5 +745,89 @@ public class InvInvoiceDTOApi extends BaseEntityDTOAPI {
      */
     public void setPayed(BigDecimal payed) {
         this.payed = payed;
+    }
+
+    /**
+     * @return the remain
+     */
+    public BigDecimal getRemain() {
+        return remain;
+    }
+
+    /**
+     * @param remain the remain to set
+     */
+    public void setRemain(BigDecimal remain) {
+        this.remain = remain;
+    }
+
+    /**
+     * @return the noticeDebit
+     */
+    public BigDecimal getNoticeDebit() {
+        return noticeDebit;
+    }
+
+    /**
+     * @param noticeDebit the noticeDebit to set
+     */
+    public void setNoticeDebit(BigDecimal noticeDebit) {
+        this.noticeDebit = noticeDebit;
+    }
+
+    /**
+     * @return the noticeCredit
+     */
+    public BigDecimal getNoticeCredit() {
+        return noticeCredit;
+    }
+
+    /**
+     * @param noticeCredit the noticeCredit to set
+     */
+    public void setNoticeCredit(BigDecimal noticeCredit) {
+        this.noticeCredit = noticeCredit;
+    }
+
+    /**
+     * @return the returnPurchaseValue
+     */
+    public BigDecimal getReturnPurchaseValue() {
+        return returnPurchaseValue;
+    }
+
+    /**
+     * @param returnPurchaseValue the returnPurchaseValue to set
+     */
+    public void setReturnPurchaseValue(BigDecimal returnPurchaseValue) {
+        this.returnPurchaseValue = returnPurchaseValue;
+    }
+
+    /**
+     * @return the totalNet
+     */
+    public BigDecimal getTotalNet() {
+        return totalNet;
+    }
+
+    /**
+     * @param totalNet the totalNet to set
+     */
+    public void setTotalNet(BigDecimal totalNet) {
+        this.totalNet = totalNet;
+    }
+
+    /**
+     * @return the galleryType
+     */
+    public Integer getGalleryType() {
+        return galleryType;
+    }
+
+    /**
+     * @param galleryType the galleryType to set
+     */
+    public void setGalleryType(Integer galleryType) {
+        this.galleryType = galleryType;
     }
 }

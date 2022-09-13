@@ -6,6 +6,7 @@
 package com.toby.businessservice;
 
 import com.toby.API.BankBalanceReportAPI;
+import com.toby.API.InvDetailsDTOAPI;
 import com.toby.API.InvInvoiceDTOApi;
 import com.toby.API.ResponseApi;
 import com.toby.API.SummitionItemAPI;
@@ -202,8 +203,11 @@ public interface InvPurchaseInvoiceService_1 {
 
     public InvInvoiceDTO mapToDTOApiDeskTop(InvInvoiceDTOApi invInvoiceDTOApi, Boolean isSave);
     
-    public String printQRCode(Date invoiceDate ,String sellerName ,String sallerTRN ,BigDecimal finalNet ,BigDecimal VATTotalValue ,
-            Integer gallaryId) throws UnsupportedEncodingException, IOException ;
+    public String printQRCode(Date invoiceDate ,String sellerName ,String sallerTRN ,BigDecimal finalNet ,BigDecimal VATTotalValue) throws UnsupportedEncodingException, IOException ;
+    
+    public void updateTarhil(Integer invoiceId);
+    
+    public List<InvDetailsDTOAPI> offer999Les16Les20Only(List<InvDetailsDTOAPI> detailList) ;
 
     
     public List<ClientsNoMovment> findClientsNoMovmentAPI(BankBalanceReportAPI bankBalanceReportAPI)  ;

@@ -603,7 +603,7 @@ public class InvItemServiceImpl implements InvItemService {
         api.setUnitName(invItem.getUnitId().getName());
 //            dto.setScrewing(new BigDecimal((Long) line[12]));
         api.setIsInventoryItem(invItem.getIsInventoryItem());
-        api.setTypeShow(invItem.getTypeshow());
+        api.setTypeShow(invItem.getItemNatural());
         api.setProGroupId(invItem.getProGroupId() == null ? null : invItem.getProGroupId().getId());
         api.setNumberMetersYoung(invItem.getNumbermetersyoung());
         api.setNumberMetersMen(invItem.getNumbermetersmen());
@@ -611,6 +611,8 @@ public class InvItemServiceImpl implements InvItemService {
         api.setNumberMetersFreeMen(invItem.getNumbermetersfreemen());
         api.setSupplierId(invItem.getSiteId() == null ? null : invItem.getSiteId().getName());
         api.setItemType(invItem.getType());
+        api.setPriceType(invItem.getPriceType());
+        api.setLastCost(invItem.getLastCost());
         api.setPriceType(invItem.getPriceType());
         
         

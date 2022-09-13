@@ -53,6 +53,7 @@ public class InvItemDTOApi {
     private BigDecimal discountRow;
     private BigDecimal availableQuantity;
     private BigDecimal quantity;
+    private BigDecimal lastCost;
 
     /**
      * @return the name
@@ -570,6 +571,20 @@ public class InvItemDTOApi {
      */
     public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
+    }
+
+    /**
+     * @return the lastCost
+     */
+    public BigDecimal getLastCost() {
+        return lastCost;
+    }
+
+    /**
+     * @param lastCost the lastCost to set
+     */
+    public void setLastCost(BigDecimal lastCost) {
+        this.lastCost = lastCost;
     }
 
 }
