@@ -54,6 +54,7 @@ public class InvItemDTOApi {
     private BigDecimal availableQuantity;
     private BigDecimal quantity;
     private BigDecimal lastCost;
+    private Integer invNameGallary;
 
     /**
      * @return the name
@@ -585,6 +586,20 @@ public class InvItemDTOApi {
      */
     public void setLastCost(BigDecimal lastCost) {
         this.lastCost = lastCost;
+    }
+
+    /**
+     * @return the invNameGallary
+     */
+    public Integer getInvNameGallary() {
+        return invNameGallary;
+    }
+
+    /**
+     * @param invNameGallary the invNameGallary to set
+     */
+    public void setInvNameGallary(Integer invNameGallary) {
+        this.invNameGallary = invNameGallary;
     }
 
 }

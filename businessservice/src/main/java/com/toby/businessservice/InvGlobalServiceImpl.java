@@ -1618,18 +1618,24 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             CompanyActivityClassEnum companyActivity, ScreenNameClassEnum screenName,
             Integer proGroupId, Integer invName, String itemCode, BigDecimal discountvalue, BigDecimal quantityOfUnit,
             BigDecimal numberMetersFreeMen, BigDecimal numberMetersFreeYoung, BigDecimal customerDiscount,
-            BigDecimal offerCompanycustomerDiscount, Integer IsOfferItem) {
+            BigDecimal offerCompanycustomerDiscount, Integer IsOfferItem, Integer invNameGallary) {
+        BigDecimal cost = BigDecimal.ZERO;
         if (itemNatural == null) {
-            return calcCost(itemNatural, pricetype, maxPriceMen, maxPriceYoung, companyActivity, screenName, proGroupId, invName, itemCode, discountvalue, quantityOfUnit,
+            cost = calcCost(itemNatural, pricetype, maxPriceMen, maxPriceYoung, companyActivity, screenName, proGroupId, invName, itemCode, discountvalue, quantityOfUnit,
                     numberMetersFreeMen, numberMetersFreeYoung, customerDiscount, offerCompanycustomerDiscount, IsOfferItem);
         } else {
             if (pricetype != null && 1 == pricetype) {
-                return maxPriceMen == null ? BigDecimal.ZERO : maxPriceMen;
+                cost = maxPriceMen == null ? BigDecimal.ZERO : maxPriceMen;
             } else {
-                return maxPriceYoung == null ? BigDecimal.ZERO : maxPriceYoung;
+                cost =  maxPriceYoung == null ? BigDecimal.ZERO : maxPriceYoung;
             }
         }
+        
+        if (invNameGallary != null && invNameGallary == 1 && proGroupId != null && proGroupId == 1 && IsOfferItem != null &&  IsOfferItem == 1) {
+            cost = new BigDecimal((cost.multiply(new BigDecimal(0.85))).setScale(5, RoundingMode.HALF_DOWN).stripTrailingZeros().toPlainString());
+        }
 
+        return cost ;
     }
 
     private BigDecimal calcCost(Integer typeShow, Integer pricetype, BigDecimal maxPriceMen, BigDecimal maxPriceYoung,
@@ -1801,7 +1807,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
     }
 
     @Override
-    public InvItemDTOApi findItemData(Integer itemId, Integer customerId, Integer priceType, Integer inventoryId) {
+    public InvItemDTOApi findItemData(Integer itemId, Integer customerId, Integer priceType, Integer inventoryId, Integer invNameGallary) {
         if (itemId != null && customerId != null && priceType != null) {
             InvItem item = dao.findEntityById(InvItem.class, itemId);
             InvOrganizationSite customer = dao.findEntityById(InvOrganizationSite.class, customerId);
@@ -1819,7 +1825,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                     item.getMaxpriceyoung(), CompanyActivityClassEnum.RetailSaleForClothFactory, ScreenNameClassEnum.PROWORKORDER, item.getProGroupId() == null ? null : item.getProGroupId().getId(),
                     customer.getGallaryId() == null ? null : customer.getGallaryId().getInvName(), item.getCode(), item.getDiscountvalue(), dTOApi.getQuantityOfUnit(),
                     item.getNumbermetersfreemen(), item.getNumbermetersfreeyoung(), customer.getDiscount(), customer.getOfferCompanyId() == null ? BigDecimal.ZERO : customer.getOfferCompanyId().getDiscount(),
-                    item.getIsOfferItem()));
+                    item.getIsOfferItem(), invNameGallary));
             dTOApi.setUnitName(item.getUnitId() == null ? "" : item.getUnitId().getName());
             dTOApi.setDiscountRow(calcDiscount(item.getProGroupId().getId(), item.getSiteId().getId(), item.getIsOfferItem(), customer.getDiscount(), customer.getOfferCompanyId() == null ? BigDecimal.ZERO : customer.getOfferCompanyId().getDiscount()));
             if (item.getIsInventoryItem() != null && item.getIsInventoryItem() == 1) {
@@ -1834,7 +1840,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
     }
 
     @Override
-    public InvItemDTOApi findItemPriceData(Integer itemId, Integer customerId, Integer priceType, Integer inventoryId,BigDecimal quantityOfUnit) {
+    public InvItemDTOApi findItemPriceData(Integer itemId, Integer customerId, Integer priceType, Integer inventoryId,BigDecimal quantityOfUnit, Integer invNameGallary) {
         if (itemId != null && customerId != null && priceType != null) {
             InvItem item = dao.findEntityById(InvItem.class, itemId);
             InvOrganizationSite customer = dao.findEntityById(InvOrganizationSite.class, customerId);
@@ -1843,7 +1849,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                     item.getMaxpriceyoung(), CompanyActivityClassEnum.RetailSaleForClothFactory, ScreenNameClassEnum.PROWORKORDER, item.getProGroupId() == null ? null : item.getProGroupId().getId(),
                     customer.getGallaryId() == null ? null : customer.getGallaryId().getInvName(), item.getCode(), item.getDiscountvalue(), quantityOfUnit,
                     item.getNumbermetersfreemen(), item.getNumbermetersfreeyoung(), customer.getDiscount(), customer.getOfferCompanyId() == null ? BigDecimal.ZERO : customer.getOfferCompanyId().getDiscount(),
-                    item.getIsOfferItem()));
+                    item.getIsOfferItem(),invNameGallary));
             return dTOApi;
         }
         return null;

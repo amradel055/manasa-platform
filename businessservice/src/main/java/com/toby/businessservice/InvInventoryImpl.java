@@ -152,6 +152,7 @@ public class InvInventoryImpl implements InvInventoryService {
 
         dto.setMsg(entity.getMsg());
         dto.setSellerName(entity.getSellerName());
+        dto.setInvName(entity.getInvName());
         if (entity.getAccountId() != null) {
             GlAccountDTO accountDTO = new GlAccountDTO();
             accountDTO.setId(entity.getAccountId().getId());

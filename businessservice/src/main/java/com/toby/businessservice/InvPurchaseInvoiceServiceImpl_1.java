@@ -1531,6 +1531,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         dtoAPI.setCustomerId(dto.getOrganizationSiteId() == null ? null : dto.getOrganizationSiteId().getId());
         dtoAPI.setCustomerName(dto.getOrganizationSiteId() == null ? null : dto.getOrganizationSiteId().getName());
         dtoAPI.setCustomerCode(dto.getOrganizationSiteId() == null ? null : dto.getOrganizationSiteId().getCode());
+        dtoAPI.setCustomerMobile(dto.getOrganizationSiteId() == null ? null : dto.getOrganizationSiteId().getMobile());
+        dtoAPI.setCustomerEmail(dto.getOrganizationSiteId() == null ? null : dto.getOrganizationSiteId().getEmail());
 
         dtoAPI.setDate(new Date());
         dtoAPI.setId(dto.getId());
@@ -1827,54 +1829,54 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     @Override
     public List<InvDetailsDTOAPI> offer999Les16Les20OnlyPrinceTwo(List<InvDetailsDTOAPI> detailList) {
         List<InvDetailsDTOAPI> list = new ArrayList<>();
-        int numbertotal = 0;
-        int numberone = 0;
-        int numbertwo = 0;
-        for (InvDetailsDTOAPI detailDTO : detailList) {
-
-            if (detailDTO.getItemId() != null
-                    && detailDTO.getProgroupId() != null && detailDTO.getProgroupId() == 1) {
-                if (detailDTO.getTypeShow() == 1) {
-                    if ((detailDTO.getLastCost().compareTo(BigDecimal.valueOf(16.67)) != 1)
-                            || (detailDTO.getCode().equals("035142"))
-                            || (detailDTO.getCode().equals("035143"))
-                            || (detailDTO.getCode().equals("035157"))
-                            || (detailDTO.getCode().equals("15094"))
-                            || (detailDTO.getCode().equals("012214"))
-                            || (detailDTO.getCode().equals("012215"))
-                            || (detailDTO.getCode().equals("004430"))
-                            || (detailDTO.getCode().equals("047238"))
-                            || (detailDTO.getCode().equals("004210"))
-                            || (detailDTO.getCode().equals("053012"))
-                            || (detailDTO.getCode().equals("001029"))) {
-                        numberone = numberone + detailDTO.getNumber().intValue();
-                        numbertotal = numbertotal + detailDTO.getNumber().intValue();
-                    } else if (detailDTO.getLastCost().compareTo(BigDecimal.valueOf(16.5)) != -1 && detailDTO.getLastCost().compareTo(BigDecimal.valueOf(28)) != 1) {
-                        numbertwo = numbertwo + detailDTO.getNumber().intValue();
-                        numbertotal = numbertotal + detailDTO.getNumber().intValue();
-                    }
-                } else if (detailDTO.getTypeShow() == 2) {
-                    if ((detailDTO.getLastCost().compareTo(BigDecimal.valueOf(20)) != 1)
-                            || (detailDTO.getCode().equals("035142"))
-                            || (detailDTO.getCode().equals("035143"))
-                            || (detailDTO.getCode().equals("035157"))
-                            || (detailDTO.getCode().equals("15094"))
-                            || (detailDTO.getCode().equals("012214"))
-                            || (detailDTO.getCode().equals("012215"))
-                            || (detailDTO.getCode().equals("004430"))
-                            || (detailDTO.getCode().equals("047238"))
-                            || (detailDTO.getCode().equals("004210"))
-                            || (detailDTO.getCode().equals("053012"))
-                            || (detailDTO.getCode().equals("001029"))) {
-                        numberone = numberone + detailDTO.getNumber().intValue();
-                        numbertotal = numbertotal + detailDTO.getNumber().intValue();
-                    } else if (detailDTO.getLastCost().compareTo(BigDecimal.valueOf(21)) != -1 && detailDTO.getLastCost().compareTo(BigDecimal.valueOf(40)) != 1) {
-                        numbertwo = numbertwo + detailDTO.getNumber().intValue();
-                        numbertotal = numbertotal + detailDTO.getNumber().intValue();
-                    }
-                }
-            }
-        }
+//        int numbertotal = 0;
+//        int numberone = 0;
+//        int numbertwo = 0;
+//        for (InvDetailsDTOAPI detailDTO : detailList) {
+//
+//            if (detailDTO.getItemId() != null
+//                    && detailDTO.getProgroupId() != null && detailDTO.getProgroupId() == 1) {
+//                if (detailDTO.getTypeShow() == 1) {
+//                    if ((detailDTO.getLastCost().compareTo(BigDecimal.valueOf(16.67)) != 1)
+//                            || (detailDTO.getCode().equals("035142"))
+//                            || (detailDTO.getCode().equals("035143"))
+//                            || (detailDTO.getCode().equals("035157"))
+//                            || (detailDTO.getCode().equals("15094"))
+//                            || (detailDTO.getCode().equals("012214"))
+//                            || (detailDTO.getCode().equals("012215"))
+//                            || (detailDTO.getCode().equals("004430"))
+//                            || (detailDTO.getCode().equals("047238"))
+//                            || (detailDTO.getCode().equals("004210"))
+//                            || (detailDTO.getCode().equals("053012"))
+//                            || (detailDTO.getCode().equals("001029"))) {
+//                        numberone = numberone + detailDTO.getNumber().intValue();
+//                        numbertotal = numbertotal + detailDTO.getNumber().intValue();
+//                    } else if (detailDTO.getLastCost().compareTo(BigDecimal.valueOf(16.5)) != -1 && detailDTO.getLastCost().compareTo(BigDecimal.valueOf(28)) != 1) {
+//                        numbertwo = numbertwo + detailDTO.getNumber().intValue();
+//                        numbertotal = numbertotal + detailDTO.getNumber().intValue();
+//                    }
+//                } else if (detailDTO.getTypeShow() == 2) {
+//                    if ((detailDTO.getLastCost().compareTo(BigDecimal.valueOf(20)) != 1)
+//                            || (detailDTO.getCode().equals("035142"))
+//                            || (detailDTO.getCode().equals("035143"))
+//                            || (detailDTO.getCode().equals("035157"))
+//                            || (detailDTO.getCode().equals("15094"))
+//                            || (detailDTO.getCode().equals("012214"))
+//                            || (detailDTO.getCode().equals("012215"))
+//                            || (detailDTO.getCode().equals("004430"))
+//                            || (detailDTO.getCode().equals("047238"))
+//                            || (detailDTO.getCode().equals("004210"))
+//                            || (detailDTO.getCode().equals("053012"))
+//                            || (detailDTO.getCode().equals("001029"))) {
+//                        numberone = numberone + detailDTO.getNumber().intValue();
+//                        numbertotal = numbertotal + detailDTO.getNumber().intValue();
+//                    } else if (detailDTO.getLastCost().compareTo(BigDecimal.valueOf(21)) != -1 && detailDTO.getLastCost().compareTo(BigDecimal.valueOf(40)) != 1) {
+//                        numbertwo = numbertwo + detailDTO.getNumber().intValue();
+//                        numbertotal = numbertotal + detailDTO.getNumber().intValue();
+//                    }
+//                }
+//            }
+//        }
 
         for (InvDetailsDTOAPI detailDTO : detailList) {
 
@@ -1895,50 +1897,50 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                         || detailDTO.getProgroupId() == 29) {
                     detailDTO.setDiscount(new BigDecimal(30));
                 } else if (detailDTO.getProgroupId() == 1) {
-                    if (numbertotal == 2 && numbertwo == 2) {
-                        detailDTO.setPrice(new BigDecimal(431.3043));
-                        detailDTO.setDiscount(BigDecimal.ZERO);
-                    } else if (numbertotal > 2) {
-                        if (detailDTO.getTypeShow() == 1) {
-                            if ((detailDTO.getLastCost().compareTo(BigDecimal.valueOf(16.67)) != 1)
-                                    || (detailDTO.getCode().equals("035142"))
-                                    || (detailDTO.getCode().equals("035143"))
-                                    || (detailDTO.getCode().equals("035157"))
-                                    || (detailDTO.getCode().equals("15094"))
-                                    || (detailDTO.getCode().equals("012214"))
-                                    || (detailDTO.getCode().equals("012215"))
-                                    || (detailDTO.getCode().equals("004430"))
-                                    || (detailDTO.getCode().equals("047238"))
-                                    || (detailDTO.getCode().equals("004210"))
-                                    || (detailDTO.getCode().equals("053012"))
-                                    || (detailDTO.getCode().equals("001029"))) {
-                                detailDTO.setPrice(new BigDecimal(287.536));
-                            } else if (detailDTO.getLastCost().compareTo(BigDecimal.valueOf(16.5)) != -1 
-                                    && detailDTO.getLastCost().compareTo(BigDecimal.valueOf(28)) != 1) {
-                                detailDTO.setPrice(new BigDecimal(431.3043));
-                            }
-                            detailDTO.setDiscount(BigDecimal.ZERO);
-                        } else if (detailDTO.getTypeShow() == 2) {
-                            if ((detailDTO.getLastCost().compareTo(BigDecimal.valueOf(20)) != 1)
-                                    || (detailDTO.getCode().equals("035142"))
-                                    || (detailDTO.getCode().equals("035143"))
-                                    || (detailDTO.getCode().equals("035157"))
-                                    || (detailDTO.getCode().equals("15094"))
-                                    || (detailDTO.getCode().equals("012214"))
-                                    || (detailDTO.getCode().equals("012215"))
-                                    || (detailDTO.getCode().equals("004430"))
-                                    || (detailDTO.getCode().equals("047238"))
-                                    || (detailDTO.getCode().equals("004210"))
-                                    || (detailDTO.getCode().equals("053012"))
-                                    || (detailDTO.getCode().equals("001029"))) {
-                                detailDTO.setPrice(new BigDecimal(287.536));
-                            } else if (detailDTO.getLastCost().compareTo(BigDecimal.valueOf(16.5)) != -1 
-                                    && detailDTO.getLastCost().compareTo(BigDecimal.valueOf(28)) != 1) {
-                                detailDTO.setPrice(new BigDecimal(431.3043));
-                            }
-                            detailDTO.setDiscount(BigDecimal.ZERO);
+//                    if (numbertotal == 2 && numbertwo == 2) {
+//                        detailDTO.setPrice(new BigDecimal(431.3043));
+//                        detailDTO.setDiscount(BigDecimal.ZERO);
+//                    } else if (numbertotal > 2) {
+                    if (detailDTO.getTypeShow() == 1) {
+                        if ((detailDTO.getLastCost().compareTo(BigDecimal.valueOf(16.67)) != 1)
+                                || (detailDTO.getCode().equals("035142"))
+                                || (detailDTO.getCode().equals("035143"))
+                                || (detailDTO.getCode().equals("035157"))
+                                || (detailDTO.getCode().equals("15094"))
+                                || (detailDTO.getCode().equals("012214"))
+                                || (detailDTO.getCode().equals("012215"))
+                                || (detailDTO.getCode().equals("004430"))
+                                || (detailDTO.getCode().equals("047238"))
+                                || (detailDTO.getCode().equals("004210"))
+                                || (detailDTO.getCode().equals("053012"))
+                                || (detailDTO.getCode().equals("001029"))) {
+                            detailDTO.setPrice(new BigDecimal(287.536));
+                        } else if (detailDTO.getLastCost().compareTo(BigDecimal.valueOf(16.5)) != -1
+                                && detailDTO.getLastCost().compareTo(BigDecimal.valueOf(28)) != 1) {
+                            detailDTO.setPrice(new BigDecimal(431.3043));
                         }
+                        detailDTO.setDiscount(BigDecimal.ZERO);
+                    } else if (detailDTO.getTypeShow() == 2) {
+                        if ((detailDTO.getLastCost().compareTo(BigDecimal.valueOf(20)) != 1)
+                                || (detailDTO.getCode().equals("035142"))
+                                || (detailDTO.getCode().equals("035143"))
+                                || (detailDTO.getCode().equals("035157"))
+                                || (detailDTO.getCode().equals("15094"))
+                                || (detailDTO.getCode().equals("012214"))
+                                || (detailDTO.getCode().equals("012215"))
+                                || (detailDTO.getCode().equals("004430"))
+                                || (detailDTO.getCode().equals("047238"))
+                                || (detailDTO.getCode().equals("004210"))
+                                || (detailDTO.getCode().equals("053012"))
+                                || (detailDTO.getCode().equals("001029"))) {
+                            detailDTO.setPrice(new BigDecimal(287.536));
+                        } else if (detailDTO.getLastCost().compareTo(BigDecimal.valueOf(21)) != -1
+                                && detailDTO.getLastCost().compareTo(BigDecimal.valueOf(40)) != 1) {
+                            detailDTO.setPrice(new BigDecimal(431.3043));
+                        }
+                        detailDTO.setDiscount(BigDecimal.ZERO);
                     }
+//                    }
                 }
                 detailDTO.setNet((detailDTO.getPrice().subtract(detailDTO.getPrice().multiply(detailDTO.getDiscount().divide(new BigDecimal(100))))).multiply(detailDTO.getNumber()));
             }
@@ -3420,8 +3422,10 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     public InvInvoiceDTOApi tarhilSalesAPI(InvInvoiceDTO dto) {
         try {
             InvInvoiceDTOApi api = null;
+            Integer gallaryInvName = null;
             if (dto.getOrganizationSiteId() != null && dto.getGallaryId() != null && dto.getId() != null) {
                 InvPurchaseInvoice invPurchaseInvoice = dao.findEntityById(InvPurchaseInvoice.class, dto.getId());
+                gallaryInvName = invPurchaseInvoice.getGalaryId().getInvName();
                 dto.setSerial(invPurchaseInvoice.getSerial());
                 dto.setSerialTax(invPurchaseInvoice.getSerialTax());
                 InvOrganizationSite invOrganizationSite = dao.findEntityById(InvOrganizationSite.class, dto.getOrganizationSiteId().getId());
@@ -3452,15 +3456,25 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 }
                 try {
                     api = mapToDTOApiDeskTop(dto, Boolean.TRUE);
+
                     StringBuilder message = new StringBuilder();
                     message.append("عميلنا العزيز ، شكراً لتسوقك تمت عملية شراء رقم ");
                     message.append(dto.getSerial());
                     message.append(" المدفوع ");
                     message.append(dto.getPayed());
-                    message.append("\n");
-                    message.append("نسعد بتلقي تقييمكم عن الخدمة المقدمة لكم من برنس  \n");
-                    message.append(" https://forms.gle/jARVyTyhGMT9MQRi7 ");
-                    sendSms(dto.getCustomerMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
+
+                    if (gallaryInvName != null && gallaryInvName == 0) {
+                        message.append("\n");
+                        message.append("نسعد بتلقي تقييمكم عن الخدمة المقدمة لكم من برنس  \n");
+                        message.append(" https://forms.gle/jARVyTyhGMT9MQRi7 ");
+                        sendSms(dto.getCustomerMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
+                    } else if (gallaryInvName != null && gallaryInvName == 1) {
+                        message.append("\n");
+                        message.append("نسعد بتلقي تقييمكم عن الخدمة المقدمة لكم من لي رويال  \n");
+                        message.append(" https://forms.gle/Jcti3uYixoUX8P9D6 ");
+                        sendSms(dto.getCustomerMobile(), "التوبى العالمى", message.toString(), "20099320", "Royal@e12z");
+                    }
+
                     api.setPayed(dto.getPayed());
                 } catch (IOException ex) {
                     Logger.getLogger(InvPurchaseInvoiceServiceImpl_1.class.getName()).log(Level.SEVERE, null, ex);
