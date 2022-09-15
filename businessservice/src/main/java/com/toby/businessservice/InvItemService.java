@@ -127,4 +127,6 @@ public interface InvItemService {
      public List<InvItemDTOApi> findInvItemDTOListAPI(Integer branchId);
      
      public List<InvItemDTOApi> findInvItemDTOListAPINew(Integer branchId);
+     
+     public BigDecimal findCostAvarageItem(Integer id);
 }

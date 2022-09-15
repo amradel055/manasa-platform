@@ -230,4 +230,6 @@ public interface OrganizationSiteService {
     public InvOrganizationSiteDTO findOrganizationSiteDTOByCodeAndGallaryIdDTO(Integer branchId, String code, Integer gallaryId);
 
     public InvOrganizationSiteDTO addNewCustomerAPI(InvOrganizationSiteDTOAPI invOrganizationSiteDTOAPI, TobyUser tobyUser, Integer accountId);
+    
+    public String findCustomerMobile(Integer customerId);
 }

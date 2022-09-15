@@ -226,7 +226,6 @@ public class InvItemServiceImpl implements InvItemService {
 //        dto.setPrice_type(invItem.getPriceType());
 //        return dto;
 //    }
-
     @Override
     public InvItemDTO mapToDTO(InvItem invItem) {
 
@@ -337,6 +336,7 @@ public class InvItemServiceImpl implements InvItemService {
         }
         return invItemDTOList;
     }
+
     public List<InvItemDTOApi> mapToDTOListAPI(List<InvItem> invItemList) {
         List<InvItemDTOApi> invItemDTOList = new ArrayList<>();
         for (InvItem invItem : invItemList) {
@@ -412,6 +412,7 @@ public class InvItemServiceImpl implements InvItemService {
         List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId ", params);
         return mapToDTOList(invItemList);
     }
+
     @Override
     public List<InvItemDTOApi> findInvItemDTOListAPI(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
@@ -419,7 +420,7 @@ public class InvItemServiceImpl implements InvItemService {
         List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId and e.id >= 23148", params);
         return mapToDTOListAPI(invItemList);
     }
-    
+
     @Override
     public List<InvItemDTOApi> findInvItemDTOListAPINew(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
@@ -587,8 +588,7 @@ public class InvItemServiceImpl implements InvItemService {
         api.setCode(invItem.getCode());
         api.setImage(invItem.getImage());
         api.setRemarks(invItem.getRemarks());
-        
-        
+
         api.setCode(invItem.getCode());
         api.setId(invItem.getId());
         api.setCostAverage(invItem.getCostAverage());
@@ -614,8 +614,7 @@ public class InvItemServiceImpl implements InvItemService {
         api.setPriceType(invItem.getPriceType());
         api.setLastCost(invItem.getLastCost());
         api.setPriceType(invItem.getPriceType());
-        
-        
+
 //        AttributeDTO attributeDTO = new AttributeDTO();
 //        attributeDTO.setItemId(invItem.getId());
 //        api.setAtrributesList(attributeService.getAllAttributesByBranchIdAndItemId(attributeDTO));
@@ -1379,6 +1378,16 @@ public class InvItemServiceImpl implements InvItemService {
         InvItem item = dao.findEntityById(InvItem.class, invItem);
         item.setIsOfferItemFinal(isOfferFinal);
         dao.updateEntity(item);
+    }
+
+    @Override
+    public BigDecimal findCostAvarageItem(Integer id) {
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT IFNULL(i.cost_average,0) FROM inv_item i WHERE i.id = " + id);
+
+        List<BigDecimal> costavarege = dao.executeNativeQuery(query.toString());
+
+        return (costavarege == null || costavarege.isEmpty()) ? BigDecimal.ZERO : costavarege.get(0);
     }
 
 }
