@@ -6,12 +6,15 @@
 package com.toby.rest;
 
 import com.toby.API.GlBankTransactionAPI;
+import com.toby.API.GlPayDTOAPI;
 import com.toby.businessservice.GlBankTransactionDetailsService;
 import com.toby.businessservice.GlBankTransactionService;
-import com.toby.dto.GlBankTransactionDTO;
+import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.entity.Branch;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
+import java.util.Date;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -28,6 +31,8 @@ public class GlBankTransactionRest {
     private GlBankTransactionService glBankTransactionService;
     @EJB
     private GlBankTransactionDetailsService glBankTransactionDetailsService;
+    @EJB
+    private InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
 
     @Transactional
     @Path("/saveGlBankTransaction")
@@ -43,8 +48,36 @@ public class GlBankTransactionRest {
         TobyCompany tobyCompany = new TobyCompany();
         tobyCompany.setId(glBankTransactionAPI.getCompanyId());
         tobyUser1.setCompanyId(tobyCompany);
-        
+
         return bankTransactionAPI;
+    }
+
+    @Transactional
+    @Path("/tarhilSalesAPI")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<GlPayDTOAPI> tarhilSalesAPI(List<GlPayDTOAPI> glPayDTOAPIList) {
+        try {
+
+            for (GlPayDTOAPI glPayDTOAPI : glPayDTOAPIList) {
+                TobyUser tobyUser1 = new TobyUser();
+                Branch branch = new Branch();
+                branch.setId(182);
+                tobyUser1.setBranchId(branch);
+                TobyCompany tobyCompany = new TobyCompany();
+                tobyCompany.setId(125);
+                tobyUser1.setCompanyId(tobyCompany);
+                tobyUser1.setId(201);
+
+                if (glPayDTOAPI.getInvoiceId() != null && glPayDTOAPI.getId() != null) {
+                    glBankTransactionDetailsService.tarhilAfterSave(glPayDTOAPI.getId(), tobyUser1);
+                }
+            }
+            return glPayDTOAPIList;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }
