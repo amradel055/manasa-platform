@@ -15,6 +15,7 @@ import com.toby.entity.Symbol;
 import com.toby.entity.TobyCompany;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -521,7 +522,8 @@ public class SymbolServiceImpl implements SymbolService {
             dTOList.add(mapTODTO(entity, null));
         }
     }
-    private List<SymbolDTOAPI>  returnListDTOAPI(List<Symbol> list) {
+
+    private List<SymbolDTOAPI> returnListDTOAPI(List<Symbol> list) {
         List<SymbolDTOAPI> dTOList = new ArrayList<>();
         for (Symbol entity : list) {
             dTOList.add(initMapToDTOAPI(entity));
@@ -611,6 +613,7 @@ public class SymbolServiceImpl implements SymbolService {
         Map<String, Object> params = new HashMap<>();
         params.put("companyId", companyId);
         List<Symbol> symbolList = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=1 AND sym.companyId.id=:companyId AND (sym.serial < 1000 OR sym.serial > 2000) order by (CASE WHEN sym.arrange IS NULL THEN 999999999999 ELSE 0 END) , sym.arrange", params);
+        Collections.reverse(symbolList);
         return returnListDTOAPI(symbolList);
 
     }
