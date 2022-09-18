@@ -5,6 +5,8 @@
  */
 package com.toby.dto;
 
+import java.math.BigDecimal;
+
 /**
  *
  * @author Lenovo
@@ -14,7 +16,7 @@ public class CommisionReport {
     private String gallaryName;
     private String transactionType;
     private String bankName;
-    private String bankValue;
+    private BigDecimal value;
 
     /**
      * @return the gallaryName
@@ -59,17 +61,17 @@ public class CommisionReport {
     }
 
     /**
-     * @return the bankValue
+     * @return the value
      */
-    public String getBankValue() {
-        return bankValue;
+    public BigDecimal getValue() {
+        return value;
     }
 
     /**
-     * @param bankValue the bankValue to set
+     * @param value the value to set
      */
-    public void setBankValue(String bankValue) {
-        this.bankValue = bankValue;
+    public void setValue(BigDecimal value) {
+        this.value = value;
     }
 
 }
