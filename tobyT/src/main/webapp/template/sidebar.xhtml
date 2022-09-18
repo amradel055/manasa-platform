@@ -753,7 +753,9 @@
                                                        or userData.userScreens['ProfitOfItemsSoldReport'].view 
                                                        or userData.userScreens['InvoiceMovementReport'].view 
                                                        or userData.userScreens['SalesStatementForThePeriod'].view 
-                                                       or userData.userScreens['SalesStatementForThePeriodPay'].view 
+                                                       or userData.userScreens['SalesStatementForThePeriodPay'].view
+                                                       or userData.userScreens['commisionReport'].view 
+
                                                        or userData.isAdmin}" >
                                     <p:menuitem id="sr_sm71" value=" بيان الفواتير حسب الضريبة " icon="&#xE8D2;" url="/faces/views/proproductionreport/SalesReportByValueAdedReport.xhtml" 
                                                 rendered="#{userData.userScreens['SalesReportByValueAdedReport'].view or   userData.isAdmin}"
@@ -819,6 +821,9 @@
                                                 />
                                     <p:menuitem id="sr_lnk99990035513" value=" تقرير بالمبالغ الغير المسددة" icon="&#xE8D2;" url="/faces/views/inventoryreports/unPaidAmountReport.xhtml" 
                                                 rendered="#{userData.userScreens['CustomerBalancesReport'].view or userData.isAdmin}"
+                                                />
+                                       <p:menuitem id="sr_lnk999900355136555" value=" تقرير العملات" icon="&#xE8D2;" url="/faces/views/inventoryreports/commisionReport.xhtml" 
+                                                rendered="#{userData.userScreens['commisionReport'].view or userData.isAdmin}"
                                                 />
 
                                 </p:submenu>
