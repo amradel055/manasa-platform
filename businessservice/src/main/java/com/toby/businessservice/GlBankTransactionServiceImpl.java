@@ -820,7 +820,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
                 dTO.setTransactionId(bankTransaction.getId());
                 dTO.setSerial(bankTransaction.getSerial());
                 detailList.add(dTO);
-                glBankTransactionDetailsService.tarhilAfterSave(bankTransaction.getId(), tobyUser1);
+//                glBankTransactionDetailsService.tarhilAfterSave(bankTransaction.getId(), tobyUser1);
 //                tarhilglBankTransaction(bankTransaction.getId(), bankTransaction);
             }
         }
@@ -828,5 +828,6 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         
         return glBankTransactionAPI;
     }
+    
     
 }

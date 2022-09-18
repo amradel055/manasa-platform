@@ -11,6 +11,7 @@ import com.toby.API.ResponseApi;
 import com.toby.businessservice.InvInventoryService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.dto.InvInvoiceDTO;
+import java.util.Date;
 import java.util.List;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -54,7 +55,7 @@ public class SalesRest {
                 if (invInvoiceDTOApi.getGalleryType() != null && invInvoiceDTOApi.getGalleryType() == 1) {
                     List<InvDetailsDTOAPI> list = invPurchaseInvoiceService_1.offer999Les16Les20Only(invInvoiceDTOApi.getInvoiceDetailApiList());
                     return list;
-                } else if (invInvoiceDTOApi.getGalleryType() != null && invInvoiceDTOApi.getGalleryType() == 1) {
+                } else if (invInvoiceDTOApi.getGalleryType() != null && invInvoiceDTOApi.getGalleryType() == 0) {
                     List<InvDetailsDTOAPI> list = invPurchaseInvoiceService_1.offer999Les16Les20OnlyPrinceTwo(invInvoiceDTOApi.getInvoiceDetailApiList());
                     return list;
                 }
@@ -107,10 +108,14 @@ public class SalesRest {
     @Consumes(MediaType.APPLICATION_JSON)
     public InvInvoiceDTOApi tarhilSalesAPI(InvInvoiceDTOApi invInvoiceDTOApi) {
         try {
+            System.err.println(" -- 01 -> " + new Date());
             if (invInvoiceDTOApi.getId() != null && invInvoiceDTOApi.getCustomerId() != null && invInvoiceDTOApi.getGallaryId() != null) {
                 invPurchaseInvoiceService_1.updateTarhil(invInvoiceDTOApi.getId());
+                System.err.println(" -- 04 -> " + new Date());
                 InvInvoiceDTO invInvoiceDTO = invPurchaseInvoiceService_1.mapToDTOApiDeskTop(invInvoiceDTOApi, false);
+                System.err.println(" -- 05 -> " + new Date());
                 InvInvoiceDTOApi invInvoiceDTOAPI = invPurchaseInvoiceService_1.tarhilSalesAPI(invInvoiceDTO);
+                System.err.println(" -- 20 -> " + new Date());
                 return invInvoiceDTOAPI;
             }
             return null;

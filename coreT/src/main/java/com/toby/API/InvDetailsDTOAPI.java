@@ -36,6 +36,9 @@ public class InvDetailsDTOAPI extends BaseEntityDTOAPI {
     private Integer progroupId;
     private Integer typeShow;
     private BigDecimal lastCost;
+    
+    
+    private Integer unitId;
 
     /**
      * @return the name
@@ -329,6 +332,20 @@ public class InvDetailsDTOAPI extends BaseEntityDTOAPI {
      */
     public void setInventoryCode(String inventoryCode) {
         this.inventoryCode = inventoryCode;
+    }
+
+    /**
+     * @return the unitId
+     */
+    public Integer getUnitId() {
+        return unitId;
+    }
+
+    /**
+     * @param unitId the unitId to set
+     */
+    public void setUnitId(Integer unitId) {
+        this.unitId = unitId;
     }
 
 }

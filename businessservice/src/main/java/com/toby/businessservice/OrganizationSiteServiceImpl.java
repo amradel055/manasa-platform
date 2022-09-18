@@ -524,7 +524,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             symbol.setId(invOrganizationSiteDTO.getLearnAboutCompanyFrom().getId());
             invOrganizationSite.setLearnAboutCompanyfrom(symbol);
         }
-        
+
         if (invOrganizationSiteDTO.getAccountIdAPI() != null) {
             GlAccount account = new GlAccount();
             account.setId(invOrganizationSiteDTO.getAccountIdAPI());
@@ -573,7 +573,6 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             invOrganizationSite.setContractorType(symbol);
         }
 
-        
         if (invOrganizationSiteDTO.getAccountId() != null) {
             GlAccount account = new GlAccount();
             account.setId(invOrganizationSiteDTO.getAccountId().getId());
@@ -2897,6 +2896,15 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             params.put("gallaryId", gallaryId);
             InvOrganizationSite invOrganizationSiteList = dao.findEntityByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.gallaryId.id =:gallaryId AND ( e.mobile = :code OR e.code = :code )", params);
             return mapToDTOSmall(invOrganizationSiteList);
+        }
+        return null;
+    }
+
+    @Override
+    public String findCustomerMobile(Integer customerId) {
+        if (customerId != null) {
+            List<String> mobile = dao.executeNativeQuery("SELECT e.mobile FROM inv_organization_site e WHERE e.id = " + customerId);
+            return (mobile != null && !mobile.isEmpty()) ? mobile.get(0) : null;
         }
         return null;
     }
