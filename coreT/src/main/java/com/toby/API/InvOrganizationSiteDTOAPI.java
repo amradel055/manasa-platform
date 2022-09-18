@@ -29,6 +29,8 @@ public class InvOrganizationSiteDTOAPI extends BaseEntityDTOAPI {
     private Integer accountIdAPI;
     private Integer typeShow;
     
+    private String taxNumber;
+    
 
     public InvOrganizationSiteDTOAPI() {
     }
@@ -260,6 +262,20 @@ public class InvOrganizationSiteDTOAPI extends BaseEntityDTOAPI {
      */
     public void setTypeShow(Integer typeShow) {
         this.typeShow = typeShow;
+    }
+
+    /**
+     * @return the taxNumber
+     */
+    public String getTaxNumber() {
+        return taxNumber;
+    }
+
+    /**
+     * @param taxNumber the taxNumber to set
+     */
+    public void setTaxNumber(String taxNumber) {
+        this.taxNumber = taxNumber;
     }
 
   

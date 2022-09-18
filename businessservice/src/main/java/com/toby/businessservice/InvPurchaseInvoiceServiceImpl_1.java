@@ -1623,8 +1623,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         System.err.println("0000004 -> " + new Date());
         invoiceDTO.setGallaryId(gallary);
         if (invInvoiceDTOApi.getGallaryDeliveryId() != null) {
-//        InvInventoryDTO gallaryDelivery = new InvInventoryDTO();
-//        gallaryDelivery.setId(invInvoiceDTOApi.getGallaryId());
+            InvInventoryDTO gallaryDelivery = new InvInventoryDTO();
+            gallaryDelivery.setId(invInvoiceDTOApi.getGallaryId());
+            invoiceDTO.setDeliveryPlace(gallaryDelivery);
             invoiceDTO.setGallaryDelivery(invInvoiceDTOApi.getGallaryDeliveryId());
             invoiceDTO.setGallaryDeliveryShow(invInvoiceDTOApi.getGallaryDeliveryId());
             System.err.println("0000005 -> " + new Date());
@@ -1702,10 +1703,10 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
     public InvDetailDTO mapToDTOAPIDetailDeskTop(InvDetailsDTOAPI detailsDTOAPI) {
 //        InvItem item = invItemService.findInvItem(detailsDTOAPI.getItemId());
-       BigDecimal costAvarage = invItemService.findCostAvarageItem(detailsDTOAPI.getItemId());
+        BigDecimal costAvarage = invItemService.findCostAvarageItem(detailsDTOAPI.getItemId());
         InvDetailDTO invDetailDTO = new InvDetailDTO();
 //        invDetailDTO.setBarCode(detailsDTOAPI.getCode() == null ? item.getCode() : detailsDTOAPI.getCode());
-        invDetailDTO.setBarCode(detailsDTOAPI.getCode() );
+        invDetailDTO.setBarCode(detailsDTOAPI.getCode());
         invDetailDTO.setCost(detailsDTOAPI.getPrice());
         invDetailDTO.setNet(detailsDTOAPI.getNet());
 //        invDetailDTO.setCostAvarage(detailsDTOAPI.getCostAvarage() == null ? item.getCostAverage() : detailsDTOAPI.getCostAvarage());
@@ -1723,7 +1724,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 //        barcodesDetailsView.setCostAverage(detailsDTOAPI.getCostAvarage() == null ? item.getCostAverage() : detailsDTOAPI.getCostAvarage());
         barcodesDetailsView.setCostAverage(costAvarage);
 //        barcodesDetailsView.setItemId(detailsDTOAPI.getId() == null ? item.getId() : detailsDTOAPI.getId());
-        barcodesDetailsView.setItemId(detailsDTOAPI.getItemId() );
+        barcodesDetailsView.setItemId(detailsDTOAPI.getItemId());
         barcodesDetailsView.setMaxPriceMen(detailsDTOAPI.getPrice());
 //        barcodesDetailsView.setProGroupId(detailsDTOAPI.getProgroupId() == null ? item.getProGroupId().getId() : detailsDTOAPI.getProgroupId());
         barcodesDetailsView.setProGroupId(detailsDTOAPI.getProgroupId());
@@ -3445,7 +3446,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             InvInvoiceDTOApi api = null;
             Integer gallaryInvName = null;
             if (dto.getOrganizationSiteId() != null && dto.getGallaryId() != null && dto.getId() != null) {
-                
+
                 System.err.println(" -- 07 -> " + new Date());
                 InvPurchaseInvoice invPurchaseInvoice = dao.findEntityById(InvPurchaseInvoice.class, dto.getId());
                 System.err.println(" -- 08 -> " + new Date());

@@ -881,6 +881,14 @@
                                 <p:outputLabel style="width: 100px" value="خطوة "/>
                             </div>
                         </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputText  value="#{invPurchaseInvoiceFormDTOMB.organizationSiteId.taxNumber}"/>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 100px" value="الرقم الضريبى "/>
+                            </div>
+                        </div>
 
                         <div class="ui-g-12 ui-xl-12">
                             <p:commandButton     class="saveButton"  
@@ -1371,6 +1379,13 @@
                         </h:panelGroup> 
                         <h:panelGroup>
                             <p:inputText  value="#{invPurchaseInvoiceFormDTOMB.organizationSiteIdNew.step}"/>
+                        </h:panelGroup>
+                        <br/> <br/>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 100px" value="الرقم الضريبى "/>
+                        </h:panelGroup> 
+                        <h:panelGroup>
+                            <p:inputText  value="#{invPurchaseInvoiceFormDTOMB.organizationSiteIdNew.taxNumber}"/>
                         </h:panelGroup>
                         <br/> <br/>
                         <p:commandButton     class="saveButton"  

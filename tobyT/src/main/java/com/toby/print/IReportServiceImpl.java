@@ -486,6 +486,11 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("customerPhone", invPurchaseInvoiceDTO.getOrganizationSiteId() == null ? "" : invPurchaseInvoiceDTO.getOrganizationSiteId().getMobile());
             hashMap.put("addressValue", invPurchaseInvoiceDTO.getOrganizationSiteId() == null ? "" : invPurchaseInvoiceDTO.getOrganizationSiteId().getAddress());
             hashMap.put("customerCodeValue", invPurchaseInvoiceDTO.getOrganizationSiteId() == null ? "" : invPurchaseInvoiceDTO.getOrganizationSiteId().getCode());
+            if (invPurchaseInvoiceDTO.getOrganizationSiteId() != null && invPurchaseInvoiceDTO.getOrganizationSiteId().getTaxNumber() != null && !invPurchaseInvoiceDTO.getOrganizationSiteId().getTaxNumber().isEmpty()) {
+                hashMap.put("customerTaxText", "الرقم الضريبى للعميل");
+                hashMap.put("customerTaxValue", invPurchaseInvoiceDTO.getOrganizationSiteId() == null ? "" : invPurchaseInvoiceDTO.getOrganizationSiteId().getTaxNumber());
+            }
+
             hashMap.put("remarkValue", invPurchaseInvoiceDTO.getRemarks());
             hashMap.put("dateValue", invPurchaseInvoiceDTO.getDate());
             hashMap.put("salesValue", invPurchaseInvoiceDTO.getInvDelegatorId() == null ? "" : invPurchaseInvoiceDTO.getInvDelegatorId().getName());

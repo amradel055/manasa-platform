@@ -106,6 +106,8 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
     private Integer gallaryIdAPI;
     private Integer accountIdAPI;
     
+    private String taxNumber;
+    
 
     public InvOrganizationSiteDTO() {
     }
@@ -1267,6 +1269,20 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
      */
     public void setAccountIdAPI(Integer accountIdAPI) {
         this.accountIdAPI = accountIdAPI;
+    }
+
+    /**
+     * @return the taxNumber
+     */
+    public String getTaxNumber() {
+        return taxNumber;
+    }
+
+    /**
+     * @param taxNumber the taxNumber to set
+     */
+    public void setTaxNumber(String taxNumber) {
+        this.taxNumber = taxNumber;
     }
 
   

@@ -67,7 +67,7 @@ public class CustomerRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<OrganizationSiteStatementView> statementForOrganizationSite(InvOrganizationSiteDTO invOrganizationSiteDTO) {
+    public List<OrganizationSiteStatementView> statementForOrganizationSite(InvOrganizationSiteDTOAPI invOrganizationSiteDTO) {
         List<OrganizationSiteStatementView> statementViews = new ArrayList<>();
         if (invOrganizationSiteDTO != null) {
             statementViews = supplierAccountService.getStatementForOrganizationSite(invOrganizationSiteDTO.getId());

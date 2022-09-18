@@ -25,7 +25,6 @@ import com.toby.dto.SymbolDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.Currency;
 import com.toby.entity.Employee;
-import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlAccount;
 import com.toby.entity.InvInventory;
 import com.toby.entity.InvOrganizationSite;
@@ -79,6 +78,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         if (organizationSiteDTO != null && organizationSiteDTO.getId() != null) {
             InvOrganizationSite entity = dao.findEntityById(InvOrganizationSite.class, organizationSiteDTO.getId());
             entity.setMobile(organizationSiteDTO.getMobile());
+            entity.setTaxNumber(organizationSiteDTO.getTaxNumber());
             entity.setEmail(organizationSiteDTO.getEmail());
             entity.setLength(organizationSiteDTO.getLength());
             entity.setShoulder(organizationSiteDTO.getShoulder());
@@ -94,6 +94,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             InvOrganizationSite entity = dao.findEntityById(InvOrganizationSite.class, organizationSiteDTO.getId());
             if (entity != null) {
                 entity.setMobile(organizationSiteDTO.getMobile());
+                entity.setTaxNumber(organizationSiteDTO.getTaxNumber());
                 entity.setEmail(organizationSiteDTO.getEmail());
                 entity.setLength(organizationSiteDTO.getLength());
                 entity.setShoulder(organizationSiteDTO.getShoulder());
@@ -116,6 +117,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
                 entity.setOfferCompanyId(null);
             }
             entity.setMobile(organizationSiteDTO.getMobile());
+            entity.setTaxNumber(organizationSiteDTO.getTaxNumber());
             entity.setName(organizationSiteDTO.getName());
             entity.setOpenBalanceDebit(organizationSiteDTO.getOpenBalanceDebit());
             entity.setOpenBalanceCredit(organizationSiteDTO.getOpenBalanceCredit());
@@ -485,6 +487,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSite.setAddress(invOrganizationSiteDTO.getAddress());
         invOrganizationSite.setCode(invOrganizationSiteDTO.getCode());
         invOrganizationSite.setMobile(invOrganizationSiteDTO.getMobile());
+        invOrganizationSite.setTaxNumber(invOrganizationSiteDTO.getTaxNumber());
         invOrganizationSite.setFax(invOrganizationSiteDTO.getFax());
         invOrganizationSite.setId(invOrganizationSiteDTO.getId());
 
@@ -641,6 +644,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSiteDTO.setFax(invOrganizationSite.getFax());
         invOrganizationSiteDTO.setId(invOrganizationSite.getId());
         invOrganizationSiteDTO.setMobile(invOrganizationSite.getMobile());
+        invOrganizationSiteDTO.setTaxNumber(invOrganizationSite.getTaxNumber());
         invOrganizationSiteDTO.setName(invOrganizationSite.getName());
         invOrganizationSiteDTO.setTelephone(invOrganizationSite.getPhone());
         invOrganizationSiteDTO.setType(invOrganizationSite.getType());
@@ -953,6 +957,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         dTO.setName(entity.getName());
         dTO.setAddress(entity.getAddress());
         dTO.setMobile(entity.getMobile());
+        dTO.setTaxNumber(entity.getTaxNumber());
         dTO.setFax(entity.getFax());
         dTO.setPhone(entity.getPhone());
         dTO.setType(entity.getType());
@@ -1073,6 +1078,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         entity.setCode(dTO.getCode());
         entity.setAddress(dTO.getAddress());
         entity.setMobile(dTO.getMobile());
+        entity.setTaxNumber(dTO.getTaxNumber());
         entity.setFax(dTO.getFax());
         entity.setPhone(dTO.getPhone());
         entity.setType(dTO.getType());
@@ -1591,6 +1597,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             invOrganizationSiteDTO.setDelegatorId(inventoryDelegatorDTO);
             invOrganizationSiteDTO.setCode(code.toString());
             invOrganizationSiteDTO.setMobile(invOrganizationSiteDTO.getMobile());
+            invOrganizationSiteDTO.setTaxNumber(invOrganizationSiteDTO.getTaxNumber());
             invOrganizationSiteDTO.setEmail(invOrganizationSiteDTO.getEmail());
             invOrganizationSiteDTO.setAddress(invOrganizationSiteDTO.getAddress());
             invOrganizationSiteDTO.setLength(invOrganizationSiteDTO.getLength());
@@ -1625,6 +1632,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             invOrganizationSiteDTO.setCode(code.toString());
             invOrganizationSiteDTO.setName(invOrganizationSiteDTOAPI.getName());
             invOrganizationSiteDTO.setMobile(invOrganizationSiteDTOAPI.getMobile());
+            invOrganizationSiteDTO.setTaxNumber(invOrganizationSiteDTOAPI.getTaxNumber());
             invOrganizationSiteDTO.setEmail(invOrganizationSiteDTOAPI.getEmail());
             invOrganizationSiteDTO.setLength(invOrganizationSiteDTOAPI.getLength());
             invOrganizationSiteDTO.setShoulder(invOrganizationSiteDTOAPI.getShoulder());
@@ -1750,6 +1758,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSiteDTO.setName(invOrganizationSite.getName());
         invOrganizationSiteDTO.setCode(invOrganizationSite.getCode());
         invOrganizationSiteDTO.setMobile(invOrganizationSite.getMobile());
+        invOrganizationSiteDTO.setTaxNumber(invOrganizationSite.getTaxNumber());
         invOrganizationSiteDTO.setLength(invOrganizationSite.getLength());
         invOrganizationSiteDTO.setShoulder(invOrganizationSite.getShoulder());
         invOrganizationSiteDTO.setStep(invOrganizationSite.getStep());
@@ -1767,6 +1776,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             parent.setName(invOrganizationSite.getParent().getName());
             parent.setCode(invOrganizationSite.getParent().getCode());
             parent.setMobile(invOrganizationSite.getParent().getMobile());
+            parent.setTaxNumber(invOrganizationSite.getParent().getTaxNumber());
             parent.setDiscount(invOrganizationSite.getParent().getDiscount());
             invOrganizationSiteDTO.setParent(parent);
         }
@@ -2856,7 +2866,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         String gallary = returnGallaryString(invInventoryDTOList);
         List<InvOrganizationSiteDTO> invOrganizationSiteDTOList = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
-        sql.append("select ios.code , ios.name , ios.mobile from inv_purchase_invoice ipi left join inv_organization_site ios on ios.id = ipi.organization_site_id where ipi.branch_id = " + invInventoryDTOList.get(0).getBranchId()
+        sql.append("select ios.code , ios.name , ios.mobile , ios.tax_number from inv_purchase_invoice ipi left join inv_organization_site ios on ios.id = ipi.organization_site_id where ipi.branch_id = " + invInventoryDTOList.get(0).getBranchId()
                 + " and ipi.galary_Id in (").append(gallary).append(") and ipi.date >= '").append(dateFrom1).append("' and ipi.date <= '").append(dateTo1).append("' group by ipi.organization_site_id having count(ipi.id) in(").append(value).append(")");
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
         Iterator it = res.iterator();
@@ -2866,6 +2876,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             invOrganizationSiteDTO.setCode((String) line[0]);
             invOrganizationSiteDTO.setName((String) line[1]);
             invOrganizationSiteDTO.setMobile((String) line[2]);
+            invOrganizationSiteDTO.setTaxNumber((String) line[3]);
 
             invOrganizationSiteDTOList.add(invOrganizationSiteDTO);
         }

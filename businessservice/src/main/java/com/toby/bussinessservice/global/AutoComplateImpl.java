@@ -278,13 +278,14 @@ public class AutoComplateImpl implements AutoCompleteService {
         invOrganizationSiteDTO.setName(invOrganizationSite.getName());
         invOrganizationSiteDTO.setCode(invOrganizationSite.getCode());
         invOrganizationSiteDTO.setMobile(invOrganizationSite.getMobile());
+        invOrganizationSiteDTO.setTaxNumber(invOrganizationSite.getTaxNumber());
         invOrganizationSiteDTO.setPostBox(invOrganizationSite.getPostBox());
         invOrganizationSiteDTO.setLength(invOrganizationSite.getLength());
         invOrganizationSiteDTO.setShoulder(invOrganizationSite.getShoulder());
         invOrganizationSiteDTO.setStep(invOrganizationSite.getStep());
         invOrganizationSiteDTO.setDiscount(invOrganizationSite.getDiscount());
         invOrganizationSiteDTO.setEmail(invOrganizationSite.getEmail());
-        invOrganizationSiteDTO.setMobile(invOrganizationSite.getMobile());
+//        invOrganizationSiteDTO.setMobile(invOrganizationSite.getMobile());
         invOrganizationSiteDTO.setActive(invOrganizationSite.getActive());
         invOrganizationSiteDTO.setStreet(invOrganizationSite.getStreet());
         invOrganizationSiteDTO.setCity(invOrganizationSite.getCity());
@@ -315,6 +316,7 @@ public class AutoComplateImpl implements AutoCompleteService {
             parent.setName(invOrganizationSite.getParent().getName());
             parent.setCode(invOrganizationSite.getParent().getCode());
             parent.setMobile(invOrganizationSite.getParent().getMobile());
+            parent.setTaxNumber(invOrganizationSite.getParent().getTaxNumber());
             parent.setDiscount(invOrganizationSite.getParent().getDiscount());
             invOrganizationSiteDTO.setParent(parent);
         }
@@ -361,6 +363,7 @@ public class AutoComplateImpl implements AutoCompleteService {
         invOrganizationSiteDTO.setDiscount(invOrganizationSite.getDiscount());
         invOrganizationSiteDTO.setEmail(invOrganizationSite.getEmail());
         invOrganizationSiteDTO.setMobile(invOrganizationSite.getMobile());
+        invOrganizationSiteDTO.setTaxNumber(invOrganizationSite.getTaxNumber());
 
         invOrganizationSiteDTO.setOfferCompanyName(invOrganizationSite.getOfferCompanyId() == null ? "" : invOrganizationSite.getOfferCompanyId().getName());
 
@@ -539,6 +542,7 @@ public class AutoComplateImpl implements AutoCompleteService {
         dTO.setCode(entity.getCode());
         dTO.setName(entity.getName());
         dTO.setMobile(entity.getMobile());
+        dTO.setTaxNumber(entity.getTaxNumber());
         if (entity.getCurrencyId() != null) {
             Currency currencyDTO = new Currency();
             currencyDTO.setId(entity.getCurrencyId().getId());
