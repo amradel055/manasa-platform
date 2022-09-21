@@ -30,52 +30,53 @@ import net.sf.jasperreports.engine.JRException;
 @Named("bankAndGallaryValueReportMB")
 @ViewScoped
 public class BankAndGallaryValueReportMB extends BaseReportBean {
-    
+
     private Date datefrom;
     private Date dateto;
     private List<InvInventoryDTO> invInventoryDTOList;
     private List<InvInventoryDTO> invInventoryDTOSelected;
     private InvInventoryDTOConverter inventoryDTOConverters;
     private List<CommisionReport> CommisionReport;
-    
+
     @EJB
     InvInventoryService invInventoryService;
     @EJB
     GlBankTransactionService glBankTransactionService;
-    
+
     @Override
     @PostConstruct
-    
+
     public void load() {
-        
+
     }
-    
+
     @Override
     public void reset() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public void search() {
+        CommisionReport = null;
         for (InvInventoryDTO invInventoryDTO : invInventoryDTOSelected) {
-            List<CommisionReport> commisionReports1 = glBankTransactionService.FindGallarValue(datefrom, dateto, invInventoryDTO.getId(),invInventoryDTO.getName());
-            CommisionReport.addAll(commisionReports1);
-            List<CommisionReport> commisionReports2 = glBankTransactionService.FindBankValues(datefrom, dateto, invInventoryDTO.getId() , invInventoryDTO.getName());
-            CommisionReport.addAll(commisionReports2) ;
+            List<CommisionReport> commisionReports1 = glBankTransactionService.FindGallarValue(datefrom, dateto, invInventoryDTO.getId(), invInventoryDTO.getName());
+            getCommisionReport().addAll(commisionReports1);
+            List<CommisionReport> commisionReports2 = glBankTransactionService.FindBankValues(datefrom, dateto, invInventoryDTO.getId(), invInventoryDTO.getName());
+            getCommisionReport().addAll(commisionReports2);
         }
-        
+
     }
-    
+
     @Override
     public void exportExcel(ActionEvent actionEvent) throws JRException, IOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public void exportHtml(ActionEvent actionEvent) throws JRException, IOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public String getScreenName() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -157,12 +158,12 @@ public class BankAndGallaryValueReportMB extends BaseReportBean {
     public void setInvInventoryDTOSelected(List<InvInventoryDTO> invInventoryDTOSelected) {
         this.invInventoryDTOSelected = invInventoryDTOSelected;
     }
-    
+
     @Override
     public HashMap prepareReport() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -184,5 +185,5 @@ public class BankAndGallaryValueReportMB extends BaseReportBean {
     public void setCommisionReport(List<CommisionReport> CommisionReport) {
         this.CommisionReport = CommisionReport;
     }
-    
+
 }

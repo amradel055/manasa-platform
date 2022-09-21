@@ -2,6 +2,7 @@ package com.toby.businessservice.report;
 
 import com.toby.businessservice.reports.searchBean.ComplexRevisionBalanceSearchBean;
 import com.toby.core.GenericDAO;
+import com.toby.entity.CostCenter;
 import com.toby.entity.GlYear;
 import com.toby.views.ComplexRevisionBalance;
 import java.util.List;
@@ -66,16 +67,28 @@ public class ComplexRevisionReportViewServiceImp implements ComplexRevisionRepor
     }
 
     private void appendcomplexCostCenterForQueryBuilder(StringBuilder queryBuilder, Map<String, Object> params, ComplexRevisionBalanceSearchBean complexRevisionBalanceSearchBean) {
-        if (complexRevisionBalanceSearchBean.getCostCenterFrom() != null && complexRevisionBalanceSearchBean.getCostCenterFrom() > 0) {
-            params.put("costCenterFrom", complexRevisionBalanceSearchBean.getCostCenterFrom());
-            queryBuilder.append(" and crb.glCostCenterId >= :costCenterFrom ");
-        }
+//        if (complexRevisionBalanceSearchBean.getCostCenterFrom() != null && complexRevisionBalanceSearchBean.getCostCenterFrom() > 0) {
+//            params.put("costCenterFrom", complexRevisionBalanceSearchBean.getCostCenterFrom());
+//            queryBuilder.append(" and crb.glCostCenterId >= :costCenterFrom ");
+//        }
+//
+//        if (complexRevisionBalanceSearchBean.getCostCenterTo() != null && complexRevisionBalanceSearchBean.getCostCenterTo() > 0) {
+//            params.put("costCenterTo", complexRevisionBalanceSearchBean.getCostCenterTo());
+//            queryBuilder.append(" and crb.glCostCenterId <=  :costCenterTo");
+//        }
 
-        if (complexRevisionBalanceSearchBean.getCostCenterTo() != null && complexRevisionBalanceSearchBean.getCostCenterTo() > 0) {
-            params.put("costCenterTo", complexRevisionBalanceSearchBean.getCostCenterTo());
-            queryBuilder.append(" and crb.glCostCenterId <=  :costCenterTo");
+        if(complexRevisionBalanceSearchBean.getCostCenterList() != null && !complexRevisionBalanceSearchBean.getCostCenterList().isEmpty()){
+            StringBuilder costCenter = null;
+            for(CostCenter costCenterid : complexRevisionBalanceSearchBean.getCostCenterList()){
+                if(costCenter == null){
+                    costCenter = new StringBuilder();
+                    costCenter.append(costCenterid.getId());
+                }else{
+                    costCenter.append(",").append(costCenterid.getId());
+                }
+            }
+            queryBuilder.append(" and crb.glCostCenterId in (").append(costCenter.toString()).append(")");
         }
-
     }
 
     private void appendcomplexAdminUnitForQueryBuilder(StringBuilder queryBuilder, Map<String, Object> params, ComplexRevisionBalanceSearchBean complexRevisionBalanceSearchBean) {

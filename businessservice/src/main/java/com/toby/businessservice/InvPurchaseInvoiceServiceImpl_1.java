@@ -1624,7 +1624,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invoiceDTO.setGallaryId(gallary);
         if (invInvoiceDTOApi.getGallaryDeliveryId() != null) {
             InvInventoryDTO gallaryDelivery = new InvInventoryDTO();
-            gallaryDelivery.setId(invInvoiceDTOApi.getGallaryId());
+            gallaryDelivery.setId(invInvoiceDTOApi.getGallaryDeliveryId());
             invoiceDTO.setDeliveryPlace(gallaryDelivery);
             invoiceDTO.setGallaryDelivery(invInvoiceDTOApi.getGallaryDeliveryId());
             invoiceDTO.setGallaryDeliveryShow(invInvoiceDTOApi.getGallaryDeliveryId());
@@ -1916,7 +1916,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                         || detailDTO.getProgroupId() == 21
                         || detailDTO.getProgroupId() == 29) {
                     detailDTO.setDiscount(new BigDecimal(30));
-                } else if (detailDTO.getProgroupId() == 1) {
+                } else if (detailDTO.getProgroupId() == 1 && detailDTO.getTypeShow()  != null) {
 //                    if (numbertotal == 2 && numbertwo == 2) {
 //                        detailDTO.setPrice(new BigDecimal(431.3043));
 //                        detailDTO.setDiscount(BigDecimal.ZERO);

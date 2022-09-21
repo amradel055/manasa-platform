@@ -47,6 +47,10 @@ public class ComplexRevisionBalanceMB extends BaseGlAccountReportBean {
     private List<ComplexRevisionBalance> complexRevisionFirstPeriodList;
     private List<GlAccount> glAccountRootList;
     private List<GlAccount> glAccountFromMenuItemList;
+    
+     private List<CostCenter> costCenterListNew ;
+             
+             
     private List<IncomeMenuBean> incomeMenuBeanList;
     private GlaccountConverter accountConverter;
     private CostCenterConverter costCenterConverter;
@@ -81,8 +85,9 @@ public class ComplexRevisionBalanceMB extends BaseGlAccountReportBean {
     private StringBuilder stringBuilderParent;
     private String uri;
 
-    private CostCenter costCenterToSelected;
-    private CostCenter costCenterFromSelected;
+//    private CostCenter costCenterToSelected;
+//    private CostCenter costCenterFromSelected;
+    private List<CostCenter> costCenterListSelected;
     private GlAdminUnit glAdminUnitToSelected;
     private GlAdminUnit glAdminUnitFromSelected;
     private GlAccount glAccountSelectedTo;
@@ -138,8 +143,9 @@ public class ComplexRevisionBalanceMB extends BaseGlAccountReportBean {
         resetDateFrom();
         resetDateTo();
         prepareOpeneingBlancesValues(commonSearchBean);
-        costCenterToSelected = null;
-        costCenterFromSelected = null;
+//        costCenterToSelected = null;
+//        costCenterFromSelected = null;
+        setCostCenterListSelected(null);
         glAdminUnitFromSelected = null;
         glAdminUnitToSelected = null;
         glAccountSelectedTo = null;
@@ -171,8 +177,9 @@ public class ComplexRevisionBalanceMB extends BaseGlAccountReportBean {
         intailize();
         complexRevisionBalanceSearchBeanA.setAccountFrom(glAccountSelectedFrom != null ? glAccountSelectedFrom.getAccNumber() : null);
         complexRevisionBalanceSearchBeanA.setAccountTo(glAccountSelectedTo != null ? glAccountSelectedTo.getAccNumber() : null);
-        complexRevisionBalanceSearchBeanA.setCostCenterFrom(costCenterFromSelected != null ? costCenterFromSelected.getId() : null);
-        complexRevisionBalanceSearchBeanA.setCostCenterTo(costCenterToSelected != null ? costCenterToSelected.getId() : null);
+//        complexRevisionBalanceSearchBeanA.setCostCenterFrom(costCenterFromSelected != null ? costCenterFromSelected.getId() : null);
+//        complexRevisionBalanceSearchBeanA.setCostCenterTo(costCenterToSelected != null ? costCenterToSelected.getId() : null);
+        complexRevisionBalanceSearchBeanA.setCostCenterList(getCostCenterListSelected());
         complexRevisionBalanceSearchBeanA.setAdminUnitFrom(glAdminUnitFromSelected != null ? glAdminUnitFromSelected.getId() : null);
         complexRevisionBalanceSearchBeanA.setAdminUnitTo(glAdminUnitToSelected != null ? glAdminUnitToSelected.getId() : null);
         complexRevisionBalanceSearchBeanA.setBranchId(getUserData().getUserBranch().getId());
@@ -640,18 +647,18 @@ public class ComplexRevisionBalanceMB extends BaseGlAccountReportBean {
             parameterNumber++;
         }
 
-        if (costCenterFromSelected != null) {
-            hashMap.put("parameter_" + parameterNumber.toString(), userDDs.get("COST_CENTER_FROM"));
-            parameterNumber++;
-            hashMap.put("parameter_" + parameterNumber.toString(), costCenterFromSelected.getName());
-            parameterNumber++;
-        }
-        if (costCenterToSelected != null) {
-            hashMap.put("parameter_" + parameterNumber.toString(), userDDs.get("COST_CENTER_TO"));
-            parameterNumber++;
-            hashMap.put("parameter_" + parameterNumber.toString(), costCenterToSelected.getName());
-            parameterNumber++;
-        }
+//        if (costCenterFromSelected != null) {
+//            hashMap.put("parameter_" + parameterNumber.toString(), userDDs.get("COST_CENTER_FROM"));
+//            parameterNumber++;
+//            hashMap.put("parameter_" + parameterNumber.toString(), costCenterFromSelected.getName());
+//            parameterNumber++;
+//        }
+//        if (costCenterToSelected != null) {
+//            hashMap.put("parameter_" + parameterNumber.toString(), userDDs.get("COST_CENTER_TO"));
+//            parameterNumber++;
+//            hashMap.put("parameter_" + parameterNumber.toString(), costCenterToSelected.getName());
+//            parameterNumber++;
+//        }
 
         if (glAdminUnitFromSelected != null) {
             hashMap.put("parameter_" + parameterNumber.toString(), userDDs.get("ADMIN_UNIT_FROM"));
@@ -778,6 +785,10 @@ public class ComplexRevisionBalanceMB extends BaseGlAccountReportBean {
                 resetDateTo();
             }
         }
+    }
+    
+    public void findCostCenter() {
+        setCostCenterConverter(new CostCenterConverter(getCostCenterList()));
     }
 
     public List<CostCenter> completeCostCenter(String query) {
@@ -1200,33 +1211,33 @@ public class ComplexRevisionBalanceMB extends BaseGlAccountReportBean {
         this.uri = uri;
     }
 
-    /**
-     * @return the costCenterToSelected
-     */
-    public CostCenter getCostCenterToSelected() {
-        return costCenterToSelected;
-    }
-
-    /**
-     * @param costCenterToSelected the costCenterToSelected to set
-     */
-    public void setCostCenterToSelected(CostCenter costCenterToSelected) {
-        this.costCenterToSelected = costCenterToSelected;
-    }
-
-    /**
-     * @return the costCenterFromSelected
-     */
-    public CostCenter getCostCenterFromSelected() {
-        return costCenterFromSelected;
-    }
-
-    /**
-     * @param costCenterFromSelected the costCenterFromSelected to set
-     */
-    public void setCostCenterFromSelected(CostCenter costCenterFromSelected) {
-        this.costCenterFromSelected = costCenterFromSelected;
-    }
+//    /**
+//     * @return the costCenterToSelected
+//     */
+//    public CostCenter getCostCenterToSelected() {
+//        return costCenterToSelected;
+//    }
+//
+//    /**
+//     * @param costCenterToSelected the costCenterToSelected to set
+//     */
+//    public void setCostCenterToSelected(CostCenter costCenterToSelected) {
+//        this.costCenterToSelected = costCenterToSelected;
+//    }
+//
+//    /**
+//     * @return the costCenterFromSelected
+//     */
+//    public CostCenter getCostCenterFromSelected() {
+//        return costCenterFromSelected;
+//    }
+//
+//    /**
+//     * @param costCenterFromSelected the costCenterFromSelected to set
+//     */
+//    public void setCostCenterFromSelected(CostCenter costCenterFromSelected) {
+//        this.costCenterFromSelected = costCenterFromSelected;
+//    }
 
     /**
      * @return the glAdminUnitToSelected
@@ -1353,4 +1364,40 @@ public class ComplexRevisionBalanceMB extends BaseGlAccountReportBean {
     public void setParameterNumber(Integer parameterNumber) {
         this.parameterNumber = parameterNumber;
     }
+
+    /**
+     * @return the costCenterListSelected
+     */
+    public List<CostCenter> getCostCenterListSelected() {
+        if(costCenterListSelected == null){
+            costCenterListSelected = new ArrayList<>();
+        }
+        return costCenterListSelected;
+    }
+
+    /**
+     * @param costCenterListSelected the costCenterListSelected to set
+     */
+    public void setCostCenterListSelected(List<CostCenter> costCenterListSelected) {
+        this.costCenterListSelected = costCenterListSelected;
+    }
+
+    /**
+     * @return the costCenterListNew
+     */
+    public List<CostCenter> getCostCenterListNew() {
+        if(costCenterListNew == null ){
+            costCenterListNew = getCostCenterList();
+            setCostCenterConverter(new CostCenterConverter(costCenterListNew));
+        }
+        return costCenterListNew;
+    }
+
+    /**
+     * @param costCenterListNew the costCenterListNew to set
+     */
+    public void setCostCenterListNew(List<CostCenter> costCenterListNew) {
+        this.costCenterListNew = costCenterListNew;
+    }
+
 }

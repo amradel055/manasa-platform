@@ -832,6 +832,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         return glBankTransactionAPI;
     }
 
+    @Override
     public List<CommisionReport> FindBankValues(Date dateFrom, Date dateTo, Integer invInventoryId, String gallaryName) {
         StringBuilder stringBuilder = new StringBuilder();
         List<CommisionReport> commisionReportList = new ArrayList<>();
@@ -874,7 +875,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
                 + "left join inv_inventory inv on inv.id = ipi.galary_Id\n"
                 + "left join inv_inventory inv2 on inv2.id = bank.gallary_id\n"
                 + "where gbt.transaction_type = 1 and gbt.branch_id = 182 and gbt.movement_type is not null\n"
-                + " and inv2.id = " + invInventoryId + " and gbt.date >= '" + dateFrom1 + "' and gbt.date <= '" + dateTo1 + "' ) as cashForMe1 )");
+                + " and inv.id = " + invInventoryId + " and gbt.date >= '" + dateFrom1 + "' and gbt.date <= '" + dateTo1 + "' ) as cashForMe1 )");
 
         List<Object[]> res = dao.executeNativeQuery(stringBuilder.toString());
 
@@ -891,24 +892,24 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
             commisionReport0.setTransactionType("سند صرف");
 
             commisionReport1.setValue((BigDecimal) object[1]);
-            commisionReport0.setGallaryName(gallaryName);
-            commisionReport0.setTransactionType("اشعار خصم ");
+            commisionReport1.setGallaryName(gallaryName);
+            commisionReport1.setTransactionType("اشعار خصم ");
 
             commisionReport2.setValue((BigDecimal) object[2]);
-            commisionReport0.setGallaryName(gallaryName);
-            commisionReport0.setTransactionType("اشعار دائن");
+            commisionReport2.setGallaryName(gallaryName);
+            commisionReport2.setTransactionType("اشعار دائن");
 
             commisionReport3.setValue((BigDecimal) object[3]);
-            commisionReport0.setGallaryName(gallaryName);
-            commisionReport0.setTransactionType("اشعار مدين");
+            commisionReport3.setGallaryName(gallaryName);
+            commisionReport3.setTransactionType("اشعار مدين");
 
             commisionReport4.setValue((BigDecimal) object[4]);
-            commisionReport0.setGallaryName(gallaryName);
-            commisionReport0.setTransactionType("سندات سوددت للفرع لفروع اخري ");
+            commisionReport4.setGallaryName(gallaryName);
+            commisionReport4.setTransactionType("سندات سوددت للفرع لفروع اخري ");
 
             commisionReport5.setValue((BigDecimal) object[5]);
-            commisionReport0.setGallaryName(gallaryName);
-            commisionReport0.setTransactionType("سندات خاصة بالفرع في فروع اخري ");
+            commisionReport5.setGallaryName(gallaryName);
+            commisionReport5.setTransactionType("سندات خاصة بالفرع في فروع اخري ");
 
             commisionReportList.add(commisionReport0);
             commisionReportList.add(commisionReport1);
@@ -921,6 +922,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         return commisionReportList;
     }
 
+    @Override
     public List<CommisionReport> FindGallarValue(Date dateFrom, Date dateTo, Integer invInventoryId, String gallaryName) {
         StringBuilder stringBuilder = new StringBuilder();
         List<CommisionReport> commisionReportList = new ArrayList<>();

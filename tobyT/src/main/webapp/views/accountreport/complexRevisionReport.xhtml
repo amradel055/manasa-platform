@@ -68,62 +68,21 @@
                                 </div>
                                 <div class="ui-g-12 ui-xl-12">
                                     <div class="ui-g-6 ui-xl-6">
-                                        <p:autoComplete style="width:75%" id="Cost_Center_From" 
-                                                        dropdown="true"
-                                                        converter="#{complexRevisionBalanceMB.costCenterConverter}"
-                                                        value="#{complexRevisionBalanceMB.costCenterFromSelected}"
-
-                                                        var="cost"
-                                                        itemLabel="#{cost}" 
-                                                        itemValue="#{cost}" 
-                                                        forceSelection="true" 
-                                                        completeMethod="#{complexRevisionBalanceMB.completeCostCenter}" >
-                                        </p:autoComplete>
+                                        <p:selectCheckboxMenu id="Cost_Center_From" value="#{complexRevisionBalanceMB.costCenterListSelected}"
+                                                              converter="#{complexRevisionBalanceMB.costCenterConverter}" 
+                                                              label="مركز التكلفة" style="width: 15rem"
+                                                              filter="true" filterMatchMode="contains" panelStyle="width: 15rem" scrollHeight="250"
+                                                              >
+                                            <f:selectItems value="#{complexRevisionBalanceMB.costCenterListNew}"/>
+                                        </p:selectCheckboxMenu>
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
                                         <p:outputLabel style="width: 65px" value="#{userData.userDDs['FROM_COST_CENTER']}" for="Cost_Center_From"/>
 
                                     </div>
                                 </div>
+                                
                                 <div class="ui-g-12 ui-xl-12">
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:autoComplete style="width:75%" id="COST_CENTER_TO" 
-                                                        dropdown="true"
-                                                        converter="#{complexRevisionBalanceMB.costCenterConverter}"
-                                                        value="#{complexRevisionBalanceMB.costCenterToSelected}"
-
-                                                        var="cost"
-                                                        itemLabel="#{cost}" 
-                                                        itemValue="#{cost}" 
-                                                        forceSelection="true" 
-                                                        completeMethod="#{complexRevisionBalanceMB.completeCostCenter}" >
-                                        </p:autoComplete>
-                                    </div>
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 65px" value="#{userData.userDDs['TO_COST_CENTER']}" for="COST_CENTER_TO"/>
-
-                                    </div>
-                                </div>
-                                <div class="ui-g-12 ui-xl-12">
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:autoComplete style="width:75%" id="ADMIN_UNIT_FROM" 
-                                                        dropdown="true"
-                                                        converter="#{complexRevisionBalanceMB.glAdminUnitConverter}"
-                                                        value="#{complexRevisionBalanceMB.glAdminUnitFromSelected}"
-
-                                                        var="admin"
-                                                        itemLabel="#{admin}" 
-                                                        itemValue="#{admin}" 
-                                                        forceSelection="true" 
-                                                        completeMethod="#{complexRevisionBalanceMB.completeAdminUnit}" >
-                                        </p:autoComplete>
-                                    </div>
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 65px" value="#{userData.userDDs['FROM_ADMIN_UNIT']}" for="ADMIN_UNIT_FROM"/>
-
-                                    </div>
-                                </div>
-                                         <div class="ui-g-12 ui-xl-12">
                                     <div class="ui-g-6 ui-xl-6">
                                         <p:selectOneMenu style="width:55%" id="year" filter="true" filterMatchMode="contains"   value="#{complexRevisionBalanceMB.glYearSelection}" converter="#{complexRevisionBalanceMB.glYearConverter}"   >
                                             <p:ajax update="dateFrom dateTo" listener="#{complexRevisionBalanceMB.pushGlYearSelection()}" />
@@ -139,27 +98,7 @@
                             </div>
                             <div class="ui-g-6 ui-xl-6">
 
-                                <div class="ui-g-12 ui-xl-12">
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:autoComplete style="width:75%" id="ADMIN_UNIT_TO" 
-                                                        dropdown="true"
-                                                        converter="#{complexRevisionBalanceMB.glAdminUnitConverter}"
-                                                        value="#{complexRevisionBalanceMB.glAdminUnitToSelected}"
-
-                                                        var="admin"
-                                                        itemLabel="#{admin}" 
-                                                        itemValue="#{admin}" 
-                                                        forceSelection="true" 
-                                                        completeMethod="#{complexRevisionBalanceMB.completeAdminUnit}" >
-
-
-                                        </p:autoComplete>
-                                    </div>
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 65px" value="#{userData.userDDs['TO_ADMIN_UNIT']}" for="ADMIN_UNIT_TO"/>
-
-                                    </div>
-                                </div>
+                                
                                 <div class="ui-g-12 ui-xl-12">
                                     <div class="ui-g-6 ui-xl-6">
                                         <p:inputText style="width:55%!important"  value="#{complexRevisionBalanceMB.complexRevisionBalanceSearchBeanA.levelFrom}"/>
@@ -202,7 +141,7 @@
 
                                     </div>
                                 </div>
-                       
+
                                 <div class="ui-g-12 ui-xl-12">
                                     <div class="ui-g-6 ui-xl-6">
                                         <p:selectBooleanCheckbox value="#{complexRevisionBalanceMB.zeroAmount}" style="margin-right:1%">

@@ -1,6 +1,8 @@
 package com.toby.businessservice.reports.searchBean;
 
+import com.toby.entity.CostCenter;
 import java.util.Date;
+import java.util.List;
 
 public class ComplexRevisionBalanceSearchBean {
 
@@ -12,8 +14,9 @@ public class ComplexRevisionBalanceSearchBean {
     private Integer levelTo;
     private Integer accountFrom   ;
     private Integer accountTo  ;
-    private Integer costCenterFrom;
-    private Integer costCenterTo;
+//    private Integer costCenterFrom;
+//    private Integer costCenterTo;
+    private List<CostCenter> costCenterList;
     private Integer adminUnitFrom;
     private Integer adminUnitTo;
     private Integer branchId;
@@ -68,21 +71,21 @@ public class ComplexRevisionBalanceSearchBean {
         this.accountTo = accountTo;
     }
 
-    public Integer getCostCenterFrom() {
-        return costCenterFrom;
-    }
-
-    public void setCostCenterFrom(Integer costCenterFrom) {
-        this.costCenterFrom = costCenterFrom;
-    }
-
-    public Integer getCostCenterTo() {
-        return costCenterTo;
-    }
-
-    public void setCostCenterTo(Integer costCenterTo) {
-        this.costCenterTo = costCenterTo;
-    }
+//    public Integer getCostCenterFrom() {
+//        return costCenterFrom;
+//    }
+//
+//    public void setCostCenterFrom(Integer costCenterFrom) {
+//        this.costCenterFrom = costCenterFrom;
+//    }
+//
+//    public Integer getCostCenterTo() {
+//        return costCenterTo;
+//    }
+//
+//    public void setCostCenterTo(Integer costCenterTo) {
+//        this.costCenterTo = costCenterTo;
+//    }
 
     public Integer getBranchId() {
         return branchId;
@@ -174,6 +177,20 @@ public class ComplexRevisionBalanceSearchBean {
      */
     public void setIsOpenningBalance(boolean isOpenningBalance) {
         this.isOpenningBalance = isOpenningBalance;
+    }
+
+    /**
+     * @return the costCenterList
+     */
+    public List<CostCenter> getCostCenterList() {
+        return costCenterList;
+    }
+
+    /**
+     * @param costCenterList the costCenterList to set
+     */
+    public void setCostCenterList(List<CostCenter> costCenterList) {
+        this.costCenterList = costCenterList;
     }
 
     
