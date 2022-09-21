@@ -26,4 +26,6 @@ public interface PeriodsService {
     public void deletePeriods(PeriodsDTO periodsDTO);
 
     public void deletePeriods(Integer periodsDTO);
+
+    public List<PeriodsDTO> findPeriodsByMaterialId(Integer materialId);
 }
