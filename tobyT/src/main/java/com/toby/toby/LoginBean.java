@@ -35,11 +35,12 @@ import com.toby.businessservice.DDService;
 import com.toby.businessservice.GallerySettingsService;
 import com.toby.businessservice.GlAnalyticsAccountsServcie;
 import com.toby.businessservice.GlYearService;
+import com.toby.businessservice.NotificationsService;
 import com.toby.businessservice.PathService;
 import com.toby.businessservice.PrivilegeService;
 import com.toby.businessservice.TobyUserRoleService;
-import com.toby.bussinessservice.global.Utility;
 import com.toby.core.UserDataDTO;
+import com.toby.dto.EmployeeDTO;
 import com.toby.dto.GlBankDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.entity.Branch;
@@ -58,7 +59,7 @@ public class LoginBean extends Basic implements Serializable {
      */
 
     @EJB
-    private TobyUserLoginService tobyUserLoginService1;
+    private TobyUserLoginService tobyUserLoginService;
     @EJB
     private CompanyService companyService;
 
@@ -113,6 +114,11 @@ public class LoginBean extends Basic implements Serializable {
     private TobyUserBankService tobyUserBankService;
     @EJB
     private ProProductionStagesService proProductionStagesService;
+    @EJB
+    private TobyUserInventoryService isagUserInventoryService;
+    
+     @EJB
+    NotificationsService notificationsService;
 
     public LoginBean() throws IOException {
 
@@ -142,7 +148,7 @@ public class LoginBean extends Basic implements Serializable {
                 System.out.println("Logged In Successfully");
 //                int branchId = branchService.getBranchesForUser(loggedInUser.getId()).get(0).getId();
 //                  
-//                 boolean state = tobyUserLoginService1.checkUserLogged(loggedInUser.getId(), branchId);
+//                 boolean state = tobyUserLoginService.checkUserLogged(loggedInUser.getId(), branchId);
 //                if (!state /*|| loggedInUser.getId() == 61*/) {
                 userData = new UserData();
                 UserDataDTO userDataDTO = new UserDataDTO();
@@ -170,9 +176,9 @@ public class LoginBean extends Basic implements Serializable {
                 loggedInUser.setBranchId(userData.getUserBranch());
                 context.getSessionMap().put("userlogin", loggedInUser);
                 context.getSessionMap().put("userDataDTO", userDataDTO);
-
+               
                 saveUserData(userData, true);
-
+                
 //                if (userData.getUserBranch() != null) {
 ////                    designateMonitoringForEachBranch();
 ////                    purchaseAndSalesAccountsForEachBranch();
@@ -327,6 +333,12 @@ public class LoginBean extends Basic implements Serializable {
             userData.setGlBankDTOList(glBankDTOList);
             if (glBankDTOList != null && glBankDTOList.size() > 0) {
                 userData.setGlBankDTODefault(glBankDTOList.get(0));
+            }
+            
+            List<EmployeeDTO> isagUserEmployeeDTO = isagUserInventoryService.getAllEmployeesByUserAndBranchPerDTO(userData.getUser().getId(), userData.getUserBranch().getId());
+            userData.setEmployeeDTOList(isagUserEmployeeDTO);
+            if (isagUserEmployeeDTO != null && isagUserEmployeeDTO.size() > 0) {
+                userData.setEmployeeDTODefault(isagUserEmployeeDTO.get(0));
             }
 
             List<InvInventoryDTO> tobyUserGallaryDTO = tobyUserInventoryService.getAllGallaryByUserAndBranch(userData.getUser());

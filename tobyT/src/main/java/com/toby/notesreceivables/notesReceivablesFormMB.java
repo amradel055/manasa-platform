@@ -12,17 +12,23 @@ import com.toby.businessservice.GlAdminUnitService;
 import com.toby.businessservice.GlBankTransactionDetailsService;
 import com.toby.businessservice.GlBankTransactionInvoiceViewService;
 import com.toby.businessservice.GlBankTransactionService;
+import com.toby.businessservice.InvInventoryService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.TobyUserBankService;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.SymbolService;
 import com.toby.businessservice.report.SupplierAccountService;
 import com.toby.bussinessservice.global.AutoCompleteService;
+import com.toby.bussinessservice.global.Utility;
 import com.toby.converter.GlBankConverter;
 import com.toby.converter.GlaccountConverter;
 import com.toby.converter.InstTransactionViewConverter;
 import com.toby.converter.InvOrganizationSiteConverter;
 import com.toby.converter.SymbolConverter;
+import com.toby.dto.GlBankDTO;
+import com.toby.dto.GlBankTransactionDTO;
+import com.toby.dto.GlPayDTO;
+import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.entity.AccountsSystemSettings;
@@ -171,10 +177,14 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
 
     private Boolean isEdit;
     private Boolean isPreviosBalance;
+    private Boolean saveCheck;
 
     private Integer serialSelected;
 
     private InvOrganizationSiteDTO invOrganizationSiteDTOSelected;
+
+    private List<GlPayDTO> glPayDTOList;
+    private GlPayDTO glPayDTOSelection;
 
     @EJB
     private GlBankTransactionInvoiceViewService bankTransactionInvoiceViewService;
@@ -213,6 +223,9 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
 
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
+
+    @EJB
+    InvInventoryService invInventoryService;
 
     @Override
     @PostConstruct
@@ -287,6 +300,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                 getGlBankTransactionEntity().setInvoiceId(invInvoiceDTO.getId());
                 calculateRemain();
                 setIsEdit(Boolean.TRUE);
+
             }
             check();
             /* symbolList = symbolService.getAllDocumentsByCompanyId(getUserData().getCompany().getId());
@@ -301,9 +315,32 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                 }
 
             }
+
         } catch (Exception e) {
             saveError(e, "notesReceivablesFormMB", "init");
         }
+    }
+
+    public void fillGlPayDTO() {
+        setGlPayDTOList(new ArrayList<>());
+        for (GlBank bank : getGlBankList()) {
+            GlPayDTO glPayDTO = new GlPayDTO();
+            GlBankDTO glBankDTO = new GlBankDTO();
+            glBankDTO.setId(bank.getId());
+            glBankDTO.setName(bank.getName());
+            glBankDTO.setCode(bank.getCode());
+            glPayDTO.setBank(glBankDTO);
+            glPayDTO.setIndex(getIndex());
+            glPayDTO.setBankName(bank.getName());
+            getGlPayDTOList().add(glPayDTO);
+        }
+    }
+
+    public void addGlPayDTO() {
+        GlPayDTO glPayDTO = new GlPayDTO();
+        glPayDTO.setIndex(getIndex());
+        setGlPayDTOSelection(glPayDTO);
+        getGlPayDTOList().add(glPayDTO);
     }
 
     public void convertDateFrom() {
@@ -322,11 +359,22 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
         }
     }
 
+    public void calculateRemainTable() {
+        if (getGlPayDTOSelection() != null && getGlPayDTOSelection().getInvoiceId() != null) {
+//            InvInvoiceDTO dTO = invPurchaseInvoiceService_1.findInvPurchaseInvoiceById(getGlPayDTOSelection().getInvoiceId());
+            BigDecimal remain = invPurchaseInvoiceService_1.returnRemain(getGlPayDTOSelection().getInvoiceId());
+            getGlPayDTOSelection().setRemain(remain);
+            getGlPayDTOSelection().setValue(remain);
+//            getGlPayDTOSelection().setInvoiceSerial(index);
+        }
+    }
+
     public void check() {
         if (glBankTransactionDetailEntity.getInvOrganizationSite() != null
                 && glBankTransactionDetailEntity.getInvOrganizationSite().getId() != null) {
             glBankTransactionInvoiceViewList = bankTransactionInvoiceViewService.getGlBankTransactionInvoiceViewListNew(glBankTransactionDetailEntity.getInvOrganizationSite().getId(), getUserData().getUser());
             glBankTransactionEntity.setAccountStatement(supplierAccountService.getAccountForOrganizationSite(glBankTransactionDetailEntity.getInvOrganizationSite().getId()));
+//            fillGlPayDTO();
         }
     }
 
@@ -384,7 +432,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
             glBankTransactionEntity.setValueLocal(glBankTransactionEntity.getValue() != null ? glBankTransactionEntity.getValue().setScale(2, BigDecimal.ROUND_UP) : null);
             glBankTransactionEntity.setRate(BigDecimal.ONE);
 
-            glBankTransactionEntity.setDate(new Date());
+            glBankTransactionEntity.setDate(Utility.hourNow());
             glBankTransaction = new GlBankTransaction();
             glBankTransactionDetailEntity = new GlBankTransactionDetailEntity();
             glBankTransactionDetailsList = new ArrayList<>();
@@ -640,6 +688,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
             glBankTransactionEntityMapper.setDate(bankTransaction.getDate() != null ? bankTransaction.getDate() : new Date());
             glBankTransactionEntityMapper.setPaymentType(bankTransaction.getPaymentType() != null ? bankTransaction.getPaymentType() : 0);
             glBankTransactionEntityMapper.setPostFlag(bankTransaction.getPostFlag());
+            glBankTransactionEntityMapper.setMovementType(bankTransaction.getMovementType());
             if (bankTransaction.getPaymentType() == 1) {
                 glBankTransactionEntityMapper.setChequeDate(bankTransaction.getChequeDate() != null ? bankTransaction.getChequeDate() : new Date());
                 glBankTransactionEntityMapper.setChequeDueDate(bankTransaction.getChequeDueDate() != null ? bankTransaction.getChequeDueDate() : new Date());
@@ -657,6 +706,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
             glBankTransactionEntityMapper.setOrganizationType(bankTransaction.getOrganizationType() != null ? bankTransaction.getOrganizationType() : 0);
             glBankTransactionEntityMapper.setRemark(bankTransaction.getRemark() != null ? bankTransaction.getRemark() : null);
             glBankTransactionEntityMapper.setRemark2(bankTransaction.getRemark2());
+            glBankTransactionEntityMapper.setMovementType(bankTransaction.getMovementType());
             glBankTransactionEntityMapper.setTransactionType(bankTransaction.getTransactionType() != null ? bankTransaction.getTransactionType() : 0);
             glBankTransactionEntityMapper.setValue(bankTransaction.getValue() != null ? bankTransaction.getValue().setScale(2, BigDecimal.ROUND_UP) : BigDecimal.ZERO);
             glBankTransactionEntityMapper.setRate(bankTransaction.getRate() != null ? bankTransaction.getRate().setScale(2, BigDecimal.ROUND_UP) : BigDecimal.ONE);
@@ -715,7 +765,9 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                 glBankTransactionEntity.setValue(null);
                 glBankTransactionEntity.setValueLocal(null);
             }
-
+            InvInventoryDTO inventoryDTO = new InvInventoryDTO();
+            inventoryDTO = invInventoryService.maptoDTOSmall(null, glBankTransactionEntity.getGlBank().getGallaryId());
+            setGallaryDTOSelect(inventoryDTO);
             checkAllowDate();
         } catch (Exception e) {
             saveError(e, "notesReceivablesFormMB", "updateTransactionRate");
@@ -779,6 +831,35 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
 
 //        localValue = valueSummary.multiply(glBankTransactionEntity.getRate() != null ? glBankTransactionEntity.getRate() : BigDecimal.ZERO);
     }
+    
+
+    public String saveAll() {
+        BigDecimal valueTotal = BigDecimal.ZERO;
+        StringBuilder serialList = null;
+        for (GlPayDTO glPayDTO : glPayDTOList) {
+            setGlPayDTOSelection(glPayDTO);
+            valueTotal = valueTotal.add(glPayDTO.getValue());
+            if (serialList == null) {
+                serialList = new StringBuilder();
+                serialList.append(invPurchaseInvoiceService_1.getInvoiceSerialById(glPayDTO.getInvoiceId()));
+            } else {
+                serialList.append(",").append(invPurchaseInvoiceService_1.getInvoiceSerialById(glPayDTO.getInvoiceId()));
+            }
+            if (!checkValue()) {
+                return "";
+            }
+        }
+        setGlPayDTOList(glBankTransactionService.addCash(getGlPayDTOList(), glBankTransactionEntity.getDate(), BigDecimal.ONE, glBankTransactionEntity.getRemark(), glBankTransactionDetailEntity.getInvOrganizationSite().getId(), getGlYearSelection().getId(), getUserData().getUser()));
+        for (GlPayDTO pay : getGlPayDTOList()) {
+            if (pay.getTransactionId() != null) {
+                glBankTransactionDetailsService.tarhilAfterSave(pay.getTransactionId(), getUserData().getUser());
+            }
+        }
+        sendSMS(serialList.toString(), valueTotal);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserDDs().get("INFO"), getUserDDs().get("SAVED")));
+        setSaveCheck(Boolean.FALSE);
+        return "";
+    }
 
     @Override
     public String save() {
@@ -825,11 +906,16 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                     glBankTransaction.setPaymentType(glBankTransactionEntity.getPaymentType());
                     glBankTransaction.setRemark(glBankTransactionEntity.getRemark());
                     glBankTransaction.setRemark2(glBankTransactionEntity.getRemark2());
+                    glBankTransaction.setMovementType(glBankTransactionEntity.getMovementType());
                     glBankTransaction.setOrganizationType(glBankTransactionEntity.getOrganizationType() != null ? glBankTransactionEntity.getOrganizationType() : null);
                     if (!getUri().contains("notesreceivablesFormpre")) {
                         glBankTransaction.setTransactionType(1);
                     } else {
                         glBankTransaction.setTransactionType(3);
+                    }
+
+                    if (getUri().contains("notesreceivablesAnotherBranch")) {
+                        glBankTransaction.setMovementType(1);
                     }
 
                     glBankTransaction.setValue(glBankTransactionEntity.getValue() != null ? glBankTransactionEntity.getValue() : BigDecimal.ZERO);
@@ -940,7 +1026,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                     bankTransactionDetail.setValueLocal(bankTransactionDetail.getValue());
 //                    bankTransactionDetail.setValueLocal(glBankTransactionEntity.getValueLocal() != null ? glBankTransactionEntity.getValueLocal() : BigDecimal.ZERO);
                     bankTransactionDetail.setSymbolId(glBankTransactionDetailEntity.getGlItems());
-//            bankTransactionDetail.set
+
                     try {
                         glBankTransactionDetailsUpdatedList.add(bankTransactionDetail);
                         GlBankTransaction bankTransaction;
@@ -951,31 +1037,18 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                             idCheck = Boolean.FALSE;
                         }
                         bankTransaction = glBankTransactionService.addGlBankTransaction(glBankTransaction, glBankTransactionDetailsUpdatedList, new ArrayList<>(), companyId, getUserData().getUser());
-
+                        GlBankTransactionDTO gbtdto = glBankTransactionDetailsService.tarhilAfterSave(bankTransaction.getId(), getUserData().getUser());
                         if (bankTransaction != null && bankTransaction.getId() != null && printAndSave) {
                             exportPDF(null);
                             printAndSave = false;
                         }
                         if (bankTransaction != null && bankTransaction.getId() != null) {
-                            findnotesReceivablesObject(bankTransaction.getId());
+                            glBankTransactionEntity.setId(bankTransaction.getId());
+                            glBankTransactionEntity.setSerial(gbtdto.getSerial());
+//                            findnotesReceivablesObject(bankTransaction.getId());
                         }
                         if (getUri().contains("notesreceivablesForm") && idCheck) {
-                            StringBuilder message = new StringBuilder();
-                            message.append("عميلنا العزيز ، شكراً لتسوقك  تمت عملية دفع رقم ");
-                            message.append(getGlBankTransactionEntity().getSerial());
-                            message.append(" المدفوع ");
-                            message.append(getGlBankTransactionEntity().getValue());
-//                            message.append(" المتبقي ");
-//                            message.append(getGlBankTransactionEntity().getRemainInvoice());
-                            if (getGlBankTransactionEntity().getGlBank().getGallaryId() != null
-                                    && getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() != null
-                                    && getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() == 0) {
-                                sendSms(getGlBankTransactionDetailEntity().getInvOrganizationSite().getMobile(), "برنس", message.toString(), "20099319", "0564933202");
-                            } else if (getGlBankTransactionEntity().getGlBank().getGallaryId() != null
-                                    && getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() != null
-                                    && getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() == 1) {
-                                sendSms(getGlBankTransactionDetailEntity().getInvOrganizationSite().getMobile(), "لي رويال", message.toString(), "20099320", "Royal@e12z");
-                            }
+                            sendSMS(getGlBankTransactionEntity().getSerial() == null ? null : getGlBankTransactionEntity().getSerial().toString(), getGlBankTransactionEntity().getValue());
                         }
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userDDs.get("INFO"), userDDs.get("SAVED")));
 //                        exit();
@@ -991,6 +1064,25 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
         } catch (Exception e) {
             saveError(e, "notesReceivablesFormMB", "save");
             return null;
+        }
+    }
+
+    public void sendSMS(String serial, BigDecimal value) {
+        StringBuilder message = new StringBuilder();
+        message.append("عميلنا العزيز ، شكراً لتسوقك  تمت عملية دفع رقم ");
+        message.append(serial);
+        message.append(" المدفوع ");
+        message.append(value);
+//                            message.append(" المتبقي ");
+//                            message.append(getGlBankTransactionEntity().getRemainInvoice());
+        if (getGlBankTransactionEntity().getGlBank().getGallaryId() != null
+                && getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() != null
+                && getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() == 0) {
+            sendSms(getGlBankTransactionDetailEntity().getInvOrganizationSite().getMobile(), "برنس", message.toString(), "20099319", "0564933202");
+        } else if (getGlBankTransactionEntity().getGlBank().getGallaryId() != null
+                && getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() != null
+                && getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() == 1) {
+            sendSms(getGlBankTransactionDetailEntity().getInvOrganizationSite().getMobile(), "لي رويال", message.toString(), "20099320", "Royal@e12z");
         }
     }
 
@@ -1219,6 +1311,24 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
         }
     }
 
+    public void exportPDFAll(ActionEvent actionEvent) throws JRException, IOException {
+        try {
+            if (getGlPayDTOList() != null && !getGlPayDTOList().isEmpty()) {
+                List<GlPayDTO> glPayDTOListNew = new ArrayList<>();
+                for (GlPayDTO glPayDTO : getGlPayDTOList()) {
+                    if (glPayDTO.getId() != null) {
+                        glPayDTO.setInvoiceSerial(invPurchaseInvoiceService_1.getInvoiceSerialById(glPayDTO.getInvoiceId()));
+                        glPayDTOListNew.add(glPayDTO);
+                    }
+                }
+                fillReport(prepareReportAll(glPayDTOListNew), getUserData().getReportPath() + "notesReceivablesTobyBranch.jasper", glPayDTOListNew, "pdf");
+            }
+        } catch (Exception e) {
+            saveError(e, "notesReceivablesFormMB", "exportPDF");
+        }
+
+    }
+
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
         try {
             Integer z = glBankTransactionEntity.getHiddenId();
@@ -1266,11 +1376,34 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
         }
     }
 
-    public void loadThePageAgain() {
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        context.getSessionMap().put("ScreenMode", "Add");
-        exit("../notesreceivables/notesreceivablesForm.xhtml");
+    public Boolean checkValue() {
+        if (getGlPayDTOSelection() != null && getGlPayDTOSelection().getValue() != null && getGlPayDTOSelection().getRemain() != null) {
+            if (getGlPayDTOSelection().getValue().compareTo(getGlPayDTOSelection().getRemain()) == 1) {
+                getGlPayDTOSelection().setValue(getGlPayDTOSelection().getRemain());
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "المبلغ أعلى من قيمة الفاتورة"));
+                return false;
+            }
+        }
+        return true;
+    }
 
+    public void loadThePageAgain() {
+//        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+//        context.getSessionMap().put("ScreenMode", "Add");
+//        exit("../notesreceivables/notesreceivablesForm.xhtml");
+        getGlBankTransactionEntity().setId(null);
+        getGlBankTransactionEntity().setSerial(null);
+        getGlBankTransactionEntity().setRemainInvoice(BigDecimal.ZERO);
+        getGlBankTransactionEntity().setAccountStatement(BigDecimal.ZERO);
+        getGlBankTransactionEntity().setValue(BigDecimal.ZERO);
+        getGlBankTransactionEntity().setInvoiceId(null);
+        getGlBankTransactionDetailEntity().setId(null);
+        getGlBankTransactionDetailEntity().setSerial(null);
+        setGlBankTransactionDetailsUpdatedList(new ArrayList<>());
+//        fillGlPayDTO();
+        setGlPayDTOSelection(null);
+        setGlPayDTOList(null);
+        setSaveCheck(Boolean.TRUE);
     }
 
     public String sendSms() {
@@ -1391,6 +1524,64 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                         break;
                 }
             }
+            hashMap.put("copyWordIcon", getUserData().getImagePath() + "copyWordIcon.png");
+            System.out.println(getUserData().getImagePath() + "copyWordIcon.png  -> 1");
+            if (isFileExist(getUserData().getImageReportPath())) {
+                hashMap.put("companyImage", getUserData().getImageReportPath());
+            } else {
+                hashMap.put("companyImage", null);
+            }
+
+        } catch (Exception e) {
+            System.out.println(getUserData().getImagePath() + "copyWordIcon.png   -> 2");
+            saveError(e, "notesReceivablesFormMB", "prepareReport");
+        }
+        System.out.println(getUserData().getImagePath() + "copyWordIcon.png   -> 3");
+        return hashMap;
+    }
+
+    public HashMap prepareReportAll(List<GlPayDTO> glPayDTOListNew) {
+        HashMap hashMap = new HashMap();
+        try {
+            Map<String, String> userDDs = getUserData().getUserDDs();
+
+            hashMap.put("PrintedBy", getUserData().getUser().getName());
+            hashMap.put("branchName", getUserData().getUserBranch().getNameAr());
+            hashMap.put("companyName", getUserData().getCompany().getName());
+            hashMap.put("amountText", userDDs.get("AMOUNT"));
+            hashMap.put("dateText", userDDs.get("DATE"));
+            hashMap.put("recipientText", "المستلم");
+            hashMap.put("SecretaryOfTheTreasuryText", "امين الخزينة");
+            hashMap.put("recievedFromText", "استلمنا من");
+            hashMap.put("accountManager", "مدير الحسابات");
+            hashMap.put("confirmationText", "إعتماد");
+            hashMap.put("remarkText2", ("مناولة"));
+            hashMap.put("valueFromText", "وذلك قيمة");
+            hashMap.put("documentNumberText", "رقم السند");
+
+            hashMap.put("rateText", "المعدل");
+            hashMap.put("amountInRateText", userDDs.get("TOTAL"));
+            hashMap.put("amountInRateValue", glPayDTOSelection.getValue());
+
+            hashMap.put("dateValue", glBankTransactionEntity.getDate());
+            hashMap.put("documentNumberValue", glPayDTOSelection.getSerial());
+            hashMap.put("recipientValue", glPayDTOSelection.getBank().getName());
+
+            BigDecimal amountValueTotal = BigDecimal.ZERO;
+
+            for (GlPayDTO glPayDTO : glPayDTOListNew) {
+                amountValueTotal = amountValueTotal.add(glPayDTO.getValue() == null ? BigDecimal.ZERO : glPayDTO.getValue());
+            }
+
+            hashMap.put("amountValue", amountValueTotal);
+
+            hashMap.put("amountValueText", Tafqeet.numberToText(Double.parseDouble(amountValueTotal.toString()), "ريـال", "هلله"));
+            hashMap.put("valueFromValue", remark1);
+            hashMap.put("explainationValue", remark2);
+
+            hashMap.put("recievedFromValue", glBankTransactionDetailEntity.getInvOrganizationSite() != null ? glBankTransactionDetailEntity.getInvOrganizationSite().getName() : null);
+
+            hashMap.put("reportNameText", "سند قبض نقدي ");
             hashMap.put("copyWordIcon", getUserData().getImagePath() + "copyWordIcon.png");
             System.out.println(getUserData().getImagePath() + "copyWordIcon.png  -> 1");
             if (isFileExist(getUserData().getImageReportPath())) {
@@ -2163,6 +2354,54 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
      */
     public void setInvOrganizationSiteDTOSelected(InvOrganizationSiteDTO invOrganizationSiteDTOSelected) {
         this.invOrganizationSiteDTOSelected = invOrganizationSiteDTOSelected;
+    }
+
+    /**
+     * @return the glPayDTOList
+     */
+    public List<GlPayDTO> getGlPayDTOList() {
+        if (glPayDTOList == null) {
+            glPayDTOList = new ArrayList<>();
+        }
+        return glPayDTOList;
+    }
+
+    /**
+     * @param glPayDTOList the glPayDTOList to set
+     */
+    public void setGlPayDTOList(List<GlPayDTO> glPayDTOList) {
+        this.glPayDTOList = glPayDTOList;
+    }
+
+    /**
+     * @return the glPayDTOSelection
+     */
+    public GlPayDTO getGlPayDTOSelection() {
+        return glPayDTOSelection;
+    }
+
+    /**
+     * @param glPayDTOSelection the glPayDTOSelection to set
+     */
+    public void setGlPayDTOSelection(GlPayDTO glPayDTOSelection) {
+        this.glPayDTOSelection = glPayDTOSelection;
+    }
+
+    /**
+     * @return the save
+     */
+    public Boolean getSaveCheck() {
+        if (saveCheck == null) {
+            saveCheck = Boolean.TRUE;
+        }
+        return saveCheck;
+    }
+
+    /**
+     * @param save the save to set
+     */
+    public void setSaveCheck(Boolean saveCheck) {
+        this.saveCheck = saveCheck;
     }
 
 }

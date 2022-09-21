@@ -5,15 +5,23 @@
  */
 package com.toby.rest;
 
+import com.toby.API.InvDetailsDTOAPI;
+import com.toby.API.InvInvoiceDTOApi;
 import com.toby.businessservice.InvItemService;
 import com.toby.businessservice.InvPurchaseInvoiceDetailsService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
-import com.toby.dto.InvDetailsDTOAPI;
+import com.toby.businessservice.QuantityItemsStoreByDateService;
 import com.toby.dto.InvInvoiceDTO;
-import com.toby.dto.InvInvoiceDTOApi;
 import com.toby.dto.InvItemDTO;
-import com.toby.dto.InvItemDTOApi;
+import com.toby.API.InvItemDTOApi;
+import com.toby.API.InvOrganizationSiteDTOAPI;
+import com.toby.businessservice.InvGlobalService;
+import com.toby.businessservice.ItemsDataViewService;
+import com.toby.businessservice.reports.searchBean.ItemCardReportSerachBean;
+import com.toby.entity.InvInventory;
 import com.toby.entity.InvItem;
+import com.toby.views.ItemsDataView;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import javax.ejb.EJB;
@@ -31,14 +39,80 @@ public class ItemsRest {
 
     @EJB
     InvItemService invItemService;
+    @EJB
+    ItemsDataViewService itemsDataViewService;
 
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
+    @EJB
+    InvGlobalService invGlobalService;
+    @EJB
+    InvPurchaseInvoiceDetailsService invPurchaseInvoiceDetailsService;
+    @EJB
+    QuantityItemsStoreByDateService quantityItemsStoreByDateService;
+
+    @Transactional
+    @Path("/findAllItem")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findAllItem(InvInvoiceDTOApi invoiceDTOApi) {
+        try {
+            if (invoiceDTOApi.getBranchId() != null) {
+                List<InvItemDTOApi> invItemDTOList = invItemService.findInvItemDTOListAPI(invoiceDTOApi.getBranchId());
+                GenericEntity<List<InvItemDTOApi>> list = new GenericEntity<List<InvItemDTOApi>>(invItemDTOList) {
+                };
+                return Response.ok(list).build();
+            } else {
+                invoiceDTOApi.setMsg("يجب اختيار فرع ");
+                return Response.ok(invoiceDTOApi).build();
+            }
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
     
-    @EJB 
-    InvPurchaseInvoiceDetailsService invPurchaseInvoiceDetailsService ;
-    
- 
+    @Transactional
+    @Path("/findAllItemNew")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findAllItemNew(InvInvoiceDTOApi invoiceDTOApi) {
+        try {
+            if (invoiceDTOApi.getBranchId() != null) {
+                List<InvItemDTOApi> invItemDTOList = invItemService.findInvItemDTOListAPINew(invoiceDTOApi.getBranchId());
+                GenericEntity<List<InvItemDTOApi>> list = new GenericEntity<List<InvItemDTOApi>>(invItemDTOList) {
+                };
+                return Response.ok(list).build();
+            } else {
+                invoiceDTOApi.setMsg("يجب اختيار فرع ");
+                return Response.ok(invoiceDTOApi).build();
+            }
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
+
+    @Transactional
+    @Path("/findAllItem2")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<InvItemDTOApi> findAllItem2(InvInvoiceDTOApi invoiceDTOApi) {
+        return invItemService.findInvItemDTOListAPINew(invoiceDTOApi.getBranchId());
+    }
+
+    @Transactional
+    @Path("/calcItemQuantity")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public BigDecimal calcItemQuantity(InvOrganizationSiteDTOAPI siteDTOAPI) {
+        return invGlobalService.calcItemQuantity(siteDTOAPI.getLength(), siteDTOAPI.getShoulder(), siteDTOAPI.getStep(), siteDTOAPI.getTypeShow());
+    }
+
     @Transactional
     @Path("/groupItems")
     @POST
@@ -69,7 +143,7 @@ public class ItemsRest {
     public Response findCustomerOldBuy(InvInvoiceDTOApi invoiceDTOApi) {
         try {
             if (invoiceDTOApi.getCustomerMobile() != null) {
-                List<InvInvoiceDTOApi> invInvoiceDTOs = invPurchaseInvoiceService_1.getALLInvPurchaseInvoiceDTOBYCustomerForWebSite(4,invoiceDTOApi.getCustomerMobile());
+                List<InvInvoiceDTOApi> invInvoiceDTOs = invPurchaseInvoiceService_1.getALLInvPurchaseInvoiceDTOBYCustomerForWebSite(4, invoiceDTOApi.getCustomerMobile());
                 GenericEntity<List<InvInvoiceDTOApi>> list = new GenericEntity<List<InvInvoiceDTOApi>>(invInvoiceDTOs) {
                 };
                 return Response.ok(list).build();
@@ -82,7 +156,29 @@ public class ItemsRest {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
-    
+
+    @Transactional
+    @Path("/customerInvoice")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findInvoiceCustomer(InvInvoiceDTOApi invoiceDTOApi) {
+        try {
+            if (invoiceDTOApi.getCustomerMobile() != null) {
+                List<InvInvoiceDTOApi> invInvoiceDTOs = invPurchaseInvoiceService_1.getALLInvPurchaseInvoiceDTOBYCustomerForWebSite(4, invoiceDTOApi.getCustomerId());
+                GenericEntity<List<InvInvoiceDTOApi>> list = new GenericEntity<List<InvInvoiceDTOApi>>(invInvoiceDTOs) {
+                };
+                return Response.ok(list).build();
+            } else {
+                invoiceDTOApi.setMsg("يجب اختيار عميل ");
+                return Response.ok(invoiceDTOApi).build();
+            }
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
+
     @Transactional
     @Path("/invoiceDetails")
     @POST
@@ -91,7 +187,7 @@ public class ItemsRest {
     public Response findInvoiceDetailsForCustomerOldBuy(InvInvoiceDTO invoiceDTO) {
         try {
             if (invoiceDTO.getId() != null) {
-                List<InvDetailsDTOAPI> invInvoiceDTOs = invPurchaseInvoiceDetailsService.getAllInvPurchaseInvoiceDetailListWebSite(invoiceDTO);
+                List<InvDetailsDTOAPI> invInvoiceDTOs = invPurchaseInvoiceDetailsService.getAllInvPurchaseInvoiceDetailListWebSite(invoiceDTO.getId());
                 GenericEntity<List<InvDetailsDTOAPI>> list = new GenericEntity<List<InvDetailsDTOAPI>>(invInvoiceDTOs) {
                 };
                 return Response.ok(list).build();
@@ -136,6 +232,26 @@ public class ItemsRest {
     }
 
     @Transactional
+    @Path("/findQuantatyItemByinventory")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findQuantatyItemByinventory(InvItemDTOApi invItemDTO) {
+        try {
+            if (invItemDTO.getId() != null) {
+                BigDecimal quantity = quantityItemsStoreByDateService.getQuantatyItemByinventory(invItemDTO.getInventoryId(), invItemDTO.getId(), false, null);
+                return Response.ok(quantity).build();
+            } else {
+                invItemDTO.setMsg("يجب اختيار منتج ");
+                return Response.ok(invItemDTO).build();
+            }
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
+
+    @Transactional
     @Path("/findItem")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -167,7 +283,7 @@ public class ItemsRest {
     public Response updateItem(InvItem invItem) {
         try {
             if (invItem.getId() != null) {
-                invItem = invItemService.updateInvItemWebSite(invItem);
+                invItemService.updateInvItemWebSite(invItem);
                 return Response.ok().entity("تم الحفظ بنجاح").build();
             } else {
                 return Response.ok().entity("يجب اختيار منتج ").build();
@@ -184,6 +300,42 @@ public class ItemsRest {
         }
 
         return invItemDTO;
+    }
+
+    @Transactional
+    @Path("/findItemMinimunLimit")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<ItemsDataView> findItemMinimunLimit(InvItemDTOApi invItemDTO) {
+        if (invItemDTO.getInventoryId() != null) {
+            ItemCardReportSerachBean itemCardReportSerachBean = new ItemCardReportSerachBean();
+            InvInventory inventoryFrom = new InvInventory();
+            inventoryFrom.setId(invItemDTO.getInventoryId());
+            itemCardReportSerachBean.setInventoryFrom(inventoryFrom);
+            itemCardReportSerachBean.setBranchId(invItemDTO.getBranchId());
+            List<ItemsDataView> list = itemsDataViewService.findQuantityItems(itemCardReportSerachBean, 1);
+            return list;
+        }
+        return null;
+    }
+
+    @Transactional
+    @Path("/findItemData")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public InvItemDTOApi findItemData(InvItemDTOApi invItemDTOApi) {
+        return invGlobalService.findItemData(invItemDTOApi.getId(), invItemDTOApi.getCustomerId(), invItemDTOApi.getPriceType(), invItemDTOApi.getInventoryId());
+    }
+
+    @Transactional
+    @Path("/findItemPrice")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public InvItemDTOApi findItemPrice(InvItemDTOApi invItemDTOApi) {
+        return invGlobalService.findItemPriceData(invItemDTOApi.getId(), invItemDTOApi.getCustomerId(), invItemDTOApi.getPriceType(), invItemDTOApi.getInventoryId(),invItemDTOApi.getQuantityOfUnit());
     }
 
 }

@@ -1,6 +1,7 @@
 package com.toby.reports;
 
 import com.toby.businessservice.ProProductionItemsTransactionService;
+import com.toby.bussinessservice.global.Utility;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.ProGroupDTO;
 import com.toby.dto.ProProductionItemsTransactionDTO;
@@ -39,8 +40,8 @@ public class ProProductionTransactionFactoryLastMB extends Basic {
     @PostConstruct
     public void init() {
         getProProductionTransactionFactoryView().getGallerySelectedList().addAll(getGallaryLists());
-        getProProductionTransactionFactoryView().setDate(new Date());
-        getProProductionTransactionFactoryView().setDateTo(new Date());
+        getProProductionTransactionFactoryView().setDate(Utility.hourNow());
+        getProProductionTransactionFactoryView().setDateTo(Utility.hourNow());
     }
 
     public boolean validateSearch() {

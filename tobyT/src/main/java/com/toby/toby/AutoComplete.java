@@ -185,6 +185,38 @@ public class AutoComplete {
         activityTypeDTOConverter = new SymbolDTOConverter(filteredRelation);
         return filteredRelation;
     }
+    
+       public static List<InvInventoryDTO> completeGalleryList(String query, List<InvInventoryDTO> gallleryList, InvInventoryDTOConverter invInventoryDTOConverter) {
+        List<InvInventoryDTO> userGallleryList = gallleryList;
+        if (query == null || query.trim().equals("")) {
+            invInventoryDTOConverter = new InvInventoryDTOConverter(userGallleryList);
+            return userGallleryList;
+        }
+        List<InvInventoryDTO> filteredRelation = new ArrayList<>();
+
+        String nameAr;
+        Integer code;
+        InvInventoryDTO relationListGallery;
+        for (int i = 0; i < userGallleryList.size(); i++) {
+            relationListGallery = userGallleryList.get(i);
+            nameAr = relationListGallery.getName();
+            if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase())) {
+                if (!filteredRelation.contains(relationListGallery)) {
+                    filteredRelation.add(relationListGallery);
+                }
+            }
+
+            code = relationListGallery.getSerial();
+            if (code != null && String.valueOf(code).contains(query)) {
+                if (!filteredRelation.contains(relationListGallery)) {
+                    filteredRelation.add(relationListGallery);
+                }
+            }
+        }
+
+        invInventoryDTOConverter = new InvInventoryDTOConverter(filteredRelation);
+        return filteredRelation;
+    }
 
     public static List<SymbolDTO> completepriority(String query, List<SymbolDTO> priorityList, SymbolDTOConverter priorityDTOConverter) {
         List<SymbolDTO> activityType = priorityList;

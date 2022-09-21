@@ -460,5 +460,15 @@ public class InvPurchaseInvoiceDetailsImpl implements InvPurchaseInvoiceDetailSe
         detailDetailViewDTOList = new ArrayList<>(map.values());
         return detailDetailViewDTOList;
     }
+    
+    
+
+    @Override
+    public List<InvPurchaseInvoiceDetailDTO> getInvPurchaseInvoiceDetailList(Integer invPurchaseInvoiceId, TobyUser tobyUser) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("invPurchaseInvoiceId", invPurchaseInvoiceId);         
+        List<InvPurchaseInvoiceDetail> detailses = dao.findListByQuery("SELECT e FROM InvPurchaseInvoiceDetail e WHERE e.invPurchaseInvoiceId.id=:invPurchaseInvoiceId ", params);
+        return mapToDTOList(detailses, tobyUser);
+    }
 
 }

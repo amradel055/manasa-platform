@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package com.toby.toby;
-
 import com.toby.businessservice.CRMEventServiceDTO;
 import com.toby.businessservice.CrmSettingService;
 import com.toby.businessservice.EmployeeService;
@@ -55,6 +54,7 @@ public abstract class CrmBasicDataForm extends BaseFormBean {
     private List<SymbolDTO> countryIdDTOList;
     private List<SymbolDTO> projectNameDTOList;
     private List<SymbolDTO> workTypeDTOList;
+    private List<SymbolDTO> crmTyprList;
     private List<InstProjectGuideDTO> instProjectGuideDTOList;
     private List<InvOrganizationSiteDTO> invOrganizationSiteDTOList;
     private List<InvOrganizationSiteDTO> invOrganizationSiteDTOListByLeaders;
@@ -69,6 +69,7 @@ public abstract class CrmBasicDataForm extends BaseFormBean {
     private SymbolDTOConverter countryIdconverter;
     private SymbolDTOConverter ProjectNameConverter;
     private SymbolDTOConverter JobConverter;
+    private SymbolDTOConverter crmTypeConverter;
     private InstProjectGuideDTOConverter instProjectGuideDTOConverter;
     private InvOrganizationSiteDTOConverter invOrganizationSiteDTOConverter;
     private TobyNotificationSettingDTO tobyNotificationSettingDTO;
@@ -235,11 +236,11 @@ public abstract class CrmBasicDataForm extends BaseFormBean {
     }
 
     public void updateTODOValue() {
-        getCrmEventDTO().setType(1);
+        getCrmEventDTO().setTypee(1);
     }
 
     public void updateEventValue() {
-        getCrmEventDTO().setType(0);
+        getCrmEventDTO().setTypee(0);
     }
 
     public void fillEventsDTO(Integer customerId) {
@@ -1131,6 +1132,38 @@ public abstract class CrmBasicDataForm extends BaseFormBean {
      */
     public void setWorkTypeDTOList(List<SymbolDTO> workTypeDTOList) {
         this.workTypeDTOList = workTypeDTOList;
+    }
+
+    /**
+     * @return the crmTyprList
+     */
+    public List<SymbolDTO> getCrmTyprList() {
+         if (crmTyprList == null || crmTyprList.isEmpty()) {
+            crmTyprList = symbolService.getCrmEventTypeFromByCompanyIdDTO(getUserData().getCompany().getId());
+            setCrmTypeConverter(new SymbolDTOConverter(crmTyprList));
+        }
+        return crmTyprList;
+    }
+
+    /**
+     * @param crmTyprList the crmTyprList to set
+     */
+    public void setCrmTyprList(List<SymbolDTO> crmTyprList) {
+        this.crmTyprList = crmTyprList;
+    }
+
+    /**
+     * @return the crmTypeConverter
+     */
+    public SymbolDTOConverter getCrmTypeConverter() {
+        return crmTypeConverter;
+    }
+
+    /**
+     * @param crmTypeConverter the crmTypeConverter to set
+     */
+    public void setCrmTypeConverter(SymbolDTOConverter crmTypeConverter) {
+        this.crmTypeConverter = crmTypeConverter;
     }
 
 }

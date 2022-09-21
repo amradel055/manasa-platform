@@ -5,6 +5,7 @@
  */
 package com.toby.toby;
 
+import com.toby.businessservice.CRMEventServiceDTO;
 import com.toby.businessservice.EmployeeService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import java.io.Serializable;
@@ -14,8 +15,10 @@ import javax.ejb.EJB;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.SymbolService;
 import com.toby.converter.EmployeeDTOConverter;
+import com.toby.converter.InvInvoiceDTOConverter;
 import com.toby.converter.SymbolDTOConverter;
 import com.toby.dto.CrmCustomerInterestedProductsDTO;
+import com.toby.dto.CrmEventDTO;
 import com.toby.dto.EmployeeDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
@@ -23,6 +26,7 @@ import com.toby.dto.SymbolDTO;
 import java.util.ArrayList;
 import java.util.Map;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -37,7 +41,7 @@ import org.primefaces.model.SortOrder;
 @Named(value = "globalMB")
 @ViewScoped
 public class globalMB extends Basic implements Serializable {
-
+    
     private InvOrganizationSiteDTO invOrganizationSiteDTO;
     private Boolean errorMsgbool = Boolean.TRUE;
     private SymbolDTOConverter LearnAboutCompanyfromconverter;
@@ -50,41 +54,89 @@ public class globalMB extends Basic implements Serializable {
     private List<EmployeeDTO> employeeDTOList;
     private String errorMsg;
     private LazyDataModel<InvInvoiceDTO> dataModel;
+    
+    private CrmEventDTO crmEventDTO;
+    
+    
+    
+    private List<InvInvoiceDTO> customerInvoiceList;
+    
+    private List<EmployeeDTO> crmEmployeeList;
+    private List<SymbolDTO> crmCRMTypeList;
+    private List<SymbolDTO> crmPeriorityList;
+    
+    private EmployeeDTOConverter crmEmployeeConverter;
+    private SymbolDTOConverter crmTypeConverter;
+    private SymbolDTOConverter crmPeriorityConverter;
+    
+    private InvInvoiceDTOConverter invInvoiceDTOConverter;
 
     /**
      * Creates a new instance of LoginBean
      */
     @EJB
     private OrganizationSiteService organizationSiteService;
-
+    
     @EJB
     private SymbolService symbolService;
-
+    
     @EJB
     EmployeeService employeeService;
-
+    
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
-
+    
+    @EJB
+    private CRMEventServiceDTO cRMEventServiceDTO;
+    
     @PostConstruct
     public void init() {
-
+        
         System.out.println("");
     }
-
+    
     public void showAddDialog() {
         OpenDlg("dlg12add");
     }
-
+    
+    public void showAddEventDialog() {
+        loadData();
+        OpenDlg("dlgeventadd");
+    }
+    
     public void reset() {
         invOrganizationSiteDTO = new InvOrganizationSiteDTO();
     }
-
+    
+    public void findCustomer() {
+        if (getGallaryId() != null && getCustomerCode() != null && !getCustomerCode().isEmpty()) {
+            getCrmEventDTO().setCustomerId(organizationSiteService.findOrganizationSiteDTOByCodeAndGallaryIdDTO(getUserData().getUserBranch().getId(), getCustomerCode(), getGallaryId()));
+            findCustomerInvoices();
+        }
+    }
+    
+    public void findCustomerInvoices() {
+        if (getCrmEventDTO() != null && getCrmEventDTO().getCustomerId() != null && getCrmEventDTO().getCustomerId().getId() != null) {
+            setCustomerInvoiceList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(4, null, getCrmEventDTO().getCustomerId().getId()));
+            setInvInvoiceDTOConverter(new InvInvoiceDTOConverter(getCustomerInvoiceList()));
+        }
+    }
+    
+    public void saveEvent() {
+        setCrmEventDTO(cRMEventServiceDTO.save(getCrmEventDTO(), getUserData().getUser()));
+        if (getCrmEventDTO().getMsg() != null && !getCrmEventDTO().getMsg().isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getCrmEventDTO().getMsg()));
+        } else {
+            loadData();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), "تم الحفظ بنجاح"));
+        }
+    }
+    
     public String validateSaveLead(InvOrganizationSiteDTO invOrganizationSiteDTO) {
         StringBuilder error = new StringBuilder();
         return organizationSiteService.validateSmallSaveLead(error, invOrganizationSiteDTO, getUserData().getUser());
     }
-
+    
     public void loadGallaryList() {
         try {
             if (getGallaryDTOSelect() != null && getGallaryDTOSelect().getId() != null && getGallaryDTOSelect().getId() > 0) {
@@ -94,16 +146,23 @@ public class globalMB extends Basic implements Serializable {
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceListMB", "loadInventoryList");
         }
-
+        
     }
-
+    
+    public void loadData() {
+        setCrmEventDTO(new CrmEventDTO());
+        getCrmEventDTO().setAssignedTo((getCrmEmployeeList() == null || getCrmEmployeeList().isEmpty()) ? null : getCrmEmployeeList().get(0));
+        getCrmEventDTO().setStatus((getCrmCRMTypeList() == null || getCrmCRMTypeList().isEmpty()) ? null : getCrmCRMTypeList().get(0));
+        getCrmEventDTO().setSymbolPriority((getCrmPeriorityList() == null || getCrmPeriorityList().isEmpty()) ? null : getCrmPeriorityList().get(0));
+    }
+    
     public void load() {
         try {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             setUserData((UserData) context.getSessionMap().get("userLogInData"));
             this.setDataModel(new LazyDataModel<InvInvoiceDTO>() {
                 private static final long serialVersionUID = 1L;
-
+                
                 @Override
                 public List<InvInvoiceDTO> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
                     Integer type = 0;
@@ -138,11 +197,11 @@ public class globalMB extends Basic implements Serializable {
             saveError(e, "InvPurchaseInvoiceListMB", "load");
         }
     }
-
+    
     public String saveLead() {
-
+        
         String error = validateSaveLead(getInvOrganizationSiteDTO());
-
+        
         if (error != null && !error.isEmpty()) {
             errorMessage(error);
             setErrorMsgbool(Boolean.TRUE);
@@ -162,19 +221,19 @@ public class globalMB extends Basic implements Serializable {
         }
         return "";
     }
-
+    
     public List<EmployeeDTO> completeEmployeeDTO(String query) {
         return AutoComplete.completeEmployeeDTO(query, getEmployeeDTOList(), getEmployeeDTOConverter());
     }
-
+    
     public List<SymbolDTO> completeLeadStatus(String query) {
         return AutoComplete.completeLeadStatus(query, getLeadStatusDTOList(), getLeadStatusDTOconverter());
     }
-
+    
     public List<SymbolDTO> completeLearnAboutCompanyfrom(String query) {
         return AutoComplete.completeSymbol(query, getLearnAboutCompanyfromDTOList(), getLearnAboutCompanyfromconverter());
     }
-
+    
     public List<SymbolDTO> completeWorkType(String query) {
         return AutoComplete.completeSymbol(query, getWorkTypeDTOList(), getJobConverter());
     }
@@ -377,4 +436,145 @@ public class globalMB extends Basic implements Serializable {
         this.dataModel = dataModel;
     }
 
+    /**
+     * @return the crmEmployeeList
+     */
+    public List<EmployeeDTO> getCrmEmployeeList() {
+        if (crmEmployeeList == null || crmEmployeeList.isEmpty()) {
+            crmEmployeeList = employeeService.getAllCRMEmployee(getUserData().getUserBranch().getId());
+            setCrmEmployeeConverter(new EmployeeDTOConverter(employeeDTOList));
+        }
+        return crmEmployeeList;
+    }
+
+    /**
+     * @param crmEmployeeList the crmEmployeeList to set
+     */
+    public void setCrmEmployeeList(List<EmployeeDTO> crmEmployeeList) {
+        this.crmEmployeeList = crmEmployeeList;
+    }
+
+    /**
+     * @return the crmCRMTypeList
+     */
+    public List<SymbolDTO> getCrmCRMTypeList() {
+        if (crmCRMTypeList == null || crmCRMTypeList.isEmpty()) {
+            crmCRMTypeList = symbolService.getCrmEventTypeFromByCompanyIdDTO(getUserData().getCompany().getId());
+            setCrmTypeConverter(new SymbolDTOConverter(crmCRMTypeList));
+        }
+        return crmCRMTypeList;
+    }
+
+    /**
+     * @param crmCRMTypeList the crmCRMTypeList to set
+     */
+    public void setCrmCRMTypeList(List<SymbolDTO> crmCRMTypeList) {
+        this.crmCRMTypeList = crmCRMTypeList;
+    }
+
+    /**
+     * @return the crmPeriorityList
+     */
+    public List<SymbolDTO> getCrmPeriorityList() {
+        if (crmPeriorityList == null || crmPeriorityList.isEmpty()) {
+            crmPeriorityList = symbolService.getCrmPeriorityByCompanyIdDTO(getUserData().getCompany().getId());
+            setCrmPeriorityConverter(new SymbolDTOConverter(crmPeriorityList));
+        }
+        return crmPeriorityList;
+    }
+
+    /**
+     * @param crmPeriorityList the crmPeriorityList to set
+     */
+    public void setCrmPeriorityList(List<SymbolDTO> crmPeriorityList) {
+        this.crmPeriorityList = crmPeriorityList;
+    }
+
+    /**
+     * @return the crmEmployeeConverter
+     */
+    public EmployeeDTOConverter getCrmEmployeeConverter() {
+        return crmEmployeeConverter;
+    }
+
+    /**
+     * @param crmEmployeeConverter the crmEmployeeConverter to set
+     */
+    public void setCrmEmployeeConverter(EmployeeDTOConverter crmEmployeeConverter) {
+        this.crmEmployeeConverter = crmEmployeeConverter;
+    }
+
+    /**
+     * @return the crmTypeConverter
+     */
+    public SymbolDTOConverter getCrmTypeConverter() {
+        return crmTypeConverter;
+    }
+
+    /**
+     * @param crmTypeConverter the crmTypeConverter to set
+     */
+    public void setCrmTypeConverter(SymbolDTOConverter crmTypeConverter) {
+        this.crmTypeConverter = crmTypeConverter;
+    }
+
+    /**
+     * @return the crmPeriorityConverter
+     */
+    public SymbolDTOConverter getCrmPeriorityConverter() {
+        return crmPeriorityConverter;
+    }
+
+    /**
+     * @param crmPeriorityConverter the crmPeriorityConverter to set
+     */
+    public void setCrmPeriorityConverter(SymbolDTOConverter crmPeriorityConverter) {
+        this.crmPeriorityConverter = crmPeriorityConverter;
+    }
+
+    /**
+     * @return the crmEventDTO
+     */
+    public CrmEventDTO getCrmEventDTO() {
+        if (crmEventDTO == null) {
+            crmEventDTO = new CrmEventDTO();
+        }
+        return crmEventDTO;
+    }
+
+    /**
+     * @param crmEventDTO the crmEventDTO to set
+     */
+    public void setCrmEventDTO(CrmEventDTO crmEventDTO) {
+        this.crmEventDTO = crmEventDTO;
+    }
+
+    /**
+     * @return the customerInvoiceList
+     */
+    public List<InvInvoiceDTO> getCustomerInvoiceList() {
+        return customerInvoiceList;
+    }
+
+    /**
+     * @param customerInvoiceList the customerInvoiceList to set
+     */
+    public void setCustomerInvoiceList(List<InvInvoiceDTO> customerInvoiceList) {
+        this.customerInvoiceList = customerInvoiceList;
+    }
+
+    /**
+     * @return the invInvoiceDTOConverter
+     */
+    public InvInvoiceDTOConverter getInvInvoiceDTOConverter() {
+        return invInvoiceDTOConverter;
+    }
+
+    /**
+     * @param invInvoiceDTOConverter the invInvoiceDTOConverter to set
+     */
+    public void setInvInvoiceDTOConverter(InvInvoiceDTOConverter invInvoiceDTOConverter) {
+        this.invInvoiceDTOConverter = invInvoiceDTOConverter;
+    }
+    
 }

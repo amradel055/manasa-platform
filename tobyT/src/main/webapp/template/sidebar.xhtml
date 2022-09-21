@@ -399,10 +399,13 @@
                                                        or userData.userScreens['glBankTransaction'].view
                                                        or userData.isAdmin}"
                                            >
-                                    <p:menuitem id="sr_lnk624" value="#{userData.userDDs['RECEIPTS']}" icon="&#xE8D2;" url="/faces/views/notesreceivablesadmin/notesreceivablesListAdmin.xhtml" 
+                                    <p:menuitem id="sr_lnk624" value="#{userData.userDDs['RECEIPTS']}" icon="&#xE8D2;" url="/faces/views/notesreceivablesadmin/notesreceivablesListAdminNew.xhtml" 
                                                 rendered="#{userData.userScreens['notesreceivablesadmin'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk621" value="#{userData.userDDs['RECEIPTS']}" icon="&#xE8D2;" url="/faces/views/notesreceivables/notesreceivablesList.xhtml" 
+                                                rendered="#{userData.userScreens['notesreceivables'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk62122" value="السداد لفرع أخر" icon="&#xE8D2;" url="/faces/views/notesreceivablesAnotherBranch/notesreceivablesForm.xhtml" 
                                                 rendered="#{userData.userScreens['notesreceivables'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk622" value="#{userData.userDDs['PAYMENTS']}" icon="&#xE8D2;" url="/faces/views/settlementdeed/settlementdeedList.xhtml"
@@ -539,7 +542,7 @@
                                     <p:menuitem id="sr_lnk312" value="#{userData.userDDs['ITEMS_DATA']}" icon="&#xE8D2;" url="/faces/views/itemsdata/itemsdatalist.xhtml" 
                                                 rendered="#{userData.userScreens['itemsdata'].view or userData.isAdmin}"
                                                 />
-                                      <p:menuitem id="sr_lnk3125" value="انواع الثياب" icon="&#xE8D2;" url="/faces/views/InvItemType/invItemTypeList.xhtml" 
+                                    <p:menuitem id="sr_lnk3125" value="انواع الثياب" icon="&#xE8D2;" url="/faces/views/InvItemType/invItemTypeList.xhtml" 
                                                 rendered="#{userData.userScreens['itemsdata'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk312001" value="اسعار الاصناف لكل فرع" icon="&#xE8D2;" url="/faces/views/invitemprice/itemspricelist.xhtml" 
@@ -547,6 +550,9 @@
                                                 />
                                     <p:menuitem id="sr_lnk313" value="#{userData.userDDs['CHANGE_PRICE']}" icon="&#xE8D2;" url="/faces/views/changeprice/.xhtml" 
                                                 rendered="#{userData.userScreens['changeprice'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk315551" value="المجموعه" icon="&#xE8D2;" url="/faces/views/progroup/progroupList.xhtml" 
+                                                rendered="#{userData.userScreens['invgroup'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
                                 <p:submenu id="sr_sm32" label="#{userData.userDDs['Payable_Accounts']}" icon="&#xE8D2;"
@@ -643,8 +649,21 @@
                                                        or userData.userScreens['invupdate'].view 
                                                        or userData.isAdmin}"
                                            >
+
+                                    <p:menuitem id="sr_lnk361" value="#{userData.userDDs['STORE_INIT_BALAN']}" icon="&#xE8D2;" url="/faces/views/invopeningbalanceitem/invopeningbalanceitemlist.xhtml" 
+                                                rendered="#{userData.userScreens['invopeningbalanceitem'].view or userData.isAdmin}"
+                                                />
+
                                     <p:menuitem id="sr_lnk9999321" value="#{userData.userDDs['CONVERSION_BET_STORE']}" icon="&#xE8D2;" url="/faces/views/invtransferInventory/invTransferInventoryList.xhtml" 
                                                 rendered="#{userData.userScreens['invtransferInventory'].view or userData.isAdmin}"
+                                                />
+
+                                    <p:menuitem id="sr_lnk9999322" value="جرد المخزون" icon="&#xE8D2;" url="/faces/views/invstripNew/invStripList.xhtml" 
+                                                rendered="#{userData.userScreens['invpermissionorder_1'].view or userData.isAdmin}"
+                                                />
+
+                                    <p:menuitem id="sr_lnk9999323" value="ضبط المخزون" icon="&#xE8D2;" url="/faces/views/invupdate/invUpdateList.xhtml" 
+                                                rendered="#{userData.userScreens['invupdate'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
                             </p:submenu>
@@ -712,6 +731,7 @@
                                                    or userData.userScreens['ProfitOfItemsSoldReport'].view 
                                                    or userData.userScreens['InvoiceMovementReport'].view 
                                                    or userData.userScreens['SalesStatementForThePeriod'].view 
+                                                   or userData.userScreens['SalesStatementForThePeriodPay'].view 
 
 
                                                    or userData.isAdmin}"
@@ -733,6 +753,7 @@
                                                        or userData.userScreens['ProfitOfItemsSoldReport'].view 
                                                        or userData.userScreens['InvoiceMovementReport'].view 
                                                        or userData.userScreens['SalesStatementForThePeriod'].view 
+                                                       or userData.userScreens['SalesStatementForThePeriodPay'].view 
                                                        or userData.isAdmin}" >
                                     <p:menuitem id="sr_sm71" value=" بيان الفواتير حسب الضريبة " icon="&#xE8D2;" url="/faces/views/proproductionreport/SalesReportByValueAdedReport.xhtml" 
                                                 rendered="#{userData.userScreens['SalesReportByValueAdedReport'].view or   userData.isAdmin}"
@@ -741,7 +762,7 @@
                                                 rendered="#{userData.userScreens['SalesReportByValueAdedDetailsReport'].view or   userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_sm73" value="  بيان بالسندات الصادرة حسب الفرع " icon="&#xE8D2;" url="/faces/views/proproductionreport/StatementOfBondsByBranchReport.xhtml" 
-                                                rendered="#{userData.userScreens['StatementOfBondsByBranchReport'].view or   userData.isAdmin}"
+                                                rendered="#{userData.userScreens['SalesReportByValueAdedDetailsReport'].view or   userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_sm74" value=" أرصدة العملاء" icon="&#xE8D2;" url="/faces/views/proproductionreport/CustomerBalancesReport.xhtml" 
                                                 rendered="#{userData.userScreens['CustomerBalancesReport'].view or   userData.isAdmin}"
@@ -752,14 +773,17 @@
                                     <p:menuitem id="sr_lnk33329" value="عملاء ليس عليهم حركة من تاريخ" icon="&#xE8D2;" url="/faces/views/proproductionreport/clientsNoMovmentReport.xhtml" 
                                                 rendered="#{userData.userScreens['clientsNoMovmentReport'].view or   userData.isAdmin}"
                                                 />
+                                    <p:menuitem id="sr_lnk3564543329" value="مبيعات العملاء" icon="&#xE8D2;" url="/faces/views/proproductionreport/clientSalesReport.xhtml" 
+                                                rendered="#{userData.userScreens['clientSalesReport'].view or   userData.isAdmin}"
+                                                />
                                     <p:menuitem id="sr_lnk33334" value="فواتير الشركات بدون خياطة " icon="&#xE8D2;" url="/faces/views/proproductionreport/CompanyInvoicesWithoutSewingReport.xhtml" 
-                                                rendered="#{userData.userScreens['CompanyInvoicesWithoutSewingReport'].view or   userData.isAdmin}"
+                                                rendered="#{userData.userScreens['SalesReportByValueAdedDetailsReport'].view or   userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk33331" value="الفواتير الصادرة خلال فترة " icon="&#xE8D2;" url="/faces/views/proproductionreport/InvoicesIssuedWithinAperiod.xhtml" 
-                                                rendered="#{userData.userScreens['InvoicesIssuedWithinAperiod'].view or   userData.isAdmin}"
+                                                rendered="#{userData.userScreens['SalesRepp:menuitemortByValueAdedDetailsReport'].view or   userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk33335" value="بيان ارصدة الأصناف" icon="&#xE8D2;" url="/faces/views/proproductionreport/ItemBalancesStatementReport.xhtml" 
-                                                rendered="#{userData.userScreens['ItemBalancesStatementReport'].view or   userData.isAdmin}"
+                                                rendered="#{userData.userScreens['SalesReportByValueAdedDetailsReport'].view or   userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk4510" value="المبيعات حسب الشركات لفتره" icon="&#xE8D2;" url="/faces/views/inventoryreports/SalesOfItemsByCompany.xhtml"
                                                 rendered="#{userData.userScreens['SalesOfItemsByCompany'].view or userData.isAdmin}"
@@ -783,9 +807,18 @@
                                                 rendered="#{userData.userScreens['InvoiceMovementReport'].view or userData.isAdmin}"/>
                                     <p:menuitem id="sr_lnk33339" value=" بيان المبيعات لفترة" icon="&#xE8D2;" url="/faces/views/proproductionreport/SalesStatementForThePeriod.xhtml" 
                                                 rendered="#{userData.userScreens['SalesStatementForThePeriod'].view or userData.isAdmin}"/>
+                                    <p:menuitem id="sr_lnk333394" value=" الفواتير المسدده لفتره سابقه" icon="&#xE8D2;" url="/faces/views/proproductionreport/SalesStatementForThePeriodPay.xhtml" 
+                                                rendered="#{userData.userScreens['SalesStatementForThePeriod'].view or userData.isAdmin}"/>
 
                                     <p:menuitem id="sr_lnk466" value="الأصناف حسب الفئات" icon="&#xE8D2;" url="/faces/views/inventoryreports/itemDataReport.xhtml" 
                                                 rendered="#{userData.userScreens['basicdataofitemsbysuppliersreport'].view or userData.isAdmin}"
+                                                />
+
+                                    <p:menuitem id="sr_lnk999935513" value=" تقرير بالمبالغ المسددة" icon="&#xE8D2;" url="/faces/views/inventoryreports/paidAmountReport.xhtml" 
+                                                rendered="#{userData.userScreens['CustomerBalancesReport'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk99990035513" value=" تقرير بالمبالغ الغير المسددة" icon="&#xE8D2;" url="/faces/views/inventoryreports/unPaidAmountReport.xhtml" 
+                                                rendered="#{userData.userScreens['CustomerBalancesReport'].view or userData.isAdmin}"
                                                 />
 
                                 </p:submenu>
@@ -898,7 +931,7 @@
 
                                                        or userData.isAdmin}"
                                            >
-                                    <p:menuitem id="sr_lnk451" value="#{userData.userDDs['ITEM_SALE_GROUP']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
+                                    <p:menuitem id="sr_lnk451" value="#{userData.userDDs['ITEM_SALE_GROUP']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/itemSalesReport.xhtml" 
                                                 rendered="#{userData.userScreens['itemSalesReport'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk452" value="#{userData.userDDs['ITEM_SALE_CUST']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
@@ -910,7 +943,7 @@
                                     <p:menuitem id="sr_lnk451345" value="#{userData.userDDs['ITEM_SALE_CUST']} تفصيلى" icon="&#xE8D2;" url="/faces/views/inventoryreports/SalesOfItemsBySuppliersTobyForUser.xhtml" 
                                                 rendered="#{userData.userScreens['SalesOfItemsBySuppliersTobyForUser'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk453" value="#{userData.userDDs['ITEM_SALE_DELE']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
+                                    <p:menuitem id="sr_lnk453" value="#{userData.userDDs['ITEM_SALE_DELE']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/SalesOfItemsByDelegator.xhtml" 
                                                 rendered="#{userData.userScreens['SalesOfItemsByDelegator'].view or userData.isAdmin}"
                                                 />
 
@@ -1130,62 +1163,27 @@
                             </p:submenu>
                             <p:submenu id="sr_sm1000" label="CRM" icon="&#xE8D2;"  rendered="#{userData.userScreens['shiftingJournalsettings'].view or userData.isAdmin}"
                                        >
-                                <p:menuitem id="sr_lnk1000" value= "dashboard" icon="&#xE8D2;" url="/faces/views/crmDashboard/dashboard.xhtml" 
+                                <p:menuitem id="sr_lnk1000" value= "الرئيسية" icon="&#xE8D2;" url="/faces/views/crmDashboard/dashboard.xhtml" 
                                             rendered="#{userData.userScreens['crmDashboard'].view or userData.isAdmin}"
                                             />
-                                <p:submenu id="sr_sm1001" label="CRM Main Data" icon="&#xE8D2;"
+                                <p:menuitem id="cr_lnk1000" value= "الشكاوي" icon="&#xE8D2;" url="/faces/views/crmTodoEvent/TodoEventList.xhtml" 
+                                            rendered="#{userData.userScreens['crmTodoEvent'].view or userData.isAdmin}"
+                                            />
+                                <p:menuitem id="cr_lnk2000" value= "متابعة عميل" icon="&#xE8D2;" url="/faces/views/crmCustomerTracking/crmCustomerTrackingNew.xhtml" 
+                                            rendered="#{userData.userScreens['crmTodoEvent'].view or userData.isAdmin}"
+                                            />
+                            </p:submenu>
+                            <p:submenu id="hr_sm1000" label="الموارد البشرية" icon="&#xE8D2;"  rendered="#{userData.userScreens['hremployee'].view or userData.isAdmin}"
+                                       >
+                                <p:submenu id="hr_sm1001" label="البيانات الاساسية" icon="&#xE8D2;"
                                            >
-                                    <p:menuitem id="sr_lnk1001" value= "dashboardLeadsList" icon="&#xE8D2;" url="/faces/views/crmDashboardList/dashboardLeadsList.xhtml" 
-                                                rendered="#{userData.userScreens['crmDashboardList'].view or userData.isAdmin}"
+                                    <p:menuitem id="hr_lnk1002" value= "إنشاء قسم" icon="&#xE8D2;" url="/faces/views/hrdeparment/DepartmentList.xhtml" 
+                                                rendered="#{userData.userScreens['hrdeparment'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk1002" value= "بنك المهام و الاحداث" icon="&#xE8D2;" url="/faces/views/crmDashboardEventList/dashboardEventList.xhtml" 
-                                                rendered="#{userData.userScreens['crmDashboardEventList'].view or userData.isAdmin}"
+                                    <p:menuitem id="hr_lnk1003" value= " إنشاء موظف" icon="&#xE8D2;" url="/faces/views/hremployee/employeeList.xhtml" 
+                                                rendered="#{userData.userScreens['hremployee'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk1003" value= "تقييم اداء الموظفين" icon="&#xE8D2;" url="/faces/views/crmSalesReport/employeesSalesReport.xhtml" 
-                                                rendered="#{userData.userScreens['crmSalesReport'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk1004" value= "main" icon="&#xE8D2;" url="/faces/views/crm/main.xhtml" 
-                                                rendered="#{userData.userScreens['crm'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk1005" value= "الاعدادات" icon="&#xE8D2;" url="/faces/views/crmSetting/crmNotificationSetting.xhtml" 
-                                                rendered="#{userData.userScreens['crmSetting'].view or userData.isAdmin}"
-                                                />
-
-
                                 </p:submenu>
-                                <p:submenu id="sr_sm1002" label="CRM Movement" icon="&#xE8D2;"
-                                           >
-                                    <p:menuitem id="sr_lnk1007" value= "leadsList" icon="&#xE8D2;" url="/faces/views/crmLeads/leadsList.xhtml" 
-                                                rendered="#{userData.userScreens['crmLeads'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk1008" value= "TodoEventList" icon="&#xE8D2;" url="/faces/views/crmTodoEvent/TodoEventList.xhtml" 
-                                                rendered="#{userData.userScreens['crmTodoEvent'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk1009" value= "my calender" icon="&#xE8D2;" url="/faces/views/crmMyCalendar/main.xhtml" 
-                                                rendered="#{userData.userScreens['crmMyCalendar'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk10010" value= "تحويل العملاء" icon="&#xE8D2;" url="/faces/views/crmLeadsTransfer/transferLeads.xhtml" 
-                                                rendered="#{userData.userScreens['crmLeadsTransfer'].view or userData.isAdmin}"
-                                                />
-
-                                </p:submenu>
-                                <p:submenu id="sr_sm1003" label="CRM Reports" icon="&#xE8D2;"
-                                           >
-                                    <p:menuitem id="sr_lnk10011" value= "leads data reports" icon="&#xE8D2;" url="/faces/views/crmReports/leadsData.xhtml" 
-                                                rendered="#{userData.userScreens['leadsData'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk10012" value= "Event Reports" icon="&#xE8D2;" url="/faces/views/crmReports/eventsReport.xhtml" 
-                                                rendered="#{userData.userScreens['eventsReport'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk10013" value= "Customer Project Report" icon="&#xE8D2;" url="/faces/views/crmReports/customerProject.xhtml" 
-                                                rendered="#{userData.userScreens['customerProject'].view or userData.isAdmin}"
-                                                />  <p:menuitem id="sr_lnk10014" value= "Projects Customer" icon="&#xE8D2;" url="/faces/views/crmReports/projectsCustomer.xhtml" 
-                                                rendered="#{userData.userScreens['projectsCustomer'].view or userData.isAdmin}"
-                                                />
-                         
-
-                                </p:submenu>
-
                             </p:submenu>
                         </pm:menu>
                     </h:form>

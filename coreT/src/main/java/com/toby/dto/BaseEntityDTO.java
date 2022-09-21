@@ -5,6 +5,7 @@
  */
 package com.toby.dto;
 
+import com.toby.API.ResponseApi;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -37,10 +38,12 @@ public class BaseEntityDTO implements Serializable, Cloneable {
     private Integer serial;
 
     private String createdByName;
-    
+
     private String createdInvoiceByName;
 
-    private String createdByCode;
+    private String createdByCode;   
+    
+//    private ResponseApi responseApi;
 
     public Integer getId() {
         return id;
@@ -244,4 +247,21 @@ public class BaseEntityDTO implements Serializable, Cloneable {
     public void setCreatedInvoiceByName(String createdInvoiceByName) {
         this.createdInvoiceByName = createdInvoiceByName;
     }
+
+    /**
+     * @return the responseApi
+     */
+//    public ResponseApi getResponseApi() {
+//        if(responseApi == null){
+//            responseApi = new  ResponseApi();
+//        }
+//        return responseApi;
+//    }
+//
+//    /**
+//     * @param responseApi the responseApi to set
+//     */
+//    public void setResponseApi(ResponseApi responseApi) {
+//        this.responseApi = responseApi;
+//    }
 }

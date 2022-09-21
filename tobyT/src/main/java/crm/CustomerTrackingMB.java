@@ -8,23 +8,32 @@ package crm;
 import com.toby.businessservice.CRMEventServiceDTO;
 import com.toby.toby.*;
 import com.toby.businessservice.EmployeeService;
+import com.toby.businessservice.FireBaseNotificationServices;
+import com.toby.businessservice.InvPurchaseInvoiceDetailsService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.InvoiceProductionStagesReportService;
 import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
 import com.toby.businessservice.OrganizationSiteService;
+import com.toby.businessservice.ReportsService;
 import com.toby.businessservice.SymbolService;
+import com.toby.businessservice.TobyUserService;
 import com.toby.bussinessservice.global.AutoCompleteService;
 import com.toby.converter.InvOrganizationSiteDTOConverter;
 import com.toby.converter.SymbolDTOConverter;
+import com.toby.converter.TobyUserDTOConverter;
 import com.toby.dto.CrmEventDTO;
 import com.toby.dto.EmployeeDTO;
+import com.toby.dto.InvDetailDTO;
+import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.PrintProductionDTO;
 import com.toby.dto.SymbolDTO;
+import com.toby.dto.TobyUserDTO;
 import com.toby.views.InvoiceProductionStagesReport;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -40,7 +49,7 @@ import org.primefaces.event.SelectEvent;
  */
 @Named(value = "CustomerTrackingMB")
 @ViewScoped
-public class CustomerTrackingMB extends Basic implements Serializable {
+public class CustomerTrackingMB extends CrmBasicDataForm implements Serializable {
 
     private InvOrganizationSiteDTO invOrganizationSiteDTO;
 
@@ -61,22 +70,37 @@ public class CustomerTrackingMB extends Basic implements Serializable {
     private List<InvoiceProductionStagesReport> invoiceProductionStagesReports;
 
     private List<CrmEventDTO> listEveentMainScrren;
-    
-        private Integer dateType;
-        
-        private Boolean employeeIsSupervisor = Boolean.FALSE;
-        
-            private CrmEventDTO crmEventDTO;
-            
-                private SymbolDTOConverter activityTypeDTOconverter;
 
-  private List<SymbolDTO> activityTypeDTOList;
-  
-  private SymbolDTOConverter eventStatusDTOconverter;
-  
-      private List<SymbolDTO> eventStatusDTOList;
+    private Integer dateType;
 
+    private Boolean employeeIsSupervisor = Boolean.FALSE;
 
+    private CrmEventDTO crmEventDTO;
+
+    private CrmEventDTO crmEventDTOSelected;
+
+    private SymbolDTOConverter activityTypeDTOconverter;
+
+    private List<SymbolDTO> activityTypeDTOList;
+
+    private SymbolDTOConverter eventStatusDTOconverter;
+
+    private List<SymbolDTO> eventStatusDTOList;
+
+    private List<InvDetailDTO> invDetailDTOList;
+
+    private List<TobyUserDTO> tobyUserDTOList;
+
+    private TobyUserDTO tobyUserDTO;
+
+    private TobyUserDTOConverter tobyUserDTOConverter;
+
+    private InvDetailDTO invDetailDTO;
+
+    private Date lastInvoiceDate;
+    private BigDecimal lastInvoiceValue;
+
+    private Integer eventId;
 
     /**
      * Creates a new instance of LoginBean
@@ -98,16 +122,66 @@ public class CustomerTrackingMB extends Basic implements Serializable {
 
     @EJB
     CRMEventServiceDTO cRMEventServiceDTO;
-   
-       @EJB
-       SymbolService symbolService;
-       
-    public void search() {
-        if (getInvOrganizationSiteDTO() != null && getInvOrganizationSiteDTO().getId() != null) {
-            Integer type = 4;
 
-            setInvInvoiceList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(type, null, getInvOrganizationSiteDTO().getId()));
+    @EJB
+    FireBaseNotificationServices firebaseServices;
+
+    @EJB
+    SymbolService symbolService;
+
+    @EJB
+    InvPurchaseInvoiceDetailsService invPurchaseInvoiceDetailsService;
+    @EJB
+    TobyUserService tobyUserService;
+    @EJB
+    ReportsService reportsService;
+
+    public void returnUsersList() {
+
+        if (getGallaryDTOSelect() != null) {
+            setTobyUserDTOList(tobyUserService.getUsersByInventoryId(getGallaryDTOSelect().getId()));
+            setTobyUserDTOConverter(new TobyUserDTOConverter(tobyUserDTOList));
         }
+    }
+
+    public void returnListOfDetailList() {
+        setInvDetailDTOList(invPurchaseInvoiceDetailsService.getAllInvPurchaseInvoiceDetailList(getInvInvoiceDTOSelected()));
+//        return (invPurchaseInvoiceDetailsService.getAllInvPurchaseInvoiceDetailList(getInvInvoiceDTOSelected()));
+    }
+
+    public void search() {
+        if (getGallaryId() != null && getCustomerCode() != null && !getCustomerCode().isEmpty()) {
+            setInvOrganizationSiteDTO(organizationSiteService.findOrganizationSiteDTOByCodeAndGallaryIdDTO(getUserData().getUserBranch().getId(), getCustomerCode(), getGallaryId()));
+        }
+        if (getInvOrganizationSiteDTO() != null && getInvOrganizationSiteDTO().getId() != null) {
+            setListEveentMainScrren(new ArrayList<>());
+            Integer type = 4;
+            setInvInvoiceList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(type, null, getInvOrganizationSiteDTO().getId()));
+            if (getListEveentMainScrren() == null || getListEveentMainScrren().isEmpty()) {
+                setListEveentMainScrren(cRMEventServiceDTO.findALLEventByCustomerId(getInvOrganizationSiteDTO().getId(), getUserData().getUserBranch().getId()));
+            }
+            if (getInvInvoiceList() != null && !getInvInvoiceList().isEmpty()) {
+                setLastInvoiceDate(getInvInvoiceList().get(0).getDate());
+                setLastInvoiceValue(reportsService.getValueOfInvoice(getInvInvoiceList().get(0).getId()));
+            }
+        }
+    }
+
+    public void findCRMEventByInvoiceId() {
+        setListEveentMainScrren(cRMEventServiceDTO.findALLEventByInvoiceId(getInvOrganizationSiteDTO().getId(), getUserData().getUserBranch().getId()));
+    }
+
+    public String goToEditCRMvent() {
+        try {
+            return goToEventEdit(getCrmEventDTOSelected().getId());
+        } catch (Exception e) {
+            saveError(e, "crmEventListDTOMB", "goToEdit");
+            return null;
+        }
+    }
+
+    public void FillEventByCustomerId() {
+
     }
 
     public void searchProductionStagesReport(SelectEvent event) {
@@ -127,27 +201,27 @@ public class CustomerTrackingMB extends Basic implements Serializable {
             e.printStackTrace();
         }
     }
-    
-     public void updateTODOValue() {
-        getCrmEventDTO().setType(1);
+
+    public void updateTODOValue() {
+        getCrmEventDTO().setTypee(1);
     }
 
     public void updateEventValue() {
-        getCrmEventDTO().setType(0);
+        getCrmEventDTO().setTypee(0);
     }
 
     public void reset() {
         invOrganizationSiteDTO = new InvOrganizationSiteDTO();
     }
-    
-      public void resetEvent() {
+
+    public void resetEvent() {
         setCrmEventDTO(new CrmEventDTO());
     }
-      
-         public String saveEvent() { 
-             if(getInvOrganizationSiteDTO()!= null){
-             getCrmEventDTO().setCustomerId(getInvOrganizationSiteDTO());
-             }
+
+    public String saveEvent() {
+        if (getInvOrganizationSiteDTO() != null) {
+            getCrmEventDTO().setCustomerId(getInvOrganizationSiteDTO());
+        }
         if (!getEmployeeIsSupervisor()) {
             getCrmEventDTO().setAssignedTo(getUserData().getEmployeeDTODefault());
         }
@@ -162,6 +236,9 @@ public class CustomerTrackingMB extends Basic implements Serializable {
             employeeDTO.setId(1);
             getCrmEventDTO().setAssignedTo(employeeDTO);
             setCrmEventDTO(cRMEventServiceDTO.save(getCrmEventDTO(), getUserData().getUser()));
+            setEventId(getCrmEventDTO().getId());
+            excuteScript("saveNotificationToFirebase();");
+//            firebaseServices.saveNotifications(getUserData().getUserBranch().getId(), getCrmEventDTO().getId());
             msgSave(getCrmEventDTO().getMsg());
 
             //update Crm Notification
@@ -171,8 +248,8 @@ public class CustomerTrackingMB extends Basic implements Serializable {
         }
         return "";
     }
-         
-           private Date endDate() {
+
+    private Date endDate() {
         Calendar calEnd = Calendar.getInstance();
         calEnd.setTime(new Date(new Date().getTime() + (1000 * 60 * 60 * 24)));
         calEnd.set(Calendar.HOUR_OF_DAY, 0);
@@ -181,20 +258,23 @@ public class CustomerTrackingMB extends Basic implements Serializable {
         calEnd.set(Calendar.MILLISECOND, 0);
         return calEnd.getTime();
     }
-         
-          public String validateSave(CrmEventDTO crmEventDTO) {
+
+    public String validateSave(CrmEventDTO crmEventDTO) {
         String error = cRMEventServiceDTO.validateSave(crmEventDTO);
         return error;
     }
-          
-            public List<SymbolDTO> completeEventStatus(String query) {
+
+    public List<SymbolDTO> completeEventStatus(String query) {
         return AutoComplete.completeEventStatus(query, getEventStatusDTOList(), getEventStatusDTOconverter());
     }
-          
-           public List<SymbolDTO> completeActivityType(String query) {
+
+    public List<SymbolDTO> completeActivityType(String query) {
         return AutoComplete.completeActivityType(query, getActivityTypeDTOList(), getActivityTypeDTOconverter());
     }
 
+    public List<InvInventoryDTO> completeGalleryList(String query) {
+        return AutoComplete.completeGalleryList(query, getUserData().getGallaryLists(), getGallaryDTOConverters());
+    }
 
     public List<InvOrganizationSiteDTO> completeCustomerDTO(String query) {
 
@@ -342,12 +422,12 @@ public class CustomerTrackingMB extends Basic implements Serializable {
      * @return the listEveentMainScrren
      */
     public List<CrmEventDTO> getListEveentMainScrren() {
-        if (listEveentMainScrren == null || listEveentMainScrren.isEmpty()) {
-            listEveentMainScrren = new ArrayList<>();
-        }
-        if (getUserData() != null) {
-            listEveentMainScrren = cRMEventServiceDTO.findCrmEventListWithDate(getUserData().getUserlogin().getBranchId().getId(), null , getUserData().getUser().getId(), getDateType(), null);
-        }
+//        if (listEveentMainScrren == null || listEveentMainScrren.isEmpty()) {
+//            listEveentMainScrren = new ArrayList<>();
+//        }
+//        if (getUserData() != null) {
+//            listEveentMainScrren = cRMEventServiceDTO.findCrmEventListWithDate(getUserData().getUserlogin().getBranchId().getId(), null, getUserData().getUser().getId(), getDateType(), null);
+//        }
         return listEveentMainScrren;
     }
 
@@ -362,8 +442,8 @@ public class CustomerTrackingMB extends Basic implements Serializable {
      * @return the dateType
      */
     public Integer getDateType() {
-        if(dateType == null){
-        dateType = 0 ; 
+        if (dateType == null) {
+            dateType = 0;
         }
         return dateType;
     }
@@ -379,7 +459,7 @@ public class CustomerTrackingMB extends Basic implements Serializable {
      * @return the employeeIsSupervisor
      */
     public Boolean getEmployeeIsSupervisor() {
-          if (getUserData().getEmployeeDTODefault() != null) {
+        if (getUserData().getEmployeeDTODefault() != null) {
             employeeIsSupervisor = employeeService.getAllEmployeesIsSuperVisor(getUserData().getEmployeeDTODefault().getId());
         }
         getInvOrganizationSiteDTO().setEmployeeIsSupervisor(employeeIsSupervisor);
@@ -397,7 +477,7 @@ public class CustomerTrackingMB extends Basic implements Serializable {
      * @return the crmEventDTO
      */
     public CrmEventDTO getCrmEventDTO() {
-           if (crmEventDTO == null) {
+        if (crmEventDTO == null) {
             crmEventDTO = new CrmEventDTO();
         }
         if (crmEventDTO != null && getUserData() != null && getUserData().getEmployeeDTODefault() != null && getUri() != null && !getUri().contains("TodoEvent")) {
@@ -438,7 +518,7 @@ public class CustomerTrackingMB extends Basic implements Serializable {
      * @return the activityTypeDTOList
      */
     public List<SymbolDTO> getActivityTypeDTOList() {
-              if (activityTypeDTOList == null || activityTypeDTOList.isEmpty()) {
+        if (activityTypeDTOList == null || activityTypeDTOList.isEmpty()) {
             activityTypeDTOList = symbolService.getSymbolListByCompanyId(getUserData().getCompany().getId(), 58);
             setActivityTypeDTOconverter(new SymbolDTOConverter(activityTypeDTOList));
         }
@@ -470,8 +550,8 @@ public class CustomerTrackingMB extends Basic implements Serializable {
      * @return the eventStatusDTOList
      */
     public List<SymbolDTO> getEventStatusDTOList() {
-        
-         if (eventStatusDTOList == null || eventStatusDTOList.isEmpty()) {
+
+        if (eventStatusDTOList == null || eventStatusDTOList.isEmpty()) {
             eventStatusDTOList = symbolService.getSymbolListByCompanyId(getUserData().getCompany().getId(), 61);
             setEventStatusDTOconverter(new SymbolDTOConverter(eventStatusDTOList));
         }
@@ -483,6 +563,169 @@ public class CustomerTrackingMB extends Basic implements Serializable {
      */
     public void setEventStatusDTOList(List<SymbolDTO> eventStatusDTOList) {
         this.eventStatusDTOList = eventStatusDTOList;
+    }
+
+    /**
+     * @return the lastInvoiceDate
+     */
+    public Date getLastInvoiceDate() {
+
+        return lastInvoiceDate;
+    }
+
+    /**
+     * @param lastInvoiceDate the lastInvoiceDate to set
+     */
+    public void setLastInvoiceDate(Date lastInvoiceDate) {
+        this.lastInvoiceDate = lastInvoiceDate;
+    }
+
+    /**
+     * @return the lastInvoiceValue
+     */
+    public BigDecimal getLastInvoiceValue() {
+
+        return lastInvoiceValue;
+    }
+
+    /**
+     * @param lastInvoiceValue the lastInvoiceValue to set
+     */
+    public void setLastInvoiceValue(BigDecimal lastInvoiceValue) {
+        this.lastInvoiceValue = lastInvoiceValue;
+    }
+
+    /**
+     * @return the eventId
+     */
+    public Integer getEventId() {
+        return eventId;
+    }
+
+    /**
+     * @param eventId the eventId to set
+     */
+    public void setEventId(Integer eventId) {
+        this.eventId = eventId;
+    }
+
+    /**
+     * @return the invDetailDTOList
+     */
+    public List<InvDetailDTO> getInvDetailDTOList() {
+
+        if (invDetailDTOList == null) {
+            setInvDetailDTOList(new ArrayList<>());
+        }
+        return invDetailDTOList;
+    }
+
+    /**
+     * @param invDetailDTOList the invDetailDTOList to set
+     */
+    public void setInvDetailDTOList(List<InvDetailDTO> invDetailDTOList) {
+        this.invDetailDTOList = invDetailDTOList;
+    }
+
+    /**
+     * @return the invDetailDTO
+     */
+    public InvDetailDTO getInvDetailDTO() {
+
+        if (invDetailDTO == null) {
+            setInvDetailDTO(new InvDetailDTO());
+        }
+        return invDetailDTO;
+    }
+
+    /**
+     * @param invDetailDTO the invDetailDTO to set
+     */
+    public void setInvDetailDTO(InvDetailDTO invDetailDTO) {
+        this.invDetailDTO = invDetailDTO;
+    }
+
+    /**
+     * @return the tobyUserDTOList
+     */
+    public List<TobyUserDTO> getTobyUserDTOList() {
+
+        if (tobyUserDTOList == null) {
+            setTobyUserDTOList(new ArrayList<>());
+        }
+        return tobyUserDTOList;
+    }
+
+    /**
+     * @param tobyUserDTOList the tobyUserDTOList to set
+     */
+    public void setTobyUserDTOList(List<TobyUserDTO> tobyUserDTOList) {
+        this.tobyUserDTOList = tobyUserDTOList;
+    }
+
+    /**
+     * @return the tobyUserDTO
+     */
+    public TobyUserDTO getTobyUserDTO() {
+        if (tobyUserDTO == null) {
+            setTobyUserDTO(new TobyUserDTO());
+        }
+        return tobyUserDTO;
+    }
+
+    /**
+     * @param tobyUserDTO the tobyUserDTO to set
+     */
+    public void setTobyUserDTO(TobyUserDTO tobyUserDTO) {
+        this.tobyUserDTO = tobyUserDTO;
+    }
+
+    /**
+     * @return the tobyUserDTOConverter
+     */
+    public TobyUserDTOConverter getTobyUserDTOConverter() {
+        return tobyUserDTOConverter;
+    }
+
+    /**
+     * @param tobyUserDTOConverter the tobyUserDTOConverter to set
+     */
+    public void setTobyUserDTOConverter(TobyUserDTOConverter tobyUserDTOConverter) {
+        this.tobyUserDTOConverter = tobyUserDTOConverter;
+    }
+
+    /**
+     * @return the crmEventDTOSelected
+     */
+    public CrmEventDTO getCrmEventDTOSelected() {
+        return crmEventDTOSelected;
+    }
+
+    /**
+     * @param crmEventDTOSelected the crmEventDTOSelected to set
+     */
+    public void setCrmEventDTOSelected(CrmEventDTO crmEventDTOSelected) {
+        this.crmEventDTOSelected = crmEventDTOSelected;
+    }
+
+    @Override
+    public String save() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void init() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void load() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getScreenName() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

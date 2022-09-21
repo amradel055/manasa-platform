@@ -19,7 +19,11 @@ public class CustomerBalances {
     private BigDecimal Debit;
     private BigDecimal Creditor;
     private BigDecimal Balance;
+    private BigDecimal openningBalance;
     private InvInventoryDTO gallerySelected;
+    private String invoiceRemain;
+    private Integer branchId;
+    private Integer organizationsiteId;
 
     /**
      * @return the clientCode
@@ -113,6 +117,62 @@ public class CustomerBalances {
      */
     public void setGallerySelected(InvInventoryDTO gallerySelected) {
         this.gallerySelected = gallerySelected;
+    }
+
+    /**
+     * @return the openningBalance
+     */
+    public BigDecimal getOpenningBalance() {
+        return openningBalance;
+    }
+
+    /**
+     * @param openningBalance the openningBalance to set
+     */
+    public void setOpenningBalance(BigDecimal openningBalance) {
+        this.openningBalance = openningBalance;
+    }
+
+    /**
+     * @return the invoiceRemain
+     */
+    public String getInvoiceRemain() {
+        return invoiceRemain;
+    }
+
+    /**
+     * @param invoiceRemain the invoiceRemain to set
+     */
+    public void setInvoiceRemain(String invoiceRemain) {
+        this.invoiceRemain = invoiceRemain;
+    }
+
+    /**
+     * @return the organizationsiteId
+     */
+    public Integer getOrganizationsiteId() {
+        return organizationsiteId;
+    }
+
+    /**
+     * @param organizationsiteId the organizationsiteId to set
+     */
+    public void setOrganizationsiteId(Integer organizationsiteId) {
+        this.organizationsiteId = organizationsiteId;
+    }
+
+    /**
+     * @return the branchId
+     */
+    public Integer getBranchId() {
+        return branchId;
+    }
+
+    /**
+     * @param branchId the branchId to set
+     */
+    public void setBranchId(Integer branchId) {
+        this.branchId = branchId;
     }
 
 }

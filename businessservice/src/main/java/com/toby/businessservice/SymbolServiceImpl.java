@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.SymbolDTOAPI;
 import com.toby.core.GenericDAO;
 import com.toby.dto.SymbolDTO;
 import com.toby.entity.GeneralSymbol;
@@ -118,14 +119,15 @@ public class SymbolServiceImpl implements SymbolService {
     public Symbol getSpecialDocumentsTypes(Integer serial) {
         Map<String, Object> params = new HashMap<>();
         params.put("serial", serial);
-        List<Symbol> list = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=1 AND sym.serial >= 1000 AND sym.serial <= 2000  AND sym.serial = :serial",params);
+        List<Symbol> list = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=1 AND sym.serial >= 1000 AND sym.serial <= 2000  AND sym.serial = :serial", params);
         return (list != null && !list.isEmpty()) ? list.get(0) : null;
     }
+
     @Override
     public Symbol getSymbolTypes(Integer serial) {
         Map<String, Object> params = new HashMap<>();
         params.put("serial", serial);
-        List<Symbol> list = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=1   AND sym.serial = :serial",params);
+        List<Symbol> list = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=1   AND sym.serial = :serial", params);
         return (list != null && !list.isEmpty()) ? list.get(0) : null;
     }
 
@@ -470,6 +472,21 @@ public class SymbolServiceImpl implements SymbolService {
 
     }
 
+    private SymbolDTOAPI initMapToDTOAPI(Symbol entity) {
+        SymbolDTOAPI dTO = new SymbolDTOAPI();
+        dTO.setIndex(entity.getId());
+        dTO.setCreatedDate(entity.getCreationDate());
+        dTO.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
+        if (entity.getAccountId() != null) {
+            dTO.setAccountId(entity.getAccountId().getId());
+        }
+        dTO.setSerial(entity.getSerial());
+        dTO.setArrange(entity.getArrange());
+        dTO.setName(entity.getName());
+        dTO.setId(entity.getId());
+        return dTO;
+    }
+
     public Symbol mapFromDTO(SymbolDTO dTO, TobyUser tobyUser) {
         Symbol entity = new Symbol();
         entity.setName(dTO.getName());
@@ -503,6 +520,13 @@ public class SymbolServiceImpl implements SymbolService {
         for (Symbol entity : list) {
             dTOList.add(mapTODTO(entity, null));
         }
+    }
+    private List<SymbolDTOAPI>  returnListDTOAPI(List<Symbol> list) {
+        List<SymbolDTOAPI> dTOList = new ArrayList<>();
+        for (Symbol entity : list) {
+            dTOList.add(initMapToDTOAPI(entity));
+        }
+        return dTOList;
     }
 
     //goher
@@ -579,6 +603,15 @@ public class SymbolServiceImpl implements SymbolService {
         List<SymbolDTO> dTOList = new ArrayList();
         returnListDTO(symbolList, dTOList);
         return dTOList;
+
+    }
+
+    @Override
+    public List<SymbolDTOAPI> getDocumentsTypesDTOAPI(Integer companyId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("companyId", companyId);
+        List<Symbol> symbolList = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=1 AND sym.companyId.id=:companyId AND (sym.serial < 1000 OR sym.serial > 2000) order by (CASE WHEN sym.arrange IS NULL THEN 999999999999 ELSE 0 END) , sym.arrange", params);
+        return returnListDTOAPI(symbolList);
 
     }
 
@@ -684,11 +717,13 @@ public class SymbolServiceImpl implements SymbolService {
     }
 
     @Override
-    public List<Symbol> getAllworkTypeIdByCompanyId(Integer companyId) {
-
+    public List<SymbolDTO> getAllworkTypeIdByCompanyId(Integer companyId) {
+        List<SymbolDTO> dTOList = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         params.put("companyId", companyId);
-        return dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=52 AND sym.companyId.id=:companyId", params);
+        List<Symbol> list = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=52 AND sym.companyId.id=:companyId", params);
+        returnListDTO(list, dTOList);
+        return dTOList;
     }
 
     @Override
@@ -697,5 +732,45 @@ public class SymbolServiceImpl implements SymbolService {
         Map<String, Object> params = new HashMap<>();
         params.put("companyId", companyId);
         return dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=53 AND sym.companyId.id=:companyId", params);
+    }
+
+    @Override
+    public List<SymbolDTO> getCrmStatusByCompanyIdDTO(Integer companyId) {
+        Map<String, Object> params = new HashMap<>();
+        List<SymbolDTO> dTOList = new ArrayList<>();
+        params.put("companyId", companyId);
+        List<Symbol> list = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.id = 61 AND sym.companyId.id=:companyId", params);
+        returnListDTO(list, dTOList);
+        return dTOList;
+    }
+
+    @Override
+    public List<SymbolDTO> getCrmPeriorityByCompanyIdDTO(Integer companyId) {
+        Map<String, Object> params = new HashMap<>();
+        List<SymbolDTO> dTOList = new ArrayList<>();
+        params.put("companyId", companyId);
+        List<Symbol> list = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.id = 59 AND sym.companyId.id=:companyId", params);
+        returnListDTO(list, dTOList);
+        return dTOList;
+    }
+
+    @Override
+    public List<SymbolDTO> getCrmLearnAboutFromByCompanyIdDTO(Integer companyId) {
+        Map<String, Object> params = new HashMap<>();
+        List<SymbolDTO> dTOList = new ArrayList<>();
+        params.put("companyId", companyId);
+        List<Symbol> list = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.id = 55 AND sym.companyId.id=:companyId", params);
+        returnListDTO(list, dTOList);
+        return dTOList;
+    }
+
+    @Override
+    public List<SymbolDTO> getCrmEventTypeFromByCompanyIdDTO(Integer companyId) {
+        Map<String, Object> params = new HashMap<>();
+        List<SymbolDTO> dTOList = new ArrayList<>();
+        params.put("companyId", companyId);
+        List<Symbol> list = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.id = 60 AND sym.companyId.id=:companyId", params);
+        returnListDTO(list, dTOList);
+        return dTOList;
     }
 }

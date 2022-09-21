@@ -47,6 +47,10 @@ public class InvUpdateDetail extends BaseEntity {
     private BigDecimal oldAmount;
     @Column(name = "difference")
     private BigDecimal difference;
+    @Column(name = "wasalate")
+    private BigDecimal wasalate;
+    @Column(name = "cost_avarage")
+    private BigDecimal costAvarage;
     @Column(name = "value")
     private BigDecimal value;
     @Size(max = 450)
@@ -68,6 +72,9 @@ public class InvUpdateDetail extends BaseEntity {
     }
 
     public BigDecimal getNewAmount() {
+        if(newAmount == null){
+            newAmount = BigDecimal.ZERO;
+        }
         return newAmount;
     }
 
@@ -108,6 +115,9 @@ public class InvUpdateDetail extends BaseEntity {
     }
 
     public BigDecimal getScrewing() {
+        if(screwing == null){
+            screwing = BigDecimal.ONE;
+        }
         return screwing;
     }
 
@@ -176,6 +186,37 @@ public class InvUpdateDetail extends BaseEntity {
      */
     public void setSerial(Integer serial) {
         this.serial = serial;
+    }
+
+    /**
+     * @return the wasalate
+     */
+    public BigDecimal getWasalate() {
+        return wasalate;
+    }
+
+    /**
+     * @param wasalate the wasalate to set
+     */
+    public void setWasalate(BigDecimal wasalate) {
+        this.wasalate = wasalate;
+    }
+
+    /**
+     * @return the costAvarage
+     */
+    public BigDecimal getCostAvarage() {
+        if(costAvarage == null){
+            costAvarage = BigDecimal.ZERO;
+        }
+        return costAvarage;
+    }
+
+    /**
+     * @param costAvarage the costAvarage to set
+     */
+    public void setCostAvarage(BigDecimal costAvarage) {
+        this.costAvarage = costAvarage;
     }
     
 }

@@ -5,6 +5,8 @@
  */
 package com.toby.businessservice.report;
 
+import com.toby.API.CashAccountSettlementAPI;
+import com.toby.bean.BankBalanceReportBean;
 import com.toby.businessservice.GlBankService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.reports.searchBean.SubAccountSummarySearchBean;
@@ -1448,7 +1450,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         }
                     }
                 }
-                addOpeningBalanceNew(cashAccountSettlment, cashAccountSettlementBean, cashAccountSettlementSearchBean);
+//                addOpeningBalanceNew(cashAccountSettlment, cashAccountSettlementBean, cashAccountSettlementSearchBean);
                 debit = cashAccountSettlment.getDebitAmount() != null ? cashAccountSettlment.getDebitAmount().setScale(2, RoundingMode.UP) : BigDecimal.ZERO;
                 credit = cashAccountSettlment.getCreditAmount() != null ? cashAccountSettlment.getCreditAmount().setScale(2, RoundingMode.UP) : BigDecimal.ZERO;
                 balance = cashAccountSettlementBean.getTotalForBalanceMap().get(cashAccountSettlment.getBankId());
@@ -1483,6 +1485,31 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         return null;
     }
 
+    @Override
+    public CashAccountSettlementBean searchNewApi(CashAccountSettlementAPI cashAccountSettlementAPI) {
+        SubAccountSummarySearchBean subAccountSummarySearchBean = new SubAccountSummarySearchBean();
+        if (cashAccountSettlementAPI != null) {
+            subAccountSummarySearchBean.setDateFrom(cashAccountSettlementAPI.getDateFrom());
+            subAccountSummarySearchBean.setDateTo(cashAccountSettlementAPI.getDateTo());
+            subAccountSummarySearchBean.setType(cashAccountSettlementAPI.getDataType());
+            subAccountSummarySearchBean.setGlBankDTOListSelected(cashAccountSettlementAPI.getGlBankDTOListSelected());
+            subAccountSummarySearchBean.setGlYearSelected(cashAccountSettlementAPI.getGlYearSelected());
+            subAccountSummarySearchBean.setCurrencyType(0);
+            subAccountSummarySearchBean.setOrderBy(0);
+            if (cashAccountSettlementAPI.getGlBankDTOListSelected() != null) {
+                StringBuilder stringBuilder = new StringBuilder();
+                for (GlBankDTO bankDTO : cashAccountSettlementAPI.getGlBankDTOListSelected()) {
+                    stringBuilder.append(bankDTO.getId());
+                }
+                subAccountSummarySearchBean.setGlBankIdSelected(stringBuilder.toString());
+            }
+        }
+
+        return searchNew(subAccountSummarySearchBean);
+
+    }
+
+    @Override
     public List<CashAccountSettlment> findAllCashAccountSettlmentNew(SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
         List<CashAccountSettlment> list = new ArrayList<>();
         Map<String, Object> params = new HashMap();
@@ -1508,6 +1535,39 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
             cashAccountSettlmentView.setContractSerial(object[14] != null ? (String) object[14] : null);
             cashAccountSettlmentView.setTypeName(object[15] != null ? (String) object[15] : null);
             cashAccountSettlmentView.setDocumentSerial(object[16] != null ? (Integer) object[16] : null);
+            cashAccountSettlmentView.setCustomerName(object[17] != null ? (String) object[17] : null);
+            cashAccountSettlmentView.setCustomerCode(object[18] != null ? (String) object[18] : null);
+            cashAccountSettlmentView.setInvoiceNumber(object[19] != null ? (Integer) object[19] : null);
+            list.add(cashAccountSettlmentView);
+        }
+        return list;
+    }
+
+    @Override
+    public List<CashAccountSettlmentView> findAllCashAccountSettlmentNew1(SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
+        List<CashAccountSettlmentView> list = new ArrayList<>();
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", cashAccountSettlementSearchBean.getBranchId());
+        String sql = createSQL(cashAccountSettlementSearchBean, false);
+        List<Object[]> res = dao.executeNativeQuery(sql.toString());
+        for (Object[] object : res) {
+            CashAccountSettlmentView cashAccountSettlmentView = new CashAccountSettlmentView();
+            cashAccountSettlmentView.setCreatedBy(object[0] != null ? (String) object[0] : null);
+            cashAccountSettlmentView.setBankId(object[1] != null ? (Integer) object[1] : null);
+//            cashAccountSettlmentView.setPaymentType(object[2] != null ? (Integer) object[2] : null);
+            cashAccountSettlmentView.setDate(object[3] != null ? (Date) object[3] : null);
+            cashAccountSettlmentView.setSerial(object[4] != null ? Integer.parseInt(object[4].toString()) : null);
+            cashAccountSettlmentView.setValue(object[5] != null ? (BigDecimal) object[5] : null);
+            cashAccountSettlmentView.setValueLocal(object[6] != null ? (BigDecimal) object[6] : null);
+            cashAccountSettlmentView.setRemark(object[7] != null ? (String) object[7] : null);
+            cashAccountSettlmentView.setRemark2(object[8] != null ? (String) object[8] : null);
+            cashAccountSettlmentView.setName(object[9] != null ? (String) object[9] : null);
+//            cashAccountSettlmentView.setCode(object[10] != null ? object[10].toString() : null);
+            cashAccountSettlmentView.setCurrencyName(object[11] != null ? (String) object[11] : null);
+            cashAccountSettlmentView.setCurrencyCode(object[12] != null ? (String) object[12] : null);
+            cashAccountSettlmentView.setStatus(object[13] != null ? Integer.valueOf(object[13].toString()) : null);
+            cashAccountSettlmentView.setTypeName(object[15] != null ? (String) object[15] : null);
+//            cashAccountSettlmentView.setDocumentSerial(object[16] != null ? (Integer) object[16] : null);
             cashAccountSettlmentView.setCustomerName(object[17] != null ? (String) object[17] : null);
             cashAccountSettlmentView.setCustomerCode(object[18] != null ? (String) object[18] : null);
             cashAccountSettlmentView.setInvoiceNumber(object[19] != null ? (Integer) object[19] : null);
@@ -2059,5 +2119,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
             }
         }
     }
+
+
 
 }

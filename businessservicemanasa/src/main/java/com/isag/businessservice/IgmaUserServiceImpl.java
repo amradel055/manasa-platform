@@ -243,4 +243,17 @@ public class IgmaUserServiceImpl implements IgmaUserService {
         params.put("userId", userId);
         return dao.findListByQuery("SELECT e.employeeId FROM IgmaUser e WHERE e.branchId.id = :branchId  AND e.id = :userId", params);
     }
+    
+    @Override
+    public String updateUserPassword(Integer userId , String oldPassword , String newPassword) {
+        IgmaUser eUser = dao.findEntityById(IgmaUser.class, userId);
+        if(eUser.getPassword().equals(oldPassword)){
+        eUser.setPassword(newPassword);
+         dao.updateEntity(eUser);
+         return "تم تغير كلمة السر" ;
+        }else {
+         return "كلمة السر خاطئه" ;
+        }
+      
+    }
 }

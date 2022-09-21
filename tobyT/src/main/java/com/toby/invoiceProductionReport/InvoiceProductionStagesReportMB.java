@@ -1,6 +1,5 @@
 package com.toby.invoiceProductionReport;
 
-import com.toby.businessservice.InvPurchaseInvoiceService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.InvoiceMovementReportService;
 import com.toby.businessservice.InvoiceProductionStagesReportService;
@@ -11,14 +10,12 @@ import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvPurchaseInvoiceDTO;
 import com.toby.dto.PrintProductionDTO;
 import com.toby.dto.ProProductionStagesDTO;
-import com.toby.toby.AutoComplete;
 import com.toby.toby.BaseListBean;
 import com.toby.toby.UserData;
 import com.toby.views.InvoiceMovementReport;
 import com.toby.views.InvoiceProductionStagesReport;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

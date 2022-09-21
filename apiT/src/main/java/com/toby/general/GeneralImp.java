@@ -6,9 +6,11 @@
 package com.toby.general;
 
 import com.toby.businessservice.OrganizationSiteService;
+import com.toby.businessservice.TobyUserInventoryService;
 import com.toby.businessservice.TobyUserService;
 import com.toby.dto.APIDataDTO;
 import com.toby.dto.ApiLoginDTO;
+import com.toby.dto.InvInventoryDTO;
 import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.TobyUser;
 import com.toby.root.LoginRoot;
@@ -20,6 +22,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -36,9 +39,12 @@ public class GeneralImp implements GeneralService {
 
     @EJB
     TobyUserService tobyUserService;
-    
-    @EJB 
-    OrganizationSiteService organizationSiteService ;
+    @EJB
+    TobyUserInventoryService tobyUserInventoryService;
+
+    @EJB
+    OrganizationSiteService organizationSiteService;
+
     @Override
     public ApiLoginDTO authAdmin(LoginRoot loginRoot) {
         String userName = loginRoot.userName;
@@ -53,14 +59,14 @@ public class GeneralImp implements GeneralService {
 
         }
     }
-    
-      @Override
+
+    @Override
     public ApiLoginDTO authCustomer(LoginRoot loginRoot) {
-         
-          InvOrganizationSite invOrganizationSite= new InvOrganizationSite();
-          invOrganizationSite.setMobile(loginRoot.mobile);
-          
-        invOrganizationSite   = organizationSiteService.findOrganizationSiteByMobile(invOrganizationSite);
+
+        InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
+        invOrganizationSite.setMobile(loginRoot.mobile);
+
+        invOrganizationSite = organizationSiteService.findOrganizationSiteByMobile(invOrganizationSite);
 
         if (invOrganizationSite != null) {
             return getUserDataForCustomer(Boolean.TRUE, null, invOrganizationSite);
@@ -69,8 +75,8 @@ public class GeneralImp implements GeneralService {
 
         }
     }
-    
-     private ApiLoginDTO getUserDataForCustomer(Boolean success, String msg, InvOrganizationSite invOrganizationSite) {
+
+    private ApiLoginDTO getUserDataForCustomer(Boolean success, String msg, InvOrganizationSite invOrganizationSite) {
         ApiLoginDTO apiLoginDTO = new ApiLoginDTO();
         apiLoginDTO.setSuccess(success);
         apiLoginDTO.setMsg(msg);
@@ -97,8 +103,17 @@ public class GeneralImp implements GeneralService {
             if (tobyUser.getCompanyId() != null) {
                 aPIDataDTO.setCompanySelected(tobyUser.getCompanyId().getId());
             }
+
+            List<InvInventoryDTO> gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(tobyUser);
+
+            if (gallaryList != null && !gallaryList.isEmpty()) {
+                aPIDataDTO.setGalleryId(gallaryList.get(0).getId());
+                aPIDataDTO.setAccountIdAPI(gallaryList.get(0).getCustomerAccount().getId());
+                aPIDataDTO.setGalleryName(gallaryList.get(0).getName());
+            }
             aPIDataDTO.setName(tobyUser.getName());
             aPIDataDTO.setId(tobyUser.getId());
+//            aPIDataDTO.setGalleryId(65);
             apiLoginDTO.setData(aPIDataDTO);
         }
 

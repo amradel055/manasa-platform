@@ -6,6 +6,7 @@
 package com.toby.bean;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 /**
  *
@@ -17,9 +18,9 @@ public class BankBalanceReportBean {
     private Integer bankId;
     private Integer accountIdTo;
     private Integer accountIdFrom;
-    private BigDecimal credit =BigDecimal.ZERO;
+    private BigDecimal credit = BigDecimal.ZERO;
     private BigDecimal debit = BigDecimal.ZERO;
-    private BigDecimal balance = BigDecimal.ZERO ;
+    private BigDecimal balance = BigDecimal.ZERO;
     private BigDecimal previousBalance = BigDecimal.ZERO;
     private BigDecimal localValue = BigDecimal.ZERO;
     private BigDecimal bankFromBalance = BigDecimal.ZERO;
@@ -28,6 +29,9 @@ public class BankBalanceReportBean {
     private String itemName;
     private Integer itemSerial;
     private String customerName;
+    private Integer cashType;
+
+
     /**
      * @return the bankName
      */
@@ -42,10 +46,13 @@ public class BankBalanceReportBean {
         this.bankName = bankName;
     }
 
-    /** 
+    /**
      * @return the credit
      */
     public BigDecimal getCredit() {
+        if(credit == null){
+            credit = BigDecimal.ZERO;
+        }
         return credit;
     }
 
@@ -60,6 +67,9 @@ public class BankBalanceReportBean {
      * @return the debit
      */
     public BigDecimal getDebit() {
+        if(debit == null){
+            debit = BigDecimal.ZERO;
+        }
         return debit;
     }
 
@@ -236,5 +246,19 @@ public class BankBalanceReportBean {
      */
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
+    }
+
+    /**
+     * @return the cashType
+     */
+    public Integer getCashType() {
+        return cashType;
+    }
+
+    /**
+     * @param cashType the cashType to set
+     */
+    public void setCashType(Integer cashType) {
+        this.cashType = cashType;
     }
 }

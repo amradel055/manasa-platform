@@ -5,10 +5,13 @@
  */
 package com.toby.invPurchaseInvoiceDTO;
 
+import com.toby.businessservice.GlBankTransactionDetailsService;
 import com.toby.businessservice.InvGlobalService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
+import com.toby.businessservice.ProFactoryDeliveryDetailService;
 import com.toby.businessservice.ProFactoryDeliveryService;
 import com.toby.define.ScreenNameClassEnum;
+import com.toby.dto.GlPayDTO;
 import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.toby.InventoryBasicDataForm;
@@ -31,12 +34,15 @@ import javax.inject.Named;
 public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
 
     private Boolean checkFactory;
+    private Boolean checkSendSms;
 
     private Boolean checkDiscountValue = false;
     private Boolean checkDiscountRate = false;
 
     private InvInvoiceDTO invInvoiceDTOSelected;
 
+//    private List<GlAccountDTO> glAccountList;
+//    private GlAccountDTOConverter glAccountConverter;
 // EJBs
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
@@ -46,6 +52,10 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
     @EJB
     ProFactoryDeliveryService proFactoryDeliveryService;
+    @EJB
+    ProFactoryDeliveryDetailService proFactoryDeliveryDetailService;
+    @EJB
+    private GlBankTransactionDetailsService glBankTransactionDetailsService;
 
     @Override
     @PostConstruct
@@ -53,7 +63,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
         try {
 
             load();
-
+            fillGlPay();
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "init");
         }
@@ -110,27 +120,44 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
             } else {
                 exit("../base/error.xhtml");
             }
+            completeDelegatorSales(null);
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "load");
         }
     }
 
+    public void close() {
+        CloseDlg("dlgpay");
+    }
+
+    public void saveAndClose() {
+        save();
+        CloseDlg("dlgpay");
+    }
+
     @Override
     public String save() {
         if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvPurchaseInvoiceDetailList() != null && !getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().isEmpty()) {
+            calcPayed();
             Integer id = getInvInvoiceDTO().getId();
             getInvInvoiceDTO().setMsg(null);
             checkDetailData();
             if (validateInvoiceType()) {
                 try {
                     setInvInvoiceDTO(invPurchaseInvoiceService.save(getInvInvoiceDTO(), getUserData().getUser()));
-                    setInvInvoiceDTO(invPurchaseInvoiceService.completeTarhilInvoiceAfterSave(getInvInvoiceDTO(), getUserData().getUser()));
                     invPurchaseInvoiceService.updateDetailInvoiceValues(getInvInvoiceDTO().getId());
+                    setInvInvoiceDTO(invPurchaseInvoiceService.completeTarhilInvoiceAfterSave(getInvInvoiceDTO(), getUserData().getUser()));
+                    for (GlPayDTO pay : getInvInvoiceDTO().getGlPayDTOList()) {
+                        if (pay.getTransactionId() != null) {
+                            glBankTransactionDetailsService.tarhilAfterSave(pay.getTransactionId(), getUserData().getUser());
+                        }
+                    }
                     checkDetailData();
                     setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
                     msgSave(getInvInvoiceDTO().getMsg());
                     findAccountStatement();
-                    if (id == null && getUri().contains("proworkorderform") && getInvInvoiceDTO().getInvoiceType() == null) {
+
+                    if (id == null && getUri().contains("proworkorderform") && getInvInvoiceDTO().getInvoiceType() == null && getCheckSendSms() && checkDetailDataSMS()) {
                         StringBuilder message = new StringBuilder();
                         message.append("عميلنا العزيز ، شكراً لتسوقك تمت عملية شراء رقم ");
                         message.append(getInvInvoiceDTO().getSerial());
@@ -160,10 +187,34 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
         return "";
     }
 
+    public Boolean checkDetailDataSMS() {
+
+        for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
+
+            if (detailDTO.getItemsBarcodesDetail() != null && detailDTO.getItemsBarcodesDetail().getBarcode() != null
+                    && (detailDTO.getItemsBarcodesDetail().getBarcode().equals("000012")
+                    || detailDTO.getItemsBarcodesDetail().getBarcode().equals("000013")
+                    || detailDTO.getItemsBarcodesDetail().getBarcode().equals("60004"))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private Boolean validateInvoiceType() {
 
+        for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
+            if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVRETURNSALESFORM)) {
+                if (detailDTO.getNumber().compareTo(detailDTO.getAvailableQuantityRow()) == 1) {
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "العدد أكبر من المسموح"));
+                    return false;
+                }
+            }
+        }
+
         if (ScreenNameClassEnum.PROWORKORDER.equals(getInvInvoiceDTO().getScreenName())) {
-            if ( getInvInvoiceDTO().getInvoiceType() != null && getInvInvoiceDTO().getInvoiceType() == 5) {
+            if (getInvInvoiceDTO().getInvoiceType() != null && getInvInvoiceDTO().getInvoiceType() == 5) {
                 for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
                     if (detailDTO.getItemsBarcodesDetail() == null || detailDTO.getItemsBarcodesDetail().getBarcode() == null
                             || !detailDTO.getItemsBarcodesDetail().getBarcode().equals("000012")) {
@@ -299,8 +350,8 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
             if (getInvInvoiceDTOSelected() != null && getInvInvoiceDTO().getSearchBySerial() == null) {
                 getInvInvoiceDTO().setSearchBySerial(getInvInvoiceDTOSelected().getSerial());
             }
-            if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getSearchBySerial() > 0) {
-                Integer invoiceId = invPurchaseInvoiceService_1.getInvoiceBySerial(getInvInvoiceDTO().getSearchBySerial());
+            if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getSearchBySerial() != null && getInvInvoiceDTO().getSearchBySerial() > 0) {
+                Integer invoiceId = invPurchaseInvoiceService_1.getInvoiceBySerial(getInvInvoiceDTO().getSearchBySerial(),getInvInvoiceDTO().getGallaryId().getId());
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
                 context.getSessionMap().put("invPurchaseInvoiceIdSeclected", invoiceId);
                 context.getSessionMap().put("ScreenMode", "editInvoice");
@@ -314,16 +365,26 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
 
     public void searchReturnInvoiceBySerial() {
         try {
-            if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getSearchBySerial() > 0) {
-                Integer invoiceId = invPurchaseInvoiceService_1.getInvoiceBySerial(getInvInvoiceDTO().getSearchBySerial());
+            if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getSearchBySerial() != null && getInvInvoiceDTO().getSearchBySerial() > 0) {
+                Integer invoiceId = invPurchaseInvoiceService_1.getInvoiceBySerial(getInvInvoiceDTO().getSearchBySerial(),getInvInvoiceDTO().getGallaryId().getId());
                 if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
                     findinvoice(invoiceId);
-                } else if (!proFactoryDeliveryService.chechIfSalesInFactory(invoiceId)) {
+                } else if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVRETURNSALESFORM)) {
                     findinvoice(invoiceId);
-                } else {
-                    FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "تم استلامها بالمشغل"));
+                    for (InvDetailDTO invDetailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
+                        invDetailDTO.setNumber(proFactoryDeliveryDetailService.findquantityAllow(invoiceId, invDetailDTO.getItemsBarcodesDetailTrans().getBarcode()));
+                        invDetailDTO.setAvailableQuantityRow(invDetailDTO.getNumber());
+                        afterValidation(invDetailDTO, true);
+                    }
                 }
+
+//                else if (!proFactoryDeliveryService.chechIfSalesInFactory(invoiceId)) {
+//                    findinvoice(invoiceId);
+//                } 
+//                else {
+//                    FacesContext.getCurrentInstance().addMessage(null,
+//                            new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "تم استلامها بالمشغل"));
+//                }
             }
         } catch (Exception e) {
             saveError(e, "invPurchaseInvoiceFormDTOMB", "searchInvoiceBySerial");
@@ -400,4 +461,49 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
         this.invInvoiceDTOSelected = invInvoiceDTOSelected;
     }
 
+    /**
+     * @return the checkSendSms
+     */
+    public Boolean getCheckSendSms() {
+        if (checkSendSms == null) {
+            checkSendSms = Boolean.TRUE;
+        }
+        return checkSendSms;
+    }
+
+    /**
+     * @param checkSendSms the checkSendSms to set
+     */
+    public void setCheckSendSms(Boolean checkSendSms) {
+        this.checkSendSms = checkSendSms;
+    }
+
+    /**
+     * @return the glAccountList
+     */
+//    public List<GlAccountDTO> getGlAccountList() {
+//        if (glAccountList == null || glAccountList.isEmpty()) {
+//            glAccountList = glAccountService.getBranchGLAccountsActiveDTO(getUserData().getUserBranch().getId());
+//            setGlAccountConverter(new GlAccountDTOConverter(glAccountList));
+//        }
+//        return glAccountList;
+//    }
+//
+//    public void setGlAccountList(List<GlAccountDTO> glAccountList) {
+//        this.glAccountList = glAccountList;
+////    }
+//
+//    /**
+//     * @return the glAccountConverter
+//     */
+//    public GlAccountDTOConverter getGlAccountConverter() {
+//        return glAccountConverter;
+//    }
+//
+//    /**
+//     * @param glAccountConverter the glAccountConverter to set
+//     */
+//    public void setGlAccountConverter(GlAccountDTOConverter glAccountConverter) {
+//        this.glAccountConverter = glAccountConverter;
+//    }
 }

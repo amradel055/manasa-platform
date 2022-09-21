@@ -5,10 +5,12 @@
  */
 package com.toby.businessservice.report;
 
+import com.toby.API.SummitionItemAPI;
 import com.toby.businessservice.InvoiceMovementReportService;
 import com.toby.businessservice.reports.searchBean.PurchaseOfItemsBySuppliersSearchBean;
 import com.toby.core.GenericDAO;
 import com.toby.dto.InvInventoryDTO;
+import com.toby.dto.ProGroupDTO;
 import com.toby.entity.InvPurchaseInvoiceDetail;
 import com.toby.views.ItemSalesView;
 import com.toby.views.ItemSalesViewGroup;
@@ -62,6 +64,7 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
             params.put("type", purchaseOfItemsBySuppliersSearchBean.getType());
             params.put("branchId", purchaseOfItemsBySuppliersSearchBean.getBranchId());
             StringBuilder stringBuilder = new StringBuilder();
+//            stringBuilder.append(" SELECT ipid FROM InvPurchaseInvoiceDetail ipid WHERE ipid.invPurchaseInvoiceId.branchId.id = :branchId AND ipid.invPurchaseInvoiceId.type = :type ");
             stringBuilder.append(" SELECT ipid FROM InvPurchaseInvoiceDetail ipid WHERE ipid.invPurchaseInvoiceId.branchId.id = :branchId AND ipid.invPurchaseInvoiceId.type = :type ");
 
             if (invoiceType != null) {
@@ -77,12 +80,107 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
             appendPaymentType(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
             stringBuilder.append(" order by ipid.invPurchaseInvoiceId.date ASC,ipid.itemId ASC");
             List<InvPurchaseInvoiceDetail> details = dao.findListByQuery(stringBuilder.toString(), params);
-            return prepareItemSalesViewList(details);
+            return prepareItemSalesViewList(details, purchaseOfItemsBySuppliersSearchBean.getOrganizationType());
         }
         return null;
     }
 
-    private List<ItemSalesView> prepareItemSalesViewList(List<InvPurchaseInvoiceDetail> entityList) {
+    @Override    //مبيعات الاصناف حسب العملاء  
+    public List<ItemSalesView> getAllPurchaseOfItemsBySuppliersSearchBeanNewNew(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean, Integer invoiceType) {
+        if (purchaseOfItemsBySuppliersSearchBean.getGalleryFrom() != null) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("type", purchaseOfItemsBySuppliersSearchBean.getType());
+            params.put("branchId", purchaseOfItemsBySuppliersSearchBean.getBranchId());
+            StringBuilder stringBuilder = new StringBuilder();
+//            stringBuilder.append(" SELECT ipid FROM InvPurchaseInvoiceDetail ipid WHERE ipid.invPurchaseInvoiceId.branchId.id = :branchId AND ipid.invPurchaseInvoiceId.type = :type ");
+            stringBuilder.append(" SELECT ipid,(select sum(iaod.quantity) from InvAddingorderDetail iaod where iaod.addingorderId.invPurchaseInvoice.id = ipid.invPurchaseInvoiceId.id ) FROM InvPurchaseInvoiceDetail ipid WHERE ipid.invPurchaseInvoiceId.branchId.id = :branchId AND ipid.invPurchaseInvoiceId.type = :type ");
+
+            if (invoiceType == null) {
+                params.put("invoiceType", invoiceType);
+                stringBuilder.append(" AND ipid.invPurchaseInvoiceId.invoiceType IS NULL ");
+            }
+
+            if (invoiceType != null && invoiceType != -1) {
+                params.put("invoiceType", invoiceType);
+                stringBuilder.append(" AND ipid.invPurchaseInvoiceId.invoiceType = :invoiceType ");
+            }
+
+            if (purchaseOfItemsBySuppliersSearchBean.getGroupDTOSelected() != null && !purchaseOfItemsBySuppliersSearchBean.getGroupDTOSelected().isEmpty()) {
+                StringBuilder builder = new StringBuilder();
+                builder.append("0");
+                for (ProGroupDTO proGroupDTO : purchaseOfItemsBySuppliersSearchBean.getGroupDTOSelected()) {
+                    builder.append(",").append(proGroupDTO.getId());
+                }
+                stringBuilder.append(" AND ipid.itemId.proGroupId.id in ( ").append(builder).append(") ");
+            }
+
+            appendDateNew(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
+            appendSupplierNew(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
+            appendSerial(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
+//        appendInventory(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
+            appendGallary(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
+            appendItem(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
+            appendPaymentType(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
+            stringBuilder.append(" order by ipid.invPurchaseInvoiceId.date ASC,ipid.itemId ASC");
+            List<Object[]> res = dao.findListByQuery(stringBuilder.toString(), params);
+            return prepareItemSalesViewListNewNew(res, purchaseOfItemsBySuppliersSearchBean.getOrganizationType());
+        }
+        return null;
+    }
+
+    private List<ItemSalesView> prepareItemSalesViewListNewNew(List<Object[]> res, Integer organizationType) {
+
+        List<ItemSalesView> list = new ArrayList<>();
+        ItemSalesView itemsDataView;
+        for (Object[] object : res) {
+            itemsDataView = new ItemSalesView();
+            InvPurchaseInvoiceDetail entity = (InvPurchaseInvoiceDetail) object[0];
+            itemsDataView.setItemQuantity(entity.getQuantity());
+            itemsDataView.setNet(entity.getNetAfterDiscountHead());
+            itemsDataView.setItemId(entity.getItemId().getId());
+            itemsDataView.setItemName(entity.getItemId().getName());
+            itemsDataView.setItemCode(entity.getItemId().getCode());
+            itemsDataView.setItemUnitName(entity.getUnitId().getName());
+            if (organizationType != null && organizationType == 1) {
+                itemsDataView.setOrganizationSiteId(entity.getItemId().getSiteId().getId());
+                itemsDataView.setOrganizationSiteCode(entity.getItemId().getSiteId().getCode());
+                itemsDataView.setOrganizationSiteName(entity.getItemId().getSiteId().getName());
+            } else {
+                itemsDataView.setOrganizationSiteId(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getId());
+                itemsDataView.setOrganizationSiteCode(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getCode());
+                itemsDataView.setOrganizationSiteName(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getName());
+            }
+            itemsDataView.setCost(entity.getCost());
+            itemsDataView.setSerial(entity.getInvPurchaseInvoiceId().getSerial());
+
+            if (entity.getItemId() != null && entity.getItemId().getUnitId() != null) {
+                itemsDataView.setItemUnitName(entity.getItemId().getUnitId().getName());
+            }
+            itemsDataView.setDate(entity.getInvPurchaseInvoiceId().getDate());
+            itemsDataView.setItemBarcode(entity.getItemId().getCode());
+            itemsDataView.setDetailItemQuantity(entity.getQuantity());
+            itemsDataView.setDiscount(entity.getDiscount());
+            itemsDataView.setSerialTax(entity.getInvPurchaseInvoiceId().getSerialTax());
+
+            itemsDataView.setCostAvarage(entity.getCostAvarage());
+            itemsDataView.setCostAvarageTotal(entity.getCostAvarage().multiply(itemsDataView.getDetailItemQuantity()));
+
+            itemsDataView.setFash((BigDecimal) object[1]);
+            itemsDataView.setCostAvarageFashTotal(itemsDataView.getFash().multiply(entity.getCostAvarage()));
+
+            itemsDataView.setNumber(entity.getNumber());
+            itemsDataView.setQuantityOfOne(entity.getQuantityOfOneUnit());
+
+            itemsDataView.setSupplierId(itemsDataView.getOrganizationSiteId());
+            itemsDataView.setSupplierCode(itemsDataView.getOrganizationSiteCode());
+            itemsDataView.setSupplierName(itemsDataView.getOrganizationSiteName());
+
+            list.add(itemsDataView);
+        }
+        return list;
+    }
+
+    private List<ItemSalesView> prepareItemSalesViewList(List<InvPurchaseInvoiceDetail> entityList, Integer organizationType) {
         List<ItemSalesView> list = new ArrayList<>();
         ItemSalesView itemsDataView;
         for (InvPurchaseInvoiceDetail entity : entityList) {
@@ -93,7 +191,15 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
             itemsDataView.setItemName(entity.getItemId().getName());
             itemsDataView.setItemCode(entity.getItemId().getCode());
             itemsDataView.setItemUnitName(entity.getUnitId().getName());
-            itemsDataView.setOrganizationSiteId(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getId());
+            if (organizationType != null && organizationType == 1) {
+                itemsDataView.setOrganizationSiteId(entity.getItemId().getSiteId().getId());
+                itemsDataView.setOrganizationSiteCode(entity.getItemId().getSiteId().getCode());
+                itemsDataView.setOrganizationSiteName(entity.getItemId().getSiteId().getName());
+            } else {
+                itemsDataView.setOrganizationSiteId(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getId());
+                itemsDataView.setOrganizationSiteCode(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getCode());
+                itemsDataView.setOrganizationSiteName(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getName());
+            }
             itemsDataView.setCost(entity.getCost());
             itemsDataView.setSerial(entity.getInvPurchaseInvoiceId().getSerial());
 
@@ -101,12 +207,12 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
                 itemsDataView.setItemUnitName(entity.getItemId().getUnitId().getName());
             }
             itemsDataView.setDate(entity.getInvPurchaseInvoiceId().getDate());
-            itemsDataView.setItemBarcode(entity.getItemId().getName());
+            itemsDataView.setItemBarcode(entity.getItemId().getCode());
             itemsDataView.setDetailItemQuantity(entity.getQuantity());
             itemsDataView.setDiscount(entity.getDiscount());
             itemsDataView.setSerialTax(entity.getInvPurchaseInvoiceId().getSerialTax());
-            itemsDataView.setOrganizationSiteCode(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getCode());
-            itemsDataView.setOrganizationSiteName(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getName());
+
+            itemsDataView.setCostAvarageTotal(entity.getCostAvarage());
 
             list.add(itemsDataView);
         }
@@ -152,7 +258,7 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
         if (purchaseOfItemsBySuppliersSearchBean.getDateFrom() != null) {
 //            params.put("dateFrom", purchaseOfItemsBySuppliersSearchBean.getDateFrom());
 //            stringBuilder.append(" AND ipid.invPurchaseInvoiceId.date >= :dateFrom");
-            
+
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
             stringBuilder.append(" AND ipid.invPurchaseInvoiceId.date >= '").append(dateFormat.format(purchaseOfItemsBySuppliersSearchBean.getDateFrom())).append("'");
         }
@@ -160,15 +266,16 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
         if (purchaseOfItemsBySuppliersSearchBean.getDateTo() != null) {
 //            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
 //            params.put("dateTo", purchaseOfItemsBySuppliersSearchBean.getDateTo());
-            
+
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
             stringBuilder.append(" AND ipid.invPurchaseInvoiceId.date <= '").append(dateFormat.format(purchaseOfItemsBySuppliersSearchBean.getDateTo())).append("'");
-            
+
 //            stringBuilder.append(" AND ipid.invPurchaseInvoiceId.date <= :dateTo");
         }
 
     }
 
+   
     private void appendSupplier(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean, StringBuilder stringBuilder, Map<String, Object> params) {
 
         if (purchaseOfItemsBySuppliersSearchBean.getFromorganizationName() != null) {
@@ -184,15 +291,26 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
     }
 
     private void appendSupplierNew(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean, StringBuilder stringBuilder, Map<String, Object> params) {
+        if (purchaseOfItemsBySuppliersSearchBean.getOrganizationType() != null && purchaseOfItemsBySuppliersSearchBean.getOrganizationType() == 1) {
+            if (purchaseOfItemsBySuppliersSearchBean.getSupplierIdList() != null) {
+//                params.put("string", purchaseOfItemsBySuppliersSearchBean.getSupplierIdList());
+                stringBuilder.append(" AND ipid.itemId.siteId.id in (").append(purchaseOfItemsBySuppliersSearchBean.getSupplierIdList()).append(") ");
+            }
 
-        if (purchaseOfItemsBySuppliersSearchBean.getFromorganizationName() != null) {
-            params.put("fromorganization", purchaseOfItemsBySuppliersSearchBean.getFromorganizationName().getCode());
-            stringBuilder.append(" AND ipid.invPurchaseInvoiceId.organizationSiteId.code >= :fromorganization");
-        }
-
-        if (purchaseOfItemsBySuppliersSearchBean.getToorganizationName() != null) {
-            params.put("toorganization", purchaseOfItemsBySuppliersSearchBean.getToorganizationName().getCode());
-            stringBuilder.append(" AND ipid.invPurchaseInvoiceId.organizationSiteId.code <= :toorganization");
+//            if (purchaseOfItemsBySuppliersSearchBean.getToorganizationName() != null) {
+//                params.put("toorganization", purchaseOfItemsBySuppliersSearchBean.getToorganizationName().getCode());
+//                stringBuilder.append(" AND ipid.itemId.siteId.code <= :toorganization");
+//            }
+//        } else {
+//            if (purchaseOfItemsBySuppliersSearchBean.getFromorganizationName() != null) {
+//                params.put("fromorganization", purchaseOfItemsBySuppliersSearchBean.getFromorganizationName().getCode());
+//                stringBuilder.append(" AND ipid.invPurchaseInvoiceId.organizationSiteId.code >= :fromorganization");
+//            }
+//
+//            if (purchaseOfItemsBySuppliersSearchBean.getToorganizationName() != null) {
+//                params.put("toorganization", purchaseOfItemsBySuppliersSearchBean.getToorganizationName().getCode());
+//                stringBuilder.append(" AND ipid.invPurchaseInvoiceId.organizationSiteId.code <= :toorganization");
+//            }
         }
 
     }
@@ -243,6 +361,7 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
 
     }
 
+   
     private void appendInventoryNew(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean, StringBuilder stringBuilder, Map<String, Object> params) {
 
         if (purchaseOfItemsBySuppliersSearchBean.getFromInventoryName() != null) {
@@ -390,7 +509,7 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
     //-------------------------------------------
     @Override
     public List<ItemSalesView> getAllInvoiceDetailBySuppliersSearchBean(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean) {
-       dao.executeNativeQuery("select toby.sql_mode_function()");
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         StringBuilder stringBuilder = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", purchaseOfItemsBySuppliersSearchBean.getBranchId());
@@ -633,7 +752,7 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
     @Override
     public List<SalesOfItemsByCompany> getAllSalesOfItemsByCompany(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("SELECT inv.id , inv.name , oc.name as name , oc.code code , sum(ipid.net) as sum \n"
+        stringBuilder.append("SELECT inv.id , inv.name , oc.name as name , oc.code code , sum(ipid.net_after_discount_head) as sum \n"
                 + "        FROM `inv_purchase_invoice` `ipi`\n"
                 + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                 + "        LEFT JOIN inv_organization_site ios on ios.id = ipi.organization_site_id\n"
@@ -681,6 +800,24 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
             list.add(0, salesOfItemsByCompanyMain);;
         }
         return list;
+    }
+
+    @Override    //مبيعات الاصناف حسب العملاء  
+    public List<ItemSalesView> getAllPurchaseOfItemsBySuppliersSearchBeanNewAPI(SummitionItemAPI summitionItemAPI, Integer invoiceType) {
+        PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean = new PurchaseOfItemsBySuppliersSearchBean();
+        if (summitionItemAPI != null) {
+            purchaseOfItemsBySuppliersSearchBean.setDateFrom(summitionItemAPI.getDateFrom());
+            purchaseOfItemsBySuppliersSearchBean.setDateTo(summitionItemAPI.getDateTo());
+            purchaseOfItemsBySuppliersSearchBean.setBranchId(summitionItemAPI.getBranchId());
+            purchaseOfItemsBySuppliersSearchBean.setGalleryFrom(summitionItemAPI.getGallaryList());
+            purchaseOfItemsBySuppliersSearchBean.setType(summitionItemAPI.getInvoiceType());
+            purchaseOfItemsBySuppliersSearchBean.setFrompaymentType(summitionItemAPI.getFrompaymentType());
+            purchaseOfItemsBySuppliersSearchBean.setTopaymentType(summitionItemAPI.getTopaymentType());
+            purchaseOfItemsBySuppliersSearchBean.setShowReport(Boolean.FALSE);
+            purchaseOfItemsBySuppliersSearchBean.setShortReport(Boolean.FALSE);
+
+        }
+        return getAllPurchaseOfItemsBySuppliersSearchBeanNew(purchaseOfItemsBySuppliersSearchBean, invoiceType);
     }
 
 }

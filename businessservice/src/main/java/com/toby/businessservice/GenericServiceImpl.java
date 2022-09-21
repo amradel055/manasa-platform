@@ -47,7 +47,7 @@ public class GenericServiceImpl implements GenericService {
             return serial + 1;
         }
     }
-   
+
     @Override
     public synchronized <T> Integer getMaxSerialForOpenningBalance(Class<T> entityClass, Integer branchId, Integer invInventoryId, Integer type) {
         Map<String, Object> params = new HashMap<>();
@@ -95,8 +95,8 @@ public class GenericServiceImpl implements GenericService {
         } else {
             return serial + 1;
         }
-    }    
-    
+    }
+
     @Override
     public synchronized <T> Integer getMaxGenericSerialByInvTransferType(Class<T> entityClass, Integer branchId, Integer type) {
         Map<String, Object> params = new HashMap<>();
@@ -135,4 +135,7 @@ public class GenericServiceImpl implements GenericService {
             return serial + 1;
         }
     }
+
+   
+
 }

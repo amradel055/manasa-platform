@@ -8,14 +8,17 @@ package com.toby.businessservice;
 import com.toby.core.GenericDAO;
 import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.InvDailogueData;
+import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InventorySetupDTO;
 import com.toby.entity.InvAddingorder;
 import com.toby.entity.InvPurchaseInvoice;
 import com.toby.entity.InvPurchaseOrder;
 import com.toby.entity.InvQotation;
+import com.toby.entity.InvStrip;
 import com.toby.entity.ProFactoryDelivery;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
@@ -38,9 +41,12 @@ public class InvDialogueServiceImpl implements InvDialogueService {
     private InvGlobalService invGlobalService;
     @EJB
     private ProFactoryDeliveryService proFactoryDeliveryService;
+    @EJB
+    private InvUpdateDetailService invUpdateDetailService;
 
     @Override
-    public List<InvDailogueData> loadInvDailogueData(int first, int pageSize, String sortField, Boolean asc, Map<String, Object> filters, InventorySetupDTO inventorySetupDTO, Integer branchId, ScreenNameClassEnum screenNameClassEnum) {
+    public List<InvDailogueData> loadInvDailogueData(int first, int pageSize, String sortField, Boolean asc, Map<String, Object> filters, InventorySetupDTO inventorySetupDTO,
+            Integer branchId, ScreenNameClassEnum screenNameClassEnum, Integer inventoryId) {
         List<InvDailogueData> dailogueDataList = new ArrayList<>();
         if (screenNameClassEnum.equals(ScreenNameClassEnum.INVPURCHASEINVOICEFORM)) {
             if (inventorySetupDTO.getSellBuy()) {
@@ -87,8 +93,18 @@ public class InvDialogueServiceImpl implements InvDialogueService {
         } else if (screenNameClassEnum.equals(ScreenNameClassEnum.PRORECIEVEGALLARY)) {
             dailogueDataList = getProFactoryDeliveryByBranchIdAndNotLoaded(first, pageSize, sortField, asc, branchId, filters, 2, screenNameClassEnum);
             return dailogueDataList;
+        } else if (screenNameClassEnum.equals(ScreenNameClassEnum.INVUPDATE)) {
+            dailogueDataList = getInvStripByBranchIdAndNotLoaded(branchId, inventoryId);
+            return dailogueDataList;
         }
 
+        return dailogueDataList;
+    }
+
+    @Override
+    public List<InvDailogueData> loadInvDailogueDataForInvStrip(Integer branchId, Integer inventoryId) {
+        List<InvDailogueData> dailogueDataList = new ArrayList<>();
+        dailogueDataList = getInvStripByBranchIdAndNotLoaded(branchId, inventoryId);
         return dailogueDataList;
     }
 
@@ -148,6 +164,20 @@ public class InvDialogueServiceImpl implements InvDialogueService {
         return null;
     }
 
+    private List<InvDailogueData> getInvStripByBranchIdAndNotLoaded(Integer branchId, Integer inventoryId) {
+        StringBuilder builder = new StringBuilder();
+        Map<String, Object> filters = new HashMap<>();
+        filters.put("branchId", branchId);
+        filters.put("inventoryId", inventoryId);
+        builder.append("SELECT e FROM InvStrip e WHERE e.branchId.id = :branchId AND e.inventoryId.id = :inventoryId  ");
+        appendFilterInvStrip(filters, builder);
+        builder.append(" order by e.serial DESC");
+        List<InvStrip> factoryDeliveryList = dao.findListByQuery(builder.toString(), filters);
+        List<InvDailogueData> InvDailogueDataList = mapInvStripToDTOList(factoryDeliveryList);
+        return InvDailogueDataList;
+
+    }
+
     private Long getTotalRegistorsInvProFactoryDelivery(Integer branchId, Integer type, Map<String, Object> filters, ScreenNameClassEnum screenNameClassEnum) {
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT count(e) FROM ProFactoryDelivery e WHERE e.branchId.id = :branchId and  e.type = :Invtype and e.id not in (select p.parent.id from ProFactoryDelivery p where p.branchId.id = :branchId AND p.type = :type and p.parent.id is not null) ");
@@ -168,6 +198,25 @@ public class InvDialogueServiceImpl implements InvDialogueService {
         appendFilterProFactoryDelivery(filters, builder);
         Long details = dao.findEntityByQuery(builder.toString(), filters);
         return details == null ? 0 : details;
+    }
+
+    private Long getTotalRegistorsInvStrip(Integer branchId, Map<String, Object> filters, Integer inventoryId) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT count(e) InvStrip e WHERE e.branchId.id = :branchId AND e.inventoryId.id = :inventoryId  ");
+        filters.put("branchId", branchId);
+        filters.put("inventoryId", inventoryId);
+        appendFilterInvStrip(filters, builder);
+        Long details = dao.findEntityByQuery(builder.toString(), filters);
+        return details == null ? 0 : details;
+    }
+
+    private void appendFilterInvStrip(Map<String, Object> filters, StringBuilder builder) {
+        if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
+            String filter = " and (e.serial like CONCAT('%',:globalFilter ,'%') ) ";
+            builder.append(filter);
+        } else {
+            filters.remove("globalFilter");
+        }
     }
 
     private void appendFilterProFactoryDelivery(Map<String, Object> filters, StringBuilder builder) {
@@ -234,7 +283,7 @@ public class InvDialogueServiceImpl implements InvDialogueService {
     }
 
     @Override
-    public Long getTotalRegistors(Integer branchId, Map<String, Object> filters, Boolean sellBuy, ScreenNameClassEnum screenNameClassEnum) {
+    public Long getTotalRegistors(Integer branchId, Map<String, Object> filters, Boolean sellBuy, ScreenNameClassEnum screenNameClassEnum, Integer inventoryId) {
         if (screenNameClassEnum.equals(ScreenNameClassEnum.INVPURCHASEINVOICEFORM)) {
             if (sellBuy) {
                 return getTotalRegistorsInvAddingOrder(branchId, filters);
@@ -258,8 +307,8 @@ public class InvDialogueServiceImpl implements InvDialogueService {
             return getTotalRegistorsInvPurchaseInvoice(branchId, 4, filters, screenNameClassEnum);
         } else if (screenNameClassEnum.equals(ScreenNameClassEnum.PROSENDTOGALLARY)) {
             return getTotalRegistorsInvProFactoryDelivery(branchId, 1, filters, screenNameClassEnum);
-        } else if (screenNameClassEnum.equals(ScreenNameClassEnum.PRORECIEVEGALLARY)) {
-            return getTotalRegistorsInvProFactoryDelivery(branchId, 2, filters, screenNameClassEnum);
+        } else if (screenNameClassEnum.equals(ScreenNameClassEnum.INVUPDATE)) {
+            return getTotalRegistorsInvStrip(branchId, filters, inventoryId);
         }
 
         return null;
@@ -425,6 +474,14 @@ public class InvDialogueServiceImpl implements InvDialogueService {
         return entityDTOList;
     }
 
+    private List<InvDailogueData> mapInvStripToDTOList(List<InvStrip> entityList) {
+        List<InvDailogueData> entityDTOList = new ArrayList<>();
+        for (InvStrip entity : entityList) {
+            entityDTOList.add(mapInvStripToDTO(entity));
+        }
+        return entityDTOList;
+    }
+
     private List<InvDailogueData> mapInvAddingOrderToDTOList(List<InvAddingorder> entityList) {
         List<InvDailogueData> entityDTOList = new ArrayList<>();
         for (InvAddingorder entity : entityList) {
@@ -551,6 +608,29 @@ public class InvDialogueServiceImpl implements InvDialogueService {
         return dto;
     }
 
+    private InvDailogueData mapInvStripToDTO(InvStrip entity) {
+
+        InvDailogueData dto = new InvDailogueData();
+
+        if (entity.getType() == 0) {
+            dto.setScreenName(ScreenNameClassEnum.INVADDINGORDERFORM);
+        } else if (entity.getType() == 1) {
+            dto.setScreenName(ScreenNameClassEnum.INVPERMISSIONORDERFORM);
+        }
+        dto.setDate(entity.getStripDate());
+        dto.setRemarks(entity.getRemarks());
+
+        dto.setId(entity.getId());
+        dto.setSerial(entity.getSerial());
+        dto.setBranchId(entity.getBranchId() != null ? entity.getBranchId().getId() : null);
+        dto.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
+        dto.setCreatedDate(entity.getCreationDate());
+        dto.setIndex(entity.getId());
+        dto.setCompanyId(entity.getCompanyId().getId() != null ? entity.getCompanyId().getId() : null);
+        dto.setCreatedByName(entity.getCreatedBy() != null ? entity.getCreatedBy().getName() : null);
+        return dto;
+    }
+
     @Override
     public InvInvoiceDTO loadDlg(InvInvoiceDTO dTO) {
         ScreenNameClassEnum screenNameClassEnum = dTO.getScreenName();
@@ -578,33 +658,35 @@ public class InvDialogueServiceImpl implements InvDialogueService {
             dTO = loadProSendToGallary(dTO, 0);
         } else if (screenNameClassEnum.equals(ScreenNameClassEnum.PRORECIEVEGALLARY)) {
             dTO = loadProSendToGallary(dTO, 1);
-        }else if (screenNameClassEnum.equals(ScreenNameClassEnum.PROSALES)) {
+        } else if (screenNameClassEnum.equals(ScreenNameClassEnum.PROSALES)) {
             dTO = loadProSendToGallary(dTO, 2);
+        } else if (screenNameClassEnum.equals(ScreenNameClassEnum.INVUPDATE)) {
+            dTO = loadInvStrip(dTO, 2);
         }
         return dTO;
     }
 
     public InvInvoiceDTO loadInvQotation(InvInvoiceDTO dTO, Integer type) {
         dTO = invQuotationService.convertQotationToPurchaseInvoice(dTO, type);
-        dTO = invGlobalService.updateSummition(dTO,false);
+        dTO = invGlobalService.updateSummition(dTO, false);
         return dTO;
     }
 
     public InvInvoiceDTO loadInvPurchaseOrder(InvInvoiceDTO dTO) {
         dTO = invPurchaseOrderService.convertPurchaseOrderToPurchaseInvoice(dTO);
-        dTO = invGlobalService.updateSummition(dTO,false);
+        dTO = invGlobalService.updateSummition(dTO, false);
         return dTO;
     }
 
     public InvInvoiceDTO loadInvAddingOrder(InvInvoiceDTO dTO) {
         dTO = invAddingOrderService.convertAddingOrderToPurchaseInvoice(dTO);
-        dTO = invGlobalService.updateSummition(dTO,false);
+        dTO = invGlobalService.updateSummition(dTO, false);
         return dTO;
     }
 
     public InvInvoiceDTO loadInvPurchaseInvoice(InvInvoiceDTO dTO, Integer type) {
         dTO = invPurchaseInvoiceService.convertInvPurchaseInvoiceToPurchaseInvoice(dTO, type);
-        dTO = invGlobalService.updateSummition(dTO,false);
+        dTO = invGlobalService.updateSummition(dTO, false);
         return dTO;
     }
 
@@ -615,6 +697,16 @@ public class InvDialogueServiceImpl implements InvDialogueService {
 
     public InvInvoiceDTO loadProSendToGallary(InvInvoiceDTO dTO, Integer type) {
         dTO = proFactoryDeliveryService.convertProFactoryDeliveryToInvInvoice(dTO, type);
+        if (dTO.getMsg() != null && !dTO.getMsg().isEmpty()) {
+            dTO.setMsg(null);
+            dTO = invPurchaseInvoiceService.convertInvPurchaseInvoiceToInvInvoice(dTO, 4);
+        }
+        return dTO;
+    }
+
+    public InvInvoiceDTO loadInvStrip(InvInvoiceDTO dTO, Integer type) {
+        List<InvDetailDTO> dTODetail = invUpdateDetailService.getAllInvUpdatesDetailFromInvTransferDetail(dTO.getSeialsInvoices(), dTO.getBranchId(), dTO.getInvInventoryId().getId(),dTO.getDate(),true);
+        dTO.setInvPurchaseInvoiceDetailList(dTODetail);
         return dTO;
     }
 

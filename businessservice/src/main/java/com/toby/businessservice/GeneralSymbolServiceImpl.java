@@ -76,7 +76,7 @@ public class GeneralSymbolServiceImpl implements GeneralSymbolService {
 
     @Override
     public List<GeneralSymbol> getAllGSymbolWithoutLanguage() {
-        return dao.findListByQuery("SELECT g FROM GeneralSymbol g WHERE g.serial <> 0 order by g.serial asc");
+        return dao.findListByQuery("SELECT g FROM GeneralSymbol g WHERE g.serial <> 0 AND g.active = 1 order by g.serial asc");
     }
 
     @Override

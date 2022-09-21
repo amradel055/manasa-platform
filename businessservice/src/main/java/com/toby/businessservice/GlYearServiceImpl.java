@@ -90,7 +90,7 @@ public class GlYearServiceImpl implements GlYearService {
     }
 
     @Override
-    public GlYear getDefaultYearsByBranchIdByUser(Integer userId,Integer branchId) {
+    public GlYear getDefaultYearsByBranchIdByUser(Integer userId, Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         List<GlYear> yearList;
         params.put("userId", userId);
@@ -114,6 +114,8 @@ public class GlYearServiceImpl implements GlYearService {
             return dao.findListByQuery("SELECT e FROM GlYear e WHERE e.branchId.id =:branchId AND e.year =:year", params);
         }
     }
+
+    
 
     @Override
     public List<GlYear> checkDateWithinDate(Integer branchId, GlYear newGLYear) {
@@ -166,7 +168,7 @@ public class GlYearServiceImpl implements GlYearService {
         List<GlYear> glYears = dao.findListByQuery(query, params);
         return glYears;
     }
-    
+
     @Override
     public List<GlYear> findGlYearWithCode(Integer branchId, Integer year) {
         Map<String, Object> params = new HashMap<>();
@@ -177,12 +179,12 @@ public class GlYearServiceImpl implements GlYearService {
         List<GlYear> glYears = dao.findListByQuery(query, params);
         return glYears;
     }
-    
+
     @Override
     public List<GlYear> findGlYearByDateBetween(Integer branchId, Date date) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
-        
+
         StringBuilder builder = new StringBuilder();
 
         String query = "SELECT e FROM GlYear e WHERE e.branchId.id =:branchId  ";
@@ -195,6 +197,23 @@ public class GlYearServiceImpl implements GlYearService {
 
         List<GlYear> glYears = dao.findListByQuery(builder.toString(), params);
         return glYears;
+    }
+    
+    @Override
+    public Boolean checkYearIsOpenning(Integer yearId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("yearId", yearId);
+        if (yearId != null) {
+            GlYear year = dao.findEntityById(GlYear.class, yearId);
+            if (year.getOpenning() != null && year.getOpenning() == 1) {
+                return Boolean.TRUE;
+            } else if (year.getOpenning() != null && year.getOpenning() == 0) {
+                return Boolean.FALSE;
+            } else {
+                return Boolean.TRUE;
+            }
+        }
+        return Boolean.FALSE;
     }
 
 }

@@ -7,17 +7,21 @@ package com.toby.businessservice;
 
 import com.toby.bussinessservice.global.InvPurchaseReturnSave;
 import com.toby.core.GenericDAO;
+import com.toby.dto.ClientReportDTO;
 import com.toby.dto.CostCenterDTO;
 import com.toby.dto.GlAdminUnitDTO;
 import com.toby.dto.GlBankDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInventoryTransactionDTO;
 import com.toby.dto.InvInventoryTransactionDetailDTO;
+import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
+import com.toby.dto.InvPurchaseInvoiceDTO;
 import com.toby.dto.InvPurchaseInvoiceDTO1;
 import com.toby.dto.InvPurchaseInvoiceDetailDTO;
 import com.toby.dto.InventoryDelegatorDTO;
 import com.toby.dto.SymbolDTO;
+import com.toby.dto.TobyUserDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.CostCenter;
 import com.toby.entity.Currency;
@@ -46,6 +50,7 @@ import com.toby.entity.TobyUser;
 import com.toby.views.QuantityItemsStore;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -105,7 +110,6 @@ public class InvPurchaseInvoiceImpl implements InvPurchaseInvoiceService {
 
     InvPurchaseReturnSave invPurchaseReturnSave;
 
-    @Override
     public List<InvPurchaseInvoice> findInvPurchaseInvoiceforCustomer(Integer customerId) {
         Map<String, Object> params = new HashMap<>();
 
@@ -382,7 +386,7 @@ public class InvPurchaseInvoiceImpl implements InvPurchaseInvoiceService {
         }
         return invPurchaseInvoiceDTO;
     }
-    
+
     public InvPurchaseInvoiceDTO1 mapToDTOForProFactoryDelivery(InvPurchaseInvoice invPurchaseInvoice, TobyUser tobyUser) {
 
         InvPurchaseInvoiceDTO1 invPurchaseInvoiceDTO = new InvPurchaseInvoiceDTO1();
@@ -958,7 +962,7 @@ public class InvPurchaseInvoiceImpl implements InvPurchaseInvoiceService {
         List<InvPurchaseInvoice> list = retriveInvPurchaseInvoiceDate(invPurchaseInvoiceList);
         return list;
     }
-    
+
     @Override
     public BigDecimal findQuantityItemByDateWithOutInventory(InvPurchaseInvoice invPurchaseInvoice, Boolean sellBuy, InvPurchaseInvoiceDetail invPurchaseInvoiceDetail) {
         BigDecimal quantityItemsStoreByDate;
@@ -1239,6 +1243,32 @@ public class InvPurchaseInvoiceImpl implements InvPurchaseInvoiceService {
         return (itemsStores != null && itemsStores.size() > 0) ? itemsStores.get(0) : null;
     }
 
-    
+    @Override
+    public List<InvPurchaseInvoice> findInvPurchaseInfvoiceforCustomer(Integer customerId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<ClientReportDTO> getAllClients(Integer branchId, Date dateFrom, Date dateTo, String inventory, String delegator, String users, TobyUser tobyUser) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        String fromDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(dateFrom);
+        String toDate = new SimpleDateFormat("yyyy-MM-dd  23:59:59").format(dateTo);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT ios.name , ios.code , ios.mobile FROM inv_purchase_invoice ipi left join inv_organization_site ios on ipi.organization_site_id = ios.id Where ipi.branch_id = " + branchId + " and ipi.inv_delegator_id in (").append(delegator).append(") and ipi.date >= '").append(fromDate).append("' and ipi.date <= '").append(toDate).append("' and ipi.galary_Id in (").append(inventory).append(" ) and ipi.created_by in(").append(users).append(")").append(" group by ipi.id");
+        List<Object[]> res = dao.executeNativeQuery(builder.toString());
+        List<ClientReportDTO> list = new ArrayList<>();
+        ClientReportDTO clientReportDTO ;
+        for (Object[] object : res) {
+            clientReportDTO = new ClientReportDTO();
+            clientReportDTO.setName(object[0] != null ? (String) object[0] : null);
+            clientReportDTO.setCode(object[1] != null ? (String) object[1] : null);
+            clientReportDTO.setMobile(object[2] != null ? (String) object[2] : null);
+            list.add(clientReportDTO);
+        }
+//        List<InvPurchaseInvoice> invPurchaseInvoice = dao.executeNativeQuery(builder.toString());
+//        List<InvPurchaseInvoiceDTO1> invPurchaseInvoiceDTOList = mapToDTOList(invPurchaseInvoice, tobyUser);
+        return list;
+    }
 
 }

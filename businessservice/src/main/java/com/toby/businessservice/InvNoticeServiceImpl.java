@@ -20,6 +20,7 @@ import com.toby.entity.GlAccount;
 import com.toby.entity.InvNotice;
 import com.toby.entity.TobyUser;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,6 +49,17 @@ public class InvNoticeServiceImpl implements InvNoticeService {
 
     @Override
     public void deleteInvNotice(InvNotice invNotice) {
+        dao.deleteEntity(invNotice);
+    }
+
+    @Override
+    public void deleteInvNoticeNew(InvNotice invNotice) {
+        invNotice = dao.findEntityById(InvNotice.class, invNotice.getId());
+
+        Integer tarhilIdOld = invNotice.getGeneralJournalId() == null ? null : invNotice.getGeneralJournalId().getId();
+        if (tarhilIdOld != null) {
+            generaljournalService.deleteGeneralJournal(tarhilIdOld);
+        }
         dao.deleteEntity(invNotice);
     }
 
@@ -160,6 +172,12 @@ public class InvNoticeServiceImpl implements InvNoticeService {
             accountDTO.setAccNumber(entity.getContrastAccountId().getAccNumber());
             dTO.setContrastAccountId(accountDTO);
         }
+//        if (entity.getGeneralJournalId() != null) {
+//            GeneralJournalDTO generalJournal = new GeneralJournalDTO();
+//            generalJournal.setId(entity.getGeneralJournalId().getId());
+//            generalJournal.setGeneralNumber(entity.getGeneralJournalId().getAccNumber());
+//            dTO.setGeneralJournalId(generalJournal);
+//        }
         dTO.setDate(entity.getDate());
         if (entity.getGeneralJournalId() != null) {
             GeneralJournalDTO generalJournalDTO = new GeneralJournalDTO();
@@ -208,12 +226,21 @@ public class InvNoticeServiceImpl implements InvNoticeService {
     }
 
     @Override
+    public InvNotice addInvNotice(List<InvNotice> invNoticeList, TobyUser tobyUser, Integer yearSelection) {
+        InvNotice notice = null;
+        for (InvNotice invNotice : invNoticeList) {
+            notice = addInvNotice(invNotice, tobyUser, yearSelection);
+        }
+        return notice;
+    }
+
+    @Override
     public InvNotice addInvNotice(InvNotice invNotice, TobyUser tobyUser, Integer yearSelection) {
         String error = null;
         try {
             if (invNotice.getId() == null) {
                 invNotice.setSerial(getMaxGenericSerialByType(InvNotice.class, invNotice.getBranchId().getId(), invNotice.getType()));
-
+                invNotice = dao.updateEntity(invNotice);
             } else {
                 Integer tarhilIdOld = invNotice.getGeneralJournalId() == null ? null : invNotice.getGeneralJournalId().getId();
                 invNotice.setPostFlag(0);
@@ -318,7 +345,7 @@ public class InvNoticeServiceImpl implements InvNoticeService {
         StringBuilder remark = new StringBuilder();
         remark.append("اشعار الخصم ");
         remark.append(dto.getOrganizationSiteId().getName());
-        BigDecimal mainValue = dto.getValue().divide(new BigDecimal(1.15));
+        BigDecimal mainValue = dto.getValue().divide(new BigDecimal(1.15), 2, RoundingMode.HALF_UP);
         BigDecimal taxValue = dto.getValue().subtract(mainValue);
         if (dto.getInvInventory() != null && dto.getInvInventory().getCostCenterId() != null && dto.getInvInventory().getCostCenterId().getId() != null) {
 

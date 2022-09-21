@@ -9,6 +9,7 @@ import com.toby.core.GenericDAO;
 import com.toby.dto.ProProductionStagesDTO;
 import com.toby.dto.TobyUserDTO;
 import com.toby.entity.Branch;
+import com.toby.entity.Employee;
 import com.toby.entity.ProProductionStages;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
@@ -22,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 
 /**
  *
@@ -45,17 +48,23 @@ public class TobyUserServiceImpl implements TobyUserService {
 
     @Override
     public TobyUser authenticateUser(String userCode, String password) {
-        Map<String, Object> params = new HashMap();
-        params.put("userCode", userCode);
-        System.out.println("userCode: " + userCode);
-        TobyUser user;
-        user = dao.findEntityByNamedQuery("TobyUser.authenticate", params);
+        TobyUser user = findUserByCode(userCode);
         System.out.println("user: " + user);
         if (user != null && user.getPassword().equals(password)) {
             return user;
         } else {
             return null;
         }
+    }
+
+    
+    public TobyUser findUserByCode(String userCode) {
+        Map<String, Object> params = new HashMap();
+        params.put("userCode", userCode);
+        System.out.println("userCode: " + userCode);
+        TobyUser user;
+        user = dao.findEntityByNamedQuery("TobyUser.authenticate", params);
+        return user;
     }
 
     @Override
@@ -212,6 +221,15 @@ public class TobyUserServiceImpl implements TobyUserService {
         tobyUserDTO.setCreatedDate(tobyUser.getCreationDate());
         tobyUserDTO.setBranchId(tobyUser.getBranchId().getId() != null ? tobyUser.getBranchId().getId() : null);
         tobyUserDTO.setCompanyId(tobyUser.getCompanyId() != null ? tobyUser.getCompanyId().getId() : null);
+        tobyUserDTO.setActiveCrm(tobyUser.getActiveCrm());
+//        if (tobyUser.getActiveCrm() != null) {
+//            tobyUserDTO.setActiveCrm(Boolean.TRUE);
+//            tobyUserDTO.setActiveCrmName("له صلاحية لدخول السي ر م ");
+//        } else {
+//            tobyUserDTO.setActiveCrm(Boolean.FALSE);
+//            tobyUserDTO.setActiveCrmName("ليس له صلاحية لدخول السي ر م");
+//
+//        }
 
         return tobyUserDTO;
     }
@@ -244,7 +262,7 @@ public class TobyUserServiceImpl implements TobyUserService {
         Integer i = 1;
 
         for (TobyUser tobyUser : tobyUserList) {
-            System.out.println("tobyUser -> "+tobyUser.getUserCode());
+            System.out.println("tobyUser -> " + tobyUser.getUserCode());
             tobyUser = updateUser(tobyUser);
             if (stageMap.containsKey(tobyUser.getMsg())) {
 
@@ -259,11 +277,11 @@ public class TobyUserServiceImpl implements TobyUserService {
                 proProductionStagesDTO.setTypeStage(0);
 
                 ProProductionStagesDTO x = proProductionStagesService.saveProProductionStage(proProductionStagesDTO, tobyUser);
-                
+
                 stageMap.put(x.getName(), x.getId());
-                
+
                 saveany(stageMap, tobyUser);
-                
+
             }
         }
     }
@@ -271,37 +289,126 @@ public class TobyUserServiceImpl implements TobyUserService {
     private void saveany(Map<String, Integer> stageMap, TobyUser tobyUser) {
         ProProductionStages proProductionStages = new ProProductionStages();
         TobyUserRole tobyUserRole = new TobyUserRole();
-        
+
         proProductionStages.setId(stageMap.get(tobyUser.getMsg()));
-        
+
         TobyUserProproduction tobyUserProproductionDTO = new TobyUserProproduction();
         tobyUserProproductionDTO.setUserId(tobyUser);
         tobyUserProproductionDTO.setProproductionId(proProductionStages);
-        
+
         TobyCompany tobyCompany = new TobyCompany();
         tobyCompany.setId(125);
         tobyUserProproductionDTO.setCompanyId(tobyCompany);
-        
+
         TobyUser user = new TobyUser();
         user.setId(201);
         tobyUserProproductionDTO.setCreatedBy(user);
-        
+
         Branch branch = new Branch();
         branch.setId(182);
         tobyUserProproductionDTO.setBranchId(branch);
-        
+
         tobyUserProproductionDTO.setCreationDate(new Date());
-        
+
         tobyUserProproductionService.updateTobyUserProproduction(tobyUserProproductionDTO, tobyUser);
-        
+
         tobyUserRole.setBranchId(branch);
         tobyUserRole.setCompanyId(tobyCompany);
         tobyUserRole.setCreatedBy(user);
         tobyUserRole.setCreationDate(new Date());
         tobyUserRole.setUserId(tobyUser);
         tobyUserRole.setRoleId(null);
-        
+
         tobyUserRoleService.addUserRole(tobyUserRole);
     }
+
+    @Override
+    public List<TobyUserDTO> getUsersByInventoryId(Integer InventoryId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("InventoryId", InventoryId);
+        List<TobyUser> details = dao.findListByQuery("SELECT e.userId FROM TobyUserInventory e where e.invInventoryId.id = :InventoryId AND activeCrm = :1 ", params);
+        return returnTODTO(details, null);
+    }
+
+    @Override
+    public TobyUser updateUser(Integer userId) {
+        TobyUser tobyUser = dao.findEntityById(TobyUser.class, userId);
+        return tobyUser;
+    }
+
+    @Override
+    public String save(String  userName, String oldPassword, String newUserPassword, String newPasswordConfirm) {
+        TobyUser tobyUser = findUserByCode(userName);
+        try {
+            if (validateOldPassword1(tobyUser, oldPassword) && validateNewPassword1(oldPassword, newUserPassword) && validateNewPasswordConfirm1(newPasswordConfirm, newUserPassword)) {
+                tobyUser.setPassword(newUserPassword);
+                updateUser(tobyUser);
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "SAVED"));
+            }
+
+            return "";
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public boolean validateOldPassword1(TobyUser tobyUser, String oldPassword) {
+        try {
+            validateOldPassword(tobyUser, oldPassword);
+
+            if (tobyUser.getMsg() != null && !"".equals(tobyUser.getMsg())) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", tobyUser.getMsg()));
+                return false;
+            }
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean validateNewPassword1(String oldPassword, String newUserPassword) {
+        try {
+            String msg = validateNewPassword(oldPassword, newUserPassword);
+
+            if (!"".equals(msg)) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", msg));
+                return false;
+            }
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean validateNewPasswordConfirm1(String newPasswordConfirm, String newUserPassword) {
+        try {
+
+            String msg = validateConfirmationPassword(newPasswordConfirm, newUserPassword);
+
+            if (!"".equals(msg)) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", msg));
+                return false;
+            }
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    @Override
+    public List<Employee> getEmployeesByUserAndBranch(Integer userId, Integer branchId) {
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        params.put("userId", userId);
+        return dao.findListByQuery("SELECT e.employeeId FROM TobyUser e WHERE e.branchId.id = :branchId  AND e.id = :userId", params);
+    }
+ 
 
 }

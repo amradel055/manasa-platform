@@ -64,6 +64,9 @@ public class OfferCompany extends BaseEntity{
      * @return the discount
      */
     public BigDecimal getDiscount() {
+        if(discount == null){
+            discount = BigDecimal.ZERO;
+        }
         return discount;
     }
 

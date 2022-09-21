@@ -40,9 +40,7 @@
                     <p:column headerText="#" style="width: 5vh;font-size: 1.8vh;text-align: -webkit-auto;">
                         <h:outputText value="#{index +1}" style="font-size: 1.5vh;" />
                     </p:column>
-                    <p:column  headerText="#{userData.userDDs['CS_CODE']}" style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;"   >
-                        <h:outputText value="#{gsymbol.serial}" style="font-size: 1.5vh;" />
-                    </p:column>
+                    
                     <p:column filterStyle="display:none" style="width: 85vh;font-size: 1.8vh;text-align: -webkit-auto;"  sortBy="#{userData.userDDs[''+= gsymbol.name]}" filterBy="#{userData.userDDs[''+= gsymbol.name]}"  filterMatchMode="contains" headerText="#{userData.userDDs['GENERAL_SYMBOLS']} ">
                         <h:outputText value="#{userData.userDDs[''+= gsymbol.name]}" style="font-size: 1.5vh" />
                     </p:column>

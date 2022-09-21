@@ -54,7 +54,7 @@ public class GlBankTransactionEntity extends BaseEntity {
     private String createdByName;
     private GlAccountDTO costAccount;
     private CostCenterDTO costCenterDTO;
-    
+    private Integer movementType;
 
     public Date getDate() {
         return date;
@@ -65,7 +65,7 @@ public class GlBankTransactionEntity extends BaseEntity {
     }
 
     public BigDecimal getValue() {
-        if(value == null){
+        if (value == null) {
             value = BigDecimal.ZERO;
         }
         return value;
@@ -132,7 +132,7 @@ public class GlBankTransactionEntity extends BaseEntity {
     }
 
     public BigDecimal getRate() {
-        if(rate == null){
+        if (rate == null) {
             rate = BigDecimal.ONE;
         }
         return rate;
@@ -259,7 +259,7 @@ public class GlBankTransactionEntity extends BaseEntity {
     public void setHiddenId(Integer hiddenId) {
         this.hiddenId = hiddenId;
     }
-    
+
     /**
      * @return the instTransactionView
      */
@@ -273,8 +273,7 @@ public class GlBankTransactionEntity extends BaseEntity {
     public void setInstTransactionView(InstTransactionView instTransactionView) {
         this.instTransactionView = instTransactionView;
     }
-    
-    
+
     /**
      * @return the rateBankFrom
      */
@@ -293,6 +292,9 @@ public class GlBankTransactionEntity extends BaseEntity {
      * @return the rateBankTo
      */
     public BigDecimal getRateBankTo() {
+        if(rateBankTo == null){
+            rateBankTo = BigDecimal.ONE;
+        }
         return rateBankTo;
     }
 
@@ -363,7 +365,7 @@ public class GlBankTransactionEntity extends BaseEntity {
      * @return the remainInvoice
      */
     public BigDecimal getRemainInvoice() {
-        if(remainInvoice == null){
+        if (remainInvoice == null) {
             remainInvoice = BigDecimal.ZERO;
         }
         return remainInvoice;
@@ -430,6 +432,20 @@ public class GlBankTransactionEntity extends BaseEntity {
      */
     public void setCostCenterDTO(CostCenterDTO costCenterDTO) {
         this.costCenterDTO = costCenterDTO;
+    }
+
+    /**
+     * @return the movementType
+     */
+    public Integer getMovementType() {
+        return movementType;
+    }
+
+    /**
+     * @param movementType the movementType to set
+     */
+    public void setMovementType(Integer movementType) {
+        this.movementType = movementType;
     }
 
 }

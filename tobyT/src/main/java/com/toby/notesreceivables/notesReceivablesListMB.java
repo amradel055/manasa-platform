@@ -63,6 +63,8 @@ public class notesReceivablesListMB extends BaseGlBankListBean {
     private GlBankConverter bankConverter;
     private GlBank selectGlBank;
 
+    private Integer serial;
+
     private LazyDataModel<GlBankTransactionDTO> dataModel;
 
     @EJB
@@ -120,6 +122,14 @@ public class notesReceivablesListMB extends BaseGlBankListBean {
             });
         } catch (Exception e) {
             saveError(e, "notesReceivablesListMB", "load");
+        }
+    }
+
+    public void search() {
+        if (!getUri().contains("notesreceivablesListpre")) {
+            glBankTransactionEntityList = glBankTransactionService.search(1, userData.getUserBranch().getId(), getSerial());
+        } else {
+            glBankTransactionEntityList = glBankTransactionService.search(3, userData.getUserBranch().getId(), getSerial());
         }
     }
 
@@ -193,6 +203,19 @@ public class notesReceivablesListMB extends BaseGlBankListBean {
         }
     }
 
+    public String goToAddNew() {
+        try {
+            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+            context.getSessionMap().put("ScreenMode", "Add");
+            exit("../notesreceivables/notesreceivablesFormNew.xhtml");
+
+            return "";
+        } catch (Exception e) {
+            saveError(e, "notesReceivablesListMB", "load");
+            return null;
+        }
+    }
+
     private void redirectPage() {
         if (getUri().contains("notesreceivablesadmin")) {
             exit("../notesreceivablesadmin/notesreceivablesForm.xhtml");
@@ -224,20 +247,20 @@ public class notesReceivablesListMB extends BaseGlBankListBean {
         try {
 //            if (glBankTransactionEntitySelected.getPostFlag() == null || (glBankTransactionEntitySelected.getPostFlag() != null && glBankTransactionEntitySelected.getPostFlag() != 1)) {
 
-                Map<String, String> userDDs = userData.getUserDDs();
+            Map<String, String> userDDs = userData.getUserDDs();
 
-                Integer glBankTransactionId = glBankTransactionEntitySelected.getId() != null ? glBankTransactionEntitySelected.getId() : null;
-                glBankTransaction = new GlBankTransaction();
-                glBankTransaction.setId(glBankTransactionId);
+            Integer glBankTransactionId = glBankTransactionEntitySelected.getId() != null ? glBankTransactionEntitySelected.getId() : null;
+            glBankTransaction = new GlBankTransaction();
+            glBankTransaction.setId(glBankTransactionId);
 
-                try {
-                    glBankTransactionService.deleteGlBankTransaction(glBankTransaction);
-                    glBankTransactionEntityList.remove(glBankTransactionEntitySelected);
+            try {
+                glBankTransactionService.deleteGlBankTransaction(glBankTransaction);
+                glBankTransactionEntityList.remove(glBankTransactionEntitySelected);
 
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userDDs.get("INFO"), userDDs.get("DELETED")));
-                } catch (Exception e) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), userDDs.get("UNIQE_KEY_ERROR")));
-                }
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userDDs.get("INFO"), userDDs.get("DELETED")));
+            } catch (Exception e) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), userDDs.get("UNIQE_KEY_ERROR")));
+            }
 //            } else {
 //                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "هذا السند مرحل"));
 //            }
@@ -508,5 +531,19 @@ public class notesReceivablesListMB extends BaseGlBankListBean {
      */
     public void setSelectGlBank(GlBank selectGlBank) {
         this.selectGlBank = selectGlBank;
+    }
+
+    /**
+     * @return the serial
+     */
+    public Integer getSerial() {
+        return serial;
+    }
+
+    /**
+     * @param serial the serial to set
+     */
+    public void setSerial(Integer serial) {
+        this.serial = serial;
     }
 }

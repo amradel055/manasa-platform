@@ -83,7 +83,7 @@ public class ProProductionStagesServiceImpl implements ProProductionStagesServic
     public List<ProProductionStagesDTO> getAllProproductionByBranchId(TobyUser tobyUser) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", tobyUser.getBranchId().getId());
-        List<ProProductionStages> proProductionStageseList = dao.findListByQuery("SELECT e FROM ProProductionStages e WHERE e.branchId.id = :branchId ", params);
+        List<ProProductionStages> proProductionStageseList = dao.findListByQuery("SELECT e FROM ProProductionStages e WHERE e.branchId.id = :branchId order by e.serial ", params);
         return mapToDTOList(proProductionStageseList, tobyUser);
     }
 
@@ -91,7 +91,7 @@ public class ProProductionStagesServiceImpl implements ProProductionStagesServic
     public List<ProProductionStages> getAllProproductionStagesByBranchId(Integer branchId, TobyUser tobyUser) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
-        List<ProProductionStages> proProductionStageseList = dao.findListByQuery("SELECT e FROM ProProductionStages e WHERE e.branchId.id = :branchId ", params);
+        List<ProProductionStages> proProductionStageseList = dao.findListByQuery("SELECT e FROM ProProductionStages e WHERE e.branchId.id = :branchId order by e.serial  ", params);
         return proProductionStageseList;
     }
 
@@ -138,7 +138,7 @@ public class ProProductionStagesServiceImpl implements ProProductionStagesServic
     public List<ProProductionStagesDTO> getAllProproductionStages(TobyUser tobyUser, Integer branchId) {
         Map<String, Object> params = new HashMap();
         params.put("branchId", branchId);
-        List<ProProductionStages> proProductionStageseList = dao.findListByQuery(" SELECT e FROM ProProductionStages e where e.branchId.id = :branchId ", params);
+        List<ProProductionStages> proProductionStageseList = dao.findListByQuery(" SELECT e FROM ProProductionStages e where e.branchId.id = :branchId order by e.serial  ", params);
         return mapToDTOList(proProductionStageseList, tobyUser);
 
     }
@@ -230,7 +230,7 @@ public class ProProductionStagesServiceImpl implements ProProductionStagesServic
     public ProProductionStages getCheckStage(TobyUser tobyUser) {
         Map<String, Object> params = new HashMap();
         params.put("branchId", tobyUser.getBranchId().getId());
-        return dao.findEntityByQuery("Select p from ProProductionStages p where p.typeStage=1 and p.branchId.id=:branchId", params);
+        return dao.findEntityByQuery("Select p from ProProductionStages p where p.typeStage=1 and p.branchId.id=:branchId order by e.serial ", params);
 
     }
 

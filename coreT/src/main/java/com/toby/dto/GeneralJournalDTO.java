@@ -19,12 +19,14 @@ public class GeneralJournalDTO extends BaseEntityDTO {
     private int generalNumber;
     private Date generalData;
     private SymbolDTO generalType;
+    private Integer generalTypeId;
     private String generalStatement;
     private Integer generalDecument;
     private String postFlagReview;
     private boolean post_flag = Boolean.FALSE;
     private Integer serial;
     private GlYearDTO glYear;
+    private Integer glYearId;
     private String macId;
     private boolean userModifyAbility;
     private Integer companyId;
@@ -33,6 +35,7 @@ public class GeneralJournalDTO extends BaseEntityDTO {
     private TobyUserDTO created_by;
     private Integer documentId;
     private List<GeneralJournalDetails> detailList;
+    private List<GeneralJournalDetailsDTO> detailDTOList;
 
     /**
      * @return the generalNumber
@@ -282,6 +285,48 @@ public class GeneralJournalDTO extends BaseEntityDTO {
      */
     public void setDocumentId(Integer documentId) {
         this.documentId = documentId;
+    }
+
+    /**
+     * @return the glYearId
+     */
+    public Integer getGlYearId() {
+        return glYearId;
+    }
+
+    /**
+     * @param glYearId the glYearId to set
+     */
+    public void setGlYearId(Integer glYearId) {
+        this.glYearId = glYearId;
+    }
+
+    /**
+     * @return the detailDTOList
+     */
+    public List<GeneralJournalDetailsDTO> getDetailDTOList() {
+        return detailDTOList;
+    }
+
+    /**
+     * @param detailDTOList the detailDTOList to set
+     */
+    public void setDetailDTOList(List<GeneralJournalDetailsDTO> detailDTOList) {
+        this.detailDTOList = detailDTOList;
+    }
+
+    /**
+     * @return the generalTypeId
+     */
+    public Integer getGeneralTypeId() {
+        return generalTypeId;
+    }
+
+    /**
+     * @param generalTypeId the generalTypeId to set
+     */
+    public void setGeneralTypeId(Integer generalTypeId) {
+        this.generalTypeId = generalTypeId;
     }
 
 }

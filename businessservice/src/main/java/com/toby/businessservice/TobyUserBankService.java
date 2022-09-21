@@ -6,6 +6,7 @@
 package com.toby.businessservice;
 
 import com.toby.dto.GlBankDTO;
+import com.toby.dto.GlPayDTO;
 import com.toby.entity.GlBank;
 import com.toby.entity.TobyUser;
 import com.toby.entity.TobyUserBank;
@@ -47,5 +48,7 @@ public interface TobyUserBankService {
     public List<Integer> getAllGlBankIdForUserByTypeAndBranchId(Integer userId, Integer branchId, Integer type);
     
     public List<GlBank> getCashGlBankByBranchId(Integer branchId);
+    
+    public List<GlPayDTO> getGlPayDTOForUserByTypeAndBranchIdPerDTO(Integer userId, Integer branchId, Integer type, Integer gallaryId);
 
 }

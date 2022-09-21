@@ -79,16 +79,13 @@ public class InvItemDTO extends BaseEntityDTO {
     private ProGroupDTO proGroupId;
     private Integer typeItem;
     private Integer priceType;
-    
-    
+    private Integer isOfferItemFinal;
+
     //barcode    
     private List<InvBarcodeDTO> invBarcodeEntity;
     private List<InvBarcodeDTO> invBarcodeDeletedList;
-    private List<AttributeDTO> atrributesList ;
-    private List<VariationDTO> variationsList ;
-
-
-  
+    private List<AttributeDTO> atrributesList;
+    private List<VariationDTO> variationsList;
 
     /**
      * @return the msg
@@ -1073,5 +1070,18 @@ public class InvItemDTO extends BaseEntityDTO {
         this.variationsList = variationsList;
     }
 
-   
+    /**
+     * @return the isOfferItemFinal
+     */
+    public Integer getIsOfferItemFinal() {
+        return isOfferItemFinal;
+    }
+
+    /**
+     * @param isOfferItemFinal the isOfferItemFinal to set
+     */
+    public void setIsOfferItemFinal(Integer isOfferItemFinal) {
+        this.isOfferItemFinal = isOfferItemFinal;
+    }
+
 }

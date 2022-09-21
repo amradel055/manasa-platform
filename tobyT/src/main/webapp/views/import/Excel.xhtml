@@ -30,6 +30,15 @@
                 <f:ajax execute="@all" render="@form"/>
                 <p:ajax/>
             </p:commandButton>
+
+            <p:commandButton id="btninvitem588885559"  actionListener="#{importMB.tarhilAllInvoice()}" ajax="false" value="ترحيل الفواتير السابقة">
+                <f:ajax execute="@all" render="@form"/>
+                <p:ajax/>
+            </p:commandButton>
+            <p:commandButton id="btninvitem588885559e"  actionListener="#{importMB.tarhilAllGLbankTransaction()}" ajax="false" value="ترحيل  السندات الغير مرحلة بالخطأ">
+                <f:ajax execute="@all" render="@form"/>
+                <p:ajax/>
+            </p:commandButton>
             <p:fieldset  legend="ادخال نوعية الاصناف" id="invitem5"  style="margin-bottom:20px">
                 <div id="invitemloader5" class="form-group col-md-12">
 
@@ -167,7 +176,7 @@
 
 
             </p:fieldset>
-            
+
             <p:fieldset  legend="ادخال  قيود اليومية" id="generalJournalID"  style="margin-bottom:20px">
                 <div id="generalJournalloader" class="form-group col-md-12">
 

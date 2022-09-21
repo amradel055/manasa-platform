@@ -8,6 +8,7 @@ package com.toby.toby;
 import com.toby.businessservice.TobyErrorService;
 import com.toby.businessservice.TobyUserBankService;
 import com.toby.businessservice.TobyUserInventoryService;
+import com.toby.businessservice.TobyUserInventoryServiceImpl;
 import com.toby.businessservice.TobyUserLoginService;
 import com.toby.common.FindClientData;
 import com.toby.common.SendEmailSMTP;
@@ -69,6 +70,9 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.primefaces.context.RequestContext;
+
+
+
 
 /**
  *
@@ -138,39 +142,44 @@ public class Basic implements Serializable {
     private InvInventoryDTO inventoryDTOSelect;
     private String inventoryIdList;
     
-     public boolean savedMeesage(String msg) {
+    private String customerCode;
+    
+    private Integer gallaryId;
+
+    public boolean savedMeesage(String msg) {
 
         FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), msg));
         return false;
     }
-     
-     
+
     public boolean errorMessage(String msg) {
         FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), msg));
         return false;
     }
 
-   
-     
-     
-     public void errorMsg(String error) {
+    public void excuteScript(String focusId) {
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.execute(focusId);
+    }
+
+    public void errorMsg(String error) {
         if (error != null && !error.isEmpty()) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), error));
         }
     }
-     
-      public void msgSave(String error) {
+
+    public void msgSave(String error) {
         if (error != null && !error.isEmpty()) {
             errorMsg(error);
-        }else{
+        } else {
             savedMeesage(getUserData().getUserDDs().get("SAVED"));
         }
     }
-    
-      public void OpenDlg(String dlgvar) {
+
+    public void OpenDlg(String dlgvar) {
         RequestContext context = RequestContext.getCurrentInstance();
         context.execute("PF('" + dlgvar + "').show();");
     }
@@ -348,6 +357,21 @@ public class Basic implements Serializable {
         }
         return userlogin;
     }
+    
+    
+
+    public void sendSms(String mobile, String sender, String message, String username, String password) {
+        try {
+            String language = "2";
+            StringBuilder json = new StringBuilder();
+            json.append("[{\"user\":\"").append(username).append("\",\"pwd\":\"").append(password).append("\",\"number\":\"").append(mobile).append("\",\"msg\":\"").append(message);
+            json.append("\",\"sender\":\"SMSAlert\",\"language\":\"Unicode\"}]");
+            callApiPostBasic("http://mshastra.com/sendsms_api_json.aspx", null, null, json.toString(), null, HttpMethode.POST);
+        } catch (Exception e) {
+            System.out.println("Error SMS " + e);
+//            return "Error " + e;
+        }
+    }
 
     public String callApiPostBasic(String url, String userName, String password, String jsonInputString, Map<String, Object> LinkParams, HttpMethode httpMethode) {
         try {
@@ -365,8 +389,7 @@ public class Basic implements Serializable {
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
             conn.setDoOutput(true);
             if (userName != null && password != null) {
-                conn.setRequestProperty(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString(
-                        (auth).getBytes()));
+                conn.setRequestProperty(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString((auth).getBytes()));
             }
             if (jsonInputString != null && !jsonInputString.isEmpty()) {
                 try (OutputStream os = conn.getOutputStream()) {
@@ -385,12 +408,6 @@ public class Basic implements Serializable {
                 json.append(strCurrentLine);
             }
 
-//             if (conn.getResponseCode() == 200) { } else {
-//                br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-//                while ((strCurrentLine = br.readLine()) != null) {
-//                    json.append(strCurrentLine);
-//                }
-//            }
             br.close();
             conn.disconnect();
             String result = StringEscapeUtils.unescapeJava(json.toString());
@@ -450,70 +467,6 @@ public class Basic implements Serializable {
 
         } catch (MessagingException mex) {
             mex.printStackTrace();
-        }
-    }
-
-    public void sendSms(String mobile, String sender, String message, String username, String password) {
-        try {
-//            String username = ;
-//            String password = ;
-            String language = "2";
-            StringBuilder json = new StringBuilder();
-            json.append("[{\"user\":\"").append(username).append("\",\"pwd\":\"").append(password).append("\",\"number\":\"").append(mobile).append("\",\"msg\":\"").append(message);
-            json.append("\",\"sender\":\"SMSAlert\",\"language\":\"Unicode\"}]");
-            callApiPostBasic("http://mshastra.com/sendsms_api_json.aspx", null, null, json.toString(), null, HttpMethode.POST);
-//            return 
-
-//
-//            String requestUrl = "https://mshastra.com/sendurl.aspx?"
-////                    + "user=20099319"
-////                    + "&pwd=0564933202"
-////                    + "&senderid=SMSAlert"
-////                    + "&mobileno=966564933202"
-////                    + "&msgtext=HelloFromAmr"
-////                    + "&priority=High"
-////                    + "&CountryCode=ALL";
-//                    + "user=" + URLEncoder.encode("20099319", "UTF-8")
-//                    + "&pwd=" + URLEncoder.encode("0564933202", "UTF-8")
-//                    + "&senderid=" + URLEncoder.encode("SMSAlert", "UTF-8")
-//                    + "&mobileno=" + URLEncoder.encode("966564933202", "UTF-8")
-//                    + "&msgtext=" + URLEncoder.encode("HelloFromAmr", "UTF-8")
-//                    + "&priority=" + URLEncoder.encode("High", "UTF-8")
-//                    + "&CountryCode=" + URLEncoder.encode("ALL", "UTF-8");
-////            String requestUrl = "https://mshastra.com/sendurl.aspx/?"
-////                    + "user=" + URLEncoder.encode("20099319", "UTF-8")
-////                    + "&pwd=" + URLEncoder.encode("0564933202", "UTF-8")
-////                    //                    + "&language=" + URLEncoder.encode(language, "UTF-8")
-////                    + "&senderid=" + URLEncoder.encode(sender, "UTF-8")
-////                    + "&mobileno=" + URLEncoder.encode("0201015926792", "UTF-8")
-////                    + "&msgtext=" + URLEncoder.encode(message, "UTF-8")
-////                    + "&CountryCode=" + URLEncoder.encode("ALL", "UTF-8");
-//
-//            URL url = new URL(requestUrl);
-//            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//            conn.setRequestMethod("GET");
-//            conn.setDoOutput(true);
-//            conn.setDoInput(true);
-//            conn.setUseCaches(true);
-//            conn.connect();
-//            
-////            conn.setRequestMethod("POST");
-////            conn.setRequestProperty("Content-Length", Integer.toString(requestUrl.length()));
-////            conn.getOutputStream().write(requestUrl.getBytes("UTF-8")); // here
-//            final BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//            final StringBuffer stringBuffer = new StringBuffer();
-//            String line;
-//            while ((line = rd.readLine()) != null) {
-//                stringBuffer.append(line);
-//            }
-//            rd.close();
-//            System.out.println(conn.getResponseMessage());
-//
-//            conn.disconnect();
-//            return conn.getResponseMessage();
-        } catch (Exception e) {
-            System.out.println("Error SMS " + e);
-//            return "Error " + e;
         }
     }
 
@@ -826,6 +779,9 @@ public class Basic implements Serializable {
      */
     public List<InvInventoryDTO> getGallaryLists() {
         if (gallaryLists == null || gallaryLists.isEmpty()) {
+            if(tobyUserInventoryService == null){
+                tobyUserInventoryService = new TobyUserInventoryServiceImpl();
+            }
             gallaryLists = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
             setGallaryDTOConverters(new InvInventoryDTOConverter(gallaryLists));
         }
@@ -858,7 +814,8 @@ public class Basic implements Serializable {
      */
     public List<InvInventoryDTO> getGallaryListSelected() {
         if (gallaryListSelected == null) {
-            gallaryListSelected = getGallaryLists();
+            gallaryListSelected = getUserData().getGallaryDTOList();
+            gallaryDTOConverters = new InvInventoryDTOConverter(gallaryListSelected);
         }
         return gallaryListSelected;
     }
@@ -1078,6 +1035,34 @@ public class Basic implements Serializable {
      */
     public void setInventoryIdList(String inventoryIdList) {
         this.inventoryIdList = inventoryIdList;
+    }
+
+    /**
+     * @return the customerCode
+     */
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    /**
+     * @param customerCode the customerCode to set
+     */
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
+    }
+
+    /**
+     * @return the gallaryId
+     */
+    public Integer getGallaryId() {
+        return gallaryId;
+    }
+
+    /**
+     * @param gallaryId the gallaryId to set
+     */
+    public void setGallaryId(Integer gallaryId) {
+        this.gallaryId = gallaryId;
     }
 
 }

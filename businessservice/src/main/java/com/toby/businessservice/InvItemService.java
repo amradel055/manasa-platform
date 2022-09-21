@@ -8,12 +8,13 @@ package com.toby.businessservice;
 import com.toby.businessservice.reports.searchBean.ItemMainDataByGroupSearchBean;
 import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.InvItemDTO;
-import com.toby.dto.InvItemDTOApi;
+import com.toby.API.InvItemDTOApi;
 import com.toby.entity.InvBarcode;
 import com.toby.entity.InvGroup;
 import com.toby.entity.InvItem;
 import com.toby.entity.TobyUser;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Remote;
@@ -25,9 +26,9 @@ import javax.ejb.Remote;
 @Remote
 public interface InvItemService {
 
-    public List<InvItemDTO> findInvItemDTOList(TobyUser tobyUser);
+    public List<InvItemDTO> findInvItemDTOList(Integer branchId);
 
-    public List<InvItemDTO> invItemsReport(InvItemDTO invItemDTO, Integer branchId);
+    public List<InvItemDTO> invItemsReport(InvItemDTO invItemDTO, Integer branchId, Boolean isUsed, BigDecimal lastCost, Date dateFrom, Integer itemNatural);
 
     public Map<String, String> findInvItemDTOMap(Integer branchId);
 
@@ -36,6 +37,8 @@ public interface InvItemService {
     public InvItem addInvItem(InvItem invItem, List<InvBarcode> invBarcodeList, List<InvBarcode> invBarcodeDeletedList);
 
     public InvItem updateInvItem(InvItem invItem);
+    
+    public void updateLastCostInvItem(Integer invItem,BigDecimal lastCost);
 
     public InvItem updateInvItemWebSite(InvItem invItem);
 
@@ -60,6 +63,8 @@ public interface InvItemService {
     public List<InvItem> getInvItemByBranchIdAndGroupId(Integer branchId, Integer groupId);
 
     public List<InvItemDTO> getInvItemByBranchIdAndGroupIdDTO(Integer branchId, Integer groupId);
+    
+    public List<InvItemDTO> getInvItemByBranchIdAndProGroupIdDTO(StringBuilder list);
 
     public List<InvItem> getImageByCompanyId(String imageName, Integer companyId);
 
@@ -113,7 +118,13 @@ public interface InvItemService {
 
     public List<Integer> getInvItemListByBranchIdNotInInvPurchaseInvoice(Integer branchId);
 
-    public InvItemDTO mapToDTO(InvItem invItem, TobyUser tobyUser);
+    public InvItemDTO mapToDTO(InvItem invItem);
     
     public InvItem findItemByCode(String code) ;
+    
+     public void updateByOffer(Integer invItem, Integer isOfferFinal);
+     
+     public List<InvItemDTOApi> findInvItemDTOListAPI(Integer branchId);
+     
+     public List<InvItemDTOApi> findInvItemDTOListAPINew(Integer branchId);
 }

@@ -1,12 +1,65 @@
-<ui:composition 
+<ui:composition
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:p="http://primefaces.org/ui"
     xmlns:pa="http://primefaces.org/serenity">
+       <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-analytics.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script> 
+            <script id="test"  type="text/javascript" >
 
-    <div class="layout-topbar">
+            var config = {
+                apiKey: "AIzaSyBgBpi82FS6ivqsLlCO6_DX05oUFDqeE8Y",
+                authDomain: "toby-27bb1.firebaseapp.com",
+                databaseURL: "https://toby-27bb1-default-rtdb.firebaseio.com",
+                projectId: "toby-27bb1",
+                storageBucket: "toby-27bb1.appspot.com",
+                messagingSenderId: "98098799959",
+                appId: "1:98098799959:web:f3ccd166a496830d674a12",
+                measurementId: "G-B9SBC1E16M"
+            };
+            
+                  firebase.initializeApp(config); 
+                  
+                  
+                  const list = '#{userData.gallaryIdList}';
+                  const idList = list.split(" , ");
+                  
+                     
+                            var loc = firebase.database().ref("notifications/");
+                            loc.on("value", (snapshot) => {
+                             const data = snapshot.val();
+                             const data2 = snapshot.val();
+                          if (typeof data2 !== 'undefined' &amp;&amp; data2 != null) {
+                          for ([key, value] of Object.entries(data2)) {
+                          var arr = Object.keys(value);
+                          for (i = 0; i &#60; arr.length; i++) {
+                              console.log(key, arr[i]);
+                              console.log(data[key]);
+                              if(idList.indexOf(key) !== -1){
+                              document.getElementById("buttonform:eventId").value = data[key]["eventId"];
+                              document.getElementById("buttonform:updateButtonFire").click();
+                              }
+                            }
+
+                         }
+                   }
+
+                               
+                                });
+                    
+                      
+
+                 
+             
+            
+        
+        </script>
+    <div class="layout-topbar" >
+          
         <a href="www.igma-it.com" class="topbar-logo">
             <p:graphicImage name="images/logo-slim.png" library="serenity-layout" />
             <!--<span class="app-name">IGMA</span>-->
@@ -21,7 +74,7 @@
         <a href="#" class="topbar-menu-btn">
             <i class="material-icons">&#xE853;</i>
         </a>
-
+  <h:form id="buttonform">
         <div class="layout-topbar-menu-wrapper">
             <div class="sidebar-logo">
                 <a href="dashboard.xhtml">
@@ -100,11 +153,19 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="#"  >
                         <i class="topbar-icon material-icons animated swing">&#xE0C9;</i>
-                        <span class="topbar-badge animated rubberBand">5</span>
+                        <p:panelGrid id="notify">
+                         <span class="topbar-badge animated rubberBand" >
+                            #{topBarMB.onReadNotifications}    
+                        </span>
+                          
+                        <p:inputText value="#{topBarMB.lastEventId}"  id="eventId"  style="display: none;"/>
+                        </p:panelGrid>
+                    
                         <span class="topbar-item-name">Messages</span>
                     </a>
+                  
                     <ul class="animated">
                         <li role="menuitem">
                             <a href="#" class="topbar-message">
@@ -172,16 +233,24 @@
                     </ul>
                 </li>
                 <li class="search-item">
-                    <h:form>
+                  
                         <h:panelGroup styleClass="md-inputfield">
                             <p:inputText onkeypress="if (event.keyCode == 13) {return false;}" />
                             <label>Search</label>
                             <i class="topbar-icon material-icons">&#xE8B6;</i>
+                            
                         </h:panelGroup>
-                    </h:form>
+                             <p:commandButton        
+                                 id="updateButtonFire"                                  
+                                  actionListener="#{topBarMB.updateNotificationsData()}"
+                                  style="display: none;"  
+                                  update="buttonform:notify"
+                                  />  
+                   
                 </li>
             </ul>
         </div>
+ </h:form>
     </div>
 
 </ui:composition>

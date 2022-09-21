@@ -110,14 +110,13 @@
                                          value="#{userFormBean.residencyNumber}"
                                          required="true" 
                                          requiredMessage="#{userData.userDDs['REQUIRED']}" >
-                                
+
                             </p:inputText>
 
 
                         </h:panelGroup>
 
                     </h:panelGroup>
-
 
                     <h:panelGroup>
 
@@ -156,13 +155,44 @@
 
 
                 </h:panelGrid>
+                
+                <div class="ui-g-6 ui-xl-6">
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-4 ui-xl-4">
+
+                        </div>
+                        <div class="ui-g-4 ui-xl-4"> <div class="ui-g-12 ui-xl-12">
+                                <p:selectOneMenu style="width: 50%!important;margin-right: 1%;margin-bottom: 5px;" id="emp" value="#{userFormBean.employeeSelected}"
+                                                 converter="#{userFormBean.employeeConverter}"     >
+                                    <div class="ui-g-12 ui-xl-12">
+
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="" noSelectionOption="true" />
+                                    </div>
+                                    <div class="ui-g-12 ui-xl-12">
+
+                                        <f:selectItems value="#{userFormBean.employeeList}" var="emp" itemLabel="#{emp.name}" itemValue="#{emp}"/> 
+                                    </div>
+                                </p:selectOneMenu>
+                            </div></div>
+                        <div class="ui-g-4 ui-xl-4">
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <p:outputLabel style="margin-right: 25px;margin-right: 25px;" class="outputlabelwidth" value=" الموظف"/>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                
 
                 <h:panelGrid  class="centerButtons col-md-12"  columns="1">
 
 
                     <h:panelGroup>
 
-                     
+
                         <p:commandButton class="saveButton" 
                                          id="saveB" 
                                          title="#{userData.userDDs['SAVE']}"
@@ -176,13 +206,13 @@
                                          value="#{userData.userDDs['CANCEL']}" 
                                          icon="fa fa-fw fa-backward" 
                                          action="#{userFormBean.cancel}"   />
-                            
-                        
 
-                         
+
+
+
                     </h:panelGroup>
-                        
-                   
+
+
                 </h:panelGrid>
 
                 <p:blockUI block="pnl" trigger="saveB" animate="true" >

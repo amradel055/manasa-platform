@@ -38,6 +38,20 @@ import org.apache.commons.collections.ListUtils;
 @ViewScoped
 public class PurchaseOfItemsByDelegatorReportMB extends BaseInventoryReportBean {
 
+    /**
+     * @return the thobeNumber
+     */
+    public BigDecimal getThobeNumber() {
+        return thobeNumber;
+    }
+
+    /**
+     * @param thobeNumber the thobeNumber to set
+     */
+    public void setThobeNumber(BigDecimal thobeNumber) {
+        this.thobeNumber = thobeNumber;
+    }
+
     Boolean type;
     private Integer level;
 
@@ -65,6 +79,7 @@ public class PurchaseOfItemsByDelegatorReportMB extends BaseInventoryReportBean 
     private PurchaseOfItemsByDelegatorReportService purchaseOfItemsByDelegatorReportService;
     //-----------------------
     private BigDecimal total = BigDecimal.ZERO;
+    private BigDecimal thobeNumber = BigDecimal.ZERO;
     private Integer stripMapReference = 0;
     private BigDecimal repositoryBalance = BigDecimal.ZERO;
     private PurchaseOfItemsByDelegatorSearchBean purchaseOfItemsByDelegatorSearchViewBean;
@@ -75,7 +90,7 @@ public class PurchaseOfItemsByDelegatorReportMB extends BaseInventoryReportBean 
     private TreeMap<Integer, PurchaseOfItemsByDelegatorViewBean> PurchaseOfItemsByDelegatorViewTreeMap = new TreeMap<>();
     private Map<Integer, ItemSalesView> ItemSalesViewGroupedByItemIdMap = new HashMap<>();
     private List<Object> pieChartsRows;
-   // private Boolean chart = false;
+    // private Boolean chart = false;
 
     //-----------------------
     @Override
@@ -104,10 +119,10 @@ public class PurchaseOfItemsByDelegatorReportMB extends BaseInventoryReportBean 
         purchaseOfItemsByDelegatorSearchBean.setBranchId(getBranchId());
         purchaseOfItemsByDelegatorSearchBean.setShowReport(false);
         if (uri.contains("PurchaseOfItemsByDelegator")) {
-            purchaseOfItemsByDelegatorSearchBean.setType(Boolean.FALSE);
+            purchaseOfItemsByDelegatorSearchBean.setType(0);
             isSales = false;
         } else {
-            purchaseOfItemsByDelegatorSearchBean.setType(true);
+            purchaseOfItemsByDelegatorSearchBean.setType(4);
             isSales = true;
         }
 
@@ -183,9 +198,9 @@ public class PurchaseOfItemsByDelegatorReportMB extends BaseInventoryReportBean 
         purchaseOfItemsByDelegatorSearchBean.setFrompaymentType(purchaseOfItemsByDelegatorSearchBean.getFrompaymentType() != null ? purchaseOfItemsByDelegatorSearchBean.getFrompaymentType() - 1 : null);
         purchaseOfItemsByDelegatorSearchBean.setTopaymentType(purchaseOfItemsByDelegatorSearchBean.getTopaymentType() != null ? purchaseOfItemsByDelegatorSearchBean.getTopaymentType() - 1 : null);
         if (isSales) {
-            purchaseOfItemsByDelegatorSearchBean.setType(true);
+            purchaseOfItemsByDelegatorSearchBean.setType(4);
         } else {
-            purchaseOfItemsByDelegatorSearchBean.setType(false);
+            purchaseOfItemsByDelegatorSearchBean.setType(0);
         }
         balance = BigDecimal.ZERO;
 
@@ -195,19 +210,22 @@ public class PurchaseOfItemsByDelegatorReportMB extends BaseInventoryReportBean 
 
         itemSalesViewList = new ArrayList<>();
 
-        itemSalesViewList = purchaseOfItemsByDelegatorReportService.getAllPurchaseOfItemsByDelegatorSearchBean(purchaseOfItemsByDelegatorSearchBean);
-        if (itemSalesViewList != null && !itemSalesViewList.isEmpty()) {
-
-            fillGroupMapWithCorrespondingItem();
-            if (purchaseOfItemsByDelegatorSearchBean.getShowReport() != null && purchaseOfItemsByDelegatorSearchBean.getShowReport()) {
-                fillItemIdMapByGroupId();
-                fillGroupMapWithCorrespondingItem();
-            }
-            prepareRootGroupValues();
+//        itemSalesViewList = purchaseOfItemsByDelegatorReportService.getAllPurchaseOfItemsByDelegatorSearchBean(purchaseOfItemsByDelegatorSearchBean);
+        if (purchaseOfItemsByDelegatorSearchBean.getShowReport() != null && purchaseOfItemsByDelegatorSearchBean.getShowReport()) {
+            itemSalesViewList = purchaseOfItemsByDelegatorReportService.getAllPurchaseOfItemsByDelegatorSearchBeanNewHead(purchaseOfItemsByDelegatorSearchBean);
+        } else {
+            itemSalesViewList = purchaseOfItemsByDelegatorReportService.getAllPurchaseOfItemsByDelegatorSearchBeanNew(purchaseOfItemsByDelegatorSearchBean);
+            
         }
 
-        mergeGroupsWithItems();
+        if (itemSalesViewList != null && !itemSalesViewList.isEmpty()) {
 
+                fillGroupMapWithCorrespondingItem();
+                prepareRootGroupValues();
+            }
+
+            mergeGroupsWithItems();
+            
         if (purchaseOfItemsByDelegatorSearchBean.getShortReport() != null) {
             shortReportListing();
         }
@@ -312,6 +330,7 @@ public class PurchaseOfItemsByDelegatorReportMB extends BaseInventoryReportBean 
                     PurchaseOfItemsByDelegatorViewBean viewBean1 = new PurchaseOfItemsByDelegatorViewBean();
                     viewBean1.setGroupName(viewBean.getGroupName());
                     BigDecimal totalNet = BigDecimal.ZERO;
+                    BigDecimal totalthobeNumber = BigDecimal.ZERO;
                     getPurchaseOfItemsByDelegatorViewBeanList().add(viewBean1);
                     purchaseOfItemsByDelegatorViewBeanShortList.add(viewBean1);
                     int index = getPurchaseOfItemsByDelegatorViewBeanList().size() - 1;
@@ -326,16 +345,20 @@ public class PurchaseOfItemsByDelegatorReportMB extends BaseInventoryReportBean 
                         reportViewBean.setItemUnitName(idv.getItemUnitName());
                         reportViewBean.setSerial(idv.getSerial());
                         reportViewBean.setNet(idv.getNet());
+                        reportViewBean.setThobeNumber(idv.getNumber());
                         reportViewBean.setDetailUnitName(idv.getDetailUnitName());
                         reportViewBean.setItemBarcode(idv.getItemBarcode());
                         reportViewBean.setDetailItemQuantity(idv.getDetailItemQuantity());
                         getPurchaseOfItemsByDelegatorViewBeanList().add(reportViewBean);
 
                         totalNet = totalNet.add(idv.getNet());
+                        totalthobeNumber = totalthobeNumber.add(idv.getNumber());
                     }
                     viewBean1.setNet(totalNet);
+                    viewBean1.setThobeNumber(totalthobeNumber);
                     viewBean1.setIndex(index);
                     total = total.add(totalNet);
+                    thobeNumber = thobeNumber.add(totalthobeNumber);
                     getPurchaseOfItemsByDelegatorViewBeanList().set(index, viewBean1);
                 }
             }
@@ -383,8 +406,7 @@ public class PurchaseOfItemsByDelegatorReportMB extends BaseInventoryReportBean 
         }
     }
 
-    
-     public void exportChartPDF(ActionEvent actionEvent) throws JRException, IOException {
+    public void exportChartPDF(ActionEvent actionEvent) throws JRException, IOException {
         search();
         if (getPurchaseOfItemsByDelegatorViewBeanList() != null && !getPurchaseOfItemsByDelegatorViewBeanList().isEmpty()) {
             fillReport(prepareReport(), getUserData().getReportPath() + "ItemSalesReportWithColumnChart.jasper", getPurchaseOfItemsByDelegatorViewBeanList(), "pdf");

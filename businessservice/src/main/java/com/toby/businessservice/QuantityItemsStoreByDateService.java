@@ -9,6 +9,7 @@ import com.toby.views.QuantityItemsStoreByDate;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.Remote;
 
 /**
@@ -31,6 +32,8 @@ public interface QuantityItemsStoreByDateService {
     public BigDecimal getQuantatyItemByinventory(Integer invInventoryId, Integer invItemId, Boolean sellBuy);
 
     public BigDecimal getQuantatyItemByinventory(Integer invInventoryId, Integer invItemId, Boolean sellBuy, Date date);
+    
+     public Map<Integer,BigDecimal> getAllQuantatyItemByinventory(Integer invInventoryId, String invItemId, Boolean sellBuy, Date date);
     
     public BigDecimal getQuantatyItemByinventoryRecalcCostAvarage(Integer invInventoryId, Integer invItemId, Boolean sellBuy, Date date);
 

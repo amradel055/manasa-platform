@@ -6,11 +6,16 @@
 package com.toby.businessservice;
 
 import com.toby.dto.GeneralJournalDTO;
+import com.toby.dto.GlBankDTO;
+import com.toby.dto.GlBankTransactionDTO;
 import com.toby.dto.InvInvoiceDTO;
+import com.toby.dto.balanceGalary;
 import com.toby.entity.GeneralJournal;
 import com.toby.entity.GlBankTransaction;
 import com.toby.entity.GlBankTransactionDetail;
 import com.toby.entity.TobyUser;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -25,7 +30,7 @@ public interface GlBankTransactionDetailsService {
 
     public void deleteGlBankTransactionDetails(GlBankTransactionDetail glBankTransactionDetail);
 
-    public Integer updateGlBankTransactionDetails(GlBankTransactionDetail glBankTransactionDetail,TobyUser tobyUser);
+    public Integer updateGlBankTransactionDetails(GlBankTransactionDetail glBankTransactionDetail, TobyUser tobyUser);
 
     public List<GlBankTransactionDetail> getAllGlBankTransactionDetailsByGlBankTransactionId(Integer glBankTransactionId);
 
@@ -36,20 +41,32 @@ public interface GlBankTransactionDetailsService {
     public GlBankTransactionDetail addOneGlBankTransactionDetail(GlBankTransactionDetail glBankTransactionDetail);
 
     public Integer finMaxSerial(Integer glBankTransactionId);
-    
+
     public Integer addCashDetail(InvInvoiceDTO dTO, Integer glBankTransactionId, Integer glBankTransactionSerial, TobyUser tobyUser);
-    
-    public List<GeneralJournalDTO> tarhilOne(TobyUser tobyUser,Integer type); 
-    
+
+    public List<GeneralJournalDTO> tarhilOne(TobyUser tobyUser, Integer type);
+
     public Integer updateGlBankTransactionDetails(List<GlBankTransactionDetail> glBankTransactionDetailList, GlBankTransaction glBankTransaction, TobyUser tobyUser);
-        
-    public Integer tarhilSettlement(List<GlBankTransactionDetail> list, GlBankTransaction glBankTransaction, TobyUser tobyUser, Integer specialDocumentsTypes,boolean postFlag);
-    
+
+    public Integer tarhilSettlement(List<GlBankTransactionDetail> list, GlBankTransaction glBankTransaction, TobyUser tobyUser, Integer specialDocumentsTypes, boolean postFlag);
+
     public Integer tarhilSettlementVoucher(List<GlBankTransactionDetail> list1, GlBankTransaction glBankTransaction, TobyUser tobyUser, Integer specialDocumentsTypes, boolean postFlag);
-    
+
     public Integer tarhilSettlementVoucherNOSumDetail(List<GlBankTransactionDetail> list1, GlBankTransaction glBankTransaction, TobyUser tobyUser,
             Integer specialDocumentsTypes, boolean postFlag);
-            
-    public List<GeneralJournal> tarhilCashOne(TobyUser tobyUser, Integer type);
 
-}
+    public List<GeneralJournal> tarhilCashOne(TobyUser tobyUser, Integer type);
+    
+    public List<balanceGalary> GlBankTransactionDetailAfterSearchNative(Integer branchId, Date dateFrom1, Date dateTo1, String stringBuilder, TobyUser tobyUser) ;
+    
+    public void addCashDetail(GlBankDTO glBankDTO, Integer invOrganizationId, Integer glBankTransactionId, GlBankDTO bankDTO, String remarks, BigDecimal value, Integer glYearId, TobyUser tobyUser);
+    
+    public GlBankTransactionDTO tarhilAfterSave(Integer glBankTransactionId, TobyUser tobyUser);
+    
+    public void tarhilNotTarhil(GlBankTransactionDetail bankTransactionDetail , TobyUser tobyUser);
+
+    public List<GlBankTransactionDetail> findGlBankTransactionNotTarhil(TobyUser tobyUser) ;
+    
+    public List<GeneralJournalDTO> tarhilOneNotTarhil(TobyUser tobyUser, Integer type);
+
+    }

@@ -2,6 +2,7 @@ package com.toby.reports;
 
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.TobyUserInventoryService;
+import com.toby.bussinessservice.global.Utility;
 import com.toby.converter.InvInventoryDTOConverter;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.ProGroupDTO;
@@ -168,7 +169,7 @@ public class FactoryInvoiceStatusReportMB extends Basic {
      */
     public Date getToDate() {
           if(toDate == null){
-        toDate = new Date();
+        toDate = Utility.hourNow();
         }
         return toDate;
     }
@@ -185,7 +186,7 @@ public class FactoryInvoiceStatusReportMB extends Basic {
      */
     public Date getFromDate() {
         if(fromDate == null){
-        fromDate = new Date();
+        fromDate = Utility.hourNow();
         }
         return fromDate;
     }

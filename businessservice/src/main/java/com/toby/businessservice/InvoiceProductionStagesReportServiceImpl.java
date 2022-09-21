@@ -1,6 +1,7 @@
 package com.toby.businessservice;
 
 import com.toby.core.GenericDAO;
+import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.PrintProductionDTO;
 import com.toby.views.InvoiceProductionStagesReport;
 import java.math.BigDecimal;
@@ -97,6 +98,15 @@ public class InvoiceProductionStagesReportServiceImpl implements InvoiceProducti
             return query.toString();
         }
         return "";
+    }
+
+    @Override
+    public List<InvoiceProductionStagesReport> searchReportAPI(Integer serial, Integer gallaryId, Integer branchId) {
+        PrintProductionDTO printProductionDTO = new PrintProductionDTO();
+        InvInvoiceDTO invoiceDTO = new InvInvoiceDTO();
+        invoiceDTO.setSerial(serial);
+        printProductionDTO.setFromInvoice(invoiceDTO);
+        return searchReport(printProductionDTO, branchId);
     }
 
 }

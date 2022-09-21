@@ -117,6 +117,8 @@ public class GlBankTransaction extends BaseEntity {
     private InvInventory gallaryId;
     @Column(name = "document_serial")
     private Integer documentSerial;
+    @Column(name = "movement_type")
+    private Integer movementType;
     @Transient
     private Boolean dublara = Boolean.FALSE;
     @JoinColumn(name = "glAccount_id", referencedColumnName = "id")
@@ -488,6 +490,20 @@ public class GlBankTransaction extends BaseEntity {
      */
     public void setIsDebit(Boolean isDebit) {
         this.isDebit = isDebit;
+    }
+
+    /**
+     * @return the movementType
+     */
+    public Integer getMovementType() {
+        return movementType;
+    }
+
+    /**
+     * @param movementType the movementType to set
+     */
+    public void setMovementType(Integer movementType) {
+        this.movementType = movementType;
     }
 
 }

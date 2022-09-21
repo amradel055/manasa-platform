@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.CostCenterDTOAPI;
 import com.toby.entity.TobyUser;
 import com.toby.core.GenericDAO;
 import com.toby.dto.CostCenterDTO;
@@ -55,6 +56,43 @@ public class CostCenterServiceImplDTO implements CostCenterServiceDTO {
 
     }
 
+//    @Override
+//    public List<CostCenterDTOAPI> getAllSubCostCenterByBranchIdActiveAPI(Integer id) {
+//        List<CostCenter> allCostCenterUnits = costCenterService.getBranchCostCentersActive(id);
+//        List<CostCenter> childrens = new ArrayList<>();
+//        Map<Integer, CostCenter> map = new HashMap<>();
+//
+//        for (CostCenter gau : allCostCenterUnits) {
+//            if (gau.getParent() != null) {
+//                map.put(gau.getParent().getId(), gau.getParent());
+//            }
+//        }
+//
+//        for (CostCenter gau : allCostCenterUnits) {
+//            if (!map.containsKey(gau.getId())) {
+//                if (gau.getParent() == null) {
+//                    childrens.add(gau);
+//                    continue;
+//                }
+//                childrens.add(gau);
+//            }
+//        }
+//
+//        return returnListDTO(childrens);
+//
+//    }
+    @Override
+    public List<CostCenterDTOAPI> getAllSubCostCenterByBranchIdActiveAPI(Integer branchId) {
+        List<CostCenterDTOAPI> dtoList = new ArrayList<>();
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        List<CostCenter> list = dao.findListByQuery("SELECT cs FROM CostCenter cs WHERE cs.branchId.id=:branchId AND cs.active=1   ORDER BY cs.code ASC ", params);
+        for (CostCenter entity : list) {
+            dtoList.add(initMapToDTOAPI(entity));
+        }
+        return dtoList;
+    }
+
     @Override
     public CostCenterDTO findCostCenter(Integer costCenterId) {
         if (costCenterId != null) {
@@ -79,6 +117,22 @@ public class CostCenterServiceImplDTO implements CostCenterServiceDTO {
         if (needDetail) {
 
         }
+        return dTO;
+    }
+
+    private CostCenterDTOAPI initMapToDTOAPI(CostCenter entity) {
+
+        CostCenterDTOAPI dTO = new CostCenterDTOAPI();
+        dTO.setId(entity.getId());
+
+        dTO.setCode(entity.getCode());
+        dTO.setName(entity.getName());
+
+        dTO.setIndex(entity.getId());
+        dTO.setCreatedDate(entity.getCreationDate());
+        dTO.setCreatedBy(entity.getCreatedBy().getId());
+        dTO.setBranchId(entity.getBranchId().getId());
+
         return dTO;
     }
 

@@ -31,6 +31,8 @@ public class BankBalanceViewNew implements Serializable {
     private String accountIdFrom;
     private String bankCodeFrom;
     private String bankCodeto;
+    private Integer cashTo;
+    private Integer cashFrom;
 
     /**
      * @return the date
@@ -254,5 +256,33 @@ public class BankBalanceViewNew implements Serializable {
      */
     public void setBankCodeto(String bankCodeto) {
         this.bankCodeto = bankCodeto;
+    }
+
+    /**
+     * @return the cashTo
+     */
+    public Integer getCashTo() {
+        return cashTo;
+    }
+
+    /**
+     * @param cashTo the cashTo to set
+     */
+    public void setCashTo(Integer cashTo) {
+        this.cashTo = cashTo;
+    }
+
+    /**
+     * @return the cashFrom
+     */
+    public Integer getCashFrom() {
+        return cashFrom;
+    }
+
+    /**
+     * @param cashFrom the cashFrom to set
+     */
+    public void setCashFrom(Integer cashFrom) {
+        this.cashFrom = cashFrom;
     }
 }

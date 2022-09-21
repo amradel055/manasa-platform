@@ -67,8 +67,8 @@ public class ProGroupFormBean extends BaseFormBean implements Serializable {
     @Override
     public String save() {
 
-        try {
-            if (getProGroupDTO() != null && !getProGroupDTO().getName().isEmpty() && getProGroupDTO().getCode() != null) {
+        try { 
+            if (getProGroupDTO() != null && !getProGroupDTO().getName().isEmpty() ) {
                 setProGroupDTO(proGroupService.saveProGroupDTO(getProGroupDTO(), getUserData().getUser()));
                 if (getProGroupDTO() != null && getProGroupDTO().getId() != null && getProGroupDTO().getMsg() == null) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "تم الحفظ بنجاح", null));
@@ -114,7 +114,7 @@ public class ProGroupFormBean extends BaseFormBean implements Serializable {
 
     public boolean validateCode() {
         if (proGroupDTO != null) {
-            Boolean x = proGroupService.validateCode(getUserData().getUser(), proGroupDTO.getId(), proGroupDTO.getCode());
+            Boolean x = proGroupService.validateCode(getUserData().getUser(), proGroupDTO.getId(), proGroupDTO.getSerial());
             if (!x) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "الكود موجود", null));
                 showMessage = true;

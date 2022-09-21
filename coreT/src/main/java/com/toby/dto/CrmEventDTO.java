@@ -22,7 +22,7 @@ public class CrmEventDTO extends BaseEntityDTO {
     private SymbolDTO activityType;
     private SymbolDTO status;
     private EmployeeDTO assignedTo;
-    private Integer type;
+    private Integer typee;
     private Integer serial;
     private Boolean sendNotification;
     private Integer notificationTimeType;
@@ -59,6 +59,14 @@ public class CrmEventDTO extends BaseEntityDTO {
     private Boolean notificationOldTime;
     private Boolean closeEvent;
     private Boolean closeLeadStatus;
+    private Integer gallaryId;
+    
+    private SymbolDTO crmType;
+    private InvInvoiceDTO invoiceId;
+    private SymbolDTO periority;
+    private InvInventoryDTO gallarySelected;
+    
+    private String customerCode;
 
     public CrmEventDTO() {
     }
@@ -163,20 +171,20 @@ public class CrmEventDTO extends BaseEntityDTO {
     }
 
     /**
-     * @return the type
+     * @return the typee
      */
-    public Integer getType() {
-        if (type == null) {
-            type = 1;
+    public Integer getTypee() {
+        if (typee == null) {
+            typee = 0;
         }
-        return type;
+        return typee;
     }
 
     /**
-     * @param type the type to set
+     * @param typee the typee to set
      */
-    public void setType(Integer type) {
-        this.type = type;
+    public void setTypee(Integer typee) {
+        this.typee = typee;
     }
 
     /**
@@ -685,5 +693,95 @@ public class CrmEventDTO extends BaseEntityDTO {
     public void setCloseLeadStatus(Boolean closeLeadStatus) {
         this.closeLeadStatus = closeLeadStatus;
     }
+
+    /**
+     * @return the gallaryId
+     */
+    public Integer getGallaryId() {
+        return gallaryId;
+    }
+
+    /**
+     * @param gallaryId the gallaryId to set
+     */
+    public void setGallaryId(Integer gallaryId) {
+        this.gallaryId = gallaryId;
+    }
+
+   
+
+ 
+
+    /**
+     * @return the crmType
+     */
+    public SymbolDTO getCrmType() {
+        return crmType;
+    }
+
+    /**
+     * @param crmType the crmType to set
+     */
+    public void setCrmType(SymbolDTO crmType) {
+        this.crmType = crmType;
+    }
+
+    /**
+     * @return the invoiceId
+     */
+    public InvInvoiceDTO getInvoiceId() {
+        return invoiceId;
+    }
+
+    /**
+     * @param invoiceId the invoiceId to set
+     */
+    public void setInvoiceId(InvInvoiceDTO invoiceId) {
+        this.invoiceId = invoiceId;
+    }
+
+    /**
+     * @return the periority
+     */
+    public SymbolDTO getPeriority() {
+        return periority;
+    }
+
+    /**
+     * @param periority the periority to set
+     */
+    public void setPeriority(SymbolDTO periority) {
+        this.periority = periority;
+    }
+
+    /**
+     * @return the gallarySelected
+     */
+    public InvInventoryDTO getGallarySelected() {
+        return gallarySelected;
+    }
+
+    /**
+     * @param gallarySelected the gallarySelected to set
+     */
+    public void setGallarySelected(InvInventoryDTO gallarySelected) {
+        this.gallarySelected = gallarySelected;
+    }
+
+    /**
+     * @return the customerCode
+     */
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    /**
+     * @param customerCode the customerCode to set
+     */
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
+    }
+
+   
 
 }

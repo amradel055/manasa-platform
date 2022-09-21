@@ -5,9 +5,11 @@
  */
 package com.toby.businessservice.report;
 
+import com.toby.API.BankBalanceReportAPI;
+import com.toby.API.CashAccountSettlementAPI;
 import com.toby.bean.BankBalanceReportBean;
 import com.toby.bean.BankBalanceReportSearchBean;
-import com.toby.entity.GlYear;
+import com.toby.businessservice.reports.searchBean.SubAccountSummarySearchBean;
 import com.toby.views.BankBalanceView;
 import java.util.Date;
 import java.util.List;
@@ -23,8 +25,12 @@ public interface BankBalanceViewService {
     public List<BankBalanceView> getAllBankBalancesTransactions(Integer branchId, Date dateFrom, Date dateTo, Integer bankIdFrom, Integer bankIdTo);
 
     public List<BankBalanceView> getAllBankBalancesTransactionsByBankId(Integer branchId, Date dateTo, StringBuilder builder, Date dateFrom);
-    
+
     public List<BankBalanceReportBean> search(BankBalanceReportSearchBean bankBalanceReportSearchBean);
+
+    public List<BankBalanceReportBean> searchNative(BankBalanceReportSearchBean bankBalanceReportSearchBean);
+
+    public List<BankBalanceReportBean> searchNativeNew( SubAccountSummarySearchBean cashAccountSettlementSearchBean);
     
-     public List<BankBalanceReportBean> searchNative(BankBalanceReportSearchBean bankBalanceReportSearchBean) ;
+      public List<BankBalanceReportBean> searchNativeAPI(BankBalanceReportAPI balanceReportAPI) ;
 }

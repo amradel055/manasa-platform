@@ -16,6 +16,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -70,6 +71,8 @@ public class InvNotice extends BaseEntity {
     @JoinColumn(name = "inv_inventory_id", referencedColumnName = "id")
     @ManyToOne
     private InvInventory invInventory;
+    @Transient
+    private String typeName;
 
     public InvNotice() {
     }
@@ -217,6 +220,20 @@ public class InvNotice extends BaseEntity {
      */
     public void setInvInventory(InvInventory invInventory) {
         this.invInventory = invInventory;
+    }
+
+    /**
+     * @return the typeName
+     */
+    public String getTypeName() {
+        return typeName;
+    }
+
+    /**
+     * @param typeName the typeName to set
+     */
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 
 }

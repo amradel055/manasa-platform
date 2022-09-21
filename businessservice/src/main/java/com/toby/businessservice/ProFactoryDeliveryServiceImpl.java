@@ -48,6 +48,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
     private OrganizationSiteService organizationSiteService;
     @EJB
     InvoiceMovementReportService invoiceMovementReportService;
+    
 
     @Override
     public Long getTotalRegistors(Integer type, Integer branchId, Map<String, Object> filters) {
@@ -118,7 +119,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         invInvoiceDTO.setSerial(entity.getSerial());
         invInvoiceDTO.setDate(entity.getDate());
         invInvoiceDTO.setIndex(entity.getSerial());
-        invInvoiceDTO.setRemarks(entity.getRemark());
+        invInvoiceDTO.setRemarks(entity.getInvPurchaseInvoiceId().getRemarks());
         invInvoiceDTO.setNumberOfToob(invoiceMovementReportService.summitionTob(entity.getInvPurchaseInvoiceId().getId()));
         if (entity.getInvPurchaseInvoiceId() != null) {
             invInvoiceDTO.setInvoiceSerial(entity.getInvPurchaseInvoiceId().getSerial());
@@ -221,7 +222,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         ProFactoryDelivery proFactoryDelivery = null;
         if (invInvoiceDTO.getNeedLoadedSerial() != null && invInvoiceDTO.getNeedLoadedSerial() != 0) {
             proFactoryDelivery = findProFactoryDeliveryByInvInvoiceId(invInvoiceDTO.getNeedLoadedSerial(), type, invInvoiceDTO.getBranchId());
-
+            
             if (proFactoryDelivery != null && proFactoryDelivery.getInvPurchaseInvoiceId() != null && proFactoryDelivery.getInvPurchaseInvoiceId().getId() != null) {
                 invInvoiceDTO.setInvPurchaseInvoiceId(proFactoryDelivery.getInvPurchaseInvoiceId().getId());
 //                invInvoiceDTO.setRemain(invPurchaseInvoiceService_1.remainForInvPurchaseInvoice(proFactoryDelivery.getInvPurchaseInvoiceId().getId()));

@@ -30,4 +30,13 @@ public class LoginRoot {
     @XmlElement
     public Integer branchSelected;
 
+    @XmlElement
+    public String oldPassword;
+
+    @XmlElement
+    public String newUserPassword;
+
+    @XmlElement
+    public String newPasswordConfirm;
+
 }

@@ -15,24 +15,37 @@ import java.util.Date;
 public class GeneralJournalDetailsDTO extends BaseEntityDTO {
     
      
-    private Integer serial; 
+   
     private GlAccountDTO glACCOUNTId; 
     private GlAccountDTO glAssistantAccount; 
     private CostCenterDTO costCenterId; 
-    private GlAdminUnitDTO adminUnitId; 
+    private GlAdminUnitDTO adminUnitId;
+    private GeneralJournalDTO generalJournalId; 
+    
+    
+    
+    private Integer glAccount; 
+    private Integer costCenter; 
+    private Integer adminUnit; 
+    private Integer generalJournal; 
+    private Integer currency;
     private BigDecimal debitAmount; 
     private BigDecimal creditamount;  
     private BigDecimal debitAmountLocal; 
-    private BigDecimal creditamountLocal; 
-    private String discribtion; 
-    private GeneralJournalDTO generalJournalId; 
+    private BigDecimal creditamountLocal;
     private Integer branchId; 
     private BigDecimal rate; 
     private CurrencyDTO currencyId;
     private Integer companyId;
     private Integer modifiedBy ; 
     private Date modificationDate;
-    private TobyUserDTO created_By ;
+    private TobyUserDTO created_By ;  
+    private Integer serial;  
+    private String discribtion; 
+    private String glAccountName;
+    private String glAccountNumber;
+    private String glCostCenterName;
+    private String glCostCenterNumber;
     
 
     @Override
@@ -261,6 +274,132 @@ public class GeneralJournalDetailsDTO extends BaseEntityDTO {
      */
     public void setCreated_By(TobyUserDTO created_By) {
         this.created_By = created_By;
+    }
+
+    /**
+     * @return the glAccount
+     */
+    public Integer getGlAccount() {
+        return glAccount;
+    }
+
+    /**
+     * @param glAccount the glAccount to set
+     */
+    public void setGlAccount(Integer glAccount) {
+        this.glAccount = glAccount;
+    }
+
+    /**
+     * @return the costCenter
+     */
+    public Integer getCostCenter() {
+        return costCenter;
+    }
+
+    /**
+     * @param costCenter the costCenter to set
+     */
+    public void setCostCenter(Integer costCenter) {
+        this.costCenter = costCenter;
+    }
+
+    /**
+     * @return the adminUnit
+     */
+    public Integer getAdminUnit() {
+        return adminUnit;
+    }
+
+    /**
+     * @param adminUnit the adminUnit to set
+     */
+    public void setAdminUnit(Integer adminUnit) {
+        this.adminUnit = adminUnit;
+    }
+
+    /**
+     * @return the generalJournal
+     */
+    public Integer getGeneralJournal() {
+        return generalJournal;
+    }
+
+    /**
+     * @param generalJournal the generalJournal to set
+     */
+    public void setGeneralJournal(Integer generalJournal) {
+        this.generalJournal = generalJournal;
+    }
+
+    /**
+     * @return the currency
+     */
+    public Integer getCurrency() {
+        return currency;
+    }
+
+    /**
+     * @param currency the currency to set
+     */
+    public void setCurrency(Integer currency) {
+        this.currency = currency;
+    }
+
+    /**
+     * @return the glAccountName
+     */
+    public String getGlAccountName() {
+        return glAccountName;
+    }
+
+    /**
+     * @param glAccountName the glAccountName to set
+     */
+    public void setGlAccountName(String glAccountName) {
+        this.glAccountName = glAccountName;
+    }
+
+    /**
+     * @return the glAccountNumber
+     */
+    public String getGlAccountNumber() {
+        return glAccountNumber;
+    }
+
+    /**
+     * @param glAccountNumber the glAccountNumber to set
+     */
+    public void setGlAccountNumber(String glAccountNumber) {
+        this.glAccountNumber = glAccountNumber;
+    }
+
+    /**
+     * @return the glCostCenterName
+     */
+    public String getGlCostCenterName() {
+        return glCostCenterName;
+    }
+
+    /**
+     * @param glCostCenterName the glCostCenterName to set
+     */
+    public void setGlCostCenterName(String glCostCenterName) {
+        this.glCostCenterName = glCostCenterName;
+    }
+
+    /**
+     * @return the glCostCenterNumber
+     */
+    public String getGlCostCenterNumber() {
+        return glCostCenterNumber;
+    }
+
+    /**
+     * @param glCostCenterNumber the glCostCenterNumber to set
+     */
+    public void setGlCostCenterNumber(String glCostCenterNumber) {
+        this.glCostCenterNumber = glCostCenterNumber;
     }
  
 

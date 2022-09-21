@@ -10,6 +10,19 @@
 
     <ui:define name="content">
         <h:form id="form" dir="rtl" style="margin-right: 20px">
+            <div class="ui-g-12 ui-xl-12">
+                <div class="ui-g-6 ui-xl-6">
+                    <p:inputText 
+                        value="#{generalJournalBean_new.serial}"
+                        style="width:50%">
+                        <p:ajax  update="@form"  listener="#{generalJournalBean_new.search()}" event="blur" />
+                    </p:inputText>
+                </div>
+                <div class="ui-g-6 ui-xl-6">
+                    <p:outputLabel  style="width: 100px;" value="رقم القيد "/>
+
+                </div>
+            </div>
             <p:fieldset legend="#{userData.userDDs['GENERAL_JOURNAL']}" style="margin-bottom: 20px">
                 <div>
                     <p:messages autoUpdate="true"  id="msg" showDetail="true" closable="true" rendered="false" />
@@ -79,12 +92,11 @@
                     widgetVar="generalJournaltable" 
                     id="generallist"  
                     rowIndexVar="index" 
-                    lazy="true" 
-                    rows="3"
+                    rows="5"
                     var="general" 
                     dir="#{userData.dir}" 
                     rowKey="#{general.index}" 
-                    value="#{generalJournalBean_new.dataModel}"                    
+                    value="#{generalJournalBean_new.generaDTOlList}"                    
                     paginator="true" 
                     paginatorTemplate="{CurrentPageReport} {FirstPageLink}
                     {PreviousPageLink} {PageLinks} {NextPageLink}
@@ -105,12 +117,7 @@
                                                      and (generalJournalBean_new.glYearDTOSelection.openning eq 0 or generalJournalBean_new.glYearDTOSelection.openning eq null)}" 
                                          oncomplete="PF('generalJournaltable').addRow()" />
 
-                        <p:selectOneMenu id="com" value="#{generalJournalBean_new.selectedCompany}"  
-                                         style="float:right;width: 40%!important;color: #fff" rendered="#{userData.isAdmin}">
-                            <p:ajax listener="#{generalJournalBean_new.onCompanyChange}" update=":form:generallist" />
-                            <f:selectItem    itemLabel="Select Company"  noSelectionOption="true" />
-                            <f:selectItems value="#{generalJournalBean_new.companies}"  var="com" itemLabel="#{com.name}" itemValue="#{com.id}"/>
-                        </p:selectOneMenu>
+
 
                         <p:selectOneMenu id="year" value="#{generalJournalBean_new.glYearDTOSelection}"
                                          converter="#{generalJournalBean_new.glYearDTOConverter}" 
@@ -130,14 +137,6 @@
                             <f:selectItem itemLabel="#{userData.userDDs['VERTICAL_PRINT']}" itemValue="VERTICAL" />
 
                         </p:selectOneMenu>
-
-                        <p:outputPanel >
-                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large"/>
-                            <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('generalJournaltable').filter()" style="width:25%" />
-                        </p:outputPanel>
-
-
-
                     </f:facet>
 
                     <p:column headerText="#{userData.userDDs['GENERAL_NUMBER']}" style="width: 5vh;font-size: 1.4vh;text-align: "  filterStyle="display:none" sortBy="#{general.serial}"  filterBy="#{general.serial}"  filterMatchMode="contains">
@@ -232,7 +231,7 @@
 
                 </p:dataTable>
             </p:fieldset>
-            
+
             <p:fieldset id="generalDetailsFeildSet" legend="#{userData.userDDs['GENERAL_JOURNAL_DETAILS']}">
                 <div class="col-xs-12">
                     <p:messages autoUpdate="true"  id="msg2" showDetail="true" closable="true" rendered="true" />
@@ -327,12 +326,12 @@
                     <p:column id="com2" filterStyle="display:none" 
                               style="width: 5vh;font-size: 1.4vh;text-align: center"
 
-                              filterBy="#{gendetails.costCenterId.code}"
+                              filterBy="#{gendetails.costCenterId}"
                               filterMatchMode="contains" 
                               headerText="#{userData.userDDs['SINGLE_COST_CENTER']}">
 
                         <h:outputText
-                            value="#{gendetails.costCenterId.code}"
+                            value="#{gendetails.costCenterId}"
                             rendered="#{not gendetails.markEdit}"/>
 
                         <p:selectOneMenu style="width:70px; float:right"
@@ -348,7 +347,7 @@
                                           itemValue="#{-1}" noSelectionOption="true" />
 
                             <f:selectItems value="#{generalJournalBean_new.costCenterList}" 
-                                           var="cost" itemLabel="#{cost.name}"
+                                           var="cost" itemLabel="#{cost}"
                                            itemValue="#{cost.id}"/>
                         </p:selectOneMenu>
                     </p:column>
@@ -565,7 +564,7 @@
                     <h:outputLabel value="#{generalJournalBean_new.journalDetailSelected.glACCOUNTId.currencyId.name}"  /> 
                 </p:panelGrid>
             </p:fieldset>
-       
+
         </h:form>
         <script>
             function insert(str, index, value) {

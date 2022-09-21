@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.CostCenterDTOAPI;
 import com.toby.dto.CostCenterDTO;
 import java.util.List;
 import javax.ejb.Remote;
@@ -16,7 +17,9 @@ import javax.ejb.Remote;
 @Remote
 public interface CostCenterServiceDTO {
     
-     public List<CostCenterDTO> getAllSubCostCenterByBranchIdActive(Integer id);
+     public List<CostCenterDTO> getAllSubCostCenterByBranchIdActive(Integer branchId);
+     
+     public List<CostCenterDTOAPI> getAllSubCostCenterByBranchIdActiveAPI(Integer branchId);
      
       public CostCenterDTO findCostCenter(Integer costCenterId);
 }

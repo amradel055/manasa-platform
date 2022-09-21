@@ -6,13 +6,14 @@
 package com.igma.crmEvent;
 
 import com.toby.businessservice.CRMEventServiceDTO;
-import com.toby.dto.CrmEventDTO;
-import com.toby.dto.InvOrganizationSiteDTO;
+import com.toby.businessservice.EmployeeService;
+import com.toby.businessservice.EventResponseService;
+import com.toby.dto.EventResponseDTO;
 import com.toby.toby.CrmBasicDataForm;
-import java.util.Date;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.context.ExternalContext;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -25,9 +26,20 @@ import javax.inject.Named;
 @ViewScoped
 public class CrmEventFormDTOMB extends CrmBasicDataForm {
 
+//    private List<EmployeeDTO> crmEmployeeList;
+//    private EmployeeDTOConverter employeeDTOConverter;
+    private EventResponseDTO eventResponseDTO;
+    private List<EventResponseDTO> eventResponseDTOList;
+
     // EJBs
     @EJB
     private CRMEventServiceDTO cRMEventServiceDTO;
+
+    @EJB
+    EmployeeService employeeService;
+
+    @EJB
+    EventResponseService eventResponseService;
 
     @Override
     @PostConstruct
@@ -45,160 +57,93 @@ public class CrmEventFormDTOMB extends CrmBasicDataForm {
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("EditcrmTaskDTO") && getUri() != null && !getUri().contains("main")) {
                 Integer crmEventDTOSelected = (Integer) getContext().getSessionMap().get("crmEventDTOSelected");
                 setCrmEventDTO(cRMEventServiceDTO.findById(crmEventDTOSelected));
-            } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("addEventFromLeadsList")) {
-                InvOrganizationSiteDTO crmLeadsDTOSelected = (InvOrganizationSiteDTO) getContext().getSessionMap().get("leadSelected");
-                getCrmEventDTO().setCustomerId(crmLeadsDTOSelected);
+                getEventResponseDTO().setAssignedTo((getEmployeeDTOList() == null || getEmployeeDTOList().isEmpty()) ? null : getEmployeeDTOList().get(0));
+                getEventResponseDTOList();
             }
-            initData();
-            numberOfLeads();
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "load");
         }
     }
 
-    public void search() {
-        getCrmEventDTO();
-    }
-
-    private void initData() {
-        if (getCrmEventDTO() != null) {
-            if (getCrmEventDTO().getAssignedTo() != null
-                    && !getEmployeeDTOList().contains(getCrmEventDTO().getAssignedTo())) {
-                getEmployeeDTOList().add(0, getCrmEventDTO().getAssignedTo());
-            }
-            if (getCrmEventDTO().getStatus() != null
-                    && !getEventStatusDTOList().contains(getCrmEventDTO().getStatus())) {
-                getEventStatusDTOList().add(0, getCrmEventDTO().getStatus());
-            }
-            if (getCrmEventDTO().getActivityType() != null
-                    && !getActivityTypeDTOList().contains(getCrmEventDTO().getActivityType())) {
-                getActivityTypeDTOList().add(0, getCrmEventDTO().getActivityType());
-            }
-            if (getCrmEventDTO().getSymbolPriority() != null
-                    && !getPriorityDTOList().contains(getCrmEventDTO().getSymbolPriority())) {
-                getPriorityDTOList().add(0, getCrmEventDTO().getSymbolPriority());
-            }
-            if (getCrmEventDTO().getCustomerId() != null
-                    && !getInvOrganizationSiteDTOListByLeaders("").contains(getCrmEventDTO().getCustomerId())) {
-                getInvOrganizationSiteDTOListByLeaders("").add(0, getCrmEventDTO().getCustomerId());
-            }
-            if (getCrmEventDTO().getLeadStatus() != null
-                    && !getLeadStatusDTOList().contains(getCrmEventDTO().getLeadStatus())) {
-                getLeadStatusDTOList().add(0, getCrmEventDTO().getLeadStatus());
-            }
-        }
-    }
-
     @Override
     public String save() {
-        saveEvent();
+        if (getEventResponseDTO() != null && getEventResponseDTO().getAssignedTo() != null && getEventResponseDTO().getAssignedTo().getId() != null
+                && getCrmEventDTO() != null && getCrmEventDTO().getId() != null && getEventResponseDTO().getComment() != null
+                && !getEventResponseDTO().getComment().isEmpty()) {
+            getEventResponseDTO().setEventId(getCrmEventDTO().getId());
+            getEventResponseDTO().setAssignto(getEventResponseDTO().getAssignedTo().getId());
+            eventResponseService.save(getEventResponseDTO(), getUserData().getUser());
+            setEventResponseDTOList(eventResponseService.returnEventResponseDTO());
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), "تم الحفظ بنجاح"));
+        }
         return "";
     }
 
-    public void copy() {
-        getCrmEventDTO().setId(null);
-        getCrmEventDTO().setLeadStatusActive(Boolean.FALSE);
-        getCrmEventDTO().setNowDate(Boolean.FALSE);
-        savedMeesage("تم النسخ");
-        initData();
-    }
-
-    public void resetEvent() {
-        setCrmEventDTO(new CrmEventDTO());
-    }
-
-    public void resetLeads() {
-        setInvOrganizationSiteDTO(null);
-        getInvOrganizationSiteDTO();
-    }
-
-    public String goToEvent() {
-        try {
-            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            if (getCrmEventDTO() != null && getCrmEventDTO().getId() != null) {
-                context.getSessionMap().put("crmEventDTOSelected", getCrmEventDTO().getId());
-                context.getSessionMap().put("ScreenMode", "EditcrmTaskDTO");
-            }
-            exit("../crmTodoEvent/TodoEvent.xhtml");
-            return "";
-        } catch (Exception e) {
-            saveError(e, "CrmEventFormDTOMB", "goToEvent");
-            return null;
+    /**
+     * @return the crmEmployeeList
+     */
+//    public List<EmployeeDTO> getCrmEmployeeList() {
+//        if (crmEmployeeList == null || crmEmployeeList.isEmpty()) {
+//            crmEmployeeList = employeeService.getAllCRMEmployee(getUserData().getUserBranch().getId());
+//            setEmployeeDTOConverter(new EmployeeDTOConverter(crmEmployeeList));
+//        }
+//        return crmEmployeeList;
+//    }
+//
+//    /**
+//     * @param crmEmployeeList the crmEmployeeList to set
+//     */
+//    public void setCrmEmployeeList(List<EmployeeDTO> crmEmployeeList) {
+//        this.crmEmployeeList = crmEmployeeList;
+//    }
+//    /**
+//     * @return the employeeDTOConverter
+//     */
+//    public EmployeeDTOConverter getEmployeeDTOConverter() {
+//        return employeeDTOConverter;
+//    }
+//
+//    /**
+//     * @param employeeDTOConverter the employeeDTOConverter to set
+//     */
+//    public void setEmployeeDTOConverter(EmployeeDTOConverter employeeDTOConverter) {
+//        this.employeeDTOConverter = employeeDTOConverter;
+//    }
+    /**
+     * @return the eventResponseDTO
+     */
+    public EventResponseDTO getEventResponseDTO() {
+        if (eventResponseDTO == null) {
+            eventResponseDTO = new EventResponseDTO();
         }
+        return eventResponseDTO;
     }
 
-    public String goToEventList(Integer TaskType) {
-        try {
-            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            context.getSessionMap().put("TaskType", TaskType);
-            context.getSessionMap().put("ScreenMode", "TaskTypeEdit");
-            exit("../crmTodoEvent/TodoEventList.xhtml");
-            return "";
-        } catch (Exception e) {
-            saveError(e, "CrmEventFormDTOMB", "goToEvent");
-            return null;
-        }
+    /**
+     * @param eventResponseDTO the eventResponseDTO to set
+     */
+    public void setEventResponseDTO(EventResponseDTO eventResponseDTO) {
+        this.eventResponseDTO = eventResponseDTO;
     }
 
-    public String goToLeadsList(Integer LeadsType) {
-        try {
-            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            context.getSessionMap().put("LeadsType", LeadsType);
-            context.getSessionMap().put("ScreenMode", "LeadsType");
-            exit("../crmLeads/leadsList.xhtml");
-            return "";
-        } catch (Exception e) {
-            saveError(e, "CrmEventFormDTOMB", "goToEvent");
-            return null;
-        }
+    /**
+     * @return the eventResponseDTOList
+     */
+    public List<EventResponseDTO> getEventResponseDTOList() {
+        setEventResponseDTOList(eventResponseService.returnEventResponseDTOByEventId(getCrmEventDTO().getId()));
+        return eventResponseDTOList;
     }
 
-    public String goToLeads() {
-        try {
-            //   saveLead();
-            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            if (getInvOrganizationSiteDTO() != null && getInvOrganizationSiteDTO().getId() != null) {
-                context.getSessionMap().put("leadSelected", getInvOrganizationSiteDTO().getId());
-                context.getSessionMap().put("ScreenMode", "EditLead");
-            }
-            exit("../crmLeads/leads.xhtml");
-            return "";
-        } catch (Exception e) {
-            saveError(e, "CrmEventFormDTOMB", "goToAddLeads");
-            return null;
-        }
-    }
-
-    public void dateNowSelected() {
-        if (getCrmEventDTO().getNowDate()) {
-            getCrmEventDTO().setStartDate(new Date());
-        }
+    /**
+     * @param eventResponseDTOList the eventResponseDTOList to set
+     */
+    public void setEventResponseDTOList(List<EventResponseDTO> eventResponseDTOList) {
+        this.eventResponseDTOList = eventResponseDTOList;
     }
 
     @Override
     public String getScreenName() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public String exitCrmEvent() {
-        try {
-            exit("../crmTodoEvent/TodoEventList.xhtml");
-            return "";
-        } catch (Exception e) {
-            saveError(e, "CrmEventFormDTOMB", "exitCrmEvent");
-            return null;
-        }
-    }
-
-    public String exitInvOrganizationSite() {
-//        try {
-//            exit("../glBank/glBankList.xhtml");
-//            return "";
-//        } catch (Exception e) {
-//            saveError(e, "glBankFromMB", "exit");
-//            return null;
-//        }
-        return "";
     }
 
 }

@@ -239,5 +239,18 @@ public class TobyUserRoleServiceImpl implements TobyUserRoleService {
         }
         return tobyUserList;
     }
+    
+    @Override
+    public List<TobyUser> getUsersForBranchNew(Integer selectedBranchId) {
+//        List<TobyUser> tobyUserList = new ArrayList<>();
+        Map<String, Object> params = new HashMap();
+        params.put("id", selectedBranchId);
+        String sql = "SELECT iurl FROM TobyUser iurl where iurl.branchId.id = :id";
+        List<TobyUser> tobyUserRoleList = dao.findListByQuery(sql, params);
+//        for (TobyUser tobyUserRole : tobyUserRoleList) {
+//            tobyUserList.add(tobyUserRole.getUserId());
+//        }
+        return tobyUserRoleList;
+    }
 
 }

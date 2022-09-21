@@ -57,9 +57,13 @@ public interface InvInventoryService {
     public List<InvInventory> getALLInventoriesByType(Integer invType);
 
     public List<InvInventoryDTO> getALLInventorieDTOListByBranch(TobyUser tobyUser);
-    
-    public InvInventoryDTO mapToDTO(InvInventory entity) ;
-    
+
+    public InvInventoryDTO mapToDTO(InvInventory entity);
+
     public InvInventoryDTO maptoDTOSmall(InvInventoryDTO dto, InvInventory entity);
+
+    public List<InvInventoryDTO> findInventoryByBranch(Integer branchId, TobyUser tobyUser);
+
+    public List<InvInventoryDTO> findInventoryByBranchIdDTO(Integer branchId, TobyUser tobyUser);
 
 }

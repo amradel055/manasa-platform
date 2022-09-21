@@ -14,7 +14,7 @@ import com.toby.dto.AttributeDTO;
 import com.toby.dto.CurrencyDTO;
 import com.toby.dto.InvGroupDTO;
 import com.toby.dto.InvItemDTO;
-import com.toby.dto.InvItemDTOApi;
+import com.toby.API.InvItemDTOApi;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.ProGroupDTO;
 import com.toby.dto.SymbolDTO;
@@ -30,6 +30,8 @@ import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
 import com.toby.views.ItemsBarcodesDetailsView;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -59,6 +61,9 @@ public class InvItemServiceImpl implements InvItemService {
 
     @EJB
     private VariationProductService variationProductService;
+
+    @EJB
+    private QuantityItemsStoreByDateService quantityItemsStoreByDateService;
 
     StringBuilder appendQuery;
 
@@ -120,6 +125,7 @@ public class InvItemServiceImpl implements InvItemService {
         invItem.setIsInventoryItem(invItemDTO.getIsinventoryitem());
         invItem.setTypeshow(invItemDTO.getTypeshow());
         invItem.setPriceType(invItemDTO.getPriceType());
+        invItem.setIsOfferItemFinal(invItemDTO.getIsOfferItemFinal());
 //        invItem.setItemNatural(invItemDTO.getItem_natural());
         if (invItemDTO.getOriginCountry() != null) {
             Symbol symbol = new Symbol();
@@ -193,8 +199,36 @@ public class InvItemServiceImpl implements InvItemService {
         return invItem;
     }
 
+//    public InvItemDTOApi mapToDTOAPI(InvItem invItem) {
+//        InvItemDTOApi dto = new InvItemDTOApi();
+//        dto.setCode(invItem.getCode());
+//        dto.setId(invItem.getId());
+//        dto.setCostAverage(invItem.getCostAverage());
+//        dto.setName(invItem.getName());
+//        dto.setSellPrice(invItem.getSellPrice());
+//        dto.setUnitId(invItem.getUnitId().getId());
+//        dto.setMinPriceMen(invItem.getMinpricemen());
+//        dto.setMaxPriceMen(invItem.getMaxpricemen());
+//        dto.setMinPriceYoung(invItem.getMinpriceyoung());
+//        dto.setMaxPriceYoung(invItem.getMaxpriceyoung());
+//        dto.setDiscountrate(invItem.getDiscountrate());
+//        dto.setUnitName(invItem.getUnitId().getName());
+////            dto.setScrewing(new BigDecimal((Long) line[12]));
+//        dto.setIsInventoryItem(invItem.getIsInventoryItem());
+//        dto.setTypeShow(invItem.getTypeshow());
+//        dto.setProGroupId(invItem.getProGroupId().getId());
+//        dto.setNumberMetersYoung(invItem.getNumbermetersyoung());
+//        dto.setNumberMetersMen(invItem.getNumbermetersmen());
+//        dto.setNumberMetersFreeYoung(invItem.getNumbermetersfreeyoung());
+//        dto.setNumberMetersFreeMen(invItem.getNumbermetersfreemen());
+//        dto.setSupplierId(invItem.getSiteId().getName());
+//        dto.setItemType(invItem.getType());
+//        dto.setPrice_type(invItem.getPriceType());
+//        return dto;
+//    }
+
     @Override
-    public InvItemDTO mapToDTO(InvItem invItem, TobyUser tobyUser) {
+    public InvItemDTO mapToDTO(InvItem invItem) {
 
         InvItemDTO invItemDTO = new InvItemDTO();
         invItemDTO.setCreatedBy(invItem.getCreatedBy() != null ? invItem.getCreatedBy().getId() : null);
@@ -248,38 +282,8 @@ public class InvItemServiceImpl implements InvItemService {
         invItemDTO.setTypeshow(invItem.getTypeshow());
         invItemDTO.setCostAverage(invItem.getCostAverage());
         invItemDTO.setPriceType(invItem.getPriceType());
+        invItemDTO.setIsOfferItemFinal(invItem.getIsOfferItemFinal());
 
-//        invItemDTO.setItem_natural(invItem.getItemNatural());
-        if (invItem.getOriginCountry() != null) {
-            SymbolDTO symbolDTO = new SymbolDTO();
-            symbolDTO.setId(invItem.getGroupId().getId());
-            symbolDTO.setName(invItem.getGroupId().getName());
-            invItemDTO.setOriginCountry(symbolDTO);
-        }
-        if (invItem.getPaintColor() != null) {
-            SymbolDTO symbolDTO = new SymbolDTO();
-            symbolDTO.setId(invItem.getGroupId().getId());
-            symbolDTO.setName(invItem.getGroupId().getName());
-            invItemDTO.setPaintColor(symbolDTO);
-        }
-        if (invItem.getStone() != null) {
-            SymbolDTO symbolDTO = new SymbolDTO();
-            symbolDTO.setId(invItem.getGroupId().getId());
-            symbolDTO.setName(invItem.getGroupId().getName());
-            invItemDTO.setStone(symbolDTO);
-        }
-        if (invItem.getAddon1() != null) {
-            SymbolDTO symbolDTO = new SymbolDTO();
-            symbolDTO.setId(invItem.getGroupId().getId());
-            symbolDTO.setName(invItem.getGroupId().getName());
-            invItemDTO.setAddon1(symbolDTO);
-        }
-        if (invItem.getAddon2() != null) {
-            SymbolDTO symbolDTO = new SymbolDTO();
-            symbolDTO.setId(invItem.getGroupId().getId());
-            symbolDTO.setName(invItem.getGroupId().getName());
-            invItemDTO.setAddon2(symbolDTO);
-        }
         if (invItem.getGroupId() != null) {
             InvGroupDTO invGroupDTO = new InvGroupDTO();
             invGroupDTO.setId(invItem.getGroupId().getId());
@@ -326,22 +330,48 @@ public class InvItemServiceImpl implements InvItemService {
         return invItemDTO;
     }
 
-    public List<InvItemDTO> mapToDTOList(List<InvItem> invItemList, TobyUser tobyUser) {
+    public List<InvItemDTO> mapToDTOList(List<InvItem> invItemList) {
         List<InvItemDTO> invItemDTOList = new ArrayList<>();
         for (InvItem invItem : invItemList) {
-            invItemDTOList.add(mapToDTO(invItem, tobyUser));
+            invItemDTOList.add(mapToDTO(invItem));
+        }
+        return invItemDTOList;
+    }
+    public List<InvItemDTOApi> mapToDTOListAPI(List<InvItem> invItemList) {
+        List<InvItemDTOApi> invItemDTOList = new ArrayList<>();
+        for (InvItem invItem : invItemList) {
+            invItemDTOList.add(mapToDTOAPI(invItem));
         }
         return invItemDTOList;
     }
 
     @Override
-    public List<InvItemDTO> invItemsReport(InvItemDTO invItemDTO, Integer branchId) {
+    public List<InvItemDTO> invItemsReport(InvItemDTO invItemDTO, Integer branchId, Boolean isUsed, BigDecimal lastCost, Date dateFrom, Integer itemNatural) {
         StringBuilder sql = new StringBuilder();
         List<InvItemDTO> list = new ArrayList<>();
         sql.append("select i.id ,i.name,i.last_cost,i.max_price_men,i.max_price_young,i.min_price_men,i.min_price_young\n"
                 + ",i.number_meters_free_men,i.number_meters_free_young,i.number_meters_men,i.number_meters_young \n"
-                + ",i.item_natural,i.code from inv_item i\n"
+                + ",i.item_natural,i.code ,i.pro_group_id from inv_item i\n"
                 + " where i.branch_id = ").append(branchId);
+        if (isUsed) {
+            sql.append(" and i.id in ( select ipid.item_id from inv_purchase_invoice_detail ipid ");
+            if (dateFrom != null) {
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+                sql.append(" where ipid.creation_date >=  '").append(dateFormat.format(dateFrom)).append("' ");
+            }
+            sql.append(" union all select iobd.item_id from inv_openning_balance_item_detail iobd ");
+            if (dateFrom != null) {
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+                sql.append(" where iobd.creation_date >=  '").append(dateFormat.format(dateFrom)).append("' ");
+            }
+            sql.append(" )");
+        }
+        if (lastCost != null && lastCost.compareTo(BigDecimal.ZERO) == 1) {
+            sql.append(" and i.last_cost <= ").append(lastCost);
+        }
+        if (itemNatural != null) {
+            sql.append(" and i.item_natural = ").append(itemNatural);
+        }
         appendProGroup(invItemDTO, sql);
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
         for (Object[] object : res) {
@@ -359,6 +389,10 @@ public class InvItemServiceImpl implements InvItemService {
             invItemDTO.setNumbermetersyoung((BigDecimal) object[10]);
             invItemDTO.setItemNatural((Integer) object[11]);
             invItemDTO.setCode((String) object[12]);
+            Integer proGroupId = ((Integer) object[13]);
+            if (proGroupId != null && proGroupId == 1) {
+                invItemDTO.setQuantity(quantityItemsStoreByDateService.getQuantatyItemByinventory(null, invItemDTO.getId(), false, null));
+            }
             list.add(invItemDTO);
         }
         return list;
@@ -372,11 +406,26 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public List<InvItemDTO> findInvItemDTOList(TobyUser tobyUser) {
+    public List<InvItemDTO> findInvItemDTOList(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("branchId", tobyUser.getBranchId().getId());
+        params.put("branchId", branchId);
         List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId ", params);
-        return mapToDTOList(invItemList, tobyUser);
+        return mapToDTOList(invItemList);
+    }
+    @Override
+    public List<InvItemDTOApi> findInvItemDTOListAPI(Integer branchId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId and e.id >= 23148", params);
+        return mapToDTOListAPI(invItemList);
+    }
+    
+    @Override
+    public List<InvItemDTOApi> findInvItemDTOListAPINew(Integer branchId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId ", params);
+        return mapToDTOListAPI(invItemList);
     }
 
     @Override
@@ -465,6 +514,13 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
+    public synchronized void updateLastCostInvItem(Integer invItem, BigDecimal lastCost) {
+        InvItem item = dao.findEntityById(InvItem.class, invItem);
+        item.setLastCost(lastCost);
+        dao.updateEntity(item);
+    }
+
+    @Override
     public InvItem updateInvItemWebSite(InvItem invItem) {
         InvItem item = new InvItem();
         if (invItem.getId() != null) {
@@ -531,15 +587,44 @@ public class InvItemServiceImpl implements InvItemService {
         api.setCode(invItem.getCode());
         api.setImage(invItem.getImage());
         api.setRemarks(invItem.getRemarks());
-        AttributeDTO attributeDTO = new AttributeDTO();
-        attributeDTO.setItemId(invItem.getId());
-        api.setAtrributesList(attributeService.getAllAttributesByBranchIdAndItemId(attributeDTO));
-
-        VariationDTO variationDTO = new VariationDTO();
-        variationDTO.setBranchId(api.getBranchId());
-        variationDTO.setCompanyId(api.getCompanyId());
-        variationDTO.setItemId(invItem.getId());
-        api.setVariationsList(variationProductService.getAllVariationByCompanyIdAndBranchId(variationDTO));
+        
+        
+        api.setCode(invItem.getCode());
+        api.setId(invItem.getId());
+        api.setCostAverage(invItem.getCostAverage());
+        api.setName(invItem.getName());
+        api.setSellPrice(invItem.getSellPrice());
+        api.setUnitId(invItem.getUnitId().getId());
+        api.setMinPriceMen(invItem.getMinpricemen());
+        api.setMaxPriceMen(invItem.getMaxpricemen());
+        api.setMinPriceYoung(invItem.getMinpriceyoung());
+        api.setMaxPriceYoung(invItem.getMaxpriceyoung());
+//        api.setDiscountrate(invItem.getDiscountrate());
+        api.setUnitName(invItem.getUnitId().getName());
+//            dto.setScrewing(new BigDecimal((Long) line[12]));
+        api.setIsInventoryItem(invItem.getIsInventoryItem());
+        api.setTypeShow(invItem.getItemNatural());
+        api.setProGroupId(invItem.getProGroupId() == null ? null : invItem.getProGroupId().getId());
+        api.setNumberMetersYoung(invItem.getNumbermetersyoung());
+        api.setNumberMetersMen(invItem.getNumbermetersmen());
+        api.setNumberMetersFreeYoung(invItem.getNumbermetersfreeyoung());
+        api.setNumberMetersFreeMen(invItem.getNumbermetersfreemen());
+        api.setSupplierId(invItem.getSiteId() == null ? null : invItem.getSiteId().getName());
+        api.setItemType(invItem.getType());
+        api.setPriceType(invItem.getPriceType());
+        api.setLastCost(invItem.getLastCost());
+        api.setPriceType(invItem.getPriceType());
+        
+        
+//        AttributeDTO attributeDTO = new AttributeDTO();
+//        attributeDTO.setItemId(invItem.getId());
+//        api.setAtrributesList(attributeService.getAllAttributesByBranchIdAndItemId(attributeDTO));
+//
+//        VariationDTO variationDTO = new VariationDTO();
+//        variationDTO.setBranchId(api.getBranchId());
+//        variationDTO.setCompanyId(api.getCompanyId());
+//        variationDTO.setItemId(invItem.getId());
+//        api.setVariationsList(variationProductService.getAllVariationByCompanyIdAndBranchId(variationDTO));
         return api;
     }
 
@@ -564,7 +649,7 @@ public class InvItemServiceImpl implements InvItemService {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         List<InvItem> details = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId  ORDER BY e.code", params);
-        return mapToDTOList(details, tobyUser);
+        return mapToDTOList(details);
     }
 
     @Override
@@ -602,6 +687,15 @@ public class InvItemServiceImpl implements InvItemService {
         params.put("branchId", branchId);
         params.put("groupId", groupId);
         List<InvItem> details = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId AND e.groupId.id = :groupId  ORDER BY e.code", params);
+        List<InvItemDTO> detailsReturn = retriveItemDTOData(details, ScreenNameClassEnum.ITEMCARDREPORT);
+        return detailsReturn;
+    }
+
+    @Override
+    public List<InvItemDTO> getInvItemByBranchIdAndProGroupIdDTO(StringBuilder list) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("list", list.toString());
+        List<InvItem> details = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.proGroupId.id in( " + list + " ) ORDER BY e.code");
         List<InvItemDTO> detailsReturn = retriveItemDTOData(details, ScreenNameClassEnum.ITEMCARDREPORT);
         return detailsReturn;
     }
@@ -702,8 +796,7 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public Boolean validateCodeFromView(InvItem invItem
-    ) {
+    public Boolean validateCodeFromView(InvItem invItem) {
         Boolean result = true;
         Map<String, Object> params = new HashMap<>();
         StringBuilder query = new StringBuilder();
@@ -726,9 +819,7 @@ public class InvItemServiceImpl implements InvItemService {
         if (itemsBarcodesDetailsViews == null || itemsBarcodesDetailsViews.isEmpty()) {
             return false;
         }
-
         return result;
-
     }
 
     @Override
@@ -760,7 +851,7 @@ public class InvItemServiceImpl implements InvItemService {
                 + " select q.itemId from QuantityItemsStore q "
                 + "where (q.inventoryId = :inventoryId and q.itemId is not null))   ORDER BY i.code", params);
 
-        return mapToDTOList(invItems, tobyUser);
+        return mapToDTOList(invItems);
     }
 
     @Override
@@ -1083,7 +1174,7 @@ public class InvItemServiceImpl implements InvItemService {
 
         List<InvItem> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
 
-        return mapToDTOList(details, tobyUser);
+        return mapToDTOList(details);
     }
 
     public void appendFilter(Map<String, Object> filters, Integer branchId, StringBuilder builder) {
@@ -1165,7 +1256,7 @@ public class InvItemServiceImpl implements InvItemService {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", tobyUser.getBranchId().getId());
         List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id =:branchId AND e.typeCat = 2", params);
-        return mapToDTOList(invItemList, tobyUser);
+        return mapToDTOList(invItemList);
     }
 
     @Override
@@ -1174,7 +1265,7 @@ public class InvItemServiceImpl implements InvItemService {
         params.put("branchId", tobyUser.getBranchId().getId());
         List<InvItem> detailses = dao.findListByQuery("SELECT i FROM InvItem i WHERE i.branchId.id = :branchId  ORDER BY i.code", params);
 
-        return mapToDTOList(detailses, tobyUser);
+        return mapToDTOList(detailses);
 
     }
 
@@ -1258,8 +1349,8 @@ public class InvItemServiceImpl implements InvItemService {
         List<Integer> detailses = dao.findListByQuery("SELECT i.id FROM InvItem i WHERE i.branchId.id = :branchId  ORDER BY i.code", params);
         return detailses;
     }
-    
-       @Override
+
+    @Override
     public InvItem findItemByCode(String code) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder query = new StringBuilder();
@@ -1281,6 +1372,13 @@ public class InvItemServiceImpl implements InvItemService {
 
         return invItems.get(0);
 
+    }
+
+    @Override
+    public void updateByOffer(Integer invItem, Integer isOfferFinal) {
+        InvItem item = dao.findEntityById(InvItem.class, invItem);
+        item.setIsOfferItemFinal(isOfferFinal);
+        dao.updateEntity(item);
     }
 
 }

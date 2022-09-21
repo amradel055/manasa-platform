@@ -14,4 +14,6 @@ public interface SubAccountSummaryService {
     public List<SubAccountSummary> getSubAccountSummary(SubAccountSummarySearchBean subAccountSummarySearchBean, GlYear glYear , boolean extended);
     
     public BigDecimal getBeforeBalance(SubAccountSummarySearchBean subAccountSummarySearchBean , GlYear glYear,boolean extended);
+    
+    public List<SubAccountSummary> getSubAccountSummaryNew(SubAccountSummarySearchBean subAccountSummarySearchBean, GlYear glYear, boolean extended);
 }

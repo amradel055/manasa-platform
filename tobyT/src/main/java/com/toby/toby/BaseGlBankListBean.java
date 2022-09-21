@@ -9,6 +9,7 @@ import com.toby.businessservice.AccountsSystemSettingsService;
 import com.toby.businessservice.GlAccountService;
 import com.toby.businessservice.GlBankTransactionDetailsService;
 import com.toby.businessservice.GlBankTransactionService;
+import com.toby.bussinessservice.global.Utility;
 import com.toby.dto.GlBankTransactionDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.entity.AccountsSystemSettings;
@@ -83,7 +84,7 @@ public abstract class BaseGlBankListBean extends BaseListBean {
         glBankTransactionEntityMapper = new GlBankTransactionEntity();
         glBankTransactionEntityMapper.setId(bankTransaction.getId());
         glBankTransactionEntityMapper.setSerial(bankTransaction.getSerial());
-        glBankTransactionEntityMapper.setDate(bankTransaction.getDate() != null ? bankTransaction.getDate() : new Date());
+        glBankTransactionEntityMapper.setDate(bankTransaction.getDate() != null ? bankTransaction.getDate() : Utility.hourNow());
         glBankTransactionEntityMapper.setPaymentType(bankTransaction.getPaymentType() != null ? bankTransaction.getPaymentType() : 0);
 
         if (bankTransaction.getPaymentType() == 1) {

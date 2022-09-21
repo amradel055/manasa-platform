@@ -27,11 +27,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "gl_bank")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "GlBank.findAll", query = "SELECT g FROM GlBank g"),
-    @NamedQuery(name = "GlBank.findById", query = "SELECT g FROM GlBank g WHERE g.id = :id"),
-    @NamedQuery(name = "GlBank.findByName", query = "SELECT g FROM GlBank g WHERE g.name = :name"),
-    @NamedQuery(name = "GlBank.findByCode", query = "SELECT g FROM GlBank g WHERE g.code = :code"),
-    @NamedQuery(name = "GlBank.findByCreationDate", query = "SELECT g FROM GlBank g WHERE g.creationDate = :creationDate"),
+    @NamedQuery(name = "GlBank.findAll", query = "SELECT g FROM GlBank g")
+    ,
+    @NamedQuery(name = "GlBank.findById", query = "SELECT g FROM GlBank g WHERE g.id = :id")
+    ,
+    @NamedQuery(name = "GlBank.findByName", query = "SELECT g FROM GlBank g WHERE g.name = :name")
+    ,
+    @NamedQuery(name = "GlBank.findByCode", query = "SELECT g FROM GlBank g WHERE g.code = :code")
+    ,
+    @NamedQuery(name = "GlBank.findByCreationDate", query = "SELECT g FROM GlBank g WHERE g.creationDate = :creationDate")
+    ,
     @NamedQuery(name = "GlBank.findByModificationDate", query = "SELECT g FROM GlBank g WHERE g.modificationDate = :modificationDate")})
 public class GlBank extends BaseEntity {
 
@@ -54,7 +59,7 @@ public class GlBank extends BaseEntity {
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     @ManyToOne
     private GlAccount accountId;
-     @JoinColumn(name = "transferaccount_id", referencedColumnName = "id")
+    @JoinColumn(name = "transferaccount_id", referencedColumnName = "id")
     @ManyToOne
     private GlAccount transferaccountId;
     @Column(name = "type")
@@ -65,7 +70,7 @@ public class GlBank extends BaseEntity {
     @JoinColumn(name = "currency_id", referencedColumnName = "id")
     @ManyToOne
     private Currency currencyId;
-    
+
     @Column(name = "commition")
     private BigDecimal commition;
     @Column(name = "rate")
@@ -77,7 +82,12 @@ public class GlBank extends BaseEntity {
     @JoinColumn(name = "gallary_id", referencedColumnName = "id")
     @ManyToOne
     private InvInventory gallaryId;
-    
+
+    @Column(name = "fixed_amount")
+    private BigDecimal fixedAmount;
+    @JoinColumn(name = "gl_bank_id", referencedColumnName = "id")
+    @ManyToOne
+    private GlBank glBankId;
 
     public GlBank() {
     }
@@ -210,12 +220,11 @@ public class GlBank extends BaseEntity {
 //    public void setRaghiPoint(Integer raghiPoint) {
 //        this.raghiPoint = raghiPoint;
 //    }
-
     /**
      * @return the commition
      */
     public BigDecimal getCommition() {
-        if(commition == null){
+        if (commition == null) {
             commition = BigDecimal.ZERO;
         }
         return commition;
@@ -296,6 +305,37 @@ public class GlBank extends BaseEntity {
      */
     public void setTransferaccountId(GlAccount transferaccountId) {
         this.transferaccountId = transferaccountId;
+    }
+
+    /**
+     * @return the fixedAmount
+     */
+    public BigDecimal getFixedAmount() {
+        if (fixedAmount == null) {
+            fixedAmount = BigDecimal.ZERO;
+        }
+        return fixedAmount;
+    }
+
+    /**
+     * @param fixedAmount the fixedAmount to set
+     */
+    public void setFixedAmount(BigDecimal fixedAmount) {
+        this.fixedAmount = fixedAmount;
+    }
+
+    /**
+     * @return the glBankId
+     */
+    public GlBank getGlBankId() {
+        return glBankId;
+    }
+
+    /**
+     * @param glBankId the glBankId to set
+     */
+    public void setGlBankId(GlBank glBankId) {
+        this.glBankId = glBankId;
     }
 
 }

@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.InvOrganizationSiteDTOAPI;
 import com.toby.businessservice.reports.searchBean.CrmLeadsSearchBean;
 import com.toby.businessservice.reports.searchBean.SupplierAccountSearchBean;
 import com.toby.businessservice.reports.searchBean.invOrganizationSiteSearchBean;
@@ -24,6 +25,7 @@ import com.toby.dto.SymbolDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.Currency;
 import com.toby.entity.Employee;
+import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlAccount;
 import com.toby.entity.InvInventory;
 import com.toby.entity.InvOrganizationSite;
@@ -34,11 +36,13 @@ import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -71,14 +75,32 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     private InvInventoryService invInventoryService;
 
     @Override
-    public void updateOrganizationSiteMobile(InvOrganizationSiteDTO organizationSiteDTO) {
+    public void updateOrganizationSite(InvOrganizationSiteDTO organizationSiteDTO) {
         if (organizationSiteDTO != null && organizationSiteDTO.getId() != null) {
             InvOrganizationSite entity = dao.findEntityById(InvOrganizationSite.class, organizationSiteDTO.getId());
             entity.setMobile(organizationSiteDTO.getMobile());
+            entity.setEmail(organizationSiteDTO.getEmail());
             entity.setLength(organizationSiteDTO.getLength());
             entity.setShoulder(organizationSiteDTO.getShoulder());
             entity.setStep(organizationSiteDTO.getStep());
+            entity.setName(organizationSiteDTO.getName());
             dao.updateEntity(entity);
+        }
+    }
+
+    @Override
+    public void updateOrganizationSite(InvOrganizationSiteDTOAPI organizationSiteDTO) {
+        if (organizationSiteDTO != null && organizationSiteDTO.getId() != null) {
+            InvOrganizationSite entity = dao.findEntityById(InvOrganizationSite.class, organizationSiteDTO.getId());
+            if (entity != null) {
+                entity.setMobile(organizationSiteDTO.getMobile());
+                entity.setEmail(organizationSiteDTO.getEmail());
+                entity.setLength(organizationSiteDTO.getLength());
+                entity.setShoulder(organizationSiteDTO.getShoulder());
+                entity.setStep(organizationSiteDTO.getStep());
+                entity.setName(organizationSiteDTO.getName());
+                dao.updateEntity(entity);
+            }
         }
     }
 
@@ -95,6 +117,8 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             }
             entity.setMobile(organizationSiteDTO.getMobile());
             entity.setName(organizationSiteDTO.getName());
+            entity.setOpenBalanceDebit(organizationSiteDTO.getOpenBalanceDebit());
+            entity.setOpenBalanceCredit(organizationSiteDTO.getOpenBalanceCredit());
             dao.updateEntity(entity);
         }
     }
@@ -464,6 +488,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSite.setFax(invOrganizationSiteDTO.getFax());
         invOrganizationSite.setId(invOrganizationSiteDTO.getId());
 
+        invOrganizationSite.setEmployer(invOrganizationSiteDTO.getEmployer());
+        invOrganizationSite.setStreet(invOrganizationSiteDTO.getStreet());
+        invOrganizationSite.setCity(invOrganizationSiteDTO.getCity());
+        invOrganizationSite.setCountry(invOrganizationSiteDTO.getCountry());
+        invOrganizationSite.setJobNamed(invOrganizationSiteDTO.getJobNamed());
+
         invOrganizationSite.setEmail(invOrganizationSiteDTO.getEmail());
         invOrganizationSite.setMarkDisable(invOrganizationSiteDTO.getMarkDisable());
         invOrganizationSite.setMarkEdit(invOrganizationSiteDTO.getMarkEdit());
@@ -488,6 +518,31 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSite.setLength(invOrganizationSiteDTO.getLength());
         invOrganizationSite.setShoulder(invOrganizationSiteDTO.getShoulder());
         invOrganizationSite.setStep(invOrganizationSiteDTO.getStep());
+        invOrganizationSite.setCompanyName(invOrganizationSiteDTO.getCompanyName());
+        if (invOrganizationSiteDTO.getLearnAboutCompanyFrom() != null) {
+            Symbol symbol = new Symbol();
+            symbol.setId(invOrganizationSiteDTO.getLearnAboutCompanyFrom().getId());
+            invOrganizationSite.setLearnAboutCompanyfrom(symbol);
+        }
+        
+        if (invOrganizationSiteDTO.getAccountIdAPI() != null) {
+            GlAccount account = new GlAccount();
+            account.setId(invOrganizationSiteDTO.getAccountIdAPI());
+            invOrganizationSite.setAccountId(account);
+
+        }
+
+        if (invOrganizationSiteDTO.getGallaryIdAPI() != null) {
+            InvInventory invInventory = new InvInventory();
+            invInventory.setId(invOrganizationSiteDTO.getGallaryIdAPI());
+            invOrganizationSite.setGallaryId(invInventory);
+            if (invOrganizationSiteDTO.getAccountIdAPI() == null) {
+                GlAccount account = new GlAccount();
+                InvInventory inventory = dao.findEntityById(InvInventory.class, invOrganizationSiteDTO.getGallaryIdAPI());
+                account.setId((inventory != null && inventory.getCustomerAccount() != null) ? inventory.getCustomerAccount().getId() : null);
+                invOrganizationSite.setAccountId(account);
+            }
+        }
 
         if (invOrganizationSiteDTO.getGallaryIdDTO() != null && invOrganizationSiteDTO.getGallaryIdDTO().getId() != null) {
             InvInventory invInventory = new InvInventory();
@@ -518,6 +573,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             invOrganizationSite.setContractorType(symbol);
         }
 
+        
         if (invOrganizationSiteDTO.getAccountId() != null) {
             GlAccount account = new GlAccount();
             account.setId(invOrganizationSiteDTO.getAccountId().getId());
@@ -591,7 +647,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSiteDTO.setType(invOrganizationSite.getType());
         invOrganizationSiteDTO.setActive(invOrganizationSite.getActive());
         invOrganizationSiteDTO.setBalanceLimit(invOrganizationSite.getBalanceLimit());
-        invOrganizationSiteDTO.setCompanyName(invOrganizationSite.getCompanyId().getName());
+        invOrganizationSiteDTO.setCompanyName(invOrganizationSite.getCompanyName());
         invOrganizationSiteDTO.setContactPerson(invOrganizationSite.getContactPerson());
         invOrganizationSiteDTO.setDiscount(invOrganizationSite.getDiscount());
         invOrganizationSiteDTO.setIndex(invOrganizationSite.getId());
@@ -607,7 +663,11 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSiteDTO.setLength(invOrganizationSite.getLength());
         invOrganizationSiteDTO.setShoulder(invOrganizationSite.getShoulder());
         invOrganizationSiteDTO.setStep(invOrganizationSite.getStep());
-
+        invOrganizationSiteDTO.setEmployer(invOrganizationSite.getEmployer());
+        invOrganizationSiteDTO.setStreet(invOrganizationSite.getStreet());
+        invOrganizationSiteDTO.setCity(invOrganizationSite.getCity());
+        invOrganizationSiteDTO.setCountry(invOrganizationSite.getCountry());
+        invOrganizationSiteDTO.setJobNamed(invOrganizationSite.getJobNamed());
         if (invOrganizationSite.getParent() != null) {
             InvOrganizationSiteDTO invOrganizationSiteDTO1 = new InvOrganizationSiteDTO();
             invOrganizationSiteDTO1.setId(invOrganizationSite.getParent().getId());
@@ -1160,7 +1220,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSiteDTO> dTO = new ArrayList();
         List<InvOrganizationSite> invOrganizationSiteList = returnListEntity(invOrganizationSiteDTOList, tobyUser);
         for (InvOrganizationSite organizationSite : invOrganizationSiteList) {
-            dTO.add(mapTODTO(null, updateOrganizationSite(organizationSite), Boolean.FALSE));
+            dTO.add(mapTODTO(null, OrganizationSiteServiceImpl.this.updateOrganizationSite(organizationSite), Boolean.FALSE));
         }
         return dTO;
     }
@@ -1514,7 +1574,8 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     }
 
     @Override
-    public InvOrganizationSiteDTO addNewCustomer(InvOrganizationSiteDTO invOrganizationSiteDTO, List<InvOrganizationSiteDTO> invOrganizationSiteDTOList, TobyUser tobyUser, Integer accountId) {
+    public InvOrganizationSiteDTO addNewCustomer(InvOrganizationSiteDTO invOrganizationSiteDTO, List<InvOrganizationSiteDTO> invOrganizationSiteDTOList,
+            TobyUser tobyUser, Integer accountId) {
 
         CurrencyDTO currencyDefault = currencyServiceDTO.getDefaultCurrenciesByCompanyId(tobyUser.getCompanyId().getId());
 
@@ -1530,9 +1591,48 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             inventoryDelegatorDTO.setId(77);
             invOrganizationSiteDTO.setDelegatorId(inventoryDelegatorDTO);
             invOrganizationSiteDTO.setCode(code.toString());
+            invOrganizationSiteDTO.setMobile(invOrganizationSiteDTO.getMobile());
+            invOrganizationSiteDTO.setEmail(invOrganizationSiteDTO.getEmail());
+            invOrganizationSiteDTO.setAddress(invOrganizationSiteDTO.getAddress());
+            invOrganizationSiteDTO.setLength(invOrganizationSiteDTO.getLength());
+            invOrganizationSiteDTO.setShoulder(invOrganizationSiteDTO.getShoulder());
+            invOrganizationSiteDTO.setStep(invOrganizationSiteDTO.getStep());
 
             invOrganizationSiteDTO = addOrganizationSiteDTO(invOrganizationSiteDTO, tobyUser);
+            if (invOrganizationSiteDTOList == null) {
+                invOrganizationSiteDTOList = new ArrayList<>();
+            }
             invOrganizationSiteDTOList.add(0, invOrganizationSiteDTO);
+        }
+        return invOrganizationSiteDTO;
+    }
+
+    @Override
+    public InvOrganizationSiteDTO addNewCustomerAPI(InvOrganizationSiteDTOAPI invOrganizationSiteDTOAPI, TobyUser tobyUser, Integer accountId) {
+
+        CurrencyDTO currencyDefault = currencyServiceDTO.getDefaultCurrenciesByCompanyId(tobyUser.getCompanyId().getId());
+        InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
+        if (invOrganizationSiteDTOAPI != null && invOrganizationSiteDTOAPI.getName() != null && currencyDefault != null) {
+            invOrganizationSiteDTO.setType(0);
+            invOrganizationSiteDTO.setCurrencyId(currencyDefault);
+            invOrganizationSiteDTO.setActive(1);
+            Integer code = getMaxGenericSerialForDetail(tobyUser.getBranchId().getId(), 0);
+            GlAccountDTO glAccountDTO = new GlAccountDTO();
+            glAccountDTO.setId(accountId);
+            invOrganizationSiteDTO.setAccountId(glAccountDTO);
+            InventoryDelegatorDTO inventoryDelegatorDTO = new InventoryDelegatorDTO();
+            inventoryDelegatorDTO.setId(77);
+            invOrganizationSiteDTO.setDelegatorId(inventoryDelegatorDTO);
+            invOrganizationSiteDTO.setCode(code.toString());
+            invOrganizationSiteDTO.setName(invOrganizationSiteDTOAPI.getName());
+            invOrganizationSiteDTO.setMobile(invOrganizationSiteDTOAPI.getMobile());
+            invOrganizationSiteDTO.setEmail(invOrganizationSiteDTOAPI.getEmail());
+            invOrganizationSiteDTO.setLength(invOrganizationSiteDTOAPI.getLength());
+            invOrganizationSiteDTO.setShoulder(invOrganizationSiteDTOAPI.getShoulder());
+            invOrganizationSiteDTO.setStep(invOrganizationSiteDTOAPI.getStep());
+            invOrganizationSiteDTO.setGallaryIdAPI(invOrganizationSiteDTOAPI.getGallaryIdAPI());
+
+            invOrganizationSiteDTO = addOrganizationSiteDTO(invOrganizationSiteDTO, tobyUser);
         }
         return invOrganizationSiteDTO;
     }
@@ -1692,6 +1792,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             }
 
             invOrganizationSiteDTO.setGallaryIdDTO(gallary);
+            invOrganizationSiteDTO.setGallaryIdAPI(invOrganizationSite.getGallaryId().getId());
         }
 
         if (invOrganizationSite.getAccountId() != null) {
@@ -2736,17 +2837,68 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
 
     }
-    
-     @Override
-    public InvOrganizationSiteDTO getIDByCode(String code , TobyUser tobyUser , Integer gallaryId) {
+
+    @Override
+    public InvOrganizationSiteDTO getIDByCode(String code, TobyUser tobyUser, Integer gallaryId) {
         Map<String, Object> params = new HashMap<>();
         params.put("code", code);
         params.put("gallaryId", gallaryId);
         InvOrganizationSite detailses = dao.findEntityByQuery("SELECT e FROM InvOrganizationSite e WHERE e.code = :code AND e.gallaryId.id = :gallaryId  ", params);
-        if(detailses == null){
-            return null ;
+        if (detailses == null) {
+            return null;
         }
         return mapToDTO(detailses, tobyUser);
+    }
+
+    @Override
+    public List<InvOrganizationSiteDTO> returnClientSales(List<InvInventoryDTO> invInventoryDTOList, Date dateFrom, Date dateTo, String value) {
+        String dateFrom1 = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(dateFrom);
+        String dateTo1 = new SimpleDateFormat("yyyy-MM-dd  23:59:59").format(dateTo);
+        String gallary = returnGallaryString(invInventoryDTOList);
+        List<InvOrganizationSiteDTO> invOrganizationSiteDTOList = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        sql.append("select ios.code , ios.name , ios.mobile from inv_purchase_invoice ipi left join inv_organization_site ios on ios.id = ipi.organization_site_id where ipi.branch_id = " + invInventoryDTOList.get(0).getBranchId()
+                + " and ipi.galary_Id in (").append(gallary).append(") and ipi.date >= '").append(dateFrom1).append("' and ipi.date <= '").append(dateTo1).append("' group by ipi.organization_site_id having count(ipi.id) in(").append(value).append(")");
+        List<Object[]> res = dao.executeNativeQuery(sql.toString());
+        Iterator it = res.iterator();
+        while (it.hasNext()) {
+            Object[] line = (Object[]) it.next();
+            InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
+            invOrganizationSiteDTO.setCode((String) line[0]);
+            invOrganizationSiteDTO.setName((String) line[1]);
+            invOrganizationSiteDTO.setMobile((String) line[2]);
+
+            invOrganizationSiteDTOList.add(invOrganizationSiteDTO);
+        }
+        return invOrganizationSiteDTOList;
+    }
+
+    public String returnGallaryString(List<InvInventoryDTO> invInventoryDTOList) {
+        StringBuilder gallarySelected = null;
+        List<InvOrganizationSiteDTO> invOrganizationSiteDTOList = new ArrayList<>();
+        for (InvInventoryDTO invInventoryDTO : invInventoryDTOList) {
+            if (gallarySelected == null) {
+                gallarySelected = new StringBuilder();
+                gallarySelected.append(invInventoryDTO.getId());
+            } else {
+                gallarySelected.append(",");
+                gallarySelected.append(invInventoryDTO.getId());
+            }
+        }
+        return gallarySelected.toString();
+    }
+
+    @Override
+    public InvOrganizationSiteDTO findOrganizationSiteDTOByCodeAndGallaryIdDTO(Integer branchId, String code, Integer gallaryId) {
+        if (branchId != null && gallaryId != null && code != null && !code.isEmpty()) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("branchId", branchId);
+            params.put("code", code);
+            params.put("gallaryId", gallaryId);
+            InvOrganizationSite invOrganizationSiteList = dao.findEntityByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.gallaryId.id =:gallaryId AND ( e.mobile = :code OR e.code = :code )", params);
+            return mapToDTOSmall(invOrganizationSiteList);
+        }
+        return null;
     }
 
 }

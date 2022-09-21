@@ -5,14 +5,16 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.InvDetailsDTOAPI;
 import com.toby.entity.TobyUser;
 import com.toby.dto.InvDetailDTO;
-import com.toby.dto.InvDetailsDTOAPI;
 import com.toby.dto.InvInvoiceDTO;
+import com.toby.dto.balanceGalary;
 import com.toby.entity.GlYear;
 import com.toby.entity.InvPurchaseInvoiceDetail;
 import com.toby.views.ItemsBarcodesDetailsView;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -50,16 +52,22 @@ public interface InvPurchaseInvoiceDetailsService {
     public List<InvDetailDTO> getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(InvInvoiceDTO dto);
 
     public List<InvDetailDTO> getAllInvPurchaseInvoiceDetailList(InvInvoiceDTO dto);
-    
-    public List<InvDetailsDTOAPI> getAllInvPurchaseInvoiceDetailListWebSite(InvInvoiceDTO dto);
+
+    public List<InvDetailsDTOAPI> getAllInvPurchaseInvoiceDetailListWebSite(Integer invoiceId);
 
     public void deleteInvPurchaseInvoiceDetailListDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList);
 
     public List<InvDetailDTO> addInvPurchaseInvoiceDetailsDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList, InvInvoiceDTO invPurchaseInvoiceDTO, TobyUser tobyUser);
 
     public <T> List<ItemsBarcodesDetailsView> findItemBarcodeDetails(List<T> list, Integer branchId);
-    
+
     public BigDecimal findLastCost(Integer itemId);
+
+    public List<InvDetailDTO> addInvPurchaseInvoiceDetailsDTOOne(List<InvDetailDTO> invPurchaseInvoiceDetailList, Integer headId, TobyUser tobyUser);
+
+    public List<balanceGalary> UnPaidAmountAfterSearchNative(Integer branchId, Date dateFrom1, Date dateTo1, String stringBuilder, TobyUser tobyUser) ;
+
+    public Integer findDetailNumber(Integer id);
     
-     public List<InvDetailDTO> addInvPurchaseInvoiceDetailsDTOOne(List<InvDetailDTO> invPurchaseInvoiceDetailList,Integer headId , TobyUser tobyUser);
-}
+    public Boolean checkItemBarcode(Integer id) ;
+    }

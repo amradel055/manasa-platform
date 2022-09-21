@@ -18,7 +18,6 @@ import com.toby.toby.UserData;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -100,7 +99,8 @@ public class IReportServiceImpl implements IReportService {
     public void printReportInvoice(InvInvoiceDTO invPurchaseInvoiceDTO, UserData userData) {
 
         try {
-            if (ScreenNameClassEnum.INVPURCHASEINVOICEFORM.equals(invPurchaseInvoiceDTO.getScreenName())) {
+            if (ScreenNameClassEnum.INVPURCHASEINVOICEFORM.equals(invPurchaseInvoiceDTO.getScreenName())
+                    || ScreenNameClassEnum.INVRETURNPURCHASEFORM.equals(invPurchaseInvoiceDTO.getScreenName())) {
                 if (invPurchaseInvoiceDTO.getBarcodeSelect() != null && !invPurchaseInvoiceDTO.getBarcodeSelect()) {
                     fillReport(prepareInvPurchaseReport(invPurchaseInvoiceDTO, userData), userData.getReportPath() + "purchaseReceiptCash.jasper", invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailList(), "pdf");
                 } else {
@@ -113,8 +113,8 @@ public class IReportServiceImpl implements IReportService {
                 } else {
                     fillReport(prepareInvSalesReport(invPurchaseInvoiceDTO, userData), userData.getReportPath() + "InvReceiptCash.jasper", invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailList(), "pdf");
                 }
-            } else if (ScreenNameClassEnum.PROWORKORDER.equals(invPurchaseInvoiceDTO.getScreenName())) {
-
+            } else if (ScreenNameClassEnum.PROWORKORDER.equals(invPurchaseInvoiceDTO.getScreenName())
+                    || ScreenNameClassEnum.INVRETURNSALESFORM.equals(invPurchaseInvoiceDTO.getScreenName())) {
                 fillReport(prepareProWorkOrderReport(invPurchaseInvoiceDTO, userData), userData.getReportPath() + "salesReceiptCash1.jasper", invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailList(), "pdf");
             } else if (ScreenNameClassEnum.INVRETURNPURCHASEFORM.equals(invPurchaseInvoiceDTO.getScreenName())) {
                 fillReport(prepareReturnPurchaseReport(invPurchaseInvoiceDTO, userData), userData.getReportPath() + "ReturnPurchaseReport.jasper", invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailList(), "pdf");
@@ -501,21 +501,19 @@ public class IReportServiceImpl implements IReportService {
             return null;
         }
     }
-    
+
     private static final TimeZone utc = TimeZone.getTimeZone("UTC");
     private static final SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     private void printQRCode(InvInvoiceDTO invPurchaseInvoiceDTO, HashMap hashMap) throws UnsupportedEncodingException, IOException {
         isoFormatter.setTimeZone(utc);
         String date = isoFormatter.format(invPurchaseInvoiceDTO.getDate());
-        
+
 //        String sellerName = "Bobs Records";
 //        String sallerTRN = "310122393500003";
 //        String invoiceDateTime = "2022-04-25T15:30:00Z";
 //        String totalWithVAT = "1000.00";
 //        String VATTotal = "150.00";
-        
-        
         String sellerName = invPurchaseInvoiceDTO.getGallaryId().getSellerName();
         String sallerTRN = invPurchaseInvoiceDTO.getGallaryId().getDaribaValue();
         String invoiceDateTime = date;
@@ -523,7 +521,7 @@ public class IReportServiceImpl implements IReportService {
         String VATTotal = invPurchaseInvoiceDTO.getTaxvalue().toString();
 
         byte[] tag1Hex = sellerName.getBytes("UTF-8");
-        sellerName =  new String(tag1Hex, StandardCharsets.UTF_8);
+        sellerName = new String(tag1Hex, StandardCharsets.UTF_8);
         String L1 = Integer.toHexString(sellerName.length());
         String L2 = Integer.toHexString(sallerTRN.length());
         String L3 = Integer.toHexString(invoiceDateTime.length());
@@ -547,7 +545,7 @@ public class IReportServiceImpl implements IReportService {
         return result.toString();
     }
 
-     public void reportQRCode(HashMap hashMap, String qrCodeText, Integer GallaryId) {
+    public void reportQRCode(HashMap hashMap, String qrCodeText, Integer GallaryId) {
         String filePath = "JD" + GallaryId + ".png";
         int size = 200;
         String fileType = "png";
@@ -902,7 +900,6 @@ public class IReportServiceImpl implements IReportService {
 //
 //    }
 
-   
 //    private void createQRImage(File qrFile, String qrCodeText, int size, String fileType, byte[] b) {
 //        try {
 //            // Create the ByteMatrix for the QR-Code that encodes the given String
@@ -945,5 +942,4 @@ public class IReportServiceImpl implements IReportService {
 //            e.printStackTrace();
 //        }
 //    }
-
 }

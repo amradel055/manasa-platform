@@ -58,13 +58,13 @@
                                  <div class="ui-g-12 ui-md-12 fromDate">
                                     <p:outputLabel style="width:99px;margin-right: 3%"  value="من تاريخ" />
                                     <p:calendar id="datetime11" value="#{crmGlobalChart.fromDate}"  pattern="dd/MM/yyyy">
-                                        <p:ajax  event="dateSelect" listener="#{crmGlobalChart.filterDashboardSearch()}" update="pieModelLearnAboutCompany pieModelLeadStatus pieModelProjectName pieModelEventStatus pieModelEventActivityType pieModelEventPriority numberOfNewLeads numberOfLeads"/>
+                                        <p:ajax  event="dateSelect" listener="#{crmGlobalChart.filterDashboardSearch()}" update="pieModelLearnAboutCompany pieModelLeadStatus  pieModelEventStatus pieModelEventActivityType pieModelEventPriority numberOfNewLeads numberOfLeads"/>
                                     </p:calendar>
                                 </div>
                                 <div class="ui-g-12 ui-md-6 toDate" style="margin-top: -1%;padding-bottom: 2%;">
                                     <p:outputLabel style="width:99px;margin-right: 6%"  value="الي تاريخ" />
                                     <p:calendar id="datetime2"  value="#{crmGlobalChart.toDate}" pattern="dd/MM/yyyy">
-                                        <p:ajax  event="dateSelect" listener="#{crmGlobalChart.filterDashboardSearch()}" update="pieModelLearnAboutCompany pieModelLeadStatus pieModelProjectName pieModelEventStatus pieModelEventActivityType pieModelEventPriority numberOfNewLeads numberOfLeads"/>
+                                        <p:ajax  event="dateSelect" listener="#{crmGlobalChart.filterDashboardSearch()}" update="pieModelLearnAboutCompany pieModelLeadStatus  pieModelEventStatus pieModelEventActivityType pieModelEventPriority numberOfNewLeads numberOfLeads"/>
                                     </p:calendar>
                                 </div>
                                 
@@ -89,7 +89,6 @@
                                 
                                 <p:chart type="pie" id="pieModelLearnAboutCompany" model="#{crmGlobalChart.pieModelLearnAboutCompany}" style="width:320px;height:320px;display:block;margin: 0 auto;" />
                                 <p:chart type="pie" id="pieModelLeadStatus" model="#{crmGlobalChart.pieModelLeadStatus}" style="width:320px;height:320px;display:block;margin: 0 auto;" />
-                                <p:chart type="pie" id="pieModelProjectName" model="#{crmGlobalChart.pieModelProjectName}" style="width:320px;height:320px;display:block;margin: 0 auto;" />
                                 
                             </div></div>
                         

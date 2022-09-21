@@ -31,10 +31,17 @@ public class SalesStatementForThePeriod {
     private int invoiceId;
     private BigDecimal remain;
     private BigDecimal paid;
+    private BigDecimal cash;
+    private BigDecimal noticeDebit;
+    private BigDecimal noticeCredit;
     private BigDecimal totalBeforeTax;
     private BigDecimal totalAfterTax;
+    private BigDecimal totalAfterDiscount;
     private BigDecimal tax;
+    private BigDecimal invNoticeValue;
+    private BigDecimal returnPurchaseValue;
     private String galleryName;
+    private Integer organizationId;
 
     /**
      * @return the serial
@@ -218,7 +225,7 @@ public class SalesStatementForThePeriod {
      */
     public BigDecimal getRemain() {
         if (remain == null) {
-            remain = getNet().subtract(getPaid());
+            remain = getNet().subtract(getReturnPurchaseValue()).add(getNoticeDebit()).subtract(getNoticeCredit()).subtract(getCash());
         }
         return remain;
     }
@@ -310,6 +317,119 @@ public class SalesStatementForThePeriod {
      */
     public void setTax(BigDecimal tax) {
         this.tax = tax;
+    }
+
+    /**
+     * @return the invNoticeValue
+     */
+    public BigDecimal getInvNoticeValue() {
+        return invNoticeValue;
+    }
+
+    /**
+     * @param invNoticeValue the invNoticeValue to set
+     */
+    public void setInvNoticeValue(BigDecimal invNoticeValue) {
+        this.invNoticeValue = invNoticeValue;
+    }
+
+    /**
+     * @return the returnPurchaseValue
+     */
+    public BigDecimal getReturnPurchaseValue() {
+        if (returnPurchaseValue == null) {
+            returnPurchaseValue = BigDecimal.ZERO;
+        }
+        return returnPurchaseValue;
+    }
+
+    /**
+     * @param returnPurchaseValue the returnPurchaseValue to set
+     */
+    public void setReturnPurchaseValue(BigDecimal returnPurchaseValue) {
+        this.returnPurchaseValue = returnPurchaseValue;
+    }
+
+    /**
+     * @return the noticeDebit
+     */
+    public BigDecimal getNoticeDebit() {
+        if (noticeDebit == null) {
+            noticeDebit = BigDecimal.ZERO;
+        }
+        return noticeDebit;
+    }
+
+    /**
+     * @param noticeDebit the noticeDebit to set
+     */
+    public void setNoticeDebit(BigDecimal noticeDebit) {
+        this.noticeDebit = noticeDebit;
+    }
+
+    /**
+     * @return the noticeCredit
+     */
+    public BigDecimal getNoticeCredit() {
+        if (noticeCredit == null) {
+            noticeCredit = BigDecimal.ZERO;
+        }
+        return noticeCredit;
+    }
+
+    /**
+     * @param noticeCredit the noticeCredit to set
+     */
+    public void setNoticeCredit(BigDecimal noticeCredit) {
+        this.noticeCredit = noticeCredit;
+    }
+
+    /**
+     * @return the cash
+     */
+    public BigDecimal getCash() {
+        if (cash == null) {
+            cash = BigDecimal.ZERO;
+        }
+        return cash;
+    }
+
+    /**
+     * @param cash the cash to set
+     */
+    public void setCash(BigDecimal cash) {
+        this.cash = cash;
+    }
+
+    /**
+     * @return the organizationId
+     */
+    public Integer getOrganizationId() {
+        return organizationId;
+    }
+
+    /**
+     * @param organizationId the organizationId to set
+     */
+    public void setOrganizationId(Integer organizationId) {
+        this.organizationId = organizationId;
+    }
+
+    /**
+     * @return the totalAfterDiscount
+     */
+    public BigDecimal getTotalAfterDiscount() {
+        if(totalAfterDiscount == null){
+            totalAfterDiscount = BigDecimal.ZERO;
+        }
+        return totalAfterDiscount;
+    }
+
+    /**
+     * @param totalAfterDiscount the totalAfterDiscount to set
+     */
+    public void setTotalAfterDiscount(BigDecimal totalAfterDiscount) {
+        this.totalAfterDiscount = totalAfterDiscount;
     }
 
 }

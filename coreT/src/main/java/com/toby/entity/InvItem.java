@@ -142,7 +142,7 @@ public class InvItem extends BaseEntity {
     @JoinColumn(name = "author", referencedColumnName = "id")
     @ManyToOne
     private Symbol author;
-    
+
     @JoinColumn(name = "addon1", referencedColumnName = "id")
     @ManyToOne
     private Symbol addon1;
@@ -154,7 +154,7 @@ public class InvItem extends BaseEntity {
     private InvOrganizationSite siteId;
     @JoinColumn(name = "stone", referencedColumnName = "id")
     @ManyToOne
-    private Symbol stone;    
+    private Symbol stone;
     @JoinColumn(name = "pro_group_id", referencedColumnName = "id")
     @ManyToOne
     private ProGroup proGroupId;
@@ -208,8 +208,10 @@ public class InvItem extends BaseEntity {
     private Integer type;
     @Column(name = "price_type")
     private Integer priceType;
-     @Column(name = "is_offer_item")
+    @Column(name = "is_offer_item")
     private Integer isOfferItem;
+    @Column(name = "is_offer_item_final")
+    private Integer isOfferItemFinal;
 
     public InvItem() {
     }
@@ -598,6 +600,9 @@ public class InvItem extends BaseEntity {
      * @return the discountvalue
      */
     public BigDecimal getDiscountvalue() {
+        if (discountvalue == null) {
+            discountvalue = BigDecimal.ZERO;
+        }
         return discountvalue;
     }
 
@@ -612,6 +617,9 @@ public class InvItem extends BaseEntity {
      * @return the maxpriceyoung
      */
     public BigDecimal getMaxpriceyoung() {
+        if (maxpriceyoung == null) {
+            maxpriceyoung = BigDecimal.ZERO;
+        }
         return maxpriceyoung;
     }
 
@@ -626,6 +634,9 @@ public class InvItem extends BaseEntity {
      * @return the maxpricemen
      */
     public BigDecimal getMaxpricemen() {
+        if (maxpricemen == null) {
+            maxpricemen = BigDecimal.ZERO;
+        }
         return maxpricemen;
     }
 
@@ -682,6 +693,9 @@ public class InvItem extends BaseEntity {
      * @return the numbermetersmen
      */
     public BigDecimal getNumbermetersmen() {
+        if (numbermetersmen == null) {
+            numbermetersmen = BigDecimal.ZERO;
+        }
         return numbermetersmen;
     }
 
@@ -696,6 +710,9 @@ public class InvItem extends BaseEntity {
      * @return the numbermetersfreeyoung
      */
     public BigDecimal getNumbermetersfreeyoung() {
+        if (numbermetersfreeyoung == null) {
+            numbermetersfreeyoung = BigDecimal.ZERO;
+        }
         return numbermetersfreeyoung;
     }
 
@@ -710,6 +727,9 @@ public class InvItem extends BaseEntity {
      * @return the numbermetersfreemen
      */
     public BigDecimal getNumbermetersfreemen() {
+        if (numbermetersfreemen == null) {
+            numbermetersfreemen = BigDecimal.ZERO;
+        }
         return numbermetersfreemen;
     }
 
@@ -886,6 +906,20 @@ public class InvItem extends BaseEntity {
      */
     public void setIsOfferItem(Integer isOfferItem) {
         this.isOfferItem = isOfferItem;
+    }
+
+    /**
+     * @return the isOfferItemFinal
+     */
+    public Integer getIsOfferItemFinal() {
+        return isOfferItemFinal;
+    }
+
+    /**
+     * @param isOfferItemFinal the isOfferItemFinal to set
+     */
+    public void setIsOfferItemFinal(Integer isOfferItemFinal) {
+        this.isOfferItemFinal = isOfferItemFinal;
     }
 
 }

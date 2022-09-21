@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.GeneralJournalDetailsDTOAPI;
 import com.toby.entity.TobyUser;
 import com.toby.core.GenericDAO;
 import com.toby.dto.CostCenterDTO;
@@ -19,6 +20,7 @@ import com.toby.entity.GeneralJournal;
 import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlAccount;
 import com.toby.entity.GlAdminUnit;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,13 +35,13 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class GeneraljournalDetailsServiceImplDTO implements GeneraljournalDetailsServiceDTO {
-    
+
     private Integer maxSerial;
     @EJB
     private GenericDAO dao;
     @EJB
     private GeneraljournalDetailsServiceDTO detailsService;
-    
+
     @Override
     public List<GeneralJournalDetailsDTO> getAllJournalDetailsForJorunal(Integer id) {
         Map<String, Object> params = new HashMap();
@@ -48,9 +50,22 @@ public class GeneraljournalDetailsServiceImplDTO implements GeneraljournalDetail
         detail = dao.findListByQuery("SELECT d FROM GeneralJournalDetails d WHERE d.generalJournalId.id=:journalId", params);
         return returnListDTO(detail);
     }
-    
+
     @Override
-    public List<GeneralJournalDetailsDTO> addGenDetalils(List<GeneralJournalDetailsDTO> details, List<GeneralJournalDetailsDTO> generalListDeleted, TobyUser tobyUser) {
+    public List<GeneralJournalDetailsDTOAPI> getAllJournalDetailsForJorunalAPI(Integer id) {
+        List<GeneralJournalDetailsDTOAPI> list = new ArrayList<>();
+        Map<String, Object> params = new HashMap();
+        params.put("journalId", id);
+        List<GeneralJournalDetails> detail = new ArrayList<>();
+        detail = dao.findListByQuery("SELECT d FROM GeneralJournalDetails d WHERE d.generalJournalId.id=:journalId", params);
+        for (GeneralJournalDetails entity : detail) {
+            list.add(initMapToDTOAPI(entity));
+        }
+        return list;
+    }
+
+    @Override
+    public List<GeneralJournalDetailsDTO> addGenDetalils(List<GeneralJournalDetailsDTO> details, List<GeneralJournalDetailsDTO> generalListDeleted, TobyUser tobyUser, Boolean isAPI, Integer headId) {
         List<GeneralJournalDetails> list = new ArrayList<>();
         GeneralJournalDetails gjd;
         if (details != null && !details.isEmpty()) {
@@ -63,12 +78,19 @@ public class GeneraljournalDetailsServiceImplDTO implements GeneraljournalDetail
                     journalDetails.setAdminUnitId(null);
                 }
                 fillSerial(journalDetails);
-                GeneralJournalDetails generalJournalDetails = mapFromDTO(journalDetails, tobyUser);
+                GeneralJournalDetails generalJournalDetails = null;
+                if (isAPI) {
+                    generalJournalDetails = mapFromDTOAPI(journalDetails, tobyUser, headId);
+
+                } else {
+                    generalJournalDetails = mapFromDTO(journalDetails, tobyUser);
+
+                }
                 gjd = dao.updateEntity(generalJournalDetails);
                 list.add(gjd);
             }
         }
-        
+
         if (generalListDeleted != null && !generalListDeleted.isEmpty()) {
             for (GeneralJournalDetailsDTO journalDetails : generalListDeleted) {
                 if (journalDetails.getId() != null) {
@@ -77,10 +99,45 @@ public class GeneraljournalDetailsServiceImplDTO implements GeneraljournalDetail
                 }
             }
         }
-        
+
         return returnListDTO(list);
     }
-    
+
+    @Override
+    public List<GeneralJournalDetailsDTOAPI> addGenDetalilsAPI(List<GeneralJournalDetailsDTO> details, List<GeneralJournalDetailsDTO> generalListDeleted, TobyUser tobyUser, Integer headId) {
+        List<GeneralJournalDetailsDTOAPI> list = new ArrayList<>();
+        GeneralJournalDetails gjd;
+        if (details != null && !details.isEmpty()) {
+            findTheMaximumSerial(details);
+            for (GeneralJournalDetailsDTO journalDetails : details) {
+                if (journalDetails.getCostCenterId() != null && journalDetails.getCostCenterId().getId() == -1) {
+                    journalDetails.setCostCenterId(null);
+                }
+                if (journalDetails.getAdminUnitId() != null && journalDetails.getAdminUnitId().getId() == -1) {
+                    journalDetails.setAdminUnitId(null);
+                }
+                fillSerial(journalDetails);
+                GeneralJournalDetails generalJournalDetails = mapFromDTOAPI(journalDetails, tobyUser, headId);
+
+                gjd = dao.updateEntity(generalJournalDetails);
+
+                GeneralJournalDetailsDTOAPI detailsDTOAPI = initMapToDTOAPI(gjd);
+                list.add(detailsDTOAPI);
+            }
+        }
+
+        if (generalListDeleted != null && !generalListDeleted.isEmpty()) {
+            for (GeneralJournalDetailsDTO journalDetails : generalListDeleted) {
+                if (journalDetails.getId() != null) {
+                    GeneralJournalDetails gjdEntity = mapFromDTO(journalDetails, tobyUser);
+                    dao.deleteEntity(gjdEntity);
+                }
+            }
+        }
+
+        return list;
+    }
+
     @Override
     public Integer getMaxSerialByGeneral(Integer id) {
         Map<String, Object> params = new HashMap();
@@ -88,45 +145,42 @@ public class GeneraljournalDetailsServiceImplDTO implements GeneraljournalDetail
         Integer max = dao.findEntityByQuery("SELECT  MAX(d.serial) FROM GeneralJournalDetails d WHERE d.generalJournalId.id=:journalId", params);
         return max;
     }
-    
+
     private void fillSerial(GeneralJournalDetailsDTO generalJournalDetails) {
         if (generalJournalDetails.getSerial() == null) {
             generalJournalDetails.setSerial(maxSerial);
             maxSerial++;
         }
     }
-    
+
     private void findTheMaximumSerial(List<GeneralJournalDetailsDTO> generalJournalDetails) {
         maxSerial = detailsService.getMaxSerialByGeneral(generalJournalDetails.get(0).getGeneralJournalId().getId());
-        
+
         if (maxSerial == null) {
             maxSerial = 1;
         } else {
             maxSerial = maxSerial + 1;
         }
     }
-    
+
     private List<GeneralJournalDetailsDTO> returnListDTO(List<GeneralJournalDetails> list) {
         List<GeneralJournalDetailsDTO> dTOList = new ArrayList<>();
         for (GeneralJournalDetails entity : list) {
-            dTOList.add(mapTODTO(entity, false));
+            dTOList.add(mapTODTO(entity));
         }
         return dTOList;
     }
-    
-    private GeneralJournalDetailsDTO mapTODTO(GeneralJournalDetails entity, Boolean needDetail) {
+
+    private GeneralJournalDetailsDTO mapTODTO(GeneralJournalDetails entity) {
         GeneralJournalDetailsDTO dTO = initMapToDTO(entity);
-        if (needDetail) {
-            
-        }
         return dTO;
     }
-    
+
     private GeneralJournalDetailsDTO initMapToDTO(GeneralJournalDetails entity) {
-        
+
         GeneralJournalDetailsDTO dTO = new GeneralJournalDetailsDTO();
         dTO.setId(entity.getId());
-        
+
         dTO.setSerial(entity.getSerial());
         dTO.setDebitAmount(entity.getDebitAmount());
         dTO.setCreditamount(entity.getCreditamount());
@@ -134,7 +188,7 @@ public class GeneraljournalDetailsServiceImplDTO implements GeneraljournalDetail
         dTO.setCreditamountLocal(entity.getCreditamountLocal());
         dTO.setDiscribtion(entity.getDiscribtion());
         dTO.setRate(entity.getRate());
-        
+
         if (entity.getGlACCOUNTId() != null && entity.getGlACCOUNTId().getId() != null) {
             GlAccountDTO accountDTO = new GlAccountDTO();
             accountDTO.setId(entity.getGlACCOUNTId().getId());
@@ -144,6 +198,8 @@ public class GeneraljournalDetailsServiceImplDTO implements GeneraljournalDetail
             accountDTO.setStatus(entity.getGlACCOUNTId().getStatus());
             accountDTO.setShotCode(entity.getGlACCOUNTId().getShotCode());
             dTO.setGlACCOUNTId(accountDTO);
+            dTO.setGlAccountName(entity.getGlACCOUNTId().getName());
+            dTO.setGlAccountNumber(entity.getGlACCOUNTId().getAccNumber().toString());
         }
         if (entity.getGlAssistantAccount() != null && entity.getGlAssistantAccount().getId() != null) {
             GlAccountDTO accountDTO = new GlAccountDTO();
@@ -157,6 +213,8 @@ public class GeneraljournalDetailsServiceImplDTO implements GeneraljournalDetail
             costCenterDTO.setName(entity.getCostCenterId().getName());
             costCenterDTO.setCode(entity.getCostCenterId().getCode());
             dTO.setCostCenterId(costCenterDTO);
+            dTO.setGlCostCenterName(entity.getCostCenterId().getName());
+            dTO.setGlCostCenterNumber(entity.getCostCenterId().getCode().toString());
         }
         if (entity.getAdminUnitId() != null && entity.getAdminUnitId().getId() != null) {
             GlAdminUnitDTO glAdminUnitDTO = new GlAdminUnitDTO();
@@ -178,38 +236,71 @@ public class GeneraljournalDetailsServiceImplDTO implements GeneraljournalDetail
             currencyDTO.setSerial(entity.getCurrencyId().getSerial());
             dTO.setCurrencyId(currencyDTO);
         }
-        
+
         dTO.setBranchId(entity.getBranchId().getId());
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy().getId());
-        
+
         return dTO;
     }
-    
+
+    private GeneralJournalDetailsDTOAPI initMapToDTOAPI(GeneralJournalDetails entity) {
+
+        GeneralJournalDetailsDTOAPI dTO = new GeneralJournalDetailsDTOAPI();
+        dTO.setId(entity.getId());
+
+        dTO.setSerial(entity.getSerial());
+        dTO.setDebitAmount(entity.getDebitAmount());
+        dTO.setCreditamount(entity.getCreditamount());
+        dTO.setDebitAmountLocal(entity.getDebitAmountLocal());
+        dTO.setCreditamountLocal(entity.getCreditamountLocal());
+        dTO.setDiscribtion(entity.getDiscribtion());
+        dTO.setRate(entity.getRate());
+
+        if (entity.getGlACCOUNTId() != null && entity.getGlACCOUNTId().getId() != null) {
+            dTO.setGlAccount(entity.getGlACCOUNTId().getId());
+            dTO.setGlAccountName(entity.getGlACCOUNTId().getName());
+            dTO.setGlAccountNumber(entity.getGlACCOUNTId().getAccNumber().toString());
+        }
+
+        if (entity.getCostCenterId() != null && entity.getCostCenterId().getId() != null) {
+            dTO.setCostCenter(entity.getCostCenterId().getId());
+            dTO.setGlCostCenterName(entity.getCostCenterId().getName());
+            dTO.setGlCostCenterNumber(entity.getCostCenterId().getCode().toString());
+        }
+
+        if (entity.getGeneralJournalId() != null && entity.getGeneralJournalId().getId() != null) {
+            dTO.setGeneralJournal(entity.getGeneralJournalId().getId());
+        }
+        if (entity.getCurrencyId() != null && entity.getCurrencyId().getId() != null) {
+            dTO.setCurrency(entity.getCurrencyId().getId());
+            dTO.setCurrencyName(entity.getCurrencyId().getName());
+        }
+
+        dTO.setBranchId(entity.getBranchId().getId());
+        dTO.setIndex(entity.getId());
+        dTO.setCreatedDate(entity.getCreationDate());
+        dTO.setCreatedBy(entity.getCreatedBy().getId());
+
+        return dTO;
+    }
+
     private GeneralJournalDetails mapFromDTO(GeneralJournalDetailsDTO dTO, TobyUser tobyUser) {
         GeneralJournalDetails entity = new GeneralJournalDetails();
-        
-        entity.setDebitAmount(dTO.getDebitAmount());
-        entity.setCreditamount(dTO.getCreditamount());
-        entity.setSerial(dTO.getSerial());
-        entity.setDebitAmountLocal(dTO.getDebitAmountLocal());
-        entity.setCreditamountLocal(dTO.getCreditamountLocal());
-        entity.setDiscribtion(dTO.getDiscribtion());
-        entity.setRate(dTO.getRate());
-        
+
         if (dTO.getCurrencyId() != null && dTO.getCurrencyId().getId() != null) {
             Currency currency = new Currency();
             currency.setId(dTO.getCurrencyId().getId());
             entity.setCurrencyId(currency);
         }
-        
+
         if (dTO.getGlACCOUNTId() != null && dTO.getGlACCOUNTId().getId() != null) {
             GlAccount account = new GlAccount();
             account.setId(dTO.getGlACCOUNTId().getId());
             entity.setGlACCOUNTId(account);
         }
-        
+
         if (dTO.getGlAssistantAccount() != null && dTO.getGlAssistantAccount().getId() != null) {
             GlAccount account = new GlAccount();
             account.setId(dTO.getGlAssistantAccount().getId());
@@ -230,7 +321,52 @@ public class GeneraljournalDetailsServiceImplDTO implements GeneraljournalDetail
             generalJournal.setId(dTO.getGeneralJournalId().getId());
             entity.setGeneralJournalId(generalJournal);
         }
-        
+
+        defaultData(entity, dTO, tobyUser);
+        return entity;
+    }
+
+    private GeneralJournalDetails mapFromDTOAPI(GeneralJournalDetailsDTO dTO, TobyUser tobyUser, Integer headId) {
+        GeneralJournalDetails entity = new GeneralJournalDetails();
+
+        if (dTO.getCurrency() != null) {
+            Currency currency = new Currency();
+            currency.setId(dTO.getCurrency());
+            entity.setCurrencyId(currency);
+        }
+
+        if (dTO.getGlAccount() != null) {
+            GlAccount account = new GlAccount();
+            account.setId(dTO.getGlAccount());
+            entity.setGlACCOUNTId(account);
+        }
+
+        if (dTO.getCostCenter() != null) {
+            CostCenter costCenter = new CostCenter();
+            costCenter.setId(dTO.getCostCenter());
+            entity.setCostCenterId(costCenter);
+        }
+
+        if (headId != null) {
+            GeneralJournal generalJournal = new GeneralJournal();
+            generalJournal.setId(headId);
+            entity.setGeneralJournalId(generalJournal);
+        }
+
+        defaultData(entity, dTO, tobyUser);
+
+        return entity;
+    }
+
+    private void defaultData(GeneralJournalDetails entity, GeneralJournalDetailsDTO dTO, TobyUser tobyUser) {
+        entity.setDebitAmount(dTO.getDebitAmount());
+        entity.setCreditamount(dTO.getCreditamount());
+        entity.setSerial(dTO.getSerial());
+        entity.setDebitAmountLocal(dTO.getDebitAmountLocal());
+        entity.setCreditamountLocal(dTO.getCreditamountLocal());
+        entity.setDiscribtion(dTO.getDiscribtion());
+        entity.setRate(dTO.getRate());
+
         if (dTO.getId()
                 == null) {
             entity.setCreatedBy(tobyUser);
@@ -246,6 +382,15 @@ public class GeneraljournalDetailsServiceImplDTO implements GeneraljournalDetail
         }
         entity.setBranchId(tobyUser.getBranchId());
         entity.setCompanyId(tobyUser.getCompanyId());
-        return entity;
+    }
+
+    @Override
+    public BigDecimal getDebitAmountForGlAccount(Integer accountId, Integer costCenterId, Date dateFrom, Date dateTo) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("accountId", accountId);
+        params.put("costCenterId", costCenterId);
+        params.put("dateFrom", dateFrom);
+        params.put("dateTo", dateTo);
+        return dao.findEntityByQuery("SELECT SUM(IFNULL(details.debitAmount),0) - SUM(IFNULL(details.creditamount),0) FROM GeneralJournalDetails details WHERE details.glACCOUNTId.id = :accountId AND details.costCenterId.id = :costCenterId AND details.generalJournalId.generalData >= :dateFrom  AND details.generalJournalId.generalData <= :dateTo ", params);
     }
 }

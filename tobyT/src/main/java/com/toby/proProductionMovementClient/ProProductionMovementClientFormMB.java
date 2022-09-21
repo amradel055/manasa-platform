@@ -4,6 +4,7 @@ package com.toby.proProductionMovementClient;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.ProProductionMovementDetailService;
 import com.toby.businessservice.ProProductionMovementService;
+import com.toby.bussinessservice.global.Utility;
 import com.toby.converter.InvOrganizationSiteDTOConverter;
 import com.toby.converter.ProProductMovementDetailDTOConvertor;
 import com.toby.dto.InvInvoiceDTO;
@@ -56,8 +57,8 @@ public class ProProductionMovementClientFormMB extends BaseFormBean{
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         setUserData((UserData) context.getSessionMap().get("userLogInData"));
         setScreenMode((String) context.getSessionMap().get("ScreenMode"));
-        getProProductMovementDTO().setDate(new Date());
-        getProProductMovementDTO().setTime(new Date());
+        getProProductMovementDTO().setDate(Utility.hourNow());
+        getProProductMovementDTO().setTime(Utility.hourNow());
          if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("Edit")) {
             try {
                 Integer proProductMovementId = (Integer) context.getSessionMap().get("proProductMovementDTOSelected");

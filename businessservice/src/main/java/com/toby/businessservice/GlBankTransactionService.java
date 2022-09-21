@@ -5,11 +5,16 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.GlBankTransactionAPI;
+import com.toby.dto.GlBankDTO;
 import com.toby.dto.GlBankTransactionDTO;
+import com.toby.dto.GlPayDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.entity.GlBankTransaction;
 import com.toby.entity.GlBankTransactionDetail;
 import com.toby.entity.TobyUser;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Remote;
@@ -43,7 +48,7 @@ public interface GlBankTransactionService {
             
     public GlBankTransaction addOneGlBankTransaction(GlBankTransaction glBankTransaction, GlBankTransactionDetail bankTransactionDetail,TobyUser tobyUser);
 
-    public Integer getMaxSerail(GlBankTransaction glBankTransaction);
+//    public Integer getMaxSerail(GlBankTransaction glBankTransaction);
 
     public GlBankTransaction updateGlBankTransaction(GlBankTransaction glBankTransaction);
 
@@ -60,5 +65,12 @@ public interface GlBankTransactionService {
     public List<GlBankTransaction> getALLGlBankTransactionByInvoiceId(Integer invoiceId) ;
     
     public void addCash(InvInvoiceDTO dTO, TobyUser tobyUser);
+    
+    public GlBankTransaction addCash(Date date, GlBankDTO bankDTO, Integer invoiceId, BigDecimal rate, String remarks, BigDecimal value, Integer invOrganizationId, Integer glYearId, TobyUser tobyUser) ;
+    
+    public List<GlPayDTO> addCash(List<GlPayDTO> glPayDTOList, Date date, BigDecimal rate, String remarks, Integer invOrganizationId, Integer glYearId, TobyUser tobyUser);
 
+    public List<GlBankTransactionDTO> search(Integer transactionType, Integer branchId, Integer serial);
+
+     public GlBankTransactionAPI addCashAPI(GlBankTransactionAPI glBankTransactionAPI) ;
 }

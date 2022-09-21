@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.BankBalanceReportAPI;
 import com.toby.bussinessservice.global.Utility;
 import com.toby.core.GenericDAO;
 import com.toby.dto.InvInventoryDTO;
@@ -53,7 +54,7 @@ public class ReportsServiceImpl implements ReportsService {
     public List<SalesReportByValueAded> getSalesReportByValueAded(SalesReportByValueAded salesReportByValueAded, Integer branchId) {
 
         dao.executeNativeQuery("select toby.sql_mode_function()");
-        dao.executeNativeQuery("select toby.net_after_discount_head()");
+//        dao.executeNativeQuery("select toby.net_after_discount_head()");
         List<SalesReportByValueAded> salesReportByValueAdeds = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("select sum(s.net) , sum(s.netBeforTax) , s.gallary_name  from ( ");
@@ -68,7 +69,6 @@ public class ReportsServiceImpl implements ReportsService {
             salesReportByValueAded1.setTotalBeforeTax((BigDecimal) object[1]);
             salesReportByValueAded1.setGalleryName((String) object[2]);
             salesReportByValueAdeds.add(salesReportByValueAded1);
-
         }
         return salesReportByValueAdeds;
     }
@@ -105,18 +105,18 @@ public class ReportsServiceImpl implements ReportsService {
 
         sql.append(" union all ");
         sql.append(" SELECT \n"
-                + "        `ip`.`serial` AS `serial`, `ip`.`type` AS `type`,`ip`.`date` AS `date`,`inv`.`name` AS `gallary_name`,\n"
-                + "        `ios`.`name` AS `organization_site_name`,`ip`.`discount` AS `head_discount`,\n"
+                + "        `invt`.`serial` AS `serial`, `invt`.`type` AS `type`,`invt`.`date` AS `date`,`inv`.`name` AS `gallary_name`,\n"
+                + "        `ios`.`name` AS `organization_site_name`,null AS `head_discount`,\n"
                 + "        (invt.value * -1) AS `net`,\n"
                 + "                (((invt.value / 1.15) )* -1) AS `netBeforTax`\n"
                 + "    FROM\n"
-                + "        `inv_purchase_invoice` `ip` LEFT JOIN `inv_notice` `invt` ON `ip`.`id` = `invt`.`inv_invoice`\n"
-                + "        LEFT JOIN `inv_inventory` `inv` ON `inv`.`id` = `ip`.`galary_Id` LEFT JOIN `inv_organization_site` `ios` ON `ios`.`id` = `ip`.`organization_site_id`\n"
+                + "       `inv_notice` `invt` \n"
+                + "        LEFT JOIN `inv_inventory` `inv` ON `inv`.`id` = `invt`.`inv_inventory_id` LEFT JOIN `inv_organization_site` `ios` ON `ios`.`id` = `invt`.`organization_site_id`\n"
                 + " ");
-        sql.append("  where ( invt.type = 1 or invt.type = 4 ) and ip.branch_id = ").append(branchId);
-        appendGallery(salesReportByValueAded, sql);
-        appendDate(salesReportByValueAded, sql);
-        sql.append(" GROUP BY `ip`.`id` ");
+        sql.append("  where ( invt.type = 1 or invt.type = 4 ) and invt.branch_id = ").append(branchId);
+        appendGalleryInvNotice(salesReportByValueAded, sql);
+        appendDateInvoice(salesReportByValueAded, sql);
+        sql.append(" GROUP BY `invt`.`id` ");
 
         return sql;
     }
@@ -149,13 +149,13 @@ public class ReportsServiceImpl implements ReportsService {
         dao.executeNativeQuery("select toby.sql_mode_function()");
         List<CustomerBalances> customerBalanceses = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT organization_code , organization_name , sum(exitt) as exitt , sum(adding) as adding\n"
+        sql.append("SELECT organization_code , organization_name , sum(exitt) as exitt , sum(adding) as adding , openning_balance , organization_site_id \n"
                 + "FROM toby.organization_site_statement_view \n"
                 + " ");
-        sql.append(" where branch_id = ").append(branchId);
+        sql.append(" where organization_type = 0 and branch_id = ").append(branchId);
         appendGallery2(customerBalances, sql);
         sql.append(" group by organization_site_id\n");
-        sql.append(" having (sum(exitt) - sum(adding) ) > 0 ");
+        sql.append(" having (sum(exitt) - sum(adding) ) != 0 ");
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
         for (Object[] object : res) {
             CustomerBalances customerBalances1 = new CustomerBalances();
@@ -163,6 +163,8 @@ public class ReportsServiceImpl implements ReportsService {
             customerBalances1.setClientName((String) object[1]);
             customerBalances1.setDebit((BigDecimal) object[2]);
             customerBalances1.setCreditor((BigDecimal) object[3]);
+            customerBalances1.setOpenningBalance((BigDecimal) object[4]);
+            customerBalances1.setOrganizationsiteId((Integer) object[5]);
             customerBalanceses.add(customerBalances1);
         }
         return customerBalanceses;
@@ -227,10 +229,9 @@ public class ReportsServiceImpl implements ReportsService {
                         break;
                 }
             }
-            
-            
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");            
-            
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+
             customerBalancesDebtAge.setDatefromBefore(Utility.subDateAndNumer(customerBalancesDebtAge.getDatefrom12(), 1));
             List<CustomerBalancesDebtAge> customerBalancesDebtAgeList = new ArrayList<>();
             StringBuilder sql = new StringBuilder();
@@ -479,7 +480,7 @@ public class ReportsServiceImpl implements ReportsService {
 
         List<CompanyInvoicesWithoutSewing> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT inv.id , inv.name , oc.name as name , oc.code code , sum(ipid.net) as sum \n"
+        sql.append(" SELECT inv.id , inv.name , oc.name as name , oc.code code , sum(ipid.net_after_discount_head) as sum \n"
                 + " FROM `inv_purchase_invoice` `ipi`\n"
                 + " LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                 + " LEFT JOIN inv_organization_site ios on ios.id = ipi.organization_site_id\n"
@@ -551,7 +552,7 @@ public class ReportsServiceImpl implements ReportsService {
         List<ProfitOfItemsSold> profitOfItemsSoldList = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("select ii.id , ii.code , ii.name , IFNULL(ii.cost_average,0) as cost_average , sum(IFNULL(ipid.quantity,0)) as totalSell , \n"
-                + "sum(IFNULL(ipid.discount,0)) as totalDiscount  , sum(IFNULL(ipid.net,0)) as totalNet , sum(IFNULL(ipid.number,0)) as totalNumber\n"
+                + "sum(IFNULL(ipid.discount,0)) as totalDiscount  , sum(IFNULL(ipid.net_after_discount_head,0)) as totalNet , sum(IFNULL(ipid.number,0)) as totalNumber\n"
                 + "from inv_purchase_invoice_detail ipid \n"
                 + "left join inv_purchase_invoice ipi on ipi.id = ipid.inv_purchase_invoice_id left join inv_item ii on ii.id = ipid.item_id\n"
                 + "left join pro_group p on p.id = ii.pro_group_id");
@@ -561,6 +562,11 @@ public class ReportsServiceImpl implements ReportsService {
         if (invoiceType != null) {
             sql.append(" and ipi.invoice_type =  ").append(invoiceType);
         }
+
+        if (profitOfItemsSold.getItemCode() != null && !profitOfItemsSold.getItemCode().isEmpty()) {
+            sql.append(" and ii.code =  ").append(profitOfItemsSold.getItemCode());
+        }
+
         appendDate7(profitOfItemsSold, sql);
         StringBuilder gallaryIds = null;
         StringBuilder groupId = null;
@@ -606,12 +612,13 @@ public class ReportsServiceImpl implements ReportsService {
         StringBuilder sql = new StringBuilder();
         sql.append("select ipi.serial , ipi.date , ios.code , ios.name as iosName ,\n"
                 + "IFNULL(SUM(`ipid`.`net_after_discount_head`), 0) as total_net,\n"
-                + " ipi.id ,iinv.name as gallaryName \n"
+                + " ipi.id ,iinv.name as gallaryName ,IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) as net\n"
                 + "from inv_purchase_invoice ipi\n"
                 + "left join  inv_purchase_invoice_detail ipid on ipi.id = ipid.inv_purchase_invoice_id\n"
                 + "left join inv_organization_site ios on ios.id = ipi.organization_site_id left join inv_inventory iinv on iinv.id = ipi.galary_Id  \n"
-                + " where ipi.type = 4 ");
+                + " where ipi.type = 4  ");
         appendGallery5(statementForThePeriod, sql);
+        appendOrganizationId(statementForThePeriod, sql);
         appendDate8(statementForThePeriod, sql);
         sql.append(" group by ipi.id order by ipi.galary_Id ");
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
@@ -623,10 +630,86 @@ public class ReportsServiceImpl implements ReportsService {
                 statementForThePeriod.setCode((String) object[2]);
                 statementForThePeriod.setName((String) object[3]);
                 statementForThePeriod.setTotalNet((BigDecimal) object[4]);
-                statementForThePeriod.setNet((statementForThePeriod.getTotalNet().multiply(new BigDecimal(1.15))).setScale(3, RoundingMode.HALF_UP));
+                statementForThePeriod.setNet((BigDecimal) object[7]);
+//                statementForThePeriod.setNet((statementForThePeriod.getTotalNet().multiply(new BigDecimal(1.15))).setScale(3, RoundingMode.HALF_UP));
+                statementForThePeriod.setInvoiceId((Integer) object[5]);
+                statementForThePeriod.setInvoiceStatus(invPurchaseInvoiceService.findInvoiceStatus(statementForThePeriod.getInvoiceId()));
+//                statementForThePeriod.setPaid(invPurchaseInvoiceService.findPayed(statementForThePeriod.getInvoiceId()));
+//                statementForThePeriod.setGalleryName((String) object[6]);
+
+                statementForThePeriod.setReturnPurchaseValue(findInvReturnValue(statementForThePeriod.getInvoiceId()));
+                statementForThePeriod.setGalleryName((String) object[6]);
+
+                Map<String, Object> params = new HashMap<>();
+                params.put("invPurchaseInvoiceId", statementForThePeriod.getInvoiceId());
+                List<BigDecimal> noticeDebit = dao.findListByQuery("SELECT  sum(i.value)    FROM InvNotice i WHERE i.invInvoice.id = :invPurchaseInvoiceId AND i.type = 0 Group by i.invInvoice.id", params);
+                List<BigDecimal> noticeCredit = dao.findListByQuery("SELECT  sum(i.value)    FROM InvNotice i WHERE i.invInvoice.id = :invPurchaseInvoiceId AND i.type in (1,4)  Group by i.invInvoice.id", params);
+
+                List<BigDecimal> details = dao.findListByQuery("SELECT  sum(i.value)    FROM GlBankTransaction i WHERE i.invoiceId.id = :invPurchaseInvoiceId Group by i.invoiceId.id", params);
+                List<BigDecimal> detailsReturn = dao.findListByQuery("SELECT  sum(i.value)    FROM GlBankTransactionDetail i WHERE i.invoiceId.id = :invPurchaseInvoiceId Group by i.invoiceId.id", params);
+                BigDecimal payment = (details != null && !details.isEmpty()) ? details.get(0).subtract((detailsReturn != null && !detailsReturn.isEmpty()) ? detailsReturn.get(0) : BigDecimal.ZERO) : BigDecimal.ZERO;
+
+                BigDecimal noticeDebitValue = (noticeDebit != null && !noticeDebit.isEmpty()) ? noticeDebit.get(0) : BigDecimal.ZERO;
+                BigDecimal noticeCreditValue = (noticeCredit != null && !noticeCredit.isEmpty()) ? noticeCredit.get(0) : BigDecimal.ZERO;
+
+                statementForThePeriod.setInvNoticeValue(noticeCreditValue.subtract(noticeDebitValue));
+                statementForThePeriod.setNoticeDebit(noticeDebitValue);
+                statementForThePeriod.setNoticeCredit(noticeCreditValue);
+                statementForThePeriod.setCash(payment);
+
+                list.add(statementForThePeriod);
+            }
+        }
+        return list;
+    }
+
+    public BigDecimal findInvNoticeValue(Integer invPurchaseInvoiceId) {
+        List<BigDecimal> value = null;
+        if (invPurchaseInvoiceId != null && invPurchaseInvoiceId > 0) {
+            value = dao.executeNativeQuery("SELECT sum(value) from inv_notice where branch_id = 182 and inv_invoice =  " + invPurchaseInvoiceId);
+        }
+        return (value != null && !value.isEmpty()) ? value.get(0) : BigDecimal.ZERO;
+    }
+
+    public BigDecimal findInvReturnValue(Integer invPurchaseInvoiceId) {
+        List<BigDecimal> value = null;
+        if (invPurchaseInvoiceId != null && invPurchaseInvoiceId > 0) {
+            value = dao.executeNativeQuery("SELECT IFNULL(SUM(ipid.net_after_discount_head), 0) from inv_purchase_invoice ipi left join  inv_purchase_invoice_detail ipid on ipi.id = ipid.inv_purchase_invoice_id where ipi.branch_id = 182 and ipi.type = 3 and ipi.parent =  " + invPurchaseInvoiceId);
+        }
+        return (value != null && !value.isEmpty()) ? (value.get(0).multiply(new BigDecimal(1.15))).setScale(3, RoundingMode.HALF_UP) : BigDecimal.ZERO;
+    }
+
+    @Override
+    public List<SalesStatementForThePeriod> getSalesStatementForThePeriodForPay(SalesStatementForThePeriod statementForThePeriod) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
+        List<SalesStatementForThePeriod> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        sql.append("select ipi.serial , ipi.date , ios.code , ios.name as iosName ,\n"
+                + "IFNULL(SUM(`ipid`.`net_after_discount_head`), 0) as total_net,\n"
+                + " ipi.id ,iinv.name as gallaryName ,IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) as net\n"
+                + "from inv_purchase_invoice ipi\n"
+                + "left join  inv_purchase_invoice_detail ipid on ipi.id = ipid.inv_purchase_invoice_id\n"
+                + "left join inv_organization_site ios on ios.id = ipi.organization_site_id "
+                + "left join inv_inventory iinv on iinv.id = ipi.galary_Id  	"
+                + "left join gl_bank_transaction gb on ipi.id = gb.invoice_id  \n"
+                + " where ipi.type = 4 ");
+        appendGallery5(statementForThePeriod, sql);
+        appendDateForPay(statementForThePeriod, sql);
+        sql.append(" group by ipi.id order by ipi.galary_Id ");
+        List<Object[]> res = dao.executeNativeQuery(sql.toString());
+        for (Object[] object : res) {
+            if (object[0] != null) {
+                statementForThePeriod = new SalesStatementForThePeriod();
+                statementForThePeriod.setSerial((Integer) object[0]);
+                statementForThePeriod.setInvoiceDate((Date) object[1]);
+                statementForThePeriod.setCode((String) object[2]);
+                statementForThePeriod.setName((String) object[3]);
+                statementForThePeriod.setTotalNet((BigDecimal) object[4]);
+                statementForThePeriod.setNet((BigDecimal) object[7]);
                 statementForThePeriod.setInvoiceId((Integer) object[5]);
                 statementForThePeriod.setInvoiceStatus(invPurchaseInvoiceService.findInvoiceStatus(statementForThePeriod.getInvoiceId()));
                 statementForThePeriod.setPaid(invPurchaseInvoiceService.findPayed(statementForThePeriod.getInvoiceId()));
+                statementForThePeriod.setCash(statementForThePeriod.getPaid());
                 statementForThePeriod.setGalleryName((String) object[6]);
                 list.add(statementForThePeriod);
             }
@@ -765,6 +848,23 @@ public class ReportsServiceImpl implements ReportsService {
         }
     }
 
+    private void appendGalleryInvNotice(SalesReportByValueAded salesReportByValueAded, StringBuilder query) {
+        if (salesReportByValueAded.getGallerySelected() != null) {
+            query.append(" and invt.inv_inventory_id =  ").append(salesReportByValueAded.getGallerySelected().getId());
+        }
+    }
+
+    private void appendDateInvoice(SalesReportByValueAded salesReportByValueAded, StringBuilder query) {
+        if (salesReportByValueAded.getDateFrom() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+            query.append(" and invt.date >=  '").append(dateFormat.format(salesReportByValueAded.getDateFrom())).append("' ");
+        }
+        if (salesReportByValueAded.getDateTo() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
+            query.append(" and invt.date <=  '").append(dateFormat.format(salesReportByValueAded.getDateTo())).append("' ");
+        }
+    }
+
     private void appendDate(SalesReportByValueAded salesReportByValueAded, StringBuilder query) {
         if (salesReportByValueAded.getDateFrom() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -888,9 +988,25 @@ public class ReportsServiceImpl implements ReportsService {
         }
     }
 
+    private void appendDateForPay(SalesStatementForThePeriod statementForThePeriod, StringBuilder sql) {
+        if (statementForThePeriod.getDateFrom() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+            sql.append(" AND ipi.date <  '").append(dateFormat.format(statementForThePeriod.getDateFrom())).append("' ");
+
+//            DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
+            sql.append(" and gb.date >=   '").append(dateFormat.format(statementForThePeriod.getDateFrom())).append("' ");
+        }
+    }
+
     private void appendGallery5(SalesStatementForThePeriod statementForThePeriod, StringBuilder query) {
         if (statementForThePeriod.getGallerySelected() != null) {
             query.append(" and ipi.galary_Id =  ").append(statementForThePeriod.getGallerySelected().getId());
+        }
+    }
+
+    private void appendOrganizationId(SalesStatementForThePeriod statementForThePeriod, StringBuilder query) {
+        if (statementForThePeriod.getOrganizationId() != null) {
+            query.append(" and ipi.organization_site_id =  ").append(statementForThePeriod.getOrganizationId());
         }
     }
 
@@ -934,6 +1050,68 @@ public class ReportsServiceImpl implements ReportsService {
         } else {
             sql.append("  and ios.offer_company_id IS NULL");
         }
+    }
+
+    @Override
+    public BigDecimal getValueOfInvoice(Integer invoiceId) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
+        List<BigDecimal> value = null;
+        if (invoiceId != null && invoiceId > 0) {
+            value = dao.executeNativeQuery("SELECT IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) from inv_purchase_invoice ipi left join  inv_purchase_invoice_detail ipid on ipi.id = ipid.inv_purchase_invoice_id where ipi.id =  " + invoiceId);
+        }
+        return (value != null && !value.isEmpty()) ? (value.get(0)) : BigDecimal.ZERO;
+//        StringBuilder sql = new StringBuilder();
+//        sql.append("select IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) as net\n"
+//                + "from inv_purchase_invoice ipi\n"
+//                + " where ipi.id =   " + invoiceId);
+//
+//        sql.append(" group by ipi.id ");
+//        List<BigDecimal> res = dao.executeNativeQuery(sql.toString());
+//        if (res != null && !res.isEmpty() && res.get(0) != null) {
+//            return res.get(0);
+//        }
+//        return BigDecimal.ZERO;
+//    }
+    }
+
+    @Override  // بيان الفواتير حسب الضريبة 
+    public List<SalesReportByValueAded> getSalesReportByValueAdedAPI(BankBalanceReportAPI bankBalanceReportAPI) {
+        List<SalesReportByValueAded> salesReportByValueAdedList = new ArrayList<>();
+
+        SalesReportByValueAded salesReportByValueAded = new SalesReportByValueAded();
+        for (InvInventoryDTO inventoryDTO : bankBalanceReportAPI.getInvInventoryDTOList()) {
+            salesReportByValueAded.setDateFrom(bankBalanceReportAPI.getDateFrom());
+            salesReportByValueAded.setDateTo(bankBalanceReportAPI.getDateTo());
+            salesReportByValueAded.setGallerySelected(inventoryDTO);
+            List<SalesReportByValueAded> valueAdedList = getSalesReportByValueAded(salesReportByValueAded, bankBalanceReportAPI.getBranchId());
+            salesReportByValueAdedList.addAll(valueAdedList);
+        }
+
+        return salesReportByValueAdedList;
+    }
+
+    @Override
+    public List<SalesReportByValueAdedDetails> getSalesReportByValueAdedDetailsAPI(BankBalanceReportAPI bankBalanceReportAPI) {
+        List<SalesReportByValueAdedDetails> salesReportByValueAdedDetailseList = new ArrayList<>();
+        SalesReportByValueAded salesReportByValueAded = new SalesReportByValueAded();
+        salesReportByValueAded.setDateFrom(bankBalanceReportAPI.getDateFrom());
+        salesReportByValueAded.setDateTo(bankBalanceReportAPI.getDateTo());
+        for (InvInventoryDTO invInventoryDTO : bankBalanceReportAPI.getInvInventoryDTOList()) {
+            salesReportByValueAded.setGallerySelected(invInventoryDTO);
+            List<SalesReportByValueAdedDetails> list = getSalesReportByValueAdedDetails(salesReportByValueAded, bankBalanceReportAPI.getBranchId());
+            salesReportByValueAdedDetailseList.addAll(list);
+        }
+
+        return salesReportByValueAdedDetailseList;
+    }
+
+    @Override
+    public List<CustomerBalances> getCustomerBalancesAPI(BankBalanceReportAPI bankBalanceReportAPI) {
+        CustomerBalances customerBalances = new CustomerBalances();
+        if (bankBalanceReportAPI != null) {
+            customerBalances.setGallerySelected(bankBalanceReportAPI.getGallarySellected());
+        }
+        return getCustomerBalances(customerBalances, bankBalanceReportAPI.getBranchId());
     }
 
 }

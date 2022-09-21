@@ -7,11 +7,15 @@ package com.toby.user;
 
 import com.toby.businessservice.BranchService;
 import com.toby.businessservice.CompanyService;
+import com.toby.businessservice.EmployeeService;
 import com.toby.businessservice.TobyUserService;
 import com.toby.businessservice.RoleService;
 import com.toby.businessservice.SymbolService;
+import com.toby.converter.EmployeeDTOConverter;
+import com.toby.dto.EmployeeDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.CompanyLanguage;
+import com.toby.entity.Employee;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyRole;
 import com.toby.entity.TobyUser;
@@ -58,6 +62,12 @@ public class UserFormBean extends BaseFormBean implements Serializable {
     private String residencyNumber;
     private List<Symbol> languages;
     private Branch branch;
+
+    private EmployeeDTO employeeSelected;
+    private List<EmployeeDTO> employeeList;
+
+    private EmployeeDTOConverter employeeConverter;
+
     @EJB
     private TobyUserService userService;
 
@@ -73,6 +83,9 @@ public class UserFormBean extends BaseFormBean implements Serializable {
     @EJB
     private BranchService branchService;
 
+    @EJB
+    private EmployeeService employeeService;
+
     /**
      * Creates a new instance of UserFormBean
      */
@@ -83,8 +96,7 @@ public class UserFormBean extends BaseFormBean implements Serializable {
     public String save() {
         try {
             userDetails = new TobyUser();
-            if (userName != null && userPassword != null && userCode != null && selectedLangId != null ) {
-
+            if (userName != null && userPassword != null && userCode != null && selectedLangId != null) {
                 userDetails.setName(userName.trim());
                 userDetails.setPassword(userPassword);
                 userCode = userCompanyCode + "" + userCode;
@@ -97,6 +109,13 @@ public class UserFormBean extends BaseFormBean implements Serializable {
                 TobyCompany companySelected = new TobyCompany();
                 companySelected.setId(selectedCompanyId);
                 userDetails.setCompanyId(companySelected);
+
+                if (employeeSelected != null && employeeSelected.getId() != null) {
+                    Employee employee = new Employee();
+                    employee.setId(employeeSelected.getId());
+                    userDetails.setEmployeeId(employee);
+                }
+
                 if (screenMode.equalsIgnoreCase("add")) {
                     userDetails.setCreationDate(new Date());
                     userDetails.setCreatedBy(userData.getUser());
@@ -105,6 +124,7 @@ public class UserFormBean extends BaseFormBean implements Serializable {
                         if (userData.getSelectedBranch() != null) {
                             b = branchService.findBranch(userData.getSelectedBranch());
                         }
+
                         userDetails.setBranchId(b);
                         userService.addUser(userDetails);
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userData.getUserDDs().get("INFO"), userData.getUserDDs().get("SAVED")));
@@ -270,6 +290,14 @@ public class UserFormBean extends BaseFormBean implements Serializable {
                 userName = userDetails.getName();
                 userPassword = userDetails.getPassword();
                 userCode = userDetails.getUserCode().substring(3);
+                if (userDetails.getEmployeeId() != null) {
+                    EmployeeDTO employeeDTO = new EmployeeDTO();
+                    employeeDTO.setId(userDetails.getEmployeeId().getId());
+                    employeeDTO.setCode(userDetails.getEmployeeId().getCode());
+                    employeeDTO.setName(userDetails.getEmployeeId().getName());
+                    employeeSelected = employeeDTO;
+                }
+
                 List<CompanyLanguage> companyLanguages = companyService.getCompanyLanguages(selectedCompanyId);
                 for (CompanyLanguage companyLanguage : companyLanguages) {
                     languages.add(companyLanguage.getSymbol());
@@ -285,6 +313,14 @@ public class UserFormBean extends BaseFormBean implements Serializable {
                 userName = userDetails.getName();
                 userPassword = userDetails.getPassword();
                 userCode = userDetails.getUserCode();
+
+                if (userDetails.getEmployeeId() != null) {
+                    EmployeeDTO employeeDTO = new EmployeeDTO();
+                    employeeDTO.setId(userDetails.getEmployeeId().getId());
+                    employeeDTO.setCode(userDetails.getEmployeeId().getCode());
+                    employeeDTO.setName(userDetails.getEmployeeId().getName());
+                    employeeSelected = employeeDTO;
+                }
 //            userLang = userDetails.getLang();
                 try {
                     languages = symbolService.getLanguagesWhereCompanyNull();
@@ -481,6 +517,50 @@ public class UserFormBean extends BaseFormBean implements Serializable {
         this.residencyNumber = residencyNumber;
     }
 
-    
-    
+    /**
+     * @return the employeeConverter
+     */
+    public EmployeeDTOConverter getEmployeeConverter() {
+        return employeeConverter;
+    }
+
+    /**
+     * @param employeeConverter the employeeConverter to set
+     */
+    public void setEmployeeConverter(EmployeeDTOConverter employeeConverter) {
+        this.employeeConverter = employeeConverter;
+    }
+
+    /**
+     * @return the employeeSelected
+     */
+    public EmployeeDTO getEmployeeSelected() {
+        return employeeSelected;
+    }
+
+    /**
+     * @param employeeSelected the employeeSelected to set
+     */
+    public void setEmployeeSelected(EmployeeDTO employeeSelected) {
+        this.employeeSelected = employeeSelected;
+    }
+
+    /**
+     * @return the employeeList
+     */
+    public List<EmployeeDTO> getEmployeeList() {
+        if ((employeeList == null || employeeList.isEmpty()) && getUserData().getCompany() != null) {
+            employeeList = employeeService.getAllEmployeesListByBranchID(getUserData().getUserBranch().getId());
+            setEmployeeConverter(new EmployeeDTOConverter(employeeList));
+        }
+        return employeeList;
+    }
+
+    /**
+     * @param employeeList the employeeList to set
+     */
+    public void setEmployeeList(List<EmployeeDTO> employeeList) {
+        this.employeeList = employeeList;
+    }
+
 }

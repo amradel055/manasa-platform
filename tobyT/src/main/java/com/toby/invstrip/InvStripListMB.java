@@ -51,7 +51,7 @@ public class InvStripListMB extends BaseListBean {
             Integer invStripIdToPass = invStripEntity.getId();
             invStrip.setId(invStripEntity.getId());
             try {
-                invStripService.deleteInvStrip(invStrip, invStripIdToPass);
+                invStripService.deleteInvStrip(invStrip);
                 getInvStripEntityList().remove(invStripEntity);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userDDs.get("INFO"), userDDs.get("DELETED")));
             } catch (Exception e) {

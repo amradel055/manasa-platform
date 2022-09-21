@@ -6,6 +6,7 @@ import com.toby.businessservice.GlAccountService;
 import com.toby.businessservice.GlAdminUnitService;
 import com.toby.businessservice.GlYearService;
 import com.toby.businessservice.reports.searchBean.SubAccountSummarySearchBean;
+import com.toby.bussinessservice.global.Utility;
 import com.toby.converter.CostCenterConverter;
 import com.toby.converter.GlAdminUnitConverter;
 import com.toby.converter.GlaccountConverter;
@@ -99,6 +100,8 @@ public class SubAccountSummaryReportMB extends BaseGlAccountReportBean {
             accountConverter = new GlaccountConverter(accountLocalList);
 
             reset();
+            
+            
         } else {
             redirectFinancailYearPage();
         }
@@ -117,6 +120,8 @@ public class SubAccountSummaryReportMB extends BaseGlAccountReportBean {
 
         resetDateFrom();
         resetDateTo();
+        
+        subAccountSummarySearchBean.setCurrencyType(0);
     }
 
     public List<CostCenter> completeCostCenter(String query) {
@@ -228,7 +233,7 @@ public class SubAccountSummaryReportMB extends BaseGlAccountReportBean {
 
             GlYear glYear = getGlYearSelection();
             if (uri.contains("Extended")) {
-                List<GlYear> glYearOfSelectedDate = glYearService.findGlYearByDateBetween(getUserData().getUserBranch().getId(), subAccountSummarySearchBean.getDateFrom() != null ? subAccountSummarySearchBean.getDateFrom() : new Date());
+                List<GlYear> glYearOfSelectedDate = glYearService.findGlYearByDateBetween(getUserData().getUserBranch().getId(), subAccountSummarySearchBean.getDateFrom() != null ? subAccountSummarySearchBean.getDateFrom() : Utility.hourNow());
                 glYear = glYearOfSelectedDate.get(0) != null ? glYearOfSelectedDate.get(0) : getGlYearSelection();
             }
             BigDecimal beforeBalance = BigDecimal.ZERO;
@@ -248,9 +253,9 @@ public class SubAccountSummaryReportMB extends BaseGlAccountReportBean {
             subAccountSummaryReports.add(subAccountSummaryReport);
 
             if (uri.contains("Extended")) {
-                subAccountSummaryList = subAccountSummaryService.getSubAccountSummary(subAccountSummarySearchBean, glYear, true);
+                subAccountSummaryList = subAccountSummaryService.getSubAccountSummaryNew(subAccountSummarySearchBean, glYear, true);
             } else {
-                subAccountSummaryList = subAccountSummaryService.getSubAccountSummary(subAccountSummarySearchBean, glYear, false);
+                subAccountSummaryList = subAccountSummaryService.getSubAccountSummaryNew(subAccountSummarySearchBean, glYear, false);
             }
 
              totalDebit = BigDecimal.ZERO;

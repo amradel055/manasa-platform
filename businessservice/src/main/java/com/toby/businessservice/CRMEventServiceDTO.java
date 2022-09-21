@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.CrmEventDTOAPI;
 import com.toby.businessservice.reports.searchBean.CrmEventsReportSearchBean;
 import com.toby.dto.ChartDTO;
 import com.toby.dto.CrmEventDTO;
@@ -63,11 +64,11 @@ public interface CRMEventServiceDTO {
 
     public List<CrmEventDTO> findCrmEventListWithDate(Integer branchId, Integer assignedTo, Integer createdBy, Integer type, Boolean employeeIsSupervisor);
 
-    public ChartDTO getCountEventByStatus(Integer branchId,Date dateFrom,Date dateTo);
+    public ChartDTO getCountEventByStatus(Integer branchId, Date dateFrom, Date dateTo);
 
-    public ChartDTO getCountEventByActivityType(Integer branchId,Date dateFrom,Date dateTo);
+    public ChartDTO getCountEventByActivityType(Integer branchId, Date dateFrom, Date dateTo);
 
-    public ChartDTO getCountEventByPriority(Integer branchId,Date dateFrom,Date dateTo);
+    public ChartDTO getCountEventByPriority(Integer branchId, Date dateFrom, Date dateTo);
 
     public ChartDTO getCountEventByStatusAndAssignedTo(Integer branchId, Integer status, Date fromDate, Date toDate);
 
@@ -88,4 +89,22 @@ public interface CRMEventServiceDTO {
     public Long getTotalRegistorsAllEvent(Integer branchId, Map<String, Object> filters, CrmEventDTO crmEventDTOSearch, Integer type, Integer taskType);
 
     public List<CrmEventDTO> findALLEventBank(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters, CrmEventDTO crmEventDTOSearch, Integer type, Integer taskType);
+
+    public List<CrmEventDTO> findALLEventByCustomerId(Integer custumerId, Integer branchId);
+
+    public List<CrmEventDTO> findALLEventByGalleryId(String GalleryIdList, Integer userId);
+
+    public List<CrmEventDTO> findCrmEventList(Integer priorityId, Integer gallaryId, String customerCode, Integer createdBy, Integer assignedTo, Date dateTo, Date dateFrom, Integer status, Integer branchId);
+
+    public CrmEventDTO findALLEvent(TobyUser tobyUser, Integer id);
+
+    public Integer findCountCrmEvent(Integer priorityId, Integer gallaryId, String customerCode, Integer createdBy, Integer assignedTo, Date dateTo, Date dateFrom, Integer status, Integer branchId);
+
+    public List<CrmEventDTO> findALLEventList(Integer branchId);
+
+    public Integer findALLCountEventList(Integer branchId);
+
+    public List<CrmEventDTOAPI> findCrmEventListAPI(Integer priorityId, Integer gallaryId, String customerCode, Integer createdBy, Integer assignedTo, Date dateTo, Date dateFrom, Integer status, Integer branchId);
+
+    public List<CrmEventDTO> findALLEventByInvoiceId(Integer invoiceId, Integer branchId);
 }

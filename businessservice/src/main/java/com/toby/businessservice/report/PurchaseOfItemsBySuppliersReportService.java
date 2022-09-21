@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice.report;
 
+import com.toby.API.SummitionItemAPI;
 import com.toby.businessservice.reports.searchBean.PurchaseOfItemsBySuppliersSearchBean;
 import com.toby.views.ItemSalesView;
 import com.toby.views.ItemSalesViewGroup;
@@ -30,5 +31,9 @@ public interface PurchaseOfItemsBySuppliersReportService {
     public List<ItemSalesView> getAllInvoiceDetailBySuppliersSearchBean(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean);
 
     public List<SalesOfItemsByCompany> getAllSalesOfItemsByCompany(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean);
+
+    public List<ItemSalesView> getAllPurchaseOfItemsBySuppliersSearchBeanNewNew(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean, Integer invoiceType);
+
+    public List<ItemSalesView> getAllPurchaseOfItemsBySuppliersSearchBeanNewAPI(SummitionItemAPI summitionItemAPI, Integer invoiceType);
 
 }

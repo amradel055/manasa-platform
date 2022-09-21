@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.GlAccountDTOAPI;
 import com.toby.entity.TobyUser;
 import com.toby.core.GenericDAO;
 import com.toby.dto.GlAccountDTO;
@@ -47,6 +48,15 @@ public class GlAccountServiceImplDTO implements GlAccountServiceDTO {
         return returnListDTO(glAccount);
     }
     
+    @Override
+    public List<GlAccountDTOAPI> getBranchGLAccountsActiveAPI(Integer branchId) {
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        List<GlAccount> glAccount = new ArrayList<>();
+        glAccount = dao.findListByQuery("SELECT acc FROM GlAccount acc WHERE acc.branchId.id=:branchId AND acc.status=1 AND acc.type = 1 ORDER BY acc.accNumber ASC ", params);
+        return returnListDTOAPI(glAccount);
+    }
+    
      @Override
     public GlAccountDTO findGlAccountDTO(Integer glAccount) {
         if (glAccount != null) {
@@ -78,6 +88,13 @@ public class GlAccountServiceImplDTO implements GlAccountServiceDTO {
         }
         return dTOList;
     }
+    private List<GlAccountDTOAPI> returnListDTOAPI(List<GlAccount> list) {
+        List<GlAccountDTOAPI> dTOList = new ArrayList<>();
+        for (GlAccount entity : list) {
+            dTOList.add(initMapToDTOAPI(entity));
+        }
+        return dTOList;
+    }
 
     private GlAccountDTO mapTODTO(GlAccount entity, Boolean needDetail) {
         GlAccountDTO dTO = initMapToDTO(entity);
@@ -87,6 +104,30 @@ public class GlAccountServiceImplDTO implements GlAccountServiceDTO {
         return dTO;
     }
 
+    private GlAccountDTOAPI initMapToDTOAPI(GlAccount entity) {
+
+        GlAccountDTOAPI dTO = new GlAccountDTOAPI();
+        dTO.setId(entity.getId());
+        
+
+        dTO.setAccNumber(entity.getAccNumber());
+        dTO.setName(entity.getName());
+        dTO.setLevelAcc(entity.getLevelAcc());
+        dTO.setType(entity.getType());
+        dTO.setShotCode(entity.getShotCode());
+        dTO.setStatus(entity.getStatus());
+        dTO.setGeneralBudgetId(entity.getGeneralBudgetId() != null ? entity.getGeneralBudgetId().getId() : null);
+        dTO.setGeneralBudgetIdCredit(entity.getGeneralBudgetIdCredit() != null ? entity.getGeneralBudgetIdCredit().getId() : null);
+        dTO.setGeneralBudgetIdDebit(entity.getGeneralBudgetIdDebit() != null ? entity.getGeneralBudgetIdDebit().getId() : null);
+        dTO.setCurrencyId(entity.getCurrencyId() != null ? entity.getCurrencyId().getId() : null);
+
+        dTO.setStatus(entity.getStatus());
+        dTO.setIndex(entity.getId());
+        dTO.setCreatedDate(entity.getCreationDate());
+        dTO.setCreatedBy(entity.getCreatedBy().getId());
+
+        return dTO;
+    }
     private GlAccountDTO initMapToDTO(GlAccount entity) {
 
         GlAccountDTO dTO = new GlAccountDTO();

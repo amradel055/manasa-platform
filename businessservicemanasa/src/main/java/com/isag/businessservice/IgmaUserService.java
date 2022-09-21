@@ -58,4 +58,6 @@ public interface IgmaUserService {
     public String validateConfirmationPassword(String confirmationPassword, String newPassword);
 
     public List<Employee> getEmployeesByUserAndBranch(Integer userId, Integer branchId);
+    
+    public String updateUserPassword(Integer userId , String oldPassword , String newPassword);
 }

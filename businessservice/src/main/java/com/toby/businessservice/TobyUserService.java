@@ -6,6 +6,7 @@
 package com.toby.businessservice;
 
 import com.toby.dto.TobyUserDTO;
+import com.toby.entity.Employee;
 import com.toby.entity.TobyUser;
 import java.util.List;
 import javax.ejb.Remote;
@@ -52,7 +53,15 @@ public interface TobyUserService {
     public List<TobyUserDTO> getAllUserOfproduction(TobyUser tobyUser);
 
     public List<TobyUserDTO> getUsersByCompanyId(Integer companyId);
-    
+
     public void updateInvItem2(List<TobyUser> tobyUserList);
+
+    public TobyUser updateUser(Integer userId);
+
+    public List<TobyUserDTO> getUsersByInventoryId(Integer InventoryId);
+
+    public String save(String userName, String oldPassword, String newUserPassword, String newPasswordConfirm);
+
+    public List<Employee> getEmployeesByUserAndBranch(Integer userId, Integer branchId);
 
 }

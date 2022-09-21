@@ -653,7 +653,7 @@ public class GlAccountServiceImpl implements GlAccountService {
         params.put("parentId", parentId.getId());
         if (parentId != null &&  parentId.getId() != null) {
             List<Integer> accounts = dao.findListByQuery("SELECT max(g.accNumber) FROM GlAccount g  WHERE g.parentAcc.id = :parentId",params);
-            if (!accounts.isEmpty()) {
+            if (!accounts.isEmpty() && accounts.get(0) != null) {
                 return accounts.get(0) + 1;
             } else {
                 return parentId.getAccNumber() + 1;

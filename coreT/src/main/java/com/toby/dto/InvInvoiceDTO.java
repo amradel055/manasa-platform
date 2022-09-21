@@ -71,6 +71,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private Boolean isOld;
 
     private BigDecimal totalQuatity;
+    private BigDecimal totalCostAvarage;
     private BigDecimal totalWeight;
     private BigDecimal totalNet;
     private BigDecimal taxvalue;
@@ -80,6 +81,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private BigDecimal payed;
     private BigDecimal remain;
     private BigDecimal accountStatement;
+    private InvInventoryDTO deliveryPlace;
 
     private InventorySetupDTO inventorySetupDTO;
 
@@ -159,12 +161,25 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private String customerMobile;
     private Integer invoiceType;
     private Boolean sendCloth;
-    
+
+    private Integer gallaryDelivery;
+    private Integer gallaryDeliveryShow;
+
     private String offerCopoun;
-    
+
     private Integer generalJournalId;
-    
+
     private Integer excel;
+    
+    
+    private String seialsInvoices;
+    
+
+    private List<GlPayDTO> glPayDTOList ; 
+    
+    ////   accountin ////   
+    
+    private Integer account;
 
     public InvInvoiceDTO() {
     }
@@ -425,7 +440,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      * @return the taxFlagFinal
      */
     public Boolean getTaxFlagFinal() {
-        if(taxFlagFinal == null){
+        if (taxFlagFinal == null) {
             taxFlagFinal = Boolean.FALSE;
         }
         return taxFlagFinal;
@@ -525,7 +540,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      * @return the totalQuatity
      */
     public BigDecimal getTotalQuatity() {
-        if(totalQuatity == null){
+        if (totalQuatity == null) {
             totalQuatity = BigDecimal.ZERO;
         }
         return totalQuatity;
@@ -556,7 +571,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      * @return the totalNet
      */
     public BigDecimal getTotalNet() {
-        if(totalNet == null){
+        if (totalNet == null) {
             totalNet = BigDecimal.ZERO;
         }
         return totalNet;
@@ -1821,7 +1836,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      * @return the sendCloth
      */
     public Boolean getSendCloth() {
-        if(sendCloth == null){
+        if (sendCloth == null) {
             sendCloth = Boolean.FALSE;
         }
         return sendCloth;
@@ -1860,6 +1875,105 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setExcel(Integer excel) {
         this.excel = excel;
+    }
+
+    /**
+     * @return the deliveryPlace
+     */
+    public InvInventoryDTO getDeliveryPlace() {
+        return deliveryPlace;
+    }
+
+    /**
+     * @param deliveryPlace the deliveryPlace to set
+     */
+    public void setDeliveryPlace(InvInventoryDTO deliveryPlace) {
+        this.deliveryPlace = deliveryPlace;
+    }
+
+    /**
+     * @return the seialsInvoices
+     */
+    public String getSeialsInvoices() {
+        return seialsInvoices;
+    }
+
+    /**
+     * @param seialsInvoices the seialsInvoices to set
+     */
+    public void setSeialsInvoices(String seialsInvoices) {
+        this.seialsInvoices = seialsInvoices;
+    }
+
+    /**
+     * @return the glPayDTOList
+     */
+    public List<GlPayDTO> getGlPayDTOList() {
+        if(glPayDTOList == null){
+            glPayDTOList = new ArrayList<>();
+        }
+        return glPayDTOList;
+    }
+
+    /**
+     * @param glPayDTOList the glPayDTOList to set
+     */
+    public void setGlPayDTOList(List<GlPayDTO> glPayDTOList) {
+        this.glPayDTOList = glPayDTOList;
+    }
+     /* @return the gallaryDelivery
+     */
+    public Integer getGallaryDelivery() {
+        return gallaryDelivery;
+    }
+
+    /**
+     * @param gallaryDelivery the gallaryDelivery to set
+     */
+    public void setGallaryDelivery(Integer gallaryDelivery) {
+        this.gallaryDelivery = gallaryDelivery;
+    }
+
+    /**
+     * @return the gallaryDeliveryShow
+     */
+    public Integer getGallaryDeliveryShow() {
+        return gallaryDeliveryShow;
+    }
+
+    /**
+     * @param gallaryDeliveryShow the gallaryDeliveryShow to set
+     */
+    public void setGallaryDeliveryShow(Integer gallaryDeliveryShow) {
+        this.gallaryDeliveryShow = gallaryDeliveryShow;
+    }
+
+    /**
+     * @return the account
+     */
+    public Integer getAccount() {
+        return account;
+    }
+
+    /**
+     * @param account the account to set
+     */
+    public void setAccount(Integer account) {
+        this.account = account;
+    }
+
+    /**
+     * @return the totalCostAvarage
+     */
+    public BigDecimal getTotalCostAvarage() {
+        return totalCostAvarage;
+    }
+
+    /**
+     * @param totalCostAvarage the totalCostAvarage to set
+     */
+    public void setTotalCostAvarage(BigDecimal totalCostAvarage) {
+        this.totalCostAvarage = totalCostAvarage;
     }
 
 }

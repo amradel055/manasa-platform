@@ -5,6 +5,7 @@
  */
 package com.toby.bussinessservice.global;
 
+import com.toby.API.InvOrganizationSiteDTOAPI;
 import com.toby.businessservice.EmployeeService;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.core.GenericDAO;
@@ -18,6 +19,7 @@ import com.toby.dto.InvItemDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.InventoryDelegatorDTO;
 import com.toby.dto.OfferCompanyDTO;
+import com.toby.dto.SymbolDTO;
 import com.toby.entity.CostCenter;
 import com.toby.entity.Currency;
 import com.toby.entity.GlAccount;
@@ -105,9 +107,6 @@ public class AutoComplateImpl implements AutoCompleteService {
         }
 
         sql.append(" order by ii.code limit 30 ");
-//        appendItemsBarcodesDetailsViewBranchId(sql);
-//          List<ItemsBarcodesDetailsView>  list = dao.executeNativeQuery(sql.toString());
-//          return list;
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
         return convertToItemsBarcodesDetailsView(res);
     }
@@ -213,6 +212,19 @@ public class AutoComplateImpl implements AutoCompleteService {
 
     @Override
     public List<InvOrganizationSiteDTO> autoCompleteOrganizationSiteDTO(Integer branchId, boolean active, Integer type, String qeury, Integer gallaryId) {
+        List<InvOrganizationSite> detailses = findCustomerList(branchId, qeury, gallaryId, type, active);
+        List<InvOrganizationSiteDTO> list = returnListDTO2(detailses);
+        return list;
+    }
+
+    @Override
+    public List<InvOrganizationSiteDTOAPI> autoCompleteOrganizationSiteDTOAPI(Integer branchId, boolean active, Integer type, String qeury, Integer gallaryId) {
+        List<InvOrganizationSite> detailses = findCustomerList(branchId, qeury, gallaryId, type, active);
+        List<InvOrganizationSiteDTOAPI> list = returnListDTO2API(detailses);
+        return list;
+    }
+
+    private List<InvOrganizationSite> findCustomerList(Integer branchId, String qeury, Integer gallaryId, Integer type, boolean active) {
         List<InvOrganizationSiteDTO> list = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
@@ -222,15 +234,40 @@ public class AutoComplateImpl implements AutoCompleteService {
             params.put("gallaryId", gallaryId);
         }
         appendOrganizationTypeAndActive(params, type, sql, active, gallaryId);
-        List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params, 0, 10);
-        list = returnListDTO2(detailses);
-        return list;
+        List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params, 0, 15);
+        return detailses;
+    }
+
+    @Override
+    public List<InvOrganizationSiteDTO> autoCompleteOrganizationSiteDTOAnotherBranchAnotherGallary(Integer branchId, String qeury, Integer gallaryId) {
+        if (gallaryId != null) {
+            List<InvOrganizationSiteDTO> list = null;
+            Map<String, Object> params = new HashMap<>();
+            StringBuilder sql = new StringBuilder();
+            params.put("branchId", branchId);
+            params.put("qeury", qeury);
+            params.put("gallaryId", gallaryId);
+            sql.append("SELECT e FROM InvOrganizationSite e WHERE e.id in (select i.organizationSiteId.id from InvPurchaseInvoice i where i.deliveryPlace.id = :gallaryId) AND e.branchId.id = :branchId AND ((:qeury is null OR e.name  like CONCAT('%',:qeury ,'%')) OR (:qeury is null OR e.code  like CONCAT('%',:qeury ,'%') )  OR (:qeury is null OR e.mobile  like CONCAT('%',:qeury ,'%') ) )");
+            sql.append(" ORDER BY e.code");
+            List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params, 0, 10);
+            list = returnListDTO2(detailses);
+            return list;
+        }
+        return null;
     }
 
     private List<InvOrganizationSiteDTO> returnListDTO2(List<InvOrganizationSite> list) {
         List<InvOrganizationSiteDTO> DTOlist = new ArrayList();
         for (InvOrganizationSite e : list) {
             DTOlist.add(mapToDTOSmall(e));
+        }
+        return DTOlist;
+    }
+
+    private List<InvOrganizationSiteDTOAPI> returnListDTO2API(List<InvOrganizationSite> list) {
+        List<InvOrganizationSiteDTOAPI> DTOlist = new ArrayList();
+        for (InvOrganizationSite e : list) {
+            DTOlist.add(mapToDTOSmallAPI(e));
         }
         return DTOlist;
     }
@@ -246,6 +283,25 @@ public class AutoComplateImpl implements AutoCompleteService {
         invOrganizationSiteDTO.setShoulder(invOrganizationSite.getShoulder());
         invOrganizationSiteDTO.setStep(invOrganizationSite.getStep());
         invOrganizationSiteDTO.setDiscount(invOrganizationSite.getDiscount());
+        invOrganizationSiteDTO.setEmail(invOrganizationSite.getEmail());
+        invOrganizationSiteDTO.setMobile(invOrganizationSite.getMobile());
+        invOrganizationSiteDTO.setActive(invOrganizationSite.getActive());
+        invOrganizationSiteDTO.setStreet(invOrganizationSite.getStreet());
+        invOrganizationSiteDTO.setCity(invOrganizationSite.getCity());
+        invOrganizationSiteDTO.setCountry(invOrganizationSite.getCountry());
+        invOrganizationSiteDTO.setCompanyName(invOrganizationSite.getCompanyName());
+        invOrganizationSiteDTO.setEmployer(invOrganizationSite.getEmployer());
+        invOrganizationSiteDTO.setJobNamed(invOrganizationSite.getJobNamed());
+
+        if (invOrganizationSite.getLearnAboutCompanyfrom() != null) {
+            SymbolDTO symbolDTO = new SymbolDTO();
+            symbolDTO.setId(invOrganizationSite.getLearnAboutCompanyfrom().getId());
+            symbolDTO.setName(invOrganizationSite.getLearnAboutCompanyfrom().getName());
+            symbolDTO.setSerial(invOrganizationSite.getLearnAboutCompanyfrom().getSerial());
+            symbolDTO.setIndex(invOrganizationSite.getLearnAboutCompanyfrom().getId());
+            invOrganizationSiteDTO.setLearnAboutCompanyFrom(symbolDTO);
+        }
+
         if (invOrganizationSite.getCurrencyId() != null) {
             CurrencyDTO currencyDTO = new CurrencyDTO();
             currencyDTO.setId(invOrganizationSite.getCurrencyId().getId());
@@ -293,6 +349,28 @@ public class AutoComplateImpl implements AutoCompleteService {
         return invOrganizationSiteDTO;
     }
 
+    public InvOrganizationSiteDTOAPI mapToDTOSmallAPI(InvOrganizationSite invOrganizationSite) {
+        InvOrganizationSiteDTOAPI invOrganizationSiteDTO = new InvOrganizationSiteDTOAPI();
+        invOrganizationSiteDTO.setId(invOrganizationSite.getId());
+        invOrganizationSiteDTO.setName(invOrganizationSite.getName());
+        invOrganizationSiteDTO.setCode(invOrganizationSite.getCode());
+        invOrganizationSiteDTO.setMobile(invOrganizationSite.getMobile());
+        invOrganizationSiteDTO.setLength(invOrganizationSite.getLength());
+        invOrganizationSiteDTO.setShoulder(invOrganizationSite.getShoulder());
+        invOrganizationSiteDTO.setStep(invOrganizationSite.getStep());
+        invOrganizationSiteDTO.setDiscount(invOrganizationSite.getDiscount());
+        invOrganizationSiteDTO.setEmail(invOrganizationSite.getEmail());
+        invOrganizationSiteDTO.setMobile(invOrganizationSite.getMobile());
+
+        invOrganizationSiteDTO.setOfferCompanyName(invOrganizationSite.getOfferCompanyId() == null ? "" : invOrganizationSite.getOfferCompanyId().getName());
+
+        invOrganizationSiteDTO.setGallaryIdAPI(invOrganizationSite.getGallaryId() == null ? null : invOrganizationSite.getGallaryId().getId());
+
+        invOrganizationSiteDTO.setAccountIdAPI(invOrganizationSite.getAccountId() == null ? null : invOrganizationSite.getAccountId().getId());
+
+        return invOrganizationSiteDTO;
+    }
+
     @Override
     public List<InvInvoiceDTO> autoCompleteInvPurchaseForFactoryDTO(Integer branchId, String qeury) {
         List<InvInvoiceDTO> list = new ArrayList<>();
@@ -329,19 +407,20 @@ public class AutoComplateImpl implements AutoCompleteService {
     }
 
     private void appendOrganizationTypeAndActive(Map<String, Object> params, Integer type, StringBuilder sql, boolean active, Integer gallaryId) {
-        
+
         sql.append("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND ((:qeury is null OR e.name  like CONCAT('%',:qeury ,'%')) OR (:qeury is null OR e.code  like CONCAT('%',:qeury ,'%') )  OR (:qeury is null OR e.mobile  like CONCAT('%',:qeury ,'%') ) )");
-        
-        if(type != null){
-             params.put("type", type);
-        if (type == 0 || type == 1) {
-           
-            sql.append(" AND (e.type = :type OR e.type = 2) ");
-        } else{
-            
-            sql.append(" AND e.type = :type  ");
-        }}
-        
+
+        if (type != null) {
+            params.put("type", type);
+            if (type == 0 || type == 1) {
+
+                sql.append(" AND (e.type = :type OR e.type = 2) ");
+            } else {
+
+                sql.append(" AND e.type = :type  ");
+            }
+        }
+
         if (gallaryId != null) {
             params.put("gallaryId", gallaryId);
             sql.append(" AND e.gallaryId.id = :gallaryId ");

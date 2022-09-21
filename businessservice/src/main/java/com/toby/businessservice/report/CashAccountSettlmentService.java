@@ -5,9 +5,11 @@
  */
 package com.toby.businessservice.report;
 
+import com.toby.API.CashAccountSettlementAPI;
 import com.toby.businessservice.reports.searchBean.SubAccountSummarySearchBean;
 import com.toby.entity.GlYear;
 import com.toby.views.CashAccountSettlementBean;
+import com.toby.views.CashAccountSettlment;
 import com.toby.views.CashAccountSettlmentView;
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,6 +26,10 @@ public interface CashAccountSettlmentService {
 
     public List<CashAccountSettlmentView> findAllCashAccountSettlment2(SubAccountSummarySearchBean cashAccountSettlementSearchBean);
 
+    public List<CashAccountSettlmentView> findAllCashAccountSettlmentNew1(SubAccountSummarySearchBean cashAccountSettlementSearchBean);
+
+    public List<CashAccountSettlment> findAllCashAccountSettlmentNew(SubAccountSummarySearchBean cashAccountSettlementSearchBean);
+
     public List<CashAccountSettlmentView> findAllCashAccountSettlmentForLineCheck(SubAccountSummarySearchBean cashAccountSettlementSearchBean);
 
     public BigDecimal findOpeningBalancesForSpecificCashAccount(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Integer bankId, Integer type);
@@ -38,4 +44,5 @@ public interface CashAccountSettlmentService {
 
     public CashAccountSettlementBean searchNew(SubAccountSummarySearchBean cashAccountSettlementSearchBean);
 
+    public CashAccountSettlementBean searchNewApi(CashAccountSettlementAPI cashAccountSettlementAPI) ;
 }

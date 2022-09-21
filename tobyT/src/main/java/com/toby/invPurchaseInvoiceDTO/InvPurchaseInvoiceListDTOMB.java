@@ -42,6 +42,28 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
         }
     }
 
+    public void updateGallaryDelivery() {
+        if (getInvInvoiceDTOSelected() != null && getInvInvoiceDTOSelected().getId() != null) {
+            invPurchaseInvoiceService.updateGallaryDelivery(getInvInvoiceDTOSelected().getId());
+            sendSMS();
+        }
+
+    }
+
+    public void sendSMS() {
+        StringBuilder message = new StringBuilder();
+        if (getInvInvoiceDTOSelected().getInvnameType() != null && getInvInvoiceDTOSelected().getInvnameType() == 0) {
+            message.append("برنس للخياطة يبلغكم بأن الثياب جاهزة للتسليم  للاستفسار الاتصال على الرقم");
+            message.append("920027070");
+            message.append(" اكمل اناقتك مع شماغ برنس ");
+            sendSms(getInvInvoiceDTOSelected().getCustomerMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
+        } else if (getInvInvoiceDTOSelected().getInvnameType() != null && getInvInvoiceDTOSelected().getInvnameType() == 1) {
+            message.append("لي رويال للخياطة الرجالية يبلغكم بان الثياب جاهزة للاستلام ت ");
+            message.append("920027711");
+            sendSms(getInvInvoiceDTOSelected().getCustomerMobile(), "التوبى العالمى", message.toString(), "20099320", "Royal@e12z");
+        }
+    }
+
     @Override
     public void load() {
         try {
@@ -151,6 +173,8 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
                 exit("../invreturnsales_1/invreturnsalesform.xhtml");
             } else if (getUri().contains("proworkorderlist")) {
                 exit("../proworkorder/proworkorderform.xhtml");
+            } else if (getUri().contains("deliveryPlaceList")) {
+                exit("../deliveryPlace/deliveryPlaceForm.xhtml");
             }
 
             return "";
@@ -192,6 +216,11 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
                 } else if (getUri().contains("invreturnsaleslist")) {
                     exit("../invreturnsales_1/invreturnsalesform.xhtml");
                 } else if (getUri().contains("proworkorderlist")) {
+                    exit("../proworkorder/proworkorderform.xhtml");
+                } else if (getUri().contains("deliveryPlaceList")) {
+                    exit("../deliveryPlace/deliveryPlaceForm.xhtml");
+                }
+                else if (getUri().contains("crmCustomerTracking")) {
                     exit("../proworkorder/proworkorderform.xhtml");
                 }
                 return "";

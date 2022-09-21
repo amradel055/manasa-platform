@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.SymbolDTOAPI;
 import com.toby.dto.SymbolDTO;
 import com.toby.entity.Symbol;
 import com.toby.entity.TobyUser;
@@ -79,9 +80,9 @@ public interface SymbolService {
     public List<Symbol> getAllNationalitiesByCompanyId(Integer companyId);
 
     public List<Symbol> getSpecialDocumentsTypes();
-    
+
     public Symbol getSpecialDocumentsTypes(Integer serial);
-    
+
     public Symbol getSymbolTypes(Integer serial);
 
     public Symbol findSymbol(Integer id);
@@ -122,6 +123,8 @@ public interface SymbolService {
 
     //goher-----------
     public List<SymbolDTO> getDocumentsTypesDTO(Integer companyId);
+    
+    public List<SymbolDTOAPI> getDocumentsTypesDTOAPI(Integer companyId);
 
     public SymbolDTO getSymbolDTO(Integer SymbolId);
 
@@ -140,8 +143,16 @@ public interface SymbolService {
     public List<SymbolDTO> getSymbolListByCompanyId(Integer companyId, Integer generalSymbolId);
 
     public List<SymbolDTO> getDeterminationPriceDTO(Integer companyId);
-    
-    public List<Symbol> getAllworkTypeIdByCompanyId(Integer companyId);
-    
+
+    public List<SymbolDTO> getAllworkTypeIdByCompanyId(Integer companyId);
+
     public List<Symbol> getAllStoreRegionByCompanyId(Integer companyId);
+
+    public List<SymbolDTO> getCrmStatusByCompanyIdDTO(Integer companyId);
+
+    public List<SymbolDTO> getCrmPeriorityByCompanyIdDTO(Integer companyId);
+    
+    public List<SymbolDTO> getCrmLearnAboutFromByCompanyIdDTO(Integer companyId) ;
+    
+    public List<SymbolDTO> getCrmEventTypeFromByCompanyIdDTO(Integer companyId) ;
 }

@@ -139,7 +139,7 @@ public class OrganizationSiteFormMB extends BaseFormBean implements Serializable
             currencylist = currencyService.getAllCurrencyByCompanyId(getUserData().getCompany().getId());
             currencyConverter = new CurrencyConverter(currencylist);
 
-            workTypeList = symbolService.getAllworkTypeIdByCompanyId(getUserData().getCompany().getId());
+//            workTypeList = symbolService.getAllworkTypeIdByCompanyId(getUserData().getCompany().getId());
             workTypeConverter = new SymbolConverter(workTypeList);
             storeRegionList = symbolService.getAllStoreRegionByCompanyId(getUserData().getCompany().getId());
             storeRegionConverter = new SymbolConverter(storeRegionList);

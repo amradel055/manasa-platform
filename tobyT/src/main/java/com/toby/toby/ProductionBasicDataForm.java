@@ -12,6 +12,7 @@ import com.toby.businessservice.ProFactoryDeliveryService;
 import com.toby.businessservice.ReportManagementService;
 import com.toby.businessservice.report.SupplierAccountService;
 import com.toby.bussinessservice.global.AutoCompleteService;
+import com.toby.bussinessservice.global.Utility;
 import com.toby.define.ModuleClassEnum;
 import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.InvDailogueData;
@@ -158,9 +159,8 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
             
             @Override
             public List<InvDailogueData> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
-                
-                setRowCount(invDialogueService.getTotalRegistors(getUserData().getUserBranch().getId(), filters, null, getInvInvoiceDTO().getScreenName()).intValue());
-                getInvInvoiceDTO().setInvDailogueDataList(invDialogueService.loadInvDailogueData(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), filters, getInvInvoiceDTO().getInventorySetupDTO(), getUserData().getUserBranch().getId(), getInvInvoiceDTO().getScreenName()));
+                setRowCount(invDialogueService.getTotalRegistors(getUserData().getUserBranch().getId(), filters, null, getInvInvoiceDTO().getScreenName(),null).intValue());
+                getInvInvoiceDTO().setInvDailogueDataList(invDialogueService.loadInvDailogueData(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), filters, getInvInvoiceDTO().getInventorySetupDTO(), getUserData().getUserBranch().getId(), getInvInvoiceDTO().getScreenName(),null));
                 return getInvInvoiceDTO().getInvDailogueDataList();
             }
             
@@ -183,6 +183,8 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
         }
         if (getInvInvoiceDTO().getInvDailogeDataSelected() != null || getInvInvoiceDTO().getNeedLoadedSerial() != null) {
             setInvInvoiceDTO(invDialogueService.loadDlg(getInvInvoiceDTO()));
+             invInvoiceDTO.setDate(Utility.hourNow());
+        invInvoiceDTO.setTime(Utility.hourNow());
             fillLists();
             CloseDlg("loaddlg");
             errorMsg(getInvInvoiceDTO().getMsg());
@@ -281,7 +283,8 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
         
         findScreenName();
         
-        invInvoiceDTO.setDate(new Date());
+        invInvoiceDTO.setDate(Utility.hourNow());
+        invInvoiceDTO.setTime(Utility.hourNow());
         
         invInvoiceDTO.setReportManagement(reportManagementService.reportManagementByBranch(getUserData().getUserBranch().getId()));
         

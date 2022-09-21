@@ -5,6 +5,7 @@
  */
 package com.toby.entiy;
 
+import com.toby.dto.GlBankDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.Currency;
 import com.toby.entity.GlAccount;
@@ -30,10 +31,12 @@ public class GlBankEntity extends BaseEntity {
     private String typeName;
     private Integer raghiPoint;
     private BigDecimal commition;
+    private BigDecimal fixedAmount;
     private BigDecimal rate;
     private Integer cash;
     private String remark;
     private GlAccount transferaccountId ;
+    private GlBankDTO glBankId;
     
 
     public String getName() {
@@ -210,6 +213,37 @@ public class GlBankEntity extends BaseEntity {
      */
     public void setTransferaccountId(GlAccount transferaccountId) {
         this.transferaccountId = transferaccountId;
+    }
+
+    /**
+     * @return the fixedAmount
+     */
+    public BigDecimal getFixedAmount() {
+        if(fixedAmount == null){
+            fixedAmount = BigDecimal.ZERO;
+        }
+        return fixedAmount;
+    }
+
+    /**
+     * @param fixedAmount the fixedAmount to set
+     */
+    public void setFixedAmount(BigDecimal fixedAmount) {
+        this.fixedAmount = fixedAmount;
+    }
+
+    /**
+     * @return the glBankId
+     */
+    public GlBankDTO getGlBankId() {
+        return glBankId;
+    }
+
+    /**
+     * @param glBankId the glBankId to set
+     */
+    public void setGlBankId(GlBankDTO glBankId) {
+        this.glBankId = glBankId;
     }
 
 }

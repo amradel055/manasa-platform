@@ -36,7 +36,20 @@ public class UserListBean extends BaseListBean implements Serializable {
 
     private TobyUser tobyUser;
     private Integer selecteduser;
+    private TobyUser tobyUserSelected;
+
     private UserData userData;
+    private Boolean activeCrm;
+
+    public void goToUpdate() {
+        if (getTobyUserSelected() != null && getTobyUserSelected().getActiveCrm() == Boolean.TRUE) {
+            TobyUser user = userService.findUser(getTobyUserSelected().getId());
+            user.setActiveCrm(Boolean.TRUE);
+            userService.addUser(user);
+
+        }
+
+    }
 
     @PostConstruct
     @Override
@@ -117,7 +130,7 @@ public class UserListBean extends BaseListBean implements Serializable {
             if (companyId != null && companyId.getId() != null) {
                 //  get all user to all roles to this branch
                 if (userData.getSelectedBranch() != null) {
-                    users = tobyUserRoleService.getUsersForBranch(userData.getSelectedBranch());
+                    users = tobyUserRoleService.getUsersForBranchNew(userData.getSelectedBranch());
                 }
 
             } else {
@@ -194,6 +207,37 @@ public class UserListBean extends BaseListBean implements Serializable {
 
     public void setUserData(UserData userData) {
         this.userData = userData;
+    }
+
+    /**
+     * @return the activeCrm
+     */
+    public Boolean getActiveCrm() {
+        if (activeCrm == null) {
+            setActiveCrm(Boolean.FALSE);
+        }
+        return activeCrm;
+    }
+
+    /**
+     * @param activeCrm the activeCrm to set
+     */
+    public void setActiveCrm(Boolean activeCrm) {
+        this.activeCrm = activeCrm;
+    }
+
+    /**
+     * @return the tobyUserSelected
+     */
+    public TobyUser getTobyUserSelected() {
+        return tobyUserSelected;
+    }
+
+    /**
+     * @param tobyUserSelected the tobyUserSelected to set
+     */
+    public void setTobyUserSelected(TobyUser tobyUserSelected) {
+        this.tobyUserSelected = tobyUserSelected;
     }
 
 }

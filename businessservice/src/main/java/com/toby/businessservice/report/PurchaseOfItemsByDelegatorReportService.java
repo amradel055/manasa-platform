@@ -19,5 +19,8 @@ public interface PurchaseOfItemsByDelegatorReportService {
 
     public List<ItemSalesView> getAllPurchaseOfItemsByDelegatorSearchBean(PurchaseOfItemsByDelegatorSearchBean purchaseOfItemsByDelegatorSearchBean);
 
-   
+    public List<ItemSalesView> getAllPurchaseOfItemsByDelegatorSearchBeanNew(PurchaseOfItemsByDelegatorSearchBean purchaseOfItemsByDelegatorSearchBean);
+    
+    public List<ItemSalesView> getAllPurchaseOfItemsByDelegatorSearchBeanNewHead(PurchaseOfItemsByDelegatorSearchBean purchaseOfItemsByDelegatorSearchBean);
+
 }
