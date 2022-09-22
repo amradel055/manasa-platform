@@ -40,6 +40,9 @@ public class Materials extends BaseEntity {
     @JoinColumn(name = "teacher_id", referencedColumnName = "id")
     @ManyToOne
     private IgmaUser teacherId;
+    @JoinColumn(name = "stage_id", referencedColumnName = "id")
+    @ManyToOne
+    private SchoolStagesGuide stageId;
 
     public Materials() {
     }
@@ -101,6 +104,20 @@ public class Materials extends BaseEntity {
      */
     public void setTeacherId(IgmaUser teacherId) {
         this.teacherId = teacherId;
+    }
+
+    /**
+     * @return the stageId
+     */
+    public SchoolStagesGuide getStageId() {
+        return stageId;
+    }
+
+    /**
+     * @param stageId the stageId to set
+     */
+    public void setStageId(SchoolStagesGuide stageId) {
+        this.stageId = stageId;
     }
 
 }

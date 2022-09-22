@@ -11,6 +11,7 @@ import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
 import com.isag.entity.IgmaUser;
 import com.isag.entity.Materials;
+import com.isag.entity.SchoolStagesGuide;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,40 +26,49 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class MaterialsServiceImpl implements MaterialsService {
-
+    
     @EJB
     private GenericDAO dao;
-
+    
     @Override
-    public List<MaterialsDTO> findMaterials(Integer branchId , Integer teacherId) {
+    public List<MaterialsDTO> findMaterials(Integer branchId, Integer teacherId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         params.put("teacherId", teacherId);
-
+        
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT d FROM Materials d WHERE d.branchId.id = :branchId And d.teacherId.id = :teacherId ");
         List<Materials> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }
-
+    
     @Override
     public List<MaterialsDTO> findMaterialsByTeacher(Integer teacherId) {
         Map<String, Object> params = new HashMap<>();
         params.put("teacherId", teacherId);
         StringBuilder builder = new StringBuilder();
-        
-        builder.append("SELECT d.materialId FROM TeacherMaterials d WHERE d.teacherId.id = :teacherId  ");
+        builder.append("SELECT d FROM Materials d WHERE d.teacherId.id = :teacherId  ");
         List<Materials> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }
-
+    
+    @Override
+    public List<MaterialsDTO> findMaterialsByStage(Integer stageId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("stageId", stageId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM Materials d WHERE d.stageId.id = :stageId  ");
+        List<Materials> list = dao.findListByQuery(builder.toString(), params);
+        return returnListDTO(list);
+    }
+    
     @Override
     public void deleteMaterials(Integer materialsDTO) {
         Materials entity = new Materials();
         entity.setId(materialsDTO);
         dao.deleteEntity(entity);
     }
-
+    
     @Override
     public MaterialsDTO save(MaterialsDTO materialsDTO, IgmaUser isagUser) {
         MaterialsDTO msg = new MaterialsDTO();
@@ -88,7 +98,7 @@ public class MaterialsServiceImpl implements MaterialsService {
             return msg;
         }
     }
-
+    
     private List<MaterialsDTO> returnListDTO(List<Materials> list) {
         List<MaterialsDTO> dTOList = new ArrayList<>();
         for (Materials entity : list) {
@@ -96,37 +106,37 @@ public class MaterialsServiceImpl implements MaterialsService {
         }
         return dTOList;
     }
-
+    
     private MaterialsDTO mapTODTO(Materials entity) {
         MaterialsDTO dTO = initMapToDTO(entity);
-
+        
         return dTO;
     }
-
+    
     private MaterialsDTO initMapToDTO(Materials entity) {
-
+        
         MaterialsDTO dTO = new MaterialsDTO();
         dTO.setId(entity.getId());
         dTO.setName(entity.getName());
-
+        dTO.setStageId(entity.getStageId().getId());
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy().getId());
         dTO.setBranchId(entity.getBranchId().getId());
-
+        
         return dTO;
     }
-
+    
     private Materials mapToEntity(MaterialsDTO dTO, IgmaUser isagUser, Materials entity) {
         if (entity == null) {
             entity = new Materials();
         }
-
+        
         entity.setId(dTO.getId());
         entity.setName(dTO.getName());
-
+        
         if (dTO.getId() == null) {
-
+            
             entity.setCreatedBy(isagUser);
             entity.setBranchId(isagUser.getBranchId());
             entity.setCreationDate(new Date());
@@ -135,10 +145,15 @@ public class MaterialsServiceImpl implements MaterialsService {
             entity.setModificationDate(new Date());
             entity.setModifiedBy(isagUser);
         }
-
+        if(dTO.getStageId() != null){
+            SchoolStagesGuide schoolStagesGuide = new SchoolStagesGuide();
+            schoolStagesGuide.setId(dTO.getStageId());
+            entity.setStageId(schoolStagesGuide);
+        }
+        
         entity.setBranchId(isagUser.getBranchId());
         entity.setCompanyId(isagUser.getCompanyId());
         return entity;
     }
-
+    
 }

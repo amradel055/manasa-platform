@@ -10,6 +10,7 @@ import com.isag.dto.PeriodsDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
 import com.isag.entity.IgmaUser;
+import com.isag.entity.Materials;
 import com.isag.entity.Periods;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,6 +46,20 @@ public class PeriodsServiceImpl implements PeriodsService {
         params.put("teacherId", teacherId);
         StringBuilder builder = new StringBuilder();
         builder.append(" SELECT d FROM Periods d WHERE d.teacherId.id = :teacherId ");
+        List<Periods> list = dao.findListByQuery(builder.toString(), params);
+//        if(list == null || list.isEmpty()){
+//            return findPeriods(branchId);
+//        }
+        return returnListDTO(list);
+    }
+    
+    
+        @Override
+    public List<PeriodsDTO> findPeriodsByMaterialId(Integer materialId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("materialId", materialId);
+        StringBuilder builder = new StringBuilder();
+        builder.append(" SELECT d FROM Periods d WHERE d.materialId.id = :materialId ");
         List<Periods> list = dao.findListByQuery(builder.toString(), params);
 //        if(list == null || list.isEmpty()){
 //            return findPeriods(branchId);
@@ -136,6 +151,7 @@ public class PeriodsServiceImpl implements PeriodsService {
         dTO.setId(entity.getId());
         dTO.setName(entity.getName());
         dTO.setParent(entity.getId());
+        dTO.setMaterialId(entity.getMaterialId().getId());
 
         if (entity.getTeacherId() != null) {
             dTO.setTeacherId(entity.getTeacherId().getId());
@@ -177,6 +193,12 @@ public class PeriodsServiceImpl implements PeriodsService {
             entity.setId(dTO.getId());
             entity.setModificationDate(new Date());
             entity.setModifiedBy(isagUser);
+        }
+        if(dTO.getMaterialId() != null){
+            Materials materials = new Materials() ;
+            materials.setId(dTO.getMaterialId());
+            entity.setMaterialId(materials);
+        
         }
 
         entity.setBranchId(isagUser.getBranchId());

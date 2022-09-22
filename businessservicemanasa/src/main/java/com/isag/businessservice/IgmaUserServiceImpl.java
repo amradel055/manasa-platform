@@ -232,6 +232,7 @@ public class IgmaUserServiceImpl implements IgmaUserService {
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy().getId());
+        dTO.setBranchId(entity.getBranchId().getId());
     }
 
     

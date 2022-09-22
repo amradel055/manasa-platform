@@ -24,4 +24,6 @@ public interface MaterialsService {
     public List<MaterialsDTO> findMaterialsByTeacher(Integer teacherId);
 
     public void deleteMaterials(Integer materialsDTO);
+    
+     public List<MaterialsDTO> findMaterialsByStage(Integer stageId) ;
 }
