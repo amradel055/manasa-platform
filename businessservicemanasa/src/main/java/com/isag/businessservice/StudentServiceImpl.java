@@ -497,7 +497,7 @@ public class StudentServiceImpl implements StudentService {
         List<Student> list = dao.findListByQuery("SELECT e FROM Student e WHERE  e.companyId.id=:companyId", params);
         return list;
     }
-   
+
     @Override
     public StudentDTO mapTODTO(Student entity, StudentDTO dTO) {
         if (dTO == null) {
@@ -523,6 +523,7 @@ public class StudentServiceImpl implements StudentService {
         dTO.setFamilyName(entity.getFamilyName());
         dTO.setCode(entity.getCode());
         dTO.setMobile(entity.getMobile());
+        dTO.setImage(entity.getImage());
         dTO.setFatherMobile(entity.getFatherMobile());
         dTO.setGender(entity.getGender());
         dTO.setImagePath(entity.getImagePath());
@@ -578,6 +579,7 @@ public class StudentServiceImpl implements StudentService {
         dTO.setFatherJob(entity.getFatherJob());
         dTO.setBranchId(entity.getBranchId().getId());
         dTO.setGovernorateId(entity.getBranchId().getId());
+        dTO.setImage(entity.getImage());
 
         if (entity.getSchoolStagesId() != null) {
             dTO.setSchoolStagesId(entity.getSchoolStagesId().getId());
@@ -615,6 +617,7 @@ public class StudentServiceImpl implements StudentService {
         entity.setMacId(dTO.getMacId());
         entity.setIpAddress(dTO.getIpAddress());
         entity.setFatherJob(dTO.getFatherJob());
+        entity.setImage(dTO.getImage());
 
         if (dTO.getId() == null) {
             entity.setCreatedBy(isagUser);
@@ -678,6 +681,7 @@ public class StudentServiceImpl implements StudentService {
         entity.setMacId(dTO.getMacId());
         entity.setIpAddress(dTO.getIpAddress());
         entity.setFatherJob(dTO.getFatherJob());
+        entity.setImage(dTO.getImage());
 
         if (dTO.getSchoolStagesId() != null) {
             SchoolStagesGuide schoolStagesGuide = new SchoolStagesGuide();
@@ -696,6 +700,16 @@ public class StudentServiceImpl implements StudentService {
 
     public void returnListDTO(List<Student> students, List<StudentDTO> dTOList) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<APIStudentDataDTO> getAllStudentsListByMacId(String macId) {
+        Map<String, Object> params = new HashMap();
+        params.put("macId", macId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM Student d WHERE d.macId = :macId ");
+        List<Student> list = dao.findListByQuery(builder.toString(), params);
+        return returnListDTOAPI(list);
     }
 
 }

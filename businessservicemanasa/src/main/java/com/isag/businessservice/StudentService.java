@@ -84,5 +84,7 @@ public interface StudentService {
      public StudentDTO mapTODTO(Student entity, StudentDTO dTO);
      
     public List<APIStudentDataDTO> returnListDTOAPI(List<Student> studentList);
+    
+    public List<APIStudentDataDTO> getAllStudentsListByMacId(String macId)  ;
 
 }

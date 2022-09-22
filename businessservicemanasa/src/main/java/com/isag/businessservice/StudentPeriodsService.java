@@ -8,6 +8,7 @@ package com.isag.businessservice;
 import com.isag.dto.StudentPeriodsDTO;
 import com.isag.dto.TeachersDTO;
 import com.isag.entity.IgmaUser;
+import com.isag.entity.StudentPeriods;
 import com.isag.views.TeachersByStudentId;
 import java.util.List;
 import javax.ejb.Remote;
@@ -34,6 +35,8 @@ public interface StudentPeriodsService {
     public void deleteStudentPeriods(StudentPeriodsDTO studentPeriodsDTO);
 
     public void deleteStudentPeriods(Integer studentPeriodsDTO);
+    
+     public void saveTransaction(StudentPeriods studentPeriods) ;
 
 
 }

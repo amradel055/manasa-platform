@@ -88,8 +88,8 @@
                     <h:panelGroup>
                         <p:commandButton class="saveButton" 
                                          id="saveB" 
-                                         title="#{userData.userDDs['SAVE']}" 
-                                         value="#{userData.userDDs['SAVE']}"
+                                         title="#{userData.userDDs['SEARCH']}" 
+                                         value="#{userData.userDDs['SEARCH']}"
                                          icon="fa fa-fw fa-save" 
                                          action="#{studentPeriodOrderFormMB.search()}" 
                                          update="@form"/>
@@ -108,8 +108,9 @@
                     <p:dataTable 
                         var="busesTable" 
                         widgetVar="bTable"  
-                        rowIndexVar="index" 
+                        rowIndexVar="index"
                         value="#{studentPeriodOrderFormMB.searchStudentDTOList}" rows="15" 
+
                         paginator="true" emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
                         id="busesListForm">
                         <f:facet name="header" class="col-md-12">
@@ -135,6 +136,28 @@
                                   style="width:15vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterBy="#{busesTable.cash}"  filterMatchMode="contains" 
                                   headerText="المبلغ" sortBy="#{busesTable.cash}" >
                             <p:outputLabel value="#{busesTable.cash}"  style="font-size: 1.5vh" />
+                        </p:column>
+
+                        <p:column headerText="#{userData.userDDs['TRANSACTION']}"  style="width: 10vh;font-size: 1.8vh;text-align: center;border-radius: 0px;">
+
+                            <p:commandButton  id="delete" update="@form" 
+                                              class="scloseButtons" style="background-color: red;border-radius: 3px;margin-bottom:3px"
+                                              icon="fa fa-remove" title="#{userData.userDDs['DELETE']}"
+                                              action="#{studentPeriodOrderFormMB.delete}">
+                                <f:setPropertyActionListener value="#{busesTable}" target="#{studentPeriodOrderFormMB.searchStudentDTO}" />
+                                <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                            </p:commandButton>
+
+                            <p:commandButton  id="transaction" update="@form" 
+                                              class="scloseButtons" style="background-color: red;border-radius: 3px;margin-bottom:3px"
+                                              icon="fa fa-fw fa-save" title="تاكيد"
+                                              action="#{studentPeriodOrderFormMB.transaction()}">
+                                <f:setPropertyActionListener value="#{busesTable}" target="#{studentPeriodOrderFormMB.searchStudentDTO}" />
+                                <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                            </p:commandButton>
+
+
+
                         </p:column>
 
 

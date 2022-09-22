@@ -13,6 +13,7 @@ import com.isag.businessservice.SchoolStagesGuideService;
 import com.isag.businessservice.StudentPeriodsOrderService;
 import com.isag.converter.MaterialDTOConverter;
 import com.isag.converter.SchoolStagesGuideDTOConverter;
+import com.isag.converter.SearchStudentDTOConverter;
 import com.isag.converter.periodDTOConverter;
 import com.isag.dto.IgmaUserDTO;
 import com.isag.dto.MaterialsDTO;
@@ -49,6 +50,8 @@ public class StudentPeriodOrderFormMB extends BaseFormBean {
     PeriodsService periodsService;
 
     private List<SearchStudentDTO> searchStudentDTOList;
+    private SearchStudentDTO searchStudentDTO;
+    SearchStudentDTOConverter searchStudentDTOConverter;
 
     private List<IgmaUserDTO> igmaUserDTOList;
 
@@ -82,6 +85,14 @@ public class StudentPeriodOrderFormMB extends BaseFormBean {
 
     public void search() {
         setSearchStudentDTOList(studentPeriodsOrderService.searchStudent(getPeriodsDTO().getId(), getMaterialsDTO().getId()));
+    }
+
+    public void transaction() {
+        studentPeriodsOrderService.transaction(getSearchStudentDTO().getId(), getUserData().getUser());
+    }
+
+    public void delete() {
+        studentPeriodsOrderService.delete(getSearchStudentDTO().getId(), getUserData().getUser());
     }
 
     @Override
@@ -303,7 +314,7 @@ public class StudentPeriodOrderFormMB extends BaseFormBean {
      * @return the searchStudentDTOList
      */
     public List<SearchStudentDTO> getSearchStudentDTOList() {
-        if(searchStudentDTOList == null){
+        if (searchStudentDTOList == null) {
             setSearchStudentDTOList(new ArrayList<>());
         }
         return searchStudentDTOList;
@@ -314,6 +325,24 @@ public class StudentPeriodOrderFormMB extends BaseFormBean {
      */
     public void setSearchStudentDTOList(List<SearchStudentDTO> searchStudentDTOList) {
         this.searchStudentDTOList = searchStudentDTOList;
+    }
+
+    /**
+     * @return the searchStudentDTO
+     */
+    public SearchStudentDTO getSearchStudentDTO() {
+        if (searchStudentDTO == null) {
+            setSearchStudentDTO(new SearchStudentDTO());
+        }
+
+        return searchStudentDTO;
+    }
+
+    /**
+     * @param searchStudentDTO the searchStudentDTO to set
+     */
+    public void setSearchStudentDTO(SearchStudentDTO searchStudentDTO) {
+        this.searchStudentDTO = searchStudentDTO;
     }
 
 }

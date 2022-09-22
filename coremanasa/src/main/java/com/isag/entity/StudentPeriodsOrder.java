@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author m lapan
  */
 @Entity
-@Table(name = "student_periods")
+@Table(name = "student_periods_order")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "StudentPeriods.findAll", query = "SELECT s FROM StudentPeriods s")

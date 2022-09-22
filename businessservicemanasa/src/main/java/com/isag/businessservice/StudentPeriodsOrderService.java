@@ -27,5 +27,7 @@ public interface StudentPeriodsOrderService {
     public List<StudentPeriodsOrderDTO> findStudemtPeriodOrderDTO(Integer branchId);
 
     public List<SearchStudentDTO> searchStudent(Integer periodId, Integer materialId);
+    
+    public void transaction(Integer studentPeriodOrderId, IgmaUser igmaUser)  ;
 
 }

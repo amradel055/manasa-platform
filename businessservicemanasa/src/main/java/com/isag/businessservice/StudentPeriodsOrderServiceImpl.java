@@ -15,6 +15,7 @@ import com.isag.entity.Materials;
 import com.isag.entity.Periods;
 import com.isag.entity.IgmaUser;
 import com.isag.entity.Student;
+import com.isag.entity.StudentPeriods;
 import com.isag.entity.Teachers;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+
 /**
  *
  * @author hq003
@@ -32,6 +34,9 @@ public class StudentPeriodsOrderServiceImpl implements StudentPeriodsOrderServic
 
     @EJB
     private GenericDAO dao;
+
+    @EJB
+    StudentPeriodsService periodsService;
 
     private StudentPeriodsOrderDTO mapTODTO(StudentPeriodsOrder entity) {
         StudentPeriodsOrderDTO dTO = initMapToDTO(entity);
@@ -188,6 +193,28 @@ public class StudentPeriodsOrderServiceImpl implements StudentPeriodsOrderServic
         entity.setBranchId(branch);
         entity.setCompanyId(isagUser.getCompanyId());
         return entity;
+    }
+
+    @Override
+    public void transaction(Integer studentPeriodOrderId, IgmaUser igmaUser) {
+        StudentPeriodsOrder studentPeriodsOrder = dao.findEntityById(StudentPeriodsOrder.class, studentPeriodOrderId);
+        if (studentPeriodsOrder != null) {
+            StudentPeriods studentPeriods = new StudentPeriods();
+            studentPeriods.setBranchId(studentPeriodsOrder.getBranchId());
+            studentPeriods.setCompanyId(igmaUser.getCompanyId());
+            studentPeriods.setCreationDate(new Date());
+            studentPeriods.setCreatedBy(igmaUser.getCreatedBy());
+            studentPeriods.setStudentId(studentPeriodsOrder.getStudentId());
+            studentPeriods.setTeacherId(studentPeriodsOrder.getTeacherId());
+            studentPeriods.setPeriodId(studentPeriodsOrder.getPeriodId());
+            studentPeriods.setMaterialId(studentPeriodsOrder.getMaterialId());
+            studentPeriods.setRemark(studentPeriodsOrder.getRemark());
+            studentPeriods.setValue(studentPeriodsOrder.getValue());
+            studentPeriods.setConfirm(1);
+            periodsService.saveTransaction(studentPeriods);
+//            dao.updateEntity(studentPeriods);
+        }
+        dao.deleteEntity(studentPeriodsOrder);
     }
 
 }

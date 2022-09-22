@@ -36,6 +36,7 @@ public class APIStudentDataDTO {
     private String mobile;
     private String fatherMobile;
     private Integer schoolStagesId;
+    private String image;
     private Integer branchId;
     private Integer companyId;
     private Integer typeLogin;
@@ -482,6 +483,18 @@ public class APIStudentDataDTO {
         this.teacherList = teacherList;
     }
 
+    /**
+     * @return the image
+     */
+    public String getImage() {
+        return image;
+    }
 
+    /**
+     * @param image the image to set
+     */
+    public void setImage(String image) {
+        this.image = image;
+    }
 
 }

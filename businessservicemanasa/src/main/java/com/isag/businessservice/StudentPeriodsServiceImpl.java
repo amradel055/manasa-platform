@@ -35,6 +35,10 @@ public class StudentPeriodsServiceImpl implements StudentPeriodsService {
 
     @EJB
     private GenericDAO dao;
+    
+    public void saveTransaction(StudentPeriods studentPeriods){
+    dao.updateEntity(studentPeriods) ;
+    }
 
     @Override
     public List<Integer> findPeriodsByStudentId(Integer studentId, Integer materialId) {

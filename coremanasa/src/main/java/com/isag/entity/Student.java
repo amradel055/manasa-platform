@@ -91,6 +91,8 @@ public class Student extends BaseEntity {
     @Size(max = 100)
     @Column(name = "father_job")
     private String fatherJob;
+    @Column(name = "image")
+    private String image;
 
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
@@ -406,7 +408,18 @@ public class Student extends BaseEntity {
         this.familyName = familyName;
     }
 
-    
+    /**
+     * @return the image
+     */
+    public String getImage() {
+        return image;
+    }
 
-    
+    /**
+     * @param image the image to set
+     */
+    public void setImage(String image) {
+        this.image = image;
+    }
+
 }

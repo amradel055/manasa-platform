@@ -14,6 +14,7 @@ import com.isag.entity.*;
 public class StudentDTO extends BaseEntityDTO {
 
     private String fullName;
+    private String image;
     private String userName;
     private String password;
     private String code;
@@ -293,6 +294,20 @@ public class StudentDTO extends BaseEntityDTO {
      */
     public void setFamilyName(String familyName) {
         this.familyName = familyName;
+    }
+
+    /**
+     * @return the image
+     */
+    public String getImage() {
+        return image;
+    }
+
+    /**
+     * @param image the image to set
+     */
+    public void setImage(String image) {
+        this.image = image;
     }
 
     /**
