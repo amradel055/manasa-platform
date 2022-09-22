@@ -1,6 +1,5 @@
 package com.toby.config;
 
-import com.toby.API.ItemsDataAPI;
 import com.toby.rest.AttributeDetailsRest;
 import com.toby.rest.LoginRest;
 import com.toby.rest.AttributeRest;
@@ -24,6 +23,7 @@ import com.toby.rest.ItemsRest;
 import com.toby.rest.OffersDetailsRest;
 import com.toby.rest.OffersRest;
 import com.toby.rest.PayRest;
+import com.toby.rest.PermisionOrderRest;
 import com.toby.rest.ProfitOfItemsRest;
 import com.toby.rest.ProproductionReportRest;
 import com.toby.rest.PurchaseOfItemsBySupplierRest;
@@ -84,6 +84,7 @@ public class MyApplication extends Application {
         resources.add(ReportsRest.class);
         resources.add(GroupDTORest.class);
         resources.add(ProfitOfItemsRest.class);
+        resources.add(PermisionOrderRest.class);
 
         return resources;
     }
