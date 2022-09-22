@@ -37,17 +37,17 @@ public class StudentPeriodsServiceImpl implements StudentPeriodsService {
     private GenericDAO dao;
 
     @Override
-    public List<Integer> findPeriodsByStudentId(Integer studentId , Integer materialId) {
+    public List<Integer> findPeriodsByStudentId(Integer studentId, Integer materialId) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder query = new StringBuilder();
         if (studentId != null) {
             params.put("studentId", studentId);
-            query.append("SELECT b.periodId.id FROM StudentPeriods b WHERE b.studentId.id = :studentId") ;
+            query.append("SELECT b.periodId.id FROM StudentPeriods b WHERE b.studentId.id = :studentId");
         }
-        if(materialId != null){
-        params.put("materialId", materialId);
-                     query.append(" AND b.materialId.id = :materialId ") ;
-    
+        if (materialId != null) {
+            params.put("materialId", materialId);
+            query.append(" AND b.materialId.id = :materialId ");
+
         }
         List<Integer> PeriodsList = dao.findListByQuery(query.toString(), params);
         return PeriodsList;
@@ -134,9 +134,9 @@ public class StudentPeriodsServiceImpl implements StudentPeriodsService {
     }
 
     @Override
-    public void deleteStudentPeriodsBy(Integer id ,Integer teacherId, Integer periodId, Integer studentId) {
+    public void deleteStudentPeriodsBy(Integer id, Integer teacherId, Integer periodId, Integer studentId) {
         if (teacherId != null && periodId != null && studentId != null) {
-            String sql = " delete from StudentPeriods s  where s.id = " + id ;
+            String sql = " delete from StudentPeriods s  where s.id = " + id;
 //            +  " AND s.teacherId.id = " + teacherId
 //                    + " AND s.periodId.id = " + periodId + " AND s.studentId.id = " + studentId;
             dao.executeDeleteQuery(sql);

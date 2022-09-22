@@ -20,18 +20,20 @@ import javax.ejb.Remote;
 public interface StudentPeriodsService {
 
     public List<StudentPeriodsDTO> findStudentPeriods(StudentPeriodsDTO studentPeriodsDTO);
-    
+
     public List<TeachersDTO> findteachersByStudentIdLogin(Integer studentId);
 
     public List<Integer> findPeriodsByStudentId(Integer studentId, Integer materialId);
 
     public List<TeachersByStudentId> findteachersByStudentId(Integer studentId);
 
-    public void deleteStudentPeriodsBy(Integer id ,Integer teacherId, Integer periodId, Integer studentId);
+    public void deleteStudentPeriodsBy(Integer id, Integer teacherId, Integer periodId, Integer studentId);
 
     public StudentPeriodsDTO save(StudentPeriodsDTO studentPeriodsDTO, IgmaUser isagUser);
 
     public void deleteStudentPeriods(StudentPeriodsDTO studentPeriodsDTO);
 
     public void deleteStudentPeriods(Integer studentPeriodsDTO);
+
+
 }
