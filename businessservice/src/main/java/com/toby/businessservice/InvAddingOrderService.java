@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.InvInvoiceDTOApi;
 import com.toby.entity.TobyUser;
 import com.toby.bussinessservice.global.InvPurchaseReturnSave;
 import com.toby.dto.InvInvoiceDTO;
@@ -49,4 +50,6 @@ public interface InvAddingOrderService {
      public Long getTotalRegistors(Integer type, Integer branchId, Integer gallaryId, Map<String, Object> filters);
      
      public List<InvInvoiceDTO> getALLInvAddingorderDTOByBranchId(Integer type, Integer gallaryId, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters);
+     
+     public InvInvoiceDTOApi save(InvInvoiceDTOApi invInvoiceDTO, TobyUser tobyUser);
 }

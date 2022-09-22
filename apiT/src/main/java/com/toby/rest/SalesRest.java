@@ -7,6 +7,7 @@ package com.toby.rest;
 
 import com.toby.API.InvDetailsDTOAPI;
 import com.toby.API.InvInvoiceDTOApi;
+import com.toby.API.InvoiceDiscDTOApi;
 import com.toby.API.ResponseApi;
 import com.toby.businessservice.InvInventoryService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;

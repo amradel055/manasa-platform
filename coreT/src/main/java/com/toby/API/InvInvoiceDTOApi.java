@@ -5,6 +5,7 @@
  */
 package com.toby.API;
 
+import com.toby.define.ScreenNameClassEnum;
 import com.toby.views.SalesStatementForThePeriod;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -74,6 +75,10 @@ public class InvInvoiceDTOApi extends BaseEntityDTOAPI {
     private BigDecimal noticeCredit;
     private BigDecimal returnPurchaseValue;
     private BigDecimal totalNet;
+    
+    private ScreenNameClassEnum  screenNameClassEnum;
+    private Date supplierDate;
+    private Integer invPurchaseInvoice;
 
     /**
      * @return the customerName
@@ -829,5 +834,47 @@ public class InvInvoiceDTOApi extends BaseEntityDTOAPI {
      */
     public void setGalleryType(Integer galleryType) {
         this.galleryType = galleryType;
+    }
+
+    /**
+     * @return the screenNameClassEnum
+     */
+    public ScreenNameClassEnum getScreenNameClassEnum() {
+        return screenNameClassEnum;
+    }
+
+    /**
+     * @param screenNameClassEnum the screenNameClassEnum to set
+     */
+    public void setScreenNameClassEnum(ScreenNameClassEnum screenNameClassEnum) {
+        this.screenNameClassEnum = screenNameClassEnum;
+    }
+
+    /**
+     * @return the supplierDate
+     */
+    public Date getSupplierDate() {
+        return supplierDate;
+    }
+
+    /**
+     * @param supplierDate the supplierDate to set
+     */
+    public void setSupplierDate(Date supplierDate) {
+        this.supplierDate = supplierDate;
+    }
+
+    /**
+     * @return the invPurchaseInvoice
+     */
+    public Integer getInvPurchaseInvoice() {
+        return invPurchaseInvoice;
+    }
+
+    /**
+     * @param invPurchaseInvoice the invPurchaseInvoice to set
+     */
+    public void setInvPurchaseInvoice(Integer invPurchaseInvoice) {
+        this.invPurchaseInvoice = invPurchaseInvoice;
     }
 }

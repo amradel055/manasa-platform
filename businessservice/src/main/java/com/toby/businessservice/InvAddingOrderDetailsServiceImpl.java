@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.InvDetailsDTOAPI;
 import com.toby.entity.TobyUser;
 import com.toby.core.GenericDAO;
 import com.toby.dto.InvDetailDTO;
@@ -278,6 +279,72 @@ public class InvAddingOrderDetailsServiceImpl implements InvAddingOrderDetailsSe
             }
         }
 
+    }
+
+    @Override
+    public String addInvAddingOrderDetailsDTOAPI(List<InvDetailsDTOAPI> invPurchaseInvoiceDetailList, Integer invInvoiceDTOId, TobyUser tobyUser) {
+        String error = null;
+        if (invPurchaseInvoiceDetailList != null && !invPurchaseInvoiceDetailList.isEmpty()) {
+
+            if (error != null && !error.isEmpty()) {
+                return error;
+            }
+            InvAddingorderDetail detail;
+            for (InvDetailsDTOAPI detailDTO : invPurchaseInvoiceDetailList) {
+                detail = mapToEntityAPI(detailDTO, invInvoiceDTOId, tobyUser);
+                if (detail.getMsg() != null && !detail.getMsg().isEmpty()) {
+                    error = detail.getMsg();
+                    return error;
+                } else {
+                    dao.updateEntity(detail);
+                }
+            }
+        }
+
+        return error;
+    }
+
+    private InvAddingorderDetail mapToEntityAPI(InvDetailsDTOAPI dTO, Integer invAddingOrderId, TobyUser tobyUser) {
+        InvAddingorderDetail entity = new InvAddingorderDetail();
+
+        entity.setSerial(dTO.getSerial());
+        entity.setItemBarcode(dTO.getCode());
+        entity.setQuantity(dTO.getQuantity());
+        entity.setScrewing(BigDecimal.ONE);
+
+        if (invAddingOrderId != null) {
+            InvAddingorder invAddingorder = new InvAddingorder();
+            invAddingorder.setId(invAddingOrderId);
+            entity.setAddingorderId(invAddingorder);
+        }
+
+        if (dTO.getItemId() != null) {
+            InvItem invItem = new InvItem();
+            invItem.setId(dTO.getItemId());
+            entity.setItemId(invItem);
+        }
+
+        if (dTO.getUnitId() != null) {
+            Symbol symbol = new Symbol();
+            symbol.setId(dTO.getUnitId());
+            entity.setUnitId(symbol);
+        } else {
+            entity.setMsg("يجب اختيار صنف");
+            return entity;
+        }
+
+        if (entity.getSerial() == null) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("invPurchaseOrderId", invAddingOrderId);
+            Integer max = genericService.getMaxGenericSerialForDetail(InvAddingorderDetail.class, "addingorderId", invAddingOrderId);
+            entity.setSerial(max);
+        }
+        entity.setCreatedBy(tobyUser);
+        entity.setCreationDate(new Date());
+
+        entity.setCompanyId(tobyUser.getCompanyId());
+        entity.setBranchId(tobyUser.getBranchId());
+        return entity;
     }
 
 }

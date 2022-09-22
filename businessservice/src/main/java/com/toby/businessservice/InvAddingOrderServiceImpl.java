@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.API.InvInvoiceDTOApi;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
 import com.toby.bussinessservice.global.InvPurchaseReturnSave;
@@ -42,7 +43,7 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class InvAddingOrderServiceImpl implements InvAddingOrderService {
-    
+
     @EJB
     private GenericDAO dao;
     @EJB
@@ -71,9 +72,9 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
     public InvGlobalService invGlobalService;
     @EJB
     private OrganizationSiteService organizationSiteService;
-    
+
     InvPurchaseReturnSave invPurchaseReturnSave;
-    
+
     @Override
     public InvPurchaseReturnSave addInvAddingOrder(InvAddingorder invAddingOrder,
             List<InvAddingorderDetail> invAddingOrderDetailList,
@@ -85,17 +86,17 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
         if (invAddingOrder.getId() != null) {
             dao.updateEntity(invAddingOrder);
         } else {
-            
+
             serial = genericService.getMaxSerialForInvoice(InvAddingorder.class, invAddingOrder.getBranchId().getId(), invAddingOrder.getInvInventoryId().getId(), invAddingOrder.getType());
             invAddingOrder.setSerial(serial);
-            
+
             dao.saveEntity(invAddingOrder);
         }
 
         //--------------------
         // لو انا محمل الفاتورة من مرحلة سابقة بعمل هنا تعديل للكميات وحالة كل فاتورة من المحمل منها
         String msg = updateFinalQuantityAndStatusDetailAndSaveDetail(invAddingOrderDetailList, isPurchaseOrSales, invAddingOrder);
-        
+
         if (msg == null) {
             // لو الدنيا اللى فاتت تمام نروح نمسح من قاعدة البيانات اللى اتمسح من الفاتورة
             deleteDetails(invAddingOrderDetailListDeleted, isPurchaseOrSales);
@@ -114,25 +115,25 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
             invPurchaseReturnSave.setMsgOrder(msg);
             dao.rollbackQuery();
         }
-        
+
         return invPurchaseReturnSave;
-        
+
     }
 
     //-----------------------
     public List<Integer> findHeadSelectedId(StringBuilder headIdList) {
         String query;
-        
+
         query = "select DISTINCT h.id FROM InvPurchaseInvoice h Left join InvPurchaseInvoiceDetail d WHERE h.id = d.invPurchaseInvoiceId.id and d.id in (" + headIdList.toString() + ") ";
         return dao.findListByQuery(query);
-        
+
     }
 
 //---------------------------
     public synchronized String updateFinalQuantityAndStatusDetailAndSaveDetail(List<InvAddingorderDetail> invAddingorderDetailsUpdatedList,
             Boolean isPurchaseOrSales, InvAddingorder invAddingorder) {
         InventorySetup invSetup = inventorySetupService.getInventoryByBranchId(invAddingorder.getBranchId().getId());
-        
+
         Integer selectedId;
         QuantityItemsStore quantityItemsStore;
         // بحدد اذا انا كنت فى فاتورة المشتريات
@@ -153,7 +154,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
                     mergeDetailQuantities(invAddingorderDetail, isPurchaseOrSales, invAddingorder);
                 } else {
                     quantityItemsStore = findQuantityItemNow(invAddingorder, invAddingorderDetail, invSetup);
-                    
+
                     if (quantityItemsStore != null && quantityItemsStore.getQty() != null
                             && quantityItemsStore.getQty().compareTo(invAddingorderDetail.getQuantity()) != -1 && !invSetup.getNegativeSell()) {
                         // بيدخل هنا فى حالة لو مش مسموحلة يبيع بكميات سالبة بس بشرط يكون الكمية اكبر من الصفر 
@@ -167,13 +168,13 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
                         return "Quantity Not Avialable";
                     }
                 }
-                
+
             }
         }
-        
+
         return null;
     }
-    
+
     private QuantityItemsStore findQuantityItemNow(InvAddingorder invAddingorder, InvAddingorderDetail addingorderDetail, InventorySetup invSetup) {
         QuantityItemsStore quantityItemsStore;
         quantityItemsStore = itemsStoreService.findInventoryItem(invAddingorder.getInvInventoryId().getId(),
@@ -208,7 +209,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
             // فى الاخر بحفظ التفصيلى
             saveDetail(invAddingorderDetail, invAddingorder, isPurchaseOrSales);
         }
-        
+
     }
     // هنا بقى لو كان التفصيلى دا متحمل من فاتورة تانية بخش اعمل تعديل فى الكميات والحالة بتاعته فى فاتورتة الاساسية
 
@@ -226,7 +227,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
     //----------------------      
     public void updateSalesInvoiceStatusAndQuantity(InvAddingorderDetail invAddingorderDetail) {
         InvPurchaseInvoiceDetail purchaseInvoiceDetail;
-        
+
         BigDecimal purchaseInvoiceFinalQuantity;
         BigDecimal finalQuantity;
         Integer res;
@@ -331,20 +332,20 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
         } else {
             return 2;
         }
-        
+
     }
 
     //----------------------
     public void updateHeadStatus(List<Integer> updatedPurchaseOrAddingOrderList) {
         InvPurchaseInvoice purchaseInvoice;
-        
+
         Map<String, Object> params = new HashMap<>();
         List<Integer> purchaseInvoiceDetailList;
-        
+
         if (updatedPurchaseOrAddingOrderList != null) {
             for (Integer headId : updatedPurchaseOrAddingOrderList) {
                 String query;
-                
+
                 params.put("headId", headId);
                 query = "select p.status FROM InvPurchaseInvoiceDetail p WHERE p.invPurchaseInvoiceId.id = :headId ";
                 purchaseInvoiceDetailList = dao.findListByQuery(query, params);
@@ -357,7 +358,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
                             Integer x = purchaseInvoiceDetailList.get(0) == null ? 0 : purchaseInvoiceDetailList.get(0);
                             Integer y = purchaseInvoiceDetailList.get(i) == null ? 0 : purchaseInvoiceDetailList.get(i);
                             if (x.compareTo(y) != 0) {
-                                
+
                                 purchaseInvoice.setStatus(1);
                                 break;
                             }
@@ -365,7 +366,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
                     }
                     invPurchaseInvoiceService.updateInvPurchaseInvoice(purchaseInvoice);
                 }
-                
+
             }
         }
     }
@@ -378,12 +379,12 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
         }
         dao.deleteEntity(invAddingOrder);
     }
-    
+
     @Override
     public List<InvAddingorder> getALLInvAddingOrderByCompanyId(Integer companyId) {
         return dao.findEntityListByCompanyId(InvAddingorder.class, companyId);
     }
-    
+
     @Override
     public List<InvAddingorder> getALLInvAddingOrderByBranchId(Integer branchId, Integer type) {
         Map<String, Object> params = new HashMap<>();
@@ -392,17 +393,17 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
         List<InvAddingorder> invAddingOrdersList = dao.findListByQuery("SELECT e FROM InvAddingorder e WHERE e.branchId.id = :branchId and e.type = :type", params);
         return invAddingOrdersList;
     }
-    
+
     @Override
     public InvAddingorder findInvAddingOrderByInvAddingOrderId(Integer invAddingOrderId) {
         return dao.findEntityById(InvAddingorder.class, invAddingOrderId);
     }
-    
+
     @Override
     public InvAddingorder updateInvAddingOrder(InvAddingorder invAddingOrder) {
         return dao.updateEntity(invAddingOrder);
     }
-    
+
     @Override
     public List<InvAddingorder> getALLInvSalesOrderByBranchIdByStatus(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
@@ -410,7 +411,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
         List<InvAddingorder> invAddingOrdersList = dao.findListByQuery("SELECT e FROM InvAddingorder e WHERE e.branchId.id = :branchId and e.status != 2 and e.type = 1 ", params);
         return invAddingOrdersList;
     }
-    
+
     @Override
     public List<InvAddingorder> getALLInvAddingOrderByBranchIdByStatus(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
@@ -532,7 +533,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
     public void setInventorySetupService(InventorySetupService inventorySetupService) {
         this.inventorySetupService = inventorySetupService;
     }
-    
+
     @Override
     public InvInvoiceDTO convertAddingOrderToPurchaseInvoice(InvInvoiceDTO invPurchaseInvoiceDTO) {
         InvAddingorder invAddingorder = dao.findEntityById(InvAddingorder.class, invPurchaseInvoiceDTO.getInvDailogeDataSelected().getId());
@@ -544,7 +545,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
         }
         return invPurchaseInvoiceDTO;
     }
-    
+
     private void modifyReturnData(InvInvoiceDTO invPurchaseInvoiceDTO, InvAddingorder invAddingorder) {
         invPurchaseInvoiceDTO.setId(null);
         invPurchaseInvoiceDTO.setSerial(null);
@@ -558,23 +559,23 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
         }
         invPurchaseInvoiceDTO.setInvPurchaseInvoiceDetailList(detailDTOs);
     }
-    
+
     private InvInvoiceDTO mapToDTO(InvAddingorder entity) {
-        
+
         InvInvoiceDTO invPurchaseInvoiceDTO = new InvInvoiceDTO();
-        
+
         invPurchaseInvoiceDTO = initData(invPurchaseInvoiceDTO, entity);
-        
+
         return invPurchaseInvoiceDTO;
     }
-    
+
     private InvInvoiceDTO mapToDTO(InvAddingorder entity, InvInvoiceDTO invPurchaseInvoiceDTO) {
-        
+
         invPurchaseInvoiceDTO = initData(invPurchaseInvoiceDTO, entity);
-        
+
         return invPurchaseInvoiceDTO;
     }
-    
+
     private InvInvoiceDTO initData(InvInvoiceDTO invInvoiceDTO, InvAddingorder entity) {
         invInvoiceDTO.setId(entity.getId());
         invInvoiceDTO.setSerial(entity.getSerial());
@@ -591,14 +592,14 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
             invInvoiceDTO.setInvPurchaseOrderId(entity.getPurchaseOrderId() != null ? entity.getPurchaseOrderId().getId() : null);
             invInvoiceDTO.setParent(entity.getPurchaseOrderId().getId());
         }
-        
+
         if (entity.getInvPurchaseInvoice() != null) {
             invInvoiceDTO.setLoadedSerial(entity.getInvPurchaseInvoice() != null ? entity.getInvPurchaseInvoice().getSerial() : null);
             invInvoiceDTO.setInvPurchaseInvoiceId(entity.getInvPurchaseInvoice() != null ? entity.getInvPurchaseInvoice().getId() : null);
         }
-        
+
         invInvoiceDTO.setScreenName(invInvoiceDTO.getScreenName());
-        
+
         if (entity.getInvInventoryId() != null) {
             InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
             invInventoryDTO.setId(entity.getInvInventoryId().getId());
@@ -631,10 +632,10 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
         List<InvDetailDTO> invPurchaseInvoiceDetailsListDTO = invAddingOrderDetailsService.getAllInvAddingOrderDetailsByInvPurchaseInvoiceIdDTO(invInvoiceDTO);
         invInvoiceDTO.setInvPurchaseInvoiceDetailList(invPurchaseInvoiceDetailsListDTO);
         invInvoiceDTO.setInvPurchaseInvoiceDetailsDeletedList(new ArrayList<InvDetailDTO>());
-        invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO,false);
+        invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO, false);
         return invInvoiceDTO;
     }
-    
+
     @Override
     public InvInvoiceDTO findInvAddingOrderById(InvInvoiceDTO invAddingInvoice, TobyUser tobyUser) {
         InvAddingorder invAddingorder = dao.findEntityById(InvAddingorder.class, invAddingInvoice.getId());
@@ -642,25 +643,30 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
 //        invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO);
         return invPurchaseInvoiceDTO;
     }
-    
+
     public InvInvoiceDTO validateSave(InvInvoiceDTO invPurchaseInvoiceDTO, TobyUser tobyUser) {
         StringBuilder error = new StringBuilder();
-        
-        if (invPurchaseInvoiceDTO.getOrganizationSiteId() == null) {
-            error.append("\n يجب أختيار عميل / مورد");
-        }
+
+        validateSaveAPI(invPurchaseInvoiceDTO, error);
+
         if (invPurchaseInvoiceDTO.getInvPurchaseInvoiceId() != null) {
             checkIfInvInvoiceIdExist(invPurchaseInvoiceDTO.getInvPurchaseInvoiceId(), tobyUser.getBranchId().getId(), error);
         }
-        
+
         checkIfLoaded(invPurchaseInvoiceDTO, error);
-        
+
         if (!error.toString().isEmpty()) {
             invPurchaseInvoiceDTO.setMsg(error.toString());
         }
         return invPurchaseInvoiceDTO;
     }
-    
+
+    public void validateSaveAPI(InvInvoiceDTO invPurchaseInvoiceDTO, StringBuilder error) {
+        if (invPurchaseInvoiceDTO.getOrganizationSiteId() == null) {
+            error.append("\n يجب أختيار عميل / مورد");
+        }
+    }
+
     public void checkIfLoaded(InvInvoiceDTO invPurchaseInvoiceDTO, StringBuilder error) {
         if (invPurchaseInvoiceDTO.getId() != null) {
             List<Integer> id = dao.executeNativeQuery("select id from (select inv_adding_order_id as id from inv_purchase_invoice "
@@ -671,7 +677,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
             }
         }
     }
-    
+
     public void checkIfInvInvoiceIdExist(Integer invInvoiceSerial, Integer branchId, StringBuilder error) {
         if (invInvoiceSerial != null) {
             Map<String, Object> params = new HashMap<>();
@@ -683,12 +689,12 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
             }
         }
     }
-    
+
     @Override
     public InvInvoiceDTO save(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) {
         try {
             invInvoiceDTO = validateSave(invInvoiceDTO, tobyUser);
-            
+
             InvAddingorder invAddingOrder;
             if (invInvoiceDTO != null && (invInvoiceDTO.getMsg() == null || invInvoiceDTO.getMsg().isEmpty())) {
                 invAddingOrder = mapToEntity(invInvoiceDTO, tobyUser);
@@ -699,11 +705,11 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
                     // فى حالة ان الفاتورة جديدة بروح اجيب السيريال الاول 
                     Integer serial = genericService.getMaxGenericSerialByType(InvAddingorder.class, invAddingOrder.getBranchId().getId(), invAddingOrder.getType());
                     invAddingOrder.setSerial(serial);
-                    
+
                     invAddingOrder = dao.updateEntity(invAddingOrder);
                     invInvoiceDTO.setId(invAddingOrder.getId());
                 }
-                
+
                 invAddingOrderDetailsService.deleteInvAddingOrderDetailListDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailsDeletedList());
                 String error;
                 if (invAddingOrder.getInvInventoryId() != null) {
@@ -717,24 +723,24 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
                 } else {
                     if (!ScreenNameClassEnum.PROWORKORDER.equals(invInvoiceDTO.getScreenName())) {
                         invInvoiceDTO = mapToDTO(invAddingOrder, invInvoiceDTO);
-                        invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO,false);
+                        invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO, false);
                     }
                 }
-                
+
             }
         } catch (Exception e) {
             invInvoiceDTO.setMsg(e.toString());
             dao.rollbackQuery();
         }
-        
+
         return invInvoiceDTO;
     }
 
     //mapToEntity
     private InvAddingorder mapToEntity(InvInvoiceDTO invPurchaseInvoiceDTO, TobyUser tobyUser) {
-        
+
         InvAddingorder entity = new InvAddingorder();
-        
+
         if (invPurchaseInvoiceDTO.getOrganizationSiteId() != null) {
             InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
             invOrganizationSite.setId(invPurchaseInvoiceDTO.getOrganizationSiteId().getId());
@@ -748,7 +754,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
             invInventory.setCode(invPurchaseInvoiceDTO.getGallaryId().getCode());
             entity.setGallaryId(invInventory);
         }
-        
+
         if (invPurchaseInvoiceDTO.getInvDelegatorId() != null) {
             InventoryDelegator inventoryDelegator = new InventoryDelegator();
             inventoryDelegator.setId(invPurchaseInvoiceDTO.getInvDelegatorId().getId());
@@ -762,36 +768,36 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
                 entity.setInvInventoryId(invInventory);
             }
         }
-        
+
         if (invPurchaseInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)) {
             entity.setType(0);
         } else if (invPurchaseInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVPERMISSIONORDERFORM)
                 || invPurchaseInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
             entity.setType(1);
         }
-        
+
         if (!invPurchaseInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
             entity.setId(invPurchaseInvoiceDTO.getId());
         }
-        
+
         entity.setSerial(invPurchaseInvoiceDTO.getSerial());
         entity.setDate(invPurchaseInvoiceDTO.getDate());
         entity.setRemark(invPurchaseInvoiceDTO.getRemarks());
         entity.setSupplierDate(invPurchaseInvoiceDTO.getSupplierInvoiceDate());
         entity.setSupplierInvoice(invPurchaseInvoiceDTO.getSupplierInvoiceNumber());
-        
+
         if (invPurchaseInvoiceDTO.getInvPurchaseOrderId() != null) {
             InvPurchaseOrder order = new InvPurchaseOrder();
             order.setId(invPurchaseInvoiceDTO.getInvPurchaseOrderId());
             entity.setPurchaseOrderId(order);
         }
-        
+
         if (invPurchaseInvoiceDTO.getInvPurchaseInvoiceId() != null) {
             InvPurchaseInvoice invPurchaseInvoice = new InvPurchaseInvoice();
             invPurchaseInvoice.setId(invPurchaseInvoiceDTO.getInvPurchaseInvoiceId());
             entity.setInvPurchaseInvoice(invPurchaseInvoice);
         }
-        
+
         if (invPurchaseInvoiceDTO.getCreatedBy() != null) {
             TobyUser user = new TobyUser();
             user.setId(invPurchaseInvoiceDTO.getCreatedBy());
@@ -804,7 +810,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
                 company.setId(invPurchaseInvoiceDTO.getCompanyId());
                 entity.setCompanyId(company);
             }
-            
+
             if (invPurchaseInvoiceDTO.getBranchId() != null) {
                 Branch branch = new Branch();
                 branch.setId(invPurchaseInvoiceDTO.getBranchId());
@@ -817,10 +823,10 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
             entity.setCompanyId(tobyUser.getCompanyId());
             entity.setBranchId(tobyUser.getBranchId());
         }
-        
+
         return entity;
     }
-    
+
     private void commonData(InvInvoiceDTO invPurchaseInvoiceDTO, InvAddingorder entity) {
         invPurchaseInvoiceDTO.setId(entity.getId());
         invPurchaseInvoiceDTO.setSerial(entity.getSerial());
@@ -843,17 +849,17 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
         if (entity.getPurchaseOrderId() != null) {
             invPurchaseInvoiceDTO.setLoadedSerial(entity.getPurchaseOrderId().getSerial());
         }
-        
+
         if (entity.getInvPurchaseInvoice() != null) {
             invPurchaseInvoiceDTO.setLoadedSerial(entity.getInvPurchaseInvoice().getSerial());
         }
     }
-    
+
     private InvInvoiceDTO initDataForList(InvInvoiceDTO invInvoiceDTO, InvAddingorder invAddingorder) {
         commonData(invInvoiceDTO, invAddingorder);
         return invInvoiceDTO;
     }
-    
+
     @Override
     public Long getTotalRegistors(Integer type, Integer branchId, Integer gallaryId, Map<String, Object> filters) {
         dao.executeNativeQuery("select toby.sql_mode_function()");
@@ -865,10 +871,10 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
         appendFilter(filters, builder);
 //        builder.append("   group by s.id ");
         Long details = dao.findEntityByQuery(builder.toString(), filters);
-        
+
         return details == null ? 0 : details;
     }
-    
+
     private void appendFilter(Map<String, Object> filters, StringBuilder builder) {
         if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
             String filter = " and ( s.serial like CONCAT('%',:globalFilter ,'%') OR s.invPurchaseInvoice.serial like CONCAT('%',:globalFilter ,'%')) ";
@@ -877,7 +883,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
             filters.remove("globalFilter");
         }
     }
-    
+
     @Override
     public List<InvInvoiceDTO> getALLInvAddingorderDTOByBranchId(Integer type, Integer gallaryId, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters) {
         dao.executeNativeQuery("select toby.sql_mode_function()");
@@ -889,11 +895,11 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
         appendFilter(filters, builder);
         builder.append("  group by s.id ");
         builder.append(" order by s.serial DESC");
-        
+
         List<InvAddingorder> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
         return returnListDTOForList(details);
     }
-    
+
     private List<InvInvoiceDTO> returnListDTOForList(List<InvAddingorder> invAddingorderList) {
         List<InvInvoiceDTO> invInvoiceDTOList = new ArrayList<>();
         for (InvAddingorder invAddingorder : invAddingorderList) {
@@ -903,5 +909,86 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
         }
         return invInvoiceDTOList;
     }
-    
+
+    private InvAddingorder mapToEntityAPI(InvInvoiceDTOApi invInvoiceDTOApi, TobyUser tobyUser) {
+
+        InvAddingorder entity = new InvAddingorder();
+
+        if (invInvoiceDTOApi.getCustomerId() != null) {
+            InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
+            invOrganizationSite.setId(invInvoiceDTOApi.getCustomerId());
+            entity.setOrganizationSiteId(invOrganizationSite);
+        }
+
+        if (invInvoiceDTOApi.getGallaryId() != null) {
+            InvInventory invInventory = new InvInventory();
+            invInventory.setId(invInvoiceDTOApi.getGallaryId());
+            entity.setGallaryId(invInventory);
+        }
+
+        if (invInvoiceDTOApi.getInvDelegatorId() != null) {
+            InventoryDelegator inventoryDelegator = new InventoryDelegator();
+            inventoryDelegator.setId(invInvoiceDTOApi.getInvDelegatorId());
+            entity.setInvDelegatorId(inventoryDelegator);
+        }
+
+        InvInventory invInventory = new InvInventory();
+        invInventory.setId(45);
+        entity.setInvInventoryId(invInventory);
+        entity.setType(1);
+        entity.setSerial(invInvoiceDTOApi.getSerial());
+        entity.setDate(invInvoiceDTOApi.getDate());
+        entity.setRemark(invInvoiceDTOApi.getRemarks());
+        entity.setSupplierDate(invInvoiceDTOApi.getSupplierDate());
+
+        if (invInvoiceDTOApi.getInvPurchaseInvoice() != null) {
+            InvPurchaseInvoice invPurchaseInvoice = new InvPurchaseInvoice();
+            invPurchaseInvoice.setId(invInvoiceDTOApi.getInvPurchaseInvoice());
+            entity.setInvPurchaseInvoice(invPurchaseInvoice);
+        }
+
+        entity.setCreatedBy(tobyUser);
+        entity.setCreationDate(new Date());
+        entity.setCompanyId(tobyUser.getCompanyId());
+        entity.setBranchId(tobyUser.getBranchId());
+
+        return entity;
+    }
+
+    @Override
+    public InvInvoiceDTOApi save(InvInvoiceDTOApi invInvoiceDTO, TobyUser tobyUser) {
+        try {
+            if (invInvoiceDTO.getCustomerId() == null) {
+                invInvoiceDTO.setMsg("\n يجب أختيار عميل / مورد");
+            }
+
+            InvAddingorder invAddingOrder;
+            if (invInvoiceDTO != null && (invInvoiceDTO.getMsg() == null || invInvoiceDTO.getMsg().isEmpty())) {
+                invAddingOrder = mapToEntityAPI(invInvoiceDTO, tobyUser);
+
+                // فى حالة ان الفاتورة جديدة بروح اجيب السيريال الاول 
+                Integer serial = genericService.getMaxGenericSerialByType(InvAddingorder.class, invAddingOrder.getBranchId().getId(), invAddingOrder.getType());
+                invAddingOrder.setSerial(serial);
+
+                invAddingOrder = dao.updateEntity(invAddingOrder);
+                invInvoiceDTO.setId(invAddingOrder.getId());
+                invInvoiceDTO.setSerial(invAddingOrder.getSerial());
+                String error;
+                error = invAddingOrderDetailsService.addInvAddingOrderDetailsDTOAPI(invInvoiceDTO.getInvoiceDetailApiList(), invAddingOrder.getId(), tobyUser);
+                if (error != null && !error.isEmpty()) {
+                    invInvoiceDTO.setMsg(error);
+                    dao.rollbackQuery();
+                } else {
+
+                }
+
+            }
+        } catch (Exception e) {
+            invInvoiceDTO.setMsg(e.toString());
+            dao.rollbackQuery();
+        }
+
+        return invInvoiceDTO;
+    }
+
 }

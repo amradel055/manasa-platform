@@ -8,6 +8,7 @@ package com.toby.businessservice;
 import com.toby.API.BankBalanceReportAPI;
 import com.toby.API.InvDetailsDTOAPI;
 import com.toby.API.InvInvoiceDTOApi;
+import com.toby.API.InvoiceDiscDTOApi;
 import com.toby.API.ResponseApi;
 import com.toby.API.SummitionItemAPI;
 import com.toby.entity.TobyUser;
@@ -212,4 +213,6 @@ public interface InvPurchaseInvoiceService_1 {
     public List<ClientsNoMovment> findClientsNoMovmentAPI(BankBalanceReportAPI bankBalanceReportAPI);
 
     public List<InvDetailsDTOAPI> offer999Les16Les20OnlyPrinceTwo(List<InvDetailsDTOAPI> detailList);
+    
+    public InvoiceDiscDTOApi findInvoiceDataDis(Integer serial);
 }

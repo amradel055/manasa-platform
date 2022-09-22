@@ -9,6 +9,7 @@ import com.toby.API.BankBalanceReportAPI;
 import com.toby.API.GlPayDTOAPI;
 import com.toby.API.InvDetailsDTOAPI;
 import com.toby.API.InvInvoiceDTOApi;
+import com.toby.API.InvoiceDiscDTOApi;
 import com.toby.API.ResponseApi;
 import com.toby.API.SummitionItemAPI;
 import com.toby.API.SymbolDTOAPI;
@@ -99,7 +100,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.toby.define.HttpMethode;
-import com.toby.views.SalesStatementForThePeriod;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -1916,7 +1916,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                         || detailDTO.getProgroupId() == 21
                         || detailDTO.getProgroupId() == 29) {
                     detailDTO.setDiscount(new BigDecimal(30));
-                } else if (detailDTO.getProgroupId() == 1 && detailDTO.getTypeShow()  != null) {
+                } else if (detailDTO.getProgroupId() == 1 && detailDTO.getTypeShow() != null) {
 //                    if (numbertotal == 2 && numbertwo == 2) {
 //                        detailDTO.setPrice(new BigDecimal(431.3043));
 //                        detailDTO.setDiscount(BigDecimal.ZERO);
@@ -5089,6 +5089,25 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 //            Logger.getLogger(Basic.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
+    }
+
+    public InvoiceDiscDTOApi findInvoiceDataDis(Integer serial) {
+        InvoiceDiscDTOApi invoiceDiscDTOApi = new InvoiceDiscDTOApi();
+        List<Object[]> res = dao.executeNativeQuery(" select  ipi.id as invId , ipi.serial as invSerial , ipi.date as invDate , ios.id as iosId,ios.name as iosName , "
+                + " ios.code as iosCode , ios.mobile as iosMobile , ipi.inv_delegator_id  as delegatorId \n"
+                + " from inv_purchase_invoice ipi left join inv_organization_site ios on ios.id = ipi.organization_site_id\n"
+                + " where ipi.branch_id = 182 and ipi.serial =   " + serial);
+        for (Object[] object : res) {
+            invoiceDiscDTOApi.setInvId((Integer) object[0]);
+            invoiceDiscDTOApi.setInvSerial((Integer) object[1]);
+            invoiceDiscDTOApi.setInvDate((Date) object[2]);
+            invoiceDiscDTOApi.setIosId((Integer) object[3]);
+            invoiceDiscDTOApi.setIosName((String) object[4]);
+            invoiceDiscDTOApi.setIosCode((String) object[5]);
+            invoiceDiscDTOApi.setIosMobile((String) object[6]);
+            invoiceDiscDTOApi.setDelegatorId((Integer) object[7]);
+        }
+        return invoiceDiscDTOApi;
     }
 
 }
