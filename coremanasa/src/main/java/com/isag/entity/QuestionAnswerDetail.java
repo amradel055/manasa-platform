@@ -16,11 +16,11 @@ import javax.persistence.Table;
  * @author m lapan
  */
 @Entity
-@Table(name = "question_answer")
+@Table(name = "question_answer_detail")
 public class QuestionAnswerDetail extends BaseEntity {
 
-    @Column(name = "text")
-    private String text;
+    @Column(name = "description")
+    private String description;
     @Column(name = "image")
     private String image;
     
@@ -78,19 +78,7 @@ public class QuestionAnswerDetail extends BaseEntity {
         return "com.mycompany.mavenproject1.StudentPeriods[ id=" + id + " ]";
     }
 
-    /**
-     * @return the text
-     */
-    public String getText() {
-        return text;
-    }
-
-    /**
-     * @param text the text to set
-     */
-    public void setText(String text) {
-        this.text = text;
-    }
+   
 
     /**
      * @return the image
@@ -120,6 +108,20 @@ public class QuestionAnswerDetail extends BaseEntity {
      */
     public void setQuestionAnswerId(QuestionAnswer questionAnswerId) {
         this.questionAnswerId = questionAnswerId;
+    }
+
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 

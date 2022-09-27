@@ -23,11 +23,18 @@ public class QuestionCommon extends BaseEntity {
     private String text;
     @Column(name = "image")
     private String image;
-  
+
+    @JoinColumn(name = "teacher_id", referencedColumnName = "id")
+    @ManyToOne
+    private IgmaUser teacherId;
+
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
     private Branch branchId;
- 
+
+    @JoinColumn(name = "material_id", referencedColumnName = "id")
+    @ManyToOne
+    private Materials materialId;
 
     public QuestionCommon() {
     }
@@ -36,9 +43,6 @@ public class QuestionCommon extends BaseEntity {
         this.id = id;
     }
 
-    
-
-
     public Branch getBranchId() {
         return branchId;
     }
@@ -46,8 +50,6 @@ public class QuestionCommon extends BaseEntity {
     public void setBranchId(Branch branchId) {
         this.branchId = branchId;
     }
-
-  
 
     @Override
     public int hashCode() {
@@ -102,5 +104,32 @@ public class QuestionCommon extends BaseEntity {
         this.image = image;
     }
 
+    /**
+     * @return the teacherId
+     */
+    public IgmaUser getTeacherId() {
+        return teacherId;
+    }
+
+    /**
+     * @param teacherId the teacherId to set
+     */
+    public void setTeacherId(IgmaUser teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    /**
+     * @return the materialId
+     */
+    public Materials getMaterialId() {
+        return materialId;
+    }
+
+    /**
+     * @param materialId the materialId to set
+     */
+    public void setMaterialId(Materials materialId) {
+        this.materialId = materialId;
+    }
 
 }

@@ -9,8 +9,8 @@ package com.isag.dto;
  *
  * @author AhmedEssam
  */
-public class IgmaUserDTO  extends BaseEntityDTO {
-    
+public class IgmaUserDTO extends BaseEntityDTO {
+
     private String userCode;
     private String password;
     private String name;
@@ -19,8 +19,9 @@ public class IgmaUserDTO  extends BaseEntityDTO {
     private Integer parent;
     private Integer branchId;
     private String token;
-
-    
+    private String image;
+    private String description;
+    private String imagelabel;
 
     public String getUserCode() {
         return userCode;
@@ -92,7 +93,7 @@ public class IgmaUserDTO  extends BaseEntityDTO {
     public void setBranchId(Integer branchId) {
         this.branchId = branchId;
     }
- 
+
     public Integer getMaster() {
         return master;
     }
@@ -127,6 +128,48 @@ public class IgmaUserDTO  extends BaseEntityDTO {
      */
     public void setParent(Integer parent) {
         this.parent = parent;
+    }
+
+    /**
+     * @return the image
+     */
+    public String getImage() {
+        return image;
+    }
+
+    /**
+     * @param image the image to set
+     */
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * @return the imagelabel
+     */
+    public String getImagelabel() {
+        return imagelabel;
+    }
+
+    /**
+     * @param imagelabel the imagelabel to set
+     */
+    public void setImagelabel(String imagelabel) {
+        this.imagelabel = imagelabel;
     }
 
 }

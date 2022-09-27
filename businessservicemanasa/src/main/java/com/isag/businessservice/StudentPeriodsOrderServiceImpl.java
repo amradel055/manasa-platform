@@ -153,7 +153,6 @@ public class StudentPeriodsOrderServiceImpl implements StudentPeriodsOrderServic
         entity.setRemark(dTO.getRemark());
         entity.setId(dTO.getId());
         entity.setConfirm(dTO.getConfirm());
-        //entity.setMonthId(dTO.getMonthId());
 
         if (dTO.getStudentId() != null) {
             Student student = new Student();
@@ -180,7 +179,6 @@ public class StudentPeriodsOrderServiceImpl implements StudentPeriodsOrderServic
         if (dTO.getId() == null) {
 
             entity.setCreatedBy(isagUser);
-            entity.setBranchId(isagUser.getBranchId());
             entity.setCreationDate(new Date());
         } else {
             entity.setId(dTO.getId());

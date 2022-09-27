@@ -61,9 +61,6 @@ public class PeriodsServiceImpl implements PeriodsService {
         StringBuilder builder = new StringBuilder();
         builder.append(" SELECT d FROM Periods d WHERE d.materialId.id = :materialId ");
         List<Periods> list = dao.findListByQuery(builder.toString(), params);
-//        if(list == null || list.isEmpty()){
-//            return findPeriods(branchId);
-//        }
         return returnListDTO(list);
     }
 

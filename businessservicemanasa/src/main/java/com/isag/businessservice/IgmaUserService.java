@@ -5,6 +5,7 @@
  */
 package com.isag.businessservice;
 
+import com.isag.api.dto.TeacherDataAPI;
 import com.isag.dto.IgmaUserDTO;
 import com.isag.entity.Employee;
 import com.isag.entity.IgmaUser;
@@ -28,7 +29,6 @@ public interface IgmaUserService {
 
     public List<IgmaUserDTO> getAllUsersDTO();
 
-
     public List<IgmaUserDTO> getUsersByCompanyId(Integer companyId);
 
     public IgmaUser findUser(Integer userId);
@@ -38,7 +38,7 @@ public interface IgmaUserService {
     public IgmaUser addUser(IgmaUser user);
 
     public IgmaUser updateUser(IgmaUser user);
-    
+
     public List<String> getAuthorizedScreens(Integer id);
 
     public List<IgmaUser> getAllUsersByName(String name);
@@ -58,6 +58,8 @@ public interface IgmaUserService {
     public String validateConfirmationPassword(String confirmationPassword, String newPassword);
 
     public List<Employee> getEmployeesByUserAndBranch(Integer userId, Integer branchId);
-    
-    public String updateUserPassword(Integer userId , String oldPassword , String newPassword);
+
+    public String updateUserPassword(Integer userId, String oldPassword, String newPassword);
+
+    public List<TeacherDataAPI> getTeacherDataAPI(Integer branchId);
 }

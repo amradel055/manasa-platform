@@ -23,4 +23,6 @@ public interface QuestionAnswerDetailService {
 
     public List<QuestionAnswerDetailDTO> findQuestionAnswerDetailDTO(Integer branchId);
 
+    public List<QuestionAnswerDetailDTO> findAnswerDetail(Integer answerId);
+
 }

@@ -13,6 +13,10 @@ public class QuestionCommonDTO extends BaseEntityDTO {
 
     private String text;
     private String image;
+    private Integer teacherId;
+    private Integer materialId;
+
+    private QuestionAnswerDTO questionAnswerDTO;
 
     public QuestionCommonDTO() {
     }
@@ -72,6 +76,51 @@ public class QuestionCommonDTO extends BaseEntityDTO {
      */
     public void setImage(String image) {
         this.image = image;
+    }
+
+    /**
+     * @return the teacherId
+     */
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
+    /**
+     * @param teacherId the teacherId to set
+     */
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    /**
+     * @return the questionAnswerDTO
+     */
+    public QuestionAnswerDTO getQuestionAnswerDTO() {
+        if (questionAnswerDTO == null) {
+            setQuestionAnswerDTO(new QuestionAnswerDTO());
+        }
+        return questionAnswerDTO;
+    }
+
+    /**
+     * @param questionAnswerDTO the questionAnswerDTO to set
+     */
+    public void setQuestionAnswerDTO(QuestionAnswerDTO questionAnswerDTO) {
+        this.questionAnswerDTO = questionAnswerDTO;
+    }
+
+    /**
+     * @return the materialId
+     */
+    public Integer getMaterialId() {
+        return materialId;
+    }
+
+    /**
+     * @param materialId the materialId to set
+     */
+    public void setMaterialId(Integer materialId) {
+        this.materialId = materialId;
     }
 
 }

@@ -5,9 +5,12 @@
  */
 package com.isag.rest;
 
+import com.isag.api.dto.TeacherDataAPI;
 import com.isag.businessservice.PeriodsService;
 import com.isag.config.UserLoginData;
+import com.isag.dto.IgmaUserDTO;
 import com.isag.dto.PeriodsDTO;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.transaction.Transactional;
@@ -129,6 +132,19 @@ public class PeriodsRest {
      */
     public void setUserLoginData(UserLoginData userLoginData) {
         this.userLoginData = userLoginData;
+    }
+
+    @Transactional
+    @Path("/findPeriod")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<PeriodsDTO> findPeriod(PeriodsDTO periodsDTO) {
+        List<PeriodsDTO> periodsDTOList = new ArrayList<>();
+        if (periodsDTO.getMaterialId()!= null) {
+            periodsDTOList = periodsService.findPeriodsByMaterialId(periodsDTO.getMaterialId());
+        }
+        return periodsDTOList;
     }
 
 }

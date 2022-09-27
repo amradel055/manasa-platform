@@ -4,11 +4,13 @@
  * and open the template in the editor.
  */
 package com.isag.businessservice;
+
 import com.isag.core.GenericDAO;
 import com.isag.dto.QuestionCommonDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.QuestionCommon;
 import com.isag.entity.IgmaUser;
+import com.isag.entity.Materials;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,6 +28,8 @@ public class QuestionCommonServiceImpl implements QuestionCommonService {
 
     @EJB
     private GenericDAO dao;
+    @EJB
+    private QuestionAnswerService questionAnswerService;
 
     private QuestionCommonDTO mapTODTO(QuestionCommon entity) {
         QuestionCommonDTO dTO = initMapToDTO(entity);
@@ -68,7 +72,10 @@ public class QuestionCommonServiceImpl implements QuestionCommonService {
         QuestionCommonDTO dTO = new QuestionCommonDTO();
         dTO.setText(entity.getText());
         dTO.setImage(entity.getImage());
+        dTO.setQuestionAnswerDTO(questionAnswerService.findQuestioAnswer(entity.getId()));
+        dTO.setTeacherId(entity.getTeacherId().getId());
         dTO.setId(entity.getId());
+        dTO.setMaterialId(entity.getMaterialId().getId());
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy().getId());
@@ -81,9 +88,21 @@ public class QuestionCommonServiceImpl implements QuestionCommonService {
 
         QuestionCommon entity = new QuestionCommon();
 
+        if (dTO.getMaterialId() != null) {
+            Materials materials = new Materials();
+            materials.setId(dTO.getMaterialId());
+            entity.setMaterialId(materials);
+        }
+
         entity.setId(dTO.getId());
         entity.setText(dTO.getText());
         entity.setImage(dTO.getImage());
+        if (dTO.getTeacherId() != null) {
+            IgmaUser igmaUser = new IgmaUser();
+            igmaUser.setId(dTO.getTeacherId());
+            entity.setTeacherId(igmaUser);
+
+        }
 
         if (dTO.getId() == null) {
 
@@ -101,6 +120,17 @@ public class QuestionCommonServiceImpl implements QuestionCommonService {
         entity.setBranchId(branch);
         entity.setCompanyId(isagUser.getCompanyId());
         return entity;
+    }
+
+    @Override
+    public List<QuestionCommonDTO> findQuestionCommonAndAnswer(Integer teacherId, Integer materialId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("teacherId", teacherId);
+        params.put("materialId", materialId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM QuestionCommon d WHERE d.teacherId.id = :teacherId AND d.materialId.id = :materialId   ");
+        List<QuestionCommon> list = dao.findListByQuery(builder.toString(), params);
+        return returnListDTO(list);
     }
 
 }

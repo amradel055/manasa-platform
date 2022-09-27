@@ -5,9 +5,15 @@
  */
 package com.isag.rest;
 
+import com.isag.api.dto.TeacherDataAPI;
+import com.isag.businessservice.IgmaUserService;
+import com.isag.businessservice.MaterialsService;
 import com.isag.businessservice.TeachersService;
 import com.isag.config.UserLoginData;
+import com.isag.dto.IgmaUserDTO;
+import com.isag.dto.MaterialsDTO;
 import com.isag.dto.TeachersDTO;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.transaction.Transactional;
@@ -31,6 +37,10 @@ public class TeachersRest {
     private UserLoginData userLoginData;
     @EJB
     TeachersService teachersService;
+    @EJB
+    IgmaUserService igmaUserService;
+    @EJB
+    MaterialsService materialsService;
 
     @Transactional
     @Path("/allTeachers")
@@ -105,6 +115,32 @@ public class TeachersRest {
      */
     public void setUserLoginData(UserLoginData userLoginData) {
         this.userLoginData = userLoginData;
+    }
+
+    @Transactional
+    @Path("/findTeachers")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<TeacherDataAPI> findTeachers(IgmaUserDTO igmaUser) {
+        List<TeacherDataAPI> teacherDataAPI = new ArrayList<>();
+        if (igmaUser.getBranchId() != null) {
+            teacherDataAPI = igmaUserService.getTeacherDataAPI(igmaUser.getBranchId());
+        }
+        return teacherDataAPI;
+    }
+
+    @Transactional
+    @Path("/findMaterial")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<MaterialsDTO> findTeachers(MaterialsDTO materialsDTO) {
+        List<MaterialsDTO> materialsDTOList = new ArrayList<>();
+        if (materialsDTO.getTeacherId() != null) {
+            materialsDTOList = materialsService.findMaterialsABI(materialsDTO.getTeacherId() , materialsDTO.getStageId());
+        }
+        return materialsDTOList;
     }
 
 }

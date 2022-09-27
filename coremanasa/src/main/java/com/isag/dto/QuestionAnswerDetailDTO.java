@@ -11,7 +11,7 @@ package com.isag.dto;
  */
 public class QuestionAnswerDetailDTO extends BaseEntityDTO {
 
-    private String text;
+    private String description;
     private String image;
     private Integer questionAnswerId;
 
@@ -47,19 +47,7 @@ public class QuestionAnswerDetailDTO extends BaseEntityDTO {
         return "com_igma_entity.Student[ id=" + id + " ]";
     }
 
-    /**
-     * @return the text
-     */
-    public String getText() {
-        return text;
-    }
-
-    /**
-     * @param text the text to set
-     */
-    public void setText(String text) {
-        this.text = text;
-    }
+  
 
     /**
      * @return the image
@@ -87,6 +75,20 @@ public class QuestionAnswerDetailDTO extends BaseEntityDTO {
      */
     public void setQuestionAnswerId(Integer questionAnswerId) {
         this.questionAnswerId = questionAnswerId;
+    }
+
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }

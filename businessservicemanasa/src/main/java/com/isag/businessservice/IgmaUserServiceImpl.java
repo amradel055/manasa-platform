@@ -5,6 +5,7 @@
  */
 package com.isag.businessservice;
 
+import com.isag.api.dto.TeacherDataAPI;
 import com.isag.core.GenericDAO;
 import com.isag.dto.IgmaUserDTO;
 import com.isag.entity.Employee;
@@ -45,7 +46,7 @@ public class IgmaUserServiceImpl implements IgmaUserService {
             return null;
         }
     }
-    
+
     @Override
     public Boolean ckeckAdmin(String password) {
         Map<String, Object> params = new HashMap();
@@ -64,11 +65,11 @@ public class IgmaUserServiceImpl implements IgmaUserService {
     public List<IgmaUser> getAllUsersListByCompanyId(Integer companyId) {
         return dao.findEntityListByCompanyId(IgmaUser.class, companyId);
     }
-    
+
     @Override
-    public List<IgmaUserDTO> getUsersByCompanyId(Integer companyId){
-    List<IgmaUser> details = dao.findEntityListByCompanyId(IgmaUser.class, companyId);
-    return returnTODTO(details, null);
+    public List<IgmaUserDTO> getUsersByCompanyId(Integer companyId) {
+        List<IgmaUser> details = dao.findEntityListByCompanyId(IgmaUser.class, companyId);
+        return returnTODTO(details, null);
     }
 
     @Override
@@ -94,7 +95,7 @@ public class IgmaUserServiceImpl implements IgmaUserService {
         return dao.findAll(IgmaUser.class);
 
     }
-    
+
     @Override
     public List<IgmaUserDTO> getAllUsersDTO() {
         List<IgmaUser> list = dao.findAll(IgmaUser.class);
@@ -202,10 +203,10 @@ public class IgmaUserServiceImpl implements IgmaUserService {
 
         return msg;
     }
-    
+
     public List<IgmaUserDTO> returnTODTO(List<IgmaUser> list, IgmaUserDTO dTO) {
         List<IgmaUserDTO> listDTO = new ArrayList<>();
-        for(IgmaUser isagUser : list){
+        for (IgmaUser isagUser : list) {
             listDTO.add(mapTODTO(isagUser, dTO));
         }
         return listDTO;
@@ -226,8 +227,9 @@ public class IgmaUserServiceImpl implements IgmaUserService {
         dTO.setName(entity.getName());
         dTO.setPassword(entity.getPassword());
         dTO.setUserCode(entity.getUserCode());
-        
-     
+        dTO.setImage(entity.getImage());
+        dTO.setDescription(entity.getDescription());
+        dTO.setImagelabel(entity.getImageLabel());
 
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
@@ -235,25 +237,42 @@ public class IgmaUserServiceImpl implements IgmaUserService {
         dTO.setBranchId(entity.getBranchId().getId());
     }
 
-    
-     @Override
+    @Override
     public List<Employee> getEmployeesByUserAndBranch(Integer userId, Integer branchId) {
         Map<String, Object> params = new HashMap();
         params.put("branchId", branchId);
         params.put("userId", userId);
         return dao.findListByQuery("SELECT e.employeeId FROM IgmaUser e WHERE e.branchId.id = :branchId  AND e.id = :userId", params);
     }
-    
+
     @Override
-    public String updateUserPassword(Integer userId , String oldPassword , String newPassword) {
+    public String updateUserPassword(Integer userId, String oldPassword, String newPassword) {
         IgmaUser eUser = dao.findEntityById(IgmaUser.class, userId);
-        if(eUser.getPassword().equals(oldPassword)){
-        eUser.setPassword(newPassword);
-         dao.updateEntity(eUser);
-         return "تم تغير كلمة السر" ;
-        }else {
-         return "كلمة السر خاطئه" ;
+        if (eUser.getPassword().equals(oldPassword)) {
+            eUser.setPassword(newPassword);
+            dao.updateEntity(eUser);
+            return "تم تغير كلمة السر";
+        } else {
+            return "كلمة السر خاطئه";
         }
-      
+
+    }
+
+    @Override
+    public List<TeacherDataAPI> getTeacherDataAPI(Integer branchId) {
+        List<TeacherDataAPI> teacherDataAPIList = new ArrayList<>();
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        List<IgmaUser> igmaUserList = dao.findListByQuery("SELECT e FROM IgmaUser e WHERE e.branchId.id = :branchId ", params);
+        for (IgmaUser igmaUser : igmaUserList) {
+            TeacherDataAPI teacherDataAPI = new TeacherDataAPI();
+            teacherDataAPI.setDescription(igmaUser.getDescription());
+            teacherDataAPI.setId(igmaUser.getId());
+            teacherDataAPI.setImage(igmaUser.getImage());
+            teacherDataAPI.setImageLabel(igmaUser.getImageLabel());
+            teacherDataAPIList.add(teacherDataAPI);
+                    
+        }
+        return teacherDataAPIList;
     }
 }

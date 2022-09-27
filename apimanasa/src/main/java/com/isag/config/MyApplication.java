@@ -20,7 +20,9 @@ import com.isag.rest.NewRest;
 import com.isag.rest.NewsRest;
 import com.isag.rest.OtherAppointmentsRest;
 import com.isag.rest.PeriodsRest;
+import com.isag.rest.QuestionCommonRest;
 import com.isag.rest.StudentMonthsRest;
+import com.isag.rest.StudentPeriodsOrderRest;
 import com.isag.rest.StudentPeriodsRest;
 import com.isag.rest.StudentResetRest;
 import com.isag.rest.StudentRest;
@@ -62,6 +64,9 @@ public class MyApplication extends Application {
         resources.add(OtherAppointmentsRest.class);
         resources.add(ManasaReportRest.class);
         resources.add(LessonLocationRest.class);
+        resources.add(StudentPeriodsOrderRest.class);
+        resources.add(QuestionCommonRest.class);
+
         return resources;
     }
 }

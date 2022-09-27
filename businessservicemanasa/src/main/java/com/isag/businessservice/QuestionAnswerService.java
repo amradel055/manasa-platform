@@ -22,5 +22,7 @@ public interface QuestionAnswerService {
     public void delete(Integer id, IgmaUser igmaUser);
 
     public List<QuestionAnswerDTO> findQuestionAnswerDTO(Integer branchId);
+    
+     public QuestionAnswerDTO findQuestioAnswer(Integer questionId)  ;
 
 }

@@ -5,6 +5,9 @@
  */
 package com.isag.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author ahmed
@@ -14,6 +17,7 @@ public class QuestionAnswerDTO extends BaseEntityDTO {
     private String text;
     private String image;
     private Integer questionCommonId;
+    private List<QuestionAnswerDetailDTO> answerDetailDTOList ; 
 
     public QuestionAnswerDTO() {
     }
@@ -87,6 +91,23 @@ public class QuestionAnswerDTO extends BaseEntityDTO {
      */
     public void setQuestionCommonId(Integer questionCommonId) {
         this.questionCommonId = questionCommonId;
+    }
+
+    /**
+     * @return the answerDetailDTOList
+     */
+    public List<QuestionAnswerDetailDTO> getAnswerDetailDTOList() {
+        if(answerDetailDTOList == null){
+            setAnswerDetailDTOList(new ArrayList<QuestionAnswerDetailDTO>());
+        }
+        return answerDetailDTOList;
+    }
+
+    /**
+     * @param answerDetailDTOList the answerDetailDTOList to set
+     */
+    public void setAnswerDetailDTOList(List<QuestionAnswerDetailDTO> answerDetailDTOList) {
+        this.answerDetailDTOList = answerDetailDTOList;
     }
 
 }

@@ -17,13 +17,16 @@ import javax.ejb.Remote;
 @Remote
 public interface MaterialsService {
 
-    public List<MaterialsDTO> findMaterials(Integer branchId , Integer teacherId);
+    public List<MaterialsDTO> findMaterials(Integer branchId, Integer teacherId);
 
     public MaterialsDTO save(MaterialsDTO materialsDTO, IgmaUser isagUser);
 
     public List<MaterialsDTO> findMaterialsByTeacher(Integer teacherId);
 
     public void deleteMaterials(Integer materialsDTO);
-    
-     public List<MaterialsDTO> findMaterialsByStage(Integer stageId) ;
+
+    public List<MaterialsDTO> findMaterialsByStage(Integer stageId);
+
+    public List<MaterialsDTO> findMaterialsABI(Integer teacherId, Integer stageId) ;
+         
 }

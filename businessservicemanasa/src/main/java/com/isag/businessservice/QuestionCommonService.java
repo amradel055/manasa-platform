@@ -23,4 +23,6 @@ public interface QuestionCommonService {
 
     public List<QuestionCommonDTO> findStudemtPeriodOrderDTO(Integer branchId);
 
+    public List<QuestionCommonDTO> findQuestionCommonAndAnswer(Integer teacherId, Integer materialId);
+
 }

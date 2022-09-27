@@ -11,7 +11,6 @@ import com.isag.entity.Branch;
 import com.isag.entity.QuestionAnswerDetail;
 import com.isag.entity.IgmaUser;
 import com.isag.entity.QuestionAnswer;
-import com.isag.entity.QuestionCommon;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,7 +28,6 @@ public class QuestionAnswerDetailServiceImpl implements QuestionAnswerDetailServ
 
     @EJB
     private GenericDAO dao;
-
 
     private QuestionAnswerDetailDTO mapTODTO(QuestionAnswerDetail entity) {
         QuestionAnswerDetailDTO dTO = initMapToDTO(entity);
@@ -49,8 +47,6 @@ public class QuestionAnswerDetailServiceImpl implements QuestionAnswerDetailServ
         dao.deleteEntity(studentPeriodsOrder);
     }
 
-
-
     @Override
     public List<QuestionAnswerDetailDTO> findQuestionAnswerDetailDTO(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
@@ -60,7 +56,6 @@ public class QuestionAnswerDetailServiceImpl implements QuestionAnswerDetailServ
         List<QuestionAnswerDetail> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }
-
 
     private List<QuestionAnswerDetailDTO> returnListDTO(List<QuestionAnswerDetail> list) {
         List<QuestionAnswerDetailDTO> dTOList = new ArrayList<>();
@@ -73,7 +68,7 @@ public class QuestionAnswerDetailServiceImpl implements QuestionAnswerDetailServ
     private QuestionAnswerDetailDTO initMapToDTO(QuestionAnswerDetail entity) {
 
         QuestionAnswerDetailDTO dTO = new QuestionAnswerDetailDTO();
-        dTO.setText(entity.getText());
+        dTO.setDescription(entity.getDescription());
         dTO.setImage(entity.getImage());
         dTO.setQuestionAnswerId(entity.getQuestionAnswerId().getId());
         dTO.setId(entity.getId());
@@ -90,9 +85,9 @@ public class QuestionAnswerDetailServiceImpl implements QuestionAnswerDetailServ
         QuestionAnswerDetail entity = new QuestionAnswerDetail();
 
         entity.setId(dTO.getId());
-        entity.setText(dTO.getText());
+        entity.setDescription(dTO.getDescription());
         entity.setImage(dTO.getImage());
-        if(dTO.getQuestionAnswerId() != null){
+        if (dTO.getQuestionAnswerId() != null) {
             QuestionAnswer questionAnswer = new QuestionAnswer();
             questionAnswer.setId(dTO.getQuestionAnswerId());
             entity.setQuestionAnswerId(questionAnswer);
@@ -108,13 +103,22 @@ public class QuestionAnswerDetailServiceImpl implements QuestionAnswerDetailServ
             entity.setModificationDate(new Date());
             entity.setModifiedBy(isagUser);
         }
-        
 
         Branch branch = new Branch();
         branch.setId(232);
         entity.setBranchId(branch);
         entity.setCompanyId(isagUser.getCompanyId());
         return entity;
+    }
+
+    @Override
+    public List<QuestionAnswerDetailDTO> findAnswerDetail(Integer answerId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("answerId", answerId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM QuestionAnswerDetail d WHERE d.questionAnswerId.id = :answerId ");
+        List<QuestionAnswerDetail> list = dao.findListByQuery(builder.toString(), params);
+        return returnListDTO(list);
     }
 
 }

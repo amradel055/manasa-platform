@@ -28,7 +28,8 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
 
     @EJB
     private GenericDAO dao;
-
+    @EJB
+    private QuestionAnswerDetailService questionAnswerDetailService;
 
     private QuestionAnswerDTO mapTODTO(QuestionAnswer entity) {
         QuestionAnswerDTO dTO = initMapToDTO(entity);
@@ -74,6 +75,7 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
         QuestionAnswerDTO dTO = new QuestionAnswerDTO();
         dTO.setText(entity.getText());
         dTO.setImage(entity.getImage());
+        dTO.setAnswerDetailDTOList(questionAnswerDetailService.findAnswerDetail(entity.getId()));
         dTO.setQuestionCommonId(entity.getQuestionCommonId().getId());
         dTO.setId(entity.getId());
         dTO.setIndex(entity.getId());
@@ -115,5 +117,17 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
         entity.setCompanyId(isagUser.getCompanyId());
         return entity;
     }
+    
+    
+    @Override
+    public QuestionAnswerDTO findQuestioAnswer(Integer questionId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("questionId", questionId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM QuestionAnswer d WHERE d.questionCommonId.id = :questionId ");
+        QuestionAnswer questionAnswer = dao.findEntityByQuery(builder.toString(), params);
+        return mapTODTO(questionAnswer);
+    }
+
 
 }

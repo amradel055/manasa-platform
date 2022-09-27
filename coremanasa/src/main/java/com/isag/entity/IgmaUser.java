@@ -37,6 +37,12 @@ public class IgmaUser extends BaseEntity {
     @Size(min = 1, max = 45)
     @Column(name = "name")
     private String name;
+    @Column(name = "image")
+    private String image;
+    @Column(name = "description")
+    private String description;
+    @Column(name = "image_label")
+    private String imageLabel;
 
     @JoinColumn(name = "lang", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.EAGER)
@@ -168,5 +174,47 @@ public class IgmaUser extends BaseEntity {
      */
     public void setParent(IgmaUser parent) {
         this.parent = parent;
+    }
+
+    /**
+     * @return the image
+     */
+    public String getImage() {
+        return image;
+    }
+
+    /**
+     * @param image the image to set
+     */
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * @return the imageLabel
+     */
+    public String getImageLabel() {
+        return imageLabel;
+    }
+
+    /**
+     * @param imageLabel the imageLabel to set
+     */
+    public void setImageLabel(String imageLabel) {
+        this.imageLabel = imageLabel;
     }
 }
