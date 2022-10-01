@@ -38,9 +38,11 @@ public class QuestionCommonServiceImpl implements QuestionCommonService {
     }
 
     @Override
-    public void save(QuestionCommonDTO questionCommonDTO, IgmaUser isagUser) {
+    public QuestionCommonDTO save(QuestionCommonDTO questionCommonDTO, IgmaUser isagUser) {
         QuestionCommon studentPeriodsOrder = mapToEntity(questionCommonDTO, isagUser);
-        dao.updateEntity(studentPeriodsOrder);
+        studentPeriodsOrder = dao.updateEntity(studentPeriodsOrder);
+        return mapTODTO(studentPeriodsOrder) ;
+   
     }
 
     @Override

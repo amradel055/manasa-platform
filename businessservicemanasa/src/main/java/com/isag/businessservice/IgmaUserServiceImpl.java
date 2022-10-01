@@ -270,6 +270,7 @@ public class IgmaUserServiceImpl implements IgmaUserService {
             teacherDataAPI.setId(igmaUser.getId());
             teacherDataAPI.setImage(igmaUser.getImage());
             teacherDataAPI.setImageLabel(igmaUser.getImageLabel());
+            teacherDataAPI.setName(igmaUser.getName());
             teacherDataAPIList.add(teacherDataAPI);
                     
         }

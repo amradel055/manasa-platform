@@ -15,6 +15,7 @@ public class TeacherDataAPI implements Serializable {
 
     private String image;
     private String imageLabel;
+    private String name;
     private String description;
     private Integer id;
 
@@ -72,6 +73,20 @@ public class TeacherDataAPI implements Serializable {
      */
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
 }

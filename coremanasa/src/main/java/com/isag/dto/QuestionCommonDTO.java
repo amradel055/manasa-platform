@@ -15,6 +15,8 @@ public class QuestionCommonDTO extends BaseEntityDTO {
     private String image;
     private Integer teacherId;
     private Integer materialId;
+    
+ 
 
     private QuestionAnswerDTO questionAnswerDTO;
 
