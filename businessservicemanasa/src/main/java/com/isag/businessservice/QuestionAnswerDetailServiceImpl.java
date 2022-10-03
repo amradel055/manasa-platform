@@ -6,6 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
+import com.isag.dto.QuestionAnswerDTO;
 import com.isag.dto.QuestionAnswerDetailDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.QuestionAnswerDetail;
@@ -36,9 +37,16 @@ public class QuestionAnswerDetailServiceImpl implements QuestionAnswerDetailServ
     }
 
     @Override
-    public void save(QuestionAnswerDetailDTO questionAnswerDetailDTO, IgmaUser isagUser) {
-        QuestionAnswerDetail studentPeriodsOrder = mapToEntity(questionAnswerDetailDTO, isagUser);
-        dao.updateEntity(studentPeriodsOrder);
+    public List<QuestionAnswerDetailDTO> save(Integer answerId, List<QuestionAnswerDetailDTO> questionAnswerDetailDTOList, IgmaUser isagUser) {
+        List<QuestionAnswerDetailDTO> list = new ArrayList<>();
+        for (QuestionAnswerDetailDTO questionAnswerDetailDTO : questionAnswerDetailDTOList) {
+            QuestionAnswerDetailDTO detailDTO = new QuestionAnswerDetailDTO() ;
+            QuestionAnswerDetail questionAnswerDetail = mapToEntity(answerId, questionAnswerDetailDTO, isagUser);
+            questionAnswerDetail = dao.updateEntity(questionAnswerDetail);
+            detailDTO = mapTODTO(questionAnswerDetail) ;
+            list.add(detailDTO) ;
+        }
+        return(list) ;
     }
 
     @Override
@@ -80,16 +88,18 @@ public class QuestionAnswerDetailServiceImpl implements QuestionAnswerDetailServ
         return dTO;
     }
 
-    private QuestionAnswerDetail mapToEntity(QuestionAnswerDetailDTO dTO, IgmaUser isagUser) {
+    private QuestionAnswerDetail mapToEntity(Integer answerId, QuestionAnswerDetailDTO dTO, IgmaUser isagUser) {
 
         QuestionAnswerDetail entity = new QuestionAnswerDetail();
 
         entity.setId(dTO.getId());
         entity.setDescription(dTO.getDescription());
-        entity.setImage(dTO.getImage());
-        if (dTO.getQuestionAnswerId() != null) {
+        if (dTO.getImage() != null) {
+            entity.setImage(dTO.getImage());
+        }
+        if (answerId != null) {
             QuestionAnswer questionAnswer = new QuestionAnswer();
-            questionAnswer.setId(dTO.getQuestionAnswerId());
+            questionAnswer.setId(answerId);
             entity.setQuestionAnswerId(questionAnswer);
         }
 

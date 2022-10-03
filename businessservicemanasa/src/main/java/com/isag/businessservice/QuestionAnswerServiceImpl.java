@@ -7,6 +7,7 @@ package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
 import com.isag.dto.QuestionAnswerDTO;
+import com.isag.dto.QuestionAnswerDetailDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.QuestionAnswer;
 import com.isag.entity.IgmaUser;
@@ -38,9 +39,13 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
     }
 
     @Override
-    public void save(QuestionAnswerDTO studentPeriodsOrderDTO, IgmaUser isagUser) {
-        QuestionAnswer studentPeriodsOrder = mapToEntity(studentPeriodsOrderDTO, isagUser);
-        dao.updateEntity(studentPeriodsOrder);
+    public QuestionAnswerDTO save(Integer questionId, QuestionAnswerDTO questionAnswerDTO, IgmaUser isagUser) {
+        QuestionAnswer questionAnswer = mapToEntity(questionId , questionAnswerDTO , isagUser);
+        List<QuestionAnswerDetailDTO> questionAnswerDetailDTOList = questionAnswerDetailService.save(questionAnswer.getId() , questionAnswerDTO.getAnswerDetailDTOList(), isagUser) ;
+        dao.updateEntity(questionAnswer);
+        QuestionAnswerDTO questionAnswerDTO1 =  mapTODTO(questionAnswer) ;
+        questionAnswerDTO1.setAnswerDetailDTOList(questionAnswerDetailDTOList);
+        return  questionAnswerDTO1 ;
     }
 
     @Override
@@ -48,8 +53,6 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
         QuestionAnswer studentPeriodsOrder = dao.findEntityById(QuestionAnswer.class, id);
         dao.deleteEntity(studentPeriodsOrder);
     }
-
-
 
     @Override
     public List<QuestionAnswerDTO> findQuestionAnswerDTO(Integer branchId) {
@@ -60,7 +63,6 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
         List<QuestionAnswer> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }
-
 
     private List<QuestionAnswerDTO> returnListDTO(List<QuestionAnswer> list) {
         List<QuestionAnswerDTO> dTOList = new ArrayList<>();
@@ -86,16 +88,18 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
         return dTO;
     }
 
-    private QuestionAnswer mapToEntity(QuestionAnswerDTO dTO, IgmaUser isagUser) {
+    private QuestionAnswer mapToEntity(Integer questionId, QuestionAnswerDTO dTO, IgmaUser isagUser) {
 
         QuestionAnswer entity = new QuestionAnswer();
-
         entity.setId(dTO.getId());
         entity.setText(dTO.getText());
-        entity.setImage(dTO.getImage());
-        if(dTO.getQuestionCommonId() != null){
-            QuestionCommon questionCommon = new QuestionCommon() ;
-            questionCommon.setId(dTO.getQuestionCommonId());
+        if (dTO.getImage() != null) {
+            entity.setImage(dTO.getImage());
+
+        }
+        if (questionId != null) {
+            QuestionCommon questionCommon = new QuestionCommon();
+            questionCommon.setId(questionId);
             entity.setQuestionCommonId(questionCommon);
         }
 
@@ -109,7 +113,6 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
             entity.setModificationDate(new Date());
             entity.setModifiedBy(isagUser);
         }
-        
 
         Branch branch = new Branch();
         branch.setId(232);
@@ -117,8 +120,7 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
         entity.setCompanyId(isagUser.getCompanyId());
         return entity;
     }
-    
-    
+
     @Override
     public QuestionAnswerDTO findQuestioAnswer(Integer questionId) {
         Map<String, Object> params = new HashMap<>();
@@ -128,6 +130,5 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
         QuestionAnswer questionAnswer = dao.findEntityByQuery(builder.toString(), params);
         return mapTODTO(questionAnswer);
     }
-
 
 }

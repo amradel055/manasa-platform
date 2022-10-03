@@ -6,6 +6,7 @@
 package com.isag.teacherQuestion;
 
 import com.isag.businessservice.QuestionCommonService;
+import com.isag.dto.QuestionAnswerDetailDTO;
 import com.isag.dto.QuestionCommonDTO;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -33,6 +34,7 @@ public class TeacherQuestionsFormMB extends BaseFormBean {
     private String imageName;
     private String fileName;
     private StreamedContent image;
+    private boolean exitBoolean = Boolean.FALSE;
 
     @EJB
     QuestionCommonService questionCommonService;
@@ -48,6 +50,20 @@ public class TeacherQuestionsFormMB extends BaseFormBean {
             setImage(getMessageBean().findGraphicImage(getFileName()));
         } catch (Exception e) {
             saveError(e, "BranchFormBean", "upload");
+        }
+    }
+
+    public void addAnswerDetail() {
+        try {
+            if (getQuestionCommonDTO().getQuestionAnswerDTO() != null && getQuestionCommonDTO().getQuestionAnswerDTO().getId() != null) {
+                setExitBoolean((boolean) Boolean.TRUE);
+                QuestionAnswerDetailDTO questionAnswerDetailDTO = new QuestionAnswerDetailDTO();
+                questionAnswerDetailDTO.setMarkEdit(Boolean.TRUE);
+                questionAnswerDetailDTO.setQuestionAnswerId(getQuestionCommonDTO().getQuestionAnswerDTO().getId());
+                questionCommonDTO.getQuestionAnswerDTO().getAnswerDetailDTOList().add(0, questionAnswerDetailDTO);
+            }
+        } catch (Exception e) {
+            saveError(e, "answer", "add");
         }
     }
 
@@ -203,6 +219,20 @@ public class TeacherQuestionsFormMB extends BaseFormBean {
      */
     public void setImage(StreamedContent image) {
         this.image = image;
+    }
+
+    /**
+     * @return the exitBoolean
+     */
+    public boolean isExitBoolean() {
+        return exitBoolean;
+    }
+
+    /**
+     * @param exitBoolean the exitBoolean to set
+     */
+    public void setExitBoolean(boolean exitBoolean) {
+        this.exitBoolean = exitBoolean;
     }
 
 }

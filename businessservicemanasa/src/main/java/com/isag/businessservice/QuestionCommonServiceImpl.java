@@ -6,6 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
+import com.isag.dto.QuestionAnswerDTO;
 import com.isag.dto.QuestionCommonDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.QuestionCommon;
@@ -30,6 +31,7 @@ public class QuestionCommonServiceImpl implements QuestionCommonService {
     private GenericDAO dao;
     @EJB
     private QuestionAnswerService questionAnswerService;
+    
 
     private QuestionCommonDTO mapTODTO(QuestionCommon entity) {
         QuestionCommonDTO dTO = initMapToDTO(entity);
@@ -39,9 +41,12 @@ public class QuestionCommonServiceImpl implements QuestionCommonService {
 
     @Override
     public QuestionCommonDTO save(QuestionCommonDTO questionCommonDTO, IgmaUser isagUser) {
-        QuestionCommon studentPeriodsOrder = mapToEntity(questionCommonDTO, isagUser);
-        studentPeriodsOrder = dao.updateEntity(studentPeriodsOrder);
-        return mapTODTO(studentPeriodsOrder) ;
+        QuestionCommon questionCommon = mapToEntity(questionCommonDTO, isagUser);
+        questionCommon = dao.updateEntity(questionCommon);
+        QuestionAnswerDTO questionAnswerDTO =  questionAnswerService.save(questionCommon.getId() , questionCommonDTO.getQuestionAnswerDTO(),isagUser);
+        QuestionCommonDTO questionCommonDTO1 = mapTODTO(questionCommon);
+        questionCommonDTO1.setQuestionAnswerDTO(questionAnswerDTO);
+        return mapTODTO(questionCommon) ;
    
     }
 

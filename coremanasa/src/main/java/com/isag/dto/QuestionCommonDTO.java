@@ -13,12 +13,12 @@ public class QuestionCommonDTO extends BaseEntityDTO {
 
     private String text;
     private String image;
+    private QuestionAnswerDTO questionAnswerDTO ;
     private Integer teacherId;
     private Integer materialId;
     
  
 
-    private QuestionAnswerDTO questionAnswerDTO;
 
     public QuestionCommonDTO() {
     }

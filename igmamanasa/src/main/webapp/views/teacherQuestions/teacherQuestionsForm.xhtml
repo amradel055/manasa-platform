@@ -51,7 +51,7 @@
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 85px" value="اضافة صورة  " />
+                                    <p:outputLabel style="width: 85px" value="اضافة صورةالنص  " />
 
                                 </div>
                             </div>
@@ -61,6 +61,69 @@
                     </div>
 
                 </div>
+
+
+                <p:fieldset id="whole" legend=" اضافة اجابة " style="margin-bottom:20px; margin-right: 30px">
+
+                    <div class="col-xs-12">
+                        <p:messages autoUpdate="true"  id="msg" showDetail="true" closable="true" />
+                    </div>
+                    <div  id="firstSegment" class="ui-g-12 ui-g-nopad">
+                        <div class="ui-g">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:inputText style="width: 36%!important" id="nameAr222" value="#{teacherQuestionsFormMB.questionCommonDTO.questionAnswerDTO.text}" >
+                                        </p:inputText>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 85px" value="ادخل الاجابة   " />
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </p:fieldset>
+               
+                
+                
+                
+                 <p:fieldset legend="اكثر من ايجابة " style="margin-bottom:20px">
+                <p:dataTable 
+                    draggableColumns="true" 
+                    var="answer" 
+                    widgetVar="answer"  
+                    rowIndexVar="index" 
+                    value="#{teacherQuestionsFormMB.questionCommonDTO.questionAnswerDTO.answerDetailDTOList}"
+                    rows="#{userData.rowListCount}" 
+                    paginator="true" 
+                    selectionMode="single"
+                    rowKey="#{answer}"
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                    id="answer">
+                    <f:facet name="header">
+                        <p:commandButton   styleClass="saddButton" style="float:right" icon="fa fa-plus" title="#{userData.userDDs['ADD']}" action="#{teacherQuestionsFormMB.addAnswerDetail()}" 
+                        <p:outputPanel  >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                        </p:outputPanel>
+                    </f:facet>
+                    <p:column   headerText="#" style="width: 4vh;text-align: -webkit-auto;font-size: 1.8vh">
+                        <h:outputText  value="#{index+1}" style="font-size: 1.5vh"/>
+                    </p:column>
+                    <p:column  filterStyle="display:none"  style="width: 12vh;text-align: -webkit-auto;font-size: 1.8vh"   sortBy="#{answer.description}" filterBy="#{answer.description}"  filterMatchMode="contains" headerText="الوصف ">
+                        <h:outputText  value="#{answer.description}" rendered="#{not answer.markEdit}" style="font-size: 1.5vh"/>
+                        <p:inputText value="#{answer.description}" rendered="#{answer.markEdit}" style="width:100%" />
+                    </p:column>
+                    
+                </p:dataTable>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+            </p:fieldset>
 
 
 

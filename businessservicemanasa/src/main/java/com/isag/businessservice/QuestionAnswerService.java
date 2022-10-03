@@ -17,7 +17,7 @@ import javax.ejb.Remote;
 @Remote
 public interface QuestionAnswerService {
 
-    public void save(QuestionAnswerDTO questionAnswerDTO, IgmaUser isagUser);
+   public QuestionAnswerDTO save(Integer questionId, QuestionAnswerDTO questionAnswerDetailDTO, IgmaUser isagUser) ;
 
     public void delete(Integer id, IgmaUser igmaUser);
 
