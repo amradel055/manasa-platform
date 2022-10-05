@@ -40,19 +40,20 @@ public class QuestionAnswerDetailServiceImpl implements QuestionAnswerDetailServ
     public List<QuestionAnswerDetailDTO> save(Integer answerId, List<QuestionAnswerDetailDTO> questionAnswerDetailDTOList, IgmaUser isagUser) {
         List<QuestionAnswerDetailDTO> list = new ArrayList<>();
         for (QuestionAnswerDetailDTO questionAnswerDetailDTO : questionAnswerDetailDTOList) {
-            QuestionAnswerDetailDTO detailDTO = new QuestionAnswerDetailDTO() ;
+            QuestionAnswerDetailDTO detailDTO = new QuestionAnswerDetailDTO();
             QuestionAnswerDetail questionAnswerDetail = mapToEntity(answerId, questionAnswerDetailDTO, isagUser);
             questionAnswerDetail = dao.updateEntity(questionAnswerDetail);
-            detailDTO = mapTODTO(questionAnswerDetail) ;
-            list.add(detailDTO) ;
+            detailDTO = mapTODTO(questionAnswerDetail);
+            list.add(detailDTO);
         }
-        return(list) ;
+        return (list);
     }
 
     @Override
-    public void delete(Integer id, IgmaUser igmaUser) {
-        QuestionAnswerDetail studentPeriodsOrder = dao.findEntityById(QuestionAnswerDetail.class, id);
-        dao.deleteEntity(studentPeriodsOrder);
+    public void delete(Integer answerId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("answerId", answerId);
+      QuestionAnswerDetail questionAnswerDetail =  dao.findEntityByQuery("delete FROM QuestionAnswerDetail e WHERE e.questionAnswerId.id = :answerId ", params) ;
     }
 
     @Override
@@ -78,7 +79,9 @@ public class QuestionAnswerDetailServiceImpl implements QuestionAnswerDetailServ
         QuestionAnswerDetailDTO dTO = new QuestionAnswerDetailDTO();
         dTO.setDescription(entity.getDescription());
         dTO.setImage(entity.getImage());
-        dTO.setQuestionAnswerId(entity.getQuestionAnswerId().getId());
+        if (entity.getQuestionAnswerId().getId() != null) {
+            dTO.setQuestionAnswerId(entity.getQuestionAnswerId().getId());
+        }
         dTO.setId(entity.getId());
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());

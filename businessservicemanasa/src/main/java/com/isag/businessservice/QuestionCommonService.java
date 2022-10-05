@@ -18,6 +18,8 @@ import javax.ejb.Remote;
 public interface QuestionCommonService {
 
     public QuestionCommonDTO save(QuestionCommonDTO questionCommonDTO, IgmaUser isagUser) ;
+    
+     public QuestionCommonDTO findDto(Integer id) ;
 
     public void delete(Integer id, IgmaUser igmaUser);
 

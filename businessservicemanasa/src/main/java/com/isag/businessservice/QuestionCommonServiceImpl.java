@@ -31,7 +31,6 @@ public class QuestionCommonServiceImpl implements QuestionCommonService {
     private GenericDAO dao;
     @EJB
     private QuestionAnswerService questionAnswerService;
-    
 
     private QuestionCommonDTO mapTODTO(QuestionCommon entity) {
         QuestionCommonDTO dTO = initMapToDTO(entity);
@@ -43,17 +42,27 @@ public class QuestionCommonServiceImpl implements QuestionCommonService {
     public QuestionCommonDTO save(QuestionCommonDTO questionCommonDTO, IgmaUser isagUser) {
         QuestionCommon questionCommon = mapToEntity(questionCommonDTO, isagUser);
         questionCommon = dao.updateEntity(questionCommon);
-        QuestionAnswerDTO questionAnswerDTO =  questionAnswerService.save(questionCommon.getId() , questionCommonDTO.getQuestionAnswerDTO(),isagUser);
+        QuestionAnswerDTO questionAnswerDTO = questionAnswerService.save(questionCommon.getId(), questionCommonDTO.getQuestionAnswerDTO(), isagUser);
         QuestionCommonDTO questionCommonDTO1 = mapTODTO(questionCommon);
         questionCommonDTO1.setQuestionAnswerDTO(questionAnswerDTO);
-        return mapTODTO(questionCommon) ;
-   
+        return mapTODTO(questionCommon);
+
     }
 
     @Override
     public void delete(Integer id, IgmaUser igmaUser) {
         QuestionCommon studentPeriodsOrder = dao.findEntityById(QuestionCommon.class, id);
+
+        questionAnswerService.delete(studentPeriodsOrder.getId());
+
         dao.deleteEntity(studentPeriodsOrder);
+
+    }
+
+    @Override
+    public QuestionCommonDTO findDto(Integer id) {
+        QuestionCommon questionCommon = dao.findEntityById(QuestionCommon.class, id);
+        return mapTODTO(questionCommon);
     }
 
     @Override
@@ -80,9 +89,9 @@ public class QuestionCommonServiceImpl implements QuestionCommonService {
         dTO.setText(entity.getText());
         dTO.setImage(entity.getImage());
         dTO.setQuestionAnswerDTO(questionAnswerService.findQuestioAnswer(entity.getId()));
-        dTO.setTeacherId(entity.getTeacherId().getId());
+        dTO.setTeacherId(entity.getTeacherId() != null ? entity.getTeacherId().getId() : null);
         dTO.setId(entity.getId());
-        dTO.setMaterialId(entity.getMaterialId().getId());
+        dTO.setMaterialId(entity.getMaterialId() != null ? entity.getMaterialId().getId() : null);
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy().getId());
@@ -104,11 +113,9 @@ public class QuestionCommonServiceImpl implements QuestionCommonService {
         entity.setId(dTO.getId());
         entity.setText(dTO.getText());
         entity.setImage(dTO.getImage());
-        if (dTO.getTeacherId() != null) {
-            IgmaUser igmaUser = new IgmaUser();
-            igmaUser.setId(dTO.getTeacherId());
-            entity.setTeacherId(igmaUser);
 
+        if (isagUser != null) {
+            entity.setTeacherId(isagUser);
         }
 
         if (dTO.getId() == null) {

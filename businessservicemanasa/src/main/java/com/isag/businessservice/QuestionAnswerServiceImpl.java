@@ -40,18 +40,20 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
 
     @Override
     public QuestionAnswerDTO save(Integer questionId, QuestionAnswerDTO questionAnswerDTO, IgmaUser isagUser) {
-        QuestionAnswer questionAnswer = mapToEntity(questionId , questionAnswerDTO , isagUser);
-        List<QuestionAnswerDetailDTO> questionAnswerDetailDTOList = questionAnswerDetailService.save(questionAnswer.getId() , questionAnswerDTO.getAnswerDetailDTOList(), isagUser) ;
-        dao.updateEntity(questionAnswer);
-        QuestionAnswerDTO questionAnswerDTO1 =  mapTODTO(questionAnswer) ;
+        QuestionAnswer questionAnswer = mapToEntity(questionId, questionAnswerDTO, isagUser);
+        questionAnswer = dao.updateEntity(questionAnswer);
+        List<QuestionAnswerDetailDTO> questionAnswerDetailDTOList = questionAnswerDetailService.save(questionAnswer.getId(), questionAnswerDTO.getAnswerDetailDTOList(), isagUser);
+        QuestionAnswerDTO questionAnswerDTO1 = mapTODTO(questionAnswer);
         questionAnswerDTO1.setAnswerDetailDTOList(questionAnswerDetailDTOList);
-        return  questionAnswerDTO1 ;
+        return questionAnswerDTO1;
     }
 
     @Override
-    public void delete(Integer id, IgmaUser igmaUser) {
-        QuestionAnswer studentPeriodsOrder = dao.findEntityById(QuestionAnswer.class, id);
-        dao.deleteEntity(studentPeriodsOrder);
+    public void delete(Integer questionCommonId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("questionCommonId", questionCommonId);
+      QuestionAnswer questionAnswer =  dao.findEntityByQuery("delete FROM QuestionAnswer e WHERE e.questionCommonId.id = :questionCommonId ", params) ;
+      questionAnswerDetailService.delete(questionCommonId);
     }
 
     @Override

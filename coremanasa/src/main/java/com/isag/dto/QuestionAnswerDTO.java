@@ -98,7 +98,7 @@ public class QuestionAnswerDTO extends BaseEntityDTO {
      */
     public List<QuestionAnswerDetailDTO> getAnswerDetailDTOList() {
         if(answerDetailDTOList == null){
-            setAnswerDetailDTOList(new ArrayList<QuestionAnswerDetailDTO>());
+            answerDetailDTOList = new ArrayList<>() ;
         }
         return answerDetailDTOList;
     }

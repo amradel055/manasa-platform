@@ -19,7 +19,7 @@ public interface QuestionAnswerService {
 
    public QuestionAnswerDTO save(Integer questionId, QuestionAnswerDTO questionAnswerDetailDTO, IgmaUser isagUser) ;
 
-    public void delete(Integer id, IgmaUser igmaUser);
+     public void delete(Integer questionCommonId) ;
 
     public List<QuestionAnswerDTO> findQuestionAnswerDTO(Integer branchId);
     
