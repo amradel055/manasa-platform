@@ -23,19 +23,19 @@
                             <p:menuitem id="sr_dashboard" value="Dashboard" icon="&#xE871;" outcome="/dashboard"/>
                             <p:submenu id="sr_sm1" label="#{userData.userDDs['GENERAL_SYSTEM_SETTINGS']}" icon="&#xE8D2;"
                                        rendered="#{userData.userScreens['role'].view 
-                                                                 or userData.userScreens['user'].view 
-                                                                 or userData.userScreens['privilege'].view 
-                                                                 or userData.userScreens['userrole'].view 
-                                                                 or userData.userScreens['userprofile'].view 
-                                                                 or userData.isAdmin}"
+                                                   or userData.userScreens['user'].view 
+                                                   or userData.userScreens['privilege'].view 
+                                                   or userData.userScreens['userrole'].view 
+                                                   or userData.userScreens['userprofile'].view 
+                                                   or userData.isAdmin}"
                                        >
                                 <p:submenu id="sr_sm11" label="#{userData.userDDs['BRANCHES_USERS_MANAGEMENT']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['role'].view 
-                                                                            or userData.userScreens['user'].view 
-                                                                              or userData.userScreens['privilege'].view 
-                                                                                or userData.userScreens['userrole'].view 
-                                                                                  or userData.userScreens['userprofile'].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens['user'].view 
+                                                       or userData.userScreens['privilege'].view 
+                                                       or userData.userScreens['userrole'].view 
+                                                       or userData.userScreens['userprofile'].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk113" value="#{userData.userDDs['ROLE_MANAGEMENT']}"  icon="&#xE8D2;" url="/faces/views/role/roleList.xhtml"
                                                 rendered="#{userData.userScreens['role'].view or userData.isAdmin}"
@@ -44,105 +44,120 @@
                                                 rendered="#{userData.userScreens['user'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk115" value="#{userData.userDDs['PRIVILEGE_MANAGEMENT']}" icon="&#xE8D2;" url="/faces/views/privilege/privilegeList.xhtml" 
-                                               rendered="#{userData.userScreens['privilege'].view or userData.isAdmin}"
+                                                rendered="#{userData.userScreens['privilege'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk116" value="#{userData.userDDs['BRANCHES_USERS_PRIVILEGES']}" icon="&#xE8D2;" url="/faces/views/userrole/userRoleForm.xhtml" 
                                                 rendered="#{userData.userScreens['userrole'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk117" value="#{userData.userDDs['USER_PROFILE']}" icon="&#xE8D2;" url="/faces/views/userprofile/userprofileform.xhtml" 
-                                               rendered="#{userData.userScreens['userprofile'].view or userData.isAdmin}"
+                                                rendered="#{userData.userScreens['userprofile'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
                             </p:submenu>
                             <p:submenu id="sr_sm9" label="إدارة حركة الاتوبيسات" icon="&#xE8D2;"
                                        rendered="#{userData.userScreens['remcompany'].view 
-                                                                 or userData.userScreens['remdrivers'].view 
-                                                                 or userData.userScreens['rembuses'].view 
-                                                                 or userData.userScreens['rememployee'].view 
-                                                                 or userData.userScreens['rempoints'].view 
-                                                                 or userData.userScreens['remTraffic'].view 
-                                                                 or userData.userScreens['rememployeeShift'].view 
-                                                                 or userData.userScreens['remWorkOrder'].view 
-                                                                 or userData.userScreens['remBusesFollow'].view 
-                                                                 or userData.userScreens['remRegisterEmployee'].view 
-                                                                 or userData.userScreens['map'].view 
-                                                                  or userData.userScreens['remReport'].view 
-                                                                 or userData.isAdmin}"
+                                                   or userData.userScreens['remdrivers'].view 
+                                                   or userData.userScreens['rembuses'].view 
+                                                   or userData.userScreens['rememployee'].view 
+                                                   or userData.userScreens['rempoints'].view 
+                                                   or userData.userScreens['remTraffic'].view 
+                                                   or userData.userScreens['rememployeeShift'].view 
+                                                   or userData.userScreens['remWorkOrder'].view 
+                                                   or userData.userScreens['remBusesFollow'].view 
+                                                   or userData.userScreens['remRegisterEmployee'].view 
+                                                   or userData.userScreens['map'].view 
+                                                   or userData.userScreens['remReport'].view 
+                                                   or userData.isAdmin}"
                                        >
                                 <p:submenu id="sr_sm91" label="#{userData.userDDs['MAIN_DATA']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['remcompany'].view 
-                                                                            or userData.userScreens['remdrivers'].view 
-                                                                              or userData.userScreens['rembuses'].view 
-                                                                                or userData.userScreens['rememployee'].view 
-                                                                                  or userData.userScreens['rempoints'].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens['remdrivers'].view 
+                                                       or userData.userScreens['rembuses'].view 
+                                                       or userData.userScreens['rememployee'].view 
+                                                       or userData.userScreens['rempoints'].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk912" value="انشاء الشركات" icon="&#xE8D2;" url="/faces/views/remcompany/remcompanyList.xhtml" 
-                                                 rendered="#{userData.userScreens['remcompany'].view or userData.isAdmin}"
+                                                rendered="#{userData.userScreens['remcompany'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk914" value="انشاء السائقين " icon="&#xE8D2;" url="/faces/views/remdrivers/employeeList.xhtml"
-                                                 rendered="#{userData.userScreens['remdrivers'].view or userData.isAdmin}"
+                                                rendered="#{userData.userScreens['remdrivers'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk913" value="انشاءالاتوبيسات " icon="&#xE8D2;" url="/faces/views/rembuses/busesList.xhtml"
-                                                 rendered="#{userData.userScreens['rembuses'].view or userData.isAdmin}"
+                                                rendered="#{userData.userScreens['rembuses'].view or userData.isAdmin}"
                                                 />
-                                    
+
                                     <p:menuitem id="sr_lnk915" value="انشاء الموظفين " icon="&#xE8D2;" url="/faces/views/rememployee/employeeList.xhtml"
-                                                 rendered="#{userData.userScreens['rememployee'].view or userData.isAdmin}"
+                                                rendered="#{userData.userScreens['rememployee'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk911" value="انشاء النقاط" icon="&#xE8D2;" url="/faces/views/rempoints/rempointdList.xhtml" 
                                                 rendered="#{userData.userScreens['rempoints'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
                                 <p:submenu id="sr_sm92" label="إدارة الاتوبيسات" icon="&#xE8D2;"
-                                          rendered="#{userData.userScreens['remTraffic'].view 
-                                                                            
-                                                                              or userData.userScreens['rememployeeShift'].view 
-                                                                                or userData.userScreens['remWorkOrder'].view 
-                                                                                  or userData.userScreens['remBusesFollow'].view 
-                                                                                  or userData.userScreens['remRegisterEmployee'].view 
-                                                                            or userData.isAdmin}" 
+                                           rendered="#{userData.userScreens['remTraffic'].view 
+
+                                                       or userData.userScreens['rememployeeShift'].view 
+                                                       or userData.userScreens['remWorkOrder'].view 
+                                                       or userData.userScreens['remBusesFollow'].view 
+                                                       or userData.userScreens['remRegisterEmployee'].view 
+                                                       or userData.isAdmin}" 
                                            >
                                     <p:menuitem id="sr_lnk922" value="عمل خطوط السير" icon="&#xE8D2;" url="/faces/views/remTraffic/trafficList.xhtml"
-                                                 rendered="#{userData.userScreens['remTraffic'].view or userData.isAdmin}"
+                                                rendered="#{userData.userScreens['remTraffic'].view or userData.isAdmin}"
                                                 />  
                                     <p:menuitem id="sr_lnk921" value="تسكين الموظفين" icon="&#xE8D2;" url="/faces/views/rememployeeShift/employeeShiftList.xhtml" 
-                                                 rendered="#{userData.userScreens['rememployeeShift'].view or userData.isAdmin}"
+                                                rendered="#{userData.userScreens['rememployeeShift'].view or userData.isAdmin}"
                                                 />
-                                    
+
                                     <p:menuitem id="sr_lnk923" value="عمل امر الشغل" icon="&#xE8D2;" url="/faces/views/remWorkOrder/workorderList.xhtml" 
-                                                 rendered="#{userData.userScreens['remWorkOrder'].view or userData.isAdmin}"
+                                                rendered="#{userData.userScreens['remWorkOrder'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk924" value="تسجيل يدوي لمسار الاتوبيس" icon="&#xE8D2;" url="/faces/views/remBusesFollow/remBusesFollowForm.xhtml" 
-                                                 rendered="#{userData.userScreens['remBusesFollow'].view or userData.isAdmin}"
+                                                rendered="#{userData.userScreens['remBusesFollow'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk925" value="تسجيل يدوي للموظف" icon="&#xE8D2;" url="/faces/views/remRegisterEmployee/remRegisterEmployeeForm.xhtml" 
-                                                 rendered="#{userData.userScreens['remRegisterEmployee'].view or userData.isAdmin}"
+                                                rendered="#{userData.userScreens['remRegisterEmployee'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
                                 <p:submenu id="sr_sm93" label="إدارة الخرائط" icon="&#xE8D2;"
-                                            rendered="#{userData.userScreens['map'].view 
-                                                                          
-                                                                            or userData.isAdmin}" 
+                                           rendered="#{userData.userScreens['map'].view 
+
+                                                       or userData.isAdmin}" 
                                            >
                                     <p:menuitem id="sr_lnk931" value="الخريطة" icon="&#xE8D2;" url="/faces/views/map/map.xhtml"
-                                                 rendered="#{userData.userScreens['map'].view or userData.isAdmin}"
+                                                rendered="#{userData.userScreens['map'].view or userData.isAdmin}"
                                                 />  
                                 </p:submenu>
                                 <p:submenu id="sr_sm94" label="التقارير" icon="&#xE8D2;"
-                                             rendered="#{userData.userScreens['remReport'].view 
-                                                                          
-                                                                            or userData.isAdmin}" 
+                                           rendered="#{userData.userScreens['remReport'].view 
+
+                                                       or userData.isAdmin}" 
                                            >
                                     <p:menuitem id="sr_lnk941" value="مسار الاتوبيس" icon="&#xE8D2;" url="/faces/views/remReport/busesFollowReport.xhtml"
-                                                 rendered="#{userData.userScreens['remReport'].view or userData.isAdmin}"
+                                                rendered="#{userData.userScreens['remReport'].view or userData.isAdmin}"
                                                 />  
                                     <p:menuitem id="sr_lnk942" value="عدد الركاب" icon="&#xE8D2;" url="/faces/views/remReport/registerEmployeeNumber.xhtml"
-                                                 rendered="#{userData.userScreens['remReport'].view or userData.isAdmin}"
+                                                rendered="#{userData.userScreens['remReport'].view or userData.isAdmin}"
                                                 />  
                                 </p:submenu>
                             </p:submenu>
-                           
+
+
+                            <p:submenu id="sr_sm1678556" label="الدكتره " icon="&#xE8D2;"
+                                       rendered="#{userData.userScreens['teacherQuestions'].view 
+                                                   or userData.userScreens['studentPeriodOrder'].view 
+                                                   or userData.isAdmin}">
+                                <p:menuitem id="sr_lnk942433" value="تفعيل الطلبه " icon="&#xE8D2;" url="/faces/views/studentPeriodOrder/studentPeriodOrderForm.xhtml"
+                                            rendered="#{userData.userScreens['studentPeriodOrder'].view or userData.isAdmin}"
+                                            />    
+                                <p:menuitem id="sr_lnk942455633" value="الاساله الشائعه " icon="&#xE8D2;" url="/faces/views/teacherQuestions/teacherQuestionsList.xhtml"
+                                            rendered="#{userData.userScreens['teacherQuestions'].view or userData.isAdmin}"
+                                            />    
+
+                            </p:submenu>
+
+
                         </pm:menu>
                     </h:form>
                 </div>

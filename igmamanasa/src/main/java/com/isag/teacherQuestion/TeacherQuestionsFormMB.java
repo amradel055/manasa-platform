@@ -5,7 +5,9 @@
  */
 package com.isag.teacherQuestion;
 
+import com.isag.businessservice.MaterialsService;
 import com.isag.businessservice.QuestionCommonService;
+import com.isag.dto.MaterialsDTO;
 import com.isag.dto.QuestionAnswerDetailDTO;
 import com.isag.dto.QuestionCommonDTO;
 import javax.ejb.EJB;
@@ -14,6 +16,9 @@ import javax.inject.Named;
 import com.isag.isag.BaseFormBean;
 import com.isag.test.Message;
 import com.isag.uploadfile.FileUploadController;
+import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
 
@@ -25,7 +30,10 @@ import org.primefaces.model.StreamedContent;
 @ViewScoped
 public class TeacherQuestionsFormMB extends BaseFormBean {
 
+    private List<MaterialsDTO> materialsDTOList;
     private QuestionCommonDTO questionCommonDTO;
+    private QuestionAnswerDetailDTO questionAnswerDetailDTOSelected;
+
     private Message messageBean;
     private FileUploadEvent fileUploadEvent;
     private String uploadedImage;
@@ -35,9 +43,15 @@ public class TeacherQuestionsFormMB extends BaseFormBean {
     private String fileName;
     private StreamedContent image;
     private boolean exitBoolean = Boolean.FALSE;
+    
+        private String host;
+
 
     @EJB
     QuestionCommonService questionCommonService;
+
+    @EJB
+    MaterialsService materialsService;
 
     public void upload(FileUploadEvent event) {
         try {
@@ -53,17 +67,43 @@ public class TeacherQuestionsFormMB extends BaseFormBean {
         }
     }
 
+    public void upload2(FileUploadEvent event) {
+        try {
+            setFileUploadEvent(event);
+            setUploadedImage(getFileUploadController().upload(event));
+            setShowImage((getUploadedImage() != null) ? getFileUploadController().getDestination().concat(getUploadedImage()) : getFileUploadController().getDestination().concat("1.png"));
+            setFileName(getUploadedImage());
+            setImageName(getFileName());
+//            for (QuestionAnswerDetailDTO questionAnswerDetailDTO : getQuestionCommonDTO().getQuestionAnswerDTO().getAnswerDetailDTOList()) {
+            getQuestionAnswerDetailDTOSelected().setImage(getFileName());
+//            setImage(getMessageBean().findGraphicImage(getFileName()));
+            
+
+//            }
+        } catch (Exception e) {
+            saveError(e, "BranchFormBean", "upload");
+        }
+    }
+
     public void addAnswerDetail() {
         try {
-            if (getQuestionCommonDTO().getQuestionAnswerDTO() != null && getQuestionCommonDTO().getQuestionAnswerDTO().getId() != null) {
+            if (getQuestionCommonDTO().getQuestionAnswerDTO() != null && getQuestionCommonDTO().getQuestionAnswerDTO().getId() == null) {
                 setExitBoolean((boolean) Boolean.TRUE);
                 QuestionAnswerDetailDTO questionAnswerDetailDTO = new QuestionAnswerDetailDTO();
                 questionAnswerDetailDTO.setMarkEdit(Boolean.TRUE);
-                questionAnswerDetailDTO.setQuestionAnswerId(getQuestionCommonDTO().getQuestionAnswerDTO().getId());
                 questionCommonDTO.getQuestionAnswerDTO().getAnswerDetailDTOList().add(0, questionAnswerDetailDTO);
             }
         } catch (Exception e) {
             saveError(e, "answer", "add");
+        }
+    }
+
+    public void reset() {
+        try {
+            setQuestionCommonDTO(new QuestionCommonDTO());
+
+        } catch (Exception e) {
+            saveError(e, "QuestionForm", "reset");
         }
     }
 
@@ -77,13 +117,37 @@ public class TeacherQuestionsFormMB extends BaseFormBean {
     }
 
     @Override
+    @PostConstruct
     public void init() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        load();
+
     }
 
     @Override
     public void load() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+
+            if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("AddTeachersQuestions")) {
+                reset();
+
+            } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("EditTeacherQuestions")) {
+                Integer questionSelected = ((Integer) getContext().getSessionMap().get("teachersDTOSelected"));
+                setEditedQuestionsValues(questionSelected);
+
+            }
+
+        } catch (Exception e) {
+            saveError(e, "InvGroupFormBean", "init");
+        }
+
+    }
+
+    public void setEditedQuestionsValues(Integer id) {
+        try {
+            setQuestionCommonDTO(questionCommonService.findDto(id));
+        } catch (Exception e) {
+            saveError(e, "question", "setEdit");
+        }
     }
 
     @Override
@@ -233,6 +297,57 @@ public class TeacherQuestionsFormMB extends BaseFormBean {
      */
     public void setExitBoolean(boolean exitBoolean) {
         this.exitBoolean = exitBoolean;
+    }
+
+    /**
+     * @return the materialsDTOList
+     */
+    public List<MaterialsDTO> getMaterialsDTOList() {
+        if (materialsDTOList == null) {
+            setMaterialsDTOList(materialsService.findMaterialsByTeacher(getUserData().getUser().getId()));
+        }
+        return materialsDTOList;
+    }
+
+    /**
+     * @param materialsDTOList the materialsDTOList to set
+     */
+    public void setMaterialsDTOList(List<MaterialsDTO> materialsDTOList) {
+        this.materialsDTOList = materialsDTOList;
+    }
+
+    /**
+     * @return the questionAnswerDetailDTOSelected
+     */
+    public QuestionAnswerDetailDTO getQuestionAnswerDetailDTOSelected() {
+        if (questionAnswerDetailDTOSelected == null) {
+            setQuestionAnswerDetailDTOSelected(new QuestionAnswerDetailDTO());
+        }
+        return questionAnswerDetailDTOSelected;
+    }
+
+    /**
+     * @param questionAnswerDetailDTOSelected the
+     * questionAnswerDetailDTOSelected to set
+     */
+    public void setQuestionAnswerDetailDTOSelected(QuestionAnswerDetailDTO questionAnswerDetailDTOSelected) {
+        this.questionAnswerDetailDTOSelected = questionAnswerDetailDTOSelected;
+    }
+    
+        /**
+     * @return the host
+     */
+    public String getHost() {
+        HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
+        setHost(request.getRequestURL().substring(0, request.getRequestURL().indexOf("faces/")).concat("images/"));
+        return host;
+    }
+
+    /**
+     * @param host the host to set
+     */
+    public void setHost(String host) {
+        this.host = host;
     }
 
 }
