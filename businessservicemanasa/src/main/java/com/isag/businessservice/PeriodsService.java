@@ -22,10 +22,12 @@ public interface PeriodsService {
     public List<PeriodsDTO> findPeriods(Integer branchId);
 
     public PeriodsDTO save(PeriodsDTO periodsDTO, IgmaUser isagUser);
-
-    public void deletePeriods(PeriodsDTO periodsDTO);
+    
+     public void savePeriods(PeriodsDTO periodsDTO , IgmaUser igmaUser)  ;
 
     public void deletePeriods(Integer periodsDTO);
 
     public List<PeriodsDTO> findPeriodsByMaterialId(Integer materialId);
+    
+      public PeriodsDTO findPeriodsById(Integer periodsId) ;
 }

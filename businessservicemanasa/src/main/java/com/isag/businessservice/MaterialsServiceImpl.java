@@ -63,10 +63,22 @@ public class MaterialsServiceImpl implements MaterialsService {
 
     @Override
     public void deleteMaterials(Integer materialsDTO) {
-        Materials entity = new Materials();
-        entity.setId(materialsDTO);
+        Materials entity = dao.findEntityById(Materials.class, materialsDTO);
         dao.deleteEntity(entity);
     }
+
+    @Override
+    public MaterialsDTO findMaterialDTO(Integer materialsDTO) {
+        Materials entity = dao.findEntityById(Materials.class, materialsDTO);
+        return mapTODTO(entity);
+    }
+
+    @Override
+    public void saveMaterial(MaterialsDTO materialsDTO, IgmaUser igmaUser) {
+        Materials entity = mapToEntity(materialsDTO, igmaUser, null);
+        dao.updateEntity(entity);
+    }
+
 
     @Override
     public MaterialsDTO save(MaterialsDTO materialsDTO, IgmaUser isagUser) {
@@ -97,7 +109,6 @@ public class MaterialsServiceImpl implements MaterialsService {
             return msg;
         }
     }
-
     private List<MaterialsDTO> returnListDTO(List<Materials> list) {
         List<MaterialsDTO> dTOList = new ArrayList<>();
         for (Materials entity : list) {
@@ -118,10 +129,12 @@ public class MaterialsServiceImpl implements MaterialsService {
         dTO.setId(entity.getId());
         dTO.setName(entity.getName());
         dTO.setStageId(entity.getStageId() != null ? entity.getStageId().getId() : null);
+        dTO.setStageName(entity.getStageId() != null ? entity.getStageId().getName() : null);
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
-        dTO.setCreatedBy(entity.getCreatedBy().getId());
+        dTO.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
         dTO.setBranchId(entity.getBranchId() != null ? entity.getBranchId().getId() : null);
+        dTO.setTeacherId(entity.getTeacherId() != null ? entity.getTeacherId().getId() : null);
 
         return dTO;
     }
@@ -135,9 +148,8 @@ public class MaterialsServiceImpl implements MaterialsService {
         entity.setName(dTO.getName());
 
         if (dTO.getId() == null) {
-
             entity.setCreatedBy(isagUser);
-            entity.setBranchId(isagUser.getBranchId());
+            entity.setTeacherId(isagUser);
             entity.setCreationDate(new Date());
         } else {
             entity.setId(dTO.getId());
@@ -150,13 +162,15 @@ public class MaterialsServiceImpl implements MaterialsService {
             entity.setStageId(schoolStagesGuide);
         }
 
-        entity.setBranchId(isagUser.getBranchId());
+        Branch branch = new Branch() ;
+        branch.setId(232);
+        entity.setBranchId(branch);
         entity.setCompanyId(isagUser.getCompanyId());
         return entity;
     }
 
     @Override
-    public List<MaterialsDTO> findMaterialsABI(Integer teacherId , Integer stageId) {
+    public List<MaterialsDTO> findMaterialsABI(Integer teacherId, Integer stageId) {
         Map<String, Object> params = new HashMap<>();
         params.put("teacherId", teacherId);
         params.put("stageId", stageId);

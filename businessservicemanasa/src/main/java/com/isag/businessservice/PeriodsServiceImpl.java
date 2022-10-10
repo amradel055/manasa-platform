@@ -52,9 +52,8 @@ public class PeriodsServiceImpl implements PeriodsService {
 //        }
         return returnListDTO(list);
     }
-    
-    
-        @Override
+
+    @Override
     public List<PeriodsDTO> findPeriodsByMaterialId(Integer materialId) {
         Map<String, Object> params = new HashMap<>();
         params.put("materialId", materialId);
@@ -76,21 +75,27 @@ public class PeriodsServiceImpl implements PeriodsService {
     }
 
     @Override
-    public void deletePeriods(PeriodsDTO periodsDTO) {
-        Periods entity = new Periods();
-        entity.setId(periodsDTO.getId());
-        dao.deleteEntity(entity);
+    public PeriodsDTO findPeriodsById(Integer periodsId) {
+        Periods periods = dao.findEntityById(Periods.class, periodsId);
+        return mapTODTO(periods);
     }
 
     @Override
     public void deletePeriods(Integer periodsDTO) {
-        Periods entity = new Periods();
-        entity.setId(periodsDTO);
+        Periods entity = dao.findEntityById(Periods.class, periodsDTO);
+
         dao.deleteEntity(entity);
     }
 
     @Override
-    public PeriodsDTO save(PeriodsDTO periodsDTO, IgmaUser isagUser) {
+    public void savePeriods(PeriodsDTO periodsDTO, IgmaUser igmaUser) {
+        Periods entity = mapToEntity(periodsDTO, igmaUser, null);
+        dao.updateEntity(entity);
+
+    }
+
+    @Override
+    public PeriodsDTO save(PeriodsDTO periodsDTO, IgmaUser igmaUser) {
         PeriodsDTO msg = new PeriodsDTO();
         Periods periods = null;
         if (periodsDTO.getId() != null) {
@@ -100,18 +105,18 @@ public class PeriodsServiceImpl implements PeriodsService {
                 && periodsDTO.getBranchId() != null
                 && periodsDTO.getCompanyId() != null
                 && periodsDTO.getName() != null) {
-            if (isagUser == null) {
-                isagUser = new IgmaUser();
-                isagUser.setId(61);
+            if (igmaUser == null) {
+                igmaUser = new IgmaUser();
+                igmaUser.setId(61);
                 Branch branch = new Branch();
                 branch.setId(periodsDTO.getBranchId());
-                isagUser.setBranchId(branch);
+                igmaUser.setBranchId(branch);
                 IgmaCompany isagCompany = new IgmaCompany();
                 isagCompany.setId(periodsDTO.getCompanyId());
-                isagUser.setCompanyId(isagCompany);
+                igmaUser.setCompanyId(isagCompany);
             }
             if (validatePeriods(periodsDTO)) {
-                periods = mapToEntity(periodsDTO, isagUser, periods);
+                periods = mapToEntity(periodsDTO, igmaUser, periods);
                 dao.updateEntity(periods);
                 msg.setMsg("تم الحفظ بنجاح");
                 msg.setMsgType("success");
@@ -127,7 +132,6 @@ public class PeriodsServiceImpl implements PeriodsService {
             return msg;
         }
     }
-
     private List<PeriodsDTO> returnListDTO(List<Periods> list) {
         List<PeriodsDTO> dTOList = new ArrayList<>();
         for (Periods entity : list) {
@@ -147,21 +151,21 @@ public class PeriodsServiceImpl implements PeriodsService {
         PeriodsDTO dTO = new PeriodsDTO();
         dTO.setId(entity.getId());
         dTO.setName(entity.getName());
-        dTO.setParent(entity.getId());
-        dTO.setMaterialId(entity.getMaterialId().getId());
-
+        dTO.setParent(entity.getParentPeriod() != null ? entity.getParentPeriod().getId() : null);
+        dTO.setMaterialId(entity.getMaterialId() != null ? entity.getMaterialId().getId() : null);
+        dTO.setMaterialName(entity.getMaterialId() != null ? entity.getMaterialId().getName() : null);
         if (entity.getTeacherId() != null) {
-            dTO.setTeacherId(entity.getTeacherId().getId());
+            dTO.setTeacherId(entity.getTeacherId() != null ? entity.getTeacherId().getId() : null);
         }
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
-        dTO.setCreatedBy(entity.getCreatedBy().getId());
-        dTO.setBranchId(entity.getBranchId().getId());
+        dTO.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
+        dTO.setBranchId(entity.getBranchId() != null ? entity.getBranchId().getId() : null);
 
         return dTO;
     }
 
-    private Periods mapToEntity(PeriodsDTO dTO, IgmaUser isagUser, Periods entity) {
+    private Periods mapToEntity(PeriodsDTO dTO, IgmaUser igmaUser, Periods entity) {
         if (entity == null) {
             entity = new Periods();
         }
@@ -175,31 +179,31 @@ public class PeriodsServiceImpl implements PeriodsService {
             entity.setParentPeriod(periods);
         }
 
-        if (dTO.getTeacherId() != null) {
-            IgmaUser igmaUser = new IgmaUser();
-            igmaUser.setId(dTO.getTeacherId());
-            entity.setTeacherId(igmaUser);
+        if (igmaUser.getId() != null) {
+            IgmaUser igmaUser1 = new IgmaUser();
+            igmaUser1.setId(igmaUser.getId());
+            entity.setTeacherId(igmaUser1);
         }
 
         if (dTO.getId() == null) {
-
-            entity.setCreatedBy(isagUser);
-            entity.setBranchId(isagUser.getBranchId());
+            entity.setCreatedBy(igmaUser);
             entity.setCreationDate(new Date());
         } else {
             entity.setId(dTO.getId());
             entity.setModificationDate(new Date());
-            entity.setModifiedBy(isagUser);
+            entity.setModifiedBy(igmaUser);
         }
-        if(dTO.getMaterialId() != null){
-            Materials materials = new Materials() ;
+        if (dTO.getMaterialId() != null) {
+            Materials materials = new Materials();
             materials.setId(dTO.getMaterialId());
             entity.setMaterialId(materials);
-        
+
         }
 
-        entity.setBranchId(isagUser.getBranchId());
-        entity.setCompanyId(isagUser.getCompanyId());
+        Branch branch = new Branch();
+        branch.setId(232);
+        entity.setBranchId(branch);
+        entity.setCompanyId(igmaUser.getCompanyId());
         return entity;
     }
 
