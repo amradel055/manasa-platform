@@ -1,0 +1,205 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+
+        <h:form id="form" dir="#{userData.dir}">
+            <p:fieldset id="whole" legend="تسجيل الدرس " style="margin-bottom:30px; margin-right: 30px">
+
+                <div class="col-xs-12">
+                    <p:messages autoUpdate="true"  id="msg" showDetail="true" closable="true" />
+                </div>
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 36%!important" id="nameAr76" value="#{lessonFormMB.lessonDTO.lessonName}" >
+                                    </p:inputText>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px" value="اسم الدرس " />
+
+                                </div>
+                            </div>
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 36%!important" id="nameAr76554" value="#{lessonFormMB.lessonDTO.lessonDescription}" >
+                                    </p:inputText>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px" value="شرح للدرس " />
+
+                                </div>
+                            </div>
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectOneMenu style="width: 75%"  id="lessonType" 
+                                                     value="#{lessonFormMB.lessonDTO.lessonType}"
+                                                     >
+                                        <f:selectItem itemLabel="choose" itemValue="" />
+                                        <f:selectItem itemLabel="مجاني" itemValue="0" />
+                                        <f:selectItem itemLabel="مدفوع" itemValue="1" />
+
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px" value="نوع الدرس" />
+
+                                </div>
+                            </div>
+
+
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectOneMenu style="width: 75%"  id="stage11" 
+                                                     value="#{lessonFormMB.lessonDTO.schoolStagesGuideId}"
+                                                     converter="#{lessonFormMB.schoolStagesGuideDTOConverter}"
+                                                     >
+                                        <p:ajax listener="#{lessonFormMB.fillMaterialList()}" update="@form" />
+                                        <f:selectItem itemLabel="choose" itemValue="" />
+                                        <f:selectItems value="#{lessonFormMB.schoolStagesGuideDTOList}" var="stage11" itemLabel="#{stage11.name}" itemValue="#{stage11}" />
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px" value="اختر المرحلة " />
+
+                                </div>
+                            </div>
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectOneMenu style="width: 75%"  id="material12" 
+                                                     value="#{lessonFormMB.lessonDTO.materialId}"
+                                                     >
+                                        <p:ajax listener="#{lessonFormMB.fillParentList()}" update="@form" />
+
+                                        <f:selectItem itemLabel="choose" itemValue="" />
+                                        <f:selectItems value="#{lessonFormMB.materialsDTOList}" var="material" itemLabel="#{material.name}" itemValue="#{material.id}" />
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px" value="اختر المادة " />
+
+                                </div>
+                            </div>
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectOneMenu style="width: 75%"  id="parent333" 
+                                                     value="#{lessonFormMB.lessonDTO.periodId}"
+                                                     >
+                                        <f:selectItem itemLabel="choose" itemValue="" />
+                                        <f:selectItems value="#{lessonFormMB.periodsDTOList}" var="parent" itemLabel="#{parent.name}" itemValue="#{parent.id}" />
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px" value="اختر الفترات  " />
+
+                                </div>
+                            </div>
+
+
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:graphicImage url="#{lessonFormMB.host.concat(lessonFormMB.lessonDTO.image)}" library="demo"  style="max-width:80%;max-height:80%;object-fit: cover !important;"/>
+                                </div>
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="صورة الدرس"/>
+                                </div>  
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+                <p:fieldset id="whole4" legend="الصورة" style="margin-bottom:20px; margin-right: 30px">
+
+                    <div class="ui-g-12 ui-xl-12">
+                        <p:fileUpload style="width: 37%;margin-right: 28%; margin-top: -5%;" id="logo"                                          
+                                      label="#{userData.userDDs['CHOOSE']} "
+                                      dragDropSupport="true"  
+                                      cancelLabel="#{userData.userDDs['CANCEL']}" 
+                                      uploadLabel="#{userData.userDDs['UPLOAD']}"  
+                                      fileUploadListener="#{lessonFormMB.upload}"
+                                      mode="advanced" 
+                                      update="@form"
+                                      allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|txt)$/"
+                                      />
+                        <p:message for="logo"/>
+                    </div>
+
+                    <div class="ui-g-12 ui-xl-12">
+                        <p:graphicImage value="#{lessonFormMB.lessonDTO.image}" />
+                    </div>
+
+
+
+
+
+                </p:fieldset>
+
+
+
+
+                <h:panelGrid  styleClass="centerButtons col-md-12"  columns="1" >
+
+                    <h:panelGroup > 
+
+                        <p:commandButton  class="saveButton"  
+                                          id="saveB" 
+                                          title="#{userData.userDDs['SAVE']}"
+                                          value="#{userData.userDDs['SAVE']}" 
+                                          style=""
+                                          action="#{lessonFormMB.save()}" 
+                                          update="@form"/>
+
+                        <p:commandButton  class="newButton" 
+                                          id="newN"
+                                          update="@form"
+                                          ajax="false"
+                                          style=""
+                                          value="#{userData.userDDs['NEW']}" 
+                                          title="#{userData.userDDs['NEW']}"
+                                          onclick="form.target = ''" 
+                                          actionListener="#{lessonFormMB.reset()}"/>
+
+                        <p:commandButton class="closeButton" 
+                                         title="#{userData.userDDs['BACK']}" 
+                                         immediate="true" 
+                                         value="#{userData.userDDs['BACK']}" 
+                                         style="" 
+                                         action="#{lessonFormMB.exit()}"   />
+
+                    </h:panelGroup> 
+
+
+
+                </h:panelGrid>
+
+
+
+
+
+
+
+            </p:fieldset>        
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>

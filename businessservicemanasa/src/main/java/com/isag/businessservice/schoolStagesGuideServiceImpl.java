@@ -119,4 +119,15 @@ public class schoolStagesGuideServiceImpl implements SchoolStagesGuideService {
         return entity;
     }
     
+    @Override
+    public List<SchoolStagesGuideDTO> findStage(Integer materialId) {
+        List<SchoolStagesGuide> schoolStagesGuide = new ArrayList<>();
+        Map<String, Object> params = new HashMap<>();
+        params.put("materialId", materialId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d.stageId FROM Materials d WHERE d.id = :materialId  ");
+        schoolStagesGuide = dao.findListByQuery(builder.toString(), params);
+        return returnListDTO(schoolStagesGuide);
+    }
+    
 }

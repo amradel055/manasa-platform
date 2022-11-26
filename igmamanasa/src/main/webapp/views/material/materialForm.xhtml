@@ -21,7 +21,7 @@
                             
                              <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 36%!important" id="nameAr76" value="#{periodsFormMB.materialsDTO.name}" >
+                                    <p:inputText style="width: 36%!important" id="nameAr76" value="#{materialsFormMB.materialsDTO.name}" >
                                     </p:inputText>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -33,10 +33,10 @@
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:selectOneMenu style="width: 75%"  id="stage11" 
-                                                     value="#{periodsFormMB.materialsDTO.stageId}"
+                                                     value="#{materialsFormMB.materialsDTO.stageId}"
                                                      >
                                         <f:selectItem itemLabel="choose" itemValue="" />
-                                        <f:selectItems value="#{periodsFormMB.schoolStagesGuideDTOList}" var="stage11" itemLabel="#{stage11.name}" itemValue="#{stage11.id}" />
+                                        <f:selectItems value="#{materialsFormMB.schoolStagesGuideDTOList}" var="stage11" itemLabel="#{stage11.name}" itemValue="#{stage11.id}" />
                                     </p:selectOneMenu>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -60,7 +60,7 @@
                                           title="#{userData.userDDs['SAVE']}"
                                           value="#{userData.userDDs['SAVE']}" 
                                           style=""
-                                          action="#{periodsFormMB.save()}" 
+                                          action="#{materialsFormMB.save()}" 
                                           update="@form"/>
 
                         <p:commandButton  class="newButton" 
@@ -71,14 +71,14 @@
                                           value="#{userData.userDDs['NEW']}" 
                                           title="#{userData.userDDs['NEW']}"
                                           onclick="form.target = ''" 
-                                          actionListener="#{periodsFormMB.reset()}"/>
+                                          actionListener="#{materialsFormMB.reset()}"/>
 
                         <p:commandButton class="closeButton" 
                                          title="#{userData.userDDs['BACK']}" 
                                          immediate="true" 
                                          value="#{userData.userDDs['BACK']}" 
                                          style="" 
-                                         action="#{periodsFormMB.exit()}"   />
+                                         action="#{materialsFormMB.exit()}"   />
 
                     </h:panelGroup> 
 

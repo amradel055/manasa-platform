@@ -7,6 +7,7 @@ package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
 import com.isag.dto.PeriodsDTO;
+import com.isag.dto.SchoolStagesGuideDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
 import com.isag.entity.IgmaUser;
@@ -29,6 +30,9 @@ public class PeriodsServiceImpl implements PeriodsService {
 
     @EJB
     private GenericDAO dao;
+
+    @EJB
+    private SchoolStagesGuideService schoolStagesGuideService;
 
     @Override
     public List<PeriodsDTO> findPeriods(Integer branchId) {
@@ -132,6 +136,7 @@ public class PeriodsServiceImpl implements PeriodsService {
             return msg;
         }
     }
+
     private List<PeriodsDTO> returnListDTO(List<Periods> list) {
         List<PeriodsDTO> dTOList = new ArrayList<>();
         for (Periods entity : list) {
@@ -152,7 +157,15 @@ public class PeriodsServiceImpl implements PeriodsService {
         dTO.setId(entity.getId());
         dTO.setName(entity.getName());
         dTO.setParent(entity.getParentPeriod() != null ? entity.getParentPeriod().getId() : null);
+        dTO.setParentName(entity.getParentPeriod() != null ? entity.getParentPeriod().getName() : null);
         dTO.setMaterialId(entity.getMaterialId() != null ? entity.getMaterialId().getId() : null);
+
+        if (entity.getMaterialId() != null) {
+            List <SchoolStagesGuideDTO> schoolStagesGuide = schoolStagesGuideService.findStage(entity.getMaterialId().getId());
+            dTO.setSchoolStagesGuideDTO(schoolStagesGuide.get(0));
+
+        }
+
         dTO.setMaterialName(entity.getMaterialId() != null ? entity.getMaterialId().getName() : null);
         if (entity.getTeacherId() != null) {
             dTO.setTeacherId(entity.getTeacherId() != null ? entity.getTeacherId().getId() : null);

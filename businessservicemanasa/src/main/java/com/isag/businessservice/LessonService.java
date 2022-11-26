@@ -25,9 +25,9 @@ public interface LessonService {
 
     public List<LessonDTO> findAllLessonsByBranchId(Integer branchId);
 
-    public List<LessonDTO> findAllLessonsByTeacher(Integer branchId, Integer companyId, Integer teacherId, 
+    public List<LessonDTO> findAllLessonsByTeacher(Integer branchId, Integer companyId, Integer teacherId,
             Integer materialId, Integer schoolStageId, Integer id, Integer periodId, Integer studentId);
-    
+
     public List<LessonDTO> findAllLessonsByStudent(Integer branchId, Integer companyId, Integer teacherId,
             Integer materialId, Integer schoolStageId, Integer id, Integer periodId, Integer studentId);
 
@@ -36,4 +36,8 @@ public interface LessonService {
     public void deleteLesson(Integer lessonDTO);
 
     public LessonDTO save(LessonDTO lessonDTO, IgmaUser isagUser);
+
+    public LessonDTO findLessonById(Integer lessonId);
+
+    public List<LessonDTO> findLessonByTeacherId(Integer teacherId);
 }

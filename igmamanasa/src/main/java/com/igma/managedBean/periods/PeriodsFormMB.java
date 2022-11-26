@@ -75,6 +75,10 @@ public class PeriodsFormMB extends BaseFormBean {
             try {
                 Integer studenPeriodId = (Integer) getContext().getSessionMap().get("periodsSelected");
                 setPeriodsDTO(periodsService.findPeriodsById(studenPeriodId));
+                setSchoolStagesGuideDTO(getPeriodsDTO().getSchoolStagesGuideDTO());
+                fillMaterialList();
+                fillParentList();
+                
             } catch (Exception e) {
                 e.printStackTrace();
             }

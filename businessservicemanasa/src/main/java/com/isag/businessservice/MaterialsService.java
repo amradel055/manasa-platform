@@ -10,6 +10,7 @@ import com.isag.entity.IgmaUser;
 import java.util.List;
 import javax.ejb.Remote;
 
+
 /**
  *
  * @author hq003
@@ -32,4 +33,6 @@ public interface MaterialsService {
     public MaterialsDTO findMaterialDTO(Integer materialsDTO);
 
     public void saveMaterial(MaterialsDTO materialsDTO, IgmaUser igmaUser);
+    
+    
 }

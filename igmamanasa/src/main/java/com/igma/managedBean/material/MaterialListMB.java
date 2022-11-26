@@ -68,7 +68,7 @@ public class MaterialListMB extends BaseListBean {
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
                 context.getSessionMap().put("materialsSelected", getMaterialsDTOSelected());
                 context.getSessionMap().put("ScreenMode", "EditMaterials");
-                exit("../materials/materialsForm.xhtml");
+                exit("../material/materialForm.xhtml");
                 return "";
             } else {
                 return "";

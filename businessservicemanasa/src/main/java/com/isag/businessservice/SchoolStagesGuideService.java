@@ -19,5 +19,7 @@ public interface SchoolStagesGuideService {
     public List<SchoolStagesGuideDTO> findschoolStagesGuide(Integer branchId);
 
     public List<SchoolStagesGuideDTO> findschoolStagesGuideByTeacherId(Integer teacherId);
+    
+      public List<SchoolStagesGuideDTO> findStage(Integer materialId) ;
 
 }

@@ -9,10 +9,11 @@ public class PeriodsDTO extends BaseEntityDTO {
 
     private String name;
     private Integer teacherId;
+    private SchoolStagesGuideDTO schoolStagesGuideDTO;
     private Integer materialId;
     private String materialName;
-
     private Integer parent;
+    private String parentName;
 
     public PeriodsDTO() {
     }
@@ -49,9 +50,14 @@ public class PeriodsDTO extends BaseEntityDTO {
         return true;
     }
 
-    @Override
+//    @Override
+//    public String toString() {
+//        return "com.mycompany.mavenproject1.Periods[ id=" + id + " ]";
+//    }
+    
+     @Override
     public String toString() {
-        return "com.mycompany.mavenproject1.Periods[ id=" + id + " ]";
+        return teacherId + " " + materialId + " " + parent + " " ;
     }
 
     /**
@@ -109,5 +115,35 @@ public class PeriodsDTO extends BaseEntityDTO {
     public void setMaterialName(String materialName) {
         this.materialName = materialName;
     }
+
+    /**
+     * @return the parentName
+     */
+    public String getParentName() {
+        return parentName;
+    }
+
+    /**
+     * @param parentName the parentName to set
+     */
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
+    /**
+     * @return the schoolStagesGuideDTO
+     */
+    public SchoolStagesGuideDTO getSchoolStagesGuideDTO() {
+        return schoolStagesGuideDTO;
+    }
+
+    /**
+     * @param schoolStagesGuideDTO the schoolStagesGuideDTO to set
+     */
+    public void setSchoolStagesGuideDTO(SchoolStagesGuideDTO schoolStagesGuideDTO) {
+        this.schoolStagesGuideDTO = schoolStagesGuideDTO;
+    }
+
+  
 
 }

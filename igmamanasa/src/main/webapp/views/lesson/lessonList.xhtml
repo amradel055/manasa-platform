@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <h:form id="question" dir="#{userData.dir}"  styleClass='formmargin'>
+
+            <p:fieldset legend="الدروس " style="margin-bottom:20px">
+
+                <p:dataTable 
+                    draggableColumns="true" 
+                    draggableRows="true"
+                    var="lesson" 
+                    widgetVar="lesson"  
+                    rowIndexVar="index" 
+                    value="#{lessonListMB.lessonDTOList}"
+                    rows="#{userData.rowListCount}" 
+                    paginator="true" 
+                    selection="#{lessonListMB.lessonDTOSelected}"
+                    rowKey="#{lesson.index}"
+                    sortBy="#{1}"
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                    id="lesson">
+                    <f:facet name="header">
+                        <p:commandButton  styleClass="saddButton" style="float:right" icon="fa fa-plus" title="#{userData.userDDs['ADD']}" action="#{lessonListMB.goToAdd()}" 
+                                          />
+
+                        <p:outputPanel  >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('lesson').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column headerText="#" style="width: 6vh;font-size: 1.8vh;text-align:right;border-radius: 0px;border-radius: 0px;">
+                        <h:outputText value="#{index + 1}"  style="font-size: 1.5vh" />
+                    </p:column>
+
+
+                    <p:column style="text-align: right;font-size: 15px;border-radius: 0px"  
+                              filterStyle="display:none" filterBy="#{lesson.lessonName}"  
+                              filterMatchMode="contains" headerText="اسم الدرس " sortBy="#{lesson.lessonName}">
+                        <p:outputLabel value="#{lesson.lessonName}" />
+                    </p:column>
+
+                    <p:column style="text-align: right;font-size: 15px;border-radius: 0px"  
+                              filterStyle="display:none" filterBy="#{lesson.schoolStagesName}"  
+                              filterMatchMode="contains" headerText="اسم المرحلة" sortBy="#{lesson.schoolStagesName}">
+                        <p:outputLabel value="#{lesson.schoolStagesName}" />
+                    </p:column>
+
+                    <p:column style="text-align: right;font-size: 15px;border-radius: 0px"  
+                              filterStyle="display:none" filterBy="#{lesson.materialId}"  
+                              filterMatchMode="contains" headerText="اسم الماده" sortBy="#{lesson.materialId}">
+                        <p:outputLabel value="#{lesson.materialId}" />
+                    </p:column>
+
+                    <p:column style="text-align: right;font-size: 15px;border-radius: 0px"  
+                              filterStyle="display:none" filterBy="#{lesson.periodId}"  
+                              filterMatchMode="contains" headerText="اسم الفترة" sortBy="#{lesson.periodId}">
+                        <p:outputLabel value="#{lesson.periodId}" />
+                    </p:column>
+
+                    <p:column style="text-align: right;font-size: 15px;border-radius: 0px"  
+                              headerText="اسم " >
+
+                        <p:graphicImage url="#{lessonListMB.host.concat(lesson.image)}" library="demo"  style="max-width:120%;max-height:140%;object-fit: fill"/>
+
+
+                    </p:column>
+
+                    <p:column style="width:16vh;text-align: center;font-size: 15px;border-radius: 0px"  headerText="#{userData.userDDs['TRANSACTION']}">
+                        <p:commandButton update="@form" icon="fa fa-fw fa-edit"
+                                         styleClass="seditButtons" style="background-color: #6a6967;border-radius: 3px;margin-bottom:3px"
+                                         title="#{userData.userDDs['EDIT']}" action="#{lessonListMB.goToEdit()}"
+                                         >
+                            <f:setPropertyActionListener value="#{lesson.id}"  target="#{lessonListMB.lessonDTOSelected}" />
+                        </p:commandButton>
+                        <p:commandButton  styleClass="sdeleteButtons" update="question:lesson" icon="fa fa-remove" style="background-color: red;border-radius: 3px;margin-bottom:3px"   
+                                          title="#{userData.userDDs['DELETE']}"  action="#{lessonListMB.delete()}" 
+                                          >
+                            <f:setPropertyActionListener value="#{lesson}" target="#{lessonListMB.lessonDTO}" />
+                            <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

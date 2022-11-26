@@ -179,4 +179,7 @@ public class MaterialsServiceImpl implements MaterialsService {
         List<Materials> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }
+    
+    
+    
 }

@@ -33,6 +33,7 @@ public class BranchListBean extends BaseListBean implements Serializable {
     private List<Branch> branches;
     private Branch branch;
     private Integer branchselected;
+    
 
     @EJB
     private BranchService brancheService;
