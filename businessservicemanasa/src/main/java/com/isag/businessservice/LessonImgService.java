@@ -20,8 +20,14 @@ public interface LessonImgService {
     public List<String> findAllLessons(Integer lessonId);
 
     public void deleteLesson(Integer lessonId);
-    
-    public List<LessonImgDTO>  save(List<LessonImgDTO> lessonImgDTOList, IgmaUser isagUser, Integer lessonId);
-    
-    public LessonImgDTO saveList(List<String> LessonImgDTOist, Integer lessonId, Integer branchId, Integer companyId);
+
+    public List<LessonImgDTO> save(List<LessonImgDTO> lessonImgDTOList, IgmaUser isagUser, Integer lessonId);
+
+    public LessonImgDTO saveList(List<LessonImgDTO> LessonImgDTOist, Integer lessonId, Integer branchId, Integer companyId);
+
+    public List<LessonImgDTO> findlessinList(Integer lessonId);
+
+    public void deleteLessonImg(Integer id);
+
+    public void updateimage(LessonImgDTO lessonImgDTO, IgmaUser isagUser);
 }

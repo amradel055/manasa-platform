@@ -8,6 +8,8 @@ package com.isag.businessservice;
 import com.isag.core.GenericDAO;
 import com.isag.dto.DocumentsDTO;
 import com.isag.dto.LessonDTO;
+import com.isag.dto.LessonImgDTO;
+import com.isag.dto.LessonVoiceDTO;
 import com.isag.dto.SchoolStagesGuideDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
@@ -39,6 +41,8 @@ public class LessonServiceImpl implements LessonService {
     private CommentsService commentsService;
     @EJB
     private LessonImgService lessonImgService;
+    @EJB
+    private LessonVoiceService lessonVoiceService;
 
     @EJB
     private StudentPeriodsService studentPeriodsService;
@@ -273,14 +277,20 @@ public class LessonServiceImpl implements LessonService {
                 isagCompany.setId(lessonDTO.getCompanyId());
                 isagUser.setCompanyId(isagCompany);
             }
-            List<String> documents = lessonDTO.getDocuments();
-            List<String> lessonImg = lessonDTO.getImages();
+//            List<String> documents = lessonDTO.getDocuments();
+//            List<String> lessonImg = lessonDTO.getImages();
+            List<LessonImgDTO> lessonImgDto = lessonDTO.getLessonImgDTOList();
+            List<LessonVoiceDTO> lessonVoiceDTOList = lessonDTO.getLessonVoiceDTOList();
+            List<DocumentsDTO> documentsDTOList = lessonDTO.getDocumentsDTOList();
+
             lesson = mapToEntity(lessonDTO, isagUser, lesson);
             lesson = dao.updateEntity(lesson);
             lessonDTO = mapTODTO(lesson);
-            DocumentsDTO documentsDTO = new DocumentsDTO() ;
-//                    documentsService.saveList(documents, lesson.getId(), lesson.getBranchId().getId(), lesson.getCompanyId().getId());
-//            lessonImgService.saveList(lessonImg, lesson.getId(), lesson.getBranchId().getId(), lesson.getCompanyId().getId());
+            DocumentsDTO documentsDTO = new DocumentsDTO();
+            documentsService.saveList(documentsDTOList, lesson.getId(), lesson.getBranchId().getId(), lesson.getCompanyId().getId());
+            lessonImgService.saveList(lessonImgDto, lesson.getId(), lesson.getBranchId().getId(), lesson.getCompanyId().getId());
+            lessonVoiceService.saveList(lessonVoiceDTOList, lesson.getId(), lesson.getBranchId().getId(), lesson.getCompanyId().getId());
+
             if (documentsDTO.getMsg() != null && !documentsDTO.getMsg().isEmpty()) {
                 msg.setMsg("يوجد خطأ فى بيانات المذكرات");
                 msg.setMsgType("fail");
@@ -341,10 +351,14 @@ public class LessonServiceImpl implements LessonService {
         }
 
         if (entity.getPeriodId() != null) {
-            dTO.setPeriodId(entity.getPeriodId().getId());
+            dTO.setPeriodId(entity.getPeriodId() != null ? entity.getPeriodId().getId() : null);
+            dTO.setPeriodName(entity.getPeriodId() != null ? entity.getPeriodId().getName() : null);
+
         }
         if (entity.getMaterialId() != null) {
-            dTO.setMaterialId(entity.getMaterialId().getId());
+            dTO.setMaterialId(entity.getMaterialId() != null ? entity.getMaterialId().getId() : null);
+            dTO.setMaterialName(entity.getMaterialId() != null ? entity.getMaterialId().getName(): null);
+
         }
         if (entity.getTeacherId() != null) {
             dTO.setTeacherId(entity.getTeacherId().getId());

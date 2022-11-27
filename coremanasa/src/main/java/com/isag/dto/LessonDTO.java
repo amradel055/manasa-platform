@@ -5,6 +5,7 @@
  */
 package com.isag.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,6 +17,8 @@ public class LessonDTO extends BaseEntityDTO {
     private String lessonName;
     private Integer lessonType;
     private Integer periodId;
+    private String periodName;
+
     private Integer monthId;
     private String lessonDescription;
     private String videoLink;
@@ -28,10 +31,15 @@ public class LessonDTO extends BaseEntityDTO {
     private String schoolStagesName;
     private List<String> documents;
     private Integer materialId;
+    private String materialName;
+
     private Integer teacherId;
     private Integer studentId;
     private String voiceLink;
     private List<String> images;
+    private List<LessonImgDTO> lessonImgDTOList;
+    private List<LessonVoiceDTO> lessonVoiceDTOList;
+    private List<DocumentsDTO> documentsDTOList;
 
     public LessonDTO() {
     }
@@ -280,6 +288,9 @@ public class LessonDTO extends BaseEntityDTO {
      * @return the images
      */
     public List<String> getImages() {
+        if (images == null) {
+            images = new ArrayList<>();
+        }
         return images;
     }
 
@@ -302,6 +313,85 @@ public class LessonDTO extends BaseEntityDTO {
      */
     public void setStudentId(Integer studentId) {
         this.studentId = studentId;
+    }
+
+    /**
+     * @return the lessonImgDTOList
+     */
+    public List<LessonImgDTO> getLessonImgDTOList() {
+        if (lessonImgDTOList == null) {
+            lessonImgDTOList = new ArrayList<>();
+        }
+        return lessonImgDTOList;
+    }
+
+    /**
+     * @param lessonImgDTOList the lessonImgDTOList to set
+     */
+    public void setLessonImgDTOList(List<LessonImgDTO> lessonImgDTOList) {
+        this.lessonImgDTOList = lessonImgDTOList;
+    }
+
+    /**
+     * @return the lessonVoiceDTOList
+     */
+    public List<LessonVoiceDTO> getLessonVoiceDTOList() {
+        if (lessonVoiceDTOList == null) {
+            lessonVoiceDTOList = new ArrayList<>();
+        }
+        return lessonVoiceDTOList;
+    }
+
+    /**
+     * @param lessonVoiceDTOList the lessonVoiceDTOList to set
+     */
+    public void setLessonVoiceDTOList(List<LessonVoiceDTO> lessonVoiceDTOList) {
+        this.lessonVoiceDTOList = lessonVoiceDTOList;
+    }
+
+    /**
+     * @return the documentsDTOList
+     */
+    public List<DocumentsDTO> getDocumentsDTOList() {
+        if (documentsDTOList == null) {
+            documentsDTOList = new ArrayList<>();
+        }
+        return documentsDTOList;
+    }
+
+    /**
+     * @param documentsDTOList the documentsDTOList to set
+     */
+    public void setDocumentsDTOList(List<DocumentsDTO> documentsDTOList) {
+        this.documentsDTOList = documentsDTOList;
+    }
+
+    /**
+     * @return the periodName
+     */
+    public String getPeriodName() {
+        return periodName;
+    }
+
+    /**
+     * @param periodName the periodName to set
+     */
+    public void setPeriodName(String periodName) {
+        this.periodName = periodName;
+    }
+
+    /**
+     * @return the materialName
+     */
+    public String getMaterialName() {
+        return materialName;
+    }
+
+    /**
+     * @param materialName the materialName to set
+     */
+    public void setMaterialName(String materialName) {
+        this.materialName = materialName;
     }
 
 }

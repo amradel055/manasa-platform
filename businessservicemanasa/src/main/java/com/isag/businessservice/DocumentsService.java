@@ -23,7 +23,7 @@ public interface DocumentsService {
 
     public DocumentsDTO save(DocumentsDTO documentsDTO, IgmaUser isagUser);
     
-    public DocumentsDTO saveList(List<String> documentsDTOist, Integer lessonId, Integer branchId, Integer companyId);
+    public DocumentsDTO saveList(List<DocumentsDTO> documentsDTOist, Integer lessonId, Integer branchId, Integer companyId);
 
     public void deleteDocuments(DocumentsDTO documentsDTO);
 

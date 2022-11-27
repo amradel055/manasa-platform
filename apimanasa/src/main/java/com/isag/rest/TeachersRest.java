@@ -16,6 +16,7 @@ import com.isag.dto.TeachersDTO;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.servlet.ServletContext;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -41,6 +42,8 @@ public class TeachersRest {
     IgmaUserService igmaUserService;
     @EJB
     MaterialsService materialsService;
+    @EJB
+    private ServletContext context;
 
     @Transactional
     @Path("/allTeachers")
@@ -126,6 +129,7 @@ public class TeachersRest {
         List<TeacherDataAPI> teacherDataAPI = new ArrayList<>();
         if (igmaUser.getBranchId() != null) {
             teacherDataAPI = igmaUserService.getTeacherDataAPI(igmaUser.getBranchId());
+            resItemDTO.setImgUrl(context.getContextPath().concat("/restaurantItem/itemImage/").concat(resItemDTO.getImage()));
         }
         return teacherDataAPI;
     }

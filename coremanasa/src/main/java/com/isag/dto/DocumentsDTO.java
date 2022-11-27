@@ -5,8 +5,6 @@
  */
 package com.isag.dto;
 
-import com.isag.entity.*;
-
 /**
  *
  * @author ahmed
@@ -27,10 +25,10 @@ public class DocumentsDTO extends BaseEntityDTO {
         this.link = link;
     }
 
-    @Override
+   @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (getIndex() != null ? getIndex().hashCode() : 0);
         return hash;
     }
 
@@ -41,7 +39,7 @@ public class DocumentsDTO extends BaseEntityDTO {
             return false;
         }
         DocumentsDTO other = (DocumentsDTO) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.getIndex() == null && other.getIndex() != null) || (this.getIndex() != null && !this.getIndex().equals(other.getIndex()))) {
             return false;
         }
         return true;

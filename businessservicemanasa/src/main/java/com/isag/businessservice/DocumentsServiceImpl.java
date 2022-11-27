@@ -7,7 +7,6 @@ package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
 import com.isag.dto.DocumentsDTO;
-import com.isag.dto.LessonDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
 import com.isag.entity.Documents;
@@ -85,9 +84,9 @@ public class DocumentsServiceImpl implements DocumentsService {
     }
 
     @Override
-    public DocumentsDTO saveList(List<String> documentsDTOist, Integer lessonId, Integer branchId, Integer companyId) {
+    public DocumentsDTO saveList(List<DocumentsDTO> documentsDTOist, Integer lessonId, Integer branchId, Integer companyId) {
         DocumentsDTO msg = new DocumentsDTO();
-        for (String documentsDTO : documentsDTOist) {
+        for (DocumentsDTO documentsDTO : documentsDTOist) {
             if (documentsDTO != null && lessonId != null && branchId != null && companyId != null
                     && documentsDTO != null) {
                 Documents documents = new Documents();
@@ -103,7 +102,7 @@ public class DocumentsServiceImpl implements DocumentsService {
                 isagCompany.setId(companyId);
                 documents.setCompanyId(isagCompany);
                 
-                documents.setLink(documentsDTO);
+                documents.setLink(documentsDTO.getLink());
                 Lesson lesson = new  Lesson();
                 lesson.setId(lessonId);
                 documents.setLessonId(lesson);

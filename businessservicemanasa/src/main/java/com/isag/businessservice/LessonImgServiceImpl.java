@@ -27,10 +27,10 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class LessonImgServiceImpl implements LessonImgService {
-
+    
     @EJB
     private GenericDAO dao;
-
+    
     @Override
     public List<String> findAllLessons(Integer lessonId) {
         Map<String, Object> params = new HashMap<>();
@@ -38,23 +38,38 @@ public class LessonImgServiceImpl implements LessonImgService {
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT d FROM LessonImg d WHERE d.lessonId.id = :lessonId ");
         List<LessonImg> list = dao.findListByQuery(builder.toString(), params);
-        List<String> nameList = new  ArrayList<>();
-        for(LessonImg name  : list){
+        List<String> nameList = new ArrayList<>();
+        for (LessonImg name : list) {
             nameList.add(name.getImg());
         }
         return nameList;
     }
-
+    
+    @Override
+    public List<LessonImgDTO> findlessinList(Integer lessonId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("lessonId", lessonId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM LessonImg d WHERE d.lessonId.id = :lessonId ");
+        List<LessonImg> list = dao.findListByQuery(builder.toString(), params);
+        return returnListDTO(list);
+    }
+    
     @Override
     public void deleteLesson(Integer lessonId) {
         String sql = "delete from LessonImg d where d.id > 0 AND d.lessonId.id = " + lessonId;
         dao.executeDeleteQuery(sql);
     }
     
-    
-
     @Override
-    public List<LessonImgDTO> save(List<LessonImgDTO> lessonImgDTOList, IgmaUser isagUser , Integer lessonId) {
+    public void deleteLessonImg(Integer id) {
+        LessonImg lessonImg = new LessonImg();
+        lessonImg.setId(id);
+        dao.deleteEntity(lessonImg);
+    }
+    
+    @Override
+    public List<LessonImgDTO> save(List<LessonImgDTO> lessonImgDTOList, IgmaUser isagUser, Integer lessonId) {
         List<LessonImgDTO> list = new ArrayList<>();
         deleteLesson(lessonId);
         for (LessonImgDTO lessonImgDTO : lessonImgDTOList) {
@@ -62,46 +77,47 @@ public class LessonImgServiceImpl implements LessonImgService {
         }
         return list;
     }
-
+    
     @Override
-    public LessonImgDTO saveList(List<String> LessonImgDTOist, Integer lessonId, Integer branchId, Integer companyId) {
+    public LessonImgDTO saveList(List<LessonImgDTO> LessonImgDTOist, Integer lessonId, Integer branchId, Integer companyId) {
         LessonImgDTO msg = new LessonImgDTO();
-        if(LessonImgDTOist != null && !LessonImgDTOist.isEmpty()){
-        for (String lessonImg : LessonImgDTOist) {
-            if (lessonImg != null && lessonId != null && branchId != null && companyId != null
-                    && lessonImg != null) {
-                LessonImg enity = new LessonImg();
-                Branch branch = new Branch();
-                branch.setId(branchId);
-                enity.setBranchId(branch);
-
-                IgmaUser isagUser = new IgmaUser();
-                isagUser.setId(61);
-                enity.setCreatedBy(isagUser);
-
-                IgmaCompany isagCompany = new IgmaCompany();
-                isagCompany.setId(companyId);
-                enity.setCompanyId(isagCompany);
-                
-                enity.setImg(lessonImg);
-                Lesson lesson = new  Lesson();
-                lesson.setId(lessonId);
-                enity.setLessonId(lesson);
-                
-                enity.setCreationDate(new Date());
-
-                dao.updateEntity(enity);
-            } else {
-                msg.setMsg("لا يوجد بيانات  ");
+        if (LessonImgDTOist != null && !LessonImgDTOist.isEmpty()) {
+            for (LessonImgDTO lessonImg : LessonImgDTOist) {
+                if (lessonImg != null && lessonId != null && branchId != null && companyId != null
+                        && lessonImg != null) {
+                    LessonImg enity = new LessonImg();
+                    Branch branch = new Branch();
+                    branch.setId(branchId);
+                    enity.setBranchId(branch);
+                    
+                    IgmaUser isagUser = new IgmaUser();
+                    isagUser.setId(61);
+                    enity.setCreatedBy(isagUser);
+                    
+                    IgmaCompany isagCompany = new IgmaCompany();
+                    isagCompany.setId(companyId);
+                    enity.setCompanyId(isagCompany);
+                    
+                    enity.setImg(lessonImg.getImg());
+                    Lesson lesson = new Lesson();
+                    lesson.setId(lessonId);
+                    enity.setLessonId(lesson);
+                    
+                    enity.setCreationDate(new Date());
+                    
+                    dao.updateEntity(enity);
+                } else {
+                    msg.setMsg("لا يوجد بيانات  ");
+                }
             }
-        } }
+        }
         return msg;
     }
-
+    
     public LessonImgDTO save(LessonImgDTO lessonImgDTO, IgmaUser isagUser) {
         LessonImgDTO msg = new LessonImgDTO();
         LessonImg lessonImg = null;
-
+        
         if (lessonImgDTO != null) {
             if (isagUser == null) {
                 isagUser = new IgmaUser();
@@ -125,8 +141,18 @@ public class LessonImgServiceImpl implements LessonImgService {
             return msg;
         }
     }
+    
+    public void updateimage(LessonImgDTO lessonImgDTO, IgmaUser isagUser) {
+        
+        if (lessonImgDTO != null) {
+            LessonImg lessonImg = mapToEntity(lessonImgDTO, isagUser , null);
+            LessonImg updateEntity = dao.updateEntity(lessonImg);
+        }
+    }
+    
 
-    private List<LessonImgDTO> returnListDTO(List<LessonImg> list) {
+
+private List<LessonImgDTO> returnListDTO(List<LessonImg> list) {
         List<LessonImgDTO> dTOList = new ArrayList<>();
         for (LessonImg entity : list) {
             dTOList.add(mapTODTO(entity));
