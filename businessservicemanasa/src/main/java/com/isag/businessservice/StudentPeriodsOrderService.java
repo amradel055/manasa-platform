@@ -20,7 +20,7 @@ public interface StudentPeriodsOrderService {
 
     public void save(StudentPeriodsOrderDTO studentPeriodsOrderDTO, IgmaUser isagUser);
 
-    public void delete(Integer studentPeriodId, IgmaUser igmaUser);
+    public void delete(Integer studentPeriodId);
 
     public StudentPeriodsOrderDTO findStudentPeriod(Integer studentPeriodId);
 

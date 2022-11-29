@@ -80,6 +80,7 @@ public class StudentPeriodOrderFormMB extends BaseFormBean {
     @Override
     public String save() {
         studentPeriodsOrderService.save(getStudentPeriodsOrderDTO(), getUserData().getUser());
+        searchStudentDTOList.remove(getSearchStudentDTO());
         return "";
     }
 
@@ -92,7 +93,9 @@ public class StudentPeriodOrderFormMB extends BaseFormBean {
     }
 
     public void delete() {
-        studentPeriodsOrderService.delete(getSearchStudentDTO().getId(), getUserData().getUser());
+        studentPeriodsOrderService.delete(getSearchStudentDTO().getId());
+        searchStudentDTOList.remove(getSearchStudentDTO());
+
     }
 
     @Override

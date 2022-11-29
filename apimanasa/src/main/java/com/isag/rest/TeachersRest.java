@@ -5,15 +5,11 @@
  */
 package com.isag.rest;
 
-import com.isag.api.dto.TeacherDataAPI;
 import com.isag.businessservice.IgmaUserService;
 import com.isag.businessservice.MaterialsService;
 import com.isag.businessservice.TeachersService;
 import com.isag.config.UserLoginData;
-import com.isag.dto.APIStudentDataDTO;
-import com.isag.dto.MaterialsDTO;
 import com.isag.dto.TeachersDTO;
-import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletContext;
@@ -120,30 +116,34 @@ public class TeachersRest {
         this.userLoginData = userLoginData;
     }
 
-    @Transactional
-    @Path("/findTeachers")
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public List<TeacherDataAPI> findTeachers(APIStudentDataDTO igmaUserDTOABI) {
-        List<TeacherDataAPI> teacherDataAPI = new ArrayList<>();
-        if (igmaUserDTOABI.getBranchId()!= null) {
-            teacherDataAPI = igmaUserService.getTeacherDataAPI(igmaUserDTOABI.getBranchId());
-        }
-        return teacherDataAPI;
-    }
+//    @Transactional
+//    @Path("/findTeachers")
+//    @POST
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public List<TeacherDataAPI> findTeachers(APIStudentDataDTO igmaUserDTOABI) {
+//        List<TeacherDataAPI> teacherDataAPI = new ArrayList<>();
+//        if (igmaUserDTOABI.getBranchId()!= null) {
+//            teacherDataAPI = igmaUserService.getTeacherDataAPI(igmaUserDTOABI.getBranchId());
+//        }
+//        return teacherDataAPI;
+//    }
+    
+    
+    
+    
 
-    @Transactional
-    @Path("/findMaterial")
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public List<MaterialsDTO> findMaterial(MaterialsDTO materialsDTO) {
-        List<MaterialsDTO> materialsDTOList = new ArrayList<>();
-        if (materialsDTO.getTeacherId() != null) {
-            materialsDTOList = materialsService.findMaterialsABI(materialsDTO.getTeacherId() , materialsDTO.getStageId());
-        }
-        return materialsDTOList;
-    }
+//    @Transactional
+//    @Path("/findMaterial1")
+//    @POST
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public List<MaterialsDTO> findMaterial(MaterialsDTO materialsDTO) {
+//        List<MaterialsDTO> materialsDTOList = new ArrayList<>();
+//        if (materialsDTO.getTeacherId() != null) {
+//            materialsDTOList = materialsService.findMaterialsABI(materialsDTO.getTeacherId() , materialsDTO.getStageId());
+//        }
+//        return materialsDTOList;
+//    }
 
 }

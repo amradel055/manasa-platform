@@ -7,9 +7,11 @@ package com.isag.rest;
 
 import com.isag.api.dto.TeacherDataAPI;
 import com.isag.businessservice.IgmaUserService;
+import com.isag.businessservice.MaterialsService;
 import com.isag.businessservice.StudentService;
 import com.isag.config.UserLoginData;
 import com.isag.dto.APIStudentDataDTO;
+import com.isag.dto.MaterialsDTO;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
@@ -36,6 +38,9 @@ public class StudentRest {
     private StudentService studentService;
     @EJB
     IgmaUserService igmaUserService;
+
+    @EJB
+    MaterialsService materialsService;
 
     @Transactional
     @Path("/studentregister")
@@ -116,6 +121,19 @@ public class StudentRest {
             teacherDataAPI = igmaUserService.getTeacherDataAPI(igmaUserDTOABI.getBranchId());
         }
         return teacherDataAPI;
+    }
+
+    @Transactional
+    @Path("/findMaterials")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<MaterialsDTO> findMaterial(MaterialsDTO materialsDTO) {
+        List<MaterialsDTO> materialsDTOList = new ArrayList<>();
+        if (materialsDTO.getTeacherId() != null) {
+            materialsDTOList = materialsService.findMaterialsABI(materialsDTO.getTeacherId(), materialsDTO.getStageId());
+        }
+        return materialsDTOList;
     }
 
 }
