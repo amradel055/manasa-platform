@@ -10,7 +10,9 @@ import com.isag.businessservice.IgmaUserService;
 import com.isag.businessservice.MaterialsService;
 import com.isag.businessservice.TeachersService;
 import com.isag.config.UserLoginData;
+import com.isag.dto.APIStudentDataDTO;
 import com.isag.dto.IgmaUserDTO;
+import com.isag.dto.IgmaUserDTOABI;
 import com.isag.dto.MaterialsDTO;
 import com.isag.dto.TeachersDTO;
 import com.isag.root.LoginRoot;
@@ -126,10 +128,10 @@ public class TeachersRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<TeacherDataAPI> findTeachers(LoginRoot igmaUser) {
+    public List<TeacherDataAPI> findTeachers(APIStudentDataDTO igmaUserDTOABI) {
         List<TeacherDataAPI> teacherDataAPI = new ArrayList<>();
-        if (igmaUser.branchId != null) {
-            teacherDataAPI = igmaUserService.getTeacherDataAPI(igmaUser.branchId);
+        if (igmaUserDTOABI.getBranchId()!= null) {
+            teacherDataAPI = igmaUserService.getTeacherDataAPI(igmaUserDTOABI.getBranchId());
         }
         return teacherDataAPI;
     }

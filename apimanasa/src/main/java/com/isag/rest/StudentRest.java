@@ -5,9 +5,12 @@
  */
 package com.isag.rest;
 
+import com.isag.api.dto.TeacherDataAPI;
+import com.isag.businessservice.IgmaUserService;
 import com.isag.businessservice.StudentService;
 import com.isag.config.UserLoginData;
 import com.isag.dto.APIStudentDataDTO;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.transaction.Transactional;
@@ -31,6 +34,8 @@ public class StudentRest {
     private UserLoginData userLoginData;
     @EJB
     private StudentService studentService;
+    @EJB
+    IgmaUserService igmaUserService;
 
     @Transactional
     @Path("/studentregister")
@@ -98,6 +103,19 @@ public class StudentRest {
      */
     public void setUserLoginData(UserLoginData userLoginData) {
         this.userLoginData = userLoginData;
+    }
+
+    @Transactional
+    @Path("/findTeacher")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<TeacherDataAPI> findTeacher(APIStudentDataDTO igmaUserDTOABI) {
+        List<TeacherDataAPI> teacherDataAPI = new ArrayList<>();
+        if (igmaUserDTOABI.getBranchId() != null) {
+            teacherDataAPI = igmaUserService.getTeacherDataAPI(igmaUserDTOABI.getBranchId());
+        }
+        return teacherDataAPI;
     }
 
 }
