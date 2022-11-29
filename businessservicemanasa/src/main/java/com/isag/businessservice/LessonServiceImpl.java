@@ -46,6 +46,9 @@ public class LessonServiceImpl implements LessonService {
 
     @EJB
     private StudentPeriodsService studentPeriodsService;
+        @EJB
+    private LessonVoiceService lessonVoiceService1;
+
 
     private StringBuilder periodNew;
 
@@ -249,6 +252,7 @@ public class LessonServiceImpl implements LessonService {
         Lesson entity = new Lesson();
         entity.setId(lessonDTO);
         documentsService.deleteDocumentsByLesson(lessonDTO);
+        lessonVoiceService1.deleteLesson(lessonDTO);
         commentsService.deleteCommentsByLesson(lessonDTO);
         lessonImgService.deleteLesson(lessonDTO);
         dao.deleteEntity(entity);

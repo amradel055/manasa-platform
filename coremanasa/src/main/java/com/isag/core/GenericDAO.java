@@ -78,4 +78,6 @@ public interface GenericDAO {
     public void rollbackQuery();
 
     public void StoredProcedure(String storedName,List<storedProcedureParameter> procedureParameters,Map<String,Object> parm) ;
+
+    public void executeDeleteQuery(String delete_FROM_QuestionAnswer_e_WHERE_equest, Map<String, Object> params);
 }
