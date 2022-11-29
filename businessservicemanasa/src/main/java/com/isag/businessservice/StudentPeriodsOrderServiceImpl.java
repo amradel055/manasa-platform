@@ -8,7 +8,6 @@ package com.isag.businessservice;
 import com.isag.api.dto.SearchStudentDTO;
 import com.isag.core.GenericDAO;
 import com.isag.dto.StudentPeriodsOrderDTO;
-import com.isag.dto.TeachersDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.StudentPeriodsOrder;
 import com.isag.entity.Materials;
@@ -16,7 +15,6 @@ import com.isag.entity.Periods;
 import com.isag.entity.IgmaUser;
 import com.isag.entity.Student;
 import com.isag.entity.StudentPeriods;
-import com.isag.entity.Teachers;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -76,10 +74,19 @@ public class StudentPeriodsOrderServiceImpl implements StudentPeriodsOrderServic
     public List<SearchStudentDTO> searchStudent(Integer periodId, Integer materialId) {
         List<SearchStudentDTO> searchStudentDTOList = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
-        params.put("periodId", periodId);
-        params.put("materialId", materialId);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT d FROM StudentPeriodsOrder d WHERE d.periodId.id = :periodId AND d.materialId.id = :materialId  ");
+        builder.append("SELECT d FROM StudentPeriodsOrder d ");
+
+        if (materialId != null) {
+            params.put("materialId", materialId);
+            builder.append(" WHERE d.materialId.id = :materialId  ");
+        }
+        if (periodId != null) {
+            params.put("periodId", periodId);
+
+            builder.append(" AND d.periodId.id = :periodId ");
+        }
+
         List<StudentPeriodsOrder> studentList = dao.findListByQuery(builder.toString(), params);
         for (StudentPeriodsOrder student : studentList) {
             SearchStudentDTO searchStudentDTO = new SearchStudentDTO();
