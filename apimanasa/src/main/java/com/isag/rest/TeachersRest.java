@@ -13,6 +13,7 @@ import com.isag.config.UserLoginData;
 import com.isag.dto.IgmaUserDTO;
 import com.isag.dto.MaterialsDTO;
 import com.isag.dto.TeachersDTO;
+import com.isag.root.LoginRoot;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
@@ -125,10 +126,10 @@ public class TeachersRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<TeacherDataAPI> findTeachers(IgmaUserDTO igmaUser) {
+    public List<TeacherDataAPI> findTeachers(LoginRoot igmaUser) {
         List<TeacherDataAPI> teacherDataAPI = new ArrayList<>();
-        if (igmaUser.getBranchId() != null) {
-            teacherDataAPI = igmaUserService.getTeacherDataAPI(igmaUser.getBranchId());
+        if (igmaUser.branchId != null) {
+            teacherDataAPI = igmaUserService.getTeacherDataAPI(igmaUser.branchId);
         }
         return teacherDataAPI;
     }
@@ -138,7 +139,7 @@ public class TeachersRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<MaterialsDTO> findTeachers(MaterialsDTO materialsDTO) {
+    public List<MaterialsDTO> findMaterial(MaterialsDTO materialsDTO) {
         List<MaterialsDTO> materialsDTOList = new ArrayList<>();
         if (materialsDTO.getTeacherId() != null) {
             materialsDTOList = materialsService.findMaterialsABI(materialsDTO.getTeacherId() , materialsDTO.getStageId());

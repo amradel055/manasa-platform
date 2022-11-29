@@ -5,10 +5,14 @@
  */
 package com.isag.rest;
 
+import com.isag.api.dto.TeacherDataAPI;
+import com.isag.businessservice.IgmaUserService;
 import com.isag.dto.APIloginDTO;
 import com.isag.entity.IgmaUser;
 import com.isag.general.GeneralService;
 import com.isag.root.LoginRoot;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -27,6 +31,8 @@ public class LoginManasa {
 
     @EJB
     private GeneralService generalService;
+    @EJB
+    IgmaUserService igmaUserService;
 
     @Transactional
     @Path("/login")
@@ -60,6 +66,19 @@ public class LoginManasa {
         } catch (Exception e) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
+    }
+    
+     @Transactional
+    @Path("/findTeachersNew")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<TeacherDataAPI> findTeachersNew(LoginRoot igmaUser) {
+        List<TeacherDataAPI> teacherDataAPI = new ArrayList<>();
+        if (igmaUser.branchId != null) {
+            teacherDataAPI = igmaUserService.getTeacherDataAPI(igmaUser.branchId);
+        }
+        return teacherDataAPI;
     }
 }
 
