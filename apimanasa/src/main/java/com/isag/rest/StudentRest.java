@@ -122,6 +122,9 @@ public class StudentRest {
         }
         return teacherDataAPI;
     }
+    
+    
+    
 
     @Transactional
     @Path("/findMaterials")
@@ -135,5 +138,8 @@ public class StudentRest {
         }
         return materialsDTOList;
     }
+    
+    
+    
 
 }
