@@ -129,7 +129,6 @@ public class TeachersRest {
         List<TeacherDataAPI> teacherDataAPI = new ArrayList<>();
         if (igmaUser.getBranchId() != null) {
             teacherDataAPI = igmaUserService.getTeacherDataAPI(igmaUser.getBranchId());
-            resItemDTO.setImgUrl(context.getContextPath().concat("/restaurantItem/itemImage/").concat(resItemDTO.getImage()));
         }
         return teacherDataAPI;
     }
