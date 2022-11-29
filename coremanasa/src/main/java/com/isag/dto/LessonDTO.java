@@ -37,6 +37,7 @@ public class LessonDTO extends BaseEntityDTO {
     private Integer studentId;
     private String voiceLink;
     private List<String> images;
+    private List<String> lessonVoiceList;
     private List<LessonImgDTO> lessonImgDTOList;
     private List<LessonVoiceDTO> lessonVoiceDTOList;
     private List<DocumentsDTO> documentsDTOList;
@@ -392,6 +393,20 @@ public class LessonDTO extends BaseEntityDTO {
      */
     public void setMaterialName(String materialName) {
         this.materialName = materialName;
+    }
+
+    /**
+     * @return the lessonVoiceList
+     */
+    public List<String> getLessonVoiceList() {
+        return lessonVoiceList;
+    }
+
+    /**
+     * @param lessonVoiceList the lessonVoiceList to set
+     */
+    public void setLessonVoiceList(List<String> lessonVoiceList) {
+        this.lessonVoiceList = lessonVoiceList;
     }
 
 }
