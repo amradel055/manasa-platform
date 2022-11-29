@@ -50,10 +50,9 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
 
     @Override
     public void delete(Integer questionCommonId) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("questionCommonId", questionCommonId);
-      QuestionAnswer questionAnswer =  dao.findEntityByQuery("delete FROM QuestionAnswer e WHERE e.questionCommonId.id = :questionCommonId ", params) ;
-      questionAnswerDetailService.delete(questionCommonId);
+        questionAnswerDetailService.delete(questionCommonId);
+        dao.executeDeleteQuery("delete FROM QuestionAnswer e WHERE e.questionCommonId.id = " + questionCommonId);
+
     }
 
     @Override

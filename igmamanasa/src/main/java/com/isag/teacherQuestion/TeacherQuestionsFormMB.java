@@ -6,6 +6,7 @@
 package com.isag.teacherQuestion;
 
 import com.isag.businessservice.MaterialsService;
+import com.isag.businessservice.QuestionAnswerDetailService;
 import com.isag.businessservice.QuestionCommonService;
 import com.isag.dto.MaterialsDTO;
 import com.isag.dto.QuestionAnswerDetailDTO;
@@ -43,15 +44,25 @@ public class TeacherQuestionsFormMB extends BaseFormBean {
     private String fileName;
     private StreamedContent image;
     private boolean exitBoolean = Boolean.FALSE;
-    
-        private String host;
 
+    private String host;
 
     @EJB
     QuestionCommonService questionCommonService;
 
     @EJB
     MaterialsService materialsService;
+
+    @EJB
+    QuestionAnswerDetailService questionAnswerDetailService;
+
+    public void deleteImage() {
+        if (getQuestionAnswerDetailDTOSelected() != null && getQuestionAnswerDetailDTOSelected().getId() != null) {
+            questionAnswerDetailService.deleteByDetailId(getQuestionAnswerDetailDTOSelected().getId());
+
+        }
+        getQuestionCommonDTO().getQuestionAnswerDTO().getAnswerDetailDTOList().remove(getQuestionAnswerDetailDTOSelected());
+    }
 
     public void upload(FileUploadEvent event) {
         try {
@@ -66,6 +77,10 @@ public class TeacherQuestionsFormMB extends BaseFormBean {
             saveError(e, "BranchFormBean", "upload");
         }
     }
+    
+     public void hishis(){
+        System.err.println("hishis  ---- ");
+    }
 
     public void upload2(FileUploadEvent event) {
         try {
@@ -77,7 +92,6 @@ public class TeacherQuestionsFormMB extends BaseFormBean {
 //            for (QuestionAnswerDetailDTO questionAnswerDetailDTO : getQuestionCommonDTO().getQuestionAnswerDTO().getAnswerDetailDTOList()) {
             getQuestionAnswerDetailDTOSelected().setImage(getFileName());
 //            setImage(getMessageBean().findGraphicImage(getFileName()));
-            
 
 //            }
         } catch (Exception e) {
@@ -89,9 +103,11 @@ public class TeacherQuestionsFormMB extends BaseFormBean {
         try {
             if (getQuestionCommonDTO().getQuestionAnswerDTO() != null && getQuestionCommonDTO().getQuestionAnswerDTO().getId() == null) {
                 setExitBoolean((boolean) Boolean.TRUE);
-                QuestionAnswerDetailDTO questionAnswerDetailDTO = new QuestionAnswerDetailDTO();
-                questionAnswerDetailDTO.setMarkEdit(Boolean.TRUE);
-                questionCommonDTO.getQuestionAnswerDTO().getAnswerDetailDTOList().add(0, questionAnswerDetailDTO);
+                QuestionAnswerDetailDTO detailDTO = new QuestionAnswerDetailDTO();
+                detailDTO.setMarkEdit(Boolean.TRUE);
+                detailDTO.setIndex(getIndex());
+                questionCommonDTO.getQuestionAnswerDTO().getAnswerDetailDTOList().add(detailDTO);
+                questionAnswerDetailDTOSelected = detailDTO;
             }
         } catch (Exception e) {
             saveError(e, "answer", "add");
@@ -100,7 +116,7 @@ public class TeacherQuestionsFormMB extends BaseFormBean {
 
     public void reset() {
         try {
-            setQuestionCommonDTO(new QuestionCommonDTO());
+            setQuestionCommonDTO(null);
 
         } catch (Exception e) {
             saveError(e, "QuestionForm", "reset");
@@ -112,6 +128,7 @@ public class TeacherQuestionsFormMB extends BaseFormBean {
         if (getQuestionCommonDTO() != null) {
 
             setQuestionCommonDTO(questionCommonService.save(getQuestionCommonDTO(), getUserData().getUser()));
+            reset();
         }
         return "";
     }
@@ -333,8 +350,8 @@ public class TeacherQuestionsFormMB extends BaseFormBean {
     public void setQuestionAnswerDetailDTOSelected(QuestionAnswerDetailDTO questionAnswerDetailDTOSelected) {
         this.questionAnswerDetailDTOSelected = questionAnswerDetailDTOSelected;
     }
-    
-        /**
+
+    /**
      * @return the host
      */
     public String getHost() {

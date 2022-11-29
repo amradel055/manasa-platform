@@ -76,13 +76,17 @@
                             <div class="ui-g-12 ui-xl-12">
 
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:graphicImage url="#{teacherQuestionsFormMB.host.concat(teacherQuestionsFormMB.questionCommonDTO.image)}" library="demo"  style="max-width:80%;max-height:80%;object-fit: cover !important;"/>
+                                    <p:outputLabel value="#{teacherQuestionsFormMB.questionCommonDTO.image}" />
+
                                 </div>
 
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:outputLabel style="width: 65px" value="صورة السؤال"/>
                                 </div>  
                             </div>
+
+
+
 
 
                         </div>
@@ -127,6 +131,8 @@
                     rowKey="#{answer}"
                     emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
                     id="answer">
+                    <p:ajax event="rowSelect" listener="#{teacherQuestionsFormMB.hishis()}"  />
+
                     <f:facet name="header">
                         <p:commandButton update="answer"  styleClass="saddButton" style="float:right" icon="fa fa-plus" title="#{userData.userDDs['ADD']}" action="#{teacherQuestionsFormMB.addAnswerDetail()}" />
                         <p:outputPanel  >
@@ -149,9 +155,27 @@
                                       uploadLabel="#{userData.userDDs['UPLOAD']}"  
                                       fileUploadListener="#{teacherQuestionsFormMB.upload2}"
                                       mode="advanced" 
-
                                       allowTypes="/(\.|\/)(gif|jpe?g|png|doc|docx|xls|xlsx|pdf|txt)$/"
                                       />  
+                    </p:column>
+
+                    <p:column  filterStyle="display:none"  style="width: 12vh;text-align: -webkit-auto;font-size: 1.8vh"   filterMatchMode="contains" headerText="اسم الصورة  "
+                               filterBy="#{answer.image}"  
+                               sortBy="#{answer.image}">
+                        <p:outputLabel value="#{answer.image}" />
+
+
+                    </p:column>
+
+
+                    <p:column style="width:16vh;text-align: center;font-size: 15px;border-radius: 0px"  headerText="#{userData.userDDs['TRANSACTION']}">
+
+                        <p:commandButton  styleClass="sdeleteButtons" update="@form" icon="fa fa-remove" style="background-color: red;border-radius: 3px;margin-bottom:3px"   
+                                          title="#{userData.userDDs['DELETE']}"  action="#{teacherQuestionsFormMB.deleteImage()}" 
+                                          >
+                            <f:setPropertyActionListener value="#{answer}" target="#{teacherQuestionsFormMB.questionAnswerDetailDTOSelected}" />
+                            <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                        </p:commandButton>
                     </p:column>
 
 

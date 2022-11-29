@@ -364,4 +364,9 @@ public class GenericDAOImpl implements GenericDAO {
         query.execute();
     }
 
+    @Override
+    public void executeDeleteQuery(String delete_FROM_QuestionAnswer_e_WHERE_equest, Map<String, Object> params) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

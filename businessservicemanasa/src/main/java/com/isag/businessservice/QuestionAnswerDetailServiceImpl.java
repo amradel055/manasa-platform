@@ -50,10 +50,17 @@ public class QuestionAnswerDetailServiceImpl implements QuestionAnswerDetailServ
     }
 
     @Override
-    public void delete(Integer answerId) {
+    public void delete(Integer questionCommonId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("answerId", answerId);
-      QuestionAnswerDetail questionAnswerDetail =  dao.findEntityByQuery("delete FROM QuestionAnswerDetail e WHERE e.questionAnswerId.id = :answerId ", params) ;
+        params.put("questionCommonId", questionCommonId);
+        dao.executeDeleteQuery("delete FROM QuestionAnswerDetail e WHERE e.questionAnswerId.questionCommonId.id = " + questionCommonId);
+    }
+
+    @Override
+    public void deleteByDetailId(Integer detailId) {
+        QuestionAnswerDetail answerDetail = new QuestionAnswerDetail();
+        answerDetail.setId(detailId);
+        dao.deleteEntity(answerDetail);
     }
 
     @Override
