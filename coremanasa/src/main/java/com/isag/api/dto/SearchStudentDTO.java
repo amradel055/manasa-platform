@@ -16,6 +16,8 @@ import java.util.Date;
 public class SearchStudentDTO implements Serializable {
 
     private String mobile;
+    private String stageName;
+    private String materialName;
     private String name;
     private Integer id;
     private BigDecimal cash;
@@ -74,6 +76,34 @@ public class SearchStudentDTO implements Serializable {
      */
     public void setCash(BigDecimal cash) {
         this.cash = cash;
+    }
+
+    /**
+     * @return the stageName
+     */
+    public String getStageName() {
+        return stageName;
+    }
+
+    /**
+     * @param stageName the stageName to set
+     */
+    public void setStageName(String stageName) {
+        this.stageName = stageName;
+    }
+
+    /**
+     * @return the materialName
+     */
+    public String getMaterialName() {
+        return materialName;
+    }
+
+    /**
+     * @param materialName the materialName to set
+     */
+    public void setMaterialName(String materialName) {
+        this.materialName = materialName;
     }
 
 }

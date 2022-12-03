@@ -132,6 +132,21 @@
                                   headerText="الاسم" sortBy="#{busesTable.name}" >
                             <p:outputLabel value="#{busesTable.name}"  style="font-size: 1.5vh" />
                         </p:column>
+                        
+                        
+                          <p:column filterStyle="display:none" 
+                                  style="width:15vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterBy="#{busesTable.materialName}"  filterMatchMode="contains" 
+                                  headerText="الماده " sortBy="#{busesTable.materialName}" >
+                            <p:outputLabel value="#{busesTable.materialName}"  style="font-size: 1.5vh" />
+                        </p:column> 
+                        
+                          <p:column filterStyle="display:none" 
+                                    style="width:15vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterBy="#{busesTable.stageName}"  filterMatchMode="contains" 
+                                  headerText="الفرقة " sortBy="#{busesTable.stageName}" >
+                            <p:outputLabel value="#{busesTable.stageName}"  style="font-size: 1.5vh" />
+                        </p:column>
+                        
+                        
                         <p:column filterStyle="display:none" 
                                   style="width:15vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterBy="#{busesTable.cash}"  filterMatchMode="contains" 
                                   headerText="المبلغ" sortBy="#{busesTable.cash}" >
