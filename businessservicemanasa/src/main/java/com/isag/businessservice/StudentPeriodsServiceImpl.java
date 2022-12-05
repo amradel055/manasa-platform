@@ -35,9 +35,9 @@ public class StudentPeriodsServiceImpl implements StudentPeriodsService {
 
     @EJB
     private GenericDAO dao;
-    
-    public void saveTransaction(StudentPeriods studentPeriods){
-    dao.updateEntity(studentPeriods) ;
+
+    public void saveTransaction(StudentPeriods studentPeriods) {
+        dao.updateEntity(studentPeriods);
     }
 
     @Override
@@ -342,6 +342,18 @@ public class StudentPeriodsServiceImpl implements StudentPeriodsService {
         entity.setBranchId(isagUser.getBranchId());
         entity.setCompanyId(isagUser.getCompanyId());
         return entity;
+    }
+
+    @Override
+    public List<StudentPeriodsDTO> checkByStudentAndMaterialActive(Integer studentId, Integer materialId, Integer periodId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("studentId", studentId);
+        params.put("materialId", materialId);
+        params.put("periodId", periodId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM StudentPeriods d WHERE d.studentId.id = :studentId AND d.materialId.id = :materialId AND d.periodId.id = :periodId ");
+        List<StudentPeriods> list = dao.findListByQuery(builder.toString(), params);
+        return returnListDTO(list);
     }
 
 }

@@ -18,7 +18,7 @@ import javax.ejb.Remote;
 @Remote
 public interface StudentPeriodsOrderService {
 
-    public void save(StudentPeriodsOrderDTO studentPeriodsOrderDTO, IgmaUser isagUser);
+    public String save(StudentPeriodsOrderDTO studentPeriodsOrderDTO, IgmaUser isagUser);
 
     public void delete(Integer studentPeriodId);
 
@@ -27,7 +27,7 @@ public interface StudentPeriodsOrderService {
     public List<StudentPeriodsOrderDTO> findStudemtPeriodOrderDTO(Integer branchId);
 
     public List<SearchStudentDTO> searchStudent(Integer periodId, Integer materialId);
-    
-    public void transaction(Integer studentPeriodOrderId, IgmaUser igmaUser)  ;
+
+    public void transaction(Integer studentPeriodOrderId, IgmaUser igmaUser);
 
 }

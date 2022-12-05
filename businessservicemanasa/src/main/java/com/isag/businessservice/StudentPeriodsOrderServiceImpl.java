@@ -7,6 +7,7 @@ package com.isag.businessservice;
 
 import com.isag.api.dto.SearchStudentDTO;
 import com.isag.core.GenericDAO;
+import com.isag.dto.StudentPeriodsDTO;
 import com.isag.dto.StudentPeriodsOrderDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.StudentPeriodsOrder;
@@ -36,6 +37,9 @@ public class StudentPeriodsOrderServiceImpl implements StudentPeriodsOrderServic
     @EJB
     StudentPeriodsService periodsService;
 
+    @EJB
+    StudentPeriodsService studentPeriodsService;
+
     private StudentPeriodsOrderDTO mapTODTO(StudentPeriodsOrder entity) {
         StudentPeriodsOrderDTO dTO = initMapToDTO(entity);
 
@@ -43,9 +47,25 @@ public class StudentPeriodsOrderServiceImpl implements StudentPeriodsOrderServic
     }
 
     @Override
-    public void save(StudentPeriodsOrderDTO studentPeriodsOrderDTO, IgmaUser isagUser) {
-        StudentPeriodsOrder studentPeriodsOrder = mapToEntity(studentPeriodsOrderDTO, isagUser, null);
-        dao.updateEntity(studentPeriodsOrder);
+    public String save(StudentPeriodsOrderDTO studentPeriodsOrderDTO, IgmaUser isagUser) {
+        List<StudentPeriodsOrderDTO> studentPeriodsOrderDTOList = new ArrayList<>();
+        List<StudentPeriodsDTO> studentPeriodsDTOList = new ArrayList<>();
+
+        if (studentPeriodsOrderDTO.getStudentId() != null && studentPeriodsOrderDTO.getMaterialId() != null) {
+            studentPeriodsOrderDTOList = checkByStudentAndMaterial(studentPeriodsOrderDTO.getStudentId(), studentPeriodsOrderDTO.getMaterialId() , studentPeriodsOrderDTO.getPeriodId());
+            studentPeriodsDTOList = studentPeriodsService.checkByStudentAndMaterialActive(studentPeriodsOrderDTO.getStudentId(), studentPeriodsOrderDTO.getMaterialId() , studentPeriodsOrderDTO.getPeriodId());
+        }
+        if ((studentPeriodsOrderDTOList == null || studentPeriodsOrderDTOList.isEmpty() )&& (studentPeriodsDTOList == null || studentPeriodsDTOList.isEmpty())) {
+            StudentPeriodsOrder studentPeriodsOrder = mapToEntity(studentPeriodsOrderDTO, isagUser, null);
+            dao.updateEntity(studentPeriodsOrder);
+            return "تم طلب  تفعيل الطالب ";
+        } else if (studentPeriodsOrderDTOList != null && !studentPeriodsOrderDTOList.isEmpty()) {
+            return "تم طلب  التفعيل  من قبل ";
+
+        } else if (studentPeriodsDTOList != null && !studentPeriodsDTOList.isEmpty()) {
+            return "تم  التفعيل  من قبل ";
+        }
+        return null;
     }
 
     @Override
@@ -67,6 +87,17 @@ public class StudentPeriodsOrderServiceImpl implements StudentPeriodsOrderServic
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT d FROM StudentPeriodsOrder d WHERE d.branchId.id = :branchId  ");
+        List<StudentPeriodsOrder> list = dao.findListByQuery(builder.toString(), params);
+        return returnListDTO(list);
+    }
+
+    public List<StudentPeriodsOrderDTO> checkByStudentAndMaterial(Integer studentId, Integer materialId, Integer periodId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("studentId", studentId);
+        params.put("materialId", materialId);
+        params.put("periodId", periodId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM StudentPeriodsOrder d WHERE d.studentId.id = :studentId AND d.materialId.id = :materialId AND d.periodId.id = :periodId  ");
         List<StudentPeriodsOrder> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }
@@ -94,7 +125,7 @@ public class StudentPeriodsOrderServiceImpl implements StudentPeriodsOrderServic
             searchStudentDTO.setStageName(student.getStudentId() != null ? student.getStudentId().getSchoolStagesId().getName() : null);
             searchStudentDTO.setMobile(student.getStudentId() != null ? student.getStudentId().getMobile() : null);
             searchStudentDTO.setName(student.getStudentId().getFullName());
-            searchStudentDTO.setMaterialName(student.getMaterialId()!= null ? student.getMaterialId().getName() : null);
+            searchStudentDTO.setMaterialName(student.getMaterialId() != null ? student.getMaterialId().getName() : null);
             searchStudentDTO.setId(student.getId());
             searchStudentDTO.setCash(student.getValue());
             searchStudentDTOList.add(searchStudentDTO);

@@ -35,8 +35,8 @@ public interface StudentPeriodsService {
     public void deleteStudentPeriods(StudentPeriodsDTO studentPeriodsDTO);
 
     public void deleteStudentPeriods(Integer studentPeriodsDTO);
-    
-     public void saveTransaction(StudentPeriods studentPeriods) ;
 
+    public void saveTransaction(StudentPeriods studentPeriods);
 
+    public List<StudentPeriodsDTO> checkByStudentAndMaterialActive(Integer studentId, Integer materialId, Integer periodId);
 }

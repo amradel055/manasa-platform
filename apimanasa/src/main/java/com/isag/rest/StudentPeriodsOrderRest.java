@@ -35,14 +35,13 @@ public class StudentPeriodsOrderRest {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response saveStudentPeriods(StudentPeriodsOrderDTO studentPeriodsOrderDTO) {
-        String msg = "تم الحفظ نجاح ";
         IgmaUser igmaUser = new IgmaUser();
         igmaUser.setId(studentPeriodsOrderDTO.getCreatedBy());
         IgmaCompany company = new IgmaCompany() ;
         company.setId(studentPeriodsOrderDTO.getCompanyId());
         igmaUser.setCompanyId(company);
         try {
-            studentPeriodsOrderService.save(studentPeriodsOrderDTO, igmaUser);
+        String msg = studentPeriodsOrderService.save(studentPeriodsOrderDTO, igmaUser);
             return Response.ok(msg).build();
         } catch (Exception e) {
             return Response.status(Response.Status.FORBIDDEN).build();
