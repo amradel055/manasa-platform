@@ -34,7 +34,7 @@ public interface StudentPeriodsService {
 
     public void deleteStudentPeriods(StudentPeriodsDTO studentPeriodsDTO);
 
-    public void deleteStudentPeriods(Integer studentPeriodsDTO);
+    public void deleteStudentPeriods1(Integer studentPeriodsDTO) ;
 
     public void saveTransaction(StudentPeriods studentPeriods);
 

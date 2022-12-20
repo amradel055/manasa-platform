@@ -11,6 +11,7 @@ import com.isag.businessservice.MaterialsService;
 import com.isag.businessservice.PeriodsService;
 import com.isag.businessservice.SchoolStagesGuideService;
 import com.isag.businessservice.StudentPeriodsOrderService;
+import com.isag.businessservice.StudentPeriodsService;
 import com.isag.converter.MaterialDTOConverter;
 import com.isag.converter.SchoolStagesGuideDTOConverter;
 import com.isag.converter.SearchStudentDTOConverter;
@@ -48,6 +49,8 @@ public class StudentPeriodOrderFormMB extends BaseFormBean {
     MaterialsService materialsService;
     @EJB
     PeriodsService periodsService;
+    @EJB
+    StudentPeriodsService studentPeriodsService;
 
     private List<SearchStudentDTO> searchStudentDTOList;
     private SearchStudentDTO searchStudentDTO;
@@ -88,6 +91,10 @@ public class StudentPeriodOrderFormMB extends BaseFormBean {
         setSearchStudentDTOList(studentPeriodsOrderService.searchStudent(getPeriodsDTO().getId(), getMaterialsDTO().getId()));
     }
 
+    public void searchNew() {
+        setSearchStudentDTOList(studentPeriodsOrderService.searchStudentForDelete(getPeriodsDTO().getId(), getMaterialsDTO().getId()));
+    }
+
     public void transaction() {
         studentPeriodsOrderService.transaction(getSearchStudentDTO().getId(), getUserData().getUser());
     }
@@ -95,7 +102,11 @@ public class StudentPeriodOrderFormMB extends BaseFormBean {
     public void delete() {
         studentPeriodsOrderService.delete(getSearchStudentDTO().getId());
         searchStudentDTOList.remove(getSearchStudentDTO());
+    }
 
+    public void deleteNew() {
+        studentPeriodsService.deleteStudentPeriods1(getSearchStudentDTO().getId());
+        searchStudentDTOList.remove(getSearchStudentDTO());
     }
 
     @Override

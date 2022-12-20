@@ -169,7 +169,7 @@ public class StudentPeriodsServiceImpl implements StudentPeriodsService {
     }
 
     @Override
-    public void deleteStudentPeriods(Integer studentPeriodsDTO) {
+    public void deleteStudentPeriods1(Integer studentPeriodsDTO) {
         StudentPeriods entity = new StudentPeriods();
         entity.setId(studentPeriodsDTO);
         dao.deleteEntity(entity);

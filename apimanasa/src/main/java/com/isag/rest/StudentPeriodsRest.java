@@ -83,7 +83,7 @@ public class StudentPeriodsRest {
     public Response deleteStudentPeriods(StudentPeriodsDTO studentPeriodsDTO) {
         StudentPeriodsDTO msg = new StudentPeriodsDTO();
         try {
-            studentPeriodsService.deleteStudentPeriods(studentPeriodsDTO.getId());
+            studentPeriodsService.deleteStudentPeriods1(studentPeriodsDTO.getId());
             msg.setMsg("تم الحذف بنجاح");
             msg.setMsgType("success");
             return Response.ok(msg).build();

@@ -1,0 +1,177 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+
+        <h:form id="form" dir="#{userData.dir}">
+            <p:fieldset id="whole" legend="الغاء تفعيل الطلبة  " style="margin-bottom:20px; margin-right: 30px">
+
+                <div class="col-xs-12">
+                    <p:messages autoUpdate="true"  id="msg" showDetail="true" closable="true" />
+                </div>
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectOneMenu style="width: 75%"  id="stage11" 
+                                                     value="#{studentPeriodOrderFormMB.schoolStagesGuideDTO}"
+                                                     converter="#{studentPeriodOrderFormMB.schoolStagesGuideDTOConverter}"
+                                                     >
+                                        <p:ajax listener="#{studentPeriodOrderFormMB.fillMaterialList()}" update="@form" />
+                                        <f:selectItem itemLabel="choose" itemValue="" />
+                                        <f:selectItems value="#{studentPeriodOrderFormMB.schoolStagesGuideDTOList}" var="stage11" itemLabel="#{stage11.name}" itemValue="#{stage11}" />
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px" value="اختر المرحلة " />
+
+                                </div>
+                            </div>
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectOneMenu style="width: 75%"  id="material12" 
+                                                     value="#{studentPeriodOrderFormMB.materialsDTO}"
+                                                     converter="#{studentPeriodOrderFormMB.materialDTOConverter}"
+                                                     >
+                                        <p:ajax listener="#{studentPeriodOrderFormMB.fillPeriodList()}" update="@form" />
+
+                                        <f:selectItem itemLabel="choose" itemValue="" />
+                                        <f:selectItems value="#{studentPeriodOrderFormMB.materialsDTOList}" var="material" itemLabel="#{material.name}" itemValue="#{material}" />
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px" value="اختر المادة " />
+
+                                </div>
+                            </div>
+
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectOneMenu style="width: 75%"  id="period11" 
+                                                     value="#{studentPeriodOrderFormMB.periodsDTO}" 
+                                                     converter="#{studentPeriodOrderFormMB.periodDtoConverter}"
+
+                                                     >
+                                        <f:selectItem itemLabel="choose" itemValue="" />
+                                        <f:selectItems value="#{studentPeriodOrderFormMB.periodsDTOList}" var="period" itemLabel="#{period.name}" itemValue="#{period}" />
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px" value="اختر الشباتر " />
+
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+
+                <h:panelGrid class="centerButtons col-md-12" columns="1">
+
+                    <h:panelGroup>
+                        <p:commandButton class="saveButton" 
+                                         id="saveB" 
+                                         title="#{userData.userDDs['SEARCH']}" 
+                                         value="#{userData.userDDs['SEARCH']}"
+                                         icon="fa fa-fw fa-save" 
+                                         action="#{studentPeriodOrderFormMB.searchNew()}" 
+                                         update="@form"/>
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+            </p:fieldset>        
+
+            <p:fieldset legend=" الغاء تفعيل الطلاب" style="margin-bottom:20px">
+                <div >
+                    <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true"/>   
+                </div>
+                <div>
+                    <p:dataTable 
+                        var="busesTable" 
+                        widgetVar="bTable"  
+                        rowIndexVar="index"
+                        value="#{studentPeriodOrderFormMB.searchStudentDTOList}" rows="15" 
+
+                        paginator="true" emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                        id="busesListForm">
+                        <f:facet name="header" class="col-md-12">
+                            <p:outputPanel  >
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
+                                <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('bTable').filter()" style="width: 50%important" />
+                            </p:outputPanel>
+                        </f:facet>
+                        <p:column headerText="#" style="width: 6vh;font-size: 1.8vh;text-align:right;border-radius: 0px;border-radius: 0px;">
+                            <h:outputText value="#{index + 1}"  style="font-size: 1.5vh" />
+                        </p:column>
+                        <p:column  filterStyle="display:none"  style="width: 15vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                   filterBy="#{busesTable.mobile}"  filterMatchMode="contains" 
+                                   headerText="الموبايل" sortBy="#{busesTable.mobile}">
+                            <p:outputLabel value="#{busesTable.mobile}"  style="font-size: 1.5vh"/>
+                        </p:column>
+                        <p:column filterStyle="display:none" 
+                                  style="width:15vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterBy="#{busesTable.name}"  filterMatchMode="contains" 
+                                  headerText="الاسم" sortBy="#{busesTable.name}" >
+                            <p:outputLabel value="#{busesTable.name}"  style="font-size: 1.5vh" />
+                        </p:column>
+                        
+                        
+                          <p:column filterStyle="display:none" 
+                                  style="width:15vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterBy="#{busesTable.materialName}"  filterMatchMode="contains" 
+                                  headerText="الماده " sortBy="#{busesTable.materialName}" >
+                            <p:outputLabel value="#{busesTable.materialName}"  style="font-size: 1.5vh" />
+                        </p:column> 
+                        
+                          <p:column filterStyle="display:none" 
+                                    style="width:15vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterBy="#{busesTable.stageName}"  filterMatchMode="contains" 
+                                  headerText="الفرقة " sortBy="#{busesTable.stageName}" >
+                            <p:outputLabel value="#{busesTable.stageName}"  style="font-size: 1.5vh" />
+                        </p:column>
+                        
+                        
+                        <p:column filterStyle="display:none" 
+                                  style="width:15vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterBy="#{busesTable.cash}"  filterMatchMode="contains" 
+                                  headerText="المبلغ" sortBy="#{busesTable.cash}" >
+                            <p:outputLabel value="#{busesTable.cash}"  style="font-size: 1.5vh" />
+                        </p:column>
+
+                        <p:column headerText="#{userData.userDDs['TRANSACTION']}"  style="width: 10vh;font-size: 1.8vh;text-align: center;border-radius: 0px;">
+
+                            <p:commandButton  id="delete" update="@form" 
+                                              class="scloseButtons" style="background-color: red;border-radius: 3px;margin-bottom:3px"
+                                              icon="fa fa-remove" title="#{userData.userDDs['DELETE']}"
+                                              action="#{studentPeriodOrderFormMB.deleteNew}">
+                                <f:setPropertyActionListener value="#{busesTable}" target="#{studentPeriodOrderFormMB.searchStudentDTO}" />
+                                <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                            </p:commandButton>
+                        </p:column>
+
+
+                    </p:dataTable>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+                </div>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -29,5 +29,7 @@ public interface StudentPeriodsOrderService {
     public List<SearchStudentDTO> searchStudent(Integer periodId, Integer materialId);
 
     public void transaction(Integer studentPeriodOrderId, IgmaUser igmaUser);
+    
+    public List<SearchStudentDTO> searchStudentForDelete(Integer periodId, Integer materialId)  ; 
 
 }

@@ -132,6 +132,37 @@ public class StudentPeriodsOrderServiceImpl implements StudentPeriodsOrderServic
         }
         return searchStudentDTOList;
     }
+    
+    
+        @Override
+    public List<SearchStudentDTO> searchStudentForDelete(Integer periodId, Integer materialId) {
+        List<SearchStudentDTO> searchStudentDTOList = new ArrayList<>();
+        Map<String, Object> params = new HashMap<>();
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM StudentPeriods d ");
+
+        if (materialId != null) {
+            params.put("materialId", materialId);
+            builder.append(" WHERE d.materialId.id = :materialId  ");
+        }
+        if (periodId != null) {
+            params.put("periodId", periodId);
+            builder.append(" AND d.periodId.id = :periodId ");
+        }
+
+        List<StudentPeriods> studentList = dao.findListByQuery(builder.toString(), params);
+        for (StudentPeriods student : studentList) {
+            SearchStudentDTO searchStudentDTO = new SearchStudentDTO();
+            searchStudentDTO.setStageName(student.getStudentId() != null ? student.getStudentId().getSchoolStagesId().getName() : null);
+            searchStudentDTO.setMobile(student.getStudentId() != null ? student.getStudentId().getMobile() : null);
+            searchStudentDTO.setName(student.getStudentId().getFullName());
+            searchStudentDTO.setMaterialName(student.getMaterialId() != null ? student.getMaterialId().getName() : null);
+            searchStudentDTO.setId(student.getId());
+            searchStudentDTO.setCash(student.getValue());
+            searchStudentDTOList.add(searchStudentDTO);
+        }
+        return searchStudentDTOList;
+    }
 
     private List<StudentPeriodsOrderDTO> returnListDTO(List<StudentPeriodsOrder> list) {
         List<StudentPeriodsOrderDTO> dTOList = new ArrayList<>();
