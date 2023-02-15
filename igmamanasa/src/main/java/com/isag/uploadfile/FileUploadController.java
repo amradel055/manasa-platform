@@ -5,6 +5,7 @@
  */
 package com.isag.uploadfile;
 
+import com.isag.bussinessservice.global.Utility;
 import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
 import com.isag.isag.OperatingSystem;
@@ -52,9 +53,12 @@ public class FileUploadController {
         imageReName(event.getFile());
 
         try {
-
+             
             copyFile(getImageName(), event.getFile().getInputstream(), getDestination());
 
+             String fileName =  Utility.uploadFileToDashBoard(getImageName(), new File(getDestination().concat(getImageName())));
+              
+            
             FacesMessage msg = new FacesMessage("Success! ", getImageName() + " is uploaded.");
             System.out.println("Success! " + getImageName() + " is uploaded.");
             FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -71,7 +75,7 @@ public class FileUploadController {
         imageReName(event.getFile());
 
         try {
-
+            
             copyFile(getImageName(), event.getFile().getInputstream(), getNotificationDestination());
 
             FacesMessage msg = new FacesMessage("Success! ", getImageName() + " is uploaded.");

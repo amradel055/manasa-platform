@@ -32,6 +32,7 @@ import java.util.List;
 import com.isag.businessservice.IgmaApiTokenService;
 import com.isag.businessservice.IgmaUserLoginService;
 import com.isag.businessservice.IgmaUserService;
+import com.isag.businessservice.PathService;
 import com.isag.dto.StudentPeriodsDTO;
 import com.isag.views.TeachersByStudentId;
 
@@ -57,6 +58,8 @@ public class GeneralImp implements GeneralService {
     private IgmaUserLoginService isagUserLoginService;
     @EJB
     private StudentPeriodsService studentPeriodsService;
+    @EJB
+    private PathService pathService;
 
 //    private Employee emp;
     private StudentDTO studentDTO;
@@ -173,6 +176,7 @@ public class GeneralImp implements GeneralService {
         dTO.setSuccess(success);
         dTO.setMsg(msg);
         dTO.setToken(token);
+        dTO.setDownloadUrl(pathService.findPathbyTypeId(3, 3));
         if (success.equals(Boolean.TRUE)) {
             APIStudentDataDTO data = new APIStudentDataDTO();
             data.setCode(studentDTO.getCode());

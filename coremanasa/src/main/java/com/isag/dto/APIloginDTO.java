@@ -16,6 +16,7 @@ public class APIloginDTO {
     private Boolean success;
     private String msg;
     private String token;
+    private String downloadUrl;
     private APIDataDTO data;
     private APIStudentDataDTO studentData;
     private Integer teacherId;
@@ -117,6 +118,20 @@ public class APIloginDTO {
      */
     public void setTeacherList(List<TeachersDTO> teacherList) {
         this.teacherList = teacherList;
+    }
+
+    /**
+     * @return the downloadUrl
+     */
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    /**
+     * @param downloadUrl the downloadUrl to set
+     */
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
     }
 
 }
