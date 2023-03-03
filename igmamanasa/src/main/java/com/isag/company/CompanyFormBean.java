@@ -145,6 +145,7 @@ public class CompanyFormBean extends BaseFormBean {
 //        if (uploadedFile == null) {
 //            OpenDlg("dlg1");
 //        }
+            
         } catch (Exception e) {
             saveError(e, "CompanyFormBean", "upload");
         }

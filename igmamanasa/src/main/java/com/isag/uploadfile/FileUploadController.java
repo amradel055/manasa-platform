@@ -34,7 +34,7 @@ public class FileUploadController {
     private String destination;
     private String notificationDestination;
     private String imageName;
-    String imageId ;
+    String imageId;
     List<IgmaCompany> isagCompanyList;
 
     List<Branch> branchList;
@@ -49,33 +49,36 @@ public class FileUploadController {
     }
 
     public String upload(FileUploadEvent event) {
-        
+
         imageReName(event.getFile());
 
         try {
-             
+
             copyFile(getImageName(), event.getFile().getInputstream(), getDestination());
 
-             String fileName =  Utility.uploadFileToDashBoard(getImageName(), new File(getDestination().concat(getImageName())));
-              
-            
+//            String fileName = Utility.uploadFileToDashBoard(getImageName(), new File(getDestination().concat(getImageName())));
+
             FacesMessage msg = new FacesMessage("Success! ", getImageName() + " is uploaded.");
             System.out.println("Success! " + getImageName() + " is uploaded.");
+//            if (destination != null) {
+//                Utility.uploadToEndPoint(new File(destination.concat(getImageName())), getImageName());
+//                System.out.println("Success! " + getImageName() + " is uploaded in another Server.");
+//            }
             FacesContext.getCurrentInstance().addMessage(null, msg);
             return getImageName();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
-        return null ;
+
+        return null;
     }
 
-      public String uploadNotification(FileUploadEvent event) {
-        
+    public String uploadNotification(FileUploadEvent event) {
+
         imageReName(event.getFile());
 
         try {
-            
+
             copyFile(getImageName(), event.getFile().getInputstream(), getNotificationDestination());
 
             FacesMessage msg = new FacesMessage("Success! ", getImageName() + " is uploaded.");
@@ -85,16 +88,15 @@ public class FileUploadController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
-        return null ;
+
+        return null;
     }
-      
+
     public synchronized void imageReName(UploadedFile file) {
         imageId = (int) (new Date().getTime() / 1000) + "_";
         imageName = "Isag_" + imageId + file.getFileName();
         setImageName(imageName);
     }
-
 
     public boolean copyFile(String fileName, InputStream in, String destination) {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();

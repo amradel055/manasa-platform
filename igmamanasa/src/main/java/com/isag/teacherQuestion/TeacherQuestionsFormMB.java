@@ -8,6 +8,7 @@ package com.isag.teacherQuestion;
 import com.isag.businessservice.MaterialsService;
 import com.isag.businessservice.QuestionAnswerDetailService;
 import com.isag.businessservice.QuestionCommonService;
+import com.isag.bussinessservice.global.Utility;
 import com.isag.dto.MaterialsDTO;
 import com.isag.dto.QuestionAnswerDetailDTO;
 import com.isag.dto.QuestionCommonDTO;
@@ -17,6 +18,7 @@ import javax.inject.Named;
 import com.isag.isag.BaseFormBean;
 import com.isag.test.Message;
 import com.isag.uploadfile.FileUploadController;
+import java.io.File;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -73,12 +75,13 @@ public class TeacherQuestionsFormMB extends BaseFormBean {
             setImageName(getFileName());
             getQuestionCommonDTO().setImage(getFileName());
             setImage(getMessageBean().findGraphicImage(getFileName()));
+            Utility.uploadToEndPoint(new File(fileUploadController.getDestination().concat(getImageName())), getImageName());
         } catch (Exception e) {
             saveError(e, "BranchFormBean", "upload");
         }
     }
-    
-     public void hishis(){
+
+    public void hishis() {
         System.err.println("hishis  ---- ");
     }
 
@@ -92,7 +95,7 @@ public class TeacherQuestionsFormMB extends BaseFormBean {
 //            for (QuestionAnswerDetailDTO questionAnswerDetailDTO : getQuestionCommonDTO().getQuestionAnswerDTO().getAnswerDetailDTOList()) {
             getQuestionAnswerDetailDTOSelected().setImage(getFileName());
 //            setImage(getMessageBean().findGraphicImage(getFileName()));
-
+            Utility.uploadToEndPoint(new File(fileUploadController.getDestination().concat(getImageName())), getImageName());
 //            }
         } catch (Exception e) {
             saveError(e, "BranchFormBean", "upload");

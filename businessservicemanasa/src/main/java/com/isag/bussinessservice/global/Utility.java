@@ -6,22 +6,30 @@
 package com.isag.bussinessservice.global;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.entity.ContentType;
+
+
+import java.io.File;
+import java.io.IOException;
+import org.apache.http.client.HttpClient;
 
 /**
  *
@@ -112,4 +120,34 @@ public class Utility {
 //
 //        return response.toString();
     }
+    
+    
+     public static void uploadToEndPoint(File fileToUpload,String name) throws IOException {
+        // Create an instance of HttpClient
+        HttpClient httpClient = HttpClientBuilder.create().build();
+
+        // Create an instance of HttpPost with the REST endpoint URL
+        HttpPost httpPost = new HttpPost("http://educator.igma-it.com/dashboard/upload-thumb.php");
+
+        // Create a File object representing the file to upload
+//        File fileToUpload = new File("/path/to/file");
+
+        // Create a MultipartEntityBuilder to build the request body
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.addPart("thumb", new FileBody(fileToUpload));
+        builder.addPart("name", new StringBody(name, ContentType.TEXT_PLAIN));
+//        builder.addPart("file", new FileBody(fileToUpload));
+
+        // Set the request entity
+        HttpEntity multipart = builder.build();
+        httpPost.setEntity(multipart);
+
+        // Execute the request and get the response
+        HttpResponse response = httpClient.execute(httpPost);
+
+        // Print the response status code and message
+        System.out.println("Response status code: " + response.getStatusLine().getStatusCode());
+        System.out.println("Response message: " + response.getStatusLine().getReasonPhrase());
+    }
+    
 }

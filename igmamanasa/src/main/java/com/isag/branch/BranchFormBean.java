@@ -7,6 +7,7 @@ package com.isag.branch;
 
 import com.isag.businessservice.BranchService;
 import com.isag.businessservice.CompanyService;
+import com.isag.bussinessservice.global.Utility;
 import com.isag.define.CompanyActivityClassEnum;
 import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
@@ -14,6 +15,7 @@ import com.isag.isag.BaseFormBean;
 import com.isag.isag.UserData;
 import com.isag.test.Message;
 import com.isag.uploadfile.FileUploadController;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -123,11 +125,12 @@ public class BranchFormBean extends BaseFormBean {
     public void upload(FileUploadEvent event) {
         try {
             fileUploadEvent = event;
-            setUploadedImage(fileUploadController.upload(event));
+//            setUploadedImage(fileUploadController.upload(event,fileUploadController.getDestination()));
             setShowImage((getUploadedImage() != null) ? fileUploadController.getDestination().concat(getUploadedImage()) : fileUploadController.getDestination().concat("1.png"));
             setFileName(getUploadedImage());
             setImageName(fileName);
             setImage(getMessageBean().findGraphicImage(fileName));
+            Utility.uploadToEndPoint(new File(fileUploadController.getDestination().concat(getImageName())), getImageName());
         } catch (Exception e) {
             saveError(e, "BranchFormBean", "upload");
         }

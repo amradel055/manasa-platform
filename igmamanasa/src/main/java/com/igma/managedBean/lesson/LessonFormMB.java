@@ -13,6 +13,7 @@ import com.isag.businessservice.LessonService;
 import com.isag.businessservice.LessonVoiceService;
 import com.isag.businessservice.PeriodsService;
 import com.isag.businessservice.SchoolStagesGuideService;
+import com.isag.bussinessservice.global.Utility;
 import com.isag.converter.SchoolStagesGuideDTOConverter;
 import com.isag.dto.DocumentsDTO;
 import com.isag.dto.MaterialsDTO;
@@ -28,6 +29,7 @@ import javax.inject.Named;
 import com.isag.isag.BaseFormBean;
 import com.isag.test.Message;
 import com.isag.uploadfile.FileUploadController;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -136,10 +138,12 @@ public class LessonFormMB extends BaseFormBean {
         try {
             setFileUploadEvent(event);
             setUploadedImage(getFileUploadController().upload(event));
+
             setShowImage((getUploadedImage() != null) ? getFileUploadController().getDestination().concat(getUploadedImage()) : getFileUploadController().getDestination().concat("1.png"));
             setFileName(getUploadedImage());
             setImageName(getFileName());
             getLessonImgDTO().setImg(getFileName());
+            Utility.uploadToEndPoint(new File(fileUploadController.getDestination().concat(getImageName())), getImageName());
 //            List<String> imgList = new ArrayList<>();
 //            imgList.add(getFileName());
 //            if (imgList != null) {
@@ -173,6 +177,7 @@ public class LessonFormMB extends BaseFormBean {
             setFileName(getUploadedImage());
             setImageName(getFileName());
             getLessonVoiceDTO().setVoice(getFileName());
+            Utility.uploadToEndPoint(new File(fileUploadController.getDestination().concat(getImageName())), getImageName());
         } catch (Exception e) {
             saveError(e, "lessonFormBean", "upload");
         }
@@ -186,6 +191,7 @@ public class LessonFormMB extends BaseFormBean {
             setFileName(getUploadedImage());
             setImageName(getFileName());
             getDocumentsDTO().setLink(getFileName());
+            Utility.uploadToEndPoint(new File(fileUploadController.getDestination().concat(getImageName())), getImageName());
         } catch (Exception e) {
             saveError(e, "lessonFormBean", "upload");
         }
