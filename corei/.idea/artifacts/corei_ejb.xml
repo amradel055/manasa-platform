@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="ejb-jar" name="corei:ejb">
-    <output-path>$PROJECT_DIR$/target</output-path>
-    <root id="archive" name="corei-1.0.jar">
-      <element id="artifact" artifact-name="corei:ejb exploded" />
-    </root>
-  </artifact>
-</component>
