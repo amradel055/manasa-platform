@@ -5,7 +5,6 @@
  */
 package com.isag.rest;
 
-import com.isag.businessservice.AppointmentsService;
 import com.isag.businessservice.OtherAppointmentsService;
 import com.isag.config.UserLoginData;
 import com.isag.dto.AppointmentsDTO;

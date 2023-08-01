@@ -162,6 +162,30 @@ public class LockupRest {
 
         }
     }
+    @Transactional
+    @Path("/materialListbystage")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response materialListbystage(SchoolStagesGuideDTO dto) {
+        if (dto != null) {
+            try {
+                List<MaterialsDTO> dTOs = materialsService.findMaterialsByStage(dto.getId());
+                GenericEntity<List<MaterialsDTO>> list = new GenericEntity<List<MaterialsDTO>>(dTOs) {
+                };
+                return Response.ok(list).build();
+
+            } catch (Exception e) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+        } else {
+            dto = new SchoolStagesGuideDTO();
+            dto.setMsg("No Id is Sent");
+            return Response.ok(dto).build();
+
+        }
+    }
 
     public UserLoginData getUserLoginData() {
         return userLoginData;

@@ -16,6 +16,7 @@ public class QuestionCommonDTO extends BaseEntityDTO {
     private QuestionAnswerDTO questionAnswerDTO ;
     private Integer teacherId;
     private Integer materialId;
+    private Integer schoolId;
     
  
 
@@ -121,6 +122,20 @@ public class QuestionCommonDTO extends BaseEntityDTO {
      */
     public void setMaterialId(Integer materialId) {
         this.materialId = materialId;
+    }
+
+    /**
+     * @return the schoolId
+     */
+    public Integer getSchoolId() {
+        return schoolId;
+    }
+
+    /**
+     * @param schoolId the schoolId to set
+     */
+    public void setSchoolId(Integer schoolId) {
+        this.schoolId = schoolId;
     }
 
 }

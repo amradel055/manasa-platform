@@ -52,14 +52,14 @@ public class TeacherQuestionListMB extends BaseListBean {
 
     public void search() {
         if (getMaterialSelected() != null) {
-            setQuestionCommonDTOList(questionCommonService.findQuestionCommonAndAnswer(getUserData().getUser().getId(), getMaterialSelected()));
+            setQuestionCommonDTOList(questionCommonService.findQuestionCommonAndAnswer(getUserData().getUser().getId(), getMaterialSelected(),null));
         }
 
     }
 
     @Override
     public void delete() {
-        questionCommonService.delete(getQuestionCommonDTO().getId(), getUserData().getUser());
+        questionCommonService.delete(getQuestionCommonDTO().getId());
         getQuestionCommonDTOList().remove(questionCommonDTO);
     }
 

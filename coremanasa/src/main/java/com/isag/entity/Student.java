@@ -14,6 +14,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -37,6 +38,20 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Student.findByImagePath", query = "SELECT s FROM Student s WHERE s.imagePath = :imagePath")
     , @NamedQuery(name = "Student.findByEmail", query = "SELECT s FROM Student s WHERE s.email = :email")})
 public class Student extends BaseEntity {
+
+    /**
+     * @return the periodOrderId
+     */
+    public Integer getPeriodOrderId() {
+        return periodOrderId;
+    }
+
+    /**
+     * @param periodOrderId the periodOrderId to set
+     */
+    public void setPeriodOrderId(Integer periodOrderId) {
+        this.periodOrderId = periodOrderId;
+    }
 
     @Column(name = "type_login")
     private Integer typeLogin;
@@ -97,6 +112,11 @@ public class Student extends BaseEntity {
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
     private Branch branchId;
+    
+    @Transient
+    private Integer periodOrderId;
+    @Transient
+    private String periodName;
 
     @JoinColumn(name = "school_stages_id", referencedColumnName = "id")
     @ManyToOne
@@ -420,6 +440,20 @@ public class Student extends BaseEntity {
      */
     public void setImage(String image) {
         this.image = image;
+    }
+
+    /**
+     * @return the periodName
+     */
+    public String getPeriodName() {
+        return periodName;
+    }
+
+    /**
+     * @param periodName the periodName to set
+     */
+    public void setPeriodName(String periodName) {
+        this.periodName = periodName;
     }
 
 }

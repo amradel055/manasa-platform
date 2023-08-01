@@ -8,7 +8,6 @@ package com.isag.rest;
 import com.isag.api.dto.TeacherDataAPI;
 import com.isag.businessservice.IgmaUserService;
 import com.isag.dto.APIloginDTO;
-import com.isag.entity.IgmaUser;
 import com.isag.general.GeneralService;
 import com.isag.root.LoginRoot;
 import java.util.ArrayList;

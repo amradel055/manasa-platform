@@ -43,6 +43,17 @@ public class PeriodsServiceImpl implements PeriodsService {
         List<Periods> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }
+    
+    @Override
+    public List<PeriodsDTO> findPeriodsV2(Integer branchId , Integer teacherId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        params.put("teacherId", teacherId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM Periods d WHERE d.branchId.id = :branchId And d.teacherId.id = :teacherId ");
+        List<Periods> list = dao.findListByQuery(builder.toString(), params);
+        return returnListDTO(list);
+    }
 
     @Override
     public List<PeriodsDTO> findPeriodsByTeacherId(Integer teacherId) {
@@ -195,7 +206,12 @@ public class PeriodsServiceImpl implements PeriodsService {
         if (igmaUser.getId() != null) {
             IgmaUser igmaUser1 = new IgmaUser();
             igmaUser1.setId(igmaUser.getId());
-            entity.setTeacherId(igmaUser1);
+        }
+        
+        if(dTO.getTeacherId() != null){
+        IgmaUser teacher = new IgmaUser();
+        teacher.setId(dTO.getTeacherId());
+        entity.setTeacherId(teacher);
         }
 
         if (dTO.getId() == null) {

@@ -102,12 +102,12 @@ public class LessonServiceImpl implements LessonService {
     public List<LessonDTO> findAllLessonsByTeacher(Integer branchId, Integer companyId, Integer teacherId,
             Integer materialId, Integer schoolStageId, Integer id, Integer periodId, Integer studentId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("branchId", branchId);
-        params.put("companyId", companyId);
+//        params.put("branchId", branchId);
+//        params.put("companyId", companyId);
         params.put("teacherId", teacherId);
         periodNew = new StringBuilder();
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT d FROM Lesson d WHERE d.branchId.id = :branchId AND d.companyId.id = :companyId AND d.teacherId.id = :teacherId ");
+        builder.append("SELECT d FROM Lesson d WHERE d.teacherId.id = :teacherId ");
         if (id != null) {
             params.put("id", id);
             builder.append(" AND d.id = :id");
@@ -288,7 +288,7 @@ public class LessonServiceImpl implements LessonService {
             
             lesson = mapToEntity(lessonDTO, isagUser, lesson);
             lesson = dao.updateEntity(lesson);
-            lessonDTO = mapTODTO(lesson);
+//            lessonDTO = mapTODTO(lesson);
             DocumentsDTO documentsDTO = new DocumentsDTO();
             documentsService.saveList(documentsDTOList, lesson.getId(), lesson.getBranchId().getId(), lesson.getCompanyId().getId());
             lessonImgService.saveList(lessonImgDto, lesson.getId(), lesson.getBranchId().getId(), lesson.getCompanyId().getId());
@@ -352,6 +352,7 @@ public class LessonServiceImpl implements LessonService {
             schoolStagesGuideDTO.setCode(entity.getSchoolStagesGuideId().getCode());
             dTO.setSchoolStagesName(entity.getSchoolStagesGuideId().getName());
             dTO.setSchoolStagesGuideId(schoolStagesGuideDTO);
+            dTO.setSchoolId(entity.getSchoolStagesGuideId().getId());
         }
         
         if (entity.getPeriodId() != null) {
@@ -392,9 +393,9 @@ public class LessonServiceImpl implements LessonService {
         entity.setThumb(dTO.getThumb());
         entity.setVoiceLink(dTO.getVoiceLink());
         
-        if (dTO.getSchoolStagesGuideId() != null) {
+        if (dTO.getSchoolId() != null) {
             SchoolStagesGuide schoolStagesGuide = new SchoolStagesGuide();
-            schoolStagesGuide.setId(dTO.getSchoolStagesGuideId().getId());
+            schoolStagesGuide.setId(dTO.getSchoolId());
             entity.setSchoolStagesGuideId(schoolStagesGuide);
         }
         
@@ -408,9 +409,10 @@ public class LessonServiceImpl implements LessonService {
             materials.setId(dTO.getMaterialId());
             entity.setMaterialId(materials);
         }
-        if (isagUser.getId() != null) {
-            IgmaUser teacher = new IgmaUser();
-            teacher.setId(isagUser.getId());
+        
+        
+        if(dTO.getTeacherId() != null){
+            IgmaUser teacher = new IgmaUser(dTO.getTeacherId());
             entity.setTeacherId(teacher);
         }
         

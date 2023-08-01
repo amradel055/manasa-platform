@@ -50,7 +50,7 @@ public class QuestionCommonServiceImpl implements QuestionCommonService {
     }
 
     @Override
-    public void delete(Integer id, IgmaUser igmaUser) {
+    public void delete(Integer id) {
         QuestionCommon studentPeriodsOrder = dao.findEntityById(QuestionCommon.class, id);
 
         questionAnswerService.delete(studentPeriodsOrder.getId());
@@ -137,12 +137,21 @@ public class QuestionCommonServiceImpl implements QuestionCommonService {
     }
 
     @Override
-    public List<QuestionCommonDTO> findQuestionCommonAndAnswer(Integer teacherId, Integer materialId) {
+    public List<QuestionCommonDTO> findQuestionCommonAndAnswer(Integer teacherId, Integer materialId , Integer stageId) {
         Map<String, Object> params = new HashMap<>();
         params.put("teacherId", teacherId);
-        params.put("materialId", materialId);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT d FROM QuestionCommon d WHERE d.teacherId.id = :teacherId AND d.materialId.id = :materialId   ");
+        builder.append("SELECT d FROM QuestionCommon d WHERE d.teacherId.id = :teacherId   ");
+        
+        if(materialId != null){
+        params.put("materialId", materialId);
+        builder.append(" AND d.materialId.id = :materialId   ");
+        }
+        if(stageId != null){
+        params.put("stageId", stageId);
+        builder.append(" AND d.materialId.stageId.id = :stageId   ");
+        }
+        
         List<QuestionCommon> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }

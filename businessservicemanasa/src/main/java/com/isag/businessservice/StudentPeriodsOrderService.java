@@ -6,6 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.api.dto.SearchStudentDTO;
+import com.isag.dto.APIStudentDataDTO;
 import com.isag.dto.StudentPeriodsOrderDTO;
 import com.isag.entity.IgmaUser;
 import java.util.List;
@@ -31,5 +32,9 @@ public interface StudentPeriodsOrderService {
     public void transaction(Integer studentPeriodOrderId, IgmaUser igmaUser);
     
     public List<SearchStudentDTO> searchStudentForDelete(Integer periodId, Integer materialId)  ; 
+    
+     public List<APIStudentDataDTO> studentActivation(Integer branchId, Integer schoolStagesId, Integer id) ;
+     
+     public void deleteByStudentId(Integer periodOrderId) ;
 
 }

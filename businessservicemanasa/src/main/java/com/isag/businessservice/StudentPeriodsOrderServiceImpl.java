@@ -7,6 +7,7 @@ package com.isag.businessservice;
 
 import com.isag.api.dto.SearchStudentDTO;
 import com.isag.core.GenericDAO;
+import com.isag.dto.APIStudentDataDTO;
 import com.isag.dto.StudentPeriodsDTO;
 import com.isag.dto.StudentPeriodsOrderDTO;
 import com.isag.entity.Branch;
@@ -40,6 +41,9 @@ public class StudentPeriodsOrderServiceImpl implements StudentPeriodsOrderServic
     @EJB
     StudentPeriodsService studentPeriodsService;
 
+    @EJB
+    StudentService studentService;
+
     private StudentPeriodsOrderDTO mapTODTO(StudentPeriodsOrder entity) {
         StudentPeriodsOrderDTO dTO = initMapToDTO(entity);
 
@@ -52,10 +56,10 @@ public class StudentPeriodsOrderServiceImpl implements StudentPeriodsOrderServic
         List<StudentPeriodsDTO> studentPeriodsDTOList = new ArrayList<>();
 
         if (studentPeriodsOrderDTO.getStudentId() != null && studentPeriodsOrderDTO.getMaterialId() != null) {
-            studentPeriodsOrderDTOList = checkByStudentAndMaterial(studentPeriodsOrderDTO.getStudentId(), studentPeriodsOrderDTO.getMaterialId() , studentPeriodsOrderDTO.getPeriodId());
-            studentPeriodsDTOList = studentPeriodsService.checkByStudentAndMaterialActive(studentPeriodsOrderDTO.getStudentId(), studentPeriodsOrderDTO.getMaterialId() , studentPeriodsOrderDTO.getPeriodId());
+            studentPeriodsOrderDTOList = checkByStudentAndMaterial(studentPeriodsOrderDTO.getStudentId(), studentPeriodsOrderDTO.getMaterialId(), studentPeriodsOrderDTO.getPeriodId());
+            studentPeriodsDTOList = studentPeriodsService.checkByStudentAndMaterialActive(studentPeriodsOrderDTO.getStudentId(), studentPeriodsOrderDTO.getMaterialId(), studentPeriodsOrderDTO.getPeriodId());
         }
-        if ((studentPeriodsOrderDTOList == null || studentPeriodsOrderDTOList.isEmpty() )&& (studentPeriodsDTOList == null || studentPeriodsDTOList.isEmpty())) {
+        if ((studentPeriodsOrderDTOList == null || studentPeriodsOrderDTOList.isEmpty()) && (studentPeriodsDTOList == null || studentPeriodsDTOList.isEmpty())) {
             StudentPeriodsOrder studentPeriodsOrder = mapToEntity(studentPeriodsOrderDTO, isagUser, null);
             dao.updateEntity(studentPeriodsOrder);
             return "تم طلب  تفعيل الطالب ";
@@ -107,11 +111,11 @@ public class StudentPeriodsOrderServiceImpl implements StudentPeriodsOrderServic
         List<SearchStudentDTO> searchStudentDTOList = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT d FROM StudentPeriodsOrder d ");
+        builder.append("SELECT d FROM StudentPeriodsOrder d where 1 = 1 ");
 
         if (materialId != null) {
             params.put("materialId", materialId);
-            builder.append(" WHERE d.materialId.id = :materialId  ");
+            builder.append(" AND d.materialId.id = :materialId  ");
         }
         if (periodId != null) {
             params.put("periodId", periodId);
@@ -132,9 +136,8 @@ public class StudentPeriodsOrderServiceImpl implements StudentPeriodsOrderServic
         }
         return searchStudentDTOList;
     }
-    
-    
-        @Override
+
+    @Override
     public List<SearchStudentDTO> searchStudentForDelete(Integer periodId, Integer materialId) {
         List<SearchStudentDTO> searchStudentDTOList = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
@@ -271,9 +274,9 @@ public class StudentPeriodsOrderServiceImpl implements StudentPeriodsOrderServic
         if (studentPeriodsOrder != null) {
             StudentPeriods studentPeriods = new StudentPeriods();
             studentPeriods.setBranchId(studentPeriodsOrder.getBranchId());
-            studentPeriods.setCompanyId(igmaUser.getCompanyId());
+            studentPeriods.setCompanyId(studentPeriodsOrder.getCompanyId());
             studentPeriods.setCreationDate(new Date());
-            studentPeriods.setCreatedBy(igmaUser.getCreatedBy());
+            studentPeriods.setCreatedBy(studentPeriodsOrder.getCreatedBy());
             studentPeriods.setStudentId(studentPeriodsOrder.getStudentId());
             studentPeriods.setTeacherId(studentPeriodsOrder.getTeacherId());
             studentPeriods.setPeriodId(studentPeriodsOrder.getPeriodId());
@@ -285,6 +288,48 @@ public class StudentPeriodsOrderServiceImpl implements StudentPeriodsOrderServic
 //            dao.updateEntity(studentPeriods);
         }
         dao.deleteEntity(studentPeriodsOrder);
+    }
+
+    @Override
+    public List<APIStudentDataDTO> studentActivation(Integer branchId, Integer schoolStagesId, Integer id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        StringBuilder query = new StringBuilder();
+        query.append(" SELECT i FROM StudentPeriodsOrder i WHERE i.branchId.id =:branchId ");
+        if (schoolStagesId != null) {
+            params.put("schoolStagesId", schoolStagesId);
+            query.append(" AND i.schoolStagesId.id = :schoolStagesId");
+        }
+        if (id != null) {
+            params.put("id", id);
+            query.append(" AND i.id = :id ");
+        }
+        query.append(" order by i.id desc ");
+        List<StudentPeriodsOrder> list = dao.findListByQuery(query.toString(), params);
+        if (list != null && !list.isEmpty()) {
+            List<Student> studentList = new ArrayList<>();
+            for( StudentPeriodsOrder entity : list){
+                entity.getStudentId().setPeriodOrderId(entity.getId());
+                entity.getStudentId().setPeriodName(entity.getPeriodId() == null ? null : entity.getPeriodId().getName());
+                studentList.add(entity.getStudentId());
+            }
+            return studentService.returnListDTOAPI(studentList);
+        }
+        return null;
+    }
+
+    @Override
+    public void deleteByStudentId(Integer periodOrderId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("periodOrderId", periodOrderId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM StudentPeriodsOrder d WHERE d.id = :periodOrderId");
+        List<StudentPeriodsOrder> list = dao.findListByQuery(builder.toString(), params);
+        if (list != null && !list.isEmpty()) {
+            for (StudentPeriodsOrder entity : list) {
+                dao.deleteEntity(entity);
+            }
+        }
     }
 
 }

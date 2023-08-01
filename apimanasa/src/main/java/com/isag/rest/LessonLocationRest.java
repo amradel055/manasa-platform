@@ -6,9 +6,7 @@
 package com.isag.rest;
 
 import com.isag.businessservice.LessonLocationService;
-import com.isag.businessservice.LessonService;
 import com.isag.config.UserLoginData;
-import com.isag.dto.LessonDTO;
 import com.isag.dto.LessonLocationDTO;
 import java.util.List;
 import javax.ejb.EJB;

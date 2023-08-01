@@ -19,12 +19,12 @@ public interface QuestionCommonService {
 
     public QuestionCommonDTO save(QuestionCommonDTO questionCommonDTO, IgmaUser isagUser) ;
     
-     public QuestionCommonDTO findDto(Integer id) ;
+    public QuestionCommonDTO findDto(Integer id) ;
 
-    public void delete(Integer id, IgmaUser igmaUser);
+    public void delete(Integer id);
 
     public List<QuestionCommonDTO> findStudemtPeriodOrderDTO(Integer branchId);
 
-    public List<QuestionCommonDTO> findQuestionCommonAndAnswer(Integer teacherId, Integer materialId);
+    public List<QuestionCommonDTO> findQuestionCommonAndAnswer(Integer teacherId, Integer materialId , Integer stageId);
 
 }

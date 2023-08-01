@@ -20,6 +20,8 @@ public interface PeriodsService {
     public List<PeriodsDTO> findPeriodsByTeacherId(Integer teacherId);
 
     public List<PeriodsDTO> findPeriods(Integer branchId);
+    
+    public List<PeriodsDTO> findPeriodsV2(Integer branchId , Integer teacherId);
 
     public PeriodsDTO save(PeriodsDTO periodsDTO, IgmaUser isagUser);
     

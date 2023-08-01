@@ -5,10 +5,8 @@
  */
 package com.isag.rest;
 
-import com.isag.api.dto.TeacherDataAPI;
 import com.isag.businessservice.PeriodsService;
 import com.isag.config.UserLoginData;
-import com.isag.dto.IgmaUserDTO;
 import com.isag.dto.PeriodsDTO;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +41,7 @@ public class PeriodsRest {
     public Response allPeriods(PeriodsDTO periodsDTO) {
         if (periodsDTO != null) {
             try {
-                List<PeriodsDTO> dTOs = periodsService.findPeriods(periodsDTO.getBranchId());
+                List<PeriodsDTO> dTOs = periodsService.findPeriodsByTeacherId(periodsDTO.getTeacherId());
                 GenericEntity<List<PeriodsDTO>> list = new GenericEntity<List<PeriodsDTO>>(dTOs) {
                 };
                 return Response.ok(list).build();

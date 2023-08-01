@@ -5,14 +5,11 @@
  */
 package com.isag.rest;
 
-import com.isag.businessservice.IgmaUserService;
-import com.isag.businessservice.MaterialsService;
 import com.isag.businessservice.TeachersService;
 import com.isag.config.UserLoginData;
 import com.isag.dto.TeachersDTO;
 import java.util.List;
 import javax.ejb.EJB;
-import javax.servlet.ServletContext;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -34,12 +31,6 @@ public class TeachersRest {
     private UserLoginData userLoginData;
     @EJB
     TeachersService teachersService;
-    @EJB
-    IgmaUserService igmaUserService;
-    @EJB
-    MaterialsService materialsService;
-    @EJB
-    private ServletContext context;
 
     @Transactional
     @Path("/allTeachers")

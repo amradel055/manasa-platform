@@ -48,6 +48,11 @@ public class APIStudentDataDTO {
     private String stateName;
     private String governorateName;
     private String fatherJob;
+    
+    private Integer materialId ;
+    private Integer periodId ;
+    private Integer periodOrderId55 ;
+    private String periodName ;
 
     /**
      * @return the monthList
@@ -495,6 +500,62 @@ public class APIStudentDataDTO {
      */
     public void setImage(String image) {
         this.image = image;
+    }
+
+    /**
+     * @return the materialId
+     */
+    public Integer getMaterialId() {
+        return materialId;
+    }
+
+    /**
+     * @param materialId the materialId to set
+     */
+    public void setMaterialId(Integer materialId) {
+        this.materialId = materialId;
+    }
+
+    /**
+     * @return the periodId
+     */
+    public Integer getPeriodId() {
+        return periodId;
+    }
+
+    /**
+     * @param periodId the periodId to set
+     */
+    public void setPeriodId(Integer periodId) {
+        this.periodId = periodId;
+    }
+
+    /**
+     * @return the periodOrderId55
+     */
+    public Integer getPeriodOrderId55() {
+        return periodOrderId55;
+    }
+
+    /**
+     * @param periodOrderId55 the periodOrderId55 to set
+     */
+    public void setPeriodOrderId55(Integer periodOrderId55) {
+        this.periodOrderId55 = periodOrderId55;
+    }
+
+    /**
+     * @return the periodName
+     */
+    public String getPeriodName() {
+        return periodName;
+    }
+
+    /**
+     * @param periodName the periodName to set
+     */
+    public void setPeriodName(String periodName) {
+        this.periodName = periodName;
     }
 
 }
