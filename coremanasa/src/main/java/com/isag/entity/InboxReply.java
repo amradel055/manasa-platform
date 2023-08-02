@@ -5,33 +5,20 @@
  */
 package com.isag.entity;
 
-import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-
 
 /**
  *
  * @author m lapan
  */
 @Entity
-@Table(name = "inbox_messages")
-public class InboxReply implements Serializable{
+@Table(name = "inbox_replies")
+public class InboxReply extends BaseEntity {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
-    
     @Column(name = "message_id", nullable = false)
     private Integer message;
 
@@ -44,54 +31,55 @@ public class InboxReply implements Serializable{
 
     @Column(name = "body")
     private String body;
-    
+
+    @Column(name = "image")
+    private String image;
 
     // getters and setters
+    public Integer getMessage() {
+        return message;
+    }
 
-	public Integer getMessage() {
-		return message;
-	}
+    public void setMessage(Integer message) {
+        this.message = message;
+    }
 
-	public void setMessage(Integer message) {
-		this.message = message;
-	}
+    public Integer getSender() {
+        return sender;
+    }
 
-	public Integer getSender() {
-		return sender;
-	}
+    public void setSender(Integer sender) {
+        this.sender = sender;
+    }
 
-	public void setSender(Integer sender) {
-		this.sender = sender;
-	}
+    public Date getSentDate() {
+        return sentDate;
+    }
 
-	public Date getSentDate() {
-		return sentDate;
-	}
+    public void setSentDate(Date sentDate) {
+        this.sentDate = sentDate;
+    }
 
-	public void setSentDate(Date sentDate) {
-		this.sentDate = sentDate;
-	}
+    public String getBody() {
+        return body;
+    }
 
-	public String getBody() {
-		return body;
-	}
-
-	public void setBody(String body) {
-		this.body = body;
-	}
-
-    /**
-     * @return the id
-     */
-    public Integer getId() {
-        return id;
+    public void setBody(String body) {
+        this.body = body;
     }
 
     /**
-     * @param id the id to set
+     * @return the image
      */
-    public void setId(Integer id) {
-        this.id = id;
+    public String getImage() {
+        return image;
+    }
+
+    /**
+     * @param image the image to set
+     */
+    public void setImage(String image) {
+        this.image = image;
     }
 
 }

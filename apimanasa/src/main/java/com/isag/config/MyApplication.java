@@ -9,6 +9,8 @@ import com.isag.rest.AppointmentsRest;
 import com.isag.rest.CommentsRest;
 import com.isag.rest.DocumentsRest;
 import com.isag.rest.ExamsRest;
+import com.isag.rest.InboxMessageRest;
+import com.isag.rest.InboxReplyRest;
 import com.isag.rest.LessonLocationRest;
 import com.isag.rest.LessonRest;
 import com.isag.rest.LockupRest;
@@ -66,6 +68,8 @@ public class MyApplication extends Application {
         resources.add(LessonLocationRest.class);
         resources.add(StudentPeriodsOrderRest.class);
         resources.add(QuestionCommonRest.class);
+        resources.add(InboxMessageRest.class);
+        resources.add(InboxReplyRest.class);
 
         return resources;
     }

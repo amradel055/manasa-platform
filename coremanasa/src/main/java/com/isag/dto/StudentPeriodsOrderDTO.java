@@ -6,6 +6,7 @@
 package com.isag.dto;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  *
@@ -28,6 +29,7 @@ public class StudentPeriodsOrderDTO extends BaseEntityDTO {
     private String periodName;
     private Integer materialId;
     private String remark;
+    private List<Integer> periods;
 
     public StudentPeriodsOrderDTO() {
     }
@@ -257,6 +259,20 @@ public class StudentPeriodsOrderDTO extends BaseEntityDTO {
      */
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    /**
+     * @return the periods
+     */
+    public List<Integer> getPeriods() {
+        return periods;
+    }
+
+    /**
+     * @param periods the periods to set
+     */
+    public void setPeriods(List<Integer> periods) {
+        this.periods = periods;
     }
 
 }

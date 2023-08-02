@@ -88,13 +88,13 @@ public class QuestionCommonRest {
     }
     
     @Transactional
-    @Path("deleteanswer")
+    @Path("deletequestion")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteAnswer(QuestionCommonDTO dto) {
+    public Response deleteQuestion(QuestionCommonDTO dto) {
         try {
-            questionAnswerDetailService.delete(dto.getId());
+            questionCommonService.delete(dto.getId());
             dto.setMsg("تم الحذف بنجاح");
             dto.setMsgType("success");
             return Response.ok(dto).build();

@@ -5,7 +5,8 @@
  */
 package com.isag.businessservice;
 
-import com.isag.entity.InboxMessages;
+import com.isag.dto.InboxMessagesDTO;
+import com.isag.entity.IgmaUser;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -16,12 +17,12 @@ import javax.ejb.Remote;
 @Remote
 public interface InboxMessageService {
 
-    public InboxMessages save(InboxMessages inboxMessages) ;
-    
-     public InboxMessages findById(Integer id) ;
+    public InboxMessagesDTO save(InboxMessagesDTO dto , IgmaUser igmaUser);
+
+    public InboxMessagesDTO findById(Integer id);
 
     public void delete(Integer id);
 
-    public List<InboxMessages> find(Integer studentId , Integer teacherId);
+    public List<InboxMessagesDTO> find(Integer studentId, Integer teacherId, Integer schoolId, Integer materialId);
 
 }

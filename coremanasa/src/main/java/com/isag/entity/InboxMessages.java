@@ -5,19 +5,14 @@
  */
 package com.isag.entity;
 
-import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
-
 
 /**
  *
@@ -25,23 +20,23 @@ import javax.persistence.Transient;
  */
 @Entity
 @Table(name = "inbox_messages")
-public class InboxMessages implements Serializable{
+public class InboxMessages extends BaseEntity {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
-    
-    @Column(name = "student_id", nullable = false)
-    private Integer studentId;
+    @JoinColumn(name = "student_id", referencedColumnName = "id")
+    @ManyToOne()
+    private Student studentId;
 
-    @Column(name = "teacher_id", nullable = false)
-    private Integer teacherId;
+    @JoinColumn(name = "teacher_id", referencedColumnName = "id")
+    @ManyToOne()
+    private IgmaUser teacherId;
+
+    @JoinColumn(name = "material_id", referencedColumnName = "id")
+    @ManyToOne()
+    private Materials materialId;
     
-    @Column(name = "material_id", nullable = false)
-    private Integer materialId;
+    @JoinColumn(name = "branch_id", referencedColumnName = "id")
+    @ManyToOne()
+    private Branch branchId;
 
     @Column(name = "subject")
     private String subject;
@@ -49,101 +44,116 @@ public class InboxMessages implements Serializable{
     @Column(name = "body")
     private String body;
 
+    @Column(name = "image")
+    private String image;
+
     @Column(name = "sent_date")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date sentDate;
 
     @Column(name = "read_done")
     private Integer readDone;
-    
+
     @Transient
-    private List<InboxReply> inboxReplys ;
-   
+    private InboxReply inboxReply;
 
     // getters and setters
-    
-	public String getSubject() {
-		return subject;
-	}
+    public String getSubject() {
+        return subject;
+    }
 
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
 
-	public String getBody() {
-		return body;
-	}
+    public String getBody() {
+        return body;
+    }
 
-	public void setBody(String body) {
-		this.body = body;
-	}
+    public void setBody(String body) {
+        this.body = body;
+    }
 
-	public Date getSentDate() {
-		return sentDate;
-	}
+    public Date getSentDate() {
+        return sentDate;
+    }
 
-	public void setSentDate(Date sentDate) {
-		this.sentDate = sentDate;
-	}
+    public void setSentDate(Date sentDate) {
+        this.sentDate = sentDate;
+    }
 
-	public Integer getStudentId() {
-		return studentId;
-	}
+    public Student getStudentId() {
+        return studentId;
+    }
 
-	public void setStudentId(Integer studentId) {
-		this.studentId = studentId;
-	}
+    public void setStudentId(Student studentId) {
+        this.studentId = studentId;
+    }
 
-	public Integer getTeacherId() {
-		return teacherId;
-	}
+    public IgmaUser getTeacherId() {
+        return teacherId;
+    }
 
-	public void setTeacherId(Integer teacherId) {
-		this.teacherId = teacherId;
-	}
+    public void setTeacherId(IgmaUser teacherId) {
+        this.teacherId = teacherId;
+    }
 
-	public Integer getMaterialId() {
-		return materialId;
-	}
+    public Materials getMaterialId() {
+        return materialId;
+    }
 
-	public void setMaterialId(Integer materialId) {
-		this.materialId = materialId;
-	}
+    public void setMaterialId(Materials materialId) {
+        this.materialId = materialId;
+    }
 
-	public Integer getReadDone() {
-		return readDone;
-	}
+    public Integer getReadDone() {
+        return readDone;
+    }
 
-	public void setReadDone(Integer readDone) {
-		this.readDone = readDone;
-	}
-
-    /**
-     * @return the id
-     */
-    public Integer getId() {
-        return id;
+    public void setReadDone(Integer readDone) {
+        this.readDone = readDone;
     }
 
     /**
-     * @param id the id to set
+     * @return the inboxReply
      */
-    public void setId(Integer id) {
-        this.id = id;
+    public InboxReply getInboxReply() {
+        return inboxReply;
     }
 
     /**
-     * @return the inboxReplys
+     * @param inboxReply the inboxReply to set
      */
-    public List<InboxReply> getInboxReplys() {
-        return inboxReplys;
+    public void setInboxReply(InboxReply inboxReply) {
+        this.inboxReply = inboxReply;
     }
 
     /**
-     * @param inboxReplys the inboxReplys to set
+     * @return the image
      */
-    public void setInboxReplys(List<InboxReply> inboxReplys) {
-        this.inboxReplys = inboxReplys;
+    public String getImage() {
+        return image;
+    }
+
+    /**
+     * @param image the image to set
+     */
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    /**
+     * @return the branchId
+     */
+    public Branch getBranchId() {
+        return branchId;
+    }
+
+    /**
+     * @param branchId the branchId to set
+     */
+    public void setBranchId(Branch branchId) {
+        this.branchId = branchId;
     }
 
 }

@@ -26,7 +26,7 @@ public class InboxReplyServiceImpl implements InboxReplyService {
     
 
     @Override
-    public InboxReply save(InboxReply inboxReply, IgmaUser isagUser) {
+    public InboxReply save(InboxReply inboxReply) {
         inboxReply = dao.updateEntity(inboxReply);
         return inboxReply;
     }
@@ -52,7 +52,7 @@ public class InboxReplyServiceImpl implements InboxReplyService {
         builder.append("SELECT d FROM InboxReply d WHERE 1=1    ");
         if(messageId != null){
             params.put("messageId", messageId);
-            builder.append(" AND d.message = :teacherId ");
+            builder.append(" AND d.message = :messageId ");
         }
         builder.append(" order by d.sentDate ") ;
         

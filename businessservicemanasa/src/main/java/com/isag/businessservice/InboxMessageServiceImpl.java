@@ -6,8 +6,15 @@
 package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
+import com.isag.dto.InboxMessagesDTO;
+import com.isag.entity.Branch;
+import com.isag.entity.IgmaUser;
 import com.isag.entity.InboxMessages;
 import com.isag.entity.InboxReply;
+import com.isag.entity.Materials;
+import com.isag.entity.Student;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,9 +34,14 @@ public class InboxMessageServiceImpl implements InboxMessageService {
     private InboxReplyService inboxReplyService;
 
     @Override
-    public InboxMessages save(InboxMessages inboxMessages) {
-        inboxMessages = dao.updateEntity(inboxMessages);
-        return inboxMessages;
+    public InboxMessagesDTO save(InboxMessagesDTO dto, IgmaUser igmaUser) {
+        if (dto != null) {
+            InboxMessages entity = mapToEntity(dto , igmaUser);
+            entity = dao.updateEntity(entity);
+            dto.setId(entity.getId());
+            return dto;
+        }
+        return dto;
     }
 
     @Override
@@ -39,32 +51,104 @@ public class InboxMessageServiceImpl implements InboxMessageService {
     }
 
     @Override
-    public InboxMessages findById(Integer id) {
-        InboxMessages inboxMessages = dao.findEntityById(InboxMessages.class, id);
-        List<InboxReply> replys = inboxReplyService.find(id);
-        inboxMessages.setInboxReplys(replys);
-        return inboxMessages;
+    public InboxMessagesDTO findById(Integer id) {
+        InboxMessages entity = dao.findEntityById(InboxMessages.class, id);
+        return mapToDTO(entity, true);
     }
-    
+
+    private InboxMessagesDTO mapToDTO(InboxMessages entity, boolean isDetail) {
+        if (entity != null) {
+            InboxMessagesDTO dto = new InboxMessagesDTO();
+            if (isDetail) {
+                List<InboxReply> replys = inboxReplyService.find(entity.getId());
+                dto.setInboxReplys(replys);
+            }
+            dto.setId(entity.getId());
+            dto.setBody(entity.getBody());
+            dto.setMaterialId(entity.getMaterialId() == null ? null : entity.getMaterialId().getId());
+            dto.setMaterialName(entity.getMaterialId() == null ? null : entity.getMaterialId().getName());
+            dto.setReadDone(entity.getReadDone());
+            dto.setSentDate(entity.getSentDate());
+            dto.setStudentId(entity.getStudentId() == null ? null : entity.getStudentId().getId());
+            dto.setStudentName(entity.getStudentId() == null ? null : entity.getStudentId().getFullName());
+            dto.setSubject(entity.getSubject());
+            dto.setImage(entity.getImage());
+            dto.setTeacherId(entity.getTeacherId() == null ? null : entity.getTeacherId().getId());
+            dto.setTeacherName(entity.getTeacherId() == null ? null : entity.getTeacherId().getName());
+            return dto;
+        }
+        return null;
+    }
+
+    private InboxMessages mapToEntity(InboxMessagesDTO dto , IgmaUser igmaUser) {
+        if (dto != null) {
+            InboxMessages entity = new InboxMessages();
+            entity.setId(dto.getId());
+            entity.setBody(dto.getBody());
+            Materials material = new Materials(dto.getMaterialId());
+            entity.setMaterialId(material);
+            entity.setReadDone(dto.getReadDone());
+            entity.setSentDate(dto.getSentDate());
+            Student student = new Student(dto.getStudentId());
+            entity.setStudentId(student);
+            entity.setSubject(dto.getSubject());
+            entity.setImage(dto.getImage());
+            IgmaUser teacher = new IgmaUser(dto.getTeacherId());
+            entity.setTeacherId(teacher);
+
+            if (dto.getId() == null) {
+                entity.setCreatedBy(igmaUser);
+                entity.setCreationDate(new Date());
+            } else {
+                entity.setId(dto.getId());
+                entity.setModificationDate(new Date());
+                entity.setModifiedBy(igmaUser);
+            }
+
+            Branch branch = new Branch();
+            branch.setId(232);
+            entity.setBranchId(branch);
+            entity.setCompanyId(igmaUser.getCompanyId());
+
+            return entity;
+        }
+        return null;
+    }
+
     @Override
-    public List<InboxMessages> find(Integer studentId , Integer teacherId) {
+    public List<InboxMessagesDTO> find(Integer studentId, Integer teacherId, Integer schoolId, Integer materialId) {
         Map<String, Object> params = new HashMap<>();
-        
+
         StringBuilder builder = new StringBuilder();
-        
+
         builder.append("SELECT d FROM InboxMessages d WHERE 1=1    ");
-        if(studentId != null){
+        if (studentId != null) {
             params.put("teacherId", teacherId);
-            builder.append(" AND d.teacherId = :teacherId ");
+            builder.append(" AND d.teacherId.id = :teacherId ");
         }
-        if(teacherId != null){
+        if (teacherId != null) {
             params.put("studentId", studentId);
-            builder.append(" AND d.studentId = :studentId");
+            builder.append(" AND d.studentId.id = :studentId");
         }
-        builder.append(" order by d.sentDate ") ;
-        
+        if (materialId != null) {
+            params.put("materialId", materialId);
+            builder.append(" AND d.materialId.id = :materialId");
+        }
+        if (schoolId != null) {
+            params.put("schoolId", schoolId);
+            builder.append(" AND d.materialId.stageId.id = :schoolId");
+        }
+        builder.append(" order by d.sentDate ASC ");
+
         List<InboxMessages> list = dao.findListByQuery(builder.toString(), params);
-        return list;
+        if (list != null && !list.isEmpty()) {
+            List<InboxMessagesDTO> listDTO = new ArrayList<>();
+            for (InboxMessages entity : list) {
+                listDTO.add(mapToDTO(entity, false));
+            }
+            return listDTO;
+        }
+        return null;
     }
 
 }

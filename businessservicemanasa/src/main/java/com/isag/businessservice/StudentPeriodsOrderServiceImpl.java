@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -292,34 +294,41 @@ public class StudentPeriodsOrderServiceImpl implements StudentPeriodsOrderServic
 
     @Override
     public List<APIStudentDataDTO> studentActivation(Integer branchId, Integer schoolStagesId, Integer id) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("branchId", branchId);
-        StringBuilder query = new StringBuilder();
-        query.append(" SELECT i FROM StudentPeriodsOrder i WHERE i.branchId.id =:branchId ");
-        if (schoolStagesId != null) {
-            params.put("schoolStagesId", schoolStagesId);
-            query.append(" AND i.schoolStagesId.id = :schoolStagesId");
-        }
-        if (id != null) {
-            params.put("id", id);
-            query.append(" AND i.id = :id ");
-        }
-        query.append(" order by i.id desc ");
-        List<StudentPeriodsOrder> list = dao.findListByQuery(query.toString(), params);
-        if (list != null && !list.isEmpty()) {
-            List<Student> studentList = new ArrayList<>();
-            for( StudentPeriodsOrder entity : list){
-                entity.getStudentId().setPeriodOrderId(entity.getId());
-                entity.getStudentId().setPeriodName(entity.getPeriodId() == null ? null : entity.getPeriodId().getName());
-                studentList.add(entity.getStudentId());
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("branchId", branchId);
+            StringBuilder query = new StringBuilder();
+            query.append(" SELECT i FROM StudentPeriodsOrder i WHERE i.branchId.id =:branchId ");
+            if (schoolStagesId != null) {
+                params.put("schoolStagesId", schoolStagesId);
+                query.append(" AND i.schoolStagesId.id = :schoolStagesId");
             }
-            return studentService.returnListDTOAPI(studentList);
+            if (id != null) {
+                params.put("id", id);
+                query.append(" AND i.id = :id ");
+            }
+            query.append(" order by i.id desc ");
+            List<StudentPeriodsOrder> list = dao.findListByQuery(query.toString(), params);
+            if (list != null && !list.isEmpty()) {
+                List<Student> studentList = new ArrayList<>();
+                Student student;
+                for (StudentPeriodsOrder entity : list) {
+                    student = (Student) entity.getStudentId().clone();
+                    student.setPeriodOrderId(entity.getId());
+                    student.setPeriodName(entity.getPeriodId() == null ? null : entity.getPeriodId().getName());
+                    studentList.add(student);
+                }
+                return studentService.returnListDTOAPI(studentList);
+            }
+        } catch (CloneNotSupportedException ex) {
+            return null;
         }
         return null;
     }
 
     @Override
-    public void deleteByStudentId(Integer periodOrderId) {
+    public void deleteByStudentId(Integer periodOrderId
+    ) {
         Map<String, Object> params = new HashMap<>();
         params.put("periodOrderId", periodOrderId);
         StringBuilder builder = new StringBuilder();

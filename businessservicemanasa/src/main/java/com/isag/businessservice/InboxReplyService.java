@@ -5,7 +5,6 @@
  */
 package com.isag.businessservice;
 
-import com.isag.entity.IgmaUser;
 import com.isag.entity.InboxReply;
 import java.util.List;
 import javax.ejb.Remote;
@@ -17,7 +16,7 @@ import javax.ejb.Remote;
 @Remote
 public interface InboxReplyService {
 
-    public InboxReply save(InboxReply inboxReply, IgmaUser isagUser) ;
+    public InboxReply save(InboxReply inboxReply) ;
     
      public InboxReply findById(Integer id) ;
 
