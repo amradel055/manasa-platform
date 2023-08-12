@@ -63,6 +63,8 @@ public class OtherAppointmentsServiceImpl implements OtherAppointmentsService {
             params.put("type", type);
             builder.append(" AND d.appointmentsType = :type ");
         }
+        
+        builder.append(" order by d.id ASC ");
         List<OtherAppointments> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }
@@ -146,6 +148,7 @@ public class OtherAppointmentsServiceImpl implements OtherAppointmentsService {
         }
         if (entity.getSchoolStageId() != null) {
             dTO.setSchoolStageId(entity.getSchoolStageId().getId());
+            dTO.setSchoolStageName(entity.getSchoolStageId().getName());
         }
         if (entity.getMaterialId() != null) {
             dTO.setMaterialId(entity.getMaterialId().getId());

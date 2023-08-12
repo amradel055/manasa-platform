@@ -58,9 +58,11 @@ public class ZoomLinkServiceImpl implements ZoomLinkService {
             ZoomLinkDTO dto = new ZoomLinkDTO();
             dto.setId(entity.getId());
             dto.setMaterialId(entity.getMaterialId() == null ? null : entity.getMaterialId().getId());
+            dto.setMaterialName(entity.getMaterialId() == null ? null : entity.getMaterialId().getName());
             dto.setLink(entity.getLink());
             dto.setTeacherId(entity.getTeacherId() == null ? null : entity.getTeacherId().getId());
             dto.setSchoolId(entity.getSchoolId() == null ? null : entity.getSchoolId().getId());
+            dto.setSchoolName(entity.getSchoolId() == null ? null : entity.getSchoolId().getName());
             return dto;
         }
         return null;
@@ -120,7 +122,7 @@ public class ZoomLinkServiceImpl implements ZoomLinkService {
             builder.append(" AND d.materialId.stageId.id = :schoolId");
         }
 
-        builder.append(" order by d.sentDate ASC ");
+        builder.append(" order by d.id ASC ");
 
         List<ZoomLink> list = dao.findListByQuery(builder.toString(), params);
         if (list != null && !list.isEmpty()) {

@@ -15,6 +15,8 @@ public class ZoomLinkDTO extends BaseEntityDTO {
     private Integer teacherId;
     private Integer schoolId;
     private Integer materialId;
+    private String schoolName;
+    private String materialName;
 
     public ZoomLinkDTO() {
     }
@@ -89,6 +91,34 @@ public class ZoomLinkDTO extends BaseEntityDTO {
      */
     public void setLink(String link) {
         this.link = link;
+    }
+
+    /**
+     * @return the schoolName
+     */
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    /**
+     * @param schoolName the schoolName to set
+     */
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
+
+    /**
+     * @return the materialName
+     */
+    public String getMaterialName() {
+        return materialName;
+    }
+
+    /**
+     * @param materialName the materialName to set
+     */
+    public void setMaterialName(String materialName) {
+        this.materialName = materialName;
     }
 
 }

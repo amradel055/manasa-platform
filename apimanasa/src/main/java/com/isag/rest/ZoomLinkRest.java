@@ -41,14 +41,14 @@ public class ZoomLinkRest {
     public ZoomLinkDTO findById(ZoomLinkDTO dTO) {
         return zoomLinkService.findById(dTO.getId());
     }
-    
+
     @Transactional
     @Path("/find")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public List<ZoomLinkDTO> find(ZoomLinkDTO dTO) {
-        return zoomLinkService.find(dTO.getTeacherId() , dTO.getSchoolId() , dTO.getMaterialId());
+        return zoomLinkService.find(dTO.getTeacherId(), dTO.getSchoolId(), dTO.getMaterialId());
     }
 
     @Transactional
@@ -80,6 +80,8 @@ public class ZoomLinkRest {
     public Response delete(ZoomLinkDTO dto) {
         try {
             zoomLinkService.delete(dto.getId());
+            dto.setMsg("تم الحذف بنجاح");
+            dto.setMsgType("success");
             return Response.ok(dto).build();
         } catch (Exception e) {
             return Response.status(Response.Status.FORBIDDEN).build();

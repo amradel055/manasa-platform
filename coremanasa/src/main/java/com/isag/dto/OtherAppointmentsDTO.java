@@ -21,6 +21,7 @@ public class OtherAppointmentsDTO extends BaseEntityDTO {
     private Integer materialId;
     private String materialName;
     private Integer otherAppointmentsType;
+    private String schoolStageName;
 
     public OtherAppointmentsDTO() {
     }
@@ -178,6 +179,34 @@ public class OtherAppointmentsDTO extends BaseEntityDTO {
      */
     public void setMaterialName(String materialName) {
         this.materialName = materialName;
+    }
+
+    /**
+     * @return the otherAppointmentsType
+     */
+    public Integer getOtherAppointmentsType() {
+        return otherAppointmentsType;
+    }
+
+    /**
+     * @param otherAppointmentsType the otherAppointmentsType to set
+     */
+    public void setOtherAppointmentsType(Integer otherAppointmentsType) {
+        this.otherAppointmentsType = otherAppointmentsType;
+    }
+
+    /**
+     * @return the schoolStageName
+     */
+    public String getSchoolStageName() {
+        return schoolStageName;
+    }
+
+    /**
+     * @param schoolStageName the schoolStageName to set
+     */
+    public void setSchoolStageName(String schoolStageName) {
+        this.schoolStageName = schoolStageName;
     }
 
 }
