@@ -9,6 +9,7 @@ import com.isag.businessservice.GovernoratesService;
 import com.isag.businessservice.MaterialsService;
 import com.isag.businessservice.SchoolStagesGuideService;
 import com.isag.businessservice.StatesService;
+import com.isag.businessservice.StudentStatusService;
 import com.isag.config.UserLoginData;
 import com.isag.dto.GovernoratesDTO;
 import com.isag.dto.MaterialsDTO;
@@ -45,6 +46,8 @@ public class LockupRest {
     SchoolStagesGuideService schoolStagesGuideService;
     @EJB
     MaterialsService materialsService;
+    @EJB
+    private StudentStatusService studentStatusService;
 
     @Transactional
     @Path("/governorateList")

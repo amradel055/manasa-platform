@@ -9,6 +9,7 @@ import com.isag.api.dto.TeacherDataAPI;
 import com.isag.businessservice.IgmaUserService;
 import com.isag.businessservice.MaterialsService;
 import com.isag.businessservice.StudentService;
+import com.isag.businessservice.StudentStatusService;
 import com.isag.config.UserLoginData;
 import com.isag.dto.APIStudentDataDTO;
 import com.isag.dto.MaterialsDTO;
@@ -41,6 +42,8 @@ public class StudentRest {
 
     @EJB
     MaterialsService materialsService;
+    @EJB
+    private StudentStatusService studentStatusService;
 
     @Transactional
     @Path("/studentregister")

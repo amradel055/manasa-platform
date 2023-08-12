@@ -6,6 +6,7 @@
 package com.isag.rest;
 
 import com.isag.businessservice.NewsService;
+import com.isag.businessservice.StudentStatusService;
 import com.isag.config.UserLoginData;
 import com.isag.dto.NewsDTO;
 import java.util.List;
@@ -31,6 +32,8 @@ public class NewsRest {
     private UserLoginData userLoginData;
     @EJB
     NewsService newsService;
+    @EJB
+    private StudentStatusService studentStatusService;
 
     @Transactional
     @Path("/allNews")
@@ -41,7 +44,7 @@ public class NewsRest {
         if (newsDTO != null) {
             try {
                 List<NewsDTO> dTOs = newsService.findNews(newsDTO.getId(), newsDTO.getTeacherId(),
-                        newsDTO.getNewsType(), newsDTO.getSchoolStageId());
+                        newsDTO.getNewsType(), newsDTO.getSchoolStageId() , newsDTO.getActive());
                 GenericEntity<List<NewsDTO>> list = new GenericEntity<List<NewsDTO>>(dTOs) {
                 };
                 return Response.ok(list).build();

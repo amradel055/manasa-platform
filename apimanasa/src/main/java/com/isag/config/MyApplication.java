@@ -11,8 +11,11 @@ import com.isag.rest.DocumentsRest;
 import com.isag.rest.ExamsRest;
 import com.isag.rest.InboxMessageRest;
 import com.isag.rest.InboxReplyRest;
+import com.isag.rest.LessonDocumentsRest;
+import com.isag.rest.LessonImageRest;
 import com.isag.rest.LessonLocationRest;
 import com.isag.rest.LessonRest;
+import com.isag.rest.LessonVoiceRest;
 import com.isag.rest.LockupRest;
 import com.isag.rest.LoginManasa;
 import com.isag.rest.LoginStudentRest;
@@ -29,6 +32,7 @@ import com.isag.rest.StudentPeriodsRest;
 import com.isag.rest.StudentResetRest;
 import com.isag.rest.StudentRest;
 import com.isag.rest.TeachersRest;
+import com.isag.rest.ZoomLinkRest;
 import java.util.HashSet;
 import java.util.Set;
 import javax.ws.rs.ApplicationPath;
@@ -70,6 +74,10 @@ public class MyApplication extends Application {
         resources.add(QuestionCommonRest.class);
         resources.add(InboxMessageRest.class);
         resources.add(InboxReplyRest.class);
+        resources.add(ZoomLinkRest.class);
+        resources.add(LessonDocumentsRest.class);
+        resources.add(LessonVoiceRest.class);
+        resources.add(LessonImageRest.class);
 
         return resources;
     }

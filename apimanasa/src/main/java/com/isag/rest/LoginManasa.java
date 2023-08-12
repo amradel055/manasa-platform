@@ -7,6 +7,7 @@ package com.isag.rest;
 
 import com.isag.api.dto.TeacherDataAPI;
 import com.isag.businessservice.IgmaUserService;
+import com.isag.businessservice.StudentStatusService;
 import com.isag.dto.APIloginDTO;
 import com.isag.general.GeneralService;
 import com.isag.root.LoginRoot;
@@ -32,6 +33,8 @@ public class LoginManasa {
     private GeneralService generalService;
     @EJB
     IgmaUserService igmaUserService;
+    @EJB
+    private StudentStatusService studentStatusService;
 
     @Transactional
     @Path("/login")

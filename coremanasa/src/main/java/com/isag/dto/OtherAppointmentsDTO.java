@@ -20,6 +20,7 @@ public class OtherAppointmentsDTO extends BaseEntityDTO {
     private Integer teacherId;
     private Integer materialId;
     private String materialName;
+    private Integer otherAppointmentsType;
 
     public OtherAppointmentsDTO() {
     }
@@ -178,7 +179,5 @@ public class OtherAppointmentsDTO extends BaseEntityDTO {
     public void setMaterialName(String materialName) {
         this.materialName = materialName;
     }
-
-    
 
 }

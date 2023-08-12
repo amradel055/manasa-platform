@@ -6,6 +6,7 @@
 package com.isag.rest;
 
 import com.isag.businessservice.LessonService;
+import com.isag.businessservice.StudentStatusService;
 import com.isag.config.UserLoginData;
 import com.isag.dto.LessonDTO;
 import java.util.List;
@@ -31,6 +32,8 @@ public class LessonRest {
     private UserLoginData userLoginData;
     @EJB
     LessonService lessonService;
+    @EJB
+    private StudentStatusService studentStatusService;
 
     @Transactional
     @Path("/lessonList")

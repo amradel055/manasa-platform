@@ -62,6 +62,12 @@ public class LessonVoiceServiceImpl implements LessonVoiceService {
     }
     
     @Override
+    public void deleteVoice(String voice) {
+        String sql = "delete from LessonVoice d where d.id > 0 AND d.voice = '" + voice + "'";
+        dao.executeDeleteQuery(sql);
+    }
+    
+    @Override
     public void deleteLessonVoice(Integer id) {
         LessonVoice lessonVoice = new LessonVoice();
         lessonVoice.setId(id);
@@ -99,6 +105,41 @@ public class LessonVoiceServiceImpl implements LessonVoiceService {
                     enity.setCompanyId(isagCompany);
                     
                     enity.setVoice(lessonVoice.getVoice());
+                    Lesson lesson = new Lesson();
+                    lesson.setId(lessonId);
+                    enity.setLessonId(lesson);
+                    
+                    enity.setCreationDate(new Date());
+                    
+                    dao.updateEntity(enity);
+                } else {
+                    msg.setMsg("لا يوجد بيانات  ");
+                }
+            }
+        }
+        return msg;
+    }
+    
+    @Override
+    public LessonVoiceDTO saveListV2(List<String> LessonVoiceDTOist, Integer lessonId, Integer branchId, Integer companyId) {
+        LessonVoiceDTO msg = new LessonVoiceDTO();
+        if (LessonVoiceDTOist != null && !LessonVoiceDTOist.isEmpty()) {
+            for (String lessonVoice : LessonVoiceDTOist) {
+                if (lessonVoice != null && lessonId != null && branchId != null && companyId != null) {
+                    LessonVoice enity = new LessonVoice();
+                    Branch branch = new Branch();
+                    branch.setId(branchId);
+                    enity.setBranchId(branch);
+                    
+                    IgmaUser isagUser = new IgmaUser();
+                    isagUser.setId(61);
+                    enity.setCreatedBy(isagUser);
+                    
+                    IgmaCompany isagCompany = new IgmaCompany();
+                    isagCompany.setId(companyId);
+                    enity.setCompanyId(isagCompany);
+                    
+                    enity.setVoice(lessonVoice);
                     Lesson lesson = new Lesson();
                     lesson.setId(lessonId);
                     enity.setLessonId(lesson);

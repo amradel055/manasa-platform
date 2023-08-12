@@ -6,6 +6,7 @@
 package com.isag.rest;
 
 import com.isag.businessservice.InboxMessageService;
+import com.isag.businessservice.StudentStatusService;
 import com.isag.dto.InboxMessagesDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
@@ -30,6 +31,8 @@ public class InboxMessageRest {
 
     @EJB
     InboxMessageService inboxMessageService;
+    @EJB
+    private StudentStatusService studentStatusService;
 
     @Transactional
     @Path("/findmessages")
@@ -37,7 +40,7 @@ public class InboxMessageRest {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public List<InboxMessagesDTO> findMessages(InboxMessagesDTO inboxMessagesDTO) {
-        return inboxMessageService.find(inboxMessagesDTO.getStudentId(), inboxMessagesDTO.getTeacherId(), inboxMessagesDTO.getSchoolId(), inboxMessagesDTO.getMaterialId());
+        return inboxMessageService.find(inboxMessagesDTO.getStudentId(), inboxMessagesDTO.getTeacherId(), inboxMessagesDTO.getSchoolId(), inboxMessagesDTO.getMaterialId() , inboxMessagesDTO.getReadDone());
     }
 
     @Transactional
@@ -54,7 +57,7 @@ public class InboxMessageRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response lessonRegister(InboxMessagesDTO dto) {
+    public Response save(InboxMessagesDTO dto) {
         try {
             IgmaUser igmaUser = new IgmaUser();
             Branch branchId = new Branch(dto.getBranchId());
@@ -62,7 +65,7 @@ public class InboxMessageRest {
             IgmaCompany companyId = new IgmaCompany(dto.getCompanyId());
             igmaUser.setCompanyId(companyId);
             igmaUser.setId(dto.getTeacherId());
-            dto = inboxMessageService.save(dto , igmaUser);
+            dto = inboxMessageService.save(dto, igmaUser);
             return Response.ok(dto).build();
         } catch (Exception e) {
             return Response.status(Response.Status.FORBIDDEN).build();
@@ -77,6 +80,20 @@ public class InboxMessageRest {
     public Response deleteQuestion(InboxMessages dto) {
         try {
             inboxMessageService.delete(dto.getId());
+            return Response.ok(dto).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
+
+    @Transactional
+    @Path("readdone")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response readdone(InboxMessages dto) {
+        try {
+            inboxMessageService.readDone(dto.getId());
             return Response.ok(dto).build();
         } catch (Exception e) {
             return Response.status(Response.Status.FORBIDDEN).build();

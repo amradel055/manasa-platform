@@ -6,6 +6,7 @@
 package com.isag.rest;
 
 import com.isag.businessservice.StudentResetService;
+import com.isag.businessservice.StudentStatusService;
 import com.isag.config.UserLoginData;
 import com.isag.dto.StudentResetDTO;
 import javax.ejb.EJB;
@@ -29,6 +30,8 @@ public class StudentResetRest {
     private UserLoginData userLoginData;
     @EJB
     StudentResetService studentResetService;
+    @EJB
+    private StudentStatusService studentStatusService;
 
     @Transactional
     @Path("/saveGeneratorCode")

@@ -6,6 +6,7 @@
 package com.isag.rest;
 
 import com.isag.businessservice.ManasaReportService;
+import com.isag.businessservice.StudentStatusService;
 import com.isag.dto.ExamsDTO;
 import com.isag.dto.QuestionsDTO;
 import java.util.ArrayList;
@@ -29,6 +30,8 @@ public class ManasaReportRest {
 
     @EJB
     ManasaReportService manasaReportService;
+    @EJB
+    private StudentStatusService studentStatusService;
     
     @Transactional
     @Path("/examStudentNumber")

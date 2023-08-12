@@ -116,6 +116,39 @@ public class DocumentsServiceImpl implements DocumentsService {
         }
         return msg;
     }
+    
+    @Override
+    public DocumentsDTO saveListV2(List<String> documentsDTOist, Integer lessonId, Integer branchId, Integer companyId) {
+        DocumentsDTO msg = new DocumentsDTO();
+        for (String documentsDTO : documentsDTOist) {
+            if (documentsDTO != null && lessonId != null && branchId != null && companyId != null) {
+                Documents documents = new Documents();
+                Branch branch = new Branch();
+                branch.setId(branchId);
+                documents.setBranchId(branch);
+
+                IgmaUser isagUser = new IgmaUser();
+                isagUser.setId(61);
+                documents.setCreatedBy(isagUser);
+
+                IgmaCompany isagCompany = new IgmaCompany();
+                isagCompany.setId(companyId);
+                documents.setCompanyId(isagCompany);
+                
+                documents.setLink(documentsDTO);
+                Lesson lesson = new  Lesson();
+                lesson.setId(lessonId);
+                documents.setLessonId(lesson);
+                
+                documents.setCreationDate(new Date());
+
+                dao.updateEntity(documents);
+            } else {
+                msg.setMsg("لا يوجد بيانات  ");
+            }
+        }
+        return msg;
+    }
 
     @Override
     public void deleteDocuments(DocumentsDTO documentsDTO) {
@@ -134,6 +167,12 @@ public class DocumentsServiceImpl implements DocumentsService {
     @Override
     public void deleteDocumentsByLesson(Integer lessonId) {
         String sql = "delete from Documents d where d.id > 0 AND d.lessonId.id = " + lessonId;
+        dao.executeDeleteQuery(sql);
+    }
+    
+    @Override
+    public void deleteDocuments(String document) {
+        String sql = "delete from Documents d where d.id > 0 AND d.link = '" + document + "'";
         dao.executeDeleteQuery(sql);
     }
 

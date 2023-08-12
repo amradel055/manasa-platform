@@ -6,6 +6,7 @@
 package com.isag.rest;
 
 import com.isag.businessservice.PeriodsService;
+import com.isag.businessservice.StudentStatusService;
 import com.isag.config.UserLoginData;
 import com.isag.dto.PeriodsDTO;
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ public class PeriodsRest {
     private UserLoginData userLoginData;
     @EJB
     PeriodsService periodsService;
+    @EJB
+    private StudentStatusService studentStatusService;
 
     @Transactional
     @Path("/allPeriods")

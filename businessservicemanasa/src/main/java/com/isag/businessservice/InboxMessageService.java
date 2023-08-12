@@ -20,9 +20,12 @@ public interface InboxMessageService {
     public InboxMessagesDTO save(InboxMessagesDTO dto , IgmaUser igmaUser);
 
     public InboxMessagesDTO findById(Integer id);
+    
+    public void readDone(Integer id);
 
     public void delete(Integer id);
 
-    public List<InboxMessagesDTO> find(Integer studentId, Integer teacherId, Integer schoolId, Integer materialId);
+    public List<InboxMessagesDTO> find(Integer studentId, Integer teacherId, Integer schoolId, 
+            Integer materialId , Integer readDone);
 
 }

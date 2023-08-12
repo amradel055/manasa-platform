@@ -5,6 +5,7 @@
  */
 package com.isag.rest;
 
+import com.isag.businessservice.StudentStatusService;
 import com.isag.businessservice.TeachersService;
 import com.isag.config.UserLoginData;
 import com.isag.dto.TeachersDTO;
@@ -31,6 +32,8 @@ public class TeachersRest {
     private UserLoginData userLoginData;
     @EJB
     TeachersService teachersService;
+    @EJB
+    private StudentStatusService studentStatusService;
 
     @Transactional
     @Path("/allTeachers")

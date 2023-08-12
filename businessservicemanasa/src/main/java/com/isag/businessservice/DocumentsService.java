@@ -24,10 +24,14 @@ public interface DocumentsService {
     public DocumentsDTO save(DocumentsDTO documentsDTO, IgmaUser isagUser);
     
     public DocumentsDTO saveList(List<DocumentsDTO> documentsDTOist, Integer lessonId, Integer branchId, Integer companyId);
+    
+    public DocumentsDTO saveListV2(List<String> documentsDTOist, Integer lessonId, Integer branchId, Integer companyId);
 
     public void deleteDocuments(DocumentsDTO documentsDTO);
 
     public void deleteDocuments(Integer documentId);
     
      public void deleteDocumentsByLesson(Integer lessonId);
+     
+     public void deleteDocuments(String document);
 }

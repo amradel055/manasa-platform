@@ -6,6 +6,7 @@
 package com.isag.rest;
 
 import com.isag.businessservice.CommentsService;
+import com.isag.businessservice.StudentStatusService;
 import com.isag.config.UserLoginData;
 import com.isag.dto.CommentsDTO;
 import java.util.List;
@@ -31,6 +32,8 @@ public class CommentsRest {
     private UserLoginData userLoginData;
     @EJB
     CommentsService commentsService;
+    @EJB
+    private StudentStatusService studentStatusService;
 
     @Transactional
     @Path("/allComments")

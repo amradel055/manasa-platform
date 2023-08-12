@@ -20,10 +20,14 @@ public interface LessonVoiceService {
     public List<String> findAllLessons(Integer lessonId);
 
     public void deleteLesson(Integer lessonId);
+    
+    public void deleteVoice(String voice);
 
     public List<LessonVoiceDTO> save(List<LessonVoiceDTO> lessonVoiceDTOList, IgmaUser isagUser, Integer lessonId);
 
     public LessonVoiceDTO saveList(List<LessonVoiceDTO> LessonVoiceDTOist, Integer lessonId, Integer branchId, Integer companyId);
+    
+    public LessonVoiceDTO saveListV2(List<String> LessonVoiceDTOist, Integer lessonId, Integer branchId, Integer companyId);
 
     public List<LessonVoiceDTO> findlessinList(Integer lessonId);
 

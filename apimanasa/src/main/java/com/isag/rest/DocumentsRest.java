@@ -6,6 +6,7 @@
 package com.isag.rest;
 
 import com.isag.businessservice.DocumentsService;
+import com.isag.businessservice.StudentStatusService;
 import com.isag.config.UserLoginData;
 import com.isag.dto.DocumentsDTO;
 import java.util.List;
@@ -31,6 +32,9 @@ public class DocumentsRest {
     private UserLoginData userLoginData;
     @EJB
     DocumentsService documentsService;
+    @EJB
+    private StudentStatusService studentStatusService;
+    
     
     @Transactional
     @Path("/allDocuments")

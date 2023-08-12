@@ -23,7 +23,7 @@ public interface NewsService {
 
     public NewsDTO save(NewsDTO newsDTO, IgmaUser isagUser);
 
-    public List<NewsDTO> findNews(Integer newsId ,Integer teacherId, Integer type, Integer schoolStageId);
+    public List<NewsDTO> findNews(Integer newsId ,Integer teacherId, Integer type, Integer schoolStageId, Integer activ);
     
     public NewsDTO findByNewsId(Integer newsId);
 }

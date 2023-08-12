@@ -5,6 +5,8 @@
  */
 package com.isag.businessservice;
 
+import com.isag.dto.InboxReplyDTO;
+import com.isag.entity.IgmaUser;
 import com.isag.entity.InboxReply;
 import java.util.List;
 import javax.ejb.Remote;
@@ -18,10 +20,12 @@ public interface InboxReplyService {
 
     public InboxReply save(InboxReply inboxReply) ;
     
+    public InboxReplyDTO save(InboxReplyDTO dto,IgmaUser igmaUser) ;
+    
      public InboxReply findById(Integer id) ;
 
     public void delete(Integer id);
 
-    public List<InboxReply> find(Integer messageId);
+    public List<InboxReplyDTO> find(Integer messageId);
 
 }

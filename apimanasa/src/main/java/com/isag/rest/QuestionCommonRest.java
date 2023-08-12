@@ -8,6 +8,7 @@ package com.isag.rest;
 import com.isag.businessservice.QuestionAnswerDetailService;
 import com.isag.businessservice.QuestionCommonService;
 import com.isag.businessservice.StudentQuestionsService;
+import com.isag.businessservice.StudentStatusService;
 import com.isag.dto.QuestionCommonDTO;
 import com.isag.dto.StudentQuestionsDTO;
 import com.isag.entity.Branch;
@@ -36,6 +37,8 @@ public class QuestionCommonRest {
     QuestionAnswerDetailService questionAnswerDetailService;
     @EJB
     StudentQuestionsService studentQuestionsService;
+    @EJB
+    private StudentStatusService studentStatusService;
 
     @Transactional
     @Path("/findcommonquestions")
@@ -81,6 +84,7 @@ public class QuestionCommonRest {
             igmaUser.setCompanyId(companyId);
             igmaUser.setId(commonDTO.getTeacherId());
             QuestionCommonDTO msg = questionCommonService.save(commonDTO, igmaUser);
+           msg.setMsgType("success");
             return Response.ok(msg).build();
         } catch (Exception e) {
             return Response.status(Response.Status.FORBIDDEN).build();

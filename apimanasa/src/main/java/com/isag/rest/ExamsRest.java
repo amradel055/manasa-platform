@@ -9,6 +9,7 @@ import com.isag.businessservice.AnswersService;
 import com.isag.businessservice.ExamsService;
 import com.isag.businessservice.MnsLoginExamService;
 import com.isag.businessservice.QuestionsService;
+import com.isag.businessservice.StudentStatusService;
 import com.isag.config.UserLoginData;
 import com.isag.dto.AnswersDTO;
 import com.isag.dto.ExamsDTO;
@@ -44,6 +45,8 @@ public class ExamsRest {
     QuestionsService questionsService;
     @EJB
     MnsLoginExamService loginExamService;
+    @EJB
+    private StudentStatusService studentStatusService;
 
     @Transactional
     @Path("/findExamsForAdmin")
@@ -77,7 +80,7 @@ public class ExamsRest {
     public Response findExamsForStudent(ExamsDTO examsDTO) {
         if (examsDTO != null) {
             try {
-                List<ExamsDTO> dTOs = new ArrayList<>();
+                List<ExamsDTO> dTOs ;
                 if (examsDTO.getExamType() != null && examsDTO.getExamType() == 0) {
                     dTOs = examsService.findAutoExamsListForStudent(examsDTO);
                 } else {

@@ -38,7 +38,7 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> findNews(Integer newsId, Integer teacherId, Integer type, Integer schoolStageId) {
+    public List<NewsDTO> findNews(Integer newsId, Integer teacherId, Integer type, Integer schoolStageId , Integer active) {
         List<News> list = new ArrayList<>();
         if (newsId != null) {
             News news = dao.findEntityById(News.class, newsId);
@@ -46,7 +46,12 @@ public class NewsServiceImpl implements NewsService {
         } else {
             Map<String, Object> params = new HashMap<>();
             StringBuilder builder = new StringBuilder();
-            builder.append("SELECT d FROM News d WHERE d.active = 1  ");
+            builder.append("SELECT d FROM News d WHERE  1 = 1  ");
+            
+            if(active != null){
+                params.put("active", active);
+                builder.append(" and  d.active = :active ");
+            }
             if (teacherId != null) {
                 params.put("teacherId", teacherId);
                 builder.append(" and  d.teacherId.id = :teacherId ");

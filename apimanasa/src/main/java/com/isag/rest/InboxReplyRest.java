@@ -6,6 +6,11 @@
 package com.isag.rest;
 
 import com.isag.businessservice.InboxReplyService;
+import com.isag.businessservice.StudentStatusService;
+import com.isag.dto.InboxReplyDTO;
+import com.isag.entity.Branch;
+import com.isag.entity.IgmaCompany;
+import com.isag.entity.IgmaUser;
 import com.isag.entity.InboxReply;
 import java.util.List;
 import javax.ejb.EJB;
@@ -27,13 +32,15 @@ public class InboxReplyRest {
     
     @EJB
     InboxReplyService inboxReplyService;
+    @EJB
+    private StudentStatusService studentStatusService;
 
     @Transactional
     @Path("/findreplys")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<InboxReply> findReplys(InboxReply inboxReply) {
+    public List<InboxReplyDTO> findReplys(InboxReply inboxReply) {
         return inboxReplyService.find(inboxReply.getMessage());
     }
 
@@ -42,21 +49,28 @@ public class InboxReplyRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response lessonRegister(InboxReply entity) {
+    public Response save(InboxReplyDTO dto) {
         try {
-            entity = inboxReplyService.save(entity);
-            return Response.ok(entity).build();
+             IgmaUser igmaUser = new IgmaUser();
+            Branch branchId = new Branch(dto.getBranchId());
+            igmaUser.setBranchId(branchId);
+            IgmaCompany companyId = new IgmaCompany(dto.getCompanyId());
+            igmaUser.setCompanyId(companyId);
+            igmaUser.setId(dto.getCreatedBy());
+            dto = inboxReplyService.save(dto , igmaUser);
+            dto.setMsgType("success");
+            return Response.ok(dto).build();
         } catch (Exception e) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
 
     @Transactional
-    @Path("deletequestion")
+    @Path("deletereply")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteQuestion(InboxReply dto) {
+    public Response deleteReply(InboxReply dto) {
         try {
             inboxReplyService.delete(dto.getId());
             return Response.ok(dto).build();

@@ -18,6 +18,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import com.isag.businessservice.IgmaUserLoginService;
+import com.isag.businessservice.StudentStatusService;
 
 /**
  *
@@ -30,6 +31,8 @@ public class LoginStudentRest {
     private GeneralService generalService;
     @EJB
     private IgmaUserLoginService isagUserLoginService;
+    @EJB
+    private StudentStatusService studentStatusService;
 
     @Transactional
     @Path("/login")

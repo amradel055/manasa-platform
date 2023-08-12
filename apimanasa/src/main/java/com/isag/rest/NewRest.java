@@ -6,6 +6,7 @@
 package com.isag.rest;
 
 import com.isag.businessservice.NewsService;
+import com.isag.businessservice.StudentStatusService;
 import com.isag.config.UserLoginData;
 import com.isag.dto.NewsDTO;
 import java.util.List;
@@ -27,31 +28,12 @@ import javax.ws.rs.core.Response;
  */
 @Path("/newrest")
 public class NewRest {
-
-    private UserLoginData userLoginData;
-    
-    public UserLoginData getUserLoginData(@Context ContainerRequestContext crc) {
-        userLoginData = (UserLoginData) crc.getProperty("userLogInData");
-        return userLoginData;
-    }
-
-    /**
-     * @return the userLoginData
-     */
-    public UserLoginData getUserLoginData() {
-        return userLoginData;
-    }
-
-    /**
-     * @param userLoginData the userLoginData to set
-     */
-    public void setUserLoginData(UserLoginData userLoginData) {
-        this.userLoginData = userLoginData;
-    }
     
     
     @EJB
     NewsService newsService;
+    @EJB
+    private StudentStatusService studentStatusService;
 
     @Transactional
     @Path("/allNews")
@@ -62,7 +44,7 @@ public class NewRest {
         if (newsDTO != null) {
             try {
                 List<NewsDTO> dTOs = newsService.findNews(newsDTO.getId(), newsDTO.getTeacherId(),
-                        newsDTO.getNewsType(), newsDTO.getSchoolStageId());
+                        newsDTO.getNewsType(), newsDTO.getSchoolStageId() , newsDTO.getActive());
                 GenericEntity<List<NewsDTO>> list = new GenericEntity<List<NewsDTO>>(dTOs) {
                 };
                 return Response.ok(list).build();

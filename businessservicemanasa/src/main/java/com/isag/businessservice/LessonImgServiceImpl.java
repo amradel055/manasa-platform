@@ -62,6 +62,12 @@ public class LessonImgServiceImpl implements LessonImgService {
     }
     
     @Override
+    public void deleteImage(String img) {
+        String sql = "delete from LessonImg d where d.id > 0 AND d.img = '" + img+"'";
+        dao.executeDeleteQuery(sql);
+    }
+    
+    @Override
     public void deleteLessonImg(Integer id) {
         LessonImg lessonImg = new LessonImg();
         lessonImg.setId(id);
@@ -99,6 +105,42 @@ public class LessonImgServiceImpl implements LessonImgService {
                     enity.setCompanyId(isagCompany);
                     
                     enity.setImg(lessonImg.getImg());
+                    Lesson lesson = new Lesson();
+                    lesson.setId(lessonId);
+                    enity.setLessonId(lesson);
+                    
+                    enity.setCreationDate(new Date());
+                    
+                    dao.updateEntity(enity);
+                } else {
+                    msg.setMsg("لا يوجد بيانات  ");
+                }
+            }
+        }
+        return msg;
+    }
+    
+    @Override
+    public LessonImgDTO saveListV2(List<String> LessonImgDTOist, Integer lessonId, Integer branchId, Integer companyId) {
+        LessonImgDTO msg = new LessonImgDTO();
+        if (LessonImgDTOist != null && !LessonImgDTOist.isEmpty()) {
+            for (String lessonImg : LessonImgDTOist) {
+                if (lessonImg != null && lessonId != null && branchId != null && companyId != null
+                        && lessonImg != null) {
+                    LessonImg enity = new LessonImg();
+                    Branch branch = new Branch();
+                    branch.setId(branchId);
+                    enity.setBranchId(branch);
+                    
+                    IgmaUser isagUser = new IgmaUser();
+                    isagUser.setId(61);
+                    enity.setCreatedBy(isagUser);
+                    
+                    IgmaCompany isagCompany = new IgmaCompany();
+                    isagCompany.setId(companyId);
+                    enity.setCompanyId(isagCompany);
+                    
+                    enity.setImg(lessonImg);
                     Lesson lesson = new Lesson();
                     lesson.setId(lessonId);
                     enity.setLessonId(lesson);

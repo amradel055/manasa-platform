@@ -25,7 +25,7 @@ public class InboxMessagesDTO extends BaseEntityDTO{
 
     private Integer readDone;
 
-    private List<InboxReply> inboxReplys;
+    private List<InboxReplyDTO> inboxReplys;
 
     private String teacherName;
 
@@ -97,14 +97,14 @@ public class InboxMessagesDTO extends BaseEntityDTO{
     /**
      * @return the inboxReplys
      */
-    public List<InboxReply> getInboxReplys() {
+    public List<InboxReplyDTO> getInboxReplys() {
         return inboxReplys;
     }
 
     /**
      * @param inboxReplys the inboxReplys to set
      */
-    public void setInboxReplys(List<InboxReply> inboxReplys) {
+    public void setInboxReplys(List<InboxReplyDTO> inboxReplys) {
         this.inboxReplys = inboxReplys;
     }
 

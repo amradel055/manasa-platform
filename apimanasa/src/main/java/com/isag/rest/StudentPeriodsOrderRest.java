@@ -6,6 +6,7 @@
 package com.isag.rest;
 
 import com.isag.businessservice.StudentPeriodsOrderService;
+import com.isag.businessservice.StudentStatusService;
 import com.isag.dto.APIStudentDataDTO;
 import com.isag.dto.StudentPeriodsDTO;
 import com.isag.dto.StudentPeriodsOrderDTO;
@@ -31,6 +32,8 @@ public class StudentPeriodsOrderRest {
 
     @EJB
     StudentPeriodsOrderService studentPeriodsOrderService;
+    @EJB
+    private StudentStatusService studentStatusService;
 
     @Transactional
     @Path("/saveStudentPeriodsOrder")

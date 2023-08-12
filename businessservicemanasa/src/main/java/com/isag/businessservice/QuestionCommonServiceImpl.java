@@ -92,6 +92,7 @@ public class QuestionCommonServiceImpl implements QuestionCommonService {
         dTO.setTeacherId(entity.getTeacherId() != null ? entity.getTeacherId().getId() : null);
         dTO.setId(entity.getId());
         dTO.setMaterialId(entity.getMaterialId() != null ? entity.getMaterialId().getId() : null);
+        dTO.setSchoolId(entity.getMaterialId() != null ? entity.getMaterialId().getStageId().getId() : null);
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy().getId());

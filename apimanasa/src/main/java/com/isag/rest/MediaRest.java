@@ -6,6 +6,7 @@
 package com.isag.rest;
 
 import com.isag.businessservice.MediaService;
+import com.isag.businessservice.StudentStatusService;
 import com.isag.config.UserLoginData;
 import com.isag.dto.MediaDTO;
 import java.util.List;
@@ -31,6 +32,8 @@ public class MediaRest {
     private UserLoginData userLoginData;
     @EJB
     MediaService mediaService;
+    @EJB
+    private StudentStatusService studentStatusService;
 
     @Transactional
     @Path("/allMedia")

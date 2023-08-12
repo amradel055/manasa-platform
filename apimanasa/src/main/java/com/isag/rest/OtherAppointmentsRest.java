@@ -6,6 +6,7 @@
 package com.isag.rest;
 
 import com.isag.businessservice.OtherAppointmentsService;
+import com.isag.businessservice.StudentStatusService;
 import com.isag.config.UserLoginData;
 import com.isag.dto.AppointmentsDTO;
 import com.isag.dto.OtherAppointmentsDTO;
@@ -32,6 +33,8 @@ public class OtherAppointmentsRest {
     private UserLoginData userLoginData;
     @EJB
     OtherAppointmentsService appointmentsService;
+    @EJB
+    private StudentStatusService studentStatusService;
 
     @Transactional
     @Path("/allAppointments")
