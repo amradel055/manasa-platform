@@ -10,9 +10,12 @@ import com.isag.dto.StudentStatusDTO;
 import com.isag.entity.IgmaUser;
 import com.isag.entity.Student;
 import com.isag.entity.StudentStatus;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -46,6 +49,18 @@ public class StudentStatusServiceImpl implements StudentStatusService {
         List<Integer> status = dao.executeNativeQuery("SELECT student_status FROM student_status WHERE student_id = "+studentId+" and branch_id = "+branchId);
         // 1 -> is active this is default
         return status != null && !status.isEmpty() ? status.get(0) : 1;
+    }
+    
+    @Override
+    public List<StudentStatusDTO> findStudentStatusReport(Integer studentId , Integer branchId) {        
+        Map<String, Object> params = new HashMap<>();
+        params.put("studentId", studentId);
+        params.put("branchId", branchId);
+        List<StudentStatus> listEntity = dao.findListByQuery("SELECT  s FROM StudentStatus s WHERE i.branchId.id = :branchId AND i.studentId.id = :studentId ", params);
+        if(listEntity != null && !listEntity.isEmpty()){
+            return returnListDTO(listEntity);
+        }
+        return null ;
     }
 
     private List<StudentStatusDTO> returnListDTO(List<StudentStatus> list) {

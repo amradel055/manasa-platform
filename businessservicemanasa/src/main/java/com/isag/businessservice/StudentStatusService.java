@@ -7,6 +7,7 @@ package com.isag.businessservice;
 
 import com.isag.dto.StudentStatusDTO;
 import com.isag.entity.IgmaUser;
+import java.util.List;
 import javax.ejb.Remote;
 
 /**
@@ -21,4 +22,6 @@ public interface StudentStatusService {
     public void deleteStudentReset(Integer studentStatusId);
 
     public Integer findStudentStatus(Integer studentId, Integer branchId);
+    
+    public List<StudentStatusDTO> findStudentStatusReport(Integer studentId , Integer branchId);
 }

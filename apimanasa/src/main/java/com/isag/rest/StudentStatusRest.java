@@ -10,6 +10,7 @@ import com.isag.dto.StudentStatusDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
 import com.isag.entity.IgmaUser;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -75,6 +76,20 @@ public class StudentStatusRest {
             dto.setMsg("تم الحذف بنجاح");
             dto.setMsgType("success");
             return Response.ok(dto).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
+    
+    @Transactional
+    @Path("/findstatusstudentreport")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findStatusStudentReport(StudentStatusDTO dto) {
+        try {
+            List<StudentStatusDTO> list = studentStatusService.findStudentStatusReport(dto.getStudentId(), dto.getBranchId());
+            return Response.ok(list).build();
         } catch (Exception e) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }

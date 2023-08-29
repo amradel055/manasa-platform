@@ -31,6 +31,7 @@ import com.isag.rest.StudentPeriodsOrderRest;
 import com.isag.rest.StudentPeriodsRest;
 import com.isag.rest.StudentResetRest;
 import com.isag.rest.StudentRest;
+import com.isag.rest.StudentStatusRest;
 import com.isag.rest.TeachersRest;
 import com.isag.rest.ZoomLinkRest;
 import java.util.HashSet;
@@ -78,6 +79,7 @@ public class MyApplication extends Application {
         resources.add(LessonDocumentsRest.class);
         resources.add(LessonVoiceRest.class);
         resources.add(LessonImageRest.class);
+        resources.add(StudentStatusRest.class);
 
         return resources;
     }
