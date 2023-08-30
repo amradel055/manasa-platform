@@ -78,6 +78,18 @@ public class StudentServiceImpl implements StudentService {
         return dTO;
     }
     
+    @Override
+    public String findStudentPassword(Integer studentId) {
+        StudentDTO dTO = new StudentDTO();
+        Map<String, Object> params = new HashMap();
+        params.put("studentId", studentId);
+        String password = dao.findEntityByQuery("SELECT e.password FROM Student e WHERE  AND e.id = :studentId ", params);
+        if (password != null) {
+            return password;
+        }
+        return "";
+    }
+    
     public Boolean validateUser(APIStudentDataDTO aPIStudentDataDTO) {
         Map<String, Object> params = new HashMap();
         StringBuilder query = new StringBuilder();
@@ -357,6 +369,17 @@ public class StudentServiceImpl implements StudentService {
         Student student = dao.findEntityById(Student.class, id);
         StudentDTO dTO = new StudentDTO();
         return mapTODTO(student, dTO);
+    }
+    
+    @Override
+    public StudentDTO findStudentLoginData(Integer id) {
+        Student entity = dao.findEntityById(Student.class, id);
+        StudentDTO dTO = new StudentDTO();
+        dTO.setId(entity.getId());
+        dTO.setEmail(entity.getEmail());
+        dTO.setPassword(entity.getPassword());
+        dTO.setCode(entity.getCode());
+        return dTO;
     }
     
     @Override

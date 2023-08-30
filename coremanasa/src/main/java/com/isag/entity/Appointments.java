@@ -65,6 +65,8 @@ public class Appointments extends BaseEntity {
     private LessonLocation lessonLocation;
     @Column(name = "remarks")
     private String remarks;
+    @Column(name = "img")
+    private String img;
 
     public Appointments() {
     }
@@ -240,6 +242,20 @@ public class Appointments extends BaseEntity {
      */
     public void setTime4(Date time4) {
         this.time4 = time4;
+    }
+
+    /**
+     * @return the img
+     */
+    public String getImg() {
+        return img;
+    }
+
+    /**
+     * @param img the img to set
+     */
+    public void setImg(String img) {
+        this.img = img;
     }
 
 }

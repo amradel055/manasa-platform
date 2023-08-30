@@ -13,6 +13,7 @@ import com.isag.businessservice.StudentStatusService;
 import com.isag.config.UserLoginData;
 import com.isag.dto.APIStudentDataDTO;
 import com.isag.dto.MaterialsDTO;
+import com.isag.dto.StudentDTO;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
@@ -85,6 +86,50 @@ public class StudentRest {
         } else {
             aPIStudentDataDTO = new APIStudentDataDTO();
             aPIStudentDataDTO.setMsg("No Id is Sent");
+            return Response.ok(aPIStudentDataDTO).build();
+        }
+    }
+
+    @Transactional
+    @Path("/findstudentlogindata")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findStudentLoginData(APIStudentDataDTO aPIStudentDataDTO) {
+        if (aPIStudentDataDTO != null) {
+            try {
+                StudentDTO studentData = studentService.findStudentLoginData(aPIStudentDataDTO.getId());
+                return Response.ok(studentData).build();
+
+            } catch (Exception e) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+        } else {
+            aPIStudentDataDTO = new APIStudentDataDTO();
+            aPIStudentDataDTO.setMsg("No Data is Sent");
+            return Response.ok(aPIStudentDataDTO).build();
+        }
+    }
+    
+    @Transactional
+    @Path("/findstudentdata")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findStudentData(APIStudentDataDTO aPIStudentDataDTO) {
+        if (aPIStudentDataDTO != null) {
+            try {
+                StudentDTO studentData = studentService.findStudentId(aPIStudentDataDTO.getId());
+                return Response.ok(studentData).build();
+
+            } catch (Exception e) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+        } else {
+            aPIStudentDataDTO = new APIStudentDataDTO();
+            aPIStudentDataDTO.setMsg("No Data is Sent");
             return Response.ok(aPIStudentDataDTO).build();
         }
     }

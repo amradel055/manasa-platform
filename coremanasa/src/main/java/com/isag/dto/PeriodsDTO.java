@@ -14,6 +14,8 @@ public class PeriodsDTO extends BaseEntityDTO {
     private String materialName;
     private Integer parent;
     private String parentName;
+    private Integer questionNumber;
+    private Integer autoTime;
 
     public PeriodsDTO() {
     }
@@ -54,10 +56,9 @@ public class PeriodsDTO extends BaseEntityDTO {
 //    public String toString() {
 //        return "com.mycompany.mavenproject1.Periods[ id=" + id + " ]";
 //    }
-    
-     @Override
+    @Override
     public String toString() {
-        return teacherId + " " + materialId + " " + parent + " " ;
+        return teacherId + " " + materialId + " " + parent + " ";
     }
 
     /**
@@ -144,6 +145,32 @@ public class PeriodsDTO extends BaseEntityDTO {
         this.schoolStagesGuideDTO = schoolStagesGuideDTO;
     }
 
-  
+    /**
+     * @return the questionNumber
+     */
+    public Integer getQuestionNumber() {
+        return questionNumber;
+    }
+
+    /**
+     * @param questionNumber the questionNumber to set
+     */
+    public void setQuestionNumber(Integer questionNumber) {
+        this.questionNumber = questionNumber;
+    }
+
+    /**
+     * @return the autoTime
+     */
+    public Integer getAutoTime() {
+        return autoTime;
+    }
+
+    /**
+     * @param autoTime the autoTime to set
+     */
+    public void setAutoTime(Integer autoTime) {
+        this.autoTime = autoTime;
+    }
 
 }

@@ -17,10 +17,12 @@ import com.isag.entity.Questions;
 import com.isag.entity.Student;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -35,6 +37,8 @@ public class QuestionsServiceImpl implements QuestionsService {
     private GenericDAO dao;
     @EJB
     AnswersService answersService;
+    @EJB
+    PeriodsService periodsService;
 
     @Override
     public List<QuestionsDTO> findGeneralQuestions(ExamsDTO examsDTO) {
@@ -296,6 +300,67 @@ public class QuestionsServiceImpl implements QuestionsService {
         entity.setBranchId(isagUser.getBranchId());
         entity.setCompanyId(isagUser.getCompanyId());
         return entity;
+    }
+
+//    @Override
+    public List<QuestionsDTO> findAutoQuestions(ExamsDTO examsDTO) {
+        Map<String, Object> params = new HashMap<>();
+        StringBuilder builder = new StringBuilder();
+        Integer maxQuestionNumber = 20 ;
+        Integer maxTime = 60 ;
+
+        builder.append("SELECT d FROM Questions d WHERE d.examsId.examType = 0 ");
+
+        if (examsDTO.getPeriodList() != null && !examsDTO.getPeriodList().isEmpty()) {
+            List<Integer> periodIds = periodsService.findPeriodAndChildIds(examsDTO.getPeriodList());
+            params.put("periodIds", periodIds);
+            builder.append(" and d.examsId.periodId.id in( :periodIds )");
+            maxQuestionNumber = getMaxQuestionNumber(periodIds);
+            maxTime = getMaxPeriodTime(periodIds);
+        }
+
+        List<Questions> list = dao.findListByQuery(builder.toString(), params);
+        List<Questions> list2 = new ArrayList<>();
+
+        Collections.shuffle(list, new Random());
+
+        int i = 0;
+        for (Questions x : list) {
+            if (i < maxQuestionNumber) {
+                i++;
+                list2.add(x);
+            }
+        }
+
+        return returnListDTO(list2);
+    }
+
+    public Integer getMaxPeriodTime(List<Integer> periodIds) {
+
+        if (periodIds.isEmpty()) {
+            return 0;
+        }
+
+        String sql = "SELECT MAX(p.autoTime) FROM Periods p WHERE p.id IN (:periodIds)";
+        Map<String, Object> params = Collections.singletonMap("periodIds", periodIds);
+
+        List<Integer> result = dao.findListByQuery(sql, params);
+
+        return (result == null || result.isEmpty()) ? 0 : result.get(0);
+    }
+
+    public Integer getMaxQuestionNumber(List<Integer> periodIds) {
+
+        if (periodIds.isEmpty()) {
+            return 0;
+        }
+
+        String sql = "SELECT MAX(p.questionNumber) FROM Periods p WHERE p.id IN (:periodIds)";
+        Map<String, Object> params = Collections.singletonMap("periodIds", periodIds);
+
+        List<Integer> result = dao.findListByQuery(sql, params);
+
+        return (result == null || result.isEmpty()) ? 0 : result.get(0);
     }
 
 }

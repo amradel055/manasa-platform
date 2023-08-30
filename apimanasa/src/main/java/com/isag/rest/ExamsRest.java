@@ -268,23 +268,18 @@ public class ExamsRest {
         }
     }
 
-    public UserLoginData getUserLoginData(@Context ContainerRequestContext crc) {
-        userLoginData = (UserLoginData) crc.getProperty("userLogInData");
-        return userLoginData;
-    }
-
-    /**
-     * @return the userLoginData
-     */
-    public UserLoginData getUserLoginData() {
-        return userLoginData;
-    }
-
-    /**
-     * @param userLoginData the userLoginData to set
-     */
-    public void setUserLoginData(UserLoginData userLoginData) {
-        this.userLoginData = userLoginData;
+    @Transactional
+    @Path("/checkexamautoforlesson")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response checkExamAutoForLesson(ExamsDTO examsDTO) {
+        try {
+            boolean msg = examsService.checkExamAutoForLesson(examsDTO.getLessonId());
+            return Response.ok(msg).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
     }
 
 }

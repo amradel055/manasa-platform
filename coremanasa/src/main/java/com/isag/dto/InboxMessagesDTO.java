@@ -5,11 +5,11 @@
  */
 package com.isag.dto;
 
-import com.isag.entity.*;
 import java.util.Date;
 import java.util.List;
 
 public class InboxMessagesDTO extends BaseEntityDTO{
+
 
     private Integer studentId;
 
@@ -36,6 +36,10 @@ public class InboxMessagesDTO extends BaseEntityDTO{
     private Integer schoolId;
     
     private String image;
+    
+    private String audio;
+    
+    private String video;
 
     // getters and setters
     public String getSubject() {
@@ -176,6 +180,34 @@ public class InboxMessagesDTO extends BaseEntityDTO{
      */
     public void setImage(String image) {
         this.image = image;
+    }
+    
+    /**
+     * @return the audio
+     */
+    public String getAudio() {
+        return audio;
+    }
+
+    /**
+     * @param audio the audio to set
+     */
+    public void setAudio(String audio) {
+        this.audio = audio;
+    }
+
+    /**
+     * @return the video
+     */
+    public String getVideo() {
+        return video;
+    }
+
+    /**
+     * @param video the video to set
+     */
+    public void setVideo(String video) {
+        this.video = video;
     }
 
 }

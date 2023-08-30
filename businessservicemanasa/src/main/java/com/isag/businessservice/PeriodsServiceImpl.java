@@ -14,6 +14,7 @@ import com.isag.entity.IgmaUser;
 import com.isag.entity.Materials;
 import com.isag.entity.Periods;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -43,9 +44,9 @@ public class PeriodsServiceImpl implements PeriodsService {
         List<Periods> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }
-    
+
     @Override
-    public List<PeriodsDTO> findPeriodsV2(Integer branchId , Integer teacherId) {
+    public List<PeriodsDTO> findPeriodsV2(Integer branchId, Integer teacherId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         params.put("teacherId", teacherId);
@@ -148,6 +149,31 @@ public class PeriodsServiceImpl implements PeriodsService {
         }
     }
 
+    @Override
+    public List<Integer> findPeriodAndChildIds(List<Integer> periodParentIds) {
+        List<Integer> periodIds = new ArrayList<>();
+        if (periodParentIds.isEmpty()) {
+            return periodIds;
+        }
+
+        String sql = "SELECT p FROM Periods p WHERE p.id IN (:periodParentIds)";
+        Map<String, Object> params = Collections.singletonMap("periodParentIds", periodParentIds);
+
+        List<Periods> result = dao.findListByQuery(sql, params);
+
+        if (result != null && !result.isEmpty()) {
+            for (Periods entity : result) {
+                periodIds.add(entity.getId());
+                if (entity.getChildPeriods() != null && !entity.getChildPeriods().isEmpty()) {
+                    for (Periods child : entity.getChildPeriods()) {
+                        periodIds.add(child.getId());
+                    }
+                }
+            }
+        }
+        return periodIds;
+    }
+
     private List<PeriodsDTO> returnListDTO(List<Periods> list) {
         List<PeriodsDTO> dTOList = new ArrayList<>();
         for (Periods entity : list) {
@@ -167,12 +193,16 @@ public class PeriodsServiceImpl implements PeriodsService {
         PeriodsDTO dTO = new PeriodsDTO();
         dTO.setId(entity.getId());
         dTO.setName(entity.getName());
+
+        dTO.setAutoTime(entity.getAutoTime());
+        dTO.setQuestionNumber(entity.getQuestionNumber());
+
         dTO.setParent(entity.getParentPeriod() != null ? entity.getParentPeriod().getId() : null);
         dTO.setParentName(entity.getParentPeriod() != null ? entity.getParentPeriod().getName() : null);
         dTO.setMaterialId(entity.getMaterialId() != null ? entity.getMaterialId().getId() : null);
 
         if (entity.getMaterialId() != null) {
-            List <SchoolStagesGuideDTO> schoolStagesGuide = schoolStagesGuideService.findStage(entity.getMaterialId().getId());
+            List<SchoolStagesGuideDTO> schoolStagesGuide = schoolStagesGuideService.findStage(entity.getMaterialId().getId());
             dTO.setSchoolStagesGuideDTO(schoolStagesGuide.get(0));
 
         }
@@ -197,6 +227,9 @@ public class PeriodsServiceImpl implements PeriodsService {
         entity.setId(dTO.getId());
         entity.setName(dTO.getName());
 
+        entity.setAutoTime(dTO.getAutoTime());
+        entity.setQuestionNumber(dTO.getQuestionNumber());
+
         if (dTO.getParent() != null) {
             Periods periods = new Periods();
             periods.setId(dTO.getParent());
@@ -207,11 +240,11 @@ public class PeriodsServiceImpl implements PeriodsService {
             IgmaUser igmaUser1 = new IgmaUser();
             igmaUser1.setId(igmaUser.getId());
         }
-        
-        if(dTO.getTeacherId() != null){
-        IgmaUser teacher = new IgmaUser();
-        teacher.setId(dTO.getTeacherId());
-        entity.setTeacherId(teacher);
+
+        if (dTO.getTeacherId() != null) {
+            IgmaUser teacher = new IgmaUser();
+            teacher.setId(dTO.getTeacherId());
+            entity.setTeacherId(teacher);
         }
 
         if (dTO.getId() == null) {
@@ -231,6 +264,7 @@ public class PeriodsServiceImpl implements PeriodsService {
 
         Branch branch = new Branch();
         branch.setId(232);
+        here kartha
         entity.setBranchId(branch);
         entity.setCompanyId(igmaUser.getCompanyId());
         return entity;

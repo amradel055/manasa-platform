@@ -35,6 +35,12 @@ public class QuestionCommon extends BaseEntity {
     @JoinColumn(name = "material_id", referencedColumnName = "id")
     @ManyToOne
     private Materials materialId;
+    
+    @Column(name = "audio")
+    private String audio;
+    
+    @Column(name = "video")
+    private String video;
 
     public QuestionCommon() {
     }
@@ -130,6 +136,34 @@ public class QuestionCommon extends BaseEntity {
      */
     public void setMaterialId(Materials materialId) {
         this.materialId = materialId;
+    }
+
+    /**
+     * @return the audio
+     */
+    public String getAudio() {
+        return audio;
+    }
+
+    /**
+     * @param audio the audio to set
+     */
+    public void setAudio(String audio) {
+        this.audio = audio;
+    }
+
+    /**
+     * @return the video
+     */
+    public String getVideo() {
+        return video;
+    }
+
+    /**
+     * @param video the video to set
+     */
+    public void setVideo(String video) {
+        this.video = video;
     }
 
 }

@@ -20,16 +20,18 @@ public interface PeriodsService {
     public List<PeriodsDTO> findPeriodsByTeacherId(Integer teacherId);
 
     public List<PeriodsDTO> findPeriods(Integer branchId);
-    
-    public List<PeriodsDTO> findPeriodsV2(Integer branchId , Integer teacherId);
+
+    public List<PeriodsDTO> findPeriodsV2(Integer branchId, Integer teacherId);
 
     public PeriodsDTO save(PeriodsDTO periodsDTO, IgmaUser isagUser);
-    
-     public void savePeriods(PeriodsDTO periodsDTO , IgmaUser igmaUser)  ;
+
+    public void savePeriods(PeriodsDTO periodsDTO, IgmaUser igmaUser);
 
     public void deletePeriods(Integer periodsDTO);
 
     public List<PeriodsDTO> findPeriodsByMaterialId(Integer materialId);
-    
-      public PeriodsDTO findPeriodsById(Integer periodsId) ;
+
+    public PeriodsDTO findPeriodsById(Integer periodsId);
+
+    public List<Integer> findPeriodAndChildIds(List<Integer> periodParentIds);
 }

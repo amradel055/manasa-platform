@@ -215,6 +215,8 @@ public class AppointmentsServiceImpl implements AppointmentsService {
             dTO.setMaterialName(entity.getMaterialId().getName());
         }
 
+        dTO.setImg(entity.getImg());
+        
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy().getId());
@@ -236,6 +238,7 @@ public class AppointmentsServiceImpl implements AppointmentsService {
         entity.setTime4(dTO.getTime4());
         entity.setAppointmentsType(dTO.getAppointmentsType());
         entity.setRemarks(dTO.getRemarks());
+        entity.setImg(dTO.getImg());
 
         if (dTO.getTeacherId() != null) {
             IgmaUser teachers = new IgmaUser();

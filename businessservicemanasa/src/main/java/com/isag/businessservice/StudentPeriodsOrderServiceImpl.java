@@ -340,5 +340,31 @@ public class StudentPeriodsOrderServiceImpl implements StudentPeriodsOrderServic
             }
         }
     }
+    
+    @Override
+    public List<APIStudentDataDTO> studentActivationOrder(Integer studentId) {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("studentId", studentId);
+            StringBuilder query = new StringBuilder();
+            query.append(" SELECT i FROM StudentPeriodsOrder i WHERE i.studentId.id =:studentId ");
+            query.append(" order by i.id desc ");
+            List<StudentPeriodsOrder> list = dao.findListByQuery(query.toString(), params);
+            if (list != null && !list.isEmpty()) {
+                List<Student> studentList = new ArrayList<>();
+                Student student;
+                for (StudentPeriodsOrder entity : list) {
+                    student = (Student) entity.getStudentId().clone();
+                    student.setPeriodOrderId(entity.getId());
+                    student.setPeriodName(entity.getPeriodId() == null ? null : entity.getPeriodId().getName());
+                    studentList.add(student);
+                }
+                return studentService.returnListDTOAPI(studentList);
+            }
+        } catch (CloneNotSupportedException ex) {
+            return null;
+        }
+        return null;
+    }
 
 }

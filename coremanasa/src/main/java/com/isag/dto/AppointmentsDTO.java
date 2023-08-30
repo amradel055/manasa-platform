@@ -36,6 +36,8 @@ public class AppointmentsDTO extends BaseEntityDTO {
     private Map<String, List<AppointmentsDTO>> map ; 
     private Calendar c ;
     private Date d ;
+    
+    private String img;
 
     public AppointmentsDTO() {
     }
@@ -314,5 +316,19 @@ public class AppointmentsDTO extends BaseEntityDTO {
      */
     public void setTime4(Date time4) {
         this.time4 = time4;
+    }
+
+    /**
+     * @return the img
+     */
+    public String getImg() {
+        return img;
+    }
+
+    /**
+     * @param img the img to set
+     */
+    public void setImg(String img) {
+        this.img = img;
     }
 }

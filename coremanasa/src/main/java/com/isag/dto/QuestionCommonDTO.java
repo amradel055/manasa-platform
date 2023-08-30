@@ -18,6 +18,10 @@ public class QuestionCommonDTO extends BaseEntityDTO {
     private Integer materialId;
     private Integer schoolId;
     
+    private String audio;
+    
+    private String video;
+    
  
 
 
@@ -136,6 +140,34 @@ public class QuestionCommonDTO extends BaseEntityDTO {
      */
     public void setSchoolId(Integer schoolId) {
         this.schoolId = schoolId;
+    }
+
+    /**
+     * @return the audio
+     */
+    public String getAudio() {
+        return audio;
+    }
+
+    /**
+     * @param audio the audio to set
+     */
+    public void setAudio(String audio) {
+        this.audio = audio;
+    }
+
+    /**
+     * @return the video
+     */
+    public String getVideo() {
+        return video;
+    }
+
+    /**
+     * @param video the video to set
+     */
+    public void setVideo(String video) {
+        this.video = video;
     }
 
 }

@@ -11,7 +11,6 @@ import com.isag.dto.InboxReplyDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.IgmaUser;
 import com.isag.entity.InboxMessages;
-import com.isag.entity.InboxReply;
 import com.isag.entity.Materials;
 import com.isag.entity.Student;
 import java.util.ArrayList;
@@ -80,6 +79,8 @@ public class InboxMessageServiceImpl implements InboxMessageService {
             dto.setStudentName(entity.getStudentId() == null ? null : entity.getStudentId().getFullName());
             dto.setSubject(entity.getSubject());
             dto.setImage(entity.getImage());
+            dto.setVideo(entity.getVideo());
+            dto.setAudio(entity.getAudio());
             dto.setTeacherId(entity.getTeacherId() == null ? null : entity.getTeacherId().getId());
             dto.setTeacherName(entity.getTeacherId() == null ? null : entity.getTeacherId().getName());
             return dto;
@@ -100,6 +101,8 @@ public class InboxMessageServiceImpl implements InboxMessageService {
             entity.setStudentId(student);
             entity.setSubject(dto.getSubject());
             entity.setImage(dto.getImage());
+            entity.setVideo(dto.getVideo());
+            entity.setAudio(dto.getAudio());
             IgmaUser teacher = new IgmaUser(dto.getTeacherId());
             entity.setTeacherId(teacher);
 

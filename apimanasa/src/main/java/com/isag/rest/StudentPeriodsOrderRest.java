@@ -77,6 +77,30 @@ public class StudentPeriodsOrderRest {
             return Response.ok(aPIStudentDataDTO).build();
         }
     }
+    
+    @Transactional
+    @Path("/studentActivationOrder")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response studentActivationOrder(APIStudentDataDTO aPIStudentDataDTO) {
+        if (aPIStudentDataDTO != null) {
+            try {
+                List<APIStudentDataDTO> dTOs = studentPeriodsOrderService.studentActivationOrder(aPIStudentDataDTO.getId());
+                GenericEntity<List<APIStudentDataDTO>> list = new GenericEntity<List<APIStudentDataDTO>>(dTOs) {
+                };
+                return Response.ok(list).build();
+
+            } catch (Exception e) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+        } else {
+            aPIStudentDataDTO = new APIStudentDataDTO();
+            aPIStudentDataDTO.setMsg("No Id is Sent");
+            return Response.ok(aPIStudentDataDTO).build();
+        }
+    }
 
     @Transactional
     @Path("/deletestudentactivation")

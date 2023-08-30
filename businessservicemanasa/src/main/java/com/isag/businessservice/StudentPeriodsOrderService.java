@@ -36,5 +36,7 @@ public interface StudentPeriodsOrderService {
      public List<APIStudentDataDTO> studentActivation(Integer branchId, Integer schoolStagesId, Integer id) ;
      
      public void deleteByStudentId(Integer periodOrderId) ;
+     
+     public List<APIStudentDataDTO> studentActivationOrder(Integer studentId);
 
 }

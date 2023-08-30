@@ -95,6 +95,8 @@ public class InboxReplyServiceImpl implements InboxReplyService {
             dto.setSentDate(entity.getSentDate());
             dto.setMessage(entity.getMessage());
             dto.setImage(entity.getImage());
+            dto.setVideo(entity.getVideo());
+            dto.setAudio(entity.getAudio());
             return dto;
         }
         return null;
@@ -108,6 +110,8 @@ public class InboxReplyServiceImpl implements InboxReplyService {
             entity.setSentDate(dto.getSentDate());
             entity.setMessage(dto.getMessage());
             entity.setImage(dto.getImage());
+            entity.setVideo(dto.getVideo());
+            entity.setAudio(dto.getAudio());
 
             if (dto.getId() == null) {
                 entity.setCreatedBy(igmaUser);

@@ -40,7 +40,7 @@ public class ExamsServiceImpl implements ExamsService {
     @Override
     public ExamsDTO findExams(Integer id) {
         Exams exams = dao.findEntityById(Exams.class, id);
-        return mapTODTO(exams, Boolean.TRUE, null, null);
+        return mapTODTO(exams, Boolean.TRUE, Boolean.FALSE, null, null);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class ExamsServiceImpl implements ExamsService {
 
         builder.append(" order by d.id desc ");
         List<Exams> list = dao.findListByQuery(builder.toString(), params);
-        return returnListDTO(list, false);
+        return returnListDTO(list, false,false);
     }
 
 //    @Override
@@ -146,7 +146,7 @@ public class ExamsServiceImpl implements ExamsService {
 
         List<Exams> list = dao.findListByQuery(builder.toString(), params);
 
-        examsDTO = mapTODTO(list.get(0), Boolean.TRUE, 1, examsDTO.getPeriodList());
+        examsDTO = mapTODTO(list.get(0), Boolean.TRUE, Boolean.TRUE, 1, examsDTO.getPeriodList());
         List<ExamsDTO> examsDTOList = new ArrayList<>();
         examsDTO.setLessonId(null);
         examsDTO.setParent(null);
@@ -201,13 +201,13 @@ public class ExamsServiceImpl implements ExamsService {
             params.put("examType", examsDTO.getExamType());
             builder.append(" and d.examType = :examType ");
         }
-        if (examsDTO.getLessonId()!= null) {
+        if (examsDTO.getLessonId() != null) {
             params.put("lessonId", examsDTO.getExamType());
             builder.append(" and d.lessonId.id = :lessonId ");
         }
 
         List<Exams> list = dao.findListByQuery(builder.toString(), params);
-        return returnListDTO(list, true);
+        return returnListDTO(list, true,true);
     }
 
     @Override
@@ -256,7 +256,7 @@ public class ExamsServiceImpl implements ExamsService {
         }
 
         List<Exams> list = dao.findListByQuery(builder.toString(), params);
-        return returnListDTO(list, true);
+        return returnListDTO(list, true,false);
     }
 
     @Override
@@ -271,7 +271,7 @@ public class ExamsServiceImpl implements ExamsService {
             deleteExams(examsDTO.getId());
         }
 
-        return returnListDTO(list, false);
+        return returnListDTO(list, false , false);
 
     }
 
@@ -361,21 +361,21 @@ public class ExamsServiceImpl implements ExamsService {
         dao.deleteEntity(entity);
     }
 
-    public List<ExamsDTO> returnListDTO(List<Exams> list, Boolean detail) {
+    public List<ExamsDTO> returnListDTO(List<Exams> list, Boolean detail, Boolean forStudent) {
         List<ExamsDTO> dTOList = new ArrayList<>();
         for (Exams entity : list) {
-            dTOList.add(mapTODTO(entity, detail, null, null));
+            dTOList.add(mapTODTO(entity, detail,forStudent, null, null));
         }
         return dTOList;
     }
 
-    private ExamsDTO mapTODTO(Exams entity, Boolean detail, Integer examtype, List<Integer> periodList) {
-        ExamsDTO dTO = initMapToDTO(entity, detail, examtype, periodList);
+    private ExamsDTO mapTODTO(Exams entity, Boolean detail,boolean forStudent, Integer examtype, List<Integer> periodList) {
+        ExamsDTO dTO = initMapToDTO(entity, detail,forStudent, examtype, periodList);
 
         return dTO;
     }
 
-    private ExamsDTO initMapToDTO(Exams entity, Boolean detail, Integer examtype, List<Integer> periodList) {
+    private ExamsDTO initMapToDTO(Exams entity, Boolean detail,boolean forStudent, Integer examtype, List<Integer> periodList) {
 
         ExamsDTO dTO = new ExamsDTO();
         dTO.setId(entity.getId());
@@ -449,7 +449,7 @@ public class ExamsServiceImpl implements ExamsService {
             }
             entity.setDegree(dTO.getDegree());
         }
-            entity.setDegree(dTO.getDegree());
+        entity.setDegree(dTO.getDegree());
         entity.setActive(dTO.getActive());
         entity.setScore(dTO.getScore());
         entity.setMonthId(dTO.getMonthId());
@@ -513,4 +513,16 @@ public class ExamsServiceImpl implements ExamsService {
         return entity;
     }
 
+    @Override
+    public boolean checkExamAutoForLesson(Integer lessonId) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("lessonId", lessonId);
+        StringBuilder builder = new StringBuilder();
+        builder.append(" SELECT d FROM Exams d WHERE d.lessonId.id = :lessonId and examType = 0 ");
+        List<Exams> list = dao.findListByQuery(builder.toString(), params);
+
+        return !(list != null && !list.isEmpty());
+
+    }
 }

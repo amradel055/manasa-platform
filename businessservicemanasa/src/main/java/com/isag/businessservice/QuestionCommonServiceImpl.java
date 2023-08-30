@@ -98,6 +98,9 @@ public class QuestionCommonServiceImpl implements QuestionCommonService {
         dTO.setCreatedBy(entity.getCreatedBy().getId());
         dTO.setBranchId(entity.getBranchId().getId());
 
+        dTO.setVideo(entity.getVideo());
+        dTO.setAudio(entity.getAudio());
+
         return dTO;
     }
 
@@ -114,6 +117,9 @@ public class QuestionCommonServiceImpl implements QuestionCommonService {
         entity.setId(dTO.getId());
         entity.setText(dTO.getText());
         entity.setImage(dTO.getImage());
+
+        entity.setVideo(dTO.getVideo());
+        entity.setAudio(dTO.getAudio());
 
         if (isagUser != null) {
             entity.setTeacherId(isagUser);
@@ -138,21 +144,21 @@ public class QuestionCommonServiceImpl implements QuestionCommonService {
     }
 
     @Override
-    public List<QuestionCommonDTO> findQuestionCommonAndAnswer(Integer teacherId, Integer materialId , Integer stageId) {
+    public List<QuestionCommonDTO> findQuestionCommonAndAnswer(Integer teacherId, Integer materialId, Integer stageId) {
         Map<String, Object> params = new HashMap<>();
         params.put("teacherId", teacherId);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT d FROM QuestionCommon d WHERE d.teacherId.id = :teacherId   ");
-        
-        if(materialId != null){
-        params.put("materialId", materialId);
-        builder.append(" AND d.materialId.id = :materialId   ");
+
+        if (materialId != null) {
+            params.put("materialId", materialId);
+            builder.append(" AND d.materialId.id = :materialId   ");
         }
-        if(stageId != null){
-        params.put("stageId", stageId);
-        builder.append(" AND d.materialId.stageId.id = :stageId   ");
+        if (stageId != null) {
+            params.put("stageId", stageId);
+            builder.append(" AND d.materialId.stageId.id = :stageId   ");
         }
-        
+
         List<QuestionCommon> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }

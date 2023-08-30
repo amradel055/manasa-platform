@@ -22,6 +22,8 @@ public interface StudentService {
     public APIStudentDataDTO ResetPassword(APIStudentDataDTO aPIStudentDataDTO);
 
     public StudentDTO authenticateUser(String userName, String password, Integer branchId, Integer companyId);
+    
+    public String findStudentPassword(Integer studentId);
 
     public APIStudentDataDTO save(APIStudentDataDTO aPIStudentDataDTO);
 
@@ -42,6 +44,8 @@ public interface StudentService {
     public List<APIStudentDataDTO> getStudentbyBranchId(Integer branchId, Integer schoolStagesId, Integer id);
 
     public StudentDTO findStudentId(Integer id);
+    
+    public StudentDTO findStudentLoginData(Integer id);
 
     public StudentDTO addStudent(StudentDTO student);
 

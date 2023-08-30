@@ -51,6 +51,12 @@ public class Periods extends BaseEntity {
     @OneToMany(mappedBy = "parentPeriod", fetch = FetchType.EAGER)
     private List<Periods> childPeriods;
 
+    @Column(name = "question_number")
+    private Integer questionNumber;
+    
+    @Column(name = "auto_time")
+    private Integer autoTime;
+    
     public Periods() {
     }
 
@@ -159,6 +165,34 @@ public class Periods extends BaseEntity {
      */
     public void setMaterialId(Materials materialId) {
         this.materialId = materialId;
+    }
+
+    /**
+     * @return the questionNumber
+     */
+    public Integer getQuestionNumber() {
+        return questionNumber;
+    }
+
+    /**
+     * @param questionNumber the questionNumber to set
+     */
+    public void setQuestionNumber(Integer questionNumber) {
+        this.questionNumber = questionNumber;
+    }
+
+    /**
+     * @return the autoTime
+     */
+    public Integer getAutoTime() {
+        return autoTime;
+    }
+
+    /**
+     * @param autoTime the autoTime to set
+     */
+    public void setAutoTime(Integer autoTime) {
+        this.autoTime = autoTime;
     }
 
 }

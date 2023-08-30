@@ -39,5 +39,7 @@ public interface ExamsService {
 
     public void deleteExams(Integer examId);
     
-    public List<ExamsDTO> returnListDTO(List<Exams> list, Boolean detail);
+    public List<ExamsDTO> returnListDTO(List<Exams> list, Boolean detail, Boolean forStudent);
+    
+    public boolean checkExamAutoForLesson(Integer lessonId);
 }

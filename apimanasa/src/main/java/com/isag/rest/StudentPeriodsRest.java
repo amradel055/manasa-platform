@@ -8,7 +8,6 @@ package com.isag.rest;
 import com.isag.businessservice.StudentPeriodsService;
 import com.isag.businessservice.StudentService;
 import com.isag.businessservice.StudentStatusService;
-import com.isag.config.UserLoginData;
 import com.isag.dto.APIStudentDataDTO;
 import com.isag.dto.StudentPeriodsDTO;
 import java.util.List;
@@ -18,8 +17,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -31,7 +28,6 @@ import javax.ws.rs.core.Response;
 @Path("/studentPeriods")
 public class StudentPeriodsRest {
 
-    private UserLoginData userLoginData;
     @EJB
     StudentPeriodsService studentPeriodsService;
     @EJB
@@ -132,25 +128,6 @@ public class StudentPeriodsRest {
         } catch (Exception e) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
-    }
-
-    public UserLoginData getUserLoginData(@Context ContainerRequestContext crc) {
-        userLoginData = (UserLoginData) crc.getProperty("userLogInData");
-        return userLoginData;
-    }
-
-    /**
-     * @return the userLoginData
-     */
-    public UserLoginData getUserLoginData() {
-        return userLoginData;
-    }
-
-    /**
-     * @param userLoginData the userLoginData to set
-     */
-    public void setUserLoginData(UserLoginData userLoginData) {
-        this.userLoginData = userLoginData;
     }
 
 }

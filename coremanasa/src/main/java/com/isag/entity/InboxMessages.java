@@ -54,6 +54,12 @@ public class InboxMessages extends BaseEntity {
     @Column(name = "read_done")
     private Integer readDone;
 
+    @Column(name = "audio")
+    private String audio;
+    
+    @Column(name = "video")
+    private String video;
+
     @Transient
     private InboxReply inboxReply;
 
@@ -154,6 +160,34 @@ public class InboxMessages extends BaseEntity {
      */
     public void setBranchId(Branch branchId) {
         this.branchId = branchId;
+    }
+
+    /**
+     * @return the audio
+     */
+    public String getAudio() {
+        return audio;
+    }
+
+    /**
+     * @param audio the audio to set
+     */
+    public void setAudio(String audio) {
+        this.audio = audio;
+    }
+
+    /**
+     * @return the video
+     */
+    public String getVideo() {
+        return video;
+    }
+
+    /**
+     * @param video the video to set
+     */
+    public void setVideo(String video) {
+        this.video = video;
     }
 
 }
