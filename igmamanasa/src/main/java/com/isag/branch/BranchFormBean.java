@@ -197,8 +197,8 @@ public class BranchFormBean extends BaseFormBean {
                     branch.setCompanyId(companySelected);
                 }
 
-                branch.setModifiedBy(user.getUser());
-                branch.setModificationDate(new Date());
+                branch.setCreationDate(new Date());
+                branch.setCreatedBy(getUserData().getUser());
 
                 branch.setImage(getImageName());
 

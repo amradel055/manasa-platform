@@ -40,4 +40,6 @@ public interface LessonService {
     public LessonDTO findLessonById(Integer lessonId);
 
     public List<LessonDTO> findLessonByTeacherId(Integer teacherId);
+    
+    public List<LessonDTO> findAllLessonsFree(Integer branchId, Integer companyId,Integer materialId,Integer schoolId,Integer teacherId);
 }

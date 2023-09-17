@@ -115,6 +115,7 @@ public class InboxReplyServiceImpl implements InboxReplyService {
 
             if (dto.getId() == null) {
                 entity.setCreatedBy(igmaUser);
+                entity.setSender(igmaUser.getId());
                 entity.setCreationDate(new Date());
             } else {
                 entity.setId(dto.getId());

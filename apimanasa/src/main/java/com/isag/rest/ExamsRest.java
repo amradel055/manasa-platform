@@ -10,7 +10,6 @@ import com.isag.businessservice.ExamsService;
 import com.isag.businessservice.MnsLoginExamService;
 import com.isag.businessservice.QuestionsService;
 import com.isag.businessservice.StudentStatusService;
-import com.isag.config.UserLoginData;
 import com.isag.dto.AnswersDTO;
 import com.isag.dto.ExamsDTO;
 import com.isag.dto.MnsLoginExamDTO;
@@ -23,8 +22,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -36,7 +33,6 @@ import javax.ws.rs.core.Response;
 @Path("/exams")
 public class ExamsRest {
 
-    private UserLoginData userLoginData;
     @EJB
     ExamsService examsService;
     @EJB
@@ -276,9 +272,36 @@ public class ExamsRest {
     public Response checkExamAutoForLesson(ExamsDTO examsDTO) {
         try {
             boolean msg = examsService.checkExamAutoForLesson(examsDTO.getLessonId());
+            examsDTO.setMsg(msg ? "true" : "false");
             return Response.ok(msg).build();
         } catch (Exception e) {
             return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
+    
+    
+
+    @Transactional
+    @Path("/findExamPeriod")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findExmPeriod(ExamsDTO examsDTO) {
+        if (examsDTO != null) {
+            try {
+                Integer dTO = questionsService.getMaxPeriodTime(examsDTO.getPeriodList());
+                examsDTO.setTimer(dTO);
+                return Response.ok(examsDTO).build();
+
+            } catch (Exception e) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+        } else {
+            examsDTO = new ExamsDTO();
+            examsDTO.setMsg("No Id is Sent");
+            examsDTO.setMsgType("failed");
+            return Response.ok(examsDTO).build();
         }
     }
 

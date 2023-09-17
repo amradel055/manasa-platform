@@ -33,7 +33,7 @@ public interface IgmaUserLoginService {
 
     public List<IgmaUserLogin> findIsagUserLoginByUserId(Integer branchId, Integer userId);
     
-    public IgmaUserLogin findIsagUserLoginByStudentIdLast(Integer studentId);
+    public IgmaUserLogin findIsagUserLoginByStudentIdLast(Integer studentId , Integer macType);
     
     public void deleteByStudentId(Integer studentId);
     

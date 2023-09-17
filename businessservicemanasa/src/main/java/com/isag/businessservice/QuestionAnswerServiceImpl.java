@@ -115,9 +115,7 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
             entity.setModifiedBy(isagUser);
         }
 
-        Branch branch = new Branch();
-        branch.setId(232);
-        entity.setBranchId(branch);
+        entity.setBranchId(isagUser.getBranchId());
         entity.setCompanyId(isagUser.getCompanyId());
         return entity;
     }

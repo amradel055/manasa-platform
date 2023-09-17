@@ -60,6 +60,7 @@ public class UserFormBean extends BaseFormBean implements Serializable {
     private List<Symbol> languages;
     private List<Employee> employeeList;
     private Branch branch;
+    
 
 
     @EJB

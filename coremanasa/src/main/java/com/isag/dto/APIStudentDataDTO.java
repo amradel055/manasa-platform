@@ -53,6 +53,8 @@ public class APIStudentDataDTO {
     private Integer periodId ;
     private Integer periodOrderId55 ;
     private String periodName ;
+    
+    private String macMobileId;
 
     /**
      * @return the monthList
@@ -556,6 +558,20 @@ public class APIStudentDataDTO {
      */
     public void setPeriodName(String periodName) {
         this.periodName = periodName;
+    }
+
+    /**
+     * @return the macMobileId
+     */
+    public String getMacMobileId() {
+        return macMobileId;
+    }
+
+    /**
+     * @param macMobileId the macMobileId to set
+     */
+    public void setMacMobileId(String macMobileId) {
+        this.macMobileId = macMobileId;
     }
 
 }

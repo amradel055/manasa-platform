@@ -55,6 +55,8 @@ public class Questions extends BaseEntity {
     @Size(max = 450)
     @Column(name = "img")
     private String img;
+    @Column(name = "group_id")
+    private Integer groupId;
 
     public Questions() {
     }
@@ -186,6 +188,20 @@ public class Questions extends BaseEntity {
      */
     public void setImg(String img) {
         this.img = img;
+    }
+
+    /**
+     * @return the groupId
+     */
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    /**
+     * @param groupId the groupId to set
+     */
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
     }
 
 }

@@ -60,6 +60,9 @@ public class IgmaUserLogin extends BaseEntity {
     private Student studentId;
     @Column(name = "state")
     private int state;
+    @Size(max = 450)
+    @Column(name = "mac_mobile_id")
+    private String macMobileId;
 
     public IgmaUserLogin() {
     }
@@ -207,5 +210,19 @@ public class IgmaUserLogin extends BaseEntity {
      */
     public void setStudentId(Student studentId) {
         this.studentId = studentId;
+    }
+
+    /**
+     * @return the macMobileId
+     */
+    public String getMacMobileId() {
+        return macMobileId;
+    }
+
+    /**
+     * @param macMobileId the macMobileId to set
+     */
+    public void setMacMobileId(String macMobileId) {
+        this.macMobileId = macMobileId;
     }
 }

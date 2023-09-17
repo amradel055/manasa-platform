@@ -5,6 +5,7 @@
  */
 package com.isag.businessservice;
 
+import com.isag.dto.APIStudentDataDTO;
 import com.isag.dto.StudentPeriodsDTO;
 import com.isag.dto.TeachersDTO;
 import com.isag.entity.IgmaUser;
@@ -39,4 +40,6 @@ public interface StudentPeriodsService {
     public void saveTransaction(StudentPeriods studentPeriods);
 
     public List<StudentPeriodsDTO> checkByStudentAndMaterialActive(Integer studentId, Integer materialId, Integer periodId);
+    
+    public List<APIStudentDataDTO> studentActivationOrder(Integer studentId);
 }

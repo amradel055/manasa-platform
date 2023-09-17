@@ -115,7 +115,7 @@ public class StudentQuestionsServiceImpl implements StudentQuestionsService {
         }
 
         Branch branch = new Branch();
-        branch.setId(232);
+        branch.setId(dTO.getBranchId());
         entity.setBranchId(branch);
         entity.setCompanyId(isagUser.getCompanyId());
         return entity;

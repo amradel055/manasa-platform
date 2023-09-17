@@ -92,7 +92,7 @@ public class ZoomLinkServiceImpl implements ZoomLinkService {
             }
 
             Branch branch = new Branch();
-            branch.setId(232);
+            branch.setId(dto.getBranchId());
             entity.setBranchId(branch);
             entity.setCompanyId(igmaUser.getCompanyId());
 

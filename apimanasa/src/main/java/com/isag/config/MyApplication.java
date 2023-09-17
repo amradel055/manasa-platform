@@ -17,6 +17,7 @@ import com.isag.rest.LessonLocationRest;
 import com.isag.rest.LessonRest;
 import com.isag.rest.LessonVoiceRest;
 import com.isag.rest.LockupRest;
+import com.isag.rest.LoginData;
 import com.isag.rest.LoginManasa;
 import com.isag.rest.LoginStudentRest;
 import com.isag.rest.ManasaReportRest;
@@ -80,6 +81,7 @@ public class MyApplication extends Application {
         resources.add(LessonVoiceRest.class);
         resources.add(LessonImageRest.class);
         resources.add(StudentStatusRest.class);
+        resources.add(LoginData.class);
 
         return resources;
     }

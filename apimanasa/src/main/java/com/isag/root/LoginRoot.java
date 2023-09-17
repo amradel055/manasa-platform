@@ -32,6 +32,8 @@ public class LoginRoot {
     @XmlElement
     public String macId;
     @XmlElement
-    public Integer branchSelected;    
+    public Integer branchSelected;   
+    @XmlElement
+    public Integer deviceType;
 
 }

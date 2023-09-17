@@ -75,8 +75,8 @@ public class RoleFormBean extends BaseFormBean implements Serializable {
                 IgmaCompany companySelected = new IgmaCompany();
                 companySelected.setId(companyId);
                 isagRole.setCompanyId(companySelected);
-                isagRole.setModifiedBy(userData.getUser());
-                isagRole.setModificationDate(new Date());
+                isagRole.setCreatedBy(userData.getUser());
+                isagRole.setCreationDate(new Date());
                 if (screenMode.equalsIgnoreCase("add")) {
                     try {
                         isagRole = rolesService.addRole(isagRole);

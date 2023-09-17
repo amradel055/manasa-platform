@@ -41,6 +41,12 @@ public class LessonDTO extends BaseEntityDTO {
     private List<LessonImgDTO> lessonImgDTOList;
     private List<LessonVoiceDTO> lessonVoiceDTOList;
     private List<DocumentsDTO> documentsDTOList;
+    
+    private List<String> youtubeLinks;
+    private List<String> videoLinks;
+    private List<String> vimeoLinks;
+    
+    private List<ExamsDTO> exams ;
 
     public LessonDTO() {
     }
@@ -407,6 +413,62 @@ public class LessonDTO extends BaseEntityDTO {
      */
     public void setLessonVoiceList(List<String> lessonVoiceList) {
         this.lessonVoiceList = lessonVoiceList;
+    }
+
+    /**
+     * @return the youtubeLinks
+     */
+    public List<String> getYoutubeLinks() {
+        return youtubeLinks;
+    }
+
+    /**
+     * @param youtubeLinks the youtubeLinks to set
+     */
+    public void setYoutubeLinks(List<String> youtubeLinks) {
+        this.youtubeLinks = youtubeLinks;
+    }
+
+    /**
+     * @return the videoLinks
+     */
+    public List<String> getVideoLinks() {
+        return videoLinks;
+    }
+
+    /**
+     * @param videoLinks the videoLinks to set
+     */
+    public void setVideoLinks(List<String> videoLinks) {
+        this.videoLinks = videoLinks;
+    }
+
+    /**
+     * @return the vimeoLinks
+     */
+    public List<String> getVimeoLinks() {
+        return vimeoLinks;
+    }
+
+    /**
+     * @param vimeoLinks the vimeoLinks to set
+     */
+    public void setVimeoLinks(List<String> vimeoLinks) {
+        this.vimeoLinks = vimeoLinks;
+    }
+
+    /**
+     * @return the exams
+     */
+    public List<ExamsDTO> getExams() {
+        return exams;
+    }
+
+    /**
+     * @param exams the exams to set
+     */
+    public void setExams(List<ExamsDTO> exams) {
+        this.exams = exams;
     }
 
 }

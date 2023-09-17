@@ -153,10 +153,24 @@ public class IgmaUserLoginServiceImpl implements IgmaUserLoginService {
     }
     
     @Override
-    public IgmaUserLogin findIsagUserLoginByStudentIdLast(Integer studentId) {
+    public IgmaUserLogin findIsagUserLoginByStudentIdLast(Integer studentId , Integer macType) {
         Map<String, Object> params = new HashMap<>();
         params.put("studentId", studentId);
-        List<IgmaUserLogin> list = dao.findListByQuery("SELECT i FROM IgmaUserLogin i WHERE  i.studentId.id = :studentId order by i.id desc", params);
+        StringBuilder query = new StringBuilder();
+        
+        query.append(" SELECT i FROM IgmaUserLogin i WHERE  i.studentId.id = :studentId  ") ;
+        
+        if(macType != null && macType == 0){
+            query.append(" AND i.macId IS NOT NULL ");
+        }
+        
+        if(macType != null && macType == 0){
+            query.append(" AND i.macMobileId IS NOT NULL ");
+        }
+        
+        query.append(" order by i.id desc ");
+        
+        List<IgmaUserLogin> list = dao.findListByQuery(query.toString() , params);
         return (list != null && !list.isEmpty()) ? list.get(0) : null;
     }
     

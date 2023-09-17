@@ -25,6 +25,7 @@ public class QuestionsDTO extends BaseEntityDTO {
     private Integer studentId;
     private String img;
     private List<AnswersDTO> answersdtoList;
+    private Integer groupId;
 
     public QuestionsDTO() {
     }
@@ -207,6 +208,20 @@ public class QuestionsDTO extends BaseEntityDTO {
      */
     public void setImg(String img) {
         this.img = img;
+    }
+
+    /**
+     * @return the groupId
+     */
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    /**
+     * @param groupId the groupId to set
+     */
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
     }
 
 }

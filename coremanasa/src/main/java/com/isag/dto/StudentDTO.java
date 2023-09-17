@@ -33,6 +33,7 @@ public class StudentDTO extends BaseEntityDTO {
     private String fatherName;
     private String grandFatherName;
     private String familyName;
+    private String macMobileId;
 
     public StudentDTO() {
     }
@@ -308,6 +309,20 @@ public class StudentDTO extends BaseEntityDTO {
      */
     public void setImage(String image) {
         this.image = image;
+    }
+
+    /**
+     * @return the macMobileId
+     */
+    public String getMacMobileId() {
+        return macMobileId;
+    }
+
+    /**
+     * @param macMobileId the macMobileId to set
+     */
+    public void setMacMobileId(String macMobileId) {
+        this.macMobileId = macMobileId;
     }
 
     /**

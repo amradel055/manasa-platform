@@ -195,13 +195,12 @@ public class CompanyFormBean extends BaseFormBean {
                 companySave.setPhone(getPhone());
                 companySave.setFax(getFax());
                 companySave.setResponsible(getResposibility());
-                companySave.setModifiedBy(userData.getUser());
-                companySave.setModificationDate(new Date());
 
                 companySave.setImage(getUploadedImage());
 
                 if (getScreenMode().equalsIgnoreCase("add")) {
                     companySave.setCreatedBy(userData.getUser());
+                    companySave.setCreationDate(new Date());
                     try {
                         companySave = companyService.addCompany(companySave);
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userData.getUserDDs().get("INFO"), userData.getUserDDs().get("SAVED")));
@@ -230,6 +229,8 @@ public class CompanyFormBean extends BaseFormBean {
                     companySave.setName(getCompanyName());
                     companySave.setResponsible(getResposibility());
                     companySave.setPhone(getPhone());
+                companySave.setModifiedBy(userData.getUser());
+                companySave.setModificationDate(new Date());
                     try {
                         companyService.updateCompany(companySave);
                         for (String newLang : selectedLanguageIds) {
