@@ -53,6 +53,19 @@ public class schoolStagesGuideServiceImpl implements SchoolStagesGuideService {
         return listDTO;
     }
     
+    @Override
+    public List<SchoolStagesGuideDTO> findschoolStagesGuideByCompanyId(Integer companyId) {
+        Map<String, Object> params = new HashMap<>();
+        String query = "";
+        if (companyId != null) {
+            params.put("companyId", companyId);
+            query = " SELECT b FROM SchoolStagesGuide b WHERE b.companyId.id = :companyId ";
+        }
+        List<SchoolStagesGuide> schoolStagesGuideList = dao.findListByQuery(query, params);
+        List<SchoolStagesGuideDTO> listDTO = returnListDTO(schoolStagesGuideList);
+        return listDTO;
+    }
+    
     private List<SchoolStagesGuideDTO> returnListDTO(List<SchoolStagesGuide> list) {
         List<SchoolStagesGuideDTO> dTOList = new ArrayList<>();
         for (SchoolStagesGuide entity : list) {
@@ -129,5 +142,25 @@ public class schoolStagesGuideServiceImpl implements SchoolStagesGuideService {
         schoolStagesGuide = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(schoolStagesGuide);
     }
+    
+    @Override
+    public void deleteStage(Integer stageId) {
+        dao.deleteEntity(new SchoolStagesGuide(stageId));
+    }
+    
+    @Override
+    public SchoolStagesGuide findschoolStagesGuideById(Integer stageId) {
+        SchoolStagesGuide schoolStagesGuide = dao.findEntityById(SchoolStagesGuide.class, stageId) ;
+        if(schoolStagesGuide != null){
+            return schoolStagesGuide;
+        }
+        return null;
+    }
+    
+    @Override
+    public SchoolStagesGuide addSchoolStagesGuide(SchoolStagesGuide schoolStagesGuide) {
+        return dao.updateEntity(schoolStagesGuide);
+    }
+
     
 }

@@ -6,6 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.dto.SchoolStagesGuideDTO;
+import com.isag.entity.SchoolStagesGuide;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -20,6 +21,14 @@ public interface SchoolStagesGuideService {
 
     public List<SchoolStagesGuideDTO> findschoolStagesGuideByTeacherId(Integer teacherId);
     
-      public List<SchoolStagesGuideDTO> findStage(Integer materialId) ;
+    public List<SchoolStagesGuideDTO> findStage(Integer materialId) ;
+    
+    public void deleteStage(Integer stageId);
+    
+    public List<SchoolStagesGuideDTO> findschoolStagesGuideByCompanyId(Integer companyId);
+    
+    public SchoolStagesGuide findschoolStagesGuideById(Integer stageId);
+    
+    public SchoolStagesGuide addSchoolStagesGuide(SchoolStagesGuide schoolStagesGuide) ;
 
 }

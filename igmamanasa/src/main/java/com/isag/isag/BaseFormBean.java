@@ -5,9 +5,12 @@
  */
 package com.isag.isag;
 
+import com.isag.businessservice.CompanyService;
 import com.isag.core.UserDataDTO;
+import com.isag.entity.IgmaCompany;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,6 +40,9 @@ public abstract class BaseFormBean extends Basic implements BaseManagedBean {
     private Boolean columnRender = true;
     private String className = "BaseFormBean";
     private Map<String, String> userDDs;
+    
+    
+    
 
     public abstract String save();
 
@@ -213,4 +219,5 @@ public abstract class BaseFormBean extends Basic implements BaseManagedBean {
     public void setUserDDs(Map<String, String> userDDs) {
         this.userDDs = userDDs;
     }
+    
 }

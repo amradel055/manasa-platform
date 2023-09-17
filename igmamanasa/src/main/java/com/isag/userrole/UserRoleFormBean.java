@@ -44,8 +44,8 @@ public class UserRoleFormBean extends BaseFormBean implements Serializable {
     private IsagUserConverter isagUserConverter;
     private IsagRoleConverter isagRoleConverter;
     private Branch selectedBranch;
-    private List<IgmaCompany> companiesList;
-    private Integer selectedCompanyId;
+    
+    
     private IgmaUserRole selectedUserRole;
 
 //    private List<Employee> employeeList = new ArrayList<>();
@@ -54,6 +54,8 @@ public class UserRoleFormBean extends BaseFormBean implements Serializable {
 //    private List<IsagUserEmployee> isagUseremployeeListAdded = new ArrayList<>();
 
     @EJB
+    CompanyService companyService;
+    @EJB
     BranchService branchService;
     @EJB
     RoleService roleService;
@@ -61,8 +63,7 @@ public class UserRoleFormBean extends BaseFormBean implements Serializable {
     IgmaUserService iSAGUserService;
     @EJB
     IgmaUserRoleService isagUserRoleService;
-    @EJB
-    CompanyService companyService;
+    
 
 //    @EJB
 //    EmployeeService employeeService;
@@ -96,15 +97,8 @@ public class UserRoleFormBean extends BaseFormBean implements Serializable {
                 branchList = branchService.getAllBranchByCompanyId(companyId.getId());
                 userListByCompany = iSAGUserService.getAllUsersListByCompanyId(companyId.getId());
                 roleListByCompany = roleService.getAllRolesListByCompanyId(companyId.getId());
-
-                // yearsList = glYearService.getALLGlyearByCompanyId(companyId.getId());
-//            employeeList = employeeService.getAllEmployeesListByBranchId(getUserData().getUserBranch().getId());
             } else {
-                companiesList = companyService.getAllCompanies();
-
-//            yearsList = glYearService.getAllYear();
-//            bankList = glBankService.getAllGlBank();
-//            inventoryList = invInventoryService.getAllInventories();
+                getCompaniesList();
             }
 
 //        employeeConverter = new EmployeeConverter(employeeList);
@@ -356,11 +350,11 @@ public class UserRoleFormBean extends BaseFormBean implements Serializable {
 
     public void onCompanyListChange() {
         try {
-            if (selectedCompanyId != null) {
-                companyId = companyService.findCompany(selectedCompanyId);
-                branchList = branchService.getAllBranchByCompanyId(selectedCompanyId);
-                userListByCompany = iSAGUserService.getAllUsersListByCompanyId(selectedCompanyId);
-                roleListByCompany = roleService.getAllRolesListByCompanyId(selectedCompanyId);
+            if (getSelectedCompanyId() != null) {
+                companyId = companyService.findCompany(getSelectedCompanyId() );
+                branchList = branchService.getAllBranchByCompanyId(getSelectedCompanyId() );
+                userListByCompany = iSAGUserService.getAllUsersListByCompanyId(getSelectedCompanyId() );
+                roleListByCompany = roleService.getAllRolesListByCompanyId(getSelectedCompanyId() );
             }
         } catch (Exception e) {
             saveError(e, "UserRoleFormBean", "onCompanyListChange");
@@ -489,22 +483,6 @@ public class UserRoleFormBean extends BaseFormBean implements Serializable {
      */
     public void setIsagRoleConverter(IsagRoleConverter isagRoleConverter) {
         this.isagRoleConverter = isagRoleConverter;
-    }
-
-    public List<IgmaCompany> getCompaniesList() {
-        return companiesList;
-    }
-
-    public void setCompaniesList(List<IgmaCompany> companiesList) {
-        this.companiesList = companiesList;
-    }
-
-    public Integer getSelectedCompanyId() {
-        return selectedCompanyId;
-    }
-
-    public void setSelectedCompanyId(Integer selectedCompanyId) {
-        this.selectedCompanyId = selectedCompanyId;
     }
 
     public List<IgmaRole> getRoleListByCompany() {

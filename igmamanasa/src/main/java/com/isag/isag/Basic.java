@@ -5,6 +5,7 @@
  */
 package com.isag.isag;
 
+import com.isag.businessservice.CompanyService;
 import com.isag.common.FindClientData;
 import com.isag.common.SendEmailSMTP;
 import com.isag.dto.IgmaErrorDTO;
@@ -43,6 +44,8 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import com.isag.businessservice.IgmaErrorService;
 import com.isag.businessservice.IgmaTokensService;
 import com.isag.businessservice.IgmaUserLoginService;
+import com.isag.converter.CompanyConverter;
+import com.isag.entity.IgmaCompany;
 
 /**
  *
@@ -58,6 +61,8 @@ public class Basic implements Serializable {
     IgmaErrorService isagErrorService;
     @EJB
     IgmaTokensService isagTokensService;
+    @EJB
+    CompanyService companyService;
 
     private IgmaUser userlogin;
     
@@ -76,6 +81,14 @@ public class Basic implements Serializable {
     private String errorGlobal;
 
     private String uri;
+    
+    private List<IgmaCompany> companiesList;
+    
+    private IgmaCompany companySelected ;
+    
+    private CompanyConverter companyConverter;
+    
+    private Integer selectedCompanyId;
 
     public void saveError(Exception e, String className, String methodName) {
         getIsagErrorDTO().setClassName(className);
@@ -369,6 +382,54 @@ public class Basic implements Serializable {
      */
     public void setContext(ExternalContext context) {
         this.context = context;
+    }
+
+    public List<IgmaCompany> getCompaniesList() {
+        if(companiesList == null){
+            companiesList = companyService.getAllCompanies();
+            setCompanyConverter(new CompanyConverter(companiesList));
+        }
+        return companiesList;
+    }
+
+    public void setCompaniesList(List<IgmaCompany> companiesList) {
+        this.companiesList = companiesList;
+    }
+
+    public Integer getSelectedCompanyId() {
+        return selectedCompanyId;
+    }
+
+    public void setSelectedCompanyId(Integer selectedCompanyId) {
+        this.selectedCompanyId = selectedCompanyId;
+    }
+
+    /**
+     * @return the companySelected
+     */
+    public IgmaCompany getCompanySelected() {
+        return companySelected;
+    }
+
+    /**
+     * @param companySelected the companySelected to set
+     */
+    public void setCompanySelected(IgmaCompany companySelected) {
+        this.companySelected = companySelected;
+    }
+
+    /**
+     * @return the companyConverter
+     */
+    public CompanyConverter getCompanyConverter() {
+        return companyConverter;
+    }
+
+    /**
+     * @param companyConverter the companyConverter to set
+     */
+    public void setCompanyConverter(CompanyConverter companyConverter) {
+        this.companyConverter = companyConverter;
     }
 
 }
