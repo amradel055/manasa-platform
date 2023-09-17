@@ -11,7 +11,13 @@ package com.isag.define;
  */
 public enum CompanyActivityClassEnum {
     
-    Alumetal,
-    RetailSale,
-    Installment
+    Teacher,
+    Doctor,
+    Insturtor,
+    TeacherCenter,
+    DoctorCenter,
+    CourseCenter,
+    School,
+    University
+    
 }

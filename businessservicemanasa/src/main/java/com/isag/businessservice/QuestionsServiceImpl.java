@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -104,7 +105,7 @@ public class QuestionsServiceImpl implements QuestionsService {
     @Override
     public QuestionsDTO saveListForStudent(List<QuestionsDTO> questionsDTOsList, IgmaUser isagUser, Integer examsId, Integer studentId, Integer parentExamId, Integer examTpe) {
 
-        QuestionsDTO questionsDTO = null;
+        QuestionsDTO questionsDTO = new QuestionsDTO();
         BigDecimal total = BigDecimal.ZERO;
         Map<Integer, String> mapAnswer = new HashMap<>();
         if (examTpe != null && examTpe == 0) {
@@ -141,6 +142,7 @@ public class QuestionsServiceImpl implements QuestionsService {
         }
     }
 
+    @Override
     public void deleteListQuestionsDTO(List<QuestionsDTO> questionsDTOsList) {
 
         for (QuestionsDTO questionsDTO : questionsDTOsList) {
@@ -214,6 +216,7 @@ public class QuestionsServiceImpl implements QuestionsService {
         deleteListQuestionsDTO(questionsDTOsList);
     }
 
+    @Override
     public List<QuestionsDTO> returnListDTO(List<Questions> list) {
         List<QuestionsDTO> dTOList = new ArrayList<>();
         for (Questions entity : list) {
@@ -236,6 +239,7 @@ public class QuestionsServiceImpl implements QuestionsService {
         dTO.setQuestionType(entity.getQuestionType());
         dTO.setQuestionDegree(entity.getQuestionDegree());
         dTO.setImg(entity.getImg());
+        dTO.setGroupId(entity.getGroupId());
 
         if (entity.getExamsId() != null) {
             dTO.setExamsId(entity.getExamsId().getId());
@@ -267,6 +271,7 @@ public class QuestionsServiceImpl implements QuestionsService {
         entity.setQuestionType(dTO.getQuestionType());
         entity.setQuestionDegree(dTO.getQuestionDegree());
         entity.setImg(dTO.getImg());
+        entity.setGroupId(dTO.getGroupId());
 
         if (examsId != null) {
             Exams exams = new Exams();
@@ -302,39 +307,40 @@ public class QuestionsServiceImpl implements QuestionsService {
         return entity;
     }
 
-//    @Override
+    @Override
     public List<QuestionsDTO> findAutoQuestions(ExamsDTO examsDTO) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder builder = new StringBuilder();
-        Integer maxQuestionNumber = 20 ;
-        Integer maxTime = 60 ;
+        Integer maxQuestionNumber = 20;
 
         builder.append("SELECT d FROM Questions d WHERE d.examsId.examType = 0 ");
 
         if (examsDTO.getPeriodList() != null && !examsDTO.getPeriodList().isEmpty()) {
             List<Integer> periodIds = periodsService.findPeriodAndChildIds(examsDTO.getPeriodList());
-            params.put("periodIds", periodIds);
-            builder.append(" and d.examsId.periodId.id in( :periodIds )");
+            
+            StringBuilder sb = null ;
+        if (periodIds != null &&  !periodIds.isEmpty()) {
+            
+            for(Integer p : periodIds){
+                if(sb == null){
+                    sb =  new StringBuilder();
+                    sb.append(p);
+                }else{
+                    sb.append(" , ").append(p);
+                }
+            }
+        }
+//            params.put("periodIds", periodIds.toString());
+            builder.append(" and d.examsId.periodId.id in( ").append( sb ).append(" )");
             maxQuestionNumber = getMaxQuestionNumber(periodIds);
-            maxTime = getMaxPeriodTime(periodIds);
         }
 
         List<Questions> list = dao.findListByQuery(builder.toString(), params);
-        List<Questions> list2 = new ArrayList<>();
 
-        Collections.shuffle(list, new Random());
-
-        int i = 0;
-        for (Questions x : list) {
-            if (i < maxQuestionNumber) {
-                i++;
-                list2.add(x);
-            }
-        }
-
-        return returnListDTO(list2);
+        return returnListDTO(randomArrangeWithGroup(list, maxQuestionNumber));
     }
 
+    @Override
     public Integer getMaxPeriodTime(List<Integer> periodIds) {
 
         if (periodIds.isEmpty()) {
@@ -349,18 +355,80 @@ public class QuestionsServiceImpl implements QuestionsService {
         return (result == null || result.isEmpty()) ? 0 : result.get(0);
     }
 
-    public Integer getMaxQuestionNumber(List<Integer> periodIds) {
+    private Integer getMaxQuestionNumber(List<Integer> periodIds) {
 
         if (periodIds.isEmpty()) {
             return 0;
         }
+        
+                    StringBuilder sb = null ;
+        if (periodIds != null &&  !periodIds.isEmpty()) {
+            
+            for(Integer p : periodIds){
+                if(sb == null){
+                    sb =  new StringBuilder();
+                    sb.append(p);
+                }else{
+                    sb.append(" , ").append(p);
+                }
+            }
+        }
 
-        String sql = "SELECT MAX(p.questionNumber) FROM Periods p WHERE p.id IN (:periodIds)";
-        Map<String, Object> params = Collections.singletonMap("periodIds", periodIds);
+        String sql = "SELECT MAX(p.questionNumber) FROM Periods p WHERE p.id IN ( "+sb+" )";
+//        Map<String, Object> params = Collections.singletonMap("periodIds", periodIds);
 
-        List<Integer> result = dao.findListByQuery(sql, params);
+        List<Integer> result = dao.findListByQuery(sql, null);
 
         return (result == null || result.isEmpty()) ? 0 : result.get(0);
+    }
+
+    private List<Questions> randomArrangeWithGroup(List<Questions> questions, Integer listNumber) {
+        // Use a LinkedHashMap to maintain group order
+        Map<Integer, List<Questions>> map = new LinkedHashMap<>();
+
+//    // Initialize a list for questions with no group
+//    List<Questions> ungroupedQuestions = new ArrayList<>();
+        for (Questions question : questions) {
+            Integer groupId = question.getGroupId() != null ? question.getGroupId() : 9999;
+
+            // Use computeIfAbsent to create a new group list if it doesn't exist
+            map.computeIfAbsent(groupId, k -> new ArrayList<>()).add(question);
+        }
+
+        List<Questions> list9999 = map.get(9999);
+        if (list9999 != null && !list9999.isEmpty()) {
+            Collections.shuffle(list9999);
+        }
+
+        ArrayList<List<Questions>> groupedLists = new ArrayList<>(map.values());
+
+        // Shuffle the groups randomly
+        Collections.shuffle(groupedLists, new Random());
+
+        // Flatten the shuffled groups into a single list
+        List<Questions> shuffledList = new ArrayList<>();
+        if (listNumber == null) {
+            for (List<Questions> group : groupedLists) {
+                shuffledList.addAll(group);
+            }
+        } else {
+             for (List<Questions> group : groupedLists) {
+                if(shuffledList.size() < listNumber - 1){
+                    int freeSize = listNumber - 1 - shuffledList.size() ;
+                    if(group.size() <= freeSize){
+                        shuffledList.addAll(group);
+                    }else{
+                        if(group.get(0).getGroupId() == null){
+                            for (int i = 0 ; i <= freeSize ; i++) {
+                                shuffledList.add(group.get(i));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return shuffledList;
     }
 
 }

@@ -101,6 +101,9 @@ public class Student extends BaseEntity {
     @Column(name = "mac_id")
     private String macId;
     @Size(max = 450)
+    @Column(name = "mac_mobile_id")
+    private String macMobileId;
+    @Size(max = 450)
     @Column(name = "ip_adress")
     private String ipAddress;
     @Size(max = 100)
@@ -454,6 +457,20 @@ public class Student extends BaseEntity {
      */
     public void setPeriodName(String periodName) {
         this.periodName = periodName;
+    }
+
+    /**
+     * @return the macMobileId
+     */
+    public String getMacMobileId() {
+        return macMobileId;
+    }
+
+    /**
+     * @param macMobileId the macMobileId to set
+     */
+    public void setMacMobileId(String macMobileId) {
+        this.macMobileId = macMobileId;
     }
 
 }

@@ -18,6 +18,7 @@ import com.isag.entity.Periods;
 import com.isag.entity.SchoolStagesGuide;
 import com.isag.entity.Student;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +41,7 @@ public class ExamsServiceImpl implements ExamsService {
     @Override
     public ExamsDTO findExams(Integer id) {
         Exams exams = dao.findEntityById(Exams.class, id);
-        return mapTODTO(exams, Boolean.TRUE, Boolean.FALSE, null, null);
+        return mapTODTO(exams, Boolean.TRUE,  null, null);
     }
 
     @Override
@@ -67,10 +68,14 @@ public class ExamsServiceImpl implements ExamsService {
     @Override
     public List<ExamsDTO> findExamsListForTeacher(Integer schoolStagesId, Integer teacherId, Integer lessonId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("teacherId", teacherId);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT d FROM Exams d WHERE d.teacherId.id = :teacherId AND d.parent IS NULL ");
+        builder.append("SELECT d FROM Exams d WHERE  d.parent IS NULL ");
 
+        if (teacherId != null) {
+            params.put("teacherId", teacherId);
+            builder.append(" AND d.teacherId.id = :teacherId ");
+        }
+        
         if (lessonId != null) {
             params.put("lessonId", lessonId);
             builder.append(" AND d.lessonId.id = :lessonId ");
@@ -82,7 +87,7 @@ public class ExamsServiceImpl implements ExamsService {
 
         builder.append(" order by d.id desc ");
         List<Exams> list = dao.findListByQuery(builder.toString(), params);
-        return returnListDTO(list, false,false);
+        return returnListDTO(list, false);
     }
 
 //    @Override
@@ -145,8 +150,8 @@ public class ExamsServiceImpl implements ExamsService {
         }
 
         List<Exams> list = dao.findListByQuery(builder.toString(), params);
-
-        examsDTO = mapTODTO(list.get(0), Boolean.TRUE, Boolean.TRUE, 1, examsDTO.getPeriodList());
+        if(list != null && !list.isEmpty()){
+        examsDTO = mapTODTO(list.get(0), Boolean.TRUE,  1, examsDTO.getPeriodList());
         List<ExamsDTO> examsDTOList = new ArrayList<>();
         examsDTO.setLessonId(null);
         examsDTO.setParent(null);
@@ -154,6 +159,8 @@ public class ExamsServiceImpl implements ExamsService {
         examsDTO.setExamType(0);
         examsDTOList.add(examsDTO);
         return examsDTOList;
+        }
+        return null ;
 
     }
 
@@ -207,7 +214,7 @@ public class ExamsServiceImpl implements ExamsService {
         }
 
         List<Exams> list = dao.findListByQuery(builder.toString(), params);
-        return returnListDTO(list, true,true);
+        return returnListDTO(list, true);
     }
 
     @Override
@@ -256,7 +263,7 @@ public class ExamsServiceImpl implements ExamsService {
         }
 
         List<Exams> list = dao.findListByQuery(builder.toString(), params);
-        return returnListDTO(list, true,false);
+        return returnListDTO(list, true);
     }
 
     @Override
@@ -271,7 +278,7 @@ public class ExamsServiceImpl implements ExamsService {
             deleteExams(examsDTO.getId());
         }
 
-        return returnListDTO(list, false , false);
+        return returnListDTO(list, false);
 
     }
 
@@ -361,21 +368,21 @@ public class ExamsServiceImpl implements ExamsService {
         dao.deleteEntity(entity);
     }
 
-    public List<ExamsDTO> returnListDTO(List<Exams> list, Boolean detail, Boolean forStudent) {
+    public List<ExamsDTO> returnListDTO(List<Exams> list, Boolean detail) {
         List<ExamsDTO> dTOList = new ArrayList<>();
         for (Exams entity : list) {
-            dTOList.add(mapTODTO(entity, detail,forStudent, null, null));
+            dTOList.add(mapTODTO(entity, detail, null, null));
         }
         return dTOList;
     }
 
-    private ExamsDTO mapTODTO(Exams entity, Boolean detail,boolean forStudent, Integer examtype, List<Integer> periodList) {
-        ExamsDTO dTO = initMapToDTO(entity, detail,forStudent, examtype, periodList);
+    private ExamsDTO mapTODTO(Exams entity, Boolean detail, Integer examtype, List<Integer> periodList) {
+        ExamsDTO dTO = initMapToDTO(entity, detail, examtype, periodList);
 
         return dTO;
     }
 
-    private ExamsDTO initMapToDTO(Exams entity, Boolean detail,boolean forStudent, Integer examtype, List<Integer> periodList) {
+    private ExamsDTO initMapToDTO(Exams entity, Boolean detail, Integer examtype, List<Integer> periodList) {
 
         ExamsDTO dTO = new ExamsDTO();
         dTO.setId(entity.getId());
@@ -419,7 +426,8 @@ public class ExamsServiceImpl implements ExamsService {
 
         if (detail) {
             if (examtype != null) {
-                dTO.setQuestionsList(questionsService.findGeneralQuestions(dTO));
+                dTO.setQuestionsList(questionsService.findAutoQuestions(dTO));
+               
                 for (QuestionsDTO questionsDTO : dTO.getQuestionsList()) {
                     dTO.setScore(dTO.getScore().add(questionsDTO.getQuestionDegree()));
                 }
@@ -519,7 +527,7 @@ public class ExamsServiceImpl implements ExamsService {
         Map<String, Object> params = new HashMap<>();
         params.put("lessonId", lessonId);
         StringBuilder builder = new StringBuilder();
-        builder.append(" SELECT d FROM Exams d WHERE d.lessonId.id = :lessonId and examType = 0 ");
+        builder.append(" SELECT d FROM Exams d WHERE d.lessonId.id = :lessonId and d.examType = 0 ");
         List<Exams> list = dao.findListByQuery(builder.toString(), params);
 
         return !(list != null && !list.isEmpty());

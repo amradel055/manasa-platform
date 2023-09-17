@@ -152,12 +152,26 @@ public class PeriodsServiceImpl implements PeriodsService {
     @Override
     public List<Integer> findPeriodAndChildIds(List<Integer> periodParentIds) {
         List<Integer> periodIds = new ArrayList<>();
+        StringBuilder sb = null ;
         if (periodParentIds.isEmpty()) {
             return periodIds;
+        }else{
+            for(Integer p : periodParentIds){
+                if(sb == null){
+                    sb =  new StringBuilder();
+                    sb.append(p);
+                }else{
+                    sb.append(" , ").append(p);
+                }
+            }
         }
 
-        String sql = "SELECT p FROM Periods p WHERE p.id IN (:periodParentIds)";
-        Map<String, Object> params = Collections.singletonMap("periodParentIds", periodParentIds);
+        String sql = "SELECT p FROM Periods p WHERE p.id IN ( "+ sb +" )";
+//        Map<String, Object> params = Collections.singletonMap("periodParentIds", periodParentIds);
+
+        Map<String, Object> params = new HashMap<>();
+//        params.put("periodParentIds", periodParentIds);
+//        params.put("periodParentIds", sb.toString());
 
         List<Periods> result = dao.findListByQuery(sql, params);
 
@@ -263,8 +277,8 @@ public class PeriodsServiceImpl implements PeriodsService {
         }
 
         Branch branch = new Branch();
-        branch.setId(232);
-        here kartha
+        branch.setId(dTO.getBranchId());
+//        here kartha
         entity.setBranchId(branch);
         entity.setCompanyId(igmaUser.getCompanyId());
         return entity;

@@ -34,7 +34,8 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public List<IgmaCompany> getAllCompanies() {
-        return dao.findAll(IgmaCompany.class);
+//        return dao.findAll(IgmaCompany.class);
+        return dao.findListByQuery("SELECT b FROM IgmaCompany b order by b.id DESC ");
     }
 
     @Override
@@ -70,17 +71,17 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyLanguage addCompanyLanguage(CompanyLanguage companyLanguage) {
         CompanyLanguage compLang = dao.updateEntity(companyLanguage);
-        List<DataDictionary> dds = ddService.getDefaultDDsByLanguage(compLang.getSymbol().getId());
-        for (DataDictionary dd : dds) {
-            DataDictionary newDD = new DataDictionary();
-            newDD.setCompanyId(compLang.getCompanyId());
-            newDD.setLang(compLang.getSymbol());
-            newDD.setPropertyKey(dd.getPropertyKey());
-            newDD.setPropertyValue(dd.getPropertyValue());
-            newDD.setCreatedBy(compLang.getCreatedBy());
-            newDD.setCreationDate(new Date());
-            newDD = ddService.addDataDictionary(newDD);
-        }
+//        List<DataDictionary> dds = ddService.getDefaultDDsByLanguage(compLang.getSymbol().getId());
+//        for (DataDictionary dd : dds) {
+//            DataDictionary newDD = new DataDictionary();
+//            newDD.setCompanyId(compLang.getCompanyId());
+//            newDD.setLang(compLang.getSymbol());
+//            newDD.setPropertyKey(dd.getPropertyKey());
+//            newDD.setPropertyValue(dd.getPropertyValue());
+//            newDD.setCreatedBy(compLang.getCreatedBy());
+//            newDD.setCreationDate(new Date());
+//            newDD = ddService.addDataDictionary(newDD);
+//        }
         return compLang;
     }
 

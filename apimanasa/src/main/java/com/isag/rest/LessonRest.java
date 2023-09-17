@@ -135,5 +135,29 @@ public class LessonRest {
     public void setUserLoginData(UserLoginData userLoginData) {
         this.userLoginData = userLoginData;
     }
+    
+    @Transactional
+    @Path("/findAllLessonsFree")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findAllLessonsFree(LessonDTO lessonId) {
+        if (lessonId != null) {
+            try {
+                List<LessonDTO> dTOs = lessonService.findAllLessonsFree(lessonId.getBranchId(), lessonId.getCompanyId() , lessonId.getMaterialId() , lessonId.getSchoolId() , lessonId.getTeacherId());
+                GenericEntity<List<LessonDTO>> list = new GenericEntity<List<LessonDTO>>(dTOs) {
+                };
+                return Response.ok(list).build();
+
+            } catch (Exception e) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+        } else {
+            lessonId = new LessonDTO();
+            lessonId.setMsg("No Id is Sent");
+            return Response.ok(lessonId).build();
+        }
+    }
 
 }

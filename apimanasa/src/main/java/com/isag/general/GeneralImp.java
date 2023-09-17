@@ -70,16 +70,33 @@ public class GeneralImp implements GeneralService {
 
         String userName = loginRoot.userName;
         String password = loginRoot.password;
+        Integer deviceType = loginRoot.deviceType;
+        
         studentDTO = studentService.authenticateUser(userName, password, loginRoot.branchId, loginRoot.companyId);
-        IgmaUserLogin isagUserLogin = isagUserLoginService.findIsagUserLoginByStudentIdLast(studentDTO.getId());
+        
+        
 
-        if (isagUserLogin != null && isagUserLogin.getState() == 1) {
-            if (isagUserLogin.getMacId() != null && loginRoot.macId != null && !isagUserLogin.getMacId().equals(loginRoot.macId) && studentDTO.getMacId() != null) {
-                return jsonTokenStudent(null, Boolean.FALSE, "يجب الخروج أولا من الجهاز الاخر ");
+        if (deviceType != null && deviceType == 0) {
+            IgmaUserLogin isagUserLogin = isagUserLoginService.findIsagUserLoginByStudentIdLast(studentDTO.getId() , 0);
+            if (isagUserLogin != null && isagUserLogin.getState() == 1) {
+                if (isagUserLogin.getMacId() != null && loginRoot.macId != null && !isagUserLogin.getMacId().equals(loginRoot.macId) && studentDTO.getMacId() != null) {
+                    return jsonTokenStudent(null, Boolean.FALSE, "يجب الخروج أولا من الجهاز الاخر ");
+                }
             }
+            studentDTO.setMacId(loginRoot.macId);
         }
 
-        studentDTO.setMacId(loginRoot.macId);
+        if (deviceType != null && deviceType == 1) {
+            IgmaUserLogin isagUserLogin = isagUserLoginService.findIsagUserLoginByStudentIdLast(studentDTO.getId() , 1);
+            if (isagUserLogin != null && isagUserLogin.getState() == 1) {
+                if (isagUserLogin.getMacMobileId() != null && loginRoot.macId != null && !isagUserLogin.getMacMobileId().equals(loginRoot.macId) && studentDTO.getMacMobileId() != null) {
+                    return jsonTokenStudent(null, Boolean.FALSE, "يجب الخروج أولا من الجهاز الاخر ");
+                }
+            }
+            studentDTO.setMacMobileId(loginRoot.macId);
+        }
+
+        
         if (studentDTO.getId() != null) {
             studentService.updateStudentMacId(studentDTO);
         }
@@ -98,25 +115,23 @@ public class GeneralImp implements GeneralService {
         String userName = loginRoot.userName;
         String password = loginRoot.password;
         IgmaUser loggedInUser = userService.authenticateUser(userName, password);
-        //loggedInUser.getMaster() دي معناها لازم يكون مدير
         if (loggedInUser != null) {
             System.out.println("Logged In Successfully");
-//            isagUser = loggedInUser;
             return issueTokenManasa(loggedInUser);
         } else {
             return jsonTokenManasa(null, Boolean.FALSE, "عفوا اسم المستخدم او كلمه المرور غير صحيحه", loggedInUser);
         }
     }
-    
+
     @Override
     public String changePasswordManasa(LoginRoot loginRoot) {
-         String oldPassword = loginRoot.oldPassword;
-         String newPassword = loginRoot.password;
-         Integer userId = loginRoot.userId;
-         String igmaUser = userService.updateUserPassword(userId , oldPassword , newPassword);
-     
-            return igmaUser;
-        
+        String oldPassword = loginRoot.oldPassword;
+        String newPassword = loginRoot.password;
+        Integer userId = loginRoot.userId;
+        String igmaUser = userService.updateUserPassword(userId, oldPassword, newPassword);
+
+        return igmaUser;
+
     }
 
     public APIloginDTO issueTokenStudent() {
@@ -189,7 +204,7 @@ public class GeneralImp implements GeneralService {
             data.setMobile(studentDTO.getMobile());
             data.setSchoolStagesId(studentDTO.getSchoolStagesId().getId());
             data.setImagePath(studentDTO.getImagePath());
-            List<Integer> periodList = periodsService.findPeriodsByStudentId(studentDTO.getId() , null);
+            List<Integer> periodList = periodsService.findPeriodsByStudentId(studentDTO.getId(), null);
             List<TeachersByStudentId> teachersList = periodsService.findteachersByStudentId(studentDTO.getId());
             data.setPeriodList(periodList);
             data.setTeacherList(teachersList);

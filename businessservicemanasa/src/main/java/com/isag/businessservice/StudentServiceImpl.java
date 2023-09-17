@@ -44,22 +44,31 @@ public class StudentServiceImpl implements StudentService {
     
     @Override
     public APIStudentDataDTO ResetPassword(APIStudentDataDTO aPIStudentDataDTO) {
-        APIStudentDataDTO msg = new APIStudentDataDTO();
         Student student = null;
-        if (aPIStudentDataDTO.getId() != null && aPIStudentDataDTO.getPassword() != null) {
+        if (aPIStudentDataDTO.getId() != null ) {
             student = dao.findEntityById(Student.class, aPIStudentDataDTO.getId());
         }
-        if (aPIStudentDataDTO.getPassword().equals(student.getPassword())) {
-            student.setMacId(null);
-            dao.updateEntity(student);
-            msg.setMsg("تم الحفظ بنجاح");
-            msg.setMsgType("success");
-            return msg;
-        } else {
-            msg.setMsg("خطأ فى الباسورد ");
-            msg.setMsgType("fail");
-            return msg;
-        }
+        
+         student.setMacId(null);
+         dao.updateEntity(student);
+         aPIStudentDataDTO.setMsg("تم الحفظ بنجاح");
+         aPIStudentDataDTO.setMsgType("success");
+         return aPIStudentDataDTO;
+            
+//            if (aPIStudentDataDTO.getId() != null && aPIStudentDataDTO.getPassword() != null) {
+//            student = dao.findEntityById(Student.class, aPIStudentDataDTO.getId());
+//        }
+//        if (aPIStudentDataDTO.getPassword().equals(student.getPassword())) {
+//            student.setMacId(null);
+//            dao.updateEntity(student);
+//            msg.setMsg("تم الحفظ بنجاح");
+//            msg.setMsgType("success");
+//            return msg;
+//        } else {
+//            msg.setMsg("خطأ فى الباسورد ");
+//            msg.setMsgType("fail");
+//            return msg;
+//        }
         
     }
     
@@ -552,6 +561,7 @@ public class StudentServiceImpl implements StudentService {
         dTO.setImagePath(entity.getImagePath());
         dTO.setTypeLogin(entity.getTypeLogin());
         dTO.setMacId(entity.getMacId());
+        dTO.setMacMobileId(entity.getMacMobileId());
         dTO.setIpAddress(entity.getIpAddress());
         dTO.setFatherJob(entity.getFatherJob());
         dTO.setBranchId(entity.getBranchId().getId());
@@ -598,6 +608,7 @@ public class StudentServiceImpl implements StudentService {
         dTO.setImagePath(entity.getImagePath());
         dTO.setTypeLogin(entity.getTypeLogin());
         dTO.setMacId(entity.getMacId());
+        dTO.setMacMobileId(entity.getMacMobileId());
         dTO.setIpAddress(entity.getIpAddress());
         dTO.setFatherJob(entity.getFatherJob());
         dTO.setBranchId(entity.getBranchId().getId());
@@ -639,6 +650,7 @@ public class StudentServiceImpl implements StudentService {
         entity.setImagePath(dTO.getImagePath());
         entity.setTypeLogin(dTO.getTypeLogin());
         entity.setMacId(dTO.getMacId());
+        entity.setMacMobileId(dTO.getMacMobileId());
         entity.setIpAddress(dTO.getIpAddress());
         entity.setFatherJob(dTO.getFatherJob());
         entity.setImage(dTO.getImage());
@@ -704,6 +716,7 @@ public class StudentServiceImpl implements StudentService {
         entity.setUserName(dTO.getUserName());
         entity.setTypeLogin(dTO.getTypeLogin());
         entity.setMacId(dTO.getMacId());
+        entity.setMacMobileId(dTO.getMacMobileId());
         entity.setIpAddress(dTO.getIpAddress());
         entity.setFatherJob(dTO.getFatherJob());
         entity.setImage(dTO.getImage());

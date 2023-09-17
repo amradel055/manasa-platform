@@ -129,5 +129,44 @@ public class StudentPeriodsRest {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
+    
+    
+
+    @Transactional
+    @Path("/studentActivation")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response studentActivation(APIStudentDataDTO aPIStudentDataDTO) {
+//        try {
+//             studentPeriodsService.studentActivationOrder(aPIStudentDataDTO.getId());
+//             StudentPeriodsDTO msg = new StudentPeriodsDTO();
+//             msg.setMsg("تم الحذف بنجاح");
+//                msg.setMsgType("success");
+//            return Response.ok(msg).build();
+//        } catch (Exception e) {
+//            return Response.status(Response.Status.FORBIDDEN).build();
+//        }
+//        
+//        
+        if (aPIStudentDataDTO != null) {
+            try {
+                List<APIStudentDataDTO> dTOs = studentPeriodsService.studentActivationOrder(aPIStudentDataDTO.getId());
+                GenericEntity<List<APIStudentDataDTO>> list = new GenericEntity<List<APIStudentDataDTO>>(dTOs) {
+                };
+                return Response.ok(list).build();
+
+            } catch (Exception e) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+        } else {
+            aPIStudentDataDTO = new APIStudentDataDTO();
+            aPIStudentDataDTO.setMsg("No Id is Sent");
+            return Response.ok(aPIStudentDataDTO).build();
+        }
+        
+    }
+    
 
 }

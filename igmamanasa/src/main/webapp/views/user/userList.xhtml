@@ -39,6 +39,9 @@
                         <p:column headerText="#" style="width: 5vh;font-size: 1.8vh;text-align: right;border-radius: 0px">
                             <h:outputText value="#{index + 1}" style="font-size: 1.5vh;" />
                         </p:column>   
+                        <p:column style="width: 20vh;font-size: 1.8vh;text-align: right;border-radius: 0px"  headerText="ID" >
+                            <h:outputText value="#{user.id}" style="font-size: 1.5vh"  />
+                        </p:column>
                         <p:column style="width: 20vh;font-size: 1.8vh;text-align: right;border-radius: 0px" filterStyle="display:none"  filterBy="#{user.userCode}"  filterMatchMode="contains" headerText="#{userData.userDDs['USER_CODE']}" >
                             <h:outputText value="#{user.userCode}" style="font-size: 1.5vh"  />
                         </p:column>

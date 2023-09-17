@@ -37,6 +37,12 @@
                                                        or userData.userScreens['userprofile'].view 
                                                        or userData.isAdmin}"
                                            >
+                                     <p:menuitem id="sr_lnk11355" value="#{userData.userDDs['COMPANY_MANAGEMENT']}"  icon="&#xE8D2;" url="/faces/views/company/companyList.xhtml"
+                                                rendered="#{userData.userScreens['company'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk11366" value="#{userData.userDDs['BRANCHES_MANAGEMENT']}"  icon="&#xE8D2;" url="/faces/views/branch/branchList.xhtml"
+                                                rendered="#{userData.userScreens['branch'].view or userData.isAdmin}"
+                                                />
                                     <p:menuitem id="sr_lnk113" value="#{userData.userDDs['ROLE_MANAGEMENT']}"  icon="&#xE8D2;" url="/faces/views/role/roleList.xhtml"
                                                 rendered="#{userData.userScreens['role'].view or userData.isAdmin}"
                                                 />

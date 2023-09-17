@@ -40,4 +40,10 @@ public interface QuestionsService {
      public void deleteQuestionsForExam(Integer examId);
    
      public List<QuestionsDTO> returnListDTO(List<Questions> list);
+
+    public void deleteListQuestionsDTO(List<QuestionsDTO> questionsDTOsList);
+
+    public Integer getMaxPeriodTime(List<Integer> periodIds);
+    
+    public List<QuestionsDTO> findAutoQuestions(ExamsDTO examsDTO);
 }

@@ -29,7 +29,7 @@ public class BranchServiceImp implements BranchService {
     @Override
     public List<Branch> getAllBranch() {
         //return dao.findAll(Branch.class);
-        return dao.findListByQuery("SELECT b FROM Branch b order by b.serial ");
+        return dao.findListByQuery("SELECT b FROM Branch b order by b.id DESC");
     }
 
     @Override

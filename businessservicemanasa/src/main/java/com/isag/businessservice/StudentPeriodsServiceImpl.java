@@ -6,6 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
+import com.isag.dto.APIStudentDataDTO;
 import com.isag.dto.MaterialsDTO;
 import com.isag.dto.StudentDTO;
 import com.isag.dto.StudentPeriodsDTO;
@@ -35,6 +36,8 @@ public class StudentPeriodsServiceImpl implements StudentPeriodsService {
 
     @EJB
     private GenericDAO dao;
+    @EJB
+    StudentService studentService;
 
     public void saveTransaction(StudentPeriods studentPeriods) {
         dao.updateEntity(studentPeriods);
@@ -357,6 +360,32 @@ public class StudentPeriodsServiceImpl implements StudentPeriodsService {
         builder.append("SELECT d FROM StudentPeriods d WHERE d.studentId.id = :studentId AND d.materialId.id = :materialId AND d.periodId.id = :periodId ");
         List<StudentPeriods> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
+    }
+    
+    @Override
+    public List<APIStudentDataDTO> studentActivationOrder(Integer studentId) {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("studentId", studentId);
+            StringBuilder query = new StringBuilder();
+            query.append(" SELECT i FROM StudentPeriods i WHERE i.studentId.id =:studentId ");
+            query.append(" order by i.id desc ");
+            List<StudentPeriods> list = dao.findListByQuery(query.toString(), params);
+            if (list != null && !list.isEmpty()) {
+                List<Student> studentList = new ArrayList<>();
+                Student student;
+                for (StudentPeriods entity : list) {
+                    student = (Student) entity.getStudentId().clone();
+                    student.setPeriodOrderId(entity.getId());
+                    student.setPeriodName(entity.getPeriodId() == null ? null : entity.getPeriodId().getName());
+                    studentList.add(student);
+                }
+                return studentService.returnListDTOAPI(studentList);
+            }
+        } catch (CloneNotSupportedException ex) {
+            return null;
+        }
+        return null;
     }
 
 }

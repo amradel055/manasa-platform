@@ -92,7 +92,8 @@ public class IgmaUserServiceImpl implements IgmaUserService {
 
     @Override
     public List<IgmaUser> getAllUsers() {
-        return dao.findAll(IgmaUser.class);
+//        return dao.findAll(IgmaUser.class);
+        return dao.findListByQuery("SELECT b FROM IgmaUser b order by b.id DESC");
 
     }
 
@@ -272,7 +273,7 @@ public class IgmaUserServiceImpl implements IgmaUserService {
             teacherDataAPI.setImageLabel(igmaUser.getImageLabel());
             teacherDataAPI.setName(igmaUser.getName());
             teacherDataAPIList.add(teacherDataAPI);
-                    
+
         }
         return teacherDataAPIList;
     }

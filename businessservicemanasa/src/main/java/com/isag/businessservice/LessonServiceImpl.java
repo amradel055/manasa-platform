@@ -43,6 +43,10 @@ public class LessonServiceImpl implements LessonService {
     private LessonImgService lessonImgService;
     @EJB
     private LessonVoiceService lessonVoiceService;
+    @EJB
+    private LessonVideosService lessonVideosService;
+    @EJB
+    private ExamsService examsService;
 
     @EJB
     private StudentPeriodsService studentPeriodsService;
@@ -148,6 +152,9 @@ public class LessonServiceImpl implements LessonService {
             }
 
             List<Integer> periodList = studentPeriodsService.findPeriodsByStudentId(studentId, materialId);
+            if(periodList == null  || periodList.isEmpty()){
+                return null ;
+            }
             for (Integer period : periodList) {
                 if (periodNew.toString().isEmpty()) {
                     periodNew.append(period);
@@ -252,6 +259,7 @@ public class LessonServiceImpl implements LessonService {
         lessonVoiceService.deleteLesson(lessonDTO);
         commentsService.deleteCommentsByLesson(lessonDTO);
         lessonImgService.deleteLesson(lessonDTO);
+//        lessonVideosService.deleteVideos(lessonDTO);
         dao.deleteEntity(entity);
     }
 
@@ -294,7 +302,10 @@ public class LessonServiceImpl implements LessonService {
             lessonImgService.saveListV2(lessonDTO.getImages(), lesson.getId(), lesson.getBranchId().getId(), lesson.getCompanyId().getId());
             lessonVoiceService.saveList(lessonVoiceDTOList, lesson.getId(), lesson.getBranchId().getId(), lesson.getCompanyId().getId());
             lessonVoiceService.saveListV2(lessonDTO.getLessonVoiceList(), lesson.getId(), lesson.getBranchId().getId(), lesson.getCompanyId().getId());
-
+            lessonVideosService.saveList(lessonDTO.getVideoLinks(), lesson.getId(), lesson.getBranchId().getId(), lesson.getCompanyId().getId() , 0);
+            lessonVideosService.saveList(lessonDTO.getVimeoLinks(), lesson.getId(), lesson.getBranchId().getId(), lesson.getCompanyId().getId() , 1);
+            lessonVideosService.saveList(lessonDTO.getYoutubeLinks(), lesson.getId(), lesson.getBranchId().getId(), lesson.getCompanyId().getId() , 2);
+            
             if (documentsDTO.getMsg() != null && !documentsDTO.getMsg().isEmpty()) {
                 msg.setMsg("يوجد خطأ فى بيانات المذكرات");
                 msg.setMsgType("fail");
@@ -345,6 +356,12 @@ public class LessonServiceImpl implements LessonService {
         dTO.setDocuments(documentsService.findDocumentsByLessonIdLinks(entity.getId()));
         dTO.setImages(lessonImgService.findAllLessons(entity.getId()));
         dTO.setLessonVoiceList(lessonVoiceService.findAllLessons(entity.getId()));
+        
+        dTO.setVideoLinks(lessonVideosService.findlessonList(entity.getId(), 0));
+        dTO.setVimeoLinks(lessonVideosService.findlessonList(entity.getId(), 1));
+        dTO.setYoutubeLinks(lessonVideosService.findlessonList(entity.getId(), 2));
+        
+        dTO.setExams(examsService.findExamsListForTeacher(null, null, entity.getId()));
 
         
         if (entity.getSchoolStagesGuideId() != null) {
@@ -374,7 +391,7 @@ public class LessonServiceImpl implements LessonService {
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy().getId());
-        dTO.setBranchId(232);
+        dTO.setBranchId(entity.getBranchId() != null ? entity.getBranchId().getId() : null);
         dTO.setCompanyId(entity.getCompanyId() != null ? entity.getCompanyId().getId() : null);
 
         return dTO;
@@ -429,10 +446,11 @@ public class LessonServiceImpl implements LessonService {
             documentsService.deleteDocumentsByLesson(dTO.getId());
             lessonImgService.deleteLesson(dTO.getId());
             lessonVoiceService.deleteLesson(dTO.getId());
+            lessonVideosService.deleteLesson(dTO.getId());
         }
 
         Branch branch = new Branch();
-        branch.setId(232);
+        branch.setId(dTO.getBranchId());
         entity.setBranchId(branch);
         entity.setCompanyId(isagUser.getCompanyId());
         return entity;
@@ -452,6 +470,34 @@ public class LessonServiceImpl implements LessonService {
         builder.append(" SELECT d FROM Lesson d WHERE d.teacherId.id = :teacherId ");
         List<Lesson> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
+    }
+    
+    @Override
+    public List<LessonDTO> findAllLessonsFree(Integer branchId, Integer companyId,Integer materialId,Integer schoolId,Integer teacherId) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("branchId", branchId);
+            params.put("companyId", companyId);
+            if(materialId != null){
+                params.put("materialId", materialId);
+            }
+            periodNew = new StringBuilder();
+            StringBuilder builder = new StringBuilder();
+            builder.append("SELECT d FROM Lesson d WHERE d.branchId.id = :branchId AND d.companyId.id = :companyId AND d.lessonType = 1 ");
+            if(materialId != null){
+                params.put("materialId", materialId);
+                builder.append(" AND d.materialId.id = :materialId ");
+            }
+            if(schoolId != null){
+                params.put("schoolId", schoolId);
+                builder.append(" AND d.materialId.stageId.id = :schoolId ");
+            }
+            if(teacherId != null){
+                params.put("teacherId", teacherId);
+                builder.append(" AND d.teacherId.id = :teacherId ");
+            }
+
+            List<Lesson> list = dao.findListByQuery(builder.toString(), params);
+            return returnListDTO(list);
     }
 
 }
