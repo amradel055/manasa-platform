@@ -62,7 +62,7 @@ class _SignInState extends State<SignIn> {
             ],
           ),
         ),
-        leadingWidth: size.width*.7,
+        leadingWidth: size.width*.55,
         shape:  RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
         bottom:  Radius.elliptical(size.width * 0.5, 30),
@@ -84,86 +84,91 @@ class _SignInState extends State<SignIn> {
         scrollDirection: Axis.vertical,
         children: [
 
-          Stack(
-            children: [
-               Padding(
-                 padding: const EdgeInsets.all(20.0),
-                 child: SizedBox(
-                  width: size.width,
-                  // height: size.height,
-                  child:SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children:[
+          Center(
+            child: SizedBox(
+              width: size.width *.4,
+              child: Stack(
+                children: [
+                   Padding(
+                     padding: const EdgeInsets.all(20.0),
+                     child: SizedBox(
+                      width: size.width,
+                      // height: size.height,
+                      child:SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children:[
 
-                        Padding(
-                          padding: const EdgeInsets.all(30.0),
-                          child: Column(
-                            children: [
-                              textEditor(userNameController, "User Name" , TextInputType.text, size),
-                              textEditor( passwordController, "Password" , TextInputType.text, size),
-                              // PasswordField(
-                              //   // fieldKey: _passwordFieldKey,
-                              //   helperText: 'No more than 8 characters.',
-                              //   labelText: 'Password *',
-                              //   onFieldSubmitted: (String value) {
-                              //     setState(() {
-                              //       passwordController.text = value;
-                              //     });
-                              //   },
-                              // ),
-
-                              SizedBox(
-                                height:  size.height * 0.02,),
-                              regularButton(size, Colors.white!, "Login In", () => onPressed(userName: userNameController.text , password: passwordController.text)),
-                              SizedBox(
-                                height:  size.height * 0.01,),
-                              Column(
+                            Padding(
+                              padding: const EdgeInsets.all(30.0),
+                              child: Column(
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(0,0,0,20),
-                                    child: Align(
-                                        alignment : Alignment.center,
-                                        child: GestureDetector(
-                                          child: const Text("Forget Password ?",style: TextStyle(color: Colors.white) , textAlign: TextAlign.end,),
-                                          onTap: (){},
-                                        )),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                  textEditor(userNameController, "User Name" , TextInputType.text, size),
+                                  textEditor( passwordController, "Password" , TextInputType.text, size),
+                                  // PasswordField(
+                                  //   // fieldKey: _passwordFieldKey,
+                                  //   helperText: 'No more than 8 characters.',
+                                  //   labelText: 'Password *',
+                                  //   onFieldSubmitted: (String value) {
+                                  //     setState(() {
+                                  //       passwordController.text = value;
+                                  //     });
+                                  //   },
+                                  // ),
+
+                                  SizedBox(
+                                    height:  size.height * 0.02,),
+                                  regularButton(size, Colors.white!, "Login In", () => onPressed(userName: userNameController.text , password: passwordController.text)),
+                                  SizedBox(
+                                    height:  size.height * 0.01,),
+                                  Column(
                                     children: [
-                                      const Text("Don't have account ?", style: TextStyle(
-                                      color: Colors.white),),
-                                      SizedBox(
-                                          width: size.width * 0.03),
-                                      GestureDetector(
-                                        child: const Text("Sign Up Now",
-                                          style: TextStyle(
-
-                                              color: Color(0xFF11fbb4)),),
-                                        onTap: (){
-                                          // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SignUp()));
-                                        },
-                                      )
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(0,0,0,20),
+                                        child: Align(
+                                            alignment : Alignment.center,
+                                            child: GestureDetector(
+                                              child: const Text("Forget Password ?",style: TextStyle(color: Colors.white) , textAlign: TextAlign.end,),
+                                              onTap: (){},
+                                            )),
+                                      ),
+                                      // Row(
+                                      //   mainAxisAlignment: MainAxisAlignment.center,
+                                      //   children: [
+                                      //     const Text("Don't have account ?", style: TextStyle(
+                                      //     color: Colors.white),),
+                                      //     SizedBox(
+                                      //         width: size.width * 0.03),
+                                      //     GestureDetector(
+                                      //       child: const Text("Sign Up Now",
+                                      //         style: TextStyle(
+                                      //
+                                      //             color: Color(0xFF11fbb4)),),
+                                      //       onTap: (){
+                                      //         // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SignUp()));
+                                      //       },
+                                      //     )
+                                      //   ],
+                                      // ),
                                     ],
-                                  ),
+                                  )
                                 ],
-                              )
-                            ],
-                          ),
-                        )
+                              ),
+                            )
 
 
-                      ],
-                    ),
+                          ],
+                        ),
+                      ),
                   ),
+                   ),
+                  loading == true ?
+                  loadingWidget() :
+                  const SizedBox(),
+                ],
               ),
-               ),
-              loading == true ?
-              loadingWidget() :
-              const SizedBox(),
-            ],
+            ),
           ),
         ],
       ),

@@ -6,7 +6,7 @@ Widget regularButton(Size size , Color color , String text , VoidCallback onPres
   return Padding(
     padding: const EdgeInsets.all(8.0),
     child: SizedBox(
-      width: size.width * 0.4,
+      width: size.width * 0.25,
       child: ElevatedButton(
           onPressed:onPressed,
           style: ButtonStyle(

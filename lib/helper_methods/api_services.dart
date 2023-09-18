@@ -39,7 +39,7 @@ class ApiServices {
   }
 
   Future loginStudent(
-      String userName , String password) async{
+      String userName , String password ,String macId) async{
 
     Uri uri = Uri.parse(url + "authenticationStudent/login/") ;
     //TODO completeData
@@ -48,7 +48,8 @@ class ApiServices {
       "password": password,
       "companyId" :companyId ,
       "branchId" : branchId ,
-      // "macId" : macId
+      "deviceType":1,
+      "macId" : macId
     });
 
     Map<String,String> headers = {

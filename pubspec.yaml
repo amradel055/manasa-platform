@@ -38,10 +38,66 @@ dependencies:
   flutter_windowmanager: ^0.2.0
   http:
   provider:
+  #  window_manager: ^0.3.5
+#  video_player: ^2.5.1
+#  video_player_win: ^2.0.0
+#  video_player_win: ^1.0.1
+#  media_kit: ^1.1.7                              # Primary package.
+#  media_kit_video: ^1.1.8                        # For video rendering.
+#  media_kit_libs_video: ^1.0.1
+  #  flutter_windowmanager:
+  dart_vlc:
+  video_player: ^2.1.6
+  chewie: ^1.0.0
+  assets_audio_player:
+  shrink_sidemenu: ^2.0.0+1-null-safety
+  shared_preferences:
+#  cloud_firestore:
+  flutter_local_notifications: ^12.0.4
+#  firebase_core: ^2.3.0
+#  firebase_messaging: ^14.1.1
+  device_info_plus: ^9.0.3
+  rxdart:
+  android_alarm_manager_plus: ^2.0.7+1
+  sqflite:
+#  firebase_storage: ^11.0.6
+#  firebase_analytics: ^10.0.6
+  upgrader:
+  url_launcher:
+  carousel_slider: ^4.0.0
+  record: ^3.0.0
+  #  audio_recorder:
+  flutter_sound: ^8.2.0
+  connectivity_plus: ^2.0.2
+  headset_connection_event: ^2.1.1
   cached_network_image: ^3.2.1
   flutter_svg: ^1.1.5
   photo_view: ^0.14.0
   image_picker: ^0.8.5+3
+  audio_video_progress_bar: ^0.11.0
+  intl: ^0.18.1
+  flutter_image_preview: ^0.1.1
+  full_screen_image: ^2.0.0
+  insta_image_viewer: ^1.0.2
+  #  screen_capture_event: ^1.0.0+1
+  #  screen_capture_event: ^1.0.0
+  #  screenshot_callback: ^2.0.0
+  permission_handler:
+  youtube_player_flutter: ^8.1.2
+  #  chewie:
+  #  video_player:
+  voice_message_package:
+  #  vimeo_player_flutter: ^0.0.3+2
+  pod_player:
+  syncfusion_flutter_pdfviewer: ^20.4.54
+  flutter_sharing_intent: ^1.1.0
+  fijkplayer: ^0.11.0
+  #  syncfusion_flutter_pdfviewer: ^20.1.60-beta
+  #  flutter_pdfview:
+  #  flutter_sound_lite: ^8.5.0
+  #  flutter_sound: ^9.2.13
+  #  screen_protector:
+
 
 
 dev_dependencies:
