@@ -92,6 +92,7 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^20.4.54
   flutter_sharing_intent: ^1.1.0
   fijkplayer: ^0.11.0
+  screenshot: ^2.1.0
   #  syncfusion_flutter_pdfviewer: ^20.1.60-beta
   #  flutter_pdfview:
   #  flutter_sound_lite: ^8.5.0

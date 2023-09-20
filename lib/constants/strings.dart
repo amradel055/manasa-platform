@@ -1,5 +1,5 @@
- // String url = "http://igma.online/igmamanasa/rest/" ; // cloud
- String url = "http://192.168.1.19:6060/igma/rest/" ;
+ String url = "http://igma.online/igmamanasa/rest/" ; // cloud
+ // String url = "http://192.168.1.19:6060/igma/rest/" ;
  // http://192.168.1.19:9090/igma/rest
 // String uploadUrl = "http://igma.online/igmamanasa/igmaImages/" ;
 

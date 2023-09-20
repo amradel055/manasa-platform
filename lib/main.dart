@@ -18,11 +18,15 @@ import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:provider/provider.dart';
 // import 'package:video_player_win/video_player_win_plugin.dart';
 //
-
+// Future<void> secureScreen() async {
+//   await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+// }
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  DartVLC.initialize();
 
+  WidgetsFlutterBinding.ensureInitialized();
+  // secureScreen();
+  DartVLC.initialize();
+  // await windowManager.ensureInitialized();
   // Necessary initialization for package:media_kit.
   // MediaKit.ensureInitialized();
   // if (!kIsWeb && Platform.isWindows) WindowsVideoPlayer.registerWith();
