@@ -29,11 +29,11 @@ class _PlayVideoFromYoutubeState extends State<PlayVideoFromYoutube> {
   initializeController() async {
     await _controller.initialize();
     await _controller.loadStringContent("""
-      <iframe width="560" height="315" 
+      <iframe id="myVideo" width="100%" height="100%" 
       src="${widget.url}" 
       title="YouTube video player" 
       frameborder="0" 
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share" 
       allowfullscreen></iframe>
       """);
     setState(() {});
@@ -63,7 +63,21 @@ class _PlayVideoFromYoutubeState extends State<PlayVideoFromYoutube> {
   }
 
   @override
+  dispose(){
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if(_controller.value.isInitialized) {
+      _controller.executeScript("""
+      var video = document.getElementById("myVideo");
+  video.width = 100%;
+  video.height = 100%;
+  
+""");
+    }
     return Scaffold(
       appBar: AppBar(
         elevation: 0,

@@ -550,7 +550,7 @@ class _LessonScreenState extends State<LessonScreen> {
                               GestureDetector(
                                 onTap: (){
 
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => const PlayVideoFromYoutube(url: "")));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => const PlayVideoFromYoutube(url: "https://www.youtube.com/embed/zid-MVo7M-E?si=4MgSAyOzt4ZF9LZd")));
                                 },
                                 child:Stack(
                                   children: [
@@ -561,8 +561,11 @@ class _LessonScreenState extends State<LessonScreen> {
                                       child: _button(
                                         'Play',
                                         size,
-                                        onPressed: () =>
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => const PlayVideoFromYoutube(url: "")))
+                                        onPressed: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(builder: (context) => PlayVideoFromVimeo(url:'' , )));
+                                          // Navigator.push(context, MaterialPageRoute(builder: (context) => const PlayVideoFromYoutube(url: "https://www.youtube.com/embed/zid-MVo7M-E?si=4MgSAyOzt4ZF9LZd")));
+                                        }
 
 
                                         // Navigator.push(context,
@@ -590,7 +593,6 @@ class _LessonScreenState extends State<LessonScreen> {
                         child:
                         ListView.builder(
                             itemCount: widget.lesson.videoLinks!.length,
-
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               return
@@ -610,8 +612,10 @@ class _LessonScreenState extends State<LessonScreen> {
                                       child: _button(
                                         'Play',
                                         size,
-                                        onPressed: () =>       Navigator.push(context,
-                                            MaterialPageRoute(builder: (context) => PlayVideoFromNetwork(url:widget.lesson.videoLinks![index]??"" , ))),
+                                        onPressed: () {
+                                          Navigator.push(context,
+                                            MaterialPageRoute(builder: (context) => PlayVideoFromNetwork(url:widget.lesson.videoLinks![index]??"" , )));
+                                        },
                                       ),
                                     ),
                                   ],

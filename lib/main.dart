@@ -12,11 +12,7 @@ import 'package:desktop_screen/providers/screen_providers/inbox_provider.dart';
 import 'package:desktop_screen/screens/splash.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_windowmanager/flutter_windowmanager.dart';
-// import 'package:media_kit/media_kit.dart';                      // Provides [Player], [Media], [Playlist] etc.
-// import 'package:media_kit_video/media_kit_video.dart';
 import 'package:provider/provider.dart';
-// import 'package:video_player_win/video_player_win_plugin.dart';
 //
 // Future<void> secureScreen() async {
 //   await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
