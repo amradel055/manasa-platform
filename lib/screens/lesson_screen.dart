@@ -13,7 +13,6 @@ import 'package:desktop_screen/widgets/play_youtube.dart';
 import 'package:desktop_screen/widgets/video_cart_widget.dart';
 import 'package:desktop_screen/widgets/video_widget.dart';
 import 'package:desktop_screen/widgets/viemo_player.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
@@ -26,8 +25,6 @@ import 'package:provider/provider.dart';
 import 'package:record/record.dart';
 
 import 'package:video_player/video_player.dart';
-// import 'package:vimeo_player_flutter/vimeo_player_flutter.dart';
-import 'package:voice_message_package/voice_message_package.dart';
 import '../constants/colors.dart';
 import '../constants/strings.dart';
 import '../constants/text_styles.dart';

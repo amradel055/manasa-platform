@@ -1,11 +1,5 @@
 import 'package:desktop_screen/widgets/play_video_desktop.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:http/http.dart' as http;
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-
 class LessonViewerPage extends StatefulWidget {
   const LessonViewerPage( {Key? key, required this.url}) : super(key: key);
   final String url;

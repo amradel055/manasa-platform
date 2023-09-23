@@ -1,7 +1,7 @@
 
 import 'dart:io';
 
-import 'package:dart_vlc/dart_vlc.dart';
+// import 'package:dart_vlc/dart_vlc.dart';
 import 'package:desktop_screen/providers/auth_provider.dart';
 import 'package:desktop_screen/providers/data_handler_provider.dart';
 import 'package:desktop_screen/providers/local_database.dart';
@@ -21,7 +21,7 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   // secureScreen();
-  DartVLC.initialize();
+  // DartVLC.initialize();
   // await windowManager.ensureInitialized();
   // Necessary initialization for package:media_kit.
   // MediaKit.ensureInitialized();

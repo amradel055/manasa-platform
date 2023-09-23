@@ -36,7 +36,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   flutter_windowmanager: ^0.2.0
-  http:
+  http: ^1.1.0
   provider:
   #  window_manager: ^0.3.5
 #  video_player: ^2.5.1
@@ -46,7 +46,6 @@ dependencies:
 #  media_kit_video: ^1.1.8                        # For video rendering.
 #  media_kit_libs_video: ^1.0.1
   #  flutter_windowmanager:
-  dart_vlc:
   video_player: ^2.7.2
   chewie: ^1.0.0
   assets_audio_player:
@@ -87,13 +86,13 @@ dependencies:
   #  chewie:
   #  video_player:
   #  vimeo_player_flutter: ^0.0.3+2
-  voice_message_package:
   pod_player:
-  syncfusion_flutter_pdfviewer: ^20.4.54
   flutter_sharing_intent: ^1.1.0
   fijkplayer: ^0.11.0
   screenshot: ^2.1.0
   webview_windows: ^0.3.0
+  internet_file: ^1.2.0
+  pdfx:
 #  video_player_win:
 #    git:
 #      url: https://github.com/jakky1/video_player_win.git
