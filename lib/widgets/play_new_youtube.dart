@@ -1,12 +1,10 @@
-import 'package:appinio_video_player/appinio_video_player.dart';
-import 'package:flick_video_player/flick_video_player.dart';
-import 'package:pod_player/pod_player.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class PlayNewVideoFromYoutube extends StatefulWidget {
   const PlayNewVideoFromYoutube({Key? key, required this.url}) : super(key: key);
-  final String url ;
+  final String url;
+
   @override
   State<PlayNewVideoFromYoutube> createState() => _PlayNewVideoFromYoutubeState();
 }
@@ -19,19 +17,22 @@ class _PlayNewVideoFromYoutubeState extends State<PlayNewVideoFromYoutube> {
   double _volume = 100;
   bool _muted = false;
   bool _isPlayerReady = false;
+
   // String videoUrl = widget.url!;
 
   @override
   void initState() {
-    YoutubePlayerController _controller = YoutubePlayerController(
-      initialVideoId: 'iLnmTe5Q2Qw',
+    super.initState();
+    final videoId = YoutubePlayer.convertUrlToId(widget.url);
+    _controller = YoutubePlayerController(
+      initialVideoId: videoId??"",
       flags: YoutubePlayerFlags(
         autoPlay: true,
-        mute: true,
-      )
-    )..addListener(listener);
-    super.initState();
+        // mute: true,
+      ),
+    );
   }
+
   void listener() {
     if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
       setState(() {
@@ -57,7 +58,9 @@ class _PlayNewVideoFromYoutubeState extends State<PlayNewVideoFromYoutube> {
         // progressColors: ProgressColors(
         //   playedColor: Colors.amber,
         //   handleColor: Colors.amberAccent,
-
+        onReady: () {
+          _controller.addListener(listener);
+        },
       ),
     );
   }

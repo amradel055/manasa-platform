@@ -1,33 +1,22 @@
 import 'dart:async';
 import 'package:full_mark/widgets/play_new_network.dart';
 import 'package:full_mark/widgets/play_new_youtube.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-
 import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:full_mark/widgets/app_drawer.dart';
 import 'package:full_mark/widgets/attach.dart';
-import 'package:full_mark/widgets/network_player.dart';
-import 'package:full_mark/widgets/play_youtube.dart';
 import 'package:full_mark/widgets/video_cart_widget.dart';
 import 'package:full_mark/widgets/viemo_player.dart';
 import 'package:headset_connection_event/headset_event.dart';
 import 'package:pod_player/pod_player.dart';
 import 'package:provider/provider.dart';
-import 'package:record/record.dart';
 import 'package:full_mark/helper_methods/show_toast.dart';
 import 'package:full_mark/models/exam_model.dart';
 import 'package:full_mark/providers/data_handler_provider.dart';
 import 'package:full_mark/screens/do_exam_screen.dart';
 import 'package:full_mark/widgets/loading_widget.dart';
-import 'package:video_player/video_player.dart';
-// import 'package:vimeo_player_flutter/vimeo_player_flutter.dart';
-import 'package:voice_message_package/voice_message_package.dart';
 import '../constants/colors.dart';
 import '../constants/strings.dart';
-import '../constants/text_styles.dart';
 import '../models/lesson_model.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 

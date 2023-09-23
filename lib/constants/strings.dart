@@ -7,6 +7,7 @@
  // String uploadUrl = "http://igma.online/igmamanasa/igmaImages/" ;
  String uploadUrl = "http://demo.igma-it.com/dashboard/thumb/" ;
  String VideoUrl = "http://demo.igma-it.com/dashboard/videos/" ;
+ String documentUrl = "http://demo.igma-it.com/dashboard/documents/" ;
   String uploads_thumb = 'http://demo.igma-it.com/dashboard/upload-thumb-flutter.php'; // تغيير هذا بعنوان السيرفر الخاص بك
 
 String dataKey = "studentData" ;

@@ -15,16 +15,16 @@ dependencies:
 #  window_manager: ^0.3.5
 
 #  flutter_windowmanager:
-  assets_audio_player:
+  assets_audio_player: ^3.1.1
   shrink_sidemenu: ^2.0.0+1-null-safety
-  http:
+  http: ^1.1.0
   provider:
   shared_preferences:
   cloud_firestore:
   flutter_local_notifications: ^12.0.4
   firebase_core: ^2.3.0
   firebase_messaging: ^14.1.1
-  device_info_plus: ^8.0.0
+  device_info_plus: ^9.0.3
   rxdart:
   android_alarm_manager_plus: ^2.0.7+1
   sqflite:
@@ -42,7 +42,7 @@ dependencies:
   flutter_svg: ^1.1.5
   photo_view: ^0.14.0
   image_picker: ^0.8.5+3
-  audio_video_progress_bar: ^0.11.0
+  audio_video_progress_bar: ^2.0.0
   intl: ^0.18.1
   flutter_image_preview: ^0.1.1
   full_screen_image: ^2.0.0
@@ -54,10 +54,9 @@ dependencies:
   youtube_player_flutter: ^8.1.2
 #  chewie:
 #  video_player:
-  voice_message_package:
+#  voice_message_package: ^1.0.41
 #  vimeo_player_flutter: ^0.0.3+2
-  pod_player: ^0.1.5
-  syncfusion_flutter_pdfviewer: ^20.4.54
+  pod_player: ^0.2.1
 #  get_mac_address: ^0.0.2
 #  syncfusion_flutter_pdfviewer: ^20.1.60-beta
 #  flutter_pdfview:
@@ -66,8 +65,11 @@ dependencies:
 #  screen_protector:
   flutter_launcher_icons: "^0.13.1"
   appinio_video_player: ^1.2.2
-  flick_video_player:
+#  flick_video_player:
   video_player:
+  internet_file: ^1.2.0
+  pdfx:
+#  audioplayers: ^5.1.0
 
 
 dev_dependencies:
