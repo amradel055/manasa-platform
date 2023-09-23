@@ -14,8 +14,8 @@ class PdfViewerPage extends StatefulWidget {
 class _PdfViewerPageState extends State<PdfViewerPage> {
 
   // late PdfDocument doc;
-  final pdfController = PdfController(
-    document: PdfDocument.openData(InternetFile.get('https://github.com/ScerIO/packages.flutter/raw/fd0c92ac83ee355255acb306251b1adfeb2f2fd6/packages/native_pdf_renderer/example/assets/sample.pdf')),
+  late final pdfController = PdfController(
+    document: PdfDocument.openData(InternetFile.get("$documentUrl${widget.url}")),
   );
 
   @override
