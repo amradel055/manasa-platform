@@ -562,9 +562,7 @@ class _LessonScreenState extends State<LessonScreen> {
                                         'Play',
                                         size,
                                         onPressed: () {
-                                          Navigator.push(context,
-                                              MaterialPageRoute(builder: (context) => PlayVideoFromVimeo(url:'' , )));
-                                          // Navigator.push(context, MaterialPageRoute(builder: (context) => const PlayVideoFromYoutube(url: "https://www.youtube.com/embed/zid-MVo7M-E?si=4MgSAyOzt4ZF9LZd")));
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => PlayVideoFromYoutube(url: widget.lesson.youtubeLinks![index]??"")));
                                         }
 
 
