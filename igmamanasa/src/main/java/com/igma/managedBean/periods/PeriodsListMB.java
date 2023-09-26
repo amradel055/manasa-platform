@@ -111,7 +111,8 @@ public class PeriodsListMB extends BaseListBean {
      */
     public List<PeriodsDTO> getPeriodsDTOList() {
         if (PeriodsDTOList == null) {
-            setPeriodsDTOList(periodsService.findPeriodsByTeacherId(getUserData().getUser().getId()));
+//            setPeriodsDTOList(periodsService.findPeriodsByTeacherId(getUserData().getUser().getId()));
+            setPeriodsDTOList(periodsService.findPeriods(getUserData().getUserBranch() == null ? null : getUserData().getUserBranch().getId()));
         }
         return PeriodsDTOList;
     }

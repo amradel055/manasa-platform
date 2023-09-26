@@ -5,10 +5,8 @@
  */
 package com.isag.converter;
 
-import com.isag.businessservice.CompanyService;
 import com.isag.entity.IgmaCompany;
 import java.util.List;
-import javax.ejb.EJB;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -19,8 +17,6 @@ import javax.faces.convert.Converter;
  */
 public class CompanyConverter implements Converter {
 
-    @EJB
-    private CompanyService companyService;
     private List<IgmaCompany> companies;
 
     public CompanyConverter(List<IgmaCompany> all) {
@@ -30,15 +26,17 @@ public class CompanyConverter implements Converter {
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
         Integer companyId;
-        for (IgmaCompany company : companies) {
+
+        for (IgmaCompany igmaUser : companies) {
             try {
-                companyId = Integer.parseInt(value);
-            } catch (Exception e) {
-                e.printStackTrace();
+                if (value != null && !value.isEmpty()) {
+                    companyId = Integer.valueOf(value);
+                }
+            } catch (NumberFormatException e) {
                 return null;
             }
-            if (company.getId().equals(companyId)) {
-                return company;
+            if (!value.equals("") && !value.equals(" ") && igmaUser.getId().longValue() == Long.parseLong(value)) {
+                return igmaUser;
             }
         }
         return null;
@@ -47,9 +45,13 @@ public class CompanyConverter implements Converter {
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object value) {
         try {
-            if (value != null && (value instanceof IgmaCompany)) {
-                IgmaCompany company = (IgmaCompany) value;
-                return company.getId().toString();
+            if (value != null && !value.equals("") && !value.equals(" ")) {
+                if (((IgmaCompany) value).getId() != null && ((IgmaCompany) value).getId().longValue() != 0) {
+                    IgmaCompany codegenerator = (IgmaCompany) value;
+                    return codegenerator.getId().longValue() + "";
+                } else {
+                    return "";
+                }
             } else {
                 return null;
             }

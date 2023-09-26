@@ -18,7 +18,6 @@
                     widgetVar="schoolstage"  
                     rowIndexVar="index" 
                     value="#{schoolStagesListMB.schoolStagesGuideDTOs}"
-                    rows=20
                     paginator="true" 
                     selection="#{schoolStagesListMB.schoolStagesGuideDTO}"
                     rowKey="#{schoolstage.id}"
@@ -33,14 +32,14 @@
                                          value="#{schoolStagesListMB.selectedCompanyId}" 
                                          style="float:right"  
                                          rendered="#{userData.getCompany() == null}">
-                            <p:ajax listener="#{schoolStagesListMB.onCompanyListChange()}" update="table" />
+                            <p:ajax listener="#{schoolStagesListMB.onCompanyListChange()}" update="schoolstage" />
                             <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="" noSelectionOption="true" />
                             <f:selectItems value="#{schoolStagesListMB.companiesList}" var="com" itemLabel="#{com.name}" itemValue="#{com.id}"/> 
                         </p:selectOneMenu>
                         
                         <p:outputPanel  >
                             <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
-                            <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('materials').filter()" style="width:150px" />
+                            <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('schoolstage').filter()" style="width:150px" />
                         </p:outputPanel>
                     </f:facet>
                     
@@ -60,10 +59,10 @@
                                          >
                             <f:setPropertyActionListener value="#{schoolstage}"  target="#{schoolStagesListMB.schoolStagesGuideDTO}" />
                         </p:commandButton>
-                        <p:commandButton  styleClass="sdeleteButtons" update="question:materials" icon="fa fa-remove" style="background-color: red;border-radius: 3px;margin-bottom:3px"   
+                        <p:commandButton  styleClass="sdeleteButtons" update="question:schoolstage" icon="fa fa-remove" style="background-color: red;border-radius: 3px;margin-bottom:3px"   
                                           title="#{userData.userDDs['DELETE']}"  action="#{schoolStagesListMB.delete()}" 
                                           >
-                            <f:setPropertyActionListener value="#{materials}" target="#{schoolStagesListMB.schoolStagesGuideDTO}" />
+                            <f:setPropertyActionListener value="#{schoolstage}" target="#{schoolStagesListMB.schoolStagesGuideDTO}" />
                             <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
                         </p:commandButton>
                     </p:column>
@@ -72,6 +71,8 @@
                     <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                     <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                 </p:confirmDialog>
+                
+                
 
             </p:fieldset>
         </h:form>

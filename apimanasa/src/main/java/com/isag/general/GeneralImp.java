@@ -98,7 +98,7 @@ public class GeneralImp implements GeneralService {
 
         
         if (studentDTO.getId() != null) {
-            studentService.updateStudentMacId(studentDTO);
+            studentService.updateStudentMacId(studentDTO , deviceType);
         }
         if (studentDTO != null && studentDTO.getBranchId() != null) {
             System.out.println("Logged In Successfully");

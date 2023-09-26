@@ -34,5 +34,7 @@ public interface MaterialsService {
 
     public void saveMaterial(MaterialsDTO materialsDTO, IgmaUser igmaUser);
     
+    public List<MaterialsDTO> findMaterialsByCompanyAndTeachear(Integer companyId , Integer teacherId);
+    
     
 }

@@ -44,7 +44,9 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import com.isag.businessservice.IgmaErrorService;
 import com.isag.businessservice.IgmaTokensService;
 import com.isag.businessservice.IgmaUserLoginService;
+import com.isag.businessservice.IgmaUserService;
 import com.isag.converter.CompanyConverter;
+import com.isag.converter.IgmaUserConverter;
 import com.isag.entity.IgmaCompany;
 
 /**
@@ -63,11 +65,13 @@ public class Basic implements Serializable {
     IgmaTokensService isagTokensService;
     @EJB
     CompanyService companyService;
+    @EJB
+    IgmaUserService igmaUserService;
 
     private IgmaUser userlogin;
-    
+
     private UserData userData;
-    
+
     private ExternalContext context;
 
     private Branch branch;
@@ -81,14 +85,20 @@ public class Basic implements Serializable {
     private String errorGlobal;
 
     private String uri;
-    
+
     private List<IgmaCompany> companiesList;
-    
-    private IgmaCompany companySelected ;
-    
+
+    private IgmaCompany companySelected;
+
     private CompanyConverter companyConverter;
-    
+
     private Integer selectedCompanyId;
+
+    private List<IgmaUser> teacherList;
+
+    private IgmaUser teacherSelected;
+
+    private IgmaUserConverter igmaUserConverter;
 
     public void saveError(Exception e, String className, String methodName) {
         getIsagErrorDTO().setClassName(className);
@@ -230,8 +240,8 @@ public class Basic implements Serializable {
         }
 
     }
-    
-    public void hishis(){
+
+    public void hishis() {
         System.err.println("hishis  ---- ");
     }
 
@@ -385,7 +395,7 @@ public class Basic implements Serializable {
     }
 
     public List<IgmaCompany> getCompaniesList() {
-        if(companiesList == null){
+        if (companiesList == null) {
             companiesList = companyService.getAllCompanies();
             setCompanyConverter(new CompanyConverter(companiesList));
         }
@@ -430,6 +440,71 @@ public class Basic implements Serializable {
      */
     public void setCompanyConverter(CompanyConverter companyConverter) {
         this.companyConverter = companyConverter;
+    }
+
+    /**
+     * @return the teacherList
+     */
+    public List<IgmaUser> getTeacherList() {
+            if (getSelectedCompanyId() != null) {
+                teacherList = igmaUserService.getAllUsersListByCompanyId(getSelectedCompanyId());
+                setIgmaUserConverter(new IgmaUserConverter(teacherList));
+            }
+        return teacherList;
+    }
+
+    /**
+     * @return the teacherList
+     */
+    public List<IgmaUser> findTeacherList() {
+            if (getSelectedCompanyId() != null) {
+                teacherList = igmaUserService.getAllUsersListByCompanyId(getSelectedCompanyId());
+                setIgmaUserConverter(new IgmaUserConverter(teacherList));
+            }
+        return teacherList;
+    }
+    
+    public List<IgmaUser> findTeacherList2() {
+//            if (getCompanySelected() != null) {
+                teacherList = igmaUserService.getAllUsersListByCompanyId(getCompanySelected().getId());
+                setIgmaUserConverter(new IgmaUserConverter(teacherList));
+//            }
+        return teacherList;
+    }
+
+    /**
+     * @param teacherList the teacherList to set
+     */
+    public void setTeacherList(List<IgmaUser> teacherList) {
+        this.teacherList = teacherList;
+    }
+
+    /**
+     * @return the teacherSelected
+     */
+    public IgmaUser getTeacherSelected() {
+        return teacherSelected;
+    }
+
+    /**
+     * @param teacherSelected the teacherSelected to set
+     */
+    public void setTeacherSelected(IgmaUser teacherSelected) {
+        this.teacherSelected = teacherSelected;
+    }
+
+    /**
+     * @return the igmaUserConverter
+     */
+    public IgmaUserConverter getIgmaUserConverter() {
+        return igmaUserConverter;
+    }
+
+    /**
+     * @param igmaUserConverter the igmaUserConverter to set
+     */
+    public void setIgmaUserConverter(IgmaUserConverter igmaUserConverter) {
+        this.igmaUserConverter = igmaUserConverter;
     }
 
 }

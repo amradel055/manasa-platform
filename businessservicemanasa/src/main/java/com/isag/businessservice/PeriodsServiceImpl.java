@@ -38,9 +38,12 @@ public class PeriodsServiceImpl implements PeriodsService {
     @Override
     public List<PeriodsDTO> findPeriods(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT d FROM Periods d WHERE d.branchId.id = :branchId And d.teacherId is null ");
+        builder.append("SELECT d FROM Periods d WHERE 1 = 1 ");
+        if (branchId != null) {
+            params.put("branchId", branchId);
+            builder.append("  d.branchId.id = :branchId ");
+        }
         List<Periods> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }
@@ -152,21 +155,21 @@ public class PeriodsServiceImpl implements PeriodsService {
     @Override
     public List<Integer> findPeriodAndChildIds(List<Integer> periodParentIds) {
         List<Integer> periodIds = new ArrayList<>();
-        StringBuilder sb = null ;
+        StringBuilder sb = null;
         if (periodParentIds.isEmpty()) {
             return periodIds;
-        }else{
-            for(Integer p : periodParentIds){
-                if(sb == null){
-                    sb =  new StringBuilder();
+        } else {
+            for (Integer p : periodParentIds) {
+                if (sb == null) {
+                    sb = new StringBuilder();
                     sb.append(p);
-                }else{
+                } else {
                     sb.append(" , ").append(p);
                 }
             }
         }
 
-        String sql = "SELECT p FROM Periods p WHERE p.id IN ( "+ sb +" )";
+        String sql = "SELECT p FROM Periods p WHERE p.id IN ( " + sb + " )";
 //        Map<String, Object> params = Collections.singletonMap("periodParentIds", periodParentIds);
 
         Map<String, Object> params = new HashMap<>();

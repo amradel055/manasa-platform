@@ -5,10 +5,14 @@
  */
 package com.igma.managedBean.material;
 
+import com.isag.businessservice.BranchService;
 import com.isag.businessservice.MaterialsService;
 import com.isag.businessservice.SchoolStagesGuideService;
 import com.isag.dto.MaterialsDTO;
 import com.isag.dto.SchoolStagesGuideDTO;
+import com.isag.entity.Branch;
+import com.isag.entity.IgmaCompany;
+import com.isag.entity.IgmaUser;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -20,24 +24,41 @@ import java.util.List;
 @ViewScoped
 public class MaterialFormMB extends BaseFormBean {
 
-
     @EJB
     SchoolStagesGuideService schoolStagesGuideService;
     @EJB
     MaterialsService materialsService;
+    @EJB
+    BranchService branchService;
 
     private List<SchoolStagesGuideDTO> schoolStagesGuideDTOList;
 
-
     private MaterialsDTO materialsDTO;
-
-   
 
     @Override
     public String save() {
         materialsService.saveMaterial(getMaterialsDTO(), getUserData().getUser());
         reset();
-        exit() ;
+        exit();
+        return "";
+    }
+
+    public String saveGlobal() {
+
+        IgmaCompany companySelected = getCompanySelected() != null ? getCompanySelected() : getUserData().getUser().getCompanyId();
+
+        IgmaUser teacherSelected = getTeacherSelected() != null ? getTeacherSelected() : getUserData().getUser();
+
+        List<Branch> branchs = branchService.getAllBranchByCompanyId(companySelected.getId());
+
+        getUserData().getUser().setBranchId(branchs != null && !branchs.isEmpty() ? branchs.get(0) : null);
+        getMaterialsDTO().setBranchId(branchs != null && !branchs.isEmpty() ? branchs.get(0).getId() : null);
+        getUserData().getUser().setCompanyId(companySelected);
+        getUserData().getUser().setId(teacherSelected.getId());
+
+        materialsService.saveMaterial(getMaterialsDTO(), getUserData().getUser());
+        reset();
+        exit();
         return "";
     }
 
@@ -75,17 +96,26 @@ public class MaterialFormMB extends BaseFormBean {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-   
-
     /**
      * @return the schoolStagesGuideDTOList
      */
     public List<SchoolStagesGuideDTO> getSchoolStagesGuideDTOList() {
-        if (schoolStagesGuideDTOList == null) {
 
-            setSchoolStagesGuideDTOList(schoolStagesGuideService.findschoolStagesGuide(232));
-        }
+//        IgmaCompany companySelected = getCompanySelected() != null ? getCompanySelected() : getUserData().getUser().getCompanyId();
+//        List<Branch> branchs = branchService.getAllBranchByCompanyId(companySelected.getId());
+//
+//        setSchoolStagesGuideDTOList(schoolStagesGuideService.findschoolStagesGuide(branchs.get(0).getId()));
+
         return schoolStagesGuideDTOList;
+    }
+
+    public void findSchoolStagesGuideDTOList() {
+
+        IgmaCompany companySelected = getCompanySelected() != null ? getCompanySelected() : getUserData().getUser().getCompanyId();
+        List<Branch> branchs = branchService.getAllBranchByCompanyId(companySelected.getId());
+
+        setSchoolStagesGuideDTOList(schoolStagesGuideService.findschoolStagesGuide(branchs.get(0).getId()));
+
     }
 
     /**
@@ -99,7 +129,7 @@ public class MaterialFormMB extends BaseFormBean {
      * @return the materialsDTO
      */
     public MaterialsDTO getMaterialsDTO() {
-        if(materialsDTO == null){
+        if (materialsDTO == null) {
             setMaterialsDTO(new MaterialsDTO());
         }
         return materialsDTO;
@@ -112,7 +142,4 @@ public class MaterialFormMB extends BaseFormBean {
         this.materialsDTO = materialsDTO;
     }
 
-
-
-   
 }

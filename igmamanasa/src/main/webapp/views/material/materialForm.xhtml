@@ -17,9 +17,31 @@
                 </div>
                 <div  id="firstSegment" class="ui-g-12 ui-g-nopad">
                     <div class="ui-g">
+
                         <div class="ui-g-6 ui-xl-6">
-                            
-                             <div class="ui-g-12 ui-xl-12">
+
+
+                            <p:selectOneMenu id="com" 
+                                             value="#{materialsFormMB.companySelected}"  converter="#{materialsFormMB.companyConverter}"
+                                             style="float:right"  
+                                             rendered="#{userData.getCompany() == null}">
+                                <p:ajax listener="#{materialsFormMB.findTeacherList2()}" update="tec stage11" />
+                                <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{materialsFormMB.companiesList}" var="com" itemLabel="#{com.name}" itemValue="#{com}"/> 
+                            </p:selectOneMenu>
+
+                            <p:selectOneMenu id="tec" 
+                                             value="#{materialsFormMB.teacherSelected}"  converter="#{materialsFormMB.igmaUserConverter}"
+                                             style="float:right"  
+                                             rendered="#{userData.getCompany() == null}">
+                                <p:ajax listener="#{materialsFormMB.findSchoolStagesGuideDTOList()}" update="stage11"  />
+                                <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{materialsFormMB.teacherList}" var="tec" itemLabel="#{tec.name}" itemValue="#{tec}"/> 
+                            </p:selectOneMenu>
+
+
+
+                            <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:inputText style="width: 36%!important" id="nameAr76" value="#{materialsFormMB.materialsDTO.name}" >
                                     </p:inputText>
@@ -36,7 +58,8 @@
                                                      value="#{materialsFormMB.materialsDTO.stageId}"
                                                      >
                                         <f:selectItem itemLabel="choose" itemValue="" />
-                                        <f:selectItems value="#{materialsFormMB.schoolStagesGuideDTOList}" var="stage11" itemLabel="#{stage11.name}" itemValue="#{stage11.id}" />
+                                        <f:selectItems value="#{materialsFormMB.schoolStagesGuideDTOList}" var="stage11" itemLabel="#{stage11.name}" 
+                                                       itemValue="#{stage11.id}" />
                                     </p:selectOneMenu>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -60,7 +83,7 @@
                                           title="#{userData.userDDs['SAVE']}"
                                           value="#{userData.userDDs['SAVE']}" 
                                           style=""
-                                          action="#{materialsFormMB.save()}" 
+                                          action="#{materialsFormMB.saveGlobal()}" 
                                           update="@form"/>
 
                         <p:commandButton  class="newButton" 

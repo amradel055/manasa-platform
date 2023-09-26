@@ -13,6 +13,7 @@ public class MaterialsDTO extends BaseEntityDTO {
 
     private String name;
     private Integer teacherId;
+    private String teacherName;
     private Integer stageId;
     private String stageName;
 
@@ -96,6 +97,20 @@ public class MaterialsDTO extends BaseEntityDTO {
      */
     public void setStageName(String stageName) {
         this.stageName = stageName;
+    }
+
+    /**
+     * @return the teacherName
+     */
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    /**
+     * @param teacherName the teacherName to set
+     */
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
     }
 
 }

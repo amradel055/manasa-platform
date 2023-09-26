@@ -30,5 +30,7 @@ public interface SchoolStagesGuideService {
     public SchoolStagesGuide findschoolStagesGuideById(Integer stageId);
     
     public SchoolStagesGuide addSchoolStagesGuide(SchoolStagesGuide schoolStagesGuide) ;
+    
+    public List<SchoolStagesGuideDTO> findAll();
 
 }

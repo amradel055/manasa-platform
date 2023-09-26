@@ -162,6 +162,15 @@ public class schoolStagesGuideServiceImpl implements SchoolStagesGuideService {
     public SchoolStagesGuide addSchoolStagesGuide(SchoolStagesGuide schoolStagesGuide) {
         return dao.updateEntity(schoolStagesGuide);
     }
+    
+    @Override
+    public List<SchoolStagesGuideDTO> findAll() {
+        List<SchoolStagesGuide> list = dao.findAll(SchoolStagesGuide.class);
+        if(list != null && !list.isEmpty()){
+            return returnListDTO(list);
+        }
+        return null;
+    }
 
     
 }

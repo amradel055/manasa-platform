@@ -33,6 +33,7 @@ public class SchoolStagesListMB extends BaseListBean {
     @Override
     @PostConstruct
     public void init() {
+        findSchoolStagesGuideDTOs();
     }
 
     @Override
@@ -89,7 +90,7 @@ public class SchoolStagesListMB extends BaseListBean {
 
     public void onCompanyListChange() {
         try {
-            getSchoolStagesGuideDTOs();
+            findSchoolStagesGuideDTOs();
         } catch (Exception e) {
             saveError(e, "UserRoleFormBean", "onCompanyListChange");
         }
@@ -114,11 +115,12 @@ public class SchoolStagesListMB extends BaseListBean {
      * @return the schoolStagesGuideDTOs
      */
     public List<SchoolStagesGuideDTO> getSchoolStagesGuideDTOs() {
-        if (schoolStagesGuideDTOs == null) {
-            Integer companySelected = getSelectedCompanyId() != null ? getSelectedCompanyId() : getUserData().getUser().getCompanyId().getId();
-            schoolStagesGuideDTOs = schoolStagesGuideService.findschoolStagesGuideByCompanyId(companySelected);
-        }
-        return schoolStagesGuideDTOs;
+            return schoolStagesGuideDTOs;
+    }
+    
+    public void findSchoolStagesGuideDTOs() {
+            Integer companySelected = getSelectedCompanyId() != null ? getSelectedCompanyId() : getUserData().getUser().getCompanyId() == null ? null : getUserData().getUser().getCompanyId().getId();
+            setSchoolStagesGuideDTOs(companySelected == null ? schoolStagesGuideService.findAll() :  schoolStagesGuideService.findschoolStagesGuideByCompanyId(companySelected));
     }
 
     /**

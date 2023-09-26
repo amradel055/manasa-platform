@@ -30,6 +30,24 @@
                     <f:facet name="header">
                         <p:commandButton  styleClass="saddButton" style="float:right" icon="fa fa-plus" title="#{userData.userDDs['ADD']}" action="#{materialListMB.goToAdd()}" 
                                           />
+                        
+                        <p:selectOneMenu id="com" 
+                                         value="#{materialListMB.selectedCompanyId}" 
+                                         style="float:right"  
+                                         rendered="#{userData.getCompany() == null}">
+                            <p:ajax listener="#{materialListMB.findTeacherList()}" update="tec" />
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{materialListMB.companiesList}" var="com" itemLabel="#{com.name}" itemValue="#{com.id}"/> 
+                        </p:selectOneMenu>
+                        
+                        <p:selectOneMenu id="tec" 
+                                         value="#{materialListMB.teacherSelected}" 
+                                         style="float:right"  
+                                         rendered="#{userData.getCompany() == null}">
+                            <p:ajax listener="#{materialListMB.findMaterialsDTOList()}" update="materials" />
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{materialListMB.teacherList}" var="tec" itemLabel="#{tec.name}" itemValue="#{tec}"/> 
+                        </p:selectOneMenu>
 
                         <p:outputPanel  >
                             <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
@@ -41,16 +59,16 @@
                             <h:outputText value="#{index + 1}"  style="font-size: 1.5vh" />
                         </p:column>
 
-                    <p:column style="text-align: right;font-size: 15px;border-radius: 0px"  
-                              filterStyle="display:none" filterBy="#{materials.name}"  
-                              filterMatchMode="contains" headerText="اسم الماده" sortBy="#{materials.name}">
+                    <p:column style="text-align: right;font-size: 15px;border-radius: 0px"   headerText="اسم الماده" sortBy="#{materials.name}">
                         <p:outputLabel value="#{materials.name}" />
                     </p:column>
-                    <p:column style="text-align: right;font-size: 15px;border-radius: 0px"  
-                              filterStyle="display:none" filterBy="#{materials.stageName}"  
-                              filterMatchMode="contains" headerText="اسم المرحلة " sortBy="#{materials.stageName}">
+                    <p:column style="text-align: right;font-size: 15px;border-radius: 0px"   headerText="اسم المرحلة " sortBy="#{materials.stageName}">
                         <p:outputLabel value="#{materials.stageName}" />
                     </p:column>
+                    <p:column style="text-align: right;font-size: 15px;border-radius: 0px"   headerText="Teacher " sortBy="#{materials.teacherName}">
+                        <p:outputLabel value="#{materials.name}" />
+                    </p:column>
+                    
                  
                     <p:column style="width:16vh;text-align: center;font-size: 15px;border-radius: 0px"  headerText="#{userData.userDDs['TRANSACTION']}">
                         <p:commandButton update="@form" icon="fa fa-fw fa-edit"

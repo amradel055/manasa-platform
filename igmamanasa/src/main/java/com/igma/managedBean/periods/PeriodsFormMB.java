@@ -5,6 +5,7 @@
  */
 package com.igma.managedBean.periods;
 
+import com.isag.businessservice.BranchService;
 import com.isag.businessservice.IgmaUserService;
 import com.isag.businessservice.MaterialsService;
 import com.isag.businessservice.PeriodsService;
@@ -19,6 +20,9 @@ import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import com.isag.dto.StudentPeriodsOrderDTO;
+import com.isag.entity.Branch;
+import com.isag.entity.IgmaCompany;
+import com.isag.entity.IgmaUser;
 import com.isag.isag.BaseFormBean;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +38,7 @@ public class PeriodsFormMB extends BaseFormBean {
     @EJB
     StudentPeriodsOrderService studentPeriodsOrderService;
     @EJB
-    IgmaUserService igmaUserService;
+    BranchService branchService;
     @EJB
     MaterialsService materialsService;
     @EJB
@@ -60,6 +64,20 @@ public class PeriodsFormMB extends BaseFormBean {
 
     @Override
     public String save() {
+        
+        IgmaCompany companySelected = getCompanySelected() != null ? getCompanySelected() : getUserData().getUser().getCompanyId();
+
+        IgmaUser teacherSelected = getTeacherSelected() != null ? getTeacherSelected() : getUserData().getUser();
+
+        List<Branch> branchs = branchService.getAllBranchByCompanyId(companySelected.getId());
+
+        getUserData().getUser().setBranchId(branchs != null && !branchs.isEmpty() ? branchs.get(0) : null);
+        getPeriodsDTO().setBranchId(branchs != null && !branchs.isEmpty() ? branchs.get(0).getId() : null);
+        getUserData().getUser().setCompanyId(companySelected);
+        getUserData().getUser().setId(teacherSelected.getId());
+        
+        getPeriodsDTO().setTeacherId(teacherSelected.getId());
+        
         periodsService.savePeriods(getPeriodsDTO(), getUserData().getUser());
         reset();
         exit() ;
@@ -142,12 +160,21 @@ public class PeriodsFormMB extends BaseFormBean {
      * @return the schoolStagesGuideDTOList
      */
     public List<SchoolStagesGuideDTO> getSchoolStagesGuideDTOList() {
-        if (schoolStagesGuideDTOList == null) {
-
-            setSchoolStagesGuideDTOList(schoolStagesGuideService.findschoolStagesGuide(232));
-            setSchoolStagesGuideDTOConverter(new SchoolStagesGuideDTOConverter(schoolStagesGuideDTOList));
-        }
+//        if (schoolStagesGuideDTOList == null) {
+//
+//            setSchoolStagesGuideDTOList(schoolStagesGuideService.findschoolStagesGuide(232));
+//            setSchoolStagesGuideDTOConverter(new SchoolStagesGuideDTOConverter(schoolStagesGuideDTOList));
+//        }
         return schoolStagesGuideDTOList;
+    }
+    
+    public void findSchoolStagesGuideDTOList() {
+
+        IgmaCompany companySelected = getCompanySelected() != null ? getCompanySelected() : getUserData().getUser().getCompanyId();
+        List<Branch> branchs = branchService.getAllBranchByCompanyId(companySelected.getId());
+
+        setSchoolStagesGuideDTOList(schoolStagesGuideService.findschoolStagesGuide(branchs.get(0).getId()));
+        setSchoolStagesGuideDTOConverter(new SchoolStagesGuideDTOConverter(schoolStagesGuideDTOList));
     }
 
     /**

@@ -30,8 +30,9 @@
                             <p:outputLabel style="width:120px;margin-right: 25px;"  value="#{userData.userDDs['ROLE_NAME']}*" />
                         </h:panelGroup>
                         <h:panelGroup>
-                            <p:inputText  style="width: 20%!important"  id="roleName" a:autofocus="true" value="#{schoolStagesFormBean.name}" required="true" requiredMessage="#{userData.userDDs['REQUIRED']}" >
-                                <p:ajax event="keyup" update="msgroleName" />
+                            <p:inputText  style="width: 20%!important"  id="roleName"
+                                          a:autofocus="true" value="#{schoolStagesFormBean.name}" 
+                                          required="true" requiredMessage="#{userData.userDDs['REQUIRED']}" >
                             </p:inputText>
                             <p:message id="msgroleName" for="roleName"  />
                         </h:panelGroup>

@@ -135,6 +135,7 @@ public class MaterialsServiceImpl implements MaterialsService {
         dTO.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
         dTO.setBranchId(entity.getBranchId() != null ? entity.getBranchId().getId() : null);
         dTO.setTeacherId(entity.getTeacherId() != null ? entity.getTeacherId().getId() : null);
+        dTO.setTeacherName(entity.getTeacherId() != null ? entity.getTeacherId().getName() : "");
 
         return dTO;
     }
@@ -176,6 +177,28 @@ public class MaterialsServiceImpl implements MaterialsService {
         params.put("stageId", stageId);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT d FROM Materials d WHERE d.teacherId.id = :teacherId AND d.stageId.id = :stageId ");
+        List<Materials> list = dao.findListByQuery(builder.toString(), params);
+        return returnListDTO(list);
+    }
+    
+    @Override
+    public List<MaterialsDTO> findMaterialsByCompanyAndTeachear(Integer companyId , Integer teacherId) {
+        Map<String, Object> params = new HashMap<>();
+                
+       
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM Materials d WHERE 1 = 1  ");
+        
+        if(companyId != null){
+             params.put("companyId", companyId);
+             builder.append(" AND d.companyId.id = :companyId ") ;
+        }
+        
+        if(teacherId != null){
+             params.put("teacherId", teacherId);
+             builder.append(" AND d.teacherId.id = :teacherId ") ;
+        }
+        
         List<Materials> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }

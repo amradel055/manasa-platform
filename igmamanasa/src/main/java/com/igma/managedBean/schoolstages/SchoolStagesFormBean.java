@@ -5,19 +5,21 @@
  */
 package com.igma.managedBean.schoolstages;
 
+import com.isag.businessservice.BranchService;
 import com.isag.businessservice.CompanyService;
+import com.isag.businessservice.SchoolStagesGuideService;
+import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
+import com.isag.entity.SchoolStagesGuide;
 import com.isag.isag.BaseFormBean;
-import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.inject.Named;
-import com.isag.businessservice.SchoolStagesGuideService;
-import com.isag.entity.SchoolStagesGuide;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 
 /**
  *
@@ -25,12 +27,12 @@ import javax.faces.application.FacesMessage;
  */
 @Named(value = "schoolStagesFormBean")
 @ViewScoped
-public class SchoolStagesFormBean extends BaseFormBean implements Serializable {
+public class SchoolStagesFormBean extends BaseFormBean {
 
     private String name;
     private SchoolStagesGuide schoolStagesGuide;
     private IgmaCompany company;
-    
+
     private Integer stageSelected;
 
     /**
@@ -41,6 +43,8 @@ public class SchoolStagesFormBean extends BaseFormBean implements Serializable {
 
     @EJB
     private CompanyService companyService;
+    @EJB
+    private BranchService branchService;
 
     public SchoolStagesFormBean() {
 
@@ -55,18 +59,18 @@ public class SchoolStagesFormBean extends BaseFormBean implements Serializable {
             saveError(e, "RoleFormBean", "init");
         }
     }
-    
+
     @Override
     public void load() {
         try {
             if (getScreenMode() != null && (getScreenMode().length()) > 0) {
 
                 if (getUserData().getCompany() != null) {
-                        setCompanySelected(getUserData().getCompany());
-                    } 
-                
-                 if (getScreenMode().equalsIgnoreCase("EditStage")) {
-                    
+                    setCompanySelected(getUserData().getCompany());
+                }
+
+                if (getScreenMode().equalsIgnoreCase("EditStage")) {
+
                     try {
                         stageSelected = (Integer) (getContext().getSessionMap().get("stageSelected"));
                         setSchoolStagesGuide(schoolStagesGuideService.findschoolStagesGuideById(stageSelected));
@@ -86,34 +90,23 @@ public class SchoolStagesFormBean extends BaseFormBean implements Serializable {
         try {
 
             if (getName() != null && !getName().isEmpty()) {
-                schoolStagesGuide.setName(getName());
+                getSchoolStagesGuide().setName(getName());
 
                 IgmaCompany companySelected = getCompanySelected() != null ? getCompanySelected() : getUserData().getUser().getCompanyId();
-                schoolStagesGuide.setCompanyId(companySelected);
-                schoolStagesGuide.setModifiedBy(getUserData().getUser());
-                schoolStagesGuide.setModificationDate(new Date());
-                if (getScreenMode().equalsIgnoreCase("add")) {
-                    try {
-                        schoolStagesGuide = schoolStagesGuideService.addSchoolStagesGuide(schoolStagesGuide);
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), getUserData().getUserDDs().get("SAVED")));
-                    } catch (Exception e) {
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("DUBLICATED")));
-                        return null;
-                    }
-
+                getSchoolStagesGuide().setCompanyId(companySelected);
+                getSchoolStagesGuide().setModifiedBy(getUserData().getUser());
+                getSchoolStagesGuide().setModificationDate(new Date());
+                getSchoolStagesGuide().setId(stageSelected);
+                List<Branch> branchs = branchService.getAllBranchByCompanyId(companySelected.getId());
+                getSchoolStagesGuide().setBranchId(branchs != null && !branchs.isEmpty() ? branchs.get(0) : null);
+                try {
+                    setSchoolStagesGuide(schoolStagesGuideService.addSchoolStagesGuide(getSchoolStagesGuide()));
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), getUserData().getUserDDs().get("SAVED")));
+                } catch (Exception e) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("DUBLICATED")));
+                    return null;
                 }
-                if (getScreenMode().equalsIgnoreCase("edit")) {
-                    schoolStagesGuide.setId(stageSelected);
-                    try {
-                        schoolStagesGuide = schoolStagesGuideService.addSchoolStagesGuide(schoolStagesGuide);
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), getUserData().getUserDDs().get("SAVED")));
-                    } catch (Exception e) {
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("DUBLICATED")));
-                        return null;
-                    }
-
-                }
-                exit("../role/roleList.xhtml");
+                exit("../schoolstages/schoolstagesForm.xhtml");
                 return "";
             }
             return "";
@@ -122,7 +115,6 @@ public class SchoolStagesFormBean extends BaseFormBean implements Serializable {
             return null;
         }
     }
-
 
     public String cancel() {
         try {
@@ -174,7 +166,7 @@ public class SchoolStagesFormBean extends BaseFormBean implements Serializable {
      * @return the schoolStagesGuide
      */
     public SchoolStagesGuide getSchoolStagesGuide() {
-        if(schoolStagesGuide == null){
+        if (schoolStagesGuide == null) {
             schoolStagesGuide = new SchoolStagesGuide();
         }
         return schoolStagesGuide;

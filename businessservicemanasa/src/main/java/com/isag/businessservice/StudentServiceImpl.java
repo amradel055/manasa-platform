@@ -30,7 +30,7 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class StudentServiceImpl implements StudentService {
-    
+
     @EJB
     private GenericDAO dao;
     @EJB
@@ -41,20 +41,20 @@ public class StudentServiceImpl implements StudentService {
     private StudentMonthsService studentMonthsService;
     @EJB
     ExamsService examsService;
-    
+
     @Override
     public APIStudentDataDTO ResetPassword(APIStudentDataDTO aPIStudentDataDTO) {
         Student student = null;
-        if (aPIStudentDataDTO.getId() != null ) {
+        if (aPIStudentDataDTO.getId() != null) {
             student = dao.findEntityById(Student.class, aPIStudentDataDTO.getId());
         }
-        
-         student.setMacId(null);
-         dao.updateEntity(student);
-         aPIStudentDataDTO.setMsg("تم الحفظ بنجاح");
-         aPIStudentDataDTO.setMsgType("success");
-         return aPIStudentDataDTO;
-            
+
+        student.setMacId(null);
+        dao.updateEntity(student);
+        aPIStudentDataDTO.setMsg("تم الحفظ بنجاح");
+        aPIStudentDataDTO.setMsgType("success");
+        return aPIStudentDataDTO;
+
 //            if (aPIStudentDataDTO.getId() != null && aPIStudentDataDTO.getPassword() != null) {
 //            student = dao.findEntityById(Student.class, aPIStudentDataDTO.getId());
 //        }
@@ -69,9 +69,8 @@ public class StudentServiceImpl implements StudentService {
 //            msg.setMsgType("fail");
 //            return msg;
 //        }
-        
     }
-    
+
     @Override
     public StudentDTO authenticateUser(String userName, String password, Integer branchId, Integer companyId) {
         StudentDTO dTO = new StudentDTO();
@@ -86,7 +85,7 @@ public class StudentServiceImpl implements StudentService {
         }
         return dTO;
     }
-    
+
     @Override
     public String findStudentPassword(Integer studentId) {
         StudentDTO dTO = new StudentDTO();
@@ -98,7 +97,7 @@ public class StudentServiceImpl implements StudentService {
         }
         return "";
     }
-    
+
     public Boolean validateUser(APIStudentDataDTO aPIStudentDataDTO) {
         Map<String, Object> params = new HashMap();
         StringBuilder query = new StringBuilder();
@@ -107,7 +106,7 @@ public class StudentServiceImpl implements StudentService {
         params.put("email", aPIStudentDataDTO.getEmail());
         params.put("branchId", aPIStudentDataDTO.getBranchId());
         params.put("companyId", aPIStudentDataDTO.getCompanyId());
-        
+
         query.append("SELECT e FROM Student e WHERE (e.userName = :userName or e.mobile = :mobile or e.email = :email) AND e.branchId.id = :branchId AND e.companyId.id = :companyId");
         if (aPIStudentDataDTO.getId() != null) {
             params.put("id", aPIStudentDataDTO.getId());
@@ -119,7 +118,7 @@ public class StudentServiceImpl implements StudentService {
         }
         return Boolean.TRUE;
     }
-    
+
     public Boolean validateUserName(APIStudentDataDTO aPIStudentDataDTO) {
         Map<String, Object> params = new HashMap();
         StringBuilder query = new StringBuilder();
@@ -131,7 +130,7 @@ public class StudentServiceImpl implements StudentService {
         }
         return Boolean.TRUE;
     }
-    
+
     public Boolean validateMobile(APIStudentDataDTO aPIStudentDataDTO) {
         Map<String, Object> params = new HashMap();
         StringBuilder query = new StringBuilder();
@@ -143,7 +142,7 @@ public class StudentServiceImpl implements StudentService {
         }
         return Boolean.TRUE;
     }
-    
+
     public Boolean validateEmail(APIStudentDataDTO aPIStudentDataDTO) {
         Map<String, Object> params = new HashMap();
         StringBuilder query = new StringBuilder();
@@ -155,7 +154,7 @@ public class StudentServiceImpl implements StudentService {
         }
         return Boolean.TRUE;
     }
-    
+
     @Override
     public APIStudentDataDTO save(APIStudentDataDTO aPIStudentDataDTO) {
         APIStudentDataDTO msg = new APIStudentDataDTO();
@@ -198,31 +197,31 @@ public class StudentServiceImpl implements StudentService {
             return msg;
         }
     }
-    
+
     @Override
     public StudentDTO addStudent(StudentDTO studentDTO, IgmaUser isagUser) {
         // Add method which includes the 4 tables data in .
         Student entity = mapFromDTO(studentDTO, isagUser);
         entity = dao.updateEntity(entity);
         studentDTO = mapTODTO(entity, studentDTO);
-        
+
         return studentDTO;
-        
+
     }
-    
+
     @Override
     public List<Student> getAllStudentsListByBranchId(Integer branchId) {
-        
+
         Map<String, Object> params = new HashMap();
         params.put("branchId", branchId);
         List<StudentDTO> dTOList = new ArrayList<>();
         List<Student> list = dao.findListByQuery("SELECT d FROM Student d WHERE d.branchId.id=:branchId", params);
         return list;
     }
-    
+
     @Override
     public List<StudentDTO> getStudentbySchoolStagesGuideId(Integer schoolStagesId) {
-        
+
         Map<String, Object> params = new HashMap();
         params.put("schoolStagesId", schoolStagesId);
         StringBuilder query = new StringBuilder();
@@ -231,9 +230,9 @@ public class StudentServiceImpl implements StudentService {
         List<Student> students = dao.findListByQuery(query.toString(), params);
         returnListDTO(students, dTOList);
         return dTOList;
-        
+
     }
-    
+
     @Override
     public List<APIStudentDataDTO> getStudentbyBranchId(Integer branchId, Integer schoolStagesId, Integer id) {
         Map<String, Object> params = new HashMap();
@@ -252,10 +251,10 @@ public class StudentServiceImpl implements StudentService {
         List<Student> students = dao.findListByQuery(query.toString(), params);
         return returnListDTOAPI(students);
     }
-    
+
     @Override
     public List<StudentDTO> getAllStudentsListByParentId(Integer parentId) {
-        
+
         Map<String, Object> params = new HashMap();
         params.put("parentId", parentId);
         List<StudentDTO> dTOList = new ArrayList<>();
@@ -263,7 +262,7 @@ public class StudentServiceImpl implements StudentService {
         returnListDTO(list, dTOList);
         return dTOList;
     }
-    
+
     @Override
     public List<StudentDTO> getAllStudentsListByParentAndchields(Integer branchId, Integer parentId) {
         Map<String, Object> params = new HashMap();
@@ -274,7 +273,7 @@ public class StudentServiceImpl implements StudentService {
         returnListDTO(list, dTOList);
         return dTOList;
     }
-    
+
     @Override
     public List<Integer> getAllStudentsListByParentAndchield(Integer branchId, Integer parentId) {
         Map<String, Object> params = new HashMap();
@@ -285,7 +284,7 @@ public class StudentServiceImpl implements StudentService {
         List<Integer> list = dao.findListByQuery("SELECT e.id FROM Student e LEFT JOIN e.parentId c WHERE e.branchId.id = :branchId AND ( e.parentId.id = :parentId OR e.parentId.id= c.id )", params);
         return list;
     }
-    
+
     @Override
     public List<StudentDTO> getAllStudentsListByCompanyIdAndBranchId(Integer companyId, Integer branchId) {
         Map<String, Object> params = new HashMap();
@@ -298,7 +297,7 @@ public class StudentServiceImpl implements StudentService {
         returnListDTO(list, dTOList);
         return dTOList;
     }
-    
+
     @Override
     public List<StudentDTO> getAllStudentsListByCompanyId(Integer companyId) {
         Map<String, Object> params = new HashMap();
@@ -310,7 +309,7 @@ public class StudentServiceImpl implements StudentService {
         returnListDTO(list, dTOList);
         return dTOList;
     }
-    
+
     @Override
     public List<StudentDTO> getAllStudentsListByCompanyIdAndRemType(Integer companyId, Integer remType) {
         Map<String, Object> params = new HashMap();
@@ -323,7 +322,7 @@ public class StudentServiceImpl implements StudentService {
         returnListDTO(list, dTOList);
         return dTOList;
     }
-    
+
     @Override
     public List<StudentDTO> getAllStudentsListByRemCompanyId(Integer remCompany) {
         Map<String, Object> params = new HashMap();
@@ -335,7 +334,7 @@ public class StudentServiceImpl implements StudentService {
         returnListDTO(list, dTOList);
         return dTOList;
     }
-    
+
     @Override
     public List<StudentDTO> getAllStudentsListByRemPointsId(Integer remPoints, Integer remTrafficId) {
         //RemStudentShiftDetailEdit
@@ -349,7 +348,7 @@ public class StudentServiceImpl implements StudentService {
         returnListDTO(list, dTOList);
         return dTOList;
     }
-    
+
     @Override
     public Boolean getAllStudentsIsSuperVisor(Integer studentId) {
         Map<String, Object> params = new HashMap();
@@ -360,9 +359,9 @@ public class StudentServiceImpl implements StudentService {
         } else {
             return Boolean.FALSE;
         }
-        
+
     }
-    
+
     @Override
     public List<StudentDTO> getAllStudentsListByBranchIdAndHrSalaryStructure(Integer branchId) {
         Map<String, Object> params = new HashMap();
@@ -372,14 +371,14 @@ public class StudentServiceImpl implements StudentService {
         returnListDTO(list, dTOList);
         return dTOList;
     }
-    
+
     @Override
     public StudentDTO findStudentId(Integer id) {
         Student student = dao.findEntityById(Student.class, id);
         StudentDTO dTO = new StudentDTO();
         return mapTODTO(student, dTO);
     }
-    
+
     @Override
     public StudentDTO findStudentLoginData(Integer id) {
         Student entity = dao.findEntityById(Student.class, id);
@@ -390,12 +389,12 @@ public class StudentServiceImpl implements StudentService {
         dTO.setCode(entity.getCode());
         return dTO;
     }
-    
+
     @Override
     public StudentDTO addStudent(StudentDTO student) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public List<Student> findStudentByCode(Integer companyId, Integer code) {
         Map<String, Object> params = new HashMap<>();
@@ -403,53 +402,60 @@ public class StudentServiceImpl implements StudentService {
         params.put("code", code);
         return dao.findListByQuery("SELECT e FROM Student e WHERE e.companyId.id = :companyId And e.code = :code", params);
     }
-    
+
     @Override
     public StudentDTO findStudent(Integer departmentId) {
         Student student = dao.findEntityById(Student.class, departmentId);
         StudentDTO studentDTO = mapTODTO(student, null);
         return studentDTO;
     }
-    
+
     @Override
     public StudentDTO findStudentByMobile(String mobile, Integer branchId) {
-        
+
         Map<String, Object> params = new HashMap<>();
-        
+
         StudentDTO studentDTO = null;
-        
+
         params.put("mobile", mobile);
         params.put("branchId", branchId);
-        
+
         List<Student> list = dao.findListByQuery("SELECT e FROM Student e WHERE e.branchId.id = :branchId And e.mobile = :mobile", params);
         if (list != null && !list.isEmpty()) {
             studentDTO = mapTODTO(list.get(0), null);
             return studentDTO;
         }
-        
+
         return studentDTO;
     }
-    
+
     @Override
-    public StudentDTO updateStudentMacId(StudentDTO studentDTO) {
+    public StudentDTO updateStudentMacId(StudentDTO studentDTO, Integer deviceType) {
         Student student = dao.findEntityById(Student.class, studentDTO.getId());
-        student.setMacId(studentDTO.getMacId());
+        if (deviceType != null && deviceType == 0) {
+            student.setMacId(studentDTO.getMacId());
+        }
+
+        if (deviceType != null && deviceType == 1) {
+            student.setMacMobileId(studentDTO.getMacMobileId());
+        }
+
         dao.updateEntity(student);
         return mapTODTO(student, studentDTO);
     }
-    
+
     @Override
     public StudentDTO updateStudent(StudentDTO student) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public void deleteStudent(StudentDTO student) {
         Student entity = new Student();
         entity.setId(student.getId());
         dao.deleteEntity(entity);
     }
-    
+
     @Override
     public void deleteStudent(Integer student) {
         Student entity = new Student();
@@ -460,10 +466,10 @@ public class StudentServiceImpl implements StudentService {
         entity.setId(student);
         dao.deleteEntity(entity);
     }
-    
+
     @Override
     public List<StudentDTO> getAllStudentsListByCompanyId(Integer companyId, Integer branchId) {
-        
+
         Map<String, Object> params = new HashMap<>();
         List<StudentDTO> dTOList = new ArrayList<>();
         params.put("companyId", companyId);
@@ -472,10 +478,10 @@ public class StudentServiceImpl implements StudentService {
         returnListDTO(list, dTOList);
         return dTOList;
     }
-    
+
     @Override
     public List<StudentDTO> getAllStudentsListByCompanyIdByType(Integer branchId, Integer remType) {
-        
+
         Map<String, Object> params = new HashMap<>();
         List<StudentDTO> dTOList = new ArrayList<>();
         params.put("remType", remType);
@@ -512,7 +518,7 @@ public class StudentServiceImpl implements StudentService {
      */
     @Override
     public List<StudentDTO> getAllStudentsListByParentANDUserLogin(Integer studentId) {
-        
+
         Map<String, Object> params = new HashMap<>();
         List<StudentDTO> dTOList = new ArrayList<>();
         params.put("studentId", studentId);
@@ -520,28 +526,28 @@ public class StudentServiceImpl implements StudentService {
         returnListDTO(list, dTOList);
         return dTOList;
     }
-    
+
     @Override
     public List<Student> getAllStudentListByCompanyId(Integer companyId) {
-        
+
         Map<String, Object> params = new HashMap<>();
         params.put("companyId", companyId);
         List<Student> list = dao.findListByQuery("SELECT e FROM Student e WHERE  e.companyId.id=:companyId", params);
         return list;
     }
-    
+
     @Override
     public StudentDTO mapTODTO(Student entity, StudentDTO dTO) {
         if (dTO == null) {
             dTO = new StudentDTO();
         }
         initMapToDTO(dTO, entity);
-        
+
         return dTO;
     }
-    
+
     private StudentDTO initMapToDTO(StudentDTO dTO, Student entity) {
-        
+
         if (dTO == null) {
             dTO = new StudentDTO();
         }
@@ -568,7 +574,7 @@ public class StudentServiceImpl implements StudentService {
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy().getId());
-        
+
         if (entity.getSchoolStagesId() != null) {
             SchoolStagesGuideDTO schoolStagesGuideDTO = new SchoolStagesGuideDTO();
             schoolStagesGuideDTO.setName(entity.getSchoolStagesId().getName());
@@ -581,14 +587,14 @@ public class StudentServiceImpl implements StudentService {
             statesDTO.setName(entity.getStateId().getName());
             statesDTO.setId(entity.getStateId().getId());
             dTO.setStateId(statesDTO);
-            
+
         }
         return dTO;
-        
+
     }
-    
+
     private APIStudentDataDTO initMapToAPIDTO(APIStudentDataDTO dTO, Student entity) {
-        
+
         if (dTO == null) {
             dTO = new APIStudentDataDTO();
         }
@@ -626,14 +632,14 @@ public class StudentServiceImpl implements StudentService {
 //            dTO.setGovernorateId(entity.getStateId().getGovernorateId().getId());
 
         }
-        
+
         return dTO;
-        
+
     }
-    
+
     public Student mapFromDTO(StudentDTO dTO, IgmaUser isagUser) {
         Student entity = new Student();
-        
+
         entity.setUserName(dTO.getUserName());
         entity.setPassword(dTO.getPassword());
         entity.setId(dTO.getId());
@@ -654,26 +660,26 @@ public class StudentServiceImpl implements StudentService {
         entity.setIpAddress(dTO.getIpAddress());
         entity.setFatherJob(dTO.getFatherJob());
         entity.setImage(dTO.getImage());
-        
+
         if (dTO.getId() == null) {
             entity.setCreatedBy(isagUser);
             entity.setCreationDate(new Date());
-            
+
         } else {
             entity.setId(dTO.getId());
             entity.setModificationDate(new Date());
             entity.setModifiedBy(isagUser);
         }
-        
+
         entity.setCompanyId(isagUser.getCompanyId());
         return entity;
     }
-    
+
     @Override
     public void deleteIdfromFellowsQualifications(Integer studentId) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public List<APIStudentDataDTO> returnListDTOAPI(List<Student> studentList) {
         List<APIStudentDataDTO> list = new ArrayList<>();
@@ -682,25 +688,25 @@ public class StudentServiceImpl implements StudentService {
         }
         return list;
     }
-    
+
     private Student mapAPIToEntity(APIStudentDataDTO dTO, Student entity) {
         if (entity == null) {
             entity = new Student();
             IgmaUser isagUser = new IgmaUser();
             isagUser.setId(61);
-            
+
             entity.setCreatedBy(isagUser);
             entity.setCreationDate(new Date());
-            
+
             Branch branch = new Branch();
             branch.setId(dTO.getBranchId());
             entity.setBranchId(branch);
-            
+
             IgmaCompany isagCompany = new IgmaCompany();
             isagCompany.setId(dTO.getCompanyId());
             entity.setCompanyId(isagCompany);
         }
-        
+
         entity.setFirstName(dTO.getFirstName());
         entity.setFatherName(dTO.getFatherName());
         entity.setGrandFatherName(dTO.getGrandFatherName());
@@ -720,26 +726,26 @@ public class StudentServiceImpl implements StudentService {
         entity.setIpAddress(dTO.getIpAddress());
         entity.setFatherJob(dTO.getFatherJob());
         entity.setImage(dTO.getImage());
-        
+
         if (dTO.getSchoolStagesId() != null) {
             SchoolStagesGuide schoolStagesGuide = new SchoolStagesGuide();
             schoolStagesGuide.setId(dTO.getSchoolStagesId());
             entity.setSchoolStagesId(schoolStagesGuide);
         }
-        
+
         if (dTO.getStateId() != null) {
             States states = new States();
             states.setId(dTO.getStateId());
             entity.setStateId(states);
         }
-        
+
         return entity;
     }
-    
+
     public void returnListDTO(List<Student> students, List<StudentDTO> dTOList) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public List<APIStudentDataDTO> getAllStudentsListByMacId(String macId) {
         Map<String, Object> params = new HashMap();
@@ -749,5 +755,5 @@ public class StudentServiceImpl implements StudentService {
         List<Student> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTOAPI(list);
     }
-    
+
 }

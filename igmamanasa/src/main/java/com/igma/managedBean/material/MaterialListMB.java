@@ -117,6 +117,14 @@ public class MaterialListMB extends BaseListBean {
     }
 
     /**
+     * @return the materialsDTOList
+     */
+    public void findMaterialsDTOList() {
+            Integer companySelected = getSelectedCompanyId() != null ? getSelectedCompanyId() : getUserData().getUser().getCompanyId() == null ? null : getUserData().getUser().getCompanyId().getId();
+            setmaterialsDTOList(materialsService.findMaterialsByCompanyAndTeachear( companySelected , getTeacherSelected() == null ? null :  getTeacherSelected().getId()));
+    }
+
+    /**
      * @param materialsDTOList the materialsDTOList to set
      */
     public void setmaterialsDTOList(List<MaterialsDTO> materialsDTOList) {

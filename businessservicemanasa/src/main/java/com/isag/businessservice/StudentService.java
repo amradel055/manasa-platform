@@ -57,7 +57,7 @@ public interface StudentService {
 
     public StudentDTO updateStudent(StudentDTO student);
 
-    public StudentDTO updateStudentMacId(StudentDTO studentDTO);
+    public StudentDTO updateStudentMacId(StudentDTO studentDTO, Integer deviceType);
 
     public void deleteStudent(StudentDTO student);
 
