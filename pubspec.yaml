@@ -12,9 +12,6 @@ dependencies:
 
   cupertino_icons: ^1.0.2
   flutter_windowmanager: ^0.2.0
-#  window_manager: ^0.3.5
-
-#  flutter_windowmanager:
   assets_audio_player: ^3.1.1
   shrink_sidemenu: ^2.0.0+1-null-safety
   http: ^1.1.0
@@ -34,7 +31,6 @@ dependencies:
   url_launcher:
   carousel_slider: ^4.0.0
   record: ^3.0.0
-#  audio_recorder:
   flutter_sound: ^8.2.0
   connectivity_plus: ^2.0.2
   headset_connection_event: ^2.1.1
@@ -47,29 +43,14 @@ dependencies:
   flutter_image_preview: ^0.1.1
   full_screen_image: ^2.0.0
   insta_image_viewer: ^1.0.2
-#  screen_capture_event: ^1.0.0+1
-#  screen_capture_event: ^1.0.0
-#  screenshot_callback: ^2.0.0
   permission_handler:
   youtube_player_flutter: ^8.1.2
-#  chewie:
-#  video_player:
-#  voice_message_package: ^1.0.41
-#  vimeo_player_flutter: ^0.0.3+2
   pod_player: ^0.2.1
-#  get_mac_address: ^0.0.2
-#  syncfusion_flutter_pdfviewer: ^20.1.60-beta
-#  flutter_pdfview:
-#  flutter_sound_lite: ^8.5.0
-#  flutter_sound: ^9.2.13
-#  screen_protector:
   flutter_launcher_icons: "^0.13.1"
   appinio_video_player: ^1.2.2
-#  flick_video_player:
   video_player:
   internet_file: ^1.2.0
   pdfx:
-#  audioplayers: ^5.1.0
 
 
 dev_dependencies:

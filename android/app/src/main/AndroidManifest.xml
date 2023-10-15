@@ -13,7 +13,7 @@
     <application android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/launcher_icon"
         android:name="${applicationName}"
-        android:label="lumen"
+        android:label="Full mark"
         android:hardwareAccelerated="true"
         android:usesCleartextTraffic="true"
         >
