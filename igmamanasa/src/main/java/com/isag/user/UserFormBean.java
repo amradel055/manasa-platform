@@ -11,13 +11,11 @@ import com.isag.businessservice.RoleService;
 import com.isag.businessservice.SymbolService;
 import com.isag.entity.Branch;
 import com.isag.entity.CompanyLanguage;
-import com.isag.entity.Employee;
 import com.isag.entity.IgmaCompany;
 import com.isag.entity.IgmaRole;
 import com.isag.entity.IgmaUser;
 import com.isag.entity.Symbol;
 import com.isag.isag.BaseFormBean;
-import com.isag.isag.UserData;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,7 +24,6 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
@@ -41,14 +38,11 @@ import com.isag.businessservice.IgmaUserService;
 public class UserFormBean extends BaseFormBean implements Serializable {
 
     private String userName;
-    private String screenMode;
     private String userPassword;
     private String userCode;
     private Symbol userLang;
     private String userCompanyCode;
-    private Employee employeeSelected;
     private List<IgmaCompany> userCompany;
-    private UserData userData;
     private IgmaCompany company;
     private IgmaRole role;
     private IgmaUser userDetails;
@@ -58,7 +52,6 @@ public class UserFormBean extends BaseFormBean implements Serializable {
     private Integer selectedLangId;
     private Integer master;
     private List<Symbol> languages;
-    private List<Employee> employeeList;
     private Branch branch;
     
 
@@ -107,36 +100,36 @@ public class UserFormBean extends BaseFormBean implements Serializable {
 //                    userDetails.setRemCompanyId(remCompany);
 //                }
 //                userDetails.setEmployeeId(employeeSelected);
-                if (screenMode.equalsIgnoreCase("add")) {
+                if (getScreenMode().equalsIgnoreCase("add")) {
                     userDetails.setCreationDate(new Date());
-                    userDetails.setCreatedBy(userData.getUser());
+                    userDetails.setCreatedBy(getUserData().getUser());
                     try {
                         Branch b = null;
-                        if (userData.getSelectedBranch() != null) {
-                            b = branchService.findBranch(userData.getSelectedBranch());
+                        if (getUserData().getSelectedBranch() != null) {
+                            b = branchService.findBranch(getUserData().getSelectedBranch());
                         }
                         userDetails.setBranchId(b);
                         userService.addUser(userDetails);
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userData.getUserDDs().get("INFO"), userData.getUserDDs().get("SAVED")));
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), getUserData().getUserDDs().get("SAVED")));
                     } catch (Exception e) {
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userData.getUserDDs().get("ERROR"), userData.getUserDDs().get("DUBLICATED")));
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("DUBLICATED")));
                         e.printStackTrace();
                         saveError(e, "UserFormBean", "save");
                         return null;
                     }
 
-                } else if (screenMode.equalsIgnoreCase("edit")) {
-                    userDetails.setModifiedBy(userData.getUser());
+                } else if (getScreenMode().equalsIgnoreCase("edit")) {
+                    userDetails.setModifiedBy(getUserData().getUser());
                     userDetails.setModificationDate(new Date());
                     userDetails.setBranchId(branch);
                     userDetails.setId(userId);
                     userDetails.setCompanyId(company);
                     try {
                         userService.updateUser(userDetails);
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userData.getUserDDs().get("INFO"), userData.getUserDDs().get("SAVED")));
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), getUserData().getUserDDs().get("SAVED")));
                     } catch (Exception e) {
                         e.printStackTrace();
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userData.getUserDDs().get("ERROR"), userData.getUserDDs().get("DUBLICATED")));
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("DUBLICATED")));
                         saveError(e, "UserFormBean", "save");
                         return null;
 
@@ -167,19 +160,16 @@ public class UserFormBean extends BaseFormBean implements Serializable {
     @Override
     public void load() {
         try {
-            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            userData = (UserData) context.getSessionMap().get("userLogInData");
-            screenMode = (String) context.getSessionMap().get("userMode");
-            if (userData.getCompany() != null) {
-                selectedCompanyId = userData.getCompany().getId();
-                userCompanyCode = userData.getCompany().getCode();
+            if (getUserData().getCompany() != null) {
+                selectedCompanyId = getUserData().getCompany().getId();
+                userCompanyCode = getUserData().getCompany().getCode();
             }
-            if (screenMode != null) {
-                if (screenMode.equalsIgnoreCase("add")) {
+            if (getScreenMode() != null) {
+                if (getScreenMode().equalsIgnoreCase("add")) {
                     setUserDetailsEmpty();
 
-                } else if (screenMode.equalsIgnoreCase("edit")) {
-                    userId = (Integer) (context.getSessionMap().get("selecteduser"));
+                } else if (getScreenMode().equalsIgnoreCase("edit")) {
+                    userId = (Integer) (getContext().getSessionMap().get("selecteduser"));
                     if (userId != null) {
                         try {
                             userDetails = userService.findUser(userId);
@@ -252,7 +242,7 @@ public class UserFormBean extends BaseFormBean implements Serializable {
                 for (CompanyLanguage companyLanguage : companyLanguages) {
                     languages.add(companyLanguage.getSymbol());
                 }
-                userCompany.add(userData.getCompany());
+                userCompany.add(getUserData().getCompany());
                 //selectedCompanyId = userData.getCompany().getId();
             } else {
                 try {
@@ -274,7 +264,7 @@ public class UserFormBean extends BaseFormBean implements Serializable {
             // set user details if screenMode Edit
             userCompany = new ArrayList<>();
             languages = new ArrayList<>();
-            company = userData.getCompany();
+            company = getUserData().getCompany();
             if (company != null && company.getId() != null) {
                 branch = userDetails.getBranchId();
                 userName = userDetails.getName();
@@ -369,14 +359,6 @@ public class UserFormBean extends BaseFormBean implements Serializable {
         this.userCompany = userCompanies;
     }
 
-    public UserData getUserData() {
-        return userData;
-    }
-
-    public void setUserData(UserData userData) {
-        this.userData = userData;
-    }
-
     public IgmaCompany getCompany() {
         return company;
     }
@@ -423,14 +405,6 @@ public class UserFormBean extends BaseFormBean implements Serializable {
 
     public void setRoleId(IgmaRole roleId) {
         this.roleId = roleId;
-    }
-
-    public String getScreenMode() {
-        return screenMode;
-    }
-
-    public void setScreenMode(String screenMode) {
-        this.screenMode = screenMode;
     }
 
     public Integer getUserId() {
