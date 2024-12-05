@@ -1,0 +1,127 @@
+// Variables
+@import "../../assets/css/vars";
+
+.comment-body {
+  display: flex;
+  // align-items: center;
+  justify-content: space-between;
+
+  section {
+    display: flex;
+  }
+
+  img {
+    width: 70px;
+    height: 70px;
+    margin-left: 10px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+  }
+
+  p {
+    margin-top: 7px;
+    margin-bottom: 5px;
+    margin-left: 20px;
+  }
+
+  .p-button {
+    color: $white !important;
+    display: flex;
+
+    &.p-button-danger {
+      margin-bottom: 5px;
+    }
+  }
+}
+
+.replys-comments {
+  .one {
+    margin-top: 15px;
+    padding: 11px;
+    border: 1px solid #a7a7a7;
+    border-radius: 6px;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    section {
+      display: flex;
+    }
+
+    img {
+      width: 70px;
+      height: 70px;
+      margin-left: 10px;
+      object-fit: cover;
+      object-position: center;
+      border-radius: 50%;
+    }
+
+    h3 {
+      font: $med-size-black;
+
+      span {
+        color: $white;
+        background-color: $blue;
+        font: $tiny-size-bold;
+        padding: 0 5px;
+        border-radius: 5px;
+        margin-right: 5px;
+      }
+    }
+
+    p {
+      color: #7c7c7c;
+      margin-left: 20px;
+    }
+
+    .p-button {
+      color: $white !important;
+      display: flex;
+
+      &.p-button-danger {
+        margin-bottom: 5px;
+      }
+    }
+  }
+}
+
+.preview-thumb {
+  width: 235px;
+  height: 171px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.preview-video {
+  width: 235px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+.current-files {
+  padding: 10px;
+  border: 1px solid;
+  border-radius: 5px;
+  color: $dark-blue-two;
+  font: $tiny-size-bold;
+  margin-right: 10px;
+  width: 300px;
+
+  .single-file {
+    margin-bottom: 10px;
+
+    a {
+      color: $dark-blue-two;
+    }
+
+    i.delete {
+      color: $warningTxt;
+      cursor: pointer;
+      margin-left: 5px;
+    }
+  }
+}

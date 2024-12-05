@@ -1,0 +1,13 @@
+{
+    "company_id": 170,
+    "branch_id":  243,
+    "site_name": "المعلم | لوحة التحكم",
+     "api_path": "http://igma.online/igmamanasa/rest",
+    "uploads_path": "http://demo.igma-it.com/dashboard",
+    "teacher": {    
+        "name": "  demo  ",   
+        "logo": "logo.png" 
+    }
+} 
+
+

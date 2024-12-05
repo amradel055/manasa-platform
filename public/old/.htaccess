@@ -1,0 +1,45 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /dashboard/
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-l
+  RewriteRule . /dashboard/index.html [L]
+  
+</IfModule>
+
+<!-- RewriteCond %{HTTP_REFERER} !^https://top4.igma-it.com/.*$ [NC]
+RewriteCond %{HTTP_REFERER} !^https://top4.igma-it.com/.*$ [NC] -->
+RewriteRule .(mp4|mp3|avi|flv|vob|ogg|ogv|avi|wmv|mpg|mpeg|m2v|m4v|svi|3gp)$ - [F]
+
+
+  # BEGIN cPanel-generated php ini directives, do not edit
+  # Manual editing of this file may result in unexpected behavior.
+  # To make changes to this file, use the cPanel MultiPHP INI Editor (Home >> Software >> MultiPHP INI Editor)
+  # For more information, read our documentation (https://go.cpanel.net/EA4ModifyINI)
+  <IfModule php7_module>
+    php_flag display_errors Off
+    php_value max_execution_time 86400
+    php_value max_input_time 60
+    php_value max_input_vars 1000
+    php_value memory_limit 256M
+    php_value post_max_size 3000M
+    php_value session.gc_maxlifetime 1440
+    php_value session.save_path "/var/cpanel/php/sessions/ea-php70"
+    php_value upload_max_filesize 2000M
+    php_flag zlib.output_compression Off
+  </IfModule>
+  <IfModule lsapi_module>
+    php_flag display_errors Off
+    php_value max_execution_time 86400
+    php_value max_input_time 60
+    php_value max_input_vars 1000
+    php_value memory_limit 256M
+    php_value post_max_size 3000M
+    php_value session.gc_maxlifetime 1440
+    php_value session.save_path "/var/cpanel/php/sessions/ea-php70"
+    php_value upload_max_filesize 2000M
+    php_flag zlib.output_compression Off
+  </IfModule>
+  # END cPanel-generated php ini directives, do not edit

@@ -1,0 +1,22 @@
+// Variables
+@import "../../assets/css/vars";
+
+.sign-in-page {
+    height: 100vh;
+
+    .row,
+    .container {
+        height: 100%;
+    }
+
+    .logo {
+        margin: 0px auto 10px;
+        display: table;
+        max-width: 50%;
+    }
+
+    .sign-form {
+        width: 100%;
+        padding: 15px;
+    }
+}
