@@ -1,0 +1,14 @@
+// Variables
+@import "../../assets/css/vars";
+
+.questions {
+    .add-question {
+        background-color: $blue;
+    }
+}
+
+.right-answer {
+    font: $small-size-sbold;
+    margin: 0;
+    margin-right: 7px;
+}
