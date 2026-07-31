@@ -1,0 +1,100 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pm="http://primefaces.org/serenity">
+
+    <div class="layout-sidebar #{guestPreferences.darkMenu ? 'layout-sidebar-dark' : ''}">
+        <div class="sidebar-logo">
+            <a href="dashboard.xhtml">
+                <p:graphicImage name="images/logo-slim.png" library="serenity-layout" />
+                <!--  <span class="app-name">SERENITY</span> -->
+            </a>
+            <a href="#" class="sidebar-anchor" title="Toggle Menu"></a>
+        </div>
+
+        <div class="nano">
+            <div class="nano-content sidebar-scroll-content">
+                <div class="layout-menu-container">
+                    <h:form id="menuform">
+                        <pm:menu widgetVar="serenityMenuWidget">
+                            <p:menuitem id="sr_dashboard" value="Dashboard" icon="&#xE871;" outcome="/dashboard"/>
+                            <p:submenu id="sr_sm1" label="#{userData.userDDs['GENERAL_SYSTEM_SETTINGS']}" icon="&#xE8D2;"
+                                       rendered="#{userData.userScreens['role'].view 
+                                                   or userData.userScreens['user'].view 
+                                                   or userData.userScreens['privilege'].view 
+                                                   or userData.userScreens['userrole'].view 
+                                                   or userData.userScreens['userprofile'].view 
+                                                   or userData.isAdmin}"
+                                       >
+                                <p:submenu id="sr_sm11" label="#{userData.userDDs['BRANCHES_USERS_MANAGEMENT']}" icon="&#xE8D2;"
+                                           rendered="#{userData.userScreens['role'].view 
+                                                       or userData.userScreens['user'].view 
+                                                       or userData.userScreens['privilege'].view 
+                                                       or userData.userScreens['userrole'].view 
+                                                       or userData.userScreens['userprofile'].view 
+                                                       or userData.isAdmin}"
+                                           >
+                                     <p:menuitem id="sr_lnk11355" value="#{userData.userDDs['COMPANY_MANAGEMENT']}"  icon="&#xE8D2;" url="/faces/views/company/companyList.xhtml"
+                                                rendered="#{userData.userScreens['company'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk11366" value="#{userData.userDDs['BRANCHES_MANAGEMENT']}"  icon="&#xE8D2;" url="/faces/views/branch/branchList.xhtml"
+                                                rendered="#{userData.userScreens['branch'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk113" value="#{userData.userDDs['ROLE_MANAGEMENT']}"  icon="&#xE8D2;" url="/faces/views/role/roleList.xhtml"
+                                                rendered="#{userData.userScreens['role'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk114" value="#{userData.userDDs['USERS_MANAGEMENT']}" icon="&#xE8D2;" url="/faces/views/user/userList.xhtml" 
+                                                rendered="#{userData.userScreens['user'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk115" value="#{userData.userDDs['PRIVILEGE_MANAGEMENT']}" icon="&#xE8D2;" url="/faces/views/privilege/privilegeList.xhtml" 
+                                                rendered="#{userData.userScreens['privilege'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk116" value="#{userData.userDDs['BRANCHES_USERS_PRIVILEGES']}" icon="&#xE8D2;" url="/faces/views/userrole/userRoleForm.xhtml" 
+                                                rendered="#{userData.userScreens['userrole'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk117" value="#{userData.userDDs['USER_PROFILE']}" icon="&#xE8D2;" url="/faces/views/userprofile/userprofileform.xhtml" 
+                                                rendered="#{userData.userScreens['userprofile'].view or userData.isAdmin}"
+                                                />
+                                </p:submenu>
+                            </p:submenu>
+                            <p:submenu id="sr_sm1678556" label="الدكتره " icon="&#xE8D2;"
+                                       >
+                                 
+                                 <p:menuitem  value=" School Stages Create " icon="&#xE8D2;" url="/faces/views/schoolstages/schoolstagesList.xhtml"
+
+                                            /> 
+                                <p:menuitem id="sr_lnk94245563345" value="انشاء ماده " icon="&#xE8D2;" url="/faces/views/material/materialList.xhtml"
+
+                                            /> 
+                                <p:menuitem id="sr_lnk94245563366" value="انشاء فترة " icon="&#xE8D2;" url="/faces/views/periods/periodsList.xhtml"
+
+                                            /> 
+                                
+                                <p:menuitem id="sr_lnk942433" value="تفعيل الطلبه " icon="&#xE8D2;" url="/faces/views/studentPeriodOrder/studentPeriodOrderForm.xhtml"
+
+                                            />   
+                                  <p:menuitem id="sr_lnk94243553" value="الغاء تفعيل الطلبة  " icon="&#xE8D2;" url="/faces/views/studentPeriodOrder/studentPeriodFormDelete.xhtml"
+
+                                            />
+                                <p:menuitem id="sr_lnk942455633" value="الاساله الشائعه " icon="&#xE8D2;" url="/faces/views/teacherQuestions/teacherQuestionsList.xhtml"
+
+                                            /> 
+
+                                <p:menuitem id="sr_lnk9424556653366" value="انشاء درس " icon="&#xE8D2;" url="/faces/views/lesson/lessonList.xhtml"
+
+                                            /> 
+
+                            </p:submenu>
+
+
+                        </pm:menu>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</ui:composition>

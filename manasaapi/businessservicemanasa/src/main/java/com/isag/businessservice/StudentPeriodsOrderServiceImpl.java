@@ -1,0 +1,370 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.isag.businessservice;
+
+import com.isag.api.dto.SearchStudentDTO;
+import com.isag.core.GenericDAO;
+import com.isag.dto.APIStudentDataDTO;
+import com.isag.dto.StudentPeriodsDTO;
+import com.isag.dto.StudentPeriodsOrderDTO;
+import com.isag.entity.Branch;
+import com.isag.entity.StudentPeriodsOrder;
+import com.isag.entity.Materials;
+import com.isag.entity.Periods;
+import com.isag.entity.IgmaUser;
+import com.isag.entity.Student;
+import com.isag.entity.StudentPeriods;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+
+/**
+ *
+ * @author hq003
+ */
+@Stateless
+public class StudentPeriodsOrderServiceImpl implements StudentPeriodsOrderService {
+
+    @EJB
+    private GenericDAO dao;
+
+    @EJB
+    StudentPeriodsService periodsService;
+
+    @EJB
+    StudentPeriodsService studentPeriodsService;
+
+    @EJB
+    StudentService studentService;
+
+    private StudentPeriodsOrderDTO mapTODTO(StudentPeriodsOrder entity) {
+        StudentPeriodsOrderDTO dTO = initMapToDTO(entity);
+
+        return dTO;
+    }
+
+    @Override
+    public String save(StudentPeriodsOrderDTO studentPeriodsOrderDTO, IgmaUser isagUser) {
+        List<StudentPeriodsOrderDTO> studentPeriodsOrderDTOList = new ArrayList<>();
+        List<StudentPeriodsDTO> studentPeriodsDTOList = new ArrayList<>();
+
+        if (studentPeriodsOrderDTO.getStudentId() != null && studentPeriodsOrderDTO.getMaterialId() != null) {
+            studentPeriodsOrderDTOList = checkByStudentAndMaterial(studentPeriodsOrderDTO.getStudentId(), studentPeriodsOrderDTO.getMaterialId(), studentPeriodsOrderDTO.getPeriodId());
+            studentPeriodsDTOList = studentPeriodsService.checkByStudentAndMaterialActive(studentPeriodsOrderDTO.getStudentId(), studentPeriodsOrderDTO.getMaterialId(), studentPeriodsOrderDTO.getPeriodId());
+        }
+        if ((studentPeriodsOrderDTOList == null || studentPeriodsOrderDTOList.isEmpty()) && (studentPeriodsDTOList == null || studentPeriodsDTOList.isEmpty())) {
+            StudentPeriodsOrder studentPeriodsOrder = mapToEntity(studentPeriodsOrderDTO, isagUser, null);
+            dao.updateEntity(studentPeriodsOrder);
+            return "تم طلب  تفعيل الطالب ";
+        } else if (studentPeriodsOrderDTOList != null && !studentPeriodsOrderDTOList.isEmpty()) {
+            return "تم طلب  التفعيل  من قبل ";
+
+        } else if (studentPeriodsDTOList != null && !studentPeriodsDTOList.isEmpty()) {
+            return "تم  التفعيل  من قبل ";
+        }
+        return null;
+    }
+
+    @Override
+    public void delete(Integer studentPeriodId) {
+        StudentPeriodsOrder studentPeriodsOrder = new StudentPeriodsOrder();
+        studentPeriodsOrder.setId(studentPeriodId);
+        dao.deleteEntity(studentPeriodsOrder);
+    }
+
+    @Override
+    public StudentPeriodsOrderDTO findStudentPeriod(Integer studentPeriodId) {
+        StudentPeriodsOrder studentPeriodsOrder = dao.findEntityById(StudentPeriodsOrder.class, studentPeriodId);
+        return mapTODTO(studentPeriodsOrder);
+    }
+
+    @Override
+    public List<StudentPeriodsOrderDTO> findStudemtPeriodOrderDTO(Integer branchId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM StudentPeriodsOrder d WHERE d.branchId.id = :branchId  ");
+        List<StudentPeriodsOrder> list = dao.findListByQuery(builder.toString(), params);
+        return returnListDTO(list);
+    }
+
+    public List<StudentPeriodsOrderDTO> checkByStudentAndMaterial(Integer studentId, Integer materialId, Integer periodId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("studentId", studentId);
+        params.put("materialId", materialId);
+        params.put("periodId", periodId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM StudentPeriodsOrder d WHERE d.studentId.id = :studentId AND d.materialId.id = :materialId AND d.periodId.id = :periodId  ");
+        List<StudentPeriodsOrder> list = dao.findListByQuery(builder.toString(), params);
+        return returnListDTO(list);
+    }
+
+    @Override
+    public List<SearchStudentDTO> searchStudent(Integer periodId, Integer materialId) {
+        List<SearchStudentDTO> searchStudentDTOList = new ArrayList<>();
+        Map<String, Object> params = new HashMap<>();
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM StudentPeriodsOrder d where 1 = 1 ");
+
+        if (materialId != null) {
+            params.put("materialId", materialId);
+            builder.append(" AND d.materialId.id = :materialId  ");
+        }
+        if (periodId != null) {
+            params.put("periodId", periodId);
+
+            builder.append(" AND d.periodId.id = :periodId ");
+        }
+
+        List<StudentPeriodsOrder> studentList = dao.findListByQuery(builder.toString(), params);
+        for (StudentPeriodsOrder student : studentList) {
+            SearchStudentDTO searchStudentDTO = new SearchStudentDTO();
+            searchStudentDTO.setStageName(student.getStudentId() != null ? student.getStudentId().getSchoolStagesId().getName() : null);
+            searchStudentDTO.setMobile(student.getStudentId() != null ? student.getStudentId().getMobile() : null);
+            searchStudentDTO.setName(student.getStudentId().getFullName());
+            searchStudentDTO.setMaterialName(student.getMaterialId() != null ? student.getMaterialId().getName() : null);
+            searchStudentDTO.setId(student.getId());
+            searchStudentDTO.setCash(student.getValue());
+            searchStudentDTOList.add(searchStudentDTO);
+        }
+        return searchStudentDTOList;
+    }
+
+    @Override
+    public List<SearchStudentDTO> searchStudentForDelete(Integer periodId, Integer materialId) {
+        List<SearchStudentDTO> searchStudentDTOList = new ArrayList<>();
+        Map<String, Object> params = new HashMap<>();
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM StudentPeriods d ");
+
+        if (materialId != null) {
+            params.put("materialId", materialId);
+            builder.append(" WHERE d.materialId.id = :materialId  ");
+        }
+        if (periodId != null) {
+            params.put("periodId", periodId);
+            builder.append(" AND d.periodId.id = :periodId ");
+        }
+
+        List<StudentPeriods> studentList = dao.findListByQuery(builder.toString(), params);
+        for (StudentPeriods student : studentList) {
+            SearchStudentDTO searchStudentDTO = new SearchStudentDTO();
+            searchStudentDTO.setStageName(student.getStudentId() != null ? student.getStudentId().getSchoolStagesId().getName() : null);
+            searchStudentDTO.setMobile(student.getStudentId() != null ? student.getStudentId().getMobile() : null);
+            searchStudentDTO.setName(student.getStudentId().getFullName());
+            searchStudentDTO.setMaterialName(student.getMaterialId() != null ? student.getMaterialId().getName() : null);
+            searchStudentDTO.setId(student.getId());
+            searchStudentDTO.setCash(student.getValue());
+            searchStudentDTOList.add(searchStudentDTO);
+        }
+        return searchStudentDTOList;
+    }
+
+    private List<StudentPeriodsOrderDTO> returnListDTO(List<StudentPeriodsOrder> list) {
+        List<StudentPeriodsOrderDTO> dTOList = new ArrayList<>();
+        for (StudentPeriodsOrder entity : list) {
+            dTOList.add(mapTODTO(entity));
+        }
+        return dTOList;
+    }
+
+    private StudentPeriodsOrderDTO initMapToDTO(StudentPeriodsOrder entity) {
+
+        StudentPeriodsOrderDTO dTO = new StudentPeriodsOrderDTO();
+        dTO.setId(entity.getId());
+        dTO.setConfirm(entity.getConfirm());
+        dTO.setValue(entity.getValue());
+        dTO.setRemark(entity.getRemark());
+        dTO.setStudentName(entity.getStudentId().getFullName());
+        if (entity.getStudentId() != null && entity.getStudentId().getStateId() != null
+                && entity.getStudentId().getStateId().getGovernorateId() != null) {
+            dTO.setGovernorateName(entity.getStudentId().getStateId().getGovernorateId().getName());
+            dTO.setStateName(entity.getStudentId().getStateId().getName());
+        }
+        dTO.setSchoolStagesName(entity.getStudentId().getSchoolStagesId().getName());
+
+        dTO.setSchoolStagesId(entity.getStudentId().getSchoolStagesId().getId());
+        dTO.setStudentMobile(entity.getStudentId().getMobile());
+
+        if (entity.getStudentId() != null) {
+            dTO.setStudentId(entity.getStudentId().getId());
+            dTO.setStudentName(entity.getStudentId().getFullName());
+        }
+
+        if (entity.getTeacherId() != null) {
+            dTO.setTeacherId(entity.getTeacherId().getId());
+            dTO.setTeacherName(entity.getTeacherId().getName());
+        }
+
+        if (entity.getPeriodId() != null) {
+            dTO.setPeriodId(entity.getPeriodId().getId());
+            dTO.setPeriodName(entity.getPeriodId().getName());
+        }
+
+        if (entity.getMaterialId() != null) {
+            dTO.setMaterialId(entity.getMaterialId().getId());
+        }
+
+        dTO.setIndex(entity.getId());
+        dTO.setCreatedDate(entity.getCreationDate());
+        dTO.setCreatedBy(entity.getCreatedBy().getId());
+        dTO.setBranchId(entity.getBranchId().getId());
+
+        return dTO;
+    }
+
+    private StudentPeriodsOrder mapToEntity(StudentPeriodsOrderDTO dTO, IgmaUser isagUser, StudentPeriodsOrder entity) {
+        if (entity == null) {
+            entity = new StudentPeriodsOrder();
+        }
+        entity.setValue(dTO.getValue());
+        entity.setRemark(dTO.getRemark());
+        entity.setId(dTO.getId());
+        entity.setConfirm(dTO.getConfirm());
+
+        if (dTO.getStudentId() != null) {
+            Student student = new Student();
+            student.setId(dTO.getStudentId());
+            entity.setStudentId(student);
+        }
+        if (dTO.getTeacherId() != null) {
+            IgmaUser igmaUser = new IgmaUser();
+            igmaUser.setId(dTO.getTeacherId());
+            entity.setTeacherId(igmaUser);
+        }
+        if (dTO.getPeriodId() != null) {
+            Periods periods = new Periods();
+            periods.setId(dTO.getPeriodId());
+            entity.setPeriodId(periods);
+        }
+
+        if (dTO.getMaterialId() != null) {
+            Materials materials = new Materials();
+            materials.setId(dTO.getMaterialId());
+            entity.setMaterialId(materials);
+        }
+
+        if (dTO.getId() == null) {
+
+            entity.setCreatedBy(isagUser);
+            entity.setCreationDate(new Date());
+        } else {
+            entity.setId(dTO.getId());
+            entity.setModificationDate(new Date());
+            entity.setModifiedBy(isagUser);
+        }
+
+        Branch branch = new Branch();
+        branch.setId(dTO.getBranchId());
+        entity.setBranchId(branch);
+        entity.setCompanyId(isagUser.getCompanyId());
+        return entity;
+    }
+
+    @Override
+    public void transaction(Integer studentPeriodOrderId, IgmaUser igmaUser) {
+        StudentPeriodsOrder studentPeriodsOrder = dao.findEntityById(StudentPeriodsOrder.class, studentPeriodOrderId);
+        if (studentPeriodsOrder != null) {
+            StudentPeriods studentPeriods = new StudentPeriods();
+            studentPeriods.setBranchId(studentPeriodsOrder.getBranchId());
+            studentPeriods.setCompanyId(studentPeriodsOrder.getCompanyId());
+            studentPeriods.setCreationDate(new Date());
+            studentPeriods.setCreatedBy(studentPeriodsOrder.getCreatedBy());
+            studentPeriods.setStudentId(studentPeriodsOrder.getStudentId());
+            studentPeriods.setTeacherId(studentPeriodsOrder.getTeacherId());
+            studentPeriods.setPeriodId(studentPeriodsOrder.getPeriodId());
+            studentPeriods.setMaterialId(studentPeriodsOrder.getMaterialId());
+            studentPeriods.setRemark(studentPeriodsOrder.getRemark());
+            studentPeriods.setValue(studentPeriodsOrder.getValue());
+            studentPeriods.setConfirm(1);
+            periodsService.saveTransaction(studentPeriods);
+//            dao.updateEntity(studentPeriods);
+        }
+        dao.deleteEntity(studentPeriodsOrder);
+    }
+
+    @Override
+    public List<APIStudentDataDTO> studentActivation(Integer branchId, Integer schoolStagesId, Integer id) {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("branchId", branchId);
+            StringBuilder query = new StringBuilder();
+            query.append(" SELECT i FROM StudentPeriodsOrder i WHERE i.branchId.id =:branchId ");
+            if (schoolStagesId != null) {
+                params.put("schoolStagesId", schoolStagesId);
+                query.append(" AND i.schoolStagesId.id = :schoolStagesId");
+            }
+            if (id != null) {
+                params.put("id", id);
+                query.append(" AND i.id = :id ");
+            }
+            query.append(" order by i.id desc ");
+            List<StudentPeriodsOrder> list = dao.findListByQuery(query.toString(), params);
+            if (list != null && !list.isEmpty()) {
+                List<Student> studentList = new ArrayList<>();
+                Student student;
+                for (StudentPeriodsOrder entity : list) {
+                    student = (Student) entity.getStudentId().clone();
+                    student.setPeriodOrderId(entity.getId());
+                    student.setPeriodName(entity.getPeriodId() == null ? null : entity.getPeriodId().getName());
+                    studentList.add(student);
+                }
+                return studentService.returnListDTOAPI(studentList);
+            }
+        } catch (CloneNotSupportedException ex) {
+            return null;
+        }
+        return null;
+    }
+
+    @Override
+    public void deleteByStudentId(Integer periodOrderId
+    ) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("periodOrderId", periodOrderId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM StudentPeriodsOrder d WHERE d.id = :periodOrderId");
+        List<StudentPeriodsOrder> list = dao.findListByQuery(builder.toString(), params);
+        if (list != null && !list.isEmpty()) {
+            for (StudentPeriodsOrder entity : list) {
+                dao.deleteEntity(entity);
+            }
+        }
+    }
+    
+    @Override
+    public List<APIStudentDataDTO> studentActivationOrder(Integer studentId) {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("studentId", studentId);
+            StringBuilder query = new StringBuilder();
+            query.append(" SELECT i FROM StudentPeriodsOrder i WHERE i.studentId.id =:studentId ");
+            query.append(" order by i.id desc ");
+            List<StudentPeriodsOrder> list = dao.findListByQuery(query.toString(), params);
+            if (list != null && !list.isEmpty()) {
+                List<Student> studentList = new ArrayList<>();
+                Student student;
+                for (StudentPeriodsOrder entity : list) {
+                    student = (Student) entity.getStudentId().clone();
+                    student.setPeriodOrderId(entity.getId());
+                    student.setPeriodName(entity.getPeriodId() == null ? null : entity.getPeriodId().getName());
+                    studentList.add(student);
+                }
+                return studentService.returnListDTOAPI(studentList);
+            }
+        } catch (CloneNotSupportedException ex) {
+            return null;
+        }
+        return null;
+    }
+
+}

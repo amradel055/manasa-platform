@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <h:form id="question" dir="#{userData.dir}"  styleClass='formmargin'>
+
+
+            <p:fieldset legend="المواد " style="margin-bottom:20px">
+
+                <p:dataTable 
+                    draggableColumns="true" 
+                    draggableRows="true"
+                    var="materials" 
+                    widgetVar="materials"  
+                    rowIndexVar="index" 
+                    value="#{materialListMB.materialsDTOList}"
+                    rows="#{userData.rowListCount}" 
+                    paginator="true" 
+                    selection="#{materialListMB.materialsDTOSelected}"
+                    rowKey="#{materials.index}"
+                    sortBy="#{1}"
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                    id="materials">
+                    <f:facet name="header">
+                        <p:commandButton  styleClass="saddButton" style="float:right" icon="fa fa-plus" title="#{userData.userDDs['ADD']}" action="#{materialListMB.goToAdd()}" 
+                                          />
+                        
+                        <p:selectOneMenu id="com" 
+                                         value="#{materialListMB.selectedCompanyId}" 
+                                         style="float:right"  
+                                         rendered="#{userData.getCompany() == null}">
+                            <p:ajax listener="#{materialListMB.findTeacherList()}" update="tec" />
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{materialListMB.companiesList}" var="com" itemLabel="#{com.name}" itemValue="#{com.id}"/> 
+                        </p:selectOneMenu>
+                        
+                        <p:selectOneMenu id="tec" 
+                                         value="#{materialListMB.teacherSelected}" 
+                                         style="float:right"  
+                                         rendered="#{userData.getCompany() == null}">
+                            <p:ajax listener="#{materialListMB.findMaterialsDTOList()}" update="materials" />
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{materialListMB.teacherList}" var="tec" itemLabel="#{tec.name}" itemValue="#{tec}"/> 
+                        </p:selectOneMenu>
+
+                        <p:outputPanel  >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('materials').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+                    
+                        <p:column headerText="#" style="width: 6vh;font-size: 1.8vh;text-align:right;border-radius: 0px;border-radius: 0px;">
+                            <h:outputText value="#{index + 1}"  style="font-size: 1.5vh" />
+                        </p:column>
+
+                    <p:column style="text-align: right;font-size: 15px;border-radius: 0px"   headerText="اسم الماده" sortBy="#{materials.name}">
+                        <p:outputLabel value="#{materials.name}" />
+                    </p:column>
+                    <p:column style="text-align: right;font-size: 15px;border-radius: 0px"   headerText="اسم المرحلة " sortBy="#{materials.stageName}">
+                        <p:outputLabel value="#{materials.stageName}" />
+                    </p:column>
+                    <p:column style="text-align: right;font-size: 15px;border-radius: 0px"   headerText="Teacher " sortBy="#{materials.teacherName}">
+                        <p:outputLabel value="#{materials.name}" />
+                    </p:column>
+                    
+                 
+                    <p:column style="width:16vh;text-align: center;font-size: 15px;border-radius: 0px"  headerText="#{userData.userDDs['TRANSACTION']}">
+                        <p:commandButton update="@form" icon="fa fa-fw fa-edit"
+                                         styleClass="seditButtons" style="background-color: #6a6967;border-radius: 3px;margin-bottom:3px"
+                                         title="#{userData.userDDs['EDIT']}" action="#{materialListMB.goToEdit()}"
+                                         >
+                            <f:setPropertyActionListener value="#{materials.id}"  target="#{materialListMB.materialsDTOSelected}" />
+                        </p:commandButton>
+                        <p:commandButton  styleClass="sdeleteButtons" update="question:materials" icon="fa fa-remove" style="background-color: red;border-radius: 3px;margin-bottom:3px"   
+                                          title="#{userData.userDDs['DELETE']}"  action="#{materialListMB.delete()}" 
+                                          >
+                            <f:setPropertyActionListener value="#{materials}" target="#{materialListMB.materialsDTO}" />
+                            <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

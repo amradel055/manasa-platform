@@ -1,0 +1,28 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.isag.businessservice;
+
+import com.isag.dto.TeacherAnswersDTO;
+import com.isag.entity.IgmaUser;
+import java.util.List;
+import javax.ejb.Remote;
+
+/**
+ *
+ * @author hq003
+ */
+@Remote
+public interface TeacherAnswersService {
+
+    public void save(TeacherAnswersDTO teacherAnswersDTO, IgmaUser isagUser);
+
+    public void delete(Integer id, IgmaUser igmaUser);
+
+    public List<TeacherAnswersDTO> findTeacherAnswersDTO(Integer branchId);
+    
+     public TeacherAnswersDTO findQuestioAnswer(Integer questionId)  ;
+
+}
