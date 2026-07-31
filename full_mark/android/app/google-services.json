@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "50949044641",
+    "project_id": "full-mark",
+    "storage_bucket": "full-mark.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:50949044641:android:62181d35f0d9f175aef3e0",
+        "android_client_info": {
+          "package_name": "com.doctorapp.igma.docapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "50949044641-f4kvm6rf1djhl7c066aor2f483ji9v2l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyqPLGSytw4LaxfbL-_kzuUz2cEkT7yx8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "50949044641-f4kvm6rf1djhl7c066aor2f483ji9v2l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "50949044641-q1u2089v7laf4hklmnaqoql3v5le2t9v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.igma.fullMark"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:50949044641:android:c7470dd562d10030aef3e0",
+        "android_client_info": {
+          "package_name": "com.igma.full_mark"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "50949044641-f4kvm6rf1djhl7c066aor2f483ji9v2l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyqPLGSytw4LaxfbL-_kzuUz2cEkT7yx8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "50949044641-f4kvm6rf1djhl7c066aor2f483ji9v2l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "50949044641-q1u2089v7laf4hklmnaqoql3v5le2t9v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.igma.fullMark"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
