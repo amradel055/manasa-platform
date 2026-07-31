@@ -1,0 +1,96 @@
+List governorateValuesList = [
+  'Alexandria',
+  'Aswan',
+  'Asyut',
+  'Red Sea',
+  'Beheira',
+  'Beni Suef',
+  'Cairo',
+  'Dakahlia',
+  'Damietta',
+  'Faiyum',
+  'Gharbia',
+  'Giza',
+  'Ismailia',
+  'South Sinai',
+  'Qalyubia',
+  'Kafr el-Sheikh',
+  'Qena',
+  'Luxor',
+  'Minya',
+  'Monufia',
+  'Matrouh',
+  'Port Said',
+  'Sohag',
+  'Al Sharqia',
+  'North Sinai',
+  'Suez',
+  'New Valley',
+];
+
+List governorateKeysList = [
+  'EGALX',
+  'EGASN',
+  'EGAST',
+  'EGBA',
+  'EGBH',
+  'EGBNS',
+  'EGC',
+  'EGDK',
+  'EGDT',
+  'EGFYM',
+  'EGGH',
+  'EGGZ',
+  'EGIS',
+  'EGJS',
+  'EGKB',
+  'EGKFS',
+  'EGKN',
+  'EGLX',
+  'EGMN',
+  'EGMNF',
+  'EGMT',
+  'EGPTS',
+  'EGSHG',
+  'EGSHR',
+  'EGSIN',
+  'EGSUZ',
+  'EGWAD',
+];
+
+List doctorsCategory = [
+  {
+    "doctorName" : "Dr Hossam AbuOmar",
+    "logo" : "assets/images/hossam.png" ,
+    "thumb" : "assets/images/hossamPic.jpeg" ,
+    "aboutAr" : "خريج كليه تجاره انجليزي جامعه كفرالشيخ \n دبلومه دراسات عليا في تحليل البيانات جامعه القاهره بتقدير عام امتياز \n خبره اكثر من ٧ سنوات في تدريس مواد الرياضه والاحصاء\n  في مرحله تحضير رساله الماجيستير في تحليل البيانات جامعه القاهره \n دبلومه في تعلم الاله باستخدام لغه البايثون من اكاديميه ماركوف للبيانات \n دراسه مناهج والطرق الكميه في شهاده cma " ,
+    "aboutEn" : "graduate from faculty of commerce English section kafrelsheikh University \n studied quantitative techniques in cma  \n diploma in machine learning with python from Markov data academy \n  preperation master of in data analysis  \n experience more than 7years in teaching mathematics and statistics \n postgraduate diploma in data analysis Cairo university with grade excellent " ,
+  },
+  {
+    "doctorName" : "Dr Amir",
+    "logo" : "assets/images/amir.png" ,
+    "thumb" : "assets/images/amirPic.jpeg" ,
+    "aboutAr" : "" ,
+    "aboutEn" : "" ,
+  },
+  {
+    "doctorName" : "Dr Amged AlShamy",
+    "logo" : "assets/images/Amged.png" ,
+    "thumb" : "assets/images/amgedPic.jpg" ,
+    "aboutAr" : " خريج كلية تجارة شعبة اللغه الانجليزية جامعة كفر الشيخ  \n يعمل كمدير مالي في مستشفى رعاية التخصصي   \n عمل كمحلل مالي في المجموعة المالية هيرمس  \n خبرة اكثر من ١٠ سنوات في تدريس مواد الادارة و الاقتصاد\n   دراسة برنامج الشهادة المهنية في التمويل بالجامعة الامريكية \n دراسة شهادة التحليل المالي المعتمد بالجامعة الامريكية" ,
+    "aboutEn" : "graduated from faculty of commerce english section Kafrelsheikh university \n studied CFA at AUC  \n studied “career certificate of Finance” at AUC \n  experience more than 10 years in teaching Business and Economics  \n  Worked as Financial Analyst at EFG Hermes \n Work as CFO at Reaya Hospital " ,
+  },
+  {
+    "doctorName" : "Dr Moataz El Haddad",
+    "logo" : "assets/images/moataz.png" ,
+    "thumb" : "assets/images/motoazPic.jpeg" ,
+    "aboutAr" : "دراسه الجزء الاول من شهاده CMA المهنيه\n خبره اكتر من ٦ سنوات بتدريس مواد المحاسبه لسنه رابعه (سنه البكالوريوس) \n خبره اكتر من ٧ سنوات كمراقب مالي بوزارة الماليه المصريه \n خريج كليه تجارة انجليزي جامعه كفرالشيخ دفعه ٢٠١٢ شعبه محاسبه بتقدير عام تراكمي امتياز مع مرتبة الشرف (ترتيب الرابع علي قسم محاسبه)" ,
+    "aboutEn" : "Graduated from Faculty of Commerce,English section Kafr El Sheikh University Class 2012 with GPA Excellent with honors (Ranking 4th of my department) \n Experience more than 7 years as a  Financial Controller at Egyptian Ministy of Finance  \n Experience  more than 6 years in teaching Accounting for the 4th grade (Bachelor Year) \n  Studied part one of CMA certificate " ,
+  },
+
+];
+
+
+enum examType { createExam  , popExam }
+enum answerSelection { selected  , unSelected }
+enum popExamType { chapter  , term }
