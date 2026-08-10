@@ -5,6 +5,7 @@ import React, {Component, createRef} from 'react';
 
 // Helper
 import {setCookie, checkCookie} from '../../Helper/Cookies';
+import { apiFetch, getCurrentUser } from '../../Helper/Api';
 
 // Components
 import Header from '../../components/Header/Header';
@@ -62,17 +63,8 @@ class AddNews extends Component {
 
     }
 
-    getTeacherId =async()  => {
-        var data =await JSON.parse(window.localStorage.getItem('currentTeacher'));
-        this.setState({teacherId : data["teacherId"]});
-        console.log({teacher : this.state.teacherId});
-        
-     };
-     
-
     componentDidMount () {
         document.title = properties.site_name + " | إضافة فترة جديدة";
-        this.getTeacherId();
         this.allNews();
         // this.getPeriods();
        // Redirect To Sign In Page If The User Is Already Logged Out & Remove The Data If It Exists
@@ -81,47 +73,26 @@ class AddNews extends Component {
             window.location.href = `/`;
         };
 
-        fetch(properties.api_path + "/lockup/levelList", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({branchId: this.state.branchID})
-        })
-        .then(res => {return res.json()})
+        apiFetch("/lookup/school-stages", { query: { branchId: this.state.branchID } })
         .then(grades => {
             this.setState({allGrades: grades});
         })
+        .catch(error => console.error('Error:', error));
 
         // Get Periods From API
-        
+
     }
     allNews = () => {
         var _this = this ;
        // Send the data to the server
-       var data =JSON.parse(window.localStorage.getItem('currentTeacher'));
-       fetch(properties.api_path + "/newrest/allNews",
-        {
-           method: "POST",
-           headers: {
-               'Accept': 'application/json',
-               'Content-Type': 'application/json; charset=utf-8',
-           },
-           body: JSON.stringify({
-               teacherId : data["teacherId"] ,
-               companyId: this.state.companyID,
-               branchId: this.state.branchID,
-           })
-       })
-       .then(res => {return res.json()})
+       apiFetch("/news", { query: { teacherUserId: getCurrentUser()?.userId } })
        .then(done => {
         this.setState({data : done});
-        
+
        })
        .catch(error => {
-           console.error('Error:', error) 
-           _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
+           console.error('Error:', error)
+           _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
        });
    };
     
@@ -129,86 +100,49 @@ class AddNews extends Component {
    edit = () => {
     var _this = this ;
    // Send the data to the server
-   var data =JSON.parse(window.localStorage.getItem('currentTeacher'));
-//    this.setState(
-//        {editableData : { ...this.state.editableData , companyId : this.state.companyID}}
-//    )
-   fetch(properties.api_path + "/newrest/saveNewss",
-        {
-       method: "POST",
-       headers: {
-           'Accept': 'application/json',
-           'Content-Type': 'application/json; charset=utf-8',
+   apiFetch(`/news/${this.state.editableData.id}`, {
+       method: "PUT",
+       body: {
+           type: this.state.editableData.newsType,
+           post: this.state.editableData.post,
+           img: this.state.editableData.img,
+           address: this.state.editableData.address,
+           schoolStageId: this.state.editableData.schoolStageId,
+           branchId: this.state.branchID,
        },
-       body: JSON.stringify(
-            {  
-               id : this.state.editableData.id ,
-               active : this.state.editableData.active ,
-               newsType: this.state.editableData.newsType,
-               post: this.state.editableData.post , 
-               img: this.state.editableData.img.split('/') , 
-               address: this.state.editableData.address , 
-               schoolStageId : this.state.editableData.schoolStageId  ,
-               teacherId : this.state.editableData.teacherId ,
-               companyId: this.state.companyID,
-               branchId: this.state.branchID,
-            }
-            )
    })
-   .then(res => {return res.json()})
-   .then(done => {
-      
-      if (done.msgType === "success") {
-       _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: done.msg});
+   .then(() => {
+       _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: 'تم التعديل بنجاح'});
        this.allNews();
-       this.setState({visible :     false});
-       } else {
-           _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: done.msg});
-      }
+       this.setState({visible: false});
    })
    .catch(error => {
-       console.error('Error:', error) 
-       _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
+       console.error('Error:', error)
+       _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
    });
 };
 
      addNews = () => {
         var _this = this ;
        // Send the data to the server
-       var data =JSON.parse(window.localStorage.getItem('currentTeacher'));
-       fetch(properties.api_path + "/newrest/saveNewss",
-        {
+       apiFetch("/news", {
            method: "POST",
-           headers: {
-               'Accept': 'application/json',
-               'Content-Type': 'application/json; charset=utf-8',
-           },
-           body: JSON.stringify({
-               active : this.state.active ,
-               newsType:    this.state.type,
-               post:    this.state.post , 
-               img:     this.state.formContent.thumb.split('/') , 
-               address: this.state.address , 
-               schoolStageId : this.state.schoolStageId  ,
-               teacherId : data["teacherId"] ,
-               companyId: this.state.companyID,
+           body: {
+               type: this.state.type,
+               post: this.state.post,
+               img: this.state.formContent.thumb,
+               address: this.state.address,
+               schoolStageId: this.state.schoolStageId,
                branchId: this.state.branchID,
-           })
+           },
        })
-       .then(res => {return res.json()})
-       .then(done => {
-          
-          if (done.msgType === "success") {
-           _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: done.msg});
-           // this.getPeriods();
+       .then(() => {
+           _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: 'تمت إضافة الخبر بنجاح'});
            this.allNews();
-           } else {
-               _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: done.msg});
-          }
        })
        .catch(error => {
-           console.error('Error:', error) 
-           _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
+           console.error('Error:', error)
+           _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
        });
    };
 
@@ -245,24 +179,10 @@ class AddNews extends Component {
         var deletePeriod = (e) => {
             var _this = this;
             // Send the data to the server
-            fetch(properties.api_path + "/newrest/deleteNews", {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json; charset=utf-8',
-                },
-                body: JSON.stringify({
-                    id: e.id , 
-                })
-            })
-            .then(res => {return res.json()})
-            .then(done => {
-               if (done.msgType === "success") {
-                    _this.allNews();
-                   _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: done.msg});
-                } else {
-                   _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: done.msg});
-               }
+            apiFetch(`/news/${e.id}`, { method: "DELETE" })
+            .then(() => {
+                _this.allNews();
+                _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: 'تم الحذف بنجاح'});
             })
             .catch(error => {
                 console.error('Error:', error)
@@ -272,7 +192,7 @@ class AddNews extends Component {
                    buttonColor: ""
                });
 
-               _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
+               _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
             });
         };
 
@@ -347,41 +267,6 @@ class AddNews extends Component {
                     <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => deletePeriod(rowData)} />
                 </React.Fragment>
             );
-        }
-
-        const edit =(id) => {
-            var _this = this ;
-            // Send the data to the server
-            fetch(properties.api_path + "/periods/savePeriods", {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json; charset=utf-8',
-                },
-                body: JSON.stringify({
-                    id: id,
-                    branchId : this.state.branchID ,
-                    companyId: this.state.companyID,
-                    name: this.state.userInput , 
-                    teacherId: this.state.teacherId , 
-                    parent: this.state.selectedPeriod
-                })
-            })
-            .then(res => {return res.json()})
-            .then(done => {
-               
-               if (done.msgType === "success") {
-                _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: done.msg});
-                this.getPeriods();
-                this.setState({visible : false});
-                } else {
-                    _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: done.msg});
-               }
-            })
-            .catch(error => {
-                console.error('Error:', error) 
-                _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
-            });
         }
 
         return (

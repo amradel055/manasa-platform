@@ -18,7 +18,7 @@ class LocalDatabase with ChangeNotifier {
   version: 1 ,
   onCreate: (database , version){
   print("database created");
-  database.execute("CREATE TABLE studentSchedule (id INTEGER PRIMARY KEY , teacherId INTEGER , schoolStageId INTEGER , day INTEGER , time VARCHAR , materialId INTEGER , teacherName VARCHAR)")
+  database.execute("CREATE TABLE studentSchedule (id INTEGER PRIMARY KEY , teacherId VARCHAR , schoolStageId INTEGER , day INTEGER , time VARCHAR , materialId INTEGER , teacherName VARCHAR)")
       .then((value){
 
   print("studentSchedule table created");
@@ -42,11 +42,11 @@ class LocalDatabase with ChangeNotifier {
   }
 
 
-  void insertToDatabase(String tableName , {int? teacherId  , int? schoolStageId  ,
+  void insertToDatabase(String tableName , {String? teacherId  , int? schoolStageId  ,
   int? day  , String? time  , int? materialId , String? teacherName}){
   if(tableName == "studentSchedule"){
   localDatabase!.transaction((txn){
-  return txn.rawInsert("INSERT INTO $tableName (teacherId, schoolStageId, day, time, materialId , teacherName) VALUES($teacherId , $schoolStageId , $day , '$time' , $materialId , '$teacherName')").then((value){
+  return txn.rawInsert("INSERT INTO $tableName (teacherId, schoolStageId, day, time, materialId , teacherName) VALUES('$teacherId' , $schoolStageId , $day , '$time' , $materialId , '$teacherName')").then((value){
   print("$value insert to $tableName table done");
   }).catchError((error){
   print("$error when insert to $tableName table");

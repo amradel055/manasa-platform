@@ -6,7 +6,8 @@ class HomeProvider with ChangeNotifier {
   List<TeacherModel> teachers = [];
   bool isLoading = true;
   String? error;
-  late int selectedTeacherId;
+  // Teachers are now identified by a user_service UUID, not a legacy int id.
+  late String selectedTeacherId;
 
   getTeachers() {
     if(isLoading == false) {

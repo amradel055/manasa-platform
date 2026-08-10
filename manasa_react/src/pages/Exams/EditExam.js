@@ -6,6 +6,7 @@ import './Exams.scss';
 
 // Helper
 import {setCookie, checkCookie} from '../../Helper/Cookies';
+import { apiFetch } from '../../Helper/Api';
 
 // Components
 import Header from '../../components/Header/Header';
@@ -93,124 +94,29 @@ class EditExam extends Component {
           },
     }
     getMaterialByStage(stageId){
-        var data =JSON.parse(window.localStorage.getItem('currentTeacher'));
-        fetch(properties.api_path + "/lockup/materialListbystage", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                id: stageId
-            })
-        })
-        .then(res => {return res.json()})
-        .then(grades => {
-            console.log(grades);
+        apiFetch("/lookup/materials/by-stage", { query: { stageId } })
+          .then(grades => {
             this.setState({getMaterialsList : grades});
-        })
+          })
+          .catch(error => console.error('Error:', error));
      }
      getPeriod(materialId) {
-        fetch(properties.api_path + "/periods/findPeriod", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-          
-            materialId: materialId
-          }),
-        })
-          .then((res) => {
-            return res.json();
-          })
+        apiFetch("/periods/by-material", { query: { materialId } })
           .then((grades) => {
-            console.log(grades);
             this.setState({ getPeriods: grades });
-          });
+          })
+          .catch((error) => console.error("Error:", error));
       }
-    
+
       getLessonsByStage = (schoolStagesId,materialId , periodId) => {
         // Get Lessons From API
-        var _data = JSON.parse(window.localStorage.getItem("currentTeacher"));
-        fetch(properties.api_path + "/lesson/teacherLessonList", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            branchId: this.state.branchID,
-            companyId: this.state.companyID,
-            materialId: materialId,
-            schoolStagesId: schoolStagesId,
-            schoolId: schoolStagesId,
-            periodId: periodId,
-            teacherId: _data["teacherId"],
-          }),
-        })
-          .then((res) => {
-            return res.json();
-          })
+        apiFetch("/lessons", { query: { materialId, schoolStageId: schoolStagesId, id: periodId } })
           .then((fetchLessons) => {
             this.setState({ getLessons: fetchLessons });
-          });
+          })
+          .catch((error) => console.error("Error:", error));
       };
 
-    deleteAnswer = (id) => {
-        var _this = this;
-
-        // Confirm Deletion
-        var con = window.confirm("هل أنت متأكد من أنك تريد حذف هذا العنصر");
-
-        if (con) {
-            // Delete Subscription By ID
-            fetch(properties.api_path + "/exams/deleteAnswer", {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    id: id
-                })
-            })
-            .then(res => {return res.json()})
-            .then(done => {
-                this.setState({resend: true});
-                _this.toast.current.show({severity: 'success', summary: 'تمت العملية', detail: 'تم حذف الإجابة'});
-            });
-        }
-    }
-    
-    deleteQuestion = (id) => {
-        var _this = this;
-
-        // Confirm Deletion
-        var con = window.confirm("هل أنت متأكد من أنك تريد حذف هذا العنصر");
-
-        if (con) {
-            // Delete Subscription By ID
-            fetch(properties.api_path + "/exams/deleteQuestion", {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    id: id
-                })
-            })
-            .then(res => {return res.json()}).catch( (e)=>
-            _this.toast.current.show({severity: 'error', summary: 'خطأ في  العملية', detail: 'تم حذف السؤال'}))
-            .then(done => {
-                this.setState({resend: true});
-                _this.toast.current.show({severity: 'success', summary: 'تمت العملية', detail: 'تم حذف السؤال'});
-            });
-        }
-    }
-    
     componentDidMount () {
         var _this = this;
 
@@ -223,60 +129,40 @@ class EditExam extends Component {
         }
 
         // Get Grades From API
-        fetch(properties.api_path + "/lockup/levelList", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                branchId: this.state.branchID
-            })
-        })
-        .then(res => {return res.json()})
+        apiFetch("/lookup/school-stages", { query: { branchId: this.state.branchID } })
         .then(grades => {
             this.setState({getSchoolStages: grades});
-         
         })
+        .catch(error => console.error('Error:', error));
 
         // Get Exam From API
-        fetch(properties.api_path + "/exams/findExams", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                id: this.state.examID
-            })
-        })
-        .then(res => {return res.json()})
+        apiFetch(`/exams/${this.state.examID}`)
         .then(fetchExam => {
             var temp = [];
-            
-            for (var q = 0; q < fetchExam.questionsList.length; q++) {
+
+            for (var q = 0; q < fetchExam.questions.length; q++) {
                 var getAnswers = [];
 
-                for (var a = 0; a < fetchExam.questionsList[q].answersdtoList.length; a++) {
+                for (var a = 0; a < fetchExam.questions[q].answers.length; a++) {
                     getAnswers.push({
-                        answerID: fetchExam.questionsList[q].answersdtoList[a].id,
-                        id: fetchExam.questionsList[q].answersdtoList[a].id,
-                        correct: fetchExam.questionsList[q].answersdtoList[a].correct,
-                        note: fetchExam.questionsList[q].answersdtoList[a].reason,
-                        text: fetchExam.questionsList[q].answersdtoList[a].answer,
-                        parent: fetchExam.questionsList[q].answersdtoList[a].questionId,
-                        answerImage:fetchExam.questionsList[q].answersdtoList[a].img
+                        answerID: fetchExam.questions[q].answers[a].id,
+                        id: fetchExam.questions[q].answers[a].id,
+                        correct: fetchExam.questions[q].answers[a].correct ? 1 : 0,
+                        note: fetchExam.questions[q].answers[a].reason,
+                        text: fetchExam.questions[q].answers[a].answer,
+                        parent: fetchExam.questions[q].id,
+                        answerImage:fetchExam.questions[q].answers[a].img
                     });
                 }
 
                 temp.push(
                     {
-                        id: fetchExam.questionsList[q].id,
-                        qID: fetchExam.questionsList[q].id,
-                        question: fetchExam.questionsList[q].questionName,
-                        type: fetchExam.questionsList[q].questionType,
-                        score: fetchExam.questionsList[q].questionDegree,
-                        questionImage:fetchExam.questionsList[q].img,
+                        id: fetchExam.questions[q].id,
+                        qID: fetchExam.questions[q].id,
+                        question: fetchExam.questions[q].questionName,
+                        type: fetchExam.questions[q].questionType,
+                        score: fetchExam.questions[q].questionDegree,
+                        questionImage:fetchExam.questions[q].img,
                         answers: getAnswers
                     }
                 );
@@ -294,15 +180,15 @@ class EditExam extends Component {
                 selectedMaterial: (fetchExam.materialId) ? fetchExam.materialId : null,
                 selectedPeriod: (fetchExam.periodId) ? fetchExam.periodId : null,
                 selectedType: fetchExam.examType,
-                getAnswers: (fetchExam.questionsList.length) ? fetchExam.questionsList[0].id : 1,
+                getAnswers: (fetchExam.questions.length) ? fetchExam.questions[0].id : 1,
                 questions: (temp.length) ? temp : this.state.questions,
-               
+
             });
         })
         .catch(error => {
             console.error('Error:', error)
 
-            _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
+            _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
         });
     }
     
@@ -400,18 +286,17 @@ class EditExam extends Component {
                     </div>
                 </div>
                 <div className="p-col-12 p-md-2 p-p-2">
-                    <Button icon="pi pi-trash" className="p-button-danger p-button-rounded" 
-                    
-                    
+                    <Button icon="pi pi-trash" className="p-button-danger p-button-rounded"
+
+
                     onClick={() => {
-                        this.deleteAnswer(answer.id);
                         var temp = this.state.questions;
                         temp[getQuestionIndex].answers.splice(i, 1);
 
                         this.setState({
                             questions: temp
                         })
- 
+
                     }} />
                 </div>
                 <div className="p-col-12 p-md-12">
@@ -508,8 +393,6 @@ class EditExam extends Component {
                     <Button icon="pi pi-trash" className="p-button-danger p-button-rounded"
                    disabled={this.state.questions.answers==[]}
                     onClick={() => {
-                        this.deleteQuestion(qn.id);
-
                         var temp = this.state.questions;
                         temp.splice(index, 1);
 
@@ -604,17 +487,14 @@ class EditExam extends Component {
             });
 
             var finalQuestionsForm = [];
- 
+
             for (var q = 0; q < this.state.questions.length; q++) {
                 var finalAnswers = [];
 
                 for (var a = 0; a < this.state.questions[q].answers.length; a++) {
                     finalAnswers.push({
-                        companyId: this.state.companyID,
-                        branchId: this.state.branchID,
-                        id: this.state.questions[q].answers[a].id,
                         answer: this.state.questions[q].answers[a].text,
-                        correct: this.state.questions[q].answers[a].correct,
+                        correct: this.state.questions[q].answers[a].correct === 1,
                         reason: this.state.questions[q].answers[a].note,
                         img: this.state.questions[q].answers[a].answerImage
                     });
@@ -622,72 +502,50 @@ class EditExam extends Component {
 
                 finalQuestionsForm.push(
                     {
-                        companyId: this.state.companyID,
-                        branchId: this.state.branchID,
-                        id: this.state.questions[q].qID,
                         questionName: this.state.questions[q].question,
                         questionType: this.state.questions[q].type,
                         questionDegree: this.state.questions[q].score,
                         img: this.state.questions[q].questionImage,
-                        answersdtoList: finalAnswers
+                        answers: finalAnswers
                     }
                 );
             }
 
-            // console.log(finalQuestionsForm);
-
             // Send the data to the server
-            var _data =JSON.parse(window.localStorage.getItem('currentTeacher'));
-            fetch(properties.api_path + "/exams/saveExams", {
-                
-
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json; charset=utf-8',
-                },
-                body: JSON.stringify({
-                    companyId: this.state.companyID,
-                    branchId: this.state.branchID,
+            apiFetch(`/exams/${this.state.examID}`, {
+                method: "PUT",
+                body: {
                     examName: this.state.examName,
                     degree: total,
-                    id: this.state.examID,
                     active: this.state.selectedStatus,
                     schoolStagesId: this.state.selectedStage,
                     lessonId: this.state.selectedLesson,
                     monthId: this.state.selectedMonth,
-                    timer:this.state.timer,
-                    // Questions
-                    questionsList: finalQuestionsForm,
-                    materialId:this.state.selectedMaterial,
-                    periodId:this.state.selectedPeriod,
-                    examType:this.state.selectedType,
-                    teacherId:_data["teacherId"]   
-
-                })
+                    timer: this.state.timer,
+                    periodId: this.state.selectedPeriod,
+                    examType: this.state.selectedType,
+                    branchId: this.state.branchID,
+                    materialId: this.state.selectedMaterial,
+                    questions: finalQuestionsForm,
+                },
             })
-            .then(res => {return res.json()})
-            .then(done => {
+            .then(() => {
                _this.setState({
-                   buttonText: "إضافة الإمتحان",
+                   buttonText: "حفظ التعديلات",
                    buttonColor: "",
                });
 
-               if (done.msgType === "success") {
-                   _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: done.msg});
-                } else {
-                   _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: done.msg});
-               }
+               _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: 'تم حفظ التعديلات بنجاح'});
             })
             .catch(error => {
                 console.error('Error:', error)
 
                 _this.setState({
-                   buttonText: "تعديل الإمتحان",
+                   buttonText: "حفظ التعديلات",
                    buttonColor: ""
                });
 
-               _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
+               _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
             });
         }
 

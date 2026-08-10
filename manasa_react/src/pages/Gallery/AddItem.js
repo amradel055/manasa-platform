@@ -6,6 +6,7 @@ import 'primeflex/primeflex.css';
 
 // Helper
 import {setCookie, checkCookie} from '../../Helper/Cookies';
+import { apiFetch } from '../../Helper/Api';
 
 // Components
 import Header from '../../components/Header/Header';
@@ -32,7 +33,6 @@ class AddItem extends Component {
         // Lesson Data
         formContent: {
             branchId: properties.branch_id,
-            companyId: properties.company_id,
             mediaType: 0,
             mediaLink: null,
             thumb: null
@@ -83,26 +83,22 @@ class AddItem extends Component {
             });
 
             // Send the data to the server
-            fetch(properties.api_path + "/media/saveMedia", {
+            apiFetch("/media", {
                 method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json; charset=utf-8',
-                },
-                body: JSON.stringify(this.state.formContent)
+                body: {
+                    mediaLink: this.state.formContent.mediaLink,
+                    mediaType: this.state.formContent.mediaType,
+                    thumb: this.state.formContent.thumb,
+                    branchId: this.state.formContent.branchId
+                }
             })
-            .then(res => {return res.json()})
-            .then(done => {
+            .then(() => {
                _this.setState({
                    buttonText: "إضافة صورة/فيديو",
                    buttonColor: ""
                });
 
-               if (done.msgType === "success") {
-                   _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: done.msg});
-                } else {
-                   _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: done.msg});
-               }
+               _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: 'تمت إضافة الصورة/الفيديو بنجاح'});
             })
             .catch(error => {
                 console.error('Error:', error)
@@ -112,7 +108,7 @@ class AddItem extends Component {
                    buttonColor: ""
                });
 
-               _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
+               _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
             });
         }
 

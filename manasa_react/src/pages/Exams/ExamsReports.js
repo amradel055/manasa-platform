@@ -5,6 +5,7 @@ import './Exams.scss';
 
 // Helper
 import {setCookie, checkCookie} from '../../Helper/Cookies';
+import { apiFetch } from '../../Helper/Api';
 
 // Components
 import Header from '../../components/Header/Header';
@@ -31,7 +32,6 @@ class ExamsReports extends Component {
         // Teacher Identifier
         branchID: properties.branch_id,
         companyID: properties.company_id,
-        teacherId: null ,
         selectedExam : null ,
         examStudentNumber : 0 ,
         // Data
@@ -44,19 +44,8 @@ class ExamsReports extends Component {
 
     getExams = () => {
         var _this = this;
-        var data = JSON.parse(window.localStorage.getItem('currentTeacher'));
         // Get Exams From API
-        fetch(properties.api_path + "/exams/findExamsForAdmin", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-            teacherId :data["teacherId"] ,
-            })
-        })
-        .then(res => {return res.json()})
+        apiFetch("/exams")
         .then(fetchExams => {
             this.setState({
                 allExams: fetchExams
@@ -65,7 +54,7 @@ class ExamsReports extends Component {
         .catch(error => {
             console.error('Error:', error)
 
-            _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
+            _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
         });
     }
 
@@ -77,80 +66,36 @@ class ExamsReports extends Component {
 
         if (con) {
             // Delete Subscription By ID
-            fetch(properties.api_path + "/exams/deleteExams", {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    id: id
-                })
-            })
-            .then(res => {return res.json()})
-            .then(deleteMediaByID => {
+            apiFetch(`/exams/${id}`, { method: "DELETE" })
+            .then(() => {
                 this.setState({resend: true});
                 _this.toast.current.show({severity: 'success', summary: 'تمت العملية', detail: 'تم الحذف بنجاح'});
+            })
+            .catch(error => {
+                console.error('Error:', error)
+                _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
             });
         }
     }
-    getTeacherId =async()  => {
-        var data =await JSON.parse(window.localStorage.getItem('currentTeacher'));
-        this.setState({teacherId : data["teacherId"]});
-        
-     };
 
      getData = (examId) => {
-
-        fetch(properties.api_path + "/manasaReportRest/examStudentNumber", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                id: examId
-            })
+        // Single report endpoint replaces the old examStudentNumber /
+        // examStudentbestNumbers / mostMistakes trio. It only returns
+        // attemptCount + a best-students list of {attemptId, studentProfileId,
+        // score} -- there's no studentName/schoolStagesName/lessonName/degree/
+        // solutionTime, and no "most mistakes" data at all in the new API.
+        apiFetch(`/exams/${examId}/report`)
+        .then(report => {
+            this.setState({
+                examStudentNumber: report.attemptCount,
+                data: report.bestStudents,
+            });
         })
-        .then(res => {return res.json()})
-        .then(exams => {
-            console.log(exams[0].periodId);
-           this.setState({examStudentNumber : exams[0].periodId})
-        });
-
-        fetch(properties.api_path + "/manasaReportRest/examStudentbestNumbers", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                id: examId
-            })
-        })
-        .then(res => {return res.json()})
-        .then(exams => {
-           this.setState({data : exams})
-        });
-        fetch(properties.api_path + "/manasaReportRest/mostMistakes", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                id: examId
-            })
-        })
-        .then(res => {return res.json()})
-        .then(exams => {
-           this.setState({mistakesData : exams})
-        });
+        .catch(error => console.error('Error:', error));
      }
-    
+
     componentDidMount () {
         document.title = properties.site_name + " | تقارير الإمتحانات";
-        this.getTeacherId();
         // Redirect To Sign In Page If The User Is Already Logged Out & Remove The Data If It Exists
         if (!checkCookie('name')) {
             window.localStorage.removeItem('currentTeacher');
@@ -222,11 +167,7 @@ class ExamsReports extends Component {
                         <div className="card">
                             <Card title={<> عدد الطلبه اللذين أدو الامتحان  : {this.state.examStudentNumber} </>}>
                                 <DataTable header={header} sortable globalFilter={this.state.globalFilter} className="p-datatable-responsive-demo p-datatable-gridlines p-datatable-striped" value={this.state.data} paginator rows={10} rowsPerPageOptions={[10,20,50]} currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"  emptyMessage="لا يوجد بيانات">
-                                    <Column  field="studentName" header="إسم الطالب"></Column>
-                                    <Column  field="schoolStagesName" header="المرحلة الدراسية"></Column>
-                                    <Column  field="lessonName" header="الدرس"></Column>
-                                    <Column  field="degree" header="درجه الامتحان"></Column>
-                                    <Column sortable field="solutionTime" header=" وقت الحل"></Column>
+                                    <Column  field="studentProfileId" header="رقم الطالب"></Column>
                                     <Column sortable field="score" header="درجه الطالب"></Column>
                                 </DataTable>
                             </Card>

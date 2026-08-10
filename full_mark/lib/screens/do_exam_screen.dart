@@ -314,28 +314,9 @@ class _DoExamState extends State<DoExam> {
   }
 
  Future saveExam(Exam exam) async {
-    for(int i = 0 ; i < exam.questionsList!.length ; i++){
-      setState(() {
-        exam.questionsList![i].parent = exam.questionsList![i].id ;
-        exam.questionsList![i].id = null ;
-        exam.solutionTime = widget.exam.timer!= null ? (widget.exam.timer! - timerPerMin!) : 0;
-      });
-      for(Answer answer in  exam.questionsList![i].answersdtoList!){
-        if(answer.selected == answerSelection.selected){
-          setState(() {
-            answer.selection = 1 ;
-            answer.parent = answer.id;
-            answer.id = null ;
-          });
-        } else {
-          setState(() {
-            answer.selection = 0 ;
-            answer.parent = answer.id;
-            answer.id = null ;
-          });
-        }
-      }
-    }
+    setState(() {
+      exam.solutionTime = widget.exam.timer!= null ? (widget.exam.timer! - timerPerMin!) : 0;
+    });
     context.read<DataHandler>().saveExam(exam, context);
     setState(() {
       timer.cancel();

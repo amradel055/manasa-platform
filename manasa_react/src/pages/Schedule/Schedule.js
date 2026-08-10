@@ -2,6 +2,7 @@ import React, { Component, createRef } from "react";
 
 // Helper
 import { setCookie, checkCookie } from "../../Helper/Cookies";
+import { apiFetch } from "../../Helper/Api";
 
 // Components
 import Header from "../../components/Header/Header";
@@ -66,34 +67,15 @@ class Schedule extends Component {
     selectedDate4: null,
   };
 
-  getTeacherId = async () => {
-    var data = await JSON.parse(window.localStorage.getItem("currentTeacher"));
-    this.setState({ teacherId: data["teacherId"] });
-    console.log({ teacher: this.state.teacherId });
-  };
-
   getMaterial = () => {
-    // Get Periods From API
-    var data = JSON.parse(window.localStorage.getItem("currentTeacher"));
-    fetch(properties.api_path + "/lessonlocation/lessonlocationList", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        // teacherId : data["teacherId"],
-        branchId: this.state.branchID,
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
+    // Get Lesson Locations From API
+    apiFetch("/lookup/lesson-locations", { query: { branchId: this.state.branchID } })
       .then((fetchMaterials) => {
         this.setState({
           getMaterialsList: fetchMaterials,
         });
-      });
+      })
+      .catch((error) => console.error("Error:", error));
   };
 
   componentDidMount() {
@@ -109,20 +91,11 @@ class Schedule extends Component {
 
     this.getMaterial();
 
-    fetch(properties.api_path + "/lockup/levelList", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ branchId: this.state.branchID }),
-    })
-      .then((res) => {
-        return res.json();
-      })
+    apiFetch("/lookup/school-stages", { query: { branchId: this.state.branchID } })
       .then((grades) => {
         this.setState({ allGrades: grades });
-      });
+      })
+      .catch((error) => console.error("Error:", error));
 
     // Get Periods From API
   }
@@ -130,22 +103,7 @@ class Schedule extends Component {
   allAppoinments = () => {
     var _this = this;
     // Send the data to the server
-    var data = JSON.parse(window.localStorage.getItem("currentTeacher"));
-    fetch(properties.api_path + "/appointments/allAppointments", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json; charset=utf-8",
-      },
-      body: JSON.stringify({
-        teacherId: data["teacherId"],
-        companyId: this.state.companyID,
-        branchId: this.state.branchID,
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
+    apiFetch("/appointments")
       .then((done) => {
         for (var i = 0; i < done.length; i++) {
           done[i].time =
@@ -172,7 +130,7 @@ class Schedule extends Component {
         _this.toast.current.show({
           severity: "error",
           summary: "لم تتم العملية",
-          detail: "خطأ في الإتصال",
+          detail: error.message || "خطأ في الإتصال",
         });
       });
   };
@@ -180,19 +138,10 @@ class Schedule extends Component {
   edit = () => {
     var _this = this;
     // Send the data to the server
-    var data = JSON.parse(window.localStorage.getItem("currentTeacher"));
-    //    this.setState(
-    //        {editableData : { ...this.state.editableData , companyId : this.state.companyID}}
-    //    )
-    fetch(properties.api_path + "/appointments/saveAppointments", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json; charset=utf-8",
-      },
-      body: JSON.stringify({
-        id: this.state.editableData.id,
-        appointmentType: this.state.editableData.appointmentType,
+    apiFetch(`/appointments/${this.state.editableData.id}`, {
+      method: "PUT",
+      body: {
+        appointmentsType: this.state.editableData.appointmentType,
         day: this.state.editableData.day,
         time: this.state.editableData.time,
         time2: this.state.editableData.time2,
@@ -200,38 +149,25 @@ class Schedule extends Component {
         time4: this.state.editableData.time4,
         lessonLocationId: this.state.editableData.materialsId,
         schoolStageId: this.state.editableData.schoolStageId,
-        teacherId: data["teacherId"],
-        companyId: this.state.companyID,
         branchId: this.state.branchID,
         remarks: this.state.notes,
-      }),
+      },
     })
-      .then((res) => {
-        return res.json();
-      })
-      .then((done) => {
-        if (done.msgType === "success") {
-          _this.toast.current.show({
-            severity: "success",
-            summary: "تم بنجاح",
-            detail: done.msg,
-          });
-          this.allAppoinments();
-          this.setState({ visible: false });
-        } else {
-          _this.toast.current.show({
-            severity: "error",
-            summary: "لم تتم العملية",
-            detail: done.msg,
-          });
-        }
+      .then(() => {
+        _this.toast.current.show({
+          severity: "success",
+          summary: "تم بنجاح",
+          detail: "تم التعديل بنجاح",
+        });
+        this.allAppoinments();
+        this.setState({ visible: false });
       })
       .catch((error) => {
         console.error("Error:", error);
         _this.toast.current.show({
           severity: "error",
           summary: "لم تتم العملية",
-          detail: "خطأ في الإتصال",
+          detail: error.message || "خطأ في الإتصال",
         });
       });
   };
@@ -239,16 +175,9 @@ class Schedule extends Component {
   addSchedule = () => {
     var _this = this;
     // Send the data to the server
-
-    var data = JSON.parse(window.localStorage.getItem("currentTeacher"));
-
-    fetch(properties.api_path + "/appointments/saveAppointments", {
+    apiFetch("/appointments", {
       method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json; charset=utf-8",
-      },
-      body: JSON.stringify({
+      body: {
         appointmentsType: this.state.type,
         lessonLocationId: this.state.selectedMaterial,
         schoolStageId: this.state.schoolStageId,
@@ -257,38 +186,24 @@ class Schedule extends Component {
         time2: this.state.date2,
         time3: this.state.date3,
         time4: this.state.date4,
-        teacherId: data["teacherId"],
-        companyId: this.state.companyID,
         branchId: this.state.branchID,
         remarks: this.state.notes,
-      }),
+      },
     })
-      .then((res) => {
-        return res.json();
-      })
-      .then((done) => {
-        if (done.msgType === "success") {
-          _this.toast.current.show({
-            severity: "success",
-            summary: "تم بنجاح",
-            detail: done.msg,
-          });
-          // this.getPeriods();
-          this.allAppoinments();
-        } else {
-          _this.toast.current.show({
-            severity: "error",
-            summary: "لم تتم العملية",
-            detail: done.msg,
-          });
-        }
+      .then(() => {
+        _this.toast.current.show({
+          severity: "success",
+          summary: "تم بنجاح",
+          detail: "تمت إضافة الميعاد بنجاح",
+        });
+        this.allAppoinments();
       })
       .catch((error) => {
         console.error("Error:", error);
         _this.toast.current.show({
           severity: "error",
           summary: "لم تتم العملية",
-          detail: "خطأ في الإتصال",
+          detail: error.message || "خطأ في الإتصال",
         });
       });
   };
@@ -327,34 +242,14 @@ class Schedule extends Component {
     var deletePeriod = (e) => {
       var _this = this;
       // Send the data to the server
-      fetch(properties.api_path + "/appointments/deleteAppointments", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json; charset=utf-8",
-        },
-        body: JSON.stringify({
-          id: e.id,
-        }),
-      })
-        .then((res) => {
-          return res.json();
-        })
-        .then((done) => {
-          if (done.msgType === "success") {
-            _this.allAppoinments();
-            _this.toast.current.show({
-              severity: "success",
-              summary: "تم بنجاح",
-              detail: done.msg,
-            });
-          } else {
-            _this.toast.current.show({
-              severity: "error",
-              summary: "لم تتم العملية",
-              detail: done.msg,
-            });
-          }
+      apiFetch(`/appointments/${e.id}`, { method: "DELETE" })
+        .then(() => {
+          _this.allAppoinments();
+          _this.toast.current.show({
+            severity: "success",
+            summary: "تم بنجاح",
+            detail: "تم الحذف بنجاح",
+          });
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -367,7 +262,7 @@ class Schedule extends Component {
           _this.toast.current.show({
             severity: "error",
             summary: "لم تتم العملية",
-            detail: "خطأ في الإتصال",
+            detail: error.message || "خطأ في الإتصال",
           });
         });
     };

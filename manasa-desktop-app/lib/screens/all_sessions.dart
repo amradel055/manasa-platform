@@ -27,7 +27,7 @@ class AllSession extends StatefulWidget {
 
 class _AllSessionState extends State<AllSession> with TickerProviderStateMixin  {
 
-   int? selectedDoctorId ;
+   String? selectedDoctorId ;
   late List subjects ;
   final List _subjects = [];
   var subjectsDropValue;

@@ -5,6 +5,7 @@ import './Exams.scss';
 
 // Helper
 import {setCookie, checkCookie} from '../../Helper/Cookies';
+import { apiFetch, getCurrentUser } from '../../Helper/Api';
 
 // Components
 import Header from '../../components/Header/Header';
@@ -44,26 +45,15 @@ class AllInbox extends Component {
         resend: false
     }
 
+    // NOTE: the legacy call also filtered by schoolId (schoolStagesId), but
+    // GET /api/manasa/messages only accepts materialId and readDone -- there
+    // is no school-stage filter on the messages endpoint. The school-stage
+    // dropdown below is left in the UI (still drives the materials dropdown)
+    // but no longer narrows this particular list.
     getInbox = (selectedSchoolStages,materialId,selectedType) => {
         var _this = this;
-        var data = JSON.parse(window.localStorage.getItem('currentTeacher'));
-        // Get Exams From API
-        fetch(properties.api_path + "/inboxmessage/findmessages", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-            teacherId :data["teacherId"] ,
-            schoolId:selectedSchoolStages,
-            materialId:materialId,
-            readDone:selectedType
-
-          
-            })
-        })
-        .then(res => {return res.json()})
+        // Get Messages From API
+        apiFetch("/messages", { query: { materialId, readDone: selectedType } })
         .then(fetchExams => {
             this.setState({
                 data: fetchExams
@@ -72,7 +62,7 @@ class AllInbox extends Component {
         .catch(error => {
             console.error('Error:', error)
 
-            _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
+            _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
         });
     }
 
@@ -83,69 +73,34 @@ class AllInbox extends Component {
         var con = window.confirm("هل أنت متأكد من أنك تريد حذف هذا العنصر");
 
         if (con) {
-            // Delete Subscription By ID
-            fetch(properties.api_path + "/commonquestions/deleteanswer", {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    id: id
-                })
-            })
-            .then(res => {return res.json()})
-            .then(deleteMediaByID => {
+            // Delete Message By ID
+            apiFetch(`/messages/${id}`, { method: "DELETE" })
+            .then(() => {
                 this.setState({resend: true});
                 _this.toast.current.show({severity: 'success', summary: 'تمت العملية', detail: 'تم الحذف بنجاح'});
+            })
+            .catch(error => {
+                console.error('Error:', error)
+                _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
             });
         }
     }
-    getTeacherId =async()  => {
-        var data =await JSON.parse(window.localStorage.getItem('currentTeacher'));
-        this.setState({teacherId : data["teacherId"]});
-        
-     };
      getSchoolStages(){
-        var data =JSON.parse(window.localStorage.getItem('currentTeacher'));
-        fetch(properties.api_path + "/lockup/schoolStagesGuideByTeacher", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                teacherId: data["teacherId"]
-            })
-        })
-        .then(res => {return res.json()})
+        apiFetch("/lookup/school-stages/by-teacher", { query: { teacherUserId: getCurrentUser()?.userId } })
         .then(grades => {
-            console.log(grades);
-       
             this.setState({getSchoolStages : grades});
         })
+        .catch(error => console.error('Error:', error));
      }
      getMaterialByStage(stageId){
-        var data =JSON.parse(window.localStorage.getItem('currentTeacher'));
-        fetch(properties.api_path + "/lockup/materialListbystage", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                id: stageId
-            })
-        })
-        .then(res => {return res.json()})
+        apiFetch("/lookup/materials/by-stage", { query: { stageId } })
         .then(grades => {
-            console.log(grades);
             this.setState({materialList : grades});
         })
+        .catch(error => console.error('Error:', error));
      }
     componentDidMount () {
         document.title = properties.site_name + " | كل الاسئله الوارده";
-        this.getTeacherId();
         // Redirect To Sign In Page If The User Is Already Logged Out & Remove The Data If It Exists
         if (!checkCookie('name')) {
             window.localStorage.removeItem('currentTeacher');

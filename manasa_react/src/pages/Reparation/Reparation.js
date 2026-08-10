@@ -5,6 +5,7 @@ import React, {Component, createRef} from 'react';
 
 // Helper
 import {setCookie, checkCookie} from '../../Helper/Cookies';
+import { apiFetch } from '../../Helper/Api';
 
 // Components
 import Header from '../../components/Header/Header';
@@ -71,41 +72,20 @@ class Reparation extends Component {
 
     }
 
-    getTeacherId =async()  => {
-        var data =await JSON.parse(window.localStorage.getItem('currentTeacher'));
-        this.setState({teacherId : data["teacherId"]});
-        console.log({teacher : this.state.teacherId});
-        
-     };
      getMaterialByStage = (schoolStagesId) => {
-        // Get Periods From API
-        console.log(schoolStagesId);
-        // var data = JSON.parse(window.localStorage.getItem("currentTeacher"));
-        fetch(properties.api_path + "/lockup/materialListbystage", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-          
-            id: schoolStagesId,
-          }),
-        })
-          .then((res) => {
-            return res.json();
-          })
+        // Get Materials From API
+        apiFetch("/lookup/materials/by-stage", { query: { stageId: schoolStagesId } })
           .then((fetchMaterials) => {
             this.setState({
               getMaterialsList: fetchMaterials,
             });
-          });
+          })
+          .catch((error) => console.error("Error:", error));
       };
-    
+
 
     componentDidMount () {
         document.title = properties.site_name + " | إضافة فترة جديدة";
-        this.getTeacherId();
         this.allNews();
         // this.getPeriods();
        // Redirect To Sign In Page If The User Is Already Logged Out & Remove The Data If It Exists
@@ -114,55 +94,36 @@ class Reparation extends Component {
             window.location.href = `/`;
         };
 
-        fetch(properties.api_path + "/lockup/levelList", {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ branchId: this.state.formContent.branchId }),
-          }
-          )
-            .then((res) => {
-              return res.json();
-            })
-            .then((grades) => {
-              this.setState({ allGrades: grades });
-      
-            });
+        apiFetch("/lookup/school-stages", { query: { branchId: this.state.formContent.branchId } })
+          .then((grades) => {
+            this.setState({ allGrades: grades });
+          })
+          .catch((error) => console.error("Error:", error));
 
         // Get Periods From API
-        
+
     }
     allNews = () => {
         var _this = this ;
        // Send the data to the server
-       var data =JSON.parse(window.localStorage.getItem('currentTeacher'));
-       fetch(properties.api_path + "/otherappointments/appointmentsByTeacher",
-        {
-           method: "POST",
-           headers: {
-               'Accept': 'application/json',
-               'Content-Type': 'application/json; charset=utf-8',
-           },
-           body: JSON.stringify({
-               teacherId : data["teacherId"] ,
-               companyId: this.state.companyID,
-               branchId: this.state.branchID,
-           })
-       })
-       .then(res => {return res.json()})
+       apiFetch("/other-appointments")
        .then(done => {
         this.setState({data : done});
-        
+
        })
        .catch(error => {
-           console.error('Error:', error) 
-           _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
+           console.error('Error:', error)
+           _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
        });
    };
     
 
+   // NOT PORTED: unreachable dead code -- the pencil/edit button that would
+   // set editableData and open this Dialog is commented out below (only the
+   // trash/delete button is live), and the fields posted here (newsType,
+   // address, post) are leftover copy-paste from AddNews.js, unrelated to
+   // other-appointments. Left untouched since there's no live UI path that
+   // calls it.
    edit = () => {
     var _this = this ;
    // Send the data to the server
@@ -211,41 +172,23 @@ class Reparation extends Component {
      addNews = () => {
         var _this = this ;
        // Send the data to the server
-       var data =JSON.parse(window.localStorage.getItem('currentTeacher'));
-       fetch(properties.api_path + "/otherappointments/saveOtherAppointments",
-        {
+       apiFetch("/other-appointments", {
            method: "POST",
-           headers: {
-               'Accept': 'application/json',
-               'Content-Type': 'application/json; charset=utf-8',
-           },
-           body: JSON.stringify({
-              
-            otherAppointmentsType:    this.state.type,
-             
-               img:     this.state.formContent.thumb.split('/') , 
-           
-               schoolStageId : this.state.schoolStageId  ,
-               teacherId : data["teacherId"] ,
-               materialId:this.state.material,
-               companyId: this.state.companyID,
+           body: {
+               appointmentsType: this.state.type,
+               img: this.state.formContent.thumb,
+               schoolStageId: this.state.schoolStageId,
+               materialId: this.state.material,
                branchId: this.state.branchID,
-           })
+           },
        })
-       .then(res => {return res.json()})
-       .then(done => {
-          
-          if (done.msgType === "success") {
-           _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: done.msg});
-           // this.getPeriods();
+       .then(() => {
+           _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: 'تمت إضافة التعويض بنجاح'});
            this.allNews();
-           } else {
-               _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: done.msg});
-          }
        })
        .catch(error => {
-           console.error('Error:', error) 
-           _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
+           console.error('Error:', error)
+           _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
        });
    };
 
@@ -291,24 +234,10 @@ class Reparation extends Component {
         var deletePeriod = (e) => {
             var _this = this;
             // Send the data to the server
-            fetch(properties.api_path + "/otherappointments/deleteAppointments", {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json; charset=utf-8',
-                },
-                body: JSON.stringify({
-                    id: e.id , 
-                })
-            })
-            .then(res => {return res.json()})
-            .then(done => {
-               if (done.msgType === "success") {
-                    _this.allNews();
-                   _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: done.msg});
-                } else {
-                   _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: done.msg});
-               }
+            apiFetch(`/other-appointments/${e.id}`, { method: "DELETE" })
+            .then(() => {
+                _this.allNews();
+                _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: 'تم الحذف بنجاح'});
             })
             .catch(error => {
                 console.error('Error:', error)
@@ -318,7 +247,7 @@ class Reparation extends Component {
                    buttonColor: ""
                });
 
-               _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
+               _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
             });
         };
 
@@ -456,41 +385,6 @@ class Reparation extends Component {
                     <img className="preview-thumb image" src={`${properties.uploads_path}/thumb/${rowData['img']}`} alt={rowData['img']} onClick={(e)=>e.target.requestFullscreen()}/>
                 </React.Fragment>
             );
-        }
-
-        const edit =(id) => {
-            var _this = this ;
-            // Send the data to the server
-            fetch(properties.api_path + "/periods/savePeriods", {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json; charset=utf-8',
-                },
-                body: JSON.stringify({
-                    id: id,
-                    branchId : this.state.branchID ,
-                    companyId: this.state.companyID,
-                    name: this.state.userInput , 
-                    teacherId: this.state.teacherId , 
-                    parent: this.state.selectedPeriod
-                })
-            })
-            .then(res => {return res.json()})
-            .then(done => {
-               
-               if (done.msgType === "success") {
-                _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: done.msg});
-                this.getPeriods();
-                this.setState({visible : false});
-                } else {
-                    _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: done.msg});
-               }
-            })
-            .catch(error => {
-                console.error('Error:', error) 
-                _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
-            });
         }
 
         return (

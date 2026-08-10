@@ -1,12 +1,18 @@
 import 'dart:convert';
 import 'package:full_mark/models/teacher_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/strings.dart';
-import 'package:http/http.dart' as http;
 
 class TeacherRepository{
 
-
+  // NOT calling a "browse all teachers in a branch" endpoint anymore -- that
+  // legacy concept (POST student/findTeacher) doesn't exist server-side, and
+  // wouldn't be the right model anyway: a student should only ever pick among
+  // the teachers they're actually enrolled with. loginStudent() already fetches
+  // exactly that list (GET students/me/teachers) and persists it as part of
+  // the LoginData blob under dataKey, so this just reads it back out instead
+  // of making a new network call.
   Future<void> getTeachers({
     required void Function(List<TeacherModel> teachers) onSuccess,
     required void Function(String error) onError,
@@ -14,24 +20,23 @@ class TeacherRepository{
   }) async {
 
     try {
-      Uri uri = Uri.parse("${url}student/findTeacher") ;
-
-      var body = jsonEncode({
-        "branchId": branchId,
-      });
-
-      Map<String,String> headers = {
-        "Content-Type": "application/json",
-
-      };
-      final response = await http.post(uri , body: body , headers: headers );
-
-      if(response.statusCode == 200){
-        final _response = json.decode(utf8.decode(response.bodyBytes)) ;
-        onSuccess(teacherModelFromJson(_response));
-      } else {
-        throw "${response.reasonPhrase} : ${response.statusCode}";
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      String? raw = preferences.getString(dataKey);
+      if (raw == null) {
+        onSuccess([]);
+        if (onComplete != null) onComplete();
+        return;
       }
+      Map decoded = json.decode(raw);
+      List teacherList = decoded["teacherList"] ?? [];
+      List<TeacherModel> teachers = teacherList.map((t) => TeacherModel(
+        id: t["id"],
+        name: t["name"],
+        description: null,
+        image: null,
+        imageLabel: null,
+      )).toList();
+      onSuccess(teachers);
     } catch (e, s) {
       onError(e.toString());
     }

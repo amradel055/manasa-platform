@@ -6,6 +6,7 @@ import './Exams.scss';
 
 // Helper
 import {setCookie, checkCookie} from '../../Helper/Cookies';
+import { apiFetch } from '../../Helper/Api';
 
 // Components
 import Header from '../../components/Header/Header';
@@ -231,38 +232,39 @@ class EditInboxDetail extends Component {
             window.location.href = `/`;
         }
 
-        // Get Grades From API
-        
+        this.loadMessage();
+    }
 
-        // Get Exam From API
-        fetch(properties.api_path + "/inboxmessage/findmessage", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                id: this.state.examID
-            })
-        })
-        .then(res => {return res.json()})
+    // NOTE: the legacy response embedded a "materialName" field (looked up
+    // server-side); InboxMessageResponse only returns materialId, so the
+    // header's material name is left blank here -- no lookup-by-id endpoint
+    // exists to resolve it client-side.
+    loadMessage = () => {
+        var _this = this;
+
+        // Get Message From API
+        apiFetch(`/messages/${this.state.examID}`)
         .then(fetchExam => {
-          
             this.setState({
                 subject: fetchExam.subject,
-                body:fetchExam.body,
-                sendDate: fetchExam.sendDate,
-                materialName: fetchExam.materialName,
-                image:fetchExam.image,
-                sendDate:fetchExam.sendDate,
-                inboxReplies:fetchExam.inboxReplys
-              
+                body: fetchExam.body,
+                sendDate: fetchExam.sentDate,
+                image: fetchExam.image,
             });
         })
         .catch(error => {
             console.error('Error:', error)
 
-            _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
+            _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
+        });
+
+        // Get Replies From API
+        apiFetch(`/messages/${this.state.examID}/replies`)
+        .then(inboxReplies => {
+            this.setState({ inboxReplies });
+        })
+        .catch(error => {
+            console.error('Error:', error)
         });
     }
     
@@ -322,72 +324,54 @@ class EditInboxDetail extends Component {
         }
     
         var addReply = (e) => {
-            
-            var _this = this;
 
-           
+            var _this = this;
 
             this.setState({
                 buttonText: "جاري الإضافة ...",
                 buttonColor: "loading",
             });
 
-          
-
-            // console.log(finalQuestionsForm);
+            // video/vimeo link boxes are mutually exclusive via setVideoType (0 = Youtube, 2 = Vimeo)
+            let video = "";
+            if (this.state.setVideoType === 0 && this.state.youtubeLink) {
+                video = `https://www.youtube.com/embed/${this.state.youtubeLink
+                    .split("/")
+                    .pop()
+                    .replace("watch?v=", "")}`;
+            } else if (this.state.setVideoType === 2 && this.state.vimeoLink) {
+                video = `https://player.vimeo.com/video/${this.state.vimeoLink
+                    .split("/")
+                    .pop()}`;
+            }
 
             // Send the data to the server
-            var _data =JSON.parse(window.localStorage.getItem('currentTeacher'));
-            fetch(properties.api_path + "/inboxreply/save", {
-                
-
+            apiFetch(`/messages/${this.state.examID}/replies`, {
                 method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json; charset=utf-8',
+                body: {
+                    body: this.state.answer,
+                    image: this.state.imageAnswer ? this.state.imageAnswer.split('/').pop() : null,
+                    video: video,
                 },
-                body: JSON.stringify({
-                    companyId: this.state.companyID,
-                    branchId: this.state.branchID,
-                    createdBy:_data["teacherId"],
-                    body:this.state.answer,
-                    sendDate:new Date().toLocaleString(),
-                    message:this.state.examID,
-                    image:this.state.imageAnswer.split('/'),
-                    video: this.state.youtubeLink
-              ? `https,://www.youtube.com/embed/${this.state.youtubeLink
-                  .split("/")
-                  .pop()
-                  .replace("watch?v=", "")}`
-              : "",
-            vimeoLink: this.state.vimeoLink
-              ? `https://player.vimeo.com/video/${this.state.vimeoLink
-                  .split("/")
-                  .pop()}`
-              : "",
-                    // voiceLink: this.state.vimeoLink,
-                    // lessonVoiceList:this.state.lessonVoiceList,
-
-
-                })
             })
-            .then(res => {return res.json()})
-            .then(done => {
+            .then(() => {
                _this.setState({
                    buttonText: "إضافة الرد",
                    buttonColor: "",
                });
 
-               if (done.msgType === "success") {
-                   _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: done.msg});
-                } else {
-                   _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: done.msg});
-               }
+               _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: 'تمت إضافة الرد بنجاح'});
+               this.loadMessage();
             })
             .catch(error => {
                 console.error('Error:', error)
 
-               
+                _this.setState({
+                    buttonText: "إضافة الرد",
+                    buttonColor: "",
+                });
+
+                _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
             });
         }
 

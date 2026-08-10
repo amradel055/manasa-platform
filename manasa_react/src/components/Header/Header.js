@@ -4,6 +4,9 @@ import React, { Component } from "react";
 import { Menubar } from "primereact/menubar";
 import { Button } from "primereact/button";
 
+// Helper
+import { clearSession } from "../../Helper/Api";
+
 // CSS
 import "./Header.scss";
 import "primereact/resources/themes/saga-blue/theme.css";
@@ -20,6 +23,7 @@ class Header extends Component {
 
     document.cookie = "name =; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
     window.localStorage.removeItem("currentTeacher");
+    clearSession();
 
     setTimeout(() => {
       window.location.href = `/`;
@@ -184,6 +188,21 @@ class Header extends Component {
           label: "تقارير الامتحانات",
           icon: "pi pi-fw pi-chart-line",
           url: `/examsReports`,
+        },
+      ],
+    },
+    { label: "الإعدادات",
+      icon: "pi pi-fw pi-cog",
+      items: [
+        {
+          label: "المراحل الدراسية",
+          icon: "pi pi-fw pi-sitemap",
+          url: `/settings/school-stages`,
+        },
+        {
+          label: "المواد",
+          icon: "pi pi-fw pi-book",
+          url: `/settings/materials`,
         },
       ],
     },

@@ -173,7 +173,7 @@ class _ActivateRequestScreen extends State<ActivateRequestScreen> {
                           padding: const EdgeInsets.all(20.0),
                           child: ElevatedButton(
                             onPressed: () => provider.sendRequest(context),
-                            style: ElevatedButton.styleFrom(primary: mainColor),
+                            style: ElevatedButton.styleFrom(backgroundColor: mainColor),
                             child: const Center(child: Text("Send Request")),
                           ),
                         );

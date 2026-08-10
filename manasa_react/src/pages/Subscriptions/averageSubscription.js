@@ -5,6 +5,7 @@ import './Subscription.scss';
 
 // Helper
 import {setCookie, checkCookie} from '../../Helper/Cookies';
+import { apiFetch } from '../../Helper/Api';
 
 // Components
 import Header from '../../components/Header/Header';
@@ -70,25 +71,16 @@ class AverageSubscription extends Component {
     }
     getSubscriptions = () => {
         // Get Subscriptions From API
-        fetch(properties.api_path + "/studentMonths/allStudentMonths", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                branchId: this.state.branchID
-            })
-        })
-        .then(res => {return res.json()})
+        apiFetch("/students/enrollments")
         .then(fetchStudents => {
             this.setState({
                 data: fetchStudents
             });
-        });
+        })
+        .catch(error => console.error('Error:', error));
     }
 
-    
+
     componentDidMount () {
         document.title = properties.site_name + " | عدد الطلاب المشتركين";
 
@@ -99,42 +91,23 @@ class AverageSubscription extends Component {
         }
         this.getSubscriptions();
         // Get Grades From API
-        fetch(properties.api_path + "/lockup/levelList", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                branchId: this.state.branchID
-            })
-        })
-        .then(res => {return res.json()})
+        apiFetch("/lookup/school-stages", { query: { branchId: this.state.branchID } })
         .then(grades => {
             this.setState({getSchoolStages: grades});
         })
+        .catch(error => console.error('Error:', error));
     }
 
     getStudentsByStageID = (e) => {
         this.setState({selectedStage: e.value}, () => {
             // Get Students From API
-            fetch(properties.api_path + "/student/studentList", {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    branchId: this.state.branchID,
-                    schoolStagesId: this.state.selectedStage
-                })
-            })
-            .then(res => {return res.json()})
+            apiFetch("/students", { query: { branchId: this.state.branchID, schoolStagesId: this.state.selectedStage } })
             .then(fetchStudents => {
                 this.setState({
                     getStudentNames: fetchStudents
                 });
-            });
+            })
+            .catch(error => console.error('Error:', error));
         });
     }
     
@@ -148,68 +121,13 @@ class AverageSubscription extends Component {
             return {label: `${student.fullName} (${student.mobile})`, value: student.id};
         });
         
-        let monthsList = [
-            {label: 'يناير', value: 1},
-            {label: 'فبراير', value: 2},
-            {label: 'مارس', value: 3},
-            {label: 'إبريل', value: 4},
-            {label: 'مايو', value: 5},
-            {label: 'يونيو', value: 6},
-            {label: 'يوليو', value: 7},
-            {label: 'أغسطس', value: 8},
-            {label: 'سبتمبر', value: 9},
-            {label: 'أكتوبر', value: 10},
-            {label: 'نوفمبر', value: 11},
-            {label: 'ديسمبر', value: 12},
-        ];
-
         var addSubscription = (e) => {
-            var _this = this;
             e.preventDefault();
-
-            this.setState({
-                buttonText: "جاري البحث ...",
-                buttonColor: "loading",
-            });
-
-            // Send the data to the server
-            fetch(properties.api_path + "/studentMonths/saveStudentMonths", {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json; charset=utf-8',
-                },
-                body: JSON.stringify({
-                    companyId: this.state.companyID,
-                    branchId: this.state.branchID,
-                    monthId: this.state.selectedMonth,
-                    value: this.state.cost,
-                    studentId: this.state.selectedStudent
-                })
-            })
-            .then(res => {return res.json()})
-            .then(done => {
-               _this.setState({
-                   buttonText: "إضافة الإشتراك",
-                   buttonColor: "",
-               });
-
-               if (done.msgType === "success") {
-                   _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: done.msg});
-                } else {
-                   _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: done.msg});
-               }
-            })
-            .catch(error => {
-                console.error('Error:', error)
-
-                _this.setState({
-                   buttonText: "إضافة الإشتراك",
-                   buttonColor: ""
-               });
-
-               _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
-            });
+            // The stage dropdown's onChange already fetches the matching students;
+            // this just re-runs that search explicitly for the current selection.
+            if (this.state.selectedStage) {
+                this.getStudentsByStageID({ value: this.state.selectedStage });
+            }
         }
 
         return (
@@ -232,15 +150,7 @@ class AverageSubscription extends Component {
                                             </span>
                                         </div>
                                     </div>
-                                  
-                                    <div className="p-col-12 p-md-4">
-                                        <div className="p-inputgroup">
-                                            <span className="p-float-label">
-                                                <Dropdown value={this.state.selectedMonth} options={monthsList} placeholder="إختر الشهر" onChange={(e) => this.setState({selectedMonth: e.value})} optionLabel="label" filter showClear filterBy="label" />                                            
-                                            </span>
-                                        </div>
-                                    </div>
-                                   
+
                                     <div className="p-col-12 p-md-12 p-mt-2">
                                         <div className="p-inputgroup">
                                             <span className="p-float-label">

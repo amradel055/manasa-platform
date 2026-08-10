@@ -24,13 +24,13 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
     await ApiServices().registerStudent(userName, firstName,
         fatherName, grandFatherName, familyName, mobile, password, email , schoolStageId , stateId).then((res){
-          if(res["msgType"] == "success"){
-             signIn(context, userName, password);
+          if(res != null){
+             signIn(context, email, password);
              }
           else {
             loading = false ;
             notifyListeners();
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${res["msg"]}"
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("تعذر إنشاء الحساب، يرجى التأكد من البيانات والمحاولة مرة أخرى"
               , textAlign: TextAlign.center,) , backgroundColor: Colors.red,));
           }
     }).catchError((e){
@@ -102,6 +102,7 @@ class AuthProvider with ChangeNotifier {
 
    preferences.remove(dataKey);
    preferences.remove(selectedDoctor);
+   preferences.remove(authTokenKey);
    notifyListeners();
 
  }

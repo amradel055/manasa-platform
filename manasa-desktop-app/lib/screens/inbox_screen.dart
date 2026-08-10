@@ -62,11 +62,7 @@ class _InboxScreen extends State<InboxScreen> {
     filePath = '/sdcard/Download/temp.wav';
     _myRecorder = FlutterSoundRecorder();
 
-    await _myRecorder!.openAudioSession(
-        focus: AudioFocus.requestFocusAndStopOthers,
-        category: SessionCategory.playAndRecord,
-        mode: SessionMode.modeDefault,
-        device: AudioDevice.speaker);
+    await _myRecorder!.openRecorder();
     await _myRecorder?.setSubscriptionDuration(Duration(milliseconds: 10));
     await initializeDateFormatting();
 
@@ -88,7 +84,7 @@ class _InboxScreen extends State<InboxScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
-          primary: Colors.white,
+          backgroundColor: Colors.white,
           elevation: 10.0,
         ),
         onPressed:()=> f!,
@@ -106,7 +102,7 @@ class _InboxScreen extends State<InboxScreen> {
       if (!dir.existsSync()) {
         dir.createSync();
       }
-      _myRecorder!.openAudioSession();
+      _myRecorder!.openRecorder();
       await _myRecorder!.startRecorder(
         toFile: filePath,
         codec: Codec.pcm16WAV,
@@ -124,7 +120,7 @@ class _InboxScreen extends State<InboxScreen> {
     }
 
     Future<String?> stopRecord() async {
-      _myRecorder!.closeAudioSession();
+      _myRecorder!.closeRecorder();
       return await _myRecorder!.stopRecorder();
     }
 
@@ -925,7 +921,7 @@ class _InboxScreen extends State<InboxScreen> {
                                                 // }
                                               },
                                               style: ElevatedButton.styleFrom(
-                                                  primary: mainColor
+                                                  backgroundColor: mainColor
                                               ),
                                               child: Center(child: Text("Send"))
                                           ),

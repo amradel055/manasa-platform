@@ -7,14 +7,12 @@ import 'package:desktop_screen/widgets/attach.dart';
 import 'package:desktop_screen/widgets/lesson_view.dart';
 import 'package:desktop_screen/widgets/loading_widget.dart';
 import 'package:desktop_screen/widgets/network_player.dart';
-import 'package:desktop_screen/widgets/play_video_desktop.dart';
 import 'package:desktop_screen/widgets/play_video_win_desktop.dart';
 import 'package:desktop_screen/widgets/play_youtube.dart';
 import 'package:desktop_screen/widgets/video_cart_widget.dart';
 import 'package:desktop_screen/widgets/video_widget.dart';
 import 'package:desktop_screen/widgets/viemo_player.dart';
 
-import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +20,6 @@ import 'package:flutter/material.dart';
 import 'package:headset_connection_event/headset_event.dart';
 import 'package:pod_player/pod_player.dart';
 import 'package:provider/provider.dart';
-import 'package:record/record.dart';
 
 import 'package:video_player/video_player.dart';
 import '../constants/colors.dart';
@@ -41,11 +38,8 @@ class LessonScreen extends StatefulWidget {
 }
 
 class _LessonScreenState extends State<LessonScreen> {
-  AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
   // late YoutubePlayerController _controller;
 
-  List<AssetsAudioPlayer> assetsAudioPlayers = [];
-  List<Audio> audios = [];
   String? currentPlay;
   bool? isRecording;
   List<dynamic> allVideoes = [] ;
@@ -59,8 +53,6 @@ class _LessonScreenState extends State<LessonScreen> {
   List<Exam> exams = [];
 
   bool loading = false;
-
-  late Audio audio;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   HeadsetEvent headsetPlugin = HeadsetEvent();

@@ -5,6 +5,7 @@ import "./Lessons.scss";
 
 // Helper
 import { setCookie, checkCookie } from "../../Helper/Cookies";
+import { apiFetch } from "../../Helper/Api";
 
 // Components
 import Header from "../../components/Header/Header";
@@ -52,35 +53,35 @@ class AllLessons extends Component {
 
     // Data
     data: [],
+    stagesById: {},
 
     // Update Data
     resend: false,
   };
 
   getLessons = () => {
-    var _data = JSON.parse(window.localStorage.getItem("currentTeacher"));
-    console.log( _data["teacherId"])
-    // Get Free Lessons From API
-    fetch(properties.api_path + "/lesson/teacherLessonList", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        branchId: this.state.branchID,
-        companyId: this.state.companyID,
-        teacherId: _data["teacherId"],
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
+    // teacherUserId is resolved from the JWT on the server -- no need to send it.
+    apiFetch("/lessons")
       .then((fetchLessons) => {
         this.setState({
           data: fetchLessons,
         });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
       });
+  };
+
+  getStages = () => {
+    apiFetch("/lookup/school-stages", { query: { branchId: properties.branch_id } })
+      .then((stages) => {
+        const stagesById = {};
+        stages.forEach((s) => {
+          stagesById[s.id] = s.name;
+        });
+        this.setState({ stagesById });
+      })
+      .catch((error) => console.error("Error:", error));
   };
 
   deleteMedia = (id) => {
@@ -90,21 +91,9 @@ class AllLessons extends Component {
     var con = window.confirm("هل أنت متأكد من أنك تريد حذف هذا العنصر");
 
     if (con) {
-      // Delete Media By ID
-      fetch(properties.api_path + "/lesson/deleteLesson", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: id,
-        }),
-      })
-        .then((res) => {
-          return res.json();
-        })
-        .then((deleteLessonByID) => {
+      // Delete Lesson By ID
+      apiFetch(`/lessons/${id}`, { method: "DELETE" })
+        .then(() => {
           _this.toast.current.show({
             severity: "success",
             summary: "تمت العملية",
@@ -128,12 +117,7 @@ class AllLessons extends Component {
   componentDidMount() {
     document.title = properties.site_name + " | كل الدروس";
 
-    // Redirect To Sign In Page If The User Is Already Logged Out & Remove The Data If It Exists
-    // if (!checkCookie('name')) {
-    //     window.localStorage.removeItem('currentTeacher');
-    // window.location.href = `${properties.basename}`;
-    // }
-
+    this.getStages();
     this.getLessons();
   }
 
@@ -218,9 +202,9 @@ class AllLessons extends Component {
                     header="إسم الدرس"
                   ></Column>
                   <Column
-                    filter
                     sortable
-                    field="schoolStagesName"
+                    field="schoolStagesGuideId"
+                    body={(row) => this.state.stagesById[row.schoolStagesGuideId] || ""}
                     header="المرحلة الدراسية"
                   ></Column>
                   {/* <Column filter sortable field="monthId" body={(row) => this.state.namedMonths[row.monthId - 1]} header="الفترة"></Column> */}

@@ -6,6 +6,7 @@ import 'primeflex/primeflex.css';
 
 // Helper
 import {setCookie, checkCookie} from '../../Helper/Cookies';
+import { apiFetch } from '../../Helper/Api';
 
 // Components
 import Header from '../../components/Header/Header';
@@ -79,16 +80,8 @@ class EditStudent extends Component {
         })
     }
 
-    getStates = (cityID) => {
-        fetch(properties.api_path + "/lockup/statesList", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({id: cityID})
-        })
-        .then(res => {return res.json()})
+    getStates = (governorateId) => {
+        apiFetch("/lookup/states", { query: { governorateId } })
         .then(states => {
             this.setState({states: states});
         })
@@ -100,76 +93,42 @@ class EditStudent extends Component {
     componentDidMount() {
         document.title = properties.site_name + " | تعديل الطالب جديدة";
 
-        // Redirect To Sign In Page If The User Is Already Logged Out & Remove The Data If It Exists
-        if (!checkCookie('name')) {
-            window.localStorage.removeItem('currentTeacher');
-            window.location.href = `/`;
-        }
-
         // Get Cities From API
-        fetch(properties.api_path + "/lockup/governorateList", {
-            method: "POST"
-        })
-        .then(res => {return res.json()})
+        apiFetch("/lookup/governorates")
         .then(cities => {
             this.setState({cities: cities});
         })
-        
+        .catch(error => console.error('Error:', error));
+
         // Get Grades From API
-        fetch(properties.api_path + "/lockup/levelList", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({branchId: this.state.formContent.branchID})
-        })
-        .then(res => {return res.json()})
+        apiFetch("/lookup/school-stages", { query: { branchId: this.state.formContent.branchID } })
         .then(grades => {
             this.setState({grades: grades});
         })
+        .catch(error => console.error('Error:', error));
 
-        // Get Students From API
-        fetch(properties.api_path + "/student/studentList", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                branchId: this.state.formContent.branchID,
-                companyId: this.state.formContent.branchID,
-                id: this.state.studentID
-            })
-        })
-        .then(res => {return res.json()})
-        .then(fetchStudent => {
+        // Get Student From API
+        apiFetch(`/students/${this.state.studentID}`)
+        .then(student => {
             this.setState({
-                state: fetchStudent[0].stateId,
-                gender: fetchStudent[0].gender,
-                grade: fetchStudent[0].schoolStagesId,
-                city: fetchStudent[0].governorateId,
-                
+                state: student.stateId,
+                gender: student.gender,
+                grade: student.schoolStagesId,
+
                 formContent: {
-                    fullName: fetchStudent[0].fullName,
-                    city: fetchStudent[0].governorateId,
-                    cityState: fetchStudent[0].stateId,
-                    studentPhone: fetchStudent[0].mobile,
-                    parentPhone: fetchStudent[0].fatherMobile,
-                    parentJob: fetchStudent[0].fatherJob,
-                    grade: fetchStudent[0].schoolStagesId,
-                    gender: fetchStudent[0].gender,
-                    email: fetchStudent[0].email,
-                    username: fetchStudent[0].userName,
-                    password: fetchStudent[0].password,
-                    macID: fetchStudent[0].macId,
+                    fullName: student.fullName,
+                    cityState: student.stateId,
+                    studentPhone: student.mobile,
+                    parentPhone: student.fatherMobile,
+                    parentJob: student.fatherJob,
+                    grade: student.schoolStagesId,
+                    gender: student.gender,
                     companyID: properties.company_id,
                     branchID: properties.branch_id
                 }
-            }, () => {
-                this.getStates(this.state.city);
             });
-        });
+        })
+        .catch(error => console.error('Error:', error));
     }
 
     render() {
@@ -221,56 +180,33 @@ class EditStudent extends Component {
             });
 
             var studentDataEdit = {
-                id: this.state.studentID,
-                companyId: this.state.formContent.companyID,
                 branchId: this.state.formContent.branchID,
                 fullName: this.state.formContent.fullName,
-                password: this.state.formContent.password,
                 mobile: this.state.formContent.studentPhone,
                 fatherMobile: this.state.formContent.parentPhone,
                 fatherJob: this.state.formContent.parentJob,
                 gender: this.state.formContent.gender,
-                userName: this.state.formContent.username,
                 stateId: this.state.formContent.cityState,
-                email: this.state.formContent.email,
                 schoolStagesId: this.state.formContent.grade
             };
-            
-            // Send the data to the server
-            fetch(properties.api_path + "/student/studentregister", {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json; charset=utf-8',
-                },
-                body: JSON.stringify(studentDataEdit)
-            })
-            .then(res => {return res.json()})
-            .then(done => {
+
+            apiFetch(`/students/${this.state.studentID}`, { method: "PUT", body: studentDataEdit })
+            .then(() => {
                 _this.setState({
                     buttonText: "تعديل الطالب",
                     buttonColor: ""
                 });
-
-                if (done.msgType === "success") {
-                    _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: done.msg});
-                    } else {
-                    _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: done.msg});
-                }
+                _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: 'تم حفظ التعديلات'});
             })
             .catch(error => {
                 console.error('Error:', error)
 
                 _this.setState({
-                    buttonText: "إنشاء الحساب",
+                    buttonText: "تعديل الطالب",
                     buttonColor: "",
-                    msg: {
-                        msgText: "",
-                        msgType: "warning",
-                        msgIcon: "fas fa-times-circle"
-                    }});
+                });
 
-                _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
+                _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
             });
         }
 
@@ -313,18 +249,6 @@ class EditStudent extends Component {
                                                     cityState: e.value
                                                 }
                                             })} name="states" placeholder="المراكز"/>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div className="p-col-12 p-md-4 p-mt-3">
-                                        <div className="p-inputgroup">
-                                            <span className="p-float-label">
-                                                <InputText id="e-mail" type="email" value={this.state.formContent.email} name="e-mail" onChange={(e) => {this.setState({formContent: {
-                                                    ...this.state.formContent,
-                                                    email: e.target.value
-                                                }})}} />
-                                                
-                                                <label htmlFor="e-mail">البريد الإلكتروني</label>
                                             </span>
                                         </div>
                                     </div>
@@ -388,43 +312,6 @@ class EditStudent extends Component {
                                             </span>
                                         </div>
                                     </div>
-                                    <div className="p-col-12 p-md-4 p-mt-3">
-                                        <div className="p-inputgroup">
-                                            <span className="p-float-label">
-                                                <InputText id="username" value={this.state.formContent.username} name="username" type="text" onChange={(e) => {this.setState({formContent: {
-                                                    ...this.state.formContent,
-                                                    username: e.target.value
-                                                }})}} />
-                                                
-                                                <label htmlFor="username">إسم المستخدم</label>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div className="p-col-12 p-md-4 p-mt-3">
-                                        <div className="p-inputgroup">
-                                            <span className="p-float-label">
-                                                <InputText id="password" value={this.state.formContent.password} name="password" type="password" onChange={(e) => {this.setState({formContent: {
-                                                    ...this.state.formContent,
-                                                    password: e.target.value
-                                                }})}} />
-                                                
-                                                <label htmlFor="password">كلمة السر</label>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div className="p-col-12 p-md-4 p-mt-3">
-                                        <div className="p-inputgroup">
-                                            <span className="p-float-label">
-                                                <InputText id="macAddress" value={this.state.formContent.macID} name="macAddress" type="text" onChange={(e) => {this.setState({formContent: {
-                                                    ...this.state.formContent,
-                                                    macID: e.target.value
-                                                }})}} />
-                                                
-                                                <label htmlFor="macAddress">Mac ID</label>
-                                            </span>
-                                        </div>
-                                    </div>
-
                                     <div className="p-col-12 p-md-12">
                                         <div className="p-inputgroup">
                                             <span className="p-float-label">

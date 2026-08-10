@@ -5,6 +5,7 @@ import "./Subscription.scss";
 
 // Helper
 import { setCookie, checkCookie } from "../../Helper/Cookies";
+import { apiFetch } from "../../Helper/Api";
 
 // Components
 import Header from "../../components/Header/Header";
@@ -53,28 +54,14 @@ class AllSubscriptions extends Component {
     resend: false,
   };
 
-  getSubscriptions = async () => {
-    // Get Subscriptions From API
-    var data = await JSON.parse(window.localStorage.getItem("currentTeacher"));
-    fetch(properties.api_path + "/studentPeriods/allStudentPeriods", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        branchId: this.state.branchID,
-        teacherId: data["teacherId"],
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
+  getSubscriptions = () => {
+    apiFetch("/students/enrollments")
       .then((fetchStudents) => {
         this.setState({
           data: fetchStudents,
         });
-      });
+      })
+      .catch((error) => console.error("Error:", error));
   };
 
   deleteSubscription = (id) => {
@@ -84,21 +71,8 @@ class AllSubscriptions extends Component {
     var con = window.confirm("هل أنت متأكد من أنك تريد حذف هذا العنصر");
 
     if (con) {
-      // Delete Subscription By ID
-      fetch(properties.api_path + "/studentPeriods/deleteStudentPeriods", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: id,
-        }),
-      })
-        .then((res) => {
-          return res.json();
-        })
-        .then((deleteMediaByID) => {
+      apiFetch(`/students/enrollments/${id}`, { method: "DELETE" })
+        .then(() => {
           this.setState({ resend: true });
           _this.toast.current.show({
             severity: "success",
@@ -201,18 +175,6 @@ class AllSubscriptions extends Component {
                     sortable
                     field="studentMobile"
                     header="رقم الموبايل"
-                  ></Column>
-                  <Column
-                    filter
-                    sortable
-                    field="schoolStagesName"
-                    header="المرحلة الدراسية"
-                  ></Column>
-                  <Column
-                    filter
-                    sortable
-                    field="governorateName"
-                    header="المحافظة"
                   ></Column>
                   {/* <Column
                     filter

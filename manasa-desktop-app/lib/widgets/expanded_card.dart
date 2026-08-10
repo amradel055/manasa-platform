@@ -370,7 +370,7 @@ class _ExpandedCardState extends State<ExpandedCard> with SingleTickerProviderSt
     final ColorScheme colorScheme = theme.colorScheme;
     _borderColorTween.end = theme.dividerColor;
     _headerColorTween
-      ..begin = widget.collapsedTextColor ?? expansionTileTheme.collapsedTextColor ?? theme.textTheme.subtitle1!.color
+      ..begin = widget.collapsedTextColor ?? expansionTileTheme.collapsedTextColor ?? theme.textTheme.titleMedium!.color
       ..end = widget.textColor ?? expansionTileTheme.textColor ?? colorScheme.primary;
     _iconColorTween
       ..begin = widget.collapsedIconColor ?? expansionTileTheme.collapsedIconColor ?? theme.unselectedWidgetColor

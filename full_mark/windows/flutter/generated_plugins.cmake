@@ -6,6 +6,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   connectivity_plus_windows
   file_selector_windows
   firebase_core
+  flutter_sound
   pdfx
   permission_handler_windows
   url_launcher_windows

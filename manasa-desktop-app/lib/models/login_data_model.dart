@@ -49,7 +49,9 @@ class TeacherListElement {
     this.name,
   });
 
-  int? id;
+  // Legacy backend used an int igma_user.id here; the new backend identifies
+  // teachers by a user_service UUID, so this is a String now.
+  String? id;
   bool? markEdit;
   List<Material>? materialList;
   String? name;

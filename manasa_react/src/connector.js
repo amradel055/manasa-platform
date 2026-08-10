@@ -36,6 +36,8 @@ import EditInboxDetail from './pages/inbox/EditInboxDetail.js';
 import Reparation from './pages/Reparation/Reparation.js';
 import Links from './pages/links/links.js';
 import Notifications from './pages/notifications/notifications.js';
+import SchoolStages from './pages/Settings/SchoolStages.js';
+import Materials from './pages/Settings/Materials.js';
 class Connector extends Component {
   render() {
     return (
@@ -118,6 +120,12 @@ class Connector extends Component {
           </Route>
           <Route path="/examsReports" exact>
             <ExamsReports />
+          </Route>
+          <Route path="/settings/school-stages" exact>
+            <SchoolStages />
+          </Route>
+          <Route path="/settings/materials" exact>
+            <Materials />
           </Route>
         </Switch>
       </Router>

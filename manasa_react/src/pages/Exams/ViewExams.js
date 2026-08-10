@@ -13,6 +13,7 @@ import { Button } from "primereact/button";
 
 // Helper
 import {setCookie, checkCookie} from '../../Helper/Cookies';
+import { apiFetch } from '../../Helper/Api';
 
 // Properties
 var properties = require('../../properties.json');
@@ -81,17 +82,14 @@ class ViewExams extends Component {
     }
 
     getExams = (formData) => {
-
-        // Get Exams From API
-        fetch(properties.api_path + "/exams/findSolvedExamsForStudent", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({formData,  studentId: this.state.studentID})
-        })
-        .then(res => {return res.json()})
+        // Get Exams From API.
+        // NOTE: the new /exams/solved endpoint is student-self-service only
+        // (@PreAuthorize("hasRole('STUDENT')"), identity derived from the JWT)
+        // -- it has no studentId/monthId/lessonId filter params like the old
+        // "findSolvedExamsForStudent" call did. This page is only reachable by
+        // a logged-in TEACHER (see Sign-In.js), so this call will 403 in
+        // practice; kept only so the page still compiles/runs without throwing.
+        apiFetch("/exams/solved")
         .then(fetchExams => {
             this.setState({
                 data: fetchExams

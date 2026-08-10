@@ -38,7 +38,7 @@ class _CreateExamState extends State<CreateExam> with TickerProviderStateMixin{
   List chapters = [];
   List subjects = [];
   List _exams = [] ;
-  int? selectedDoctorId ;
+  String? selectedDoctorId ;
   final List _chapters = [];
    List<Exam> exams = [];
    List<Exam> firstExams = [];

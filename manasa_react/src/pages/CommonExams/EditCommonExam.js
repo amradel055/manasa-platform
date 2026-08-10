@@ -6,6 +6,7 @@ import "./Exams.scss";
 
 // Helper
 import { setCookie, checkCookie } from "../../Helper/Cookies";
+import { apiFetch } from "../../Helper/Api";
 
 
 // Components
@@ -112,77 +113,29 @@ class EditCommonExam extends Component {
 
 
     selectedPeriod: null,
-    teacherId: null,
   };
   getMaterialByStage(stageId){
-    var data =JSON.parse(window.localStorage.getItem('currentTeacher'));
-    fetch(properties.api_path + "/lockup/materialListbystage", {
-        method: "POST",
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            id: stageId
-        })
-    })
-    .then(res => {return res.json()})
-    .then(grades => {
-        console.log(grades);
+    apiFetch("/lookup/materials/by-stage", { query: { stageId } })
+      .then(grades => {
         this.setState({getMaterialsList : grades});
-    })
+      })
+      .catch(error => console.error('Error:', error));
  }
-  getTeacherId = async () => {
-    var data = await JSON.parse(window.localStorage.getItem("currentTeacher"));
-    this.setState({ teacherId: data["teacherId"] });
-  };
 
   getLessonsByStage = (schoolStagesId,materialId , periodId) => {
     // Get Lessons From API
-    var _data = JSON.parse(window.localStorage.getItem("currentTeacher"));
-    fetch(properties.api_path + "/lesson/teacherLessonList", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        branchId: this.state.branchID,
-        companyId: this.state.companyID,
-        materialId: materialId,
-        schoolStagesId: schoolStagesId,
-        schoolId: schoolStagesId,
-        periodId: periodId,
-        teacherId: _data["teacherId"],
-        
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
+    apiFetch("/lessons", { query: { materialId, schoolStageId: schoolStagesId, id: periodId } })
       .then((fetchLessons) => {
         this.setState({ getLessons: fetchLessons });
-      });
+      })
+      .catch((error) => console.error("Error:", error));
   };
   getPeriod(materialId) {
-    fetch(properties.api_path + "/periods/findPeriod", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-      
-        materialId: materialId
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
+    apiFetch("/periods/by-material", { query: { materialId } })
       .then((grades) => {
-        console.log(grades);
         this.setState({ getPeriods: grades });
-      });
+      })
+      .catch((error) => console.error("Error:", error));
   }
 
   // getPeriods() {
@@ -262,74 +215,43 @@ class EditCommonExam extends Component {
     //     lightbox = null;
     //   };
     document.title = properties.site_name + " | تعديل السؤال ";
-    this.getTeacherId();
-    // this.getMaterialByStage();
     // Redirect To Sign In Page If The User Is Already Logged Out & Remove The Data If It Exists
     if (!checkCookie("name")) {
       window.localStorage.removeItem("currentTeacher");
       window.location.href = `/`;
     }
 
-    fetch(properties.api_path + "/lockup/levelList", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          branchId: this.state.branchID,
-        }),
+    apiFetch("/lookup/school-stages", { query: { branchId: this.state.branchID } })
+      .then((grades) => {
+        this.setState({ getSchoolStages: grades });
       })
-        .then((res) => {
-          return res.json();
-        })
-        .then((grades) => {
-          this.setState({ getSchoolStages: grades });
-          
-          
-        });
-    
-    // this.getPeriods();
+      .catch((error) => console.error("Error:", error));
 
     // Get Grades From API
-    fetch(properties.api_path + "/commonquestions/findQuestion", {
-        method: "POST",
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            id: this.state.examID
-        })
-    })
-    .then(res => {return res.json()})
+    apiFetch(`/common-questions/${this.state.examID}`)
     .then(fetchExam => {
-      
-       
         this.setState({
             qustionReply:fetchExam.text,
             materialId:fetchExam.materialId,
-            levelId:fetchExam.schoolId,
             qusetionImg:fetchExam.image,
             questionId:fetchExam.id,
            answerContent:{
-                text:fetchExam.questionAnswerDTO.text,
-                image:fetchExam.questionAnswerDTO.image,
-                id:fetchExam.questionAnswerDTO.id
+                text: fetchExam.answer ? fetchExam.answer.text : "",
+                image: fetchExam.answer ? fetchExam.answer.image : "",
+                id: fetchExam.answer ? fetchExam.answer.id : null
             },
-            questionAnswerImage:fetchExam.questionAnswerDTO.image,
+            questionAnswerImage: fetchExam.answer ? fetchExam.answer.image : "",
             questionImage:fetchExam.image
-            // answer:fetchExam.questionAnswerDTO.text,
-            // answerImg:fetchExam.questionAnswerDTO.image,
-           
-           
+            // Note: the backend no longer returns a school stage for a question (materials
+            // are already stage-scoped, and QuestionCommon has no schoolStage field), so the
+            // "levelId" dropdown can't be prefilled here -- the teacher must reselect the
+            // stage to repopulate the material dropdown with this materialId.
         });
-        this.getMaterialByStage(this.state.levelId)
     })
     .catch(error => {
         console.error('Error:', error)
 
-        _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
+        _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
     });
   }
 
@@ -733,50 +655,31 @@ class EditCommonExam extends Component {
       // console.log(finalQuestionsForm);
 
       // Send the data to the server
-      fetch(properties.api_path + "/commonquestions/save", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json; charset=utf-8",
-        },
-        body: JSON.stringify({
-          companyId: this.state.companyID,
-          branchId: this.state.branchID,
-          // active: this.state.selectedStatus,
-          schoolId: this.state.selectedStage,
-          teacherId: this.state.teacherId,
-          // periodId: this.state.selectedPeriod,
-          materialId: this.state.materialId,
-          id:this.state.questionId,
-          // Questions
-          text:this.state.qustionReply,
+      apiFetch(`/common-questions/${this.state.questionId}`, {
+        method: "PUT",
+        body: {
+          text: this.state.qustionReply,
           image: this.state.questionImage,
-          questionAnswerDTO: this.state.answerContent,
-        }),
+          branchId: this.state.branchID,
+          materialId: this.state.materialId,
+          answer: {
+            text: this.state.answerContent.text,
+            image: this.state.answerContent.image,
+          },
+        },
       })
-        .then((res) => {
-          return res.json();
-        })
-        .then((done) => {
+        .then(() => {
           _this.setState({
             buttonText: "إضافة سؤال",
             buttonColor: "",
           });
 
-          if (done.msgType === "success") {
-            _this.toast.current.show({
-              severity: "success",
-              summary: "تم بنجاح",
-              detail: done.msg,
-            });
-            window.location.reload();
-          } else {
-            _this.toast.current.show({
-              severity: "error",
-              summary: "لم تتم العملية",
-              detail: done.msg,
-            });
-          }
+          _this.toast.current.show({
+            severity: "success",
+            summary: "تم بنجاح",
+            detail: "تم تعديل السؤال بنجاح",
+          });
+          window.location.reload();
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -789,7 +692,7 @@ class EditCommonExam extends Component {
           _this.toast.current.show({
             severity: "error",
             summary: "لم تتم العملية",
-            detail: "خطأ في الإتصال",
+            detail: error.message || "خطأ في الإتصال",
           });
         });
     };

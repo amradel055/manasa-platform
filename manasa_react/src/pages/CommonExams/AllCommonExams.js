@@ -5,6 +5,7 @@ import './Exams.scss';
 
 // Helper
 import {setCookie, checkCookie} from '../../Helper/Cookies';
+import { apiFetch } from '../../Helper/Api';
 
 // Components
 import Header from '../../components/Header/Header';
@@ -31,10 +32,10 @@ class AllCommonExams extends Component {
         // Teacher Identifier
         branchID: properties.branch_id,
         companyID: properties.company_id,
-        teacherId: null ,
+
         // Data
         data: [],
-        
+
         getSchoolStages: [],
         selectedSchoolStages:null,
         materialList:[],
@@ -43,23 +44,10 @@ class AllCommonExams extends Component {
         resend: false
     }
 
-    getExams = (selectedSchoolStages,materialId) => {
+    getExams = (materialId) => {
         var _this = this;
-        var data = JSON.parse(window.localStorage.getItem('currentTeacher'));
         // Get Exams From API
-        fetch(properties.api_path + "/commonquestions/findcommonquestions", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-            teacherId :data["teacherId"] ,
-            schoolId:selectedSchoolStages,
-            materialId:materialId
-            })
-        })
-        .then(res => {return res.json()})
+        apiFetch("/common-questions", { query: { materialId: materialId } })
         .then(fetchExams => {
             this.setState({
                 data: fetchExams
@@ -68,7 +56,7 @@ class AllCommonExams extends Component {
         .catch(error => {
             console.error('Error:', error)
 
-            _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
+            _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
         });
     }
 
@@ -80,91 +68,55 @@ class AllCommonExams extends Component {
 
         if (con) {
             // Delete Subscription By ID
-            fetch(properties.api_path + "/commonquestions/deleteanswer", {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    id: id
-                })
-            })
-            .then(res => {return res.json()})
-            .then(deleteMediaByID => {
+            apiFetch(`/common-questions/${id}`, { method: "DELETE" })
+            .then(() => {
                 this.setState({resend: true});
                 _this.toast.current.show({severity: 'success', summary: 'تمت العملية', detail: 'تم الحذف بنجاح'});
+            })
+            .catch(error => {
+                console.error('Error:', error)
+                _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
             });
         }
     }
-    getTeacherId =async()  => {
-        var data =await JSON.parse(window.localStorage.getItem('currentTeacher'));
-        this.setState({teacherId : data["teacherId"]});
-        
-     };
+
      getSchoolStages(){
-        var data =JSON.parse(window.localStorage.getItem('currentTeacher'));
-        fetch(properties.api_path + "/lockup/schoolStagesGuideByTeacher", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                teacherId: data["teacherId"]
-            })
-        })
-        .then(res => {return res.json()})
+        apiFetch("/lookup/school-stages", { query: { branchId: this.state.branchID } })
         .then(grades => {
-            console.log(grades);
-       
             this.setState({getSchoolStages : grades});
         })
+        .catch(error => console.error('Error:', error));
      }
      getMaterialByStage(stageId){
-        var data =JSON.parse(window.localStorage.getItem('currentTeacher'));
-        fetch(properties.api_path + "/lockup/materialListbystage", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                id: stageId
-            })
-        })
-        .then(res => {return res.json()})
+        apiFetch("/lookup/materials/by-stage", { query: { stageId } })
         .then(grades => {
-            console.log(grades);
             this.setState({materialList : grades});
         })
+        .catch(error => console.error('Error:', error));
      }
     componentDidMount () {
         document.title = properties.site_name + " | كل الاسئله";
-        this.getTeacherId();
         // Redirect To Sign In Page If The User Is Already Logged Out & Remove The Data If It Exists
         if (!checkCookie('name')) {
             window.localStorage.removeItem('currentTeacher');
             window.location.href = `/`;
         }
 
-        this.getExams(this.state.selectedSchoolStages,this.state.material);
+        this.getExams(this.state.material);
         this.getSchoolStages()
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevState.resend !== this.state.resend) {
-            this.getExams();
+            this.getExams(this.state.material);
 
             this.setState({resend: false});
         }
     }
-    
+
     render() {
         let  schoolStages = this.state.getSchoolStages.map(schoolStage => {
             return {label: schoolStage.name, value: schoolStage.id}});
-        let  periods = this.state.data.map(period => {
-            return {label: period.name, value: period.id}});
             let  materials = this.state.materialList.map(material => {
                 return {label: material.name, value: material.id}});
         const header = (
@@ -196,7 +148,7 @@ class AllCommonExams extends Component {
                     <div className="container">
                         <div className="card">
                             <Card title="كل الاسئله الشائعه">
-                            <div className="table-header p-col-12 ">     
+                            <div className="table-header p-col-12 ">
                             <div className="p-col-12 p-md-6 p-mt-3 ">
                       <div className="p-inputgroup">
                         <span className="p-float-label">
@@ -205,19 +157,12 @@ class AllCommonExams extends Component {
                             options={schoolStages}
                             onChange={ (e) =>
                               this.setState({
-                                  selectedSchoolStages: e.value,
-                                formContent: {
-                                  ...this.state.formContent,
-                                  schoolId: e.value,
-                                }
-                                
+                                  selectedSchoolStages: e.value
                               },
-                              
-                              this.getMaterialByStage(e.value ),
-                              this.getExams(e.value,this.state.material)
-                              ) 
+                              () => this.getMaterialByStage(e.value)
+                              )
                             }
-                            
+
                             name="grade"
                             placeholder="المرحلة الدراسية"
                           />
@@ -232,14 +177,9 @@ class AllCommonExams extends Component {
                             options={materials}
                             onChange={(e) =>
                               this.setState({
-                                material: e.value,
-                                formContent: {
-                                  ...this.state.formContent,
-                                  materialId: e.value,
-                                },
+                                material: e.value
                               },
-                              this.getExams(this.state.selectedSchoolStages,e.value)
-                              // this.getPeriod(e.value )
+                              () => this.getExams(e.value)
                               )
                             }
                             name="subject"
@@ -251,10 +191,6 @@ class AllCommonExams extends Component {
                     </div>
                                 <DataTable header={header} sortable globalFilter={this.state.globalFilter} className="p-datatable-responsive-demo p-datatable-gridlines p-datatable-striped" value={this.state.data} paginator rows={10} rowsPerPageOptions={[10,20,50]} currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"  emptyMessage="لا يوجد اسئله">
                                     <Column filter sortable field="text" header=" السؤال"></Column>
-                                    {/* <Column filter sortable field="schoolStagesName" header="المرحلة الدراسية"></Column> */}
-                                    {/* <Column filter sortable field="lessonName" header="الدرس"></Column> */}
-                                    {/* <Column filter sortable field="degree" header="درجه الامتحان"></Column> */}
-                                    {/* <Column filter sortable field="timer" header="الوقت"></Column> */}
                                     <Column header="تعديل / حذف" body={actionBodyTemplate}></Column>
                                 </DataTable>
                             </Card>

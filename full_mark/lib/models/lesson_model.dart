@@ -8,6 +8,20 @@ List<Lesson> lessonFromJson(String str) => List<Lesson>.from(json.decode(str).ma
 
 String lessonToJson(List<Lesson> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
+// Ported to match the new backend's LessonResponse (see
+// D:\Hiilt\backend-hiilt-manasa-service\src\main\java\com\igma\manasa\dto\LessonResponse.java).
+// `videoLinks`/`vimeoLinks`/`youtubeLinks`/`images` map directly by name now.
+// `voices` replaces the old `lessonVoiceList` key. `schoolStagesGuideId` is now
+// a plain int id (was a nested {id,name,markEdit} object -- nothing in this app
+// read `.name`/`.markEdit` off it, so the type change is safe). `documents`
+// (lesson attachments) are NOT embedded in the response anymore -- they live
+// behind a separate `GET /documents?lessonId=` call (MiscController) that
+// isn't wired up here; defaults to [] so the existing `.documents!.isNotEmpty`
+// UI code in lesson_screen.dart doesn't crash, it just shows nothing until
+// that call is added. Legacy-only fields (type/companyId/createdBy/
+// createdDate/index/markEdit/schoolStagesName/vimeoLink/youtubeLink -- the
+// singular ones, not the *Links lists) no longer exist server-side and stay
+// nullable/unused so existing `??` fallbacks keep compiling.
 class Lesson {
   Lesson({
     this.type,
@@ -24,6 +38,8 @@ class Lesson {
     this.lessonName,
     this.lessonType,
     this.periodId,
+    this.materialId,
+    this.monthId,
     this.schoolStagesGuideId,
     this.schoolStagesName,
     this.teacherId,
@@ -56,9 +72,12 @@ class Lesson {
   String? lessonName;
   int? lessonType;
   int? periodId;
-  SchoolStagesGuideId? schoolStagesGuideId;
+  int? materialId;
+  int? monthId;
+  int? schoolStagesGuideId;
   String? schoolStagesName;
-  int? teacherId;
+  // Teachers are now identified by a user_service UUID, not a legacy int id.
+  String? teacherId;
   String? vimeoLink;
   String? youtubeLink;
   String? image;
@@ -67,86 +86,45 @@ class Lesson {
   List<String>? lessonVoiceList;
 
   factory Lesson.fromJson(Map<String, dynamic> json) => Lesson(
-    type: json["type"],
     branchId: json["branchId"],
-    companyId: json["companyId"],
-    createdBy: json["createdBy"],
-    createdDate: DateTime.parse(json["createdDate"]),
     id: json["id"],
-    index: json["index"],
-    markEdit: json["markEdit"],
-    documents: List<dynamic>.from(json["documents"].map((x) => x)),
-    images: List<dynamic>.from(json["images"].map((x) => x)),
-    videoLinks: List<dynamic>.from(json["videoLinks"].map((x) => x)),
-    youtubeLinks: List<dynamic>.from(json["youtubeLinks"].map((x) => x)),
-    vimeoLinks: List<dynamic>.from(json["vimeoLinks"].map((x) => x)),
-
-
-    lessonVoiceList: List<String>.from(json["lessonVoiceList"].map((x) => x)),
+    documents: [],
+    images: json["images"] == null ? [] : List<dynamic>.from(json["images"]),
+    videoLinks: json["videoLinks"] == null ? [] : List<dynamic>.from(json["videoLinks"]),
+    youtubeLinks: json["youtubeLinks"] == null ? [] : List<dynamic>.from(json["youtubeLinks"]),
+    vimeoLinks: json["vimeoLinks"] == null ? [] : List<dynamic>.from(json["vimeoLinks"]),
+    lessonVoiceList: json["voices"] == null ? [] : List<String>.from(json["voices"]),
     lessonDescription: json["lessonDescription"],
     lessonName: json["lessonName"],
     lessonType: json["lessonType"],
     periodId: json["periodId"],
-    schoolStagesGuideId: SchoolStagesGuideId.fromJson(json["schoolStagesGuideId"]),
-    schoolStagesName: json["schoolStagesName"],
-    teacherId: json["teacherId"],
-    vimeoLink: json["vimeoLink"],
-    youtubeLink: json["youtubeLink"],
-    image: json["image"] == null ? null : json["image"],
-    voiceLink: json["voiceLink"] == null ? null : json["voiceLink"],
-    thumb: json["thumb"] == null ? null : json["thumb"],
+    materialId: json["materialId"],
+    monthId: json["monthId"],
+    schoolStagesGuideId: json["schoolStagesGuideId"],
+    teacherId: json["teacherUserId"],
+    image: json["image"],
+    voiceLink: json["voiceLink"],
+    thumb: json["thumb"],
   );
 
   Map<String, dynamic> toJson() => {
-    "type": type,
     "branchId": branchId,
-    "companyId": companyId,
-    "createdBy": createdBy,
-    "createdDate": createdDate!.toIso8601String(),
     "id": id,
-    "index": index,
-    "markEdit": markEdit,
-    "documents": List<dynamic>.from(documents!.map((x) => x)),
-    "lessonVoiceList": List<dynamic>.from(lessonVoiceList!.map((x) => x)),
-    "images": List<dynamic>.from(images!.map((x) => x)),
-    "vimeoLinks": List<dynamic>.from(vimeoLinks!.map((x) => x)),
-    "youtubeLinks": List<dynamic>.from(youtubeLinks!.map((x) => x)),
-    "videoLinks": List<dynamic>.from(videoLinks!.map((x) => x)),
+    "images": images ?? [],
+    "voices": lessonVoiceList ?? [],
+    "vimeoLinks": vimeoLinks ?? [],
+    "youtubeLinks": youtubeLinks ?? [],
+    "videoLinks": videoLinks ?? [],
     "lessonDescription": lessonDescription,
     "lessonName": lessonName,
     "lessonType": lessonType,
     "periodId": periodId,
-    "schoolStagesGuideId": schoolStagesGuideId!.toJson(),
-    "schoolStagesName": schoolStagesName,
-    "teacherId": teacherId,
-    "vimeoLink": vimeoLink,
-    "youtubeLink": youtubeLink,
-    "image": image == null ? null : image,
-    "voiceLink": voiceLink == null ? null : voiceLink,
-    "thumb": thumb == null ? null : thumb,
-  };
-}
-
-class SchoolStagesGuideId {
-  SchoolStagesGuideId({
-    this.id,
-    this.markEdit,
-    this.name,
-  });
-
-  int? id;
-  bool? markEdit;
-  String? name;
-
-  factory SchoolStagesGuideId.fromJson(Map<String, dynamic> json) => SchoolStagesGuideId(
-    id: json["id"],
-    markEdit: json["markEdit"],
-    name: json["name"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "markEdit": markEdit,
-    "name": name,
+    "materialId": materialId,
+    "monthId": monthId,
+    "schoolStagesGuideId": schoolStagesGuideId,
+    "teacherUserId": teacherId,
+    "image": image,
+    "voiceLink": voiceLink,
+    "thumb": thumb,
   };
 }

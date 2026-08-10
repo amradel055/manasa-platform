@@ -5,6 +5,7 @@ import "./Subscription.scss";
 
 // Helper
 import { setCookie, checkCookie } from "../../Helper/Cookies";
+import { apiFetch } from "../../Helper/Api";
 
 // Components
 import Header from "../../components/Header/Header";
@@ -13,7 +14,6 @@ import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
-import { getDefaultNormalizer } from "@testing-library/react";
 
 // Properties
 const properties = require("../../properties.json");
@@ -51,150 +51,32 @@ class AddSubscriptions extends Component {
     teacherId: null,
   };
 
-  getData = async () => {
-    var data = await JSON.parse(window.localStorage.getItem("currentTeacher"));
-    this.setState({ teacherId: data["teacherId"] });
-    console.log({ teacher: this.state.teacherId });
-  };
-  
-  getLessonsByStage = (schoolStagesId,materialId , periodId) => {
-    // Get Lessons From API
-    var _data = JSON.parse(window.localStorage.getItem("currentTeacher"));
-    fetch(properties.api_path + "/lesson/teacherLessonList", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        branchId: this.state.branchID,
-        companyId: this.state.companyID,
-        materialId: materialId,
-        schoolStagesId: schoolStagesId,
-        schoolId: schoolStagesId,
-        periodId: periodId,
-        teacherId: _data["teacherId"],
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
+  getLessonsByStage = (schoolStagesId, materialId, periodId) => {
+    apiFetch("/lessons", { query: { materialId, schoolStageId: schoolStagesId, id: periodId } })
       .then((fetchLessons) => {
         this.setState({ getLessons: fetchLessons });
-      });
+      })
+      .catch((error) => console.error("Error:", error));
   };
   getPeriod(materialId) {
-    fetch(properties.api_path + "/periods/findPeriod", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-      
-        materialId: materialId
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
+    apiFetch("/periods/by-material", { query: { materialId } })
       .then((grades) => {
-        console.log(grades);
         this.setState({ getPeriods: grades });
-      });
+      })
+      .catch((error) => console.error("Error:", error));
   }
 
-  // getPeriods() {
-  //   var data = JSON.parse(window.localStorage.getItem("currentTeacher"));
-  //   fetch(properties.api_path + "/periods/allPeriods", {
-  //     method: "POST",
-  //     headers: {
-  //       Accept: "application/json",
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       branchId: this.state.branchID,
-  //     }),
-  //   })
-  //     .then((res) => {
-  //       return res.json();
-  //     })
-  //     .then((grades) => {
-  //       console.log(grades);
-  //       this.setState({ getPeriods: grades });
-  //     });
-  // }
-  getMaterialByStage(stageId){
-    var data =JSON.parse(window.localStorage.getItem('currentTeacher'));
-    fetch(properties.api_path + "/lockup/materialListbystage", {
-        method: "POST",
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            id: stageId
-        })
-    })
-    .then(res => {return res.json()})
-    .then(grades => {
-        console.log(grades);
-        this.setState({getMaterialsList : grades});
-    })
- }
-
-  // getPeriods = () => {
-  //   // Get Periods From API
-  //   fetch(properties.api_path + "/periods/allPeriods", {
-  //     method: "POST",
-  //     headers: {
-  //       Accept: "application/json",
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       branchId: this.state.branchID,
-  //     }),
-  //   })
-  //     .then((res) => {
-  //       return res.json();
-  //     })
-  //     .then((fetchStudents) => {
-  //       this.setState({
-  //         getPeriodsList: fetchStudents,
-  //       });
-  //     });
-  // };
-
-  // //getMaterialList
-  // getMaterial = () => {
-  //   // Get Periods From API
-  //   var data = JSON.parse(window.localStorage.getItem("currentTeacher"));
-  //   fetch(properties.api_path + "/lockup/materialList", {
-  //     method: "POST",
-  //     headers: {
-  //       Accept: "application/json",
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       teacherId: data["teacherId"],
-  //       branchId: this.state.branchID,
-  //     }),
-  //   })
-  //     .then((res) => {
-  //       return res.json();
-  //     })
-  //     .then((fetchMaterials) => {
-  //       this.setState({
-  //         getMaterialsList: fetchMaterials,
-  //       });
-  //     });
-  // };
+  getMaterialByStage(stageId) {
+    apiFetch("/lookup/materials/by-stage", { query: { stageId } })
+      .then((grades) => {
+        this.setState({ getMaterialsList: grades });
+      })
+      .catch((error) => console.error("Error:", error));
+  }
 
   componentDidMount() {
-    this.getData();
     document.title = properties.site_name + " | دفع شهر جديد";
-    // this.getPeriods();
-    // this.getMaterial();
+
     // Redirect To Sign In Page If The User Is Already Logged Out & Remove The Data If It Exists
     if (!checkCookie("name")) {
       window.localStorage.removeItem("currentTeacher");
@@ -202,46 +84,23 @@ class AddSubscriptions extends Component {
     }
 
     // Get Grades From API
-    fetch(properties.api_path + "/lockup/levelList", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        branchId: this.state.branchID,
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
+    apiFetch("/lookup/school-stages", { query: { branchId: this.state.branchID } })
       .then((grades) => {
         this.setState({ getSchoolStages: grades });
-      });
+      })
+      .catch((error) => console.error("Error:", error));
   }
 
   getStudentsByStageID = (e) => {
     this.setState({ selectedStage: e.value }, () => {
       // Get Students From API
-      fetch(properties.api_path + "/student/studentList", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          branchId: this.state.branchID,
-          schoolStagesId: this.state.selectedStage,
-        }),
+      apiFetch("/students", {
+        query: { branchId: this.state.branchID, schoolStagesId: this.state.selectedStage },
       })
-        .then((res) => {
-          return res.json();
-        })
         .then((fetchStudents) => {
-          this.setState({
-            getStudentNames: fetchStudents,
-          });
-        });
+          this.setState({ getStudentNames: fetchStudents });
+        })
+        .catch((error) => console.error("Error:", error));
     });
   };
 
@@ -275,44 +134,26 @@ class AddSubscriptions extends Component {
       });
 
       // Send the data to the server
-      fetch(properties.api_path + "/studentPeriods/saveStudentPeriods", {
+      apiFetch("/students/enrollments", {
         method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json; charset=utf-8",
-        },
-        body: JSON.stringify({
-          companyId: this.state.companyID,
-          branchId: this.state.branchID,
+        body: {
+          studentProfileId: this.state.selectedStudent,
           periodId: this.state.selectedPeriod,
-          value: this.state.cost,
-          studentId: this.state.selectedStudent,
           materialId: this.state.selectedMaterial,
-          teacherId: this.state.teacherId,
-        }),
+          value: this.state.cost,
+        },
       })
-        .then((res) => {
-          return res.json();
-        })
-        .then((done) => {
+        .then(() => {
           _this.setState({
             buttonText: "إضافة الإشتراك",
             buttonColor: "",
           });
 
-          if (done.msgType === "success") {
-            _this.toast.current.show({
-              severity: "success",
-              summary: "تم بنجاح",
-              detail: done.msg,
-            });
-          } else {
-            _this.toast.current.show({
-              severity: "error",
-              summary: "لم تتم العملية",
-              detail: done.msg,
-            });
-          }
+          _this.toast.current.show({
+            severity: "success",
+            summary: "تم بنجاح",
+            detail: "تم إضافة الإشتراك بنجاح",
+          });
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -325,7 +166,7 @@ class AddSubscriptions extends Component {
           _this.toast.current.show({
             severity: "error",
             summary: "لم تتم العملية",
-            detail: "خطأ في الإتصال",
+            detail: error.message || "خطأ في الإتصال",
           });
         });
     };

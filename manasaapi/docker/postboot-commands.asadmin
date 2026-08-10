@@ -1,0 +1,2 @@
+create-jdbc-connection-pool --datasourceclassname com.mysql.jdbc.jdbc2.optional.MysqlDataSource --restype javax.sql.DataSource --property serverName=db:portNumber=3306:databaseName=isag:User=root:Password=isag2019:useSSL=false:zeroDateTimeBehavior=convertToNull:allowPublicKeyRetrieval=true manasaDSPool
+create-jdbc-resource --connectionpoolid manasaDSPool manasaDS

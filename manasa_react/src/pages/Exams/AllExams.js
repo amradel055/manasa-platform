@@ -5,6 +5,7 @@ import './Exams.scss';
 
 // Helper
 import {setCookie, checkCookie} from '../../Helper/Cookies';
+import { apiFetch } from '../../Helper/Api';
 
 // Components
 import Header from '../../components/Header/Header';
@@ -30,29 +31,19 @@ class AllExams extends Component {
         // Teacher Identifier
         branchID: properties.branch_id,
         companyID: properties.company_id,
-        teacherId: null ,
         // Data
         data: [],
-       
+        stagesById: {},
+        lessonsById: {},
+
         // Update Data
         resend: false
     }
 
     getExams = () => {
         var _this = this;
-        var data = JSON.parse(window.localStorage.getItem('currentTeacher'));
         // Get Exams From API
-        fetch(properties.api_path + "/exams/findExamsForAdmin", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-            teacherId :data["teacherId"] ,
-            })
-        })
-        .then(res => {return res.json()})
+        apiFetch("/exams")
         .then(fetchExams => {
             this.setState({
                 data: fetchExams
@@ -73,32 +64,20 @@ class AllExams extends Component {
 
         if (con) {
             // Delete Subscription By ID
-            fetch(properties.api_path + "/exams/deleteExams", {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    id: id
-                })
-            })
-            .then(res => {return res.json()})
-            .then(deleteMediaByID => {
+            apiFetch(`/exams/${id}`, { method: "DELETE" })
+            .then(() => {
                 this.setState({resend: true});
                 _this.toast.current.show({severity: 'success', summary: 'تمت العملية', detail: 'تم الحذف بنجاح'});
+            })
+            .catch(error => {
+                console.error('Error:', error)
+                _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
             });
         }
     }
-    getTeacherId =async()  => {
-        var data =await JSON.parse(window.localStorage.getItem('currentTeacher'));
-        this.setState({teacherId : data["teacherId"]});
-        
-     };
-    
+
     componentDidMount () {
         document.title = properties.site_name + " | كل الإمتحانات";
-        this.getTeacherId();
         // Redirect To Sign In Page If The User Is Already Logged Out & Remove The Data If It Exists
         if (!checkCookie('name')) {
             window.localStorage.removeItem('currentTeacher');
@@ -106,6 +85,22 @@ class AllExams extends Component {
         }
 
         this.getExams();
+
+        apiFetch("/lookup/school-stages", { query: { branchId: this.state.branchID } })
+        .then(stages => {
+            const stagesById = {};
+            stages.forEach(s => { stagesById[s.id] = s.name; });
+            this.setState({ stagesById });
+        })
+        .catch(error => console.error('Error:', error));
+
+        apiFetch("/lessons")
+        .then(lessons => {
+            const lessonsById = {};
+            lessons.forEach(l => { lessonsById[l.id] = l.lessonName; });
+            this.setState({ lessonsById });
+        })
+        .catch(error => console.error('Error:', error));
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -148,8 +143,8 @@ class AllExams extends Component {
                             <Card title="كل الإمتحانات">
                                 <DataTable header={header} sortable globalFilter={this.state.globalFilter} className="p-datatable-responsive-demo p-datatable-gridlines p-datatable-striped" value={this.state.data} paginator rows={10} rowsPerPageOptions={[10,20,50]} currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"  emptyMessage="لا يوجد إمتحانات">
                                     <Column filter sortable field="examName" header="إسم الإمتحان"></Column>
-                                    <Column filter sortable field="schoolStagesName" header="المرحلة الدراسية"></Column>
-                                    <Column filter sortable field="lessonName" header="الدرس"></Column>
+                                    <Column filter sortable body={(row) => this.state.stagesById[row.schoolStagesId] || ''} header="المرحلة الدراسية"></Column>
+                                    <Column filter sortable body={(row) => this.state.lessonsById[row.lessonId] || ''} header="الدرس"></Column>
                                     <Column filter sortable field="degree" header="درجه الامتحان"></Column>
                                     <Column filter sortable field="timer" header="الوقت"></Column>
                                     <Column header="تعديل / حذف" body={actionBodyTemplate}></Column>

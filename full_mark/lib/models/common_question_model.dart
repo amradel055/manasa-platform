@@ -23,7 +23,8 @@ class CommonQuestionModel {
   int? materialId;
   QuestionAnswerDto? questionAnswerDto;
   int? schoolId;
-  int? teacherId;
+  // Teachers are now identified by a user_service UUID, not a legacy int id.
+  String? teacherId;
   String? text;
 
   CommonQuestionModel({
@@ -52,25 +53,17 @@ class CommonQuestionModel {
     markEdit: json["markEdit"],
     image: json["image"],
     materialId: json["materialId"],
-    questionAnswerDto: json["questionAnswerDTO"] == null ? null : QuestionAnswerDto.fromJson(json["questionAnswerDTO"]),
-    schoolId: json["schoolId"],
-    teacherId: json["teacherId"],
+    questionAnswerDto: json["answer"] == null ? null : QuestionAnswerDto.fromJson(json["answer"]),
+    teacherId: json["teacherUserId"],
     text: json["text"],
   );
 
   Map<String, dynamic> toJson() => {
-    "type": type,
-    "branchId": branchId,
-    "createdBy": createdBy,
-    "createdDate": createdDate?.toIso8601String(),
     "id": id,
-    "index": index,
-    "markEdit": markEdit,
     "image": image,
     "materialId": materialId,
-    "questionAnswerDTO": questionAnswerDto?.toJson(),
-    "schoolId": schoolId,
-    "teacherId": teacherId,
+    "answer": questionAnswerDto?.toJson(),
+    "teacherUserId": teacherId,
     "text": text,
   };
 }

@@ -5,6 +5,7 @@ import './Gallery.scss';
 
 // Helper
 import {setCookie, checkCookie} from '../../Helper/Cookies';
+import { apiFetch } from '../../Helper/Api';
 
 // Components
 import Header from '../../components/Header/Header';
@@ -38,22 +39,19 @@ class AllLessons extends Component {
     }
 
     getMedia = () => {
+        var _this = this;
+
         // Get Media From API
-        fetch(properties.api_path + "/media/allMedia", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                branchId: this.state.branchID
-            })
-        })
-        .then(res => {return res.json()})
+        apiFetch("/media", { query: { branchId: this.state.branchID } })
         .then(allMedia => {
             this.setState({
                 data: allMedia
             });
+        })
+        .catch(error => {
+            console.error('Error:', error)
+
+            _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
         });
     }
 
@@ -65,25 +63,15 @@ class AllLessons extends Component {
 
         if (con) {
             // Delete Media By ID
-            fetch(properties.api_path + "/media/deleteMedia", {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    id: id
-                })
-            })
-            .then(res => {return res.json()})
-            .then(deleteMediaByID => {
+            apiFetch(`/media/${id}`, { method: "DELETE" })
+            .then(() => {
                 this.setState({resend: true});
                 _this.toast.current.show({severity: 'success', summary: 'تمت العملية', detail: 'تم الحذف بنجاح'});
             })
             .catch(error => {
-            console.error('Error:', error)
+                console.error('Error:', error)
 
-                _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
+                _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
             });
         }
     }

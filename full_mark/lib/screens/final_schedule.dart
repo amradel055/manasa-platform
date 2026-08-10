@@ -21,7 +21,7 @@ class FinalSchedule extends StatefulWidget {
 class _FinalScheduleState extends State<FinalSchedule> {
   var schedule ;
   String? fullPath ;
-  int? selectedDoctorId ;
+  String? selectedDoctorId ;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override

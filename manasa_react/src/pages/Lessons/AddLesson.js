@@ -6,6 +6,7 @@ import "primeflex/primeflex.css";
 
 // Helper
 import { setCookie, checkCookie } from "../../Helper/Cookies";
+import { apiFetch } from "../../Helper/Api";
 
 // Components
 import Header from "../../components/Header/Header";
@@ -96,49 +97,21 @@ class AddLessons extends Component {
   };
 
   getPeriod(materialId) {
-    fetch(properties.api_path + "/periods/findPeriod", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-      
-        materialId: materialId
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
+    apiFetch("/periods/by-material", { query: { materialId } })
       .then((grades) => {
-        console.log(grades);
         this.setState({ getPeriods: grades });
-      });
+      })
+      .catch((error) => console.error("Error:", error));
   }
 
   getMaterialByStage = (schoolStagesId) => {
-    // Get Periods From API
-    console.log(schoolStagesId);
-    // var data = JSON.parse(window.localStorage.getItem("currentTeacher"));
-    fetch(properties.api_path + "/lockup/materialListbystage", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-      
-        id: schoolStagesId,
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
+    apiFetch("/lookup/materials/by-stage", { query: { stageId: schoolStagesId } })
       .then((fetchMaterials) => {
         this.setState({
           getMaterialsList: fetchMaterials,
         });
-      });
+      })
+      .catch((error) => console.error("Error:", error));
   };
 
   componentDidMount() {
@@ -149,25 +122,12 @@ class AddLessons extends Component {
       window.localStorage.removeItem("currentTeacher");
       window.location.href = `/`;
     }
-    // this.getMaterial();
-    // this.getPeriod();
-    // Get Grades From API
-    fetch(properties.api_path + "/lockup/levelList", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ branchId: this.state.formContent.branchId }),
-    }
-    )
-      .then((res) => {
-        return res.json();
-      })
+
+    apiFetch("/lookup/school-stages", { query: { branchId: this.state.formContent.branchId } })
       .then((grades) => {
         this.setState({ allGrades: grades });
-
-      });
+      })
+      .catch((error) => console.error("Error:", error));
   }
 
   render() {
@@ -360,90 +320,52 @@ class AddLessons extends Component {
       this.setState({
         formContent: {
           ...this.state.formContent,
+          images: this.state.thumbs,
         },
-      });
-
-      this.setState(
-        {
-          formContent: {
-            ...this.state.formContent,
-            // youtubeLink: this.state.formContent.youtubeLink
-            //   ? `https,://www.youtube.com/embed/${this.state.formContent.youtubeLink
-            //       .split("/")
-            //       .pop()
-            //       .replace("watch?v=", "")}`
-            //   : "",
-            // vimeoLink: this.state.formContent.vimeoLink
-            //   ? `https://player.vimeo.com/video/${this.state.formContent.vimeoLink
-            //       .split("/")
-            //       .pop()}`
-            //   : "",
-            teacherId: _data["teacherId"],
-            images: this.state.thumbs,
-            videos:this.state.videos
-            
+      }, () => {
+        apiFetch("/lessons", {
+          method: "POST",
+          body: {
+            lessonName: this.state.formContent.lessonName,
+            lessonType: this.state.formContent.lessonType,
+            lessonDescription: this.state.formContent.lessonDescription,
+            branchId: this.state.formContent.branchId,
+            schoolStagesGuideId: this.state.formContent.schoolId,
+            periodId: this.state.formContent.periodId,
+            materialId: this.state.formContent.materialId,
+            images: this.state.formContent.images,
+            voices: this.state.formContent.lessonVoiceList,
+            videoLinks: this.state.formContent.videoLinks,
+            vimeoLinks: this.state.formContent.vimeoLinks,
+            youtubeLinks: this.state.formContent.youtubeLinks,
           },
-        
-         
-        },
-        () => {
-         
-          // Send the data to the server
-          fetch(properties.api_path + "/lesson/lessonregister", {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json; charset=utf-8",
-            },
-            body: JSON.stringify(this.state.formContent),
-          })
-            .then((res) => {
-              return res.json();
-              
-
-            })
-            .then((done) => {
-              _this.setState({
-                buttonText: "إضافة حصة",
-                buttonColor: "",
-              });
-              console.log(this.state.formContent)
-
-              if (done.msgType === "success") {
-                _this.toast.current.show({
-                  severity: "success",
-                  summary: "تم بنجاح",
-                  detail: done.msg,
-                });
-              } else {
-                _this.toast.current.show({
-                  severity: "error",
-                  summary: "لم تتم العملية",
-                  detail: done.msg,
-                });
-              }
-            })
-            .catch((error) => {
-              console.error("Error:", error);
-
-              _this.setState({
-                buttonText: "إنشاء الحساب",
-                buttonColor: "",
-                msg: {
-                  msgText: "",
-                  msgType: "warning",
-                  msgIcon: "fas fa-times-circle",
-                },
-              });
-
-              _this.toast.current.show({
-                severity: "error",
-                summary: "لم تتم العملية",
-                detail: "خطأ في الإتصال",
-              });
+        })
+          .then(() => {
+            _this.setState({
+              buttonText: "إضافة حصة",
+              buttonColor: "",
             });
-        }
-      );
+            _this.toast.current.show({
+              severity: "success",
+              summary: "تم بنجاح",
+              detail: "تم الحفظ بنجاح",
+            });
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+
+            _this.setState({
+              buttonText: "إضافة حصة",
+              buttonColor: "",
+            });
+
+            _this.toast.current.show({
+              severity: "error",
+              summary: "لم تتم العملية",
+              detail: error.message || "خطأ في الإتصال",
+            });
+          });
+      });
     };
 
     return (

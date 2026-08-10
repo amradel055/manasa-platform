@@ -16,7 +16,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:insta_image_viewer/insta_image_viewer.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -276,10 +275,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
     });
-    var initialzationSettingsAndroid = const AndroidInitializationSettings('@mipmap/ic_launcher');
-    var initializationSettings = InitializationSettings(android: initialzationSettingsAndroid);
-    // flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
     // FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
     //   RemoteNotification? notification = message.notification;
     //   AndroidNotification? android = message.notification!.android;
@@ -852,28 +847,3 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 }
 
-const AndroidNotificationChannel channel = AndroidNotificationChannel(
-  'high_importance_channel', // id
-  'High Importance Notifications', // title
-  description: 'This channel is used for important notifications',
-  // description
-  importance: Importance.max,
-  playSound: true,
-  sound: RawResourceAndroidNotificationSound("isnt"),
-  showBadge: true,
-);
-
-Future onDidReceiveLocalNotification(int id, String title, String body, String payload) async {
-  // await flutterLocalNotificationsPlugin.show(0, "title", "body", notificationDetails, payload: "Custom_Sound");
-}
-
-NotificationDetails notificationDetails = NotificationDetails(
-    android: AndroidNotificationDetails(
-  "${channel.id}",
-  "${channel.name}",
-  channelDescription: "${channel.description}",
-  importance: Importance.max,
-  priority: Priority.max,
-  playSound: true,
-  sound: RawResourceAndroidNotificationSound("isnt"),
-));

@@ -8,106 +8,113 @@ InboxQuestionDetailModel inboxQuestionDetailModelFromJson(String str) => InboxQu
 
 String inboxQuestionDetailModelToJson(InboxQuestionDetailModel data) => json.encode(data.toJson());
 
+// Ported to match the new backend's InboxMessageResponse (see
+// D:\Hiilt\backend-hiilt-manasa-service\src\main\java\com\igma\manasa\dto\InboxMessageResponse.java)
+// merged with an injected "inboxReplys" list (built client-side by
+// ApiServices().findInboxDetail() from a separate GET messages/{id}/replies
+// call). Denormalized display strings the old backend used to send
+// (materialName, studentName, teacherName, type) no longer exist server-side
+// -- kept nullable so existing UI `??` fallbacks keep compiling, but they're
+// never populated from the API anymore.
 class InboxQuestionDetailModel {
-  String type;
-  int id;
-  bool markEdit;
-  String body;
-  String image;
+  String? type;
+  int? id;
+  bool? markEdit;
+  String? body;
+  String? image;
   List<InboxReply> inboxReplys;
-  int materialId;
-  String materialName;
-  DateTime sentDate;
-  int studentId;
-  String studentName;
-  String subject;
-  int teacherId;
-  String teacherName;
+  int? materialId;
+  String? materialName;
+  DateTime? sentDate;
+  int? studentId;
+  String? studentName;
+  String? subject;
+  // Teachers are now identified by a user_service UUID, not a legacy int id.
+  String? teacherId;
+  String? teacherName;
 
   InboxQuestionDetailModel({
-    required this.type,
-    required this.id,
-    required this.markEdit,
-    required this.body,
-    required this.image,
+    this.type,
+    this.id,
+    this.markEdit,
+    this.body,
+    this.image,
     required this.inboxReplys,
-    required this.materialId,
-    required this.materialName,
-    required this.sentDate,
-    required this.studentId,
-    required this.studentName,
-    required this.subject,
-    required this.teacherId,
-    required this.teacherName,
+    this.materialId,
+    this.materialName,
+    this.sentDate,
+    this.studentId,
+    this.studentName,
+    this.subject,
+    this.teacherId,
+    this.teacherName,
   });
 
   factory InboxQuestionDetailModel.fromJson(Map<String, dynamic> json) => InboxQuestionDetailModel(
-    type: json["type"],
     id: json["id"],
-    markEdit: json["markEdit"],
     body: json["body"],
     image: json["image"],
-    inboxReplys: List<InboxReply>.from(json["inboxReplys"].map((x) => InboxReply.fromJson(x))),
+    inboxReplys: json["inboxReplys"] == null
+        ? []
+        : List<InboxReply>.from((json["inboxReplys"] as List).map((x) => InboxReply.fromJson(x))),
     materialId: json["materialId"],
-    materialName: json["materialName"],
-    sentDate: DateTime.parse(json["sentDate"]),
-    studentId: json["studentId"],
-    studentName: json["studentName"],
+    sentDate: json["sentDate"] == null ? null : DateTime.tryParse(json["sentDate"]),
+    studentId: json["studentProfileId"],
     subject: json["subject"],
-    teacherId: json["teacherId"],
-    teacherName: json["teacherName"],
+    teacherId: json["teacherUserId"],
   );
 
   Map<String, dynamic> toJson() => {
-    "type": type,
     "id": id,
-    "markEdit": markEdit,
     "body": body,
     "image": image,
     "inboxReplys": List<dynamic>.from(inboxReplys.map((x) => x.toJson())),
     "materialId": materialId,
-    "materialName": materialName,
-    "sentDate": sentDate.toIso8601String(),
-    "studentId": studentId,
-    "studentName": studentName,
+    "sentDate": sentDate?.toIso8601String(),
+    "studentProfileId": studentId,
     "subject": subject,
-    "teacherId": teacherId,
-    "teacherName": teacherName,
+    "teacherUserId": teacherId,
   };
 }
 
+// Matches InboxReplyResponse (id, messageId, senderUserId, sentDate, body,
+// image, audio, video). markEdit no longer exists.
 class InboxReply {
-  int id;
-  bool markEdit;
-  String body;
-  String image;
-  int message;
-  DateTime sentDate;
+  int? id;
+  bool? markEdit;
+  String? body;
+  String? image;
+  int? message;
+  DateTime? sentDate;
+  // The reply's sender is now a user_service UUID (could be the teacher or
+  // the student, whichever didn't send the original message).
+  String? senderUserId;
 
   InboxReply({
-    required this.id,
-    required this.markEdit,
-    required this.body,
-    required this.image,
-    required this.message,
-    required this.sentDate,
+    this.id,
+    this.markEdit,
+    this.body,
+    this.image,
+    this.message,
+    this.sentDate,
+    this.senderUserId,
   });
 
   factory InboxReply.fromJson(Map<String, dynamic> json) => InboxReply(
     id: json["id"],
-    markEdit: json["markEdit"],
     body: json["body"],
     image: json["image"],
-    message: json["message"],
-    sentDate: DateTime.parse(json["sentDate"]),
+    message: json["messageId"],
+    sentDate: json["sentDate"] == null ? null : DateTime.tryParse(json["sentDate"]),
+    senderUserId: json["senderUserId"],
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
-    "markEdit": markEdit,
     "body": body,
     "image": image,
-    "message": message,
-    "sentDate": sentDate.toIso8601String(),
+    "messageId": message,
+    "sentDate": sentDate?.toIso8601String(),
+    "senderUserId": senderUserId,
   };
 }

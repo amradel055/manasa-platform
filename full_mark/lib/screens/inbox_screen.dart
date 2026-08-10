@@ -2,7 +2,6 @@
 import 'dart:async';
 import 'package:full_mark/widgets/video_widget.dart';
 import 'package:path/path.dart' as path;
-import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:full_mark/screens/inbox_detail_screen.dart';
 import 'package:image_picker/image_picker.dart';
@@ -36,7 +35,7 @@ class InboxScreen extends StatefulWidget {
 
 class _InboxScreen extends State<InboxScreen> {
   FlutterSoundRecorder ?_myRecorder;
-  final audioPlayer = AssetsAudioPlayer();
+  final audioPlayer = FlutterSoundPlayer();
    String ?filePath;
   bool _play = false;
   String _recorderTxt = '00:00:00';
@@ -64,11 +63,7 @@ class _InboxScreen extends State<InboxScreen> {
     filePath = '/sdcard/Download/temp.wav';
     _myRecorder = FlutterSoundRecorder();
 
-    await _myRecorder!.openAudioSession(
-        focus: AudioFocus.requestFocusAndStopOthers,
-        category: SessionCategory.playAndRecord,
-        mode: SessionMode.modeDefault,
-        device: AudioDevice.speaker);
+    await _myRecorder!.openRecorder();
     await _myRecorder?.setSubscriptionDuration(Duration(milliseconds: 10));
     await initializeDateFormatting();
 
@@ -90,7 +85,7 @@ class _InboxScreen extends State<InboxScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
-          primary: Colors.white,
+          backgroundColor: Colors.white,
           elevation: 10.0,
         ),
         onPressed:()=> f!,
@@ -108,7 +103,7 @@ class _InboxScreen extends State<InboxScreen> {
       if (!dir.existsSync()) {
         dir.createSync();
       }
-      _myRecorder!.openAudioSession();
+      _myRecorder!.openRecorder();
       await _myRecorder!.startRecorder(
         toFile: filePath,
         codec: Codec.pcm16WAV,
@@ -126,20 +121,17 @@ class _InboxScreen extends State<InboxScreen> {
     }
 
     Future<String?> stopRecord() async {
-      _myRecorder!.closeAudioSession();
+      _myRecorder!.closeRecorder();
       return await _myRecorder!.stopRecorder();
     }
 
     Future<void> startPlaying() async {
-      audioPlayer.open(
-        Audio.file(filePath!),
-        autoStart: true,
-        showNotification: true,
-      );
+      await audioPlayer.openPlayer();
+      audioPlayer.startPlayer(fromURI: filePath!);
     }
 
     Future<void> stopPlaying() async {
-      audioPlayer.stop();
+      audioPlayer.stopPlayer();
     }
     return Selector<InboxProvider, bool>(
       selector: (context, provider) => provider.isLoading,
@@ -920,7 +912,7 @@ class _InboxScreen extends State<InboxScreen> {
                                                 // }
                                               },
                                               style: ElevatedButton.styleFrom(
-                                                  primary: mainColor
+                                                  backgroundColor: mainColor
                                               ),
                                               child: Center(child: Text("Send"))
                                           ),

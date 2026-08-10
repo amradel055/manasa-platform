@@ -14,7 +14,8 @@ class TeacherModel {
   });
 
   final String? description;
-  final int? id;
+  // Teachers are now identified by a user_service UUID, not a legacy int id.
+  final String? id;
   final String ?image;
   final String? name;
   final String? imageLabel;

@@ -1,18 +1,28 @@
 import 'dart:convert';
 import 'package:full_mark/models/common_question_model.dart';
-import 'package:full_mark/models/inbox_question_detail_model.dart';
 import 'package:full_mark/models/inbox_question_model.dart';
-import 'package:full_mark/models/question_model.dart';
-import 'package:full_mark/models/teacher_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/strings.dart';
 import 'package:http/http.dart' as http;
 
 class QuestionsRepository{
 
+  Future<Map<String, String>> _authHeaders() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? token = preferences.getString(authTokenKey);
+    return {
+      "Content-Type": "application/json",
+      if (token != null) "Authorization": "Bearer $token",
+    };
+  }
 
+  // GET common-questions/by-material?materialId= -- open to any authenticated
+  // role, returns FAQs for the material regardless of which teacher posted
+  // them. teacherId/schoolId are no longer sent (not supported server-side
+  // filters for this endpoint).
   Future<void> getCommonQuestions({
-    required int teacherId,
+    required teacherId,
     required int materialId,
     required int schoolId,
     required void Function(List<CommonQuestionModel> questions) onSuccess,
@@ -21,23 +31,18 @@ class QuestionsRepository{
   }) async {
 
     try {
-      Uri uri = Uri.parse("${url}commonquestions/findcommonquestions") ;
+      var headers = await _authHeaders();
+      Uri uri = Uri.parse("${url}common-questions/by-material?materialId=$materialId") ;
 
-      var body = jsonEncode({
-        "teacherId": teacherId,
-        "materialId": materialId,
-        "schoolId": schoolId,
-      });
-
-      Map<String,String> headers = {
-        "Content-Type": "application/json",
-
-      };
-      final response = await http.post(uri , body: body , headers: headers );
+      final response = await http.get(uri, headers: headers);
 
       if(response.statusCode == 200){
-        final _response = json.decode(utf8.decode(response.bodyBytes)) ;
-        onSuccess(commonQuestionModelFromJson(_response));
+        final decoded = json.decode(utf8.decode(response.bodyBytes)) ;
+        if (decoded["success"] == true) {
+          onSuccess(commonQuestionModelFromJson(decoded["payload"]));
+        } else {
+          throw decoded["error"]?["message"] ?? "حدث خطأ ما";
+        }
       } else {
         throw "${response.reasonPhrase} : ${response.statusCode}";
       }
@@ -48,8 +53,13 @@ class QuestionsRepository{
   }
 
 
+  // GET messages?materialId= -- any authenticated role; the backend
+  // auto-detects a STUDENT caller and filters to their own messages, so
+  // studentId is no longer sent. teacherId is likewise dropped (not a
+  // supported filter for this endpoint -- a student's inbox already only
+  // ever contains messages with their own enrolled teachers).
   Future<void> getInbox({
-    required int teacherId,
+    required teacherId,
     required int materialId,
     required int studentId,
     required void Function(List<InboxQuestionModel> questions) onSuccess,
@@ -58,81 +68,18 @@ class QuestionsRepository{
   }) async {
 
     try {
-      Uri uri = Uri.parse("${url}inboxmessage/findmessages") ;
+      var headers = await _authHeaders();
+      Uri uri = Uri.parse("${url}messages?materialId=$materialId") ;
 
-      var body = jsonEncode({
-        "teacherId": teacherId,
-        "materialId": materialId,
-        "studentId":studentId
-      });
-
-      Map<String,String> headers = {
-        "Content-Type": "application/json",
-
-      };
-      final response = await http.post(uri , body: body , headers: headers );
+      final response = await http.get(uri, headers: headers);
 
       if(response.statusCode == 200){
-        final _response = json.decode(utf8.decode(response.bodyBytes)) ;
-        onSuccess(inboxQuestionModelFromJson(_response));
-      } else {
-        throw "${response.reasonPhrase} : ${response.statusCode}";
-      }
-    } catch (e) {
-      onError(e.toString());
-    }
-    if(onComplete != null) onComplete();
-  }
-  // Future getInboxDetail(
-  //     int? id) async{
-  //
-  //   Uri uri = Uri.parse(url + "inboxmessage/findmessage") ;
-  //   //TODO completeData
-  //   var body = jsonEncode({
-  //  id:id
-  //   });
-  //
-  //   Map<String,String> headers = {
-  //     "Content-Type": "application/json",
-  //     // "Authorization": "Bearer $token"
-  //   };
-  //   var response = await http.post(uri , body: body , headers: headers );
-  //
-  //   if(response.statusCode == 200){
-  //     var _response = json.decode(utf8.decode(response.bodyBytes)) ;
-  //     return _response ;
-  //   }
-  // }
-
-  Future<void> getInboxDetail({
-    required int id,
-
-
-    required void Function(InboxQuestionDetailModel  s) onSuccess,
-    required void Function(String error) onError,
-    void Function()? onComplete,
-  }) async {
-
-    try {
-      Uri uri = Uri.parse("${url}inboxmessage/findmessage") ;
-
-      var body = jsonEncode({
-        "id": id,
-
-      });
-
-      Map<String,String> headers = {
-        "Content-Type": "application/json",
-
-      };
-      final response = await http.post(uri , body: body , headers: headers );
-
-      if(response.statusCode == 200){
-
-        final _response  = json.decode(utf8.decode(response.bodyBytes)) ;
-        // User.fromJson(json.decode(json['data'])),
-        onSuccess(_response );
-
+        final decoded = json.decode(utf8.decode(response.bodyBytes)) ;
+        if (decoded["success"] == true) {
+          onSuccess(inboxQuestionModelFromJson(decoded["payload"]));
+        } else {
+          throw decoded["error"]?["message"] ?? "حدث خطأ ما";
+        }
       } else {
         throw "${response.reasonPhrase} : ${response.statusCode}";
       }

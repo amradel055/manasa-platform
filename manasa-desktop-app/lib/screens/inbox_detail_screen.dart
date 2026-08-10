@@ -116,7 +116,7 @@ class _InboxScreen extends State<InboxDetailScreen> {
                                       // leading: Icon(Icons.arrow_drop_down_circle),
                                       title:  Text(provider.questionDetail!.materialName??"",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
                                       subtitle: Text(
-                                        DateFormat.yMMMEd().format(  context.read<InboxProvider>().questionDetail!.sentDate)??"",
+                                        DateFormat.yMMMEd().format(  context.read<InboxProvider>().questionDetail!.sentDate ?? DateTime.now())??"",
                                         style: TextStyle(color: Colors.black.withOpacity(0.6),fontWeight: FontWeight.bold),
                                       ),
                                       // subtitle: Text(
@@ -127,14 +127,14 @@ class _InboxScreen extends State<InboxDetailScreen> {
                                     Padding(
                                       padding: const EdgeInsets.all(3.0),
                                       child: Text(
-                                        context.read<InboxProvider>().questionDetail!.subject,
+                                        context.read<InboxProvider>().questionDetail!.subject ?? "",
                                         style: TextStyle(color: Colors.black.withOpacity(0.9),fontWeight: FontWeight.bold),
                                       ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(3.0),
                                       child: Text(
-                                        context.read<InboxProvider>().questionDetail!.body,
+                                        context.read<InboxProvider>().questionDetail!.body ?? "",
                                         style: TextStyle(color: Colors.black.withOpacity(0.9)),
                                       ),
                                     ),
@@ -145,7 +145,7 @@ class _InboxScreen extends State<InboxDetailScreen> {
                                           provider.questionDetail!.image ==null?Text(""):
                                           GestureDetector(
                                               onTap: (){
-                                                Navigator.push(context, MaterialPageRoute(builder: (_) => ImagePreviewWidget(path: uploadUrl+provider.questionDetail!.image,tag: uploadUrl+provider.questionDetail!.image)));
+                                                Navigator.push(context, MaterialPageRoute(builder: (_) => ImagePreviewWidget(path: uploadUrl+provider.questionDetail!.image!,tag: uploadUrl+provider.questionDetail!.image!)));
 
                                               },
                                               child: Card(
@@ -169,7 +169,7 @@ class _InboxScreen extends State<InboxDetailScreen> {
                                           ,  provider.questionDetail!.image ==null?Text(""):
                                           GestureDetector(
                                               onTap: (){
-                                                Navigator.push(context, MaterialPageRoute(builder: (_) => ImagePreviewWidget(path: uploadUrl+provider.questionDetail!.image,tag: uploadUrl+provider.questionDetail!.image)));
+                                                Navigator.push(context, MaterialPageRoute(builder: (_) => ImagePreviewWidget(path: uploadUrl+provider.questionDetail!.image!,tag: uploadUrl+provider.questionDetail!.image!)));
 
                                               },
                                               child:Card(
@@ -193,7 +193,7 @@ class _InboxScreen extends State<InboxDetailScreen> {
                                           ,  provider.questionDetail!.image ==null?Text(""):
               GestureDetector(
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => ImagePreviewWidget(path: uploadUrl+provider.questionDetail!.image,tag: uploadUrl+ provider.questionDetail!.image)));
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => ImagePreviewWidget(path: uploadUrl+provider.questionDetail!.image!,tag: uploadUrl+ provider.questionDetail!.image!)));
 
                   },
                   child: Container(
@@ -287,7 +287,7 @@ class _InboxScreen extends State<InboxDetailScreen> {
                                     // leading: Icon(Icons.arrow_drop_down_circle),
                                     // title:  Text(question.body??""),
                                     title: Text(
-                                      DateFormat.yMMMEd().format(   question.sentDate)??"",
+                                      DateFormat.yMMMEd().format(   question.sentDate ?? DateTime.now())??"",
 
 
                                       style: TextStyle(color: Colors.black.withOpacity(0.6)),
@@ -296,14 +296,14 @@ class _InboxScreen extends State<InboxDetailScreen> {
                                   ),   Padding(
                                     padding: const EdgeInsets.fromLTRB(5.0,0,0,10),
                                     child: Text(
-                                      question.body,
+                                      question.body ?? "",
                                       style: TextStyle(color: Colors.black.withOpacity(0.6),fontSize: 20,fontWeight: FontWeight.bold
                                       ),
                                     ),
                                   ), question.image ==null?Text(""):
                                   GestureDetector(
                                       onTap: (){
-                                        Navigator.push(context, MaterialPageRoute(builder: (_) => ImagePreviewWidget(path: uploadUrl+ question.image,tag: uploadUrl+ question.image!)));
+                                        Navigator.push(context, MaterialPageRoute(builder: (_) => ImagePreviewWidget(path: uploadUrl+ question.image!,tag: uploadUrl+ question.image!)));
 
                                       },
                                       child: Container(
@@ -592,7 +592,7 @@ class _InboxScreen extends State<InboxDetailScreen> {
 
                                         setState(() {
                                           // provider.uploadImage(provider.image);
-                                          provider.sendInboxReplyRequest(context,provider.questionDetail!.id);
+                                          provider.sendInboxReplyRequest(context,provider.questionDetail!.id!);
                                           // Navigator.pop(context);
                                         });
 
@@ -602,7 +602,7 @@ class _InboxScreen extends State<InboxDetailScreen> {
                                         // }
                                       },
                                       style: ElevatedButton.styleFrom(
-                                          primary: mainColor
+                                          backgroundColor: mainColor
                                       ),
                                       child: Center(child: Text("Send"))
                                   )

@@ -6,6 +6,7 @@ import 'primeflex/primeflex.css';
 
 // Helper
 import {setCookie, checkCookie} from '../../Helper/Cookies';
+import { apiFetch } from '../../Helper/Api';
 
 // Components
 import Header from '../../components/Header/Header';
@@ -37,7 +38,7 @@ class EditLessons extends Component {
         buttonColor: "",
 
         // Get Current Teacher
-        currentTeacher: JSON.parse(localStorage.getItem("currentTeacher")).data,
+        currentTeacher: JSON.parse(localStorage.getItem("currentTeacher")),
         setVideoType: null,
 
         // Form Select Boxes
@@ -98,49 +99,31 @@ class EditLessons extends Component {
     }
 
     getComments = () => {
-        // Get Comments From API
-        fetch(properties.api_path + "/comments/allComments", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                lessonId: this.state.lessonID
+        apiFetch("/comments", { query: { lessonId: this.state.lessonID } })
+            .then(fetchComments => {
+                this.setState({
+                    comments: [...fetchComments]
+                });
             })
-        })
-        .then(res => {return res.json()})
-        .then(fetchComments => {
-            this.setState({
-                comments: [...fetchComments]
-            });
-        })
+            .catch(error => console.error("Error:", error));
     }
 
     deleteComment = (id) => {
-
         var _this = this;
 
         // Confirm Deletion
         var con = window.confirm("هل أنت متأكد من أنك تريد حذف هذا العنصر");
 
         if (con) {
-            // Delete Media By ID
-            fetch(properties.api_path + "/comments/deleteComments", {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    id: id
+            apiFetch(`/comments/${id}`, { method: "DELETE" })
+                .then(() => {
+                    this.setState({resend: true});
+                    _this.toast.current.show({severity: 'success', summary: 'تمت العملية', detail: 'تم الحذف بنجاح'});
                 })
-            })
-            .then(res => {return res.json()})
-            .then(deleteCommentByID => {
-                this.setState({resend: true});
-                _this.toast.current.show({severity: 'success', summary: 'تمت العملية', detail: 'تم الحذف بنجاح'});
-            });
+                .catch(error => {
+                    console.error("Error:", error);
+                    _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
+                });
         }
     }
 
@@ -158,35 +141,24 @@ class EditLessons extends Component {
 
     sendReply = () => {
         var _this = this;
-        
-        fetch(properties.api_path + "/comments/saveComments", {
+
+        apiFetch("/comments/replies", {
             method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json; charset=utf-8',
-            },
-            body: JSON.stringify({
-                companyId: this.state.companyID,
+            body: {
                 branchId: this.state.branchID,
                 lessonId: this.state.lessonID,
-                studentId: null,
                 comment: this.state.reply,
-                parent: this.state.currentReplyID
-            })
-        })
-        .then(res => {return res.json()})
-        .then(done => {
-            if (done.msgType === "success") {
-                this.setState({
-                    resend: true,
-                    currentReplyID: null,
-                    reply: null
-                });
-
-                _this.toast.current.show({severity: 'success', summary: 'تم الحفظ بنجاح', detail: "تم إضافة التعليق"});
-            } else {
-                _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: "لم يتم حفظ التعليق"});
+                parentId: this.state.currentReplyID
             }
+        })
+        .then(() => {
+            this.setState({
+                resend: true,
+                currentReplyID: null,
+                reply: null
+            });
+
+            _this.toast.current.show({severity: 'success', summary: 'تم الحفظ بنجاح', detail: "تم إضافة التعليق"});
         })
         .catch(error => {
             console.error('Error:', error)
@@ -195,49 +167,20 @@ class EditLessons extends Component {
         });
     }
     getPeriod(materialId){
-        var data =JSON.parse(window.localStorage.getItem('currentTeacher'));
-        fetch(properties.api_path + "/periods/findPeriod", 
-        {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                // teacherId: data["teacherId"]
-                materialId: materialId
-            })
-        })
-        .then(res => {return res.json()})
+        apiFetch("/periods/by-material", { query: { materialId } })
         .then(grades => {
-            console.log(grades);
             this.setState({getPeriods : grades});
         })
+        .catch(error => console.error("Error:", error));
      }
      getMaterial = (schoolStagesId) => {
-        // Get Periods From API
-        console.log(schoolStagesId);
-        // var data = JSON.parse(window.localStorage.getItem("currentTeacher"));
-        fetch(properties.api_path + "/lockup/materialListbystage", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-          
-            id: schoolStagesId,
-          }),
-        })
-          .then((res) => {
-            return res.json();
-          })
+        apiFetch("/lookup/materials/by-stage", { query: { stageId: schoolStagesId } })
           .then((fetchMaterials) => {
             this.setState({
               getMaterialsList: fetchMaterials,
             });
-            
-          });
+          })
+          .catch(error => console.error("Error:", error));
       };
    
     //  getMaterial = () => {
@@ -274,115 +217,66 @@ class EditLessons extends Component {
 
         this.getComments();
         // this.getPeriod();
-        // this.getMaterial();
-        var data = JSON.parse(window.localStorage.getItem('currentTeacher'));
-
         // Get Grades From API
-        fetch(properties.api_path + "/lockup/levelList", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({branchId: this.state.formContent.branchId})
-        })
-        .then(res => {return res.json()})
+        apiFetch("/lookup/school-stages", { query: { branchId: this.state.formContent.branchId } })
         .then(grades => {
             this.setState({allGrades: grades});
         })
-        // Get Lesson From API
-        fetch(properties.api_path + "/lesson/teacherLessonList", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                branchId: this.state.branchID,
-                companyId: this.state.companyID,
-                id: this.state.lessonID,
-                teacherId : data["teacherId"]
-            })
-        })
-        .then(res => {return res.json()})
-        .then(singleLesson => {
-          
-            let vt = 1;
-            console.log(singleLesson)
-            this.getMaterial(singleLesson[0].schoolId)
-            this.getPeriod(singleLesson[0].materialId)
+        .catch(error => console.error("Error:", error));
 
-            // if (singleLesson[0].youtubeLink) {
-            //     vt = 0;
-            // } else if (singleLesson[0].vimeoLink) {
-            //     vt = 2;
-            // } else {
-            //     vt = 1;
-            // }
+        // Get Lesson From API -- single-object endpoint, no more singleLesson[0] indexing
+        // (that indexing is exactly what caused the original videoLinks.map() crash on
+        // /lessons/edit/75 before this migration: any shape mismatch here used to blow up).
+        apiFetch(`/lessons/${this.state.lessonID}`)
+        .then(lesson => {
+            this.getMaterial(lesson.schoolStagesGuideId);
+            this.getPeriod(lesson.materialId);
 
             this.setState({
                 formContent: {
-      
-                    id: parseInt(this.props.match.params.id),
+                    id: this.state.lessonID,
                     branchId: properties.branch_id,
                     companyId: properties.company_id,
-                    lessonName: singleLesson[0].lessonName,
-                    lessonDescription: singleLesson[0].lessonDescription,
-                    lessonType: singleLesson[0].lessonType,
-                    lessonVoiceList:singleLesson[0].lessonVoiceList,
-                    lessonVideosList:singleLesson[0].lessonVideosFList,
+                    lessonName: lesson.lessonName,
+                    lessonDescription: lesson.lessonDescription,
+                    lessonType: lesson.lessonType,
+                    lessonVoiceList: lesson.voices || [],
 
-                    periodId: singleLesson[0].periodId,
-                    materialId:singleLesson[0].materialId,
-                    schoolId: singleLesson[0].schoolStagesGuideId.id,
-                    // videoLink: singleLesson[0].videoLink,
-                    thumb: singleLesson[0].thumb,
+                    periodId: lesson.periodId,
+                    materialId: lesson.materialId,
+                    schoolId: lesson.schoolStagesGuideId,
+                    thumb: lesson.thumb,
 
-                    documents: singleLesson[0].documents,
-                    videoLinks:singleLesson[0].videoLinks,
-                    youtubeLinks: singleLesson[0].youtubeLinks,
-                    vimeoLinks:singleLesson[0].vimeoLinks,
-                  
-                    images:singleLesson[0].images
+                    documents: [],
+                    videoLinks: lesson.videoLinks || [],
+                    youtubeLinks: lesson.youtubeLinks || [],
+                    vimeoLinks: lesson.vimeoLinks || [],
+
+                    images: lesson.images || []
                 },
-                type: singleLesson[0].lessonType,
-                period: singleLesson[0].periodId,
-                material:singleLesson[0].materialId,
-                grade: singleLesson[0].schoolStagesGuideId.id,
-                setVideoType: vt,
-                thumbs:singleLesson[0].images,
-                // setVideoType:singleLesson[0].youtubeLink !==""?0:singleLesson[0].vimeoLink!==""?2:1
-                setVideoType:1
-
-           
+                type: lesson.lessonType,
+                period: lesson.periodId,
+                material: lesson.materialId,
+                grade: lesson.schoolStagesGuideId,
+                thumbs: lesson.images || [],
+                setVideoType: 1
             }, () => {
-                // Get Free Documents By Lessons From API On Load
-                fetch(properties.api_path + "/documents/allDocuments", {
-                    method: "POST",
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        lessonId: this.state.lessonID
-                    })
-                })
-                .then(res => {return res.json()})
+                // Get Documents For This Lesson On Load
+                apiFetch("/documents", { query: { lessonId: this.state.lessonID } })
                 .then(fetchDocuments => {
-                    var temp = [];
-                    for (var i = 0; i < fetchDocuments.length; i++) {
-                        temp.push(fetchDocuments[i].link);
-                    }
-                    
+                    var temp = fetchDocuments.map(d => d.link);
+
                     this.setState({
                         formContent: {
                             ...this.state.formContent,
                             documents: temp
                         }
                     });
-                });
+                })
+                .catch(error => console.error("Error:", error));
             });
-        });
+        })
+        .catch(error => console.error("Error:", error));
     }
     
 
@@ -416,7 +310,7 @@ class EditLessons extends Component {
                 name: comment.studentName,
                 profile: comment.profilePicture,
                 body: comment.comment,
-                parent: (comment.parent) ? comment.parent : 0
+                parent: (comment.parentId) ? comment.parentId : 0
             }
         })
         
@@ -440,7 +334,7 @@ class EditLessons extends Component {
                             <section>
                                 {(parentComment.profile) ? <img src={(parentComment.profile) ? `${properties.uploads_path}/${parentComment.profile}` : (require(`../../assets/img/pp.jpg`).default)} alt={parentComment.name} /> : ""}
                                 <div>
-                                    <h3>{(parentComment.name) ? parentComment.name : this.state.currentTeacher.name} {(!parentComment.name) ? <span>المدرس</span> : ""}</h3>
+                                    <h3>{(parentComment.name) ? parentComment.name : this.state.currentTeacher.fullName} {(!parentComment.name) ? <span>المدرس</span> : ""}</h3>
                                     <p>{parentComment.body}</p>
                                 </div>
                             </section>
@@ -556,264 +450,124 @@ class EditLessons extends Component {
         var addLesson = (e) => {
             var _this = this;
             e.preventDefault();
-            var _data = JSON.parse(window.localStorage.getItem('currentTeacher'));
             this.setState({
                 buttonText: "جاري الإضافة ...",
                 buttonColor: "loading"
             });
-            
+
             this.setState({
                 formContent: {
                     ...this.state.formContent,
-                    youtubeLinks: (this.state.formContent.youtubeLinks) ,
-                    vimeoLinks: (this.state.formContent.vimeoLinks), 
-                    videoLinks: (this.state.formContent.videoLinks), 
-
-                    teacherId : _data["teacherId"],
                     images: this.state.thumbs,
                 }
             }, () => {
-                // Send the data to the server
-                fetch(properties.api_path + "/lesson/lessonregister", {
-                    method: "POST",
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json; charset=utf-8',
-                    },
-                    body: JSON.stringify(this.state.formContent)
+                apiFetch(`/lessons/${this.state.lessonID}`, {
+                    method: "PUT",
+                    body: {
+                        lessonName: this.state.formContent.lessonName,
+                        lessonType: this.state.formContent.lessonType,
+                        lessonDescription: this.state.formContent.lessonDescription,
+                        branchId: this.state.formContent.branchId,
+                        schoolStagesGuideId: this.state.formContent.schoolId,
+                        periodId: this.state.formContent.periodId,
+                        materialId: this.state.formContent.materialId,
+                        images: this.state.formContent.images,
+                        voices: this.state.formContent.lessonVoiceList,
+                        videoLinks: this.state.formContent.videoLinks,
+                        vimeoLinks: this.state.formContent.vimeoLinks,
+                        youtubeLinks: this.state.formContent.youtubeLinks,
+                    }
                 })
-                .then(res => {return res.json()})
-                .then(done => {
+                .then(() => {
                     _this.setState({
-                        buttonText: "إضافة حصة",
+                        buttonText: "حفظ التعديلات",
                         buttonColor: ""
                     });
-
-                    if (done.msgType === "success") {
-                        _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: done.msg});
-                        } else {
-                        _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: done.msg});
-                    }
+                    _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: 'تم حفظ التعديلات'});
                 })
                 .catch(error => {
                     console.error('Error:', error)
 
                     _this.setState({
-                        buttonText: "إنشاء الحساب",
+                        buttonText: "حفظ التعديلات",
                         buttonColor: "",
-                        msg: {
-                            msgText: "",
-                            msgType: "warning",
-                            msgIcon: "fas fa-times-circle"
-                        }});
+                    });
 
-                    _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
+                    _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
                 });
             });
         }
+        // The new API has no single-item "delete this one attached file" endpoint --
+        // PUT /lessons/{id} always replaces the whole media lists, so "deleting" one
+        // item here just means: drop it locally, then save the reduced lists.
+        var saveMediaLists = (overrides) => {
+            var _this = this;
+            apiFetch(`/lessons/${this.state.lessonID}`, {
+                method: "PUT",
+                body: {
+                    lessonName: this.state.formContent.lessonName,
+                    lessonType: this.state.formContent.lessonType,
+                    lessonDescription: this.state.formContent.lessonDescription,
+                    branchId: this.state.formContent.branchId,
+                    schoolStagesGuideId: this.state.formContent.schoolId,
+                    periodId: this.state.formContent.periodId,
+                    materialId: this.state.formContent.materialId,
+                    images: this.state.thumbs,
+                    voices: this.state.formContent.lessonVoiceList,
+                    videoLinks: this.state.formContent.videoLinks,
+                    vimeoLinks: this.state.formContent.vimeoLinks,
+                    youtubeLinks: this.state.formContent.youtubeLinks,
+                    ...overrides,
+                }
+            })
+            .then(() => {
+                _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: 'تم الحذف بنجاح'});
+            })
+            .catch(error => {
+                console.error('Error:', error)
+                _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
+            });
+        };
+
         var deletImage = (e,imag,index) => {
-            var _this = this;
-
-            // Get Periods From API
-            // console.log(imageString);
-            // var data = JSON.parse(window.localStorage.getItem("currentTeacher"));
-            fetch(properties.api_path + "/lessonimage/deleteimage", {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-              
-                img: imag,
-              }),
-            })
-              .then((res) => {
-                return res.json();
-              })
-              .then(done => {
-                // _this.setState({
-                //     buttonText: "إضافة حصة",
-                //     buttonColor: ""
-                // });
-
-                if (done.msgType === "success") {
-                    _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: done.msg});
-                    // var filtered = this.state.thumbs.filter(obj => {
-                    //     // 👇️ returns truthy for all elements that
-                    //     // don't have an id equal to 2
-                    //     return obj ===imag;
-                    //   });
-                    // var array =      this.state.thumbs;
-                    // var index = array.indexOf(e.target.value); // Let's say it's Bob.
-                    // // delete array[index];
-                    // array.splice(index, 1);
-                    // window.location.reload(true)
-                    // this.state.thumbs.removeItem(index)
-                    } else {
-                    _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: done.msg});
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error)
-
-                // _this.setState({
-                //     buttonText: "إنشاء الحساب",
-                //     buttonColor: "",
-                //     msg: {
-                //         msgText: "",
-                //         msgType: "warning",
-                //         msgIcon: "fas fa-times-circle"
-                //     }});
-
-                _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
-            });
-          };
-          var deletDocument= (e,doc) => {
-            var _this = this;
-
-            // Get Periods From API
-            // console.log(imageString);
-            // var data = JSON.parse(window.localStorage.getItem("currentTeacher"));
-            fetch(properties.api_path + "/lessondocuments/deletedocuments", {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-              
-                link: doc,
-              }),
-            })
-              .then((res) => {
-                return res.json();
-              })
-              .then(done => {
-                // _this.setState({
-                //     buttonText: "إضافة حصة",
-                //     buttonColor: ""
-                // });
-
-                if (done.msgType === "success") {
-                    _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: done.msg});
-                    
-                    } else {
-                    _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: done.msg});
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error)
-
-                // _this.setState({
-                //     buttonText: "إنشاء الحساب",
-                //     buttonColor: "",
-                //     msg: {
-                //         msgText: "",
-                //         msgType: "warning",
-                //         msgIcon: "fas fa-times-circle"
-                //     }});
-
-                _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
-            });
-          };
-          var deletVoice= (e,doc) => {
-            var _this = this;
-
-            // Get Periods From API
-            // console.log(imageString);
-            // var data = JSON.parse(window.localStorage.getItem("currentTeacher"));
-            fetch(properties.api_path + "/lessonvoice/deletevoice", {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-              
-                voice: doc,
-              }),
-            })
-              .then((res) => {
-                return res.json();
-              })
-              .then(done => {
-                // _this.setState({
-                //     buttonText: "إضافة حصة",
-                //     buttonColor: ""
-                // });
-
-                if (done.msgType === "success") {
-                    _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: done.msg});
-                    
-                    } else {
-                    _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: done.msg});
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error)
-
-                // _this.setState({
-                //     buttonText: "إنشاء الحساب",
-                //     buttonColor: "",
-                //     msg: {
-                //         msgText: "",
-                //         msgType: "warning",
-                //         msgIcon: "fas fa-times-circle"
-                //     }});
-
-                _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
-            });
-          };
-          var deletVideo= (e,doc) => {
-            var _this = this;
-
-            // Get Periods From API
-            // console.log(imageString);
-            // var data = JSON.parse(window.localStorage.getItem("currentTeacher"));
-            fetch(properties.api_path + "/lessonvedio/deletevideo", {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-              
-                video: doc,
-              }),
-
-            })
-              .then((res) => {
-                return res.json();
-              })
-              .then(done => {
-                // _this.setState({
-                //     buttonText: "إضافة حصة",
-                //     buttonColor: ""
-                // });
-
-                if (done.msgType === "success") {
-                    _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: done.msg});
-                    
-                    } else {
-                    _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: done.msg});
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error)
-
-                // _this.setState({
-                //     buttonText: "إنشاء الحساب",
-                //     buttonColor: "",
-                //     msg: {
-                //         msgText: "",
-                //         msgType: "warning",
-                //         msgIcon: "fas fa-times-circle"
-                //     }});
-
-                _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
-            });
-          };
+            var thumbs = this.state.thumbs.filter(obj => obj !== imag);
+            this.setState({ thumbs, formContent: { ...this.state.formContent, images: thumbs } });
+            saveMediaLists({ images: thumbs });
+        };
+        var deletDocument = (e,doc) => {
+            apiFetch("/documents", { query: { lessonId: this.state.lessonID } })
+                .then(fetchDocuments => {
+                    var match = fetchDocuments.find(d => d.link === doc);
+                    var request = match
+                        ? apiFetch(`/documents/${match.id}`, { method: "DELETE" })
+                        : Promise.resolve();
+                    return request.then(() => {
+                        this.setState({
+                            formContent: {
+                                ...this.state.formContent,
+                                documents: this.state.formContent.documents.filter(d => d !== doc)
+                            }
+                        });
+                        this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: 'تم الحذف بنجاح'});
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error)
+                    this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
+                });
+        };
+        var deletVoice = (e,doc) => {
+            var voices = this.state.formContent.lessonVoiceList.filter(v => v !== doc);
+            this.setState({ formContent: { ...this.state.formContent, lessonVoiceList: voices } });
+            saveMediaLists({ voices });
+        };
+        var deletVideo = (e,doc) => {
+            var videoLinks = this.state.formContent.videoLinks.filter(v => v !== doc);
+            var youtubeLinks = this.state.formContent.youtubeLinks.filter(v => v !== doc);
+            var vimeoLinks = this.state.formContent.vimeoLinks.filter(v => v !== doc);
+            this.setState({ formContent: { ...this.state.formContent, videoLinks, youtubeLinks, vimeoLinks } });
+            saveMediaLists({ videoLinks, youtubeLinks, vimeoLinks });
+        };
         // var getCurrentFiles = this.state.formContent.documents.map((file, Identifier) => {
         //     var getFileFullName = file.split("/")[1];
         //     var getRealNameAndExt = getFileFullName.split("__");

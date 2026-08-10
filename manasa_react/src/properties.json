@@ -1,13 +1,13 @@
 {
-    "company_id": 170,
-    "branch_id":  243,
+    "company_id": 159,
+    "branch_id":  232,
     "site_name": "المعلم | لوحة التحكم",
-     "api_path": "http://igma.online/igmamanasa/rest",
-    "uploads_path": "http://demo.igma-it.com/dashboard",
-    "teacher": {    
-        "name": "  demo  ",   
-        "logo": "logo.png" 
+    "api_path": "http://localhost:8080/api/manasa",
+    "auth_path": "http://localhost:8080/api/auth",
+    "uploads_path": "http://localhost:8180/igmamanasa",
+    "teacher": {
+        "name": "  demo  ",
+        "logo": "logo.png"
     }
-} 
-
+}
 

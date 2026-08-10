@@ -6,6 +6,7 @@ import "./Students.scss";
 
 // Helper
 import { setCookie, checkCookie } from "../../Helper/Cookies";
+import { apiFetch } from "../../Helper/Api";
 
 // Components
 import Header from "../../components/Header/Header";
@@ -50,129 +51,44 @@ class SubStudents extends Component {
     studentCode: null,
 
   };
-  getTeatcherId = async () => {
-    var data = await JSON.parse(window.localStorage.getItem("currentTeacher"));
-    this.setState({ teacherId: data["teacherId"] });
-    console.log({ teacher: this.state.teacherId });
-  };
-  getPeriods = async () => {
-    var data = await JSON.parse(window.localStorage.getItem("currentTeacher"));
-
-    // Get Periods From API
-    fetch(properties.api_path + "/periods/allPeriods", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        teacherId: data["teacherId"],
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then((fetchStudents) => {
+  getPeriods = () => {
+    apiFetch("/periods")
+      .then((fetchPeriods) => {
         this.setState({
-          getPeriodsList: fetchStudents,
+          getPeriodsList: fetchPeriods,
         });
-      });
-  };
-  getStudentData = async () => {
-    var data = await JSON.parse(window.localStorage.getItem("currentTeacher"));
-
-    // Get Periods From API
-    fetch(properties.api_path + "/student/findstudentlogindata", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id:this.state.studentId,
-      }),
-    })
-      .then((res) => {
-        return res.json();
       })
-      .then((fetchStudents) => {
-        this.setState({
-          studentEmail: fetchStudents.email,
-          studentPassword: fetchStudents.password,
-          studentCode:fetchStudents.code
-
-        });
-      });
+      .catch((error) => console.error("Error:", error));
   };
-  getStudents = async (id) => {
-    var data = await JSON.parse(window.localStorage.getItem("currentTeacher"));
 
-    // Get Students From API
-    await fetch(properties.api_path + "/studentPeriods/allStudentPeriods", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        teacherId: data["teacherId"],
-        periodId: id,
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
+  getStudents = (periodId) => {
+    apiFetch("/students/enrollments", { query: { periodId } })
       .then((fetchStudents) => {
         this.setState({
           data: fetchStudents,
         });
-      });
+      })
+      .catch((error) => console.error("Error:", error));
   };
 
   viewStudent = (R) => {};
 
-  deleteStudent = (id,studentId, pId) => {
+  deleteStudent = (id, studentId, pId) => {
     var _this = this;
 
     // Confirm Deletion
     var con = window.confirm("هل أنت متأكد من أنك تريد حذف هذا العنصر");
 
     if (con) {
-      // Delete Subscription By ID
-      fetch(properties.api_path + "/studentPeriods/deleteStudentPeriodsBy", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id:id,
-          studentId: studentId,
-          teacherId: this.state.teacherId,
-          periodId: pId,
-        }),
-      })
-        .then((res) => {
-          return res.json();
+      apiFetch(`/students/enrollments/${id}`, { method: "DELETE" })
+        .then(() => {
+          _this.toast.current.show({
+            severity: "success",
+            summary: "تمت العملية",
+            detail: "تم الحذف بنجاح",
+          });
+          this.getStudents(pId);
         })
-        .then((deleteMediaByID) => {
-          this.setState({ resend: true, data: deleteMediaByID });
-          if (deleteMediaByID.msgType === "success") {
-            _this.toast.current.show({
-              severity: "success",
-              summary: "تمت العملية",
-              detail: "تم الحذف بنجاح",
-            });
-            this.getStudents(pId);
-          } else {
-            _this.toast.current.show({
-              severity: "error",
-              summary: "لم تتم العملية",
-              detail: "لم يتم الحذف",
-            });
-          }
-        })
-
         .catch((error) => {
           console.error("Error:", error);
 
@@ -184,46 +100,23 @@ class SubStudents extends Component {
         });
     }
   };
-   resetStudent = (id) => {
-  
+
+  /** Passwords are bcrypt-hashed now (never shown in plaintext) -- this generates and shows a NEW one. */
+  resetStudent = (studentProfileId) => {
     var _this = this;
 
-    // Confirm Deletion
-    var con = window.confirm("هل أنت متأكد من أنك تريد اعادة ظبط هذا العنصر");
+    var con = window.confirm("هل أنت متأكد من أنك تريد اعادة ضبط كلمة المرور لهذا الطالب؟ سيتم إنشاء كلمة مرور جديدة");
 
     if (con) {
-      // Delete Subscription By ID
-      fetch(properties.api_path + "/studentPeriods/resetPassword", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: id,
-          // password: this.state.studentPassword,
-        }),
-      })
-        .then((res) => {
-          return res.json();
+      apiFetch(`/students/${studentProfileId}/reset-password`, { method: "POST" })
+        .then((result) => {
+          this.setState({ studentPassword: result.newPassword, visible: true, studentId: studentProfileId });
+          _this.toast.current.show({
+            severity: "success",
+            summary: "تمت العملية",
+            detail: "تم إنشاء كلمة مرور جديدة",
+          });
         })
-        .then((reset) => {
-          if (reset.msgType === "success") {
-            _this.toast.current.show({
-              severity: "success",
-              summary: "تمت العملية",
-              detail: "تم اعاده الظبط بنجاح",
-            });
-            this.setState({ visible: false });
-          } else {
-            _this.toast.current.show({
-              severity: "error",
-              summary: "لم تتم العملية",
-              detail: "الباسورد غلط",
-            });
-          }
-        })
-
         .catch((error) => {
           console.error("Error:", error);
 
@@ -240,16 +133,9 @@ class SubStudents extends Component {
 
   componentDidMount() {
     this.getPeriods();
-    this.getTeatcherId();
     this.getStudents();
 
     document.title = properties.site_name + " | طلابي";
-
-    // Redirect To Sign In Page If The User Is Already Logged Out & Remove The Data If It Exists
-    if (!checkCookie("name")) {
-      window.localStorage.removeItem("currentTeacher");
-      window.location.href = `/`;
-    }
   }
 
   //   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -302,58 +188,19 @@ class SubStudents extends Component {
       </div>
     );
 
-    const showResetPopUp = (rowData) => {
-      this.setState({ visible: true, studentId: rowData.studentId });
-     this. getStudentData();
-
-    };
-
     const actionBodyTemplate = (rowData) => {
       return (
         <React.Fragment>
-             <Button
+          <Button
             icon="pi pi-refresh"
-            className="p-button-rounded p-button-warning  p-ml-2"
-            onClick={() =>{
-              this.resetStudent(rowData.id)
-              // this.setState({
-              //   selectedPeriod: e.value,
-              //   globalFilter: e.lable,
-              // });
-
-              // this.getStudents(rowData.periodId);
-            }
-            
-
-            }
-          />
-          <Button
-            icon="pi pi-eye"
-            className="p-button-rounded p-button-secondary p-ml-2"
-            onClick={() => (window.location.href = `exams/view/${rowData.studentId}`)}
-          />
-          <Button
-            icon="pi pi-pencil"
-            className="p-button-rounded p-button-secondary p-ml-2"
-            onClick={() => showResetPopUp(rowData)}
+            className="p-button-rounded p-button-warning p-ml-2"
+            onClick={() => this.resetStudent(rowData.studentProfileId)}
           />
           <Button
             icon="pi pi-trash"
             className="p-button-rounded p-button-danger"
-            onClick={() =>{
-              this.deleteStudent(rowData.id,rowData.studentId, rowData.periodId)
-              // this.setState({
-              //   selectedPeriod: e.value,
-              //   globalFilter: e.lable,
-              // });
-
-              // this.getStudents(rowData.periodId);
-            }
-            
-
-            }
+            onClick={() => this.deleteStudent(rowData.id, rowData.studentProfileId, rowData.periodId)}
           />
-       
         </React.Fragment>
       );
     };
@@ -391,12 +238,6 @@ class SubStudents extends Component {
                   <Column
                     filter
                     sortable
-                    field="schoolStagesName"
-                    header="المرحلة الدراسية"
-                  ></Column>
-                  <Column
-                    filter
-                    sortable
                     field="studentMobile"
                     header="رقم التلفون"
                   ></Column>
@@ -420,51 +261,13 @@ class SubStudents extends Component {
             header="بيانات الطالب"
             visible={this.state.visible}
             style={{ width: "50vw" }}
-            // footer={
-            //   <Button
-            //     label="Reset "
-            //     className="p-button-secondary p-mr-1"
-            //     onClick={() => resetStudent()}
-            //   ></Button>
-            // }
             onHide={() => this.setState({ visible: false })}
           >
-            <div  className="p-col-12 ">
-            <label>
-              البريد الالكتروني
-            </label>
-          <InputText
-              tooltip=" البريد الالكتروني  "
-              value={this.state.studentEmail}
-              onChange={(i) =>
-                this.setState({ studentEmail: i.target.value })
-              }
-            ></InputText>
-              <label>
-                    الباسورد  
-                                </label>
-            <InputText
-              tooltip=" كلمة المرور "
-              value={this.state.studentPassword}
-              onChange={(i) =>
-                this.setState({ studentPassword: i.target.value })
-              }
-            ></InputText>
-              <div className="p-col-12 p-md-4">
-              <label>
-                    كود الطالب  
-              </label>
-            <InputText
-              tooltip=" كود الطلب "
-              value={this.state.studentCode}
-              onChange={(i) =>
-                this.setState({ studentCode: i.target.value })
-              }
-            ></InputText>
-              </div> 
+            <div className="p-col-12">
+              <label>كلمة المرور الجديدة</label>
+              <InputText readOnly tooltip="كلمة المرور الجديدة" value={this.state.studentPassword}></InputText>
+              <p>يرجى إرسال كلمة المرور هذه للطالب -- لن تظهر مرة أخرى.</p>
             </div>
-        
-          
           </Dialog>
         </div>
       </>

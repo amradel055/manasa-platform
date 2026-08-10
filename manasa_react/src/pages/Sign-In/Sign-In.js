@@ -11,6 +11,7 @@ import { Button } from "primereact/button";
 
 // Helper
 import { setCookie, checkCookie } from "../../Helper/Cookies";
+import { login, saveSession, toLoginEmail } from "../../Helper/Api";
 
 // Properties
 const properties = require("../../properties.json");
@@ -40,80 +41,53 @@ class SignIn extends Component {
   }
 
   render() {
-    var signIn = (e) => {
+    var signIn = async (e) => {
       var _this = this;
       e.preventDefault();
-      console.log("sent");
       this.setState({
         buttonText: "جاري الدخول ...",
         buttonColor: "loading",
       });
 
-      // Send the data to the server
-      fetch(properties.api_path + "/authenticationManasa/login", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json; charset=utf-8",
-          // 'Access-Control-Allow-Origin': '*' , 
-          // 'Access-Control-Allow-Methods' : 'POST' ,
-          // "Access-Control-Allow-Headers": "X-Requested-With"
-        },
-        body: JSON.stringify({
-          userName: this.state.username,
-          password: this.state.password,
-        }),
-      })
-        .then((res) => {
-          return res.json();
-        })
-        .then((done) => {
-          _this.setState({
-            buttonText: "تسجيل الدخول",
-            buttonColor: "",
-          });
+      try {
+        const auth = await login(toLoginEmail(this.state.username), this.state.password);
 
-          if (done.success === true) {
-            _this.toast.current.show({
-              severity: "success",
-              summary: "تم بنجاح",
-              detail: "تم تسجيل الدخول بنجاح",
-            });
-          } else {
-            _this.toast.current.show({
-              severity: "error",
-              summary: "لم يتم تسجيل الدخول",
-              detail: "اسم المستخدم او كلمة السر غير صحيحة",
-            });
-          }
+        if (auth.role !== "TEACHER") {
+          throw new Error("هذه اللوحة لحسابات المعلمين فقط");
+        }
 
-          //  Redirection to Lessons Page & Registering a Session
-          if (done.success) {
-            console.log(done);
-            setTimeout(function () {
-              window.location.href = `/lessons`;
-              window.localStorage.setItem(
-                "currentTeacher",
-                JSON.stringify(done)
-              );
-              setCookie("name", done.data);
-            }, 1000);
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
+        saveSession(auth.token, auth);
+        // Pages ported to the new API derive identity from the JWT itself (no
+        // need to pass teacherId around). "teacherId" is kept here as an alias
+        // of the new userId purely so any page not yet migrated to Api.js still
+        // finds a value at the same localStorage key it always used.
+        window.localStorage.setItem(
+          "currentTeacher",
+          JSON.stringify({ ...auth, teacherId: auth.userId })
+        );
 
-          _this.setState({
-            buttonText: "تسجيل الدخول",
-            buttonColor: "",
-          });
-
-          _this.toast.current.show({
-            severity: "error",
-            summary: "لم تتم العملية",
-            detail: "خطأ في الإتصال",
-          });
+        _this.toast.current.show({
+          severity: "success",
+          summary: "تم بنجاح",
+          detail: "تم تسجيل الدخول بنجاح",
         });
+
+        setCookie("name", auth.fullName);
+        setTimeout(function () {
+          window.location.href = `/lessons`;
+        }, 800);
+      } catch (error) {
+        console.error("Error:", error);
+        _this.setState({
+          buttonText: "تسجيل الدخول",
+          buttonColor: "",
+        });
+        _this.toast.current.show({
+          severity: "error",
+          summary: "لم يتم تسجيل الدخول",
+          detail: error.message || "اسم المستخدم او كلمة السر غير صحيحة",
+        });
+      }
     };
 
     return (

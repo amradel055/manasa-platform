@@ -8,6 +8,13 @@ List<Schedule> scheduleFromJson(String str) => List<Schedule>.from(json.decode(s
 
 String scheduleToJson(List<Schedule> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
+// Ported to match the new backend's AppointmentResponse (see
+// D:\Hiilt\backend-hiilt-manasa-service\src\main\java\com\igma\manasa\dto\AppointmentResponse.java).
+// `lessonLocationId` is now a bare int id (the old nested lessonLocation:
+// {name, markEdit} object no longer exists) -- `lessonLocation` is kept as a
+// field for backward compat with existing UI code but is never populated
+// from this JSON anymore; ApiServices.lessonLocations() + a client-side join
+// is the way to resolve a display name now (see data_handler_provider.dart).
 class Schedule {
   Schedule({
     this.type,
@@ -21,6 +28,7 @@ class Schedule {
     this.day,
     this.dayText,
     this.lessonLocation,
+    this.lessonLocationId,
     this.schoolStageId,
     this.teacherId,
     this.teacherName,
@@ -40,8 +48,10 @@ class Schedule {
   int? day;
   String? dayText;
   LessonLocation? lessonLocation;
+  int? lessonLocationId;
   int? schoolStageId;
-  int? teacherId;
+  // Teachers are now identified by a user_service UUID, not a legacy int id.
+  String? teacherId;
   String? teacherName;
   String? time;
   String? time2;
@@ -49,20 +59,13 @@ class Schedule {
   String? time4;
   String? remarks;
   factory Schedule.fromJson(Map<String, dynamic> json) => Schedule(
-    type: json["type"],
     branchId: json["branchId"],
-    createdBy: json["createdBy"],
-    createdDate: DateTime.parse(json["createdDate"]),
     id: json["id"],
-    index: json["index"],
-    markEdit: json["markEdit"],
     appointmentsType: json["appointmentsType"],
     day: json["day"],
-    dayText: json["dayText"],
-    lessonLocation: LessonLocation.fromJson(json["lessonLocation"]),
+    lessonLocationId: json["lessonLocationId"],
     schoolStageId: json["schoolStageId"],
-    teacherId: json["teacherId"],
-    teacherName: json["teacherName"],
+    teacherId: json["teacherUserId"],
     time: json["time"],
     remarks: json["remarks"],
     time2: json["time2"],
@@ -72,20 +75,13 @@ class Schedule {
   );
 
   Map<String, dynamic> toJson() => {
-    "type": type,
     "branchId": branchId,
-    "createdBy": createdBy,
-    "createdDate": createdDate!.toIso8601String(),
     "id": id,
-    "index": index,
-    "markEdit": markEdit,
     "appointmentsType": appointmentsType,
     "day": day,
-    "dayText": dayText,
-    "lessonLocation": lessonLocation!.toJson(),
+    "lessonLocationId": lessonLocationId,
     "schoolStageId": schoolStageId,
-    "teacherId": teacherId,
-    "teacherName": teacherName,
+    "teacherUserId": teacherId,
     "time": time,
     "remarks": remarks ,
     "time2": time2,

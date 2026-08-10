@@ -184,7 +184,7 @@ class _AutoExamRequestScreen extends State<AutoExamRequestScreen> {
 
                               Navigator.push(context, MaterialPageRoute(builder: (context) =>  DoAutoExam(exams[0])));
     },
-                            style: ElevatedButton.styleFrom(primary: mainColor),
+                            style: ElevatedButton.styleFrom(backgroundColor: mainColor),
                             child: const Center(child: Text("Create Exam")),
                           ),
                         );

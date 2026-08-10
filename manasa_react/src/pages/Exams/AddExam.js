@@ -6,6 +6,7 @@ import "./Exams.scss";
 
 // Helper
 import { setCookie, checkCookie } from "../../Helper/Cookies";
+import { apiFetch } from "../../Helper/Api";
 
 // Components
 import Header from "../../components/Header/Header";
@@ -95,184 +96,43 @@ class AddExam extends Component {
     teacherId: null,
   };
 
-  getTeacherId = async () => {
-    var data = await JSON.parse(window.localStorage.getItem("currentTeacher"));
-    this.setState({ teacherId: data["teacherId"] });
-  };
-
   getLessonsByStage = (schoolStagesId,materialId , periodId) => {
-    // Get Lessons From API
-    var _data = JSON.parse(window.localStorage.getItem("currentTeacher"));
-    fetch(properties.api_path + "/lesson/teacherLessonList", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        branchId: this.state.branchID,
-        companyId: this.state.companyID,
-        materialId: materialId,
-        schoolStagesId: schoolStagesId,
-        schoolId: schoolStagesId,
-        periodId: periodId,
-        teacherId: _data["teacherId"],
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
+    apiFetch("/lessons", { query: { materialId, schoolStageId: schoolStagesId, id: periodId } })
       .then((fetchLessons) => {
         this.setState({ getLessons: fetchLessons });
-      });
+      })
+      .catch((error) => console.error("Error:", error));
   };
   getPeriod(materialId) {
-    fetch(properties.api_path + "/periods/findPeriod", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-      
-        materialId: materialId
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
+    apiFetch("/periods/by-material", { query: { materialId } })
       .then((grades) => {
-        console.log(grades);
         this.setState({ getPeriods: grades });
-      });
+      })
+      .catch((error) => console.error("Error:", error));
   }
 
-  // getPeriods() {
-  //   var data = JSON.parse(window.localStorage.getItem("currentTeacher"));
-  //   fetch(properties.api_path + "/periods/allPeriods", {
-  //     method: "POST",
-  //     headers: {
-  //       Accept: "application/json",
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       branchId: this.state.branchID,
-  //     }),
-  //   })
-  //     .then((res) => {
-  //       return res.json();
-  //     })
-  //     .then((grades) => {
-  //       console.log(grades);
-  //       this.setState({ getPeriods: grades });
-  //     });
-  // }
   getMaterialByStage(stageId){
-    var data =JSON.parse(window.localStorage.getItem('currentTeacher'));
-    fetch(properties.api_path + "/lockup/materialListbystage", {
-        method: "POST",
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            id: stageId
-        })
-    })
-    .then(res => {return res.json()})
-    .then(grades => {
-        console.log(grades);
+    apiFetch("/lookup/materials/by-stage", { query: { stageId } })
+      .then(grades => {
         this.setState({getMaterialsList : grades});
-    })
- }
-
- checkExam(lessonId){
-  fetch(properties.api_path + "/exams/checkexamautoforlesson", {
-      method: "POST",
-      headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-          lessonId: lessonId
       })
-  })
-  .then(res => {
-    console.log(res)
-    return res.json()})
-  .then(grades => {
-    if(grades===false){
-      this.toast.current.show({
-        severity: "info",
-        summary: "خطأ ",
-        detail: "لا يمكن اضافه اكثر من امتحان الي لنفس الفتره",
-      });
-      console.log(grades);
-    }else{
-      this.toast.current.show({
-        severity: "info",
-        summary: "تم الاضافه ",
-        detail: " يمكن اضافه امتحان الي  الفتره",
-      });
-      console.log(grades);
-    }
-   
-  })
-}
-  //getMaterialList
-  // getMaterial = () => {
-  //   // Get Periods From API
-  //   var data = JSON.parse(window.localStorage.getItem("currentTeacher"));
-  //   fetch(properties.api_path + "/lockup/materialList", {
-  //     method: "POST",
-  //     headers: {
-  //       Accept: "application/json",
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       teacherId: data["teacherId"],
-  //       branchId: this.state.branchID,
-  //     }),
-  //   })
-  //     .then((res) => {
-  //       return res.json();
-  //     })
-  //     .then((fetchMaterials) => {
-  //       this.setState({
-  //         getMaterialsList: fetchMaterials,
-  //       });
-  //     });
-  // };
+      .catch(error => console.error('Error:', error));
+  }
 
   componentDidMount() {
     document.title = properties.site_name + " | إضافة إمتحان جديد";
-    this.getTeacherId();
-    // this.getMaterialByStage();
     // Redirect To Sign In Page If The User Is Already Logged Out & Remove The Data If It Exists
     if (!checkCookie("name")) {
       window.localStorage.removeItem("currentTeacher");
       window.location.href = `/`;
     }
 
-    // this.getPeriods();
-
     // Get Grades From API
-    fetch(properties.api_path + "/lockup/levelList", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        branchId: this.state.branchID,
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
+    apiFetch("/lookup/school-stages", { query: { branchId: this.state.branchID } })
       .then((grades) => {
         this.setState({ getSchoolStages: grades });
-      });
+      })
+      .catch((error) => console.error("Error:", error));
   }
   // addAnswerImage (url ,index) {
   //  this.setState({questions : {...this.state.questions[this.state.getAnswers -1].answers[index] ,
@@ -640,77 +500,51 @@ class AddExam extends Component {
 
         for (var a = 0; a < this.state.questions[q].answers.length; a++) {
           finalAnswers.push({
-            companyId: this.state.companyID,
-            branchId: this.state.branchID,
             answer: this.state.questions[q].answers[a].text,
             img: this.state.questions[q].answers[a].answerImage,
-            correct: this.state.questions[q].answers[a].correct,
+            correct: this.state.questions[q].answers[a].correct === 1,
             reason: this.state.questions[q].answers[a].note,
           });
         }
 
         finalQuestionsForm.push({
-          companyId: this.state.companyID,
-          branchId: this.state.branchID,
           questionName: this.state.questions[q].question,
           questionType: this.state.questions[q].type,
           img: this.state.questions[q].questionImage,
           questionDegree: this.state.questions[q].score,
-          answersdtoList: finalAnswers,
+          answers: finalAnswers,
         });
       }
 
-      // console.log(finalQuestionsForm);
-
       // Send the data to the server
-      fetch(properties.api_path + "/exams/saveExams", {
+      apiFetch("/exams", {
         method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json; charset=utf-8",
-        },
-        body: JSON.stringify({
-          companyId: this.state.companyID,
-          branchId: this.state.branchID,
+        body: {
           examName: this.state.examName,
           degree: total,
           active: this.state.selectedStatus,
           schoolStagesId: this.state.selectedStage,
           lessonId: this.state.selectedLesson,
-          monthId: this.state.selectedMonth,
           timer: this.state.Timer,
-          teacherId: this.state.teacherId,
           periodId: this.state.selectedPeriod,
           examType: this.state.selectedType,
+          branchId: this.state.branchID,
           materialId: this.state.selectedMaterial,
-          // Questions
-
-          questionsList: finalQuestionsForm,
-        }),
+          questions: finalQuestionsForm,
+        },
       })
-        .then((res) => {
-          return res.json();
-        })
-        .then((done) => {
+        .then(() => {
           _this.setState({
             buttonText: "إضافة الإمتحان",
             buttonColor: "",
           });
 
-          if (done.msgType === "success") {
-            _this.toast.current.show({
-              severity: "success",
-              summary: "تم بنجاح",
-              detail: done.msg,
-            });
-            window.location.reload();
-          } else {
-            _this.toast.current.show({
-              severity: "error",
-              summary: "لم تتم العملية",
-              detail: done.msg,
-            });
-          }
+          _this.toast.current.show({
+            severity: "success",
+            summary: "تم بنجاح",
+            detail: "تمت إضافة الإمتحان بنجاح",
+          });
+          window.location.reload();
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -723,65 +557,10 @@ class AddExam extends Component {
           _this.toast.current.show({
             severity: "error",
             summary: "لم تتم العملية",
-            detail: "خطأ في الإتصال",
+            detail: error.message || "خطأ في الإتصال",
           });
         });
     };
-    // var checkExam = (e) => {
-    //   var _this = this;
-
-   
-
-    
-     
-
-    //   // console.log(finalQuestionsForm);
-
-    //   // Send the data to the server
-    //   fetch(properties.api_path + "/exams/checkexamautoforlesson", {
-    //     method: "POST",
-    //     headers: {
-    //       Accept: "application/json",
-    //       "Content-Type": "application/json; charset=utf-8",
-    //     },
-    //     body: JSON.stringify({
-    //       lessonId: this.state.selectedPeriod,
-         
-    //     }),
-    //   })
-    //     .then((res) => {
-    //       return res.json();
-    //     })
-    //     .then((done) => {
-          
-
-    //       if (done.msgType === "success") {
-    //         _this.toast.current.show({
-    //           severity: "success",
-    //           summary: "تم بنجاح",
-    //           detail: done.msg,
-    //         });
-        
-    //       } else {
-    //         _this.toast.current.show({
-    //           severity: "error",
-    //           summary: "لم تتم العملية",
-    //           detail: done.msg,
-    //         });
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       console.error("Error:", error);
-
-          
-
-    //       _this.toast.current.show({
-    //         severity: "error",
-    //         summary: "لم تتم العملية",
-    //         detail: "خطأ في الإتصال",
-    //       });
-    //     });
-    // };
 
     return (
       <>
@@ -897,15 +676,8 @@ class AddExam extends Component {
                                 this.state.selectedStage,
                                 this.state.selectedMaterial,
                                 e.value
-                              ),
-                            //  this.state.selectedType==1? 
-                             this. checkExam(e.value)
-                            //  :null
                               )
-                              
-                              
-
-                             
+                            )
                           }
                           optionLabel="label"
                           filter

@@ -6,6 +6,7 @@ import "./Exams.scss";
 
 // Helper
 import { setCookie, checkCookie } from "../../Helper/Cookies";
+import { apiFetch } from "../../Helper/Api";
 
 // Components
 import Header from "../../components/Header/Header";
@@ -106,7 +107,6 @@ class AddCommonExam extends Component {
     },
 
     selectedPeriod: null,
-    teacherId: null,
   };
 
   changeVideoType = (e) => {
@@ -130,56 +130,20 @@ class AddCommonExam extends Component {
     });
   };
 
-  getTeacherId = async () => {
-    var data = await JSON.parse(window.localStorage.getItem("currentTeacher"));
-    this.setState({ teacherId: data["teacherId"] });
-  };
-
   getLessonsByStage = (schoolStagesId,materialId , periodId) => {
     // Get Lessons From API
-    var _data = JSON.parse(window.localStorage.getItem("currentTeacher"));
-    fetch(properties.api_path + "/lesson/teacherLessonList", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        branchId: this.state.branchID,
-        companyId: this.state.companyID,
-        materialId: materialId,
-        schoolStagesId: schoolStagesId,
-        schoolId: schoolStagesId,
-        periodId: periodId,
-        teacherId: _data["teacherId"],
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
+    apiFetch("/lessons", { query: { materialId, schoolStageId: schoolStagesId, id: periodId } })
       .then((fetchLessons) => {
         this.setState({ getLessons: fetchLessons });
-      });
+      })
+      .catch((error) => console.error("Error:", error));
   };
   getPeriod(materialId) {
-    fetch(properties.api_path + "/periods/findPeriod", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-      
-        materialId: materialId
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
+    apiFetch("/periods/by-material", { query: { materialId } })
       .then((grades) => {
-        console.log(grades);
         this.setState({ getPeriods: grades });
-      });
+      })
+      .catch((error) => console.error("Error:", error));
   }
 
   // getPeriods() {
@@ -203,22 +167,11 @@ class AddCommonExam extends Component {
   //     });
   // }
   getMaterialByStage(stageId){
-    var data =JSON.parse(window.localStorage.getItem('currentTeacher'));
-    fetch(properties.api_path + "/lockup/materialListbystage", {
-        method: "POST",
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            id: stageId
-        })
-    })
-    .then(res => {return res.json()})
-    .then(grades => {
-        console.log(grades);
+    apiFetch("/lookup/materials/by-stage", { query: { stageId } })
+      .then(grades => {
         this.setState({getMaterialsList : grades});
-    })
+      })
+      .catch(error => console.error('Error:', error));
  }
   //getMaterialList
   // getMaterial = () => {
@@ -247,33 +200,18 @@ class AddCommonExam extends Component {
 
   componentDidMount() {
     document.title = properties.site_name + " | إضافة سؤال جديد";
-    this.getTeacherId();
-    // this.getMaterialByStage();
     // Redirect To Sign In Page If The User Is Already Logged Out & Remove The Data If It Exists
     if (!checkCookie("name")) {
       window.localStorage.removeItem("currentTeacher");
       window.location.href = `/`;
     }
 
-    // this.getPeriods();
-
     // Get Grades From API
-    fetch(properties.api_path + "/lockup/levelList", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        branchId: this.state.branchID,
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
+    apiFetch("/lookup/school-stages", { query: { branchId: this.state.branchID } })
       .then((grades) => {
         this.setState({ getSchoolStages: grades });
-      });
+      })
+      .catch((error) => console.error("Error:", error));
   }
   // addAnswerImage (url ,index) {
   //  this.setState({questions : {...this.state.questions[this.state.getAnswers -1].answers[index] ,
@@ -538,7 +476,7 @@ let uploadVideoQuestion = (uploadedFiles) => {
                     this.setState({
                       answerContent: {
                         ...this.state.answerContent,
-                        image:res.thumb_url.split('/'),
+                        image: res.thumb_url.split('/').pop(),
                       },
                     });
                      this.toast.current.show({
@@ -1006,49 +944,31 @@ let uploadVideoQuestion = (uploadedFiles) => {
       // console.log(finalQuestionsForm);
 
       // Send the data to the server
-      fetch(properties.api_path + "/commonquestions/save", {
+      apiFetch("/common-questions", {
         method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json; charset=utf-8",
-        },
-        body: JSON.stringify({
-          companyId: this.state.companyID,
+        body: {
+          text: this.state.question,
+          image: this.state.img,
           branchId: this.state.branchID,
-          // active: this.state.selectedStatus,
-          schoolId: this.state.selectedStage,
-          teacherId: this.state.teacherId,
-          // periodId: this.state.selectedPeriod,
           materialId: this.state.selectedMaterial,
-          // Questions
-          text:this.state.question,
-          image: this.state.img.split('/'),
-          questionAnswerDTO: this.state.answerContent,
-        }),
+          answer: {
+            text: this.state.answerContent.text,
+            image: this.state.answerContent.image,
+          },
+        },
       })
-        .then((res) => {
-          return res.json();
-        })
-        .then((done) => {
+        .then(() => {
           _this.setState({
             buttonText: "إضافة سؤال",
             buttonColor: "",
           });
 
-          if (done.msgType === "success") {
-            _this.toast.current.show({
-              severity: "success",
-              summary: "تم بنجاح",
-              detail: done.msg,
-            });
-            window.location.reload();
-          } else {
-            _this.toast.current.show({
-              severity: "error",
-              summary: "لم تتم العملية",
-              detail: done.msg,
-            });
-          }
+          _this.toast.current.show({
+            severity: "success",
+            summary: "تم بنجاح",
+            detail: "تمت إضافة السؤال بنجاح",
+          });
+          window.location.reload();
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -1061,7 +981,7 @@ let uploadVideoQuestion = (uploadedFiles) => {
           _this.toast.current.show({
             severity: "error",
             summary: "لم تتم العملية",
-            detail: "خطأ في الإتصال",
+            detail: error.message || "خطأ في الإتصال",
           });
         });
     };

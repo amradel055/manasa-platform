@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:full_mark/providers/auth_provider.dart';
 import 'package:full_mark/providers/screen_providers/home_provider.dart';
 import '../constants/strings.dart';
+import '../constants/helper.dart';
 import '../helper_methods/api_services.dart';
 import '../helper_methods/chat_methods.dart';
 import '../models/exam_model.dart';
@@ -115,13 +116,24 @@ class DataHandler with ChangeNotifier {
     });
   }
 
+  // Submits the student's answers via POST exams/{id}/attempts -- the server
+  // computes the score itself (never trusts a client-claimed correctness).
+  // Builds {questionId: selectedAnswerId} from each question's currently
+  // `answerSelection.selected` answer; unanswered questions are simply
+  // omitted from the map (server treats a missing selection as unanswered/0
+  // score for that question, see ExamService.submitAttempt).
   Future saveExam(Exam exam, BuildContext context) async{
-    final teacherId = context.read<HomeProvider>().selectedTeacherId;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    LoginData _student = LoginData.fromJson(json.decode(prefs.getString(dataKey)!)) ;
-    var _exam = exam.toJson() ;
-    await ApiServices().saveExams(159 , 232 , _exam["examName"] , _exam["degree"] , _exam["schoolStagesId"] ,
-      _exam['lessonId'] , _exam['timer'] , teacherId , _exam['periodId'], _exam['examType'] , _exam['questionsList'] , _exam["id"] , _student.studentData!.id! , _exam["materialId"] , _exam["solutionTime"] ).then((res){
+    Map<int, int> selections = {};
+    for (final question in exam.questionsList ?? []) {
+      if (question.id == null) continue;
+      for (final answer in question.answersdtoList ?? []) {
+        if (answer.selected == answerSelection.selected && answer.id != null) {
+          selections[question.id!] = answer.id!;
+          break;
+        }
+      }
+    }
+    await ApiServices().submitExamAttempt(exam.id!, selections).then((res){
       if (res != null)
       {
        print(res);
@@ -196,59 +208,92 @@ class DataHandler with ChangeNotifier {
     });
   }
 
+  // Legacy day (Saturday=6..Friday=5) -> Arabic display name. The old backend
+  // used to send this pre-computed as "dayText"; AppointmentResponse only
+  // sends the raw `day` int now, so it's computed client-side here (same
+  // mapping used server-side in the teacher web app's Schedule.js dayList).
+  static const Map<int, String> _dayNames = {
+    6: "السبت", 7: "الاحد", 1: "الاتنين", 2: "الثلاثاء",
+    3: "الاربعاء", 4: "الخميس", 5: "الجمعه",
+  };
+
+  /// AppointmentResponse only sends `lessonLocationId` (a bare int) and
+  /// `teacherUserId` (a UUID) now -- the old nested lessonLocation.name and a
+  /// teacherName string used to come pre-joined from the server. Resolve both
+  /// client-side: lesson location names via ApiServices().lessonLocations(),
+  /// teacher names via the teacherList already persisted at login (a student
+  /// only ever sees schedules for teachers they're enrolled with, which is
+  /// exactly that list).
+  Future<Map<String, dynamic>> _buildTeacherSchedules(List<Schedule> schedules) async {
+    Map<int, String> locationNames = {};
+    try {
+      var locations = await ApiServices().lessonLocations();
+      if (locations != null) {
+        for (final loc in locations) {
+          locationNames[loc["id"]] = loc["name"] ?? "";
+        }
+      }
+    } catch (_) {}
+
+    Map<String, String> teacherNames = {};
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? raw = prefs.getString(dataKey);
+      if (raw != null) {
+        List teacherList = json.decode(raw)["teacherList"] ?? [];
+        for (final t in teacherList) {
+          teacherNames["${t["id"]}"] = t["name"] ?? "";
+        }
+      }
+    } catch (_) {}
+
+    Map<String, dynamic> result = {};
+    for (int i = 0; i < schedules.length; i++) {
+      final s = schedules[i];
+      String teacherName = teacherNames[s.teacherId] ?? s.teacherId ?? "";
+      String locationName = locationNames[s.lessonLocationId] ?? "";
+      String dayText = _dayNames[s.day] ?? "";
+
+      List time = s.time != null ? s.time!.split("T") : [] ;
+      List times = time.length > 1 ?  time[1].split("+")[0].split(":") : [];
+      String firstTime =times.isNotEmpty ? "${times[0]} : ${times[1]}" : "" ;
+
+      List time2 = s.time2 != null ? s.time2!.split("T") : [] ;
+      List times2 = time2.length > 1 ? time2[1].split("+")[0].split(":") : [];
+      String secondTime =times2.isNotEmpty ? "${times2[0]} : ${times2[1]}" : "" ;
+
+      List time3 = s.time3 != null ? s.time3!.split("T"): [] ;
+      List times3 = time3.length > 1 ? time3[1].split("+")[0].split(":") : [];
+      String thirdTime = times3.isNotEmpty ? "${times3[0]} : ${times3[1]}" : "" ;
+
+      List time4 = s.time4 != null ?  s.time4!.split("T") : [] ;
+      List times4 = time4.length > 1 ? time4[1].split("+")[0].split(":") : [];
+      String fourthTime = times4.isNotEmpty ? "${times4[0]} : ${times4[1]}" : "";
+
+      if (result.containsKey(teacherName)) {
+        Map schedule = result[teacherName];
+        List entries = schedule[locationName] ?? [];
+        entries.add([dayText , [firstTime , secondTime , thirdTime , fourthTime] , s.remarks ]);
+        schedule[locationName] = entries;
+      } else {
+        result[teacherName] = {
+          locationName: [[dayText, [firstTime , secondTime , thirdTime , fourthTime], s.remarks]]
+        };
+      }
+    }
+    return result;
+  }
+
   Future scheduleBySchoolStageId () async{
     await checkConnectivity() ;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     LoginData _student = LoginData.fromJson(json.decode(prefs.getString(dataKey)!)) ;
-    await ApiServices().scheduleBySchoolStageId(_student.studentData!.schoolStagesId!).then((value){
+    await ApiServices().scheduleBySchoolStageId(_student.studentData!.schoolStagesId!).then((value) async {
       if ( value != null ){
         saveLocalSchedules(value);
         studentSchedule = List<Schedule>.from(value.map((x) => Schedule.fromJson(x)));
         notifyListeners();
-        teacherSchedules = {} ;
-        for(int i = 0 ; i < studentSchedule.length ; i ++){
-          List time = studentSchedule[i].time != null ? studentSchedule[i].time!.split("T") : [] ;
-          List times = time.isNotEmpty ?  time[1].split("+")[0].split(":") : [];
-          String? firstTime =times.isNotEmpty ? "${times[0]} : ${times[1]}" : "" ;
-
-          List time2 = studentSchedule[i].time2 != null ? studentSchedule[i].time2!.split("T") : [] ;
-          List times2 = time2.isNotEmpty ?time2[1].split("+")[0].split(":") : [];
-          String? secondTime =times2.isNotEmpty ? "${times2[0]} : ${times2[1]}" : "" ;
-
-
-          List time3 = studentSchedule[i].time3 != null ? studentSchedule[i].time3!.split("T"): [] ;
-          List times3 = time3.isNotEmpty ? time3[1].split("+")[0].split(":") : [];
-          String? thirdTime = times3.isNotEmpty ? "${times3[0]} : ${times3[1]}" : "" ;
-
-          List time4 = studentSchedule[i].time4 != null ?  studentSchedule[i].time4!.split("T") : [] ;
-          List times4 = time4.isNotEmpty ? time4[1].split("+")[0].split(":") : [];
-          String? fourthTime = times4.isNotEmpty ? "${times4[0]} : ${times4[1]}" : "";
-
-          if(teacherSchedules.containsKey(studentSchedule[i].teacherName))
-          {
-            Map _schedule = teacherSchedules["${studentSchedule[i].teacherName}"] ;
-            if(_schedule.containsKey(studentSchedule[i].lessonLocation!.name))
-            {
-
-              List schedule = teacherSchedules["${studentSchedule[i].teacherName}"]["${studentSchedule[i].lessonLocation!.name}"] ;
-              schedule.add([studentSchedule[i].dayText , [firstTime , secondTime , thirdTime , fourthTime] , studentSchedule[i].remarks ]);
-              _schedule.putIfAbsent(studentSchedule[i].lessonLocation!.name, () => schedule);
-            }
-            else {
-              List schedule = [] ;
-              schedule.add([studentSchedule[i].dayText , [firstTime , secondTime , thirdTime , fourthTime] , studentSchedule[i].remarks ]);
-              _schedule.putIfAbsent(studentSchedule[i].lessonLocation!.name, () => schedule);
-            }
-          } else {
-             teacherSchedules["${studentSchedule[i].teacherName}"] = {} ;
-            List schedule = [] ;
-            schedule.add([studentSchedule[i].dayText, [firstTime , secondTime , thirdTime , fourthTime], studentSchedule[i].remarks]);
-             teacherSchedules["${studentSchedule[i].teacherName}"].putIfAbsent(studentSchedule[i].lessonLocation!.name, () => schedule);
-          }
-          // = {
-          //   "${studentSchedule[i].lessonLocation!.name}" : {}
-          // };
-        }
+        teacherSchedules = await _buildTeacherSchedules(studentSchedule);
         notifyListeners();
         return studentSchedule ;
       }
@@ -373,50 +418,7 @@ class DataHandler with ChangeNotifier {
     var value = jsonDecode(prefs.getString("localSchedules")!);
       studentSchedule = List<Schedule>.from(value.map((x) => Schedule.fromJson(x)));
       notifyListeners();
-      teacherSchedules = {} ;
-      for(int i = 0 ; i < studentSchedule.length ; i ++){
-        List time = studentSchedule[i].time != null ? studentSchedule[i].time!.split("T") : [] ;
-        List times = time.isNotEmpty ?  time[1].split("+")[0].split(":") : [];
-        String? firstTime =times.isNotEmpty ? "${times[0]} : ${times[1]}" : "" ;
-
-        List time2 = studentSchedule[i].time2 != null ? studentSchedule[i].time2!.split("T") : [] ;
-        List times2 = time2.isNotEmpty ?time2[1].split("+")[0].split(":") : [];
-        String? secondTime =times2.isNotEmpty ? "${times2[0]} : ${times2[1]}" : "" ;
-
-
-        List time3 = studentSchedule[i].time3 != null ? studentSchedule[i].time3!.split("T"): [] ;
-        List times3 = time3.isNotEmpty ? time3[1].split("+")[0].split(":") : [];
-        String? thirdTime = times3.isNotEmpty ? "${times3[0]} : ${times3[1]}" : "" ;
-
-        List time4 = studentSchedule[i].time4 != null ?  studentSchedule[i].time4!.split("T") : [] ;
-        List times4 = time4.isNotEmpty ? time4[1].split("+")[0].split(":") : [];
-        String? fourthTime = times4.isNotEmpty ? "${times4[0]} : ${times4[1]}" : "";
-
-        if(teacherSchedules.containsKey(studentSchedule[i].teacherName))
-        {
-          Map _schedule = teacherSchedules["${studentSchedule[i].teacherName}"] ;
-          if(_schedule.containsKey(studentSchedule[i].lessonLocation!.name))
-          {
-
-            List schedule = teacherSchedules["${studentSchedule[i].teacherName}"]["${studentSchedule[i].lessonLocation!.name}"] ;
-            schedule.add([studentSchedule[i].dayText , [firstTime , secondTime , thirdTime , fourthTime] , studentSchedule[i].remarks ]);
-            _schedule.putIfAbsent(studentSchedule[i].lessonLocation!.name, () => schedule);
-          }
-          else {
-            List schedule = [] ;
-            schedule.add([studentSchedule[i].dayText , [firstTime , secondTime , thirdTime , fourthTime] , studentSchedule[i].remarks ]);
-            _schedule.putIfAbsent(studentSchedule[i].lessonLocation!.name, () => schedule);
-          }
-        } else {
-          teacherSchedules["${studentSchedule[i].teacherName}"] = {} ;
-          List schedule = [] ;
-          schedule.add([studentSchedule[i].dayText, [firstTime , secondTime , thirdTime , fourthTime], studentSchedule[i].remarks]);
-          teacherSchedules["${studentSchedule[i].teacherName}"].putIfAbsent(studentSchedule[i].lessonLocation!.name, () => schedule);
-        }
-        // = {
-        //   "${studentSchedule[i].lessonLocation!.name}" : {}
-        // };
-      }
+      teacherSchedules = await _buildTeacherSchedules(studentSchedule);
       notifyListeners();
       return studentSchedule ;
 

@@ -22,7 +22,7 @@ class ReSchedule extends StatefulWidget {
 class _ReScheduleState extends State<ReSchedule> {
   var schedule ;
   String? fullPath ;
-  int? selectedDoctorId ;
+  String? selectedDoctorId ;
   bool ?isLoading;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();

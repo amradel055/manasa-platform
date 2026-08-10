@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:full_mark/widgets/play_new_network.dart';
 import 'package:full_mark/widgets/play_new_youtube.dart';
-import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:flutter_sound/flutter_sound.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:full_mark/widgets/attach.dart';
@@ -30,11 +30,11 @@ class LessonScreen extends StatefulWidget {
 }
 
 class _LessonScreenState extends State<LessonScreen> {
-  AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
+  FlutterSoundPlayer assetsAudioPlayer = FlutterSoundPlayer();
+  Duration _playerPosition = Duration.zero;
   // late YoutubePlayerController _controller;
 
-  List<AssetsAudioPlayer> assetsAudioPlayers = [];
-  List<Audio> audios = [];
+  List<String> audios = [];
   String? currentPlay;
   bool? isRecording;
   List<dynamic> allVideoes = [] ;
@@ -49,7 +49,7 @@ class _LessonScreenState extends State<LessonScreen> {
 
   bool loading = false;
 
-  late Audio audio;
+  late String audio;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   HeadsetEvent headsetPlugin = HeadsetEvent();
@@ -89,14 +89,19 @@ class _LessonScreenState extends State<LessonScreen> {
       setState(() {});
     });
     if (widget.lesson.voiceLink != null) {
-      audio = Audio.network(uploadUrl + widget.lesson.voiceLink!);
+      audio = uploadUrl + widget.lesson.voiceLink!;
     }
     for (final audio in widget.lesson.lessonVoiceList ?? []) {
-      audios.add(Audio.network(uploadUrl + audio));
+      audios.add(uploadUrl + audio);
     }
+    assetsAudioPlayer.openPlayer().then((_) {
+      assetsAudioPlayer.onProgress?.listen((e) {
+        _playerPosition = e.position;
+      });
+    });
     headsetPlugin.getCurrentState.then((value) {
       if(value == HeadsetState.CONNECT){
-        assetsAudioPlayer.open(audio);
+        assetsAudioPlayer.startPlayer(fromURI: audio);
         isPlaying = true;
       }
     });
@@ -104,7 +109,7 @@ class _LessonScreenState extends State<LessonScreen> {
     /// Detect the moment headset is plugged or unplugged
     headsetPlugin.setListener((value) {
       if(value == HeadsetState.DISCONNECT){
-        assetsAudioPlayer.pause();
+        assetsAudioPlayer.pausePlayer();
         isPlaying = false;
         setState(() {});
       }
@@ -115,7 +120,7 @@ class _LessonScreenState extends State<LessonScreen> {
   @override
   void dispose() {
     // TODO: implement dispose
-    assetsAudioPlayer.dispose();
+    assetsAudioPlayer.closePlayer();
     videoController.dispose();
     super.dispose();
   }
@@ -313,7 +318,7 @@ class _LessonScreenState extends State<LessonScreen> {
                                                         IconButton(
                                                           onPressed: () {
                                                             setState(() {
-                                                              assetsAudioPlayer.seekBy(Duration(seconds: -10));
+                                                              assetsAudioPlayer.seekToPlayer(_playerPosition - Duration(seconds: 10));
                                                             });
                                                           },
                                                           icon: Icon(
@@ -329,12 +334,16 @@ class _LessonScreenState extends State<LessonScreen> {
                                                               return;
                                                             }
                                                             // setState(() async {
-                                                            if (currentPlay == audio.path) {
-                                                              await assetsAudioPlayer.playOrPause();
-                                                              isPlaying = assetsAudioPlayer.isPlaying.value;
+                                                            if (currentPlay == audio) {
+                                                              if (assetsAudioPlayer.isPlaying) {
+                                                                await assetsAudioPlayer.pausePlayer();
+                                                              } else {
+                                                                await assetsAudioPlayer.resumePlayer();
+                                                              }
+                                                              isPlaying = assetsAudioPlayer.isPlaying;
                                                             } else {
-                                                              currentPlay = audio.path;
-                                                              await assetsAudioPlayer.open(audio);
+                                                              currentPlay = audio;
+                                                              await assetsAudioPlayer.startPlayer(fromURI: audio);
                                                               isPlaying = true;
                                                             }
                                                             // if(!isPlaying){
@@ -347,7 +356,7 @@ class _LessonScreenState extends State<LessonScreen> {
                                                             // });
                                                           },
                                                           icon: Icon(
-                                                            currentPlay == audio.path && isPlaying ? Icons.pause : Icons.play_circle_outline,
+                                                            currentPlay == audio && isPlaying ? Icons.pause : Icons.play_circle_outline,
                                                             size: size.width * 0.1,
                                                           ),
                                                         ),
@@ -355,7 +364,7 @@ class _LessonScreenState extends State<LessonScreen> {
                                                           onPressed: () {
                                                             setState(() {
                                                               setState(() {
-                                                                assetsAudioPlayer.seekBy(Duration(seconds: 10));
+                                                                assetsAudioPlayer.seekToPlayer(_playerPosition + Duration(seconds: 10));
                                                               });
                                                             });
                                                           },

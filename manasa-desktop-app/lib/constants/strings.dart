@@ -1,4 +1,7 @@
- String url = "http://igma.online/igmamanasa/rest/" ; // cloud
+ // Hiilt gateway -- manasa-service (teacher/student domain API) and user-service (auth) both sit behind it.
+ String url = "http://localhost:8080/api/manasa/";
+ String authUrl = "http://localhost:8080/api/auth/";
+ String authTokenKey = "manasa_auth_token";
  // String url = "http://192.168.1.19:6060/igma/rest/" ;
  // http://192.168.1.19:9090/igma/rest
 // String uploadUrl = "http://igma.online/igmamanasa/igmaImages/" ;
