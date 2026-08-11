@@ -6,7 +6,7 @@ import 'primeflex/primeflex.css';
 
 // Helper
 import {setCookie, checkCookie} from '../../Helper/Cookies';
-import { apiFetch } from '../../Helper/Api';
+import { apiFetch, getCurrentUser } from '../../Helper/Api';
 
 // Components
 import Header from '../../components/Header/Header';
@@ -101,7 +101,7 @@ class EditStudent extends Component {
         .catch(error => console.error('Error:', error));
 
         // Get Grades From API
-        apiFetch("/lookup/school-stages", { query: { branchId: this.state.formContent.branchID } })
+        apiFetch("/lookup/school-stages/by-teacher", { query: { teacherUserId: getCurrentUser()?.userId } })
         .then(grades => {
             this.setState({grades: grades});
         })

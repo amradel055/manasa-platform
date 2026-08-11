@@ -2,7 +2,7 @@ import React, { Component, createRef } from "react";
 
 // Helper
 import { setCookie, checkCookie } from "../../Helper/Cookies";
-import { apiFetch } from "../../Helper/Api";
+import { apiFetch, getCurrentUser } from "../../Helper/Api";
 
 // Components
 import Header from "../../components/Header/Header";
@@ -91,7 +91,7 @@ class Schedule extends Component {
 
     this.getMaterial();
 
-    apiFetch("/lookup/school-stages", { query: { branchId: this.state.branchID } })
+    apiFetch("/lookup/school-stages/by-teacher", { query: { teacherUserId: getCurrentUser()?.userId } })
       .then((grades) => {
         this.setState({ allGrades: grades });
       })

@@ -73,7 +73,7 @@ class AddNews extends Component {
             window.location.href = `/`;
         };
 
-        apiFetch("/lookup/school-stages", { query: { branchId: this.state.branchID } })
+        apiFetch("/lookup/school-stages/by-teacher", { query: { teacherUserId: getCurrentUser()?.userId } })
         .then(grades => {
             this.setState({allGrades: grades});
         })

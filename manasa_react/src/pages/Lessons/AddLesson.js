@@ -6,7 +6,7 @@ import "primeflex/primeflex.css";
 
 // Helper
 import { setCookie, checkCookie } from "../../Helper/Cookies";
-import { apiFetch } from "../../Helper/Api";
+import { apiFetch, getCurrentUser } from "../../Helper/Api";
 
 // Components
 import Header from "../../components/Header/Header";
@@ -123,7 +123,7 @@ class AddLessons extends Component {
       window.location.href = `/`;
     }
 
-    apiFetch("/lookup/school-stages", { query: { branchId: this.state.formContent.branchId } })
+    apiFetch("/lookup/school-stages/by-teacher", { query: { teacherUserId: getCurrentUser()?.userId } })
       .then((grades) => {
         this.setState({ allGrades: grades });
       })

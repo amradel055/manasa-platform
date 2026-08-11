@@ -5,7 +5,7 @@ import "./Lessons.scss";
 
 // Helper
 import { setCookie, checkCookie } from "../../Helper/Cookies";
-import { apiFetch } from "../../Helper/Api";
+import { apiFetch, getCurrentUser } from "../../Helper/Api";
 
 // Components
 import Header from "../../components/Header/Header";
@@ -73,7 +73,7 @@ class AllLessons extends Component {
   };
 
   getStages = () => {
-    apiFetch("/lookup/school-stages", { query: { branchId: properties.branch_id } })
+    apiFetch("/lookup/school-stages/by-teacher", { query: { teacherUserId: getCurrentUser()?.userId } })
       .then((stages) => {
         const stagesById = {};
         stages.forEach((s) => {

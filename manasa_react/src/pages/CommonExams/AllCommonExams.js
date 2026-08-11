@@ -5,7 +5,7 @@ import './Exams.scss';
 
 // Helper
 import {setCookie, checkCookie} from '../../Helper/Cookies';
-import { apiFetch } from '../../Helper/Api';
+import { apiFetch, getCurrentUser } from '../../Helper/Api';
 
 // Components
 import Header from '../../components/Header/Header';
@@ -81,7 +81,7 @@ class AllCommonExams extends Component {
     }
 
      getSchoolStages(){
-        apiFetch("/lookup/school-stages", { query: { branchId: this.state.branchID } })
+        apiFetch("/lookup/school-stages/by-teacher", { query: { teacherUserId: getCurrentUser()?.userId } })
         .then(grades => {
             this.setState({getSchoolStages : grades});
         })
