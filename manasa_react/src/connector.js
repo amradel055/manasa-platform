@@ -38,6 +38,8 @@ import Links from './pages/links/links.js';
 import Notifications from './pages/notifications/notifications.js';
 import SchoolStages from './pages/Settings/SchoolStages.js';
 import Materials from './pages/Settings/Materials.js';
+import Join from './pages/Join/Join.js';
+import Onboarding from './pages/Onboarding/Onboarding.js';
 class Connector extends Component {
   render() {
     return (
@@ -45,6 +47,12 @@ class Connector extends Component {
         <Switch >
           <Route path="/" exact>
             <SignIn />
+          </Route>
+          <Route path="/join" exact>
+            <Join />
+          </Route>
+          <Route path="/onboarding" exact>
+            <Onboarding />
           </Route>
           <Route path="/lessons" exact>
             <AllLessons />

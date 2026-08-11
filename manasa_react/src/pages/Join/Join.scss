@@ -1,0 +1,171 @@
+// Variables
+@import "../../assets/css/vars";
+
+.join-page {
+    direction: rtl;
+
+    .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    section {
+        padding: 60px 0;
+    }
+
+    // Hero
+    .hero {
+        background: linear-gradient(135deg, $dark-blue, $blue);
+        color: $white;
+        text-align: center;
+        padding: 70px 0 90px;
+
+        .logo {
+            max-width: 140px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font: $big-size-black;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font: $med-size-reg;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            background: $yellow;
+            color: $dark-blue-one;
+            font: $small-size-bold;
+            padding: 14px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: transform 0.15s ease;
+
+            &:hover {
+                transform: translateY(-2px);
+                color: $dark-blue-one;
+            }
+        }
+    }
+
+    // Services
+    .services {
+        background: $light-blue;
+
+        h2 {
+            text-align: center;
+            font: $large-size-black;
+            color: $dark-blue-one;
+            margin-bottom: 40px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+
+            @media (max-width: 900px) {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            @media (max-width: 600px) {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .service-card {
+            background: $white;
+            border-radius: 12px;
+            padding: 30px 24px;
+            text-align: center;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+
+            i {
+                font-size: 34px;
+                color: $blue;
+                margin-bottom: 14px;
+                display: block;
+            }
+
+            h3 {
+                font: $small-size-bold;
+                color: $dark-blue-one;
+                margin-bottom: 8px;
+            }
+
+            p {
+                font: $tiny-size-reg;
+                color: $dark-blue-two;
+                margin: 0;
+            }
+        }
+    }
+
+    // Signup
+    .signup {
+        .signup-card {
+            max-width: 480px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 10px;
+
+            h2 {
+                font: $large-size-black;
+                color: $dark-blue-one;
+                margin-bottom: 6px;
+            }
+
+            .signup-subtitle {
+                font: $small-size-reg;
+                color: $dark-blue-two;
+                margin-bottom: 20px;
+            }
+        }
+
+        .signup-button {
+            background: $blue;
+            border-color: $blue;
+        }
+    }
+
+    // Success state
+    .success-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .success-card {
+        max-width: 480px;
+        text-align: center;
+        padding: 20px;
+
+        .success-icon {
+            font-size: 60px;
+            color: $successTxt;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        h2 {
+            font: $large-size-black;
+            color: $dark-blue-one;
+            margin-bottom: 12px;
+        }
+
+        p {
+            font: $small-size-reg;
+            color: $dark-blue-two;
+            line-height: 1.8;
+        }
+    }
+}

@@ -1,0 +1,192 @@
+// Variables
+@import "../../assets/css/vars";
+
+.onboarding-page {
+    direction: rtl;
+    min-height: 100vh;
+    background: $light-blue;
+    padding: 40px 20px;
+
+    &.loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font: $med-size-bold;
+        color: $dark-blue-one;
+    }
+
+    .container {
+        max-width: 700px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .logo {
+        max-width: 100px;
+        margin-bottom: 16px;
+    }
+
+    h1 {
+        font: $large-size-black;
+        color: $dark-blue-one;
+        margin-bottom: 30px;
+    }
+
+    .steps-indicator {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+
+        .step-dot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            cursor: default;
+
+            .dot {
+                width: 34px;
+                height: 34px;
+                border-radius: 50%;
+                background: $white;
+                border: 2px solid #c9d8dc;
+                color: $dark-blue-two;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font: $small-size-bold;
+                margin-bottom: 6px;
+            }
+
+            .label {
+                font: $tiny-size-reg;
+                color: $dark-blue-two;
+            }
+
+            &.active .dot {
+                background: $blue;
+                border-color: $blue;
+                color: $white;
+            }
+
+            &.done {
+                cursor: pointer;
+
+                .dot {
+                    background: $successTxt;
+                    border-color: $successTxt;
+                    color: $white;
+                }
+            }
+        }
+    }
+
+    .step-card {
+        text-align: right;
+        padding: 10px;
+    }
+
+    .step-content {
+        h2 {
+            font: $med-size-black;
+            color: $dark-blue-one;
+            margin-bottom: 6px;
+        }
+
+        .step-desc {
+            font: $tiny-size-reg;
+            color: $dark-blue-two;
+            margin-bottom: 20px;
+        }
+
+        .add-row {
+            display: flex;
+            gap: 10px;
+            margin: 16px 0;
+
+            .p-inputtext {
+                flex: 1;
+            }
+        }
+
+        .item-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px;
+
+            li {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                background: $light-blue;
+                border-radius: 8px;
+                padding: 10px 14px;
+                margin-bottom: 8px;
+                font: $small-size-reg;
+
+                small {
+                    color: $dark-blue-two;
+                }
+
+                i {
+                    cursor: pointer;
+                    color: $warningTxt;
+                }
+
+                &.empty {
+                    justify-content: center;
+                    color: $dark-blue-two;
+                    background: transparent;
+                }
+            }
+        }
+
+        .subdomain-input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 16px 0 6px;
+            direction: ltr;
+
+            .suffix {
+                font: $small-size-bold;
+                color: $dark-blue-two;
+            }
+
+            .p-inputtext {
+                flex: 1;
+                direction: ltr;
+                text-align: left;
+            }
+        }
+
+        .availability-msg {
+            min-height: 24px;
+            margin-bottom: 16px;
+            font: $tiny-size-bold;
+
+            .checking {
+                color: $dark-blue-two;
+            }
+
+            .available {
+                color: $successTxt;
+            }
+
+            .unavailable {
+                color: $warningTxt;
+            }
+        }
+
+        .nav-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 16px;
+        }
+
+        .next-button {
+            background: $blue;
+            border-color: $blue;
+        }
+    }
+}
