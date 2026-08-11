@@ -5,7 +5,7 @@ import '../Subscriptions/Subscription.scss';
 
 // Helper
 import { checkCookie } from '../../Helper/Cookies';
-import { apiFetch } from '../../Helper/Api';
+import { apiFetch, getCurrentUser } from '../../Helper/Api';
 
 // Components
 import Header from '../../components/Header/Header';
@@ -39,7 +39,9 @@ class Materials extends Component {
     }
 
     getSchoolStages() {
-        apiFetch("/lookup/school-stages", { query: { branchId: this.state.branchID } })
+        const user = getCurrentUser();
+        if (!user) return;
+        apiFetch("/lookup/school-stages/by-teacher", { query: { teacherUserId: user.userId } })
             .then(stages => {
                 this.setState({ getSchoolStages: stages });
             })
