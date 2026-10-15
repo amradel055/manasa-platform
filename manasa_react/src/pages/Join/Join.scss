@@ -670,6 +670,22 @@ $j-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
                 }
 
                 &::placeholder { color: transparent; }
+
+                // Chrome ignores autocomplete="off" often enough that the
+                // field still gets filled, and it then paints its own pale
+                // background straight over the dark panel. There is no way to
+                // override that background directly, so a full-size inset
+                // shadow covers it and the transition delay stops it flashing
+                // back on repaint.
+                &:-webkit-autofill,
+                &:-webkit-autofill:hover,
+                &:-webkit-autofill:focus,
+                &:-webkit-autofill:active {
+                    -webkit-text-fill-color: $white;
+                    -webkit-box-shadow: 0 0 0 1000px #2a6f88 inset;
+                    caret-color: $white;
+                    transition: background-color 9999s ease-in-out 0s;
+                }
             }
 
             textarea {

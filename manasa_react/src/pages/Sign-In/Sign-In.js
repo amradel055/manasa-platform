@@ -101,10 +101,12 @@ class SignIn extends Component {
         <div className="panel-face">
           <h2>تسجيل الدخول</h2>
           <p className="signup-subtitle">أدخل بياناتك للوصول للوحة التحكم</p>
-          <form action="/lessons" method="POST" onSubmit={signIn}>
+          <form action="/lessons" method="POST" onSubmit={signIn} autoComplete="off">
             <div className="fields">
               {/* placeholder=" " keeps :not(:placeholder-shown) working, so the
-                  floating label never sits on top of a typed value. */}
+                  floating label never sits on top of a typed value.
+                  autoComplete is off so the browser does not drop a saved
+                  address and password into the fields on load. */}
               <span className="p-float-label" style={{ "--d": "320ms" }}>
                 <InputText
                   id="username"
@@ -112,6 +114,7 @@ class SignIn extends Component {
                   name="username"
                   type="text"
                   placeholder=" "
+                  autoComplete="off"
                   onChange={(e) => {
                     this.setState({ username: e.target.value });
                   }}
@@ -125,6 +128,7 @@ class SignIn extends Component {
                   value={this.state.password}
                   name="password"
                   placeholder=" "
+                  autoComplete="new-password"
                   onChange={(e) => {
                     this.setState({ password: e.target.value });
                   }}

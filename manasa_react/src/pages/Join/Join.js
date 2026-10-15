@@ -122,10 +122,12 @@ class Join extends Component {
           <p className="signup-subtitle">
             أنشئ حسابك مجانًا وابدأ في استخدام لوحة التحكم فورًا
           </p>
-          <form onSubmit={this.handleSubmit}>
+          <form onSubmit={this.handleSubmit} autoComplete="off">
             <div className="fields">
               {/* placeholder=" " keeps :not(:placeholder-shown) working, so the
-                  floating label never sits on top of a typed value. */}
+                  floating label never sits on top of a typed value.
+                  autoComplete is off so the browser does not drop a saved
+                  address and password into the fields on load. */}
               <span className="p-float-label" style={{ "--d": "320ms" }}>
                 <InputText
                   id="fullName"
@@ -141,6 +143,7 @@ class Join extends Component {
                   type="email"
                   dir="ltr"
                   placeholder=" "
+                  autoComplete="off"
                   value={this.state.email}
                   onChange={(e) => this.setState({ email: e.target.value })}
                 />
@@ -151,6 +154,7 @@ class Join extends Component {
                   id="password"
                   type="password"
                   placeholder=" "
+                  autoComplete="new-password"
                   value={this.state.password}
                   onChange={(e) => this.setState({ password: e.target.value })}
                 />
