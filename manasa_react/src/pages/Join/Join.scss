@@ -1,171 +1,845 @@
 // Variables
 @import "../../assets/css/vars";
 
+// "لوحة مركزية" -- the platform's hero gradient is the ground of the whole
+// page, and one white sheet floats on it filling 95% of the viewport. Inside
+// the sheet: the pitch and the six services on white, the signup form on the
+// gradient.
+//
+// IMPORTANT -- this project remaps Cairo's weights in index.scss:
+//   100 = Regular | 200 = SemiBold | 300 = Bold | 400 = Black
+// so the usual 400/700/900 land on the wrong face (400 renders as Black, and
+// 700/900 fall back to the nearest defined face). Every weight below uses the
+// project's scale, which is what keeps this page from rendering far heavier
+// than the design.
+$w-reg: 100;
+$w-sbold: 200;
+$w-bold: 300;
+$w-black: 400;
+
+$j-ink: #16303a;
+$j-ink-2: #5b747d;
+$j-ink-3: #8299a1;
+$j-gold-ink: #2e2300;
+$j-line: #e3eaec;
+$j-line-hi: #c3d9df;
+$j-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
+
+@keyframes joinRise {
+    from { opacity: 0; transform: translateY(16px); }
+}
+@keyframes joinLand {
+    from { opacity: 0; transform: translateY(24px) scale(0.975); }
+}
+@keyframes joinFieldIn {
+    from { opacity: 0; transform: translateY(14px); }
+}
+@keyframes joinSpin {
+    to { transform: rotate(1turn); }
+}
+@keyframes joinCaret {
+    0%, 45% { opacity: 1; }
+    50%, 95% { opacity: 0; }
+    100% { opacity: 1; }
+}
+// draws the glyph in, holds it, then pulls the line back out the other side --
+// so the watermark is permanently being drawn rather than drawn once
+@keyframes joinGhostDraw {
+    0% { stroke-dashoffset: 160; }
+    42% { stroke-dashoffset: 0; }
+    68% { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: -160; }
+}
+// the gradient itself drifts, very slowly, so the ground is never quite static
+@keyframes joinShift {
+    50% { background-position: 100% 50%; }
+}
+@keyframes joinFloatA {
+    50% { transform: translate(26px, 34px); }
+}
+@keyframes joinFloatB {
+    50% { transform: translate(-22px, -28px); }
+}
+
+// one motion per service, so no two icons move the same way
+@keyframes aPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.14); }
+}
+@keyframes aStamp {
+    0%, 70%, 100% { transform: scale(1) rotate(0deg); }
+    78% { transform: scale(0.84) rotate(-8deg); }
+    88% { transform: scale(1.12) rotate(4deg); }
+}
+@keyframes aClimb {
+    0%, 100% { transform: translateY(0); }
+    45% { transform: translateY(-6px); }
+}
+@keyframes aWiggle {
+    0%, 60%, 100% { transform: rotate(0deg); }
+    70% { transform: rotate(-11deg); }
+    80% { transform: rotate(9deg); }
+    90% { transform: rotate(-5deg); }
+}
+@keyframes aFlip {
+    0%, 55%, 100% { transform: rotateY(0deg); }
+    75% { transform: rotateY(180deg); }
+}
+@keyframes aSwipe {
+    0%, 100% { transform: translateX(0); }
+    40% { transform: translateX(-7px); }
+    70% { transform: translateX(5px); }
+}
+
 .join-page {
     direction: rtl;
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    align-items: stretch;
+    // 2.5% on each side leaves the sheet filling 95% of the viewport
+    padding: 2.5vh 2.5vw;
+    // lighter than the brand gradient on purpose: the sheet sits on top of it
+    // and needs the ground to stay back, not compete
+    background: linear-gradient(135deg, #1a6a84, #33acd0, #1a6a84);
+    background-size: 220% 220%;
+    animation: joinShift 26s ease-in-out infinite;
+    font-family: $font;
 
-    .container {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 0 20px;
+    &::before,
+    &::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
     }
 
-    section {
-        padding: 60px 0;
+    &::before {
+        width: 560px;
+        height: 560px;
+        top: -20%;
+        inset-inline-start: -10%;
+        background: rgba(255, 255, 255, 0.06);
+        animation: joinFloatA 22s ease-in-out infinite;
     }
 
-    // Hero
-    .hero {
-        background: linear-gradient(135deg, $dark-blue, $blue);
-        color: $white;
-        text-align: center;
-        padding: 70px 0 90px;
+    &::after {
+        width: 360px;
+        height: 360px;
+        bottom: -14%;
+        inset-inline-end: -4%;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        animation: joinFloatB 18s ease-in-out infinite;
+    }
 
-        .logo {
-            max-width: 140px;
-            margin-bottom: 20px;
+    // ---- drifting orbs behind the sheet ----
+    .orbs {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+
+        span {
+            position: absolute;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .o1 {
+            width: 300px;
+            height: 300px;
+            top: 12%;
+            inset-inline-end: 8%;
+            background: rgba(255, 255, 255, 0.05);
+            animation: joinFloatA 19s ease-in-out infinite;
+        }
+
+        .o2 {
+            width: 190px;
+            height: 190px;
+            bottom: 18%;
+            inset-inline-start: 14%;
+            border: 1px solid rgba(238, 184, 7, 0.28);
+            animation: joinFloatB 25s ease-in-out infinite;
+        }
+
+        .o3 {
+            width: 420px;
+            height: 420px;
+            top: 46%;
+            inset-inline-end: 38%;
+            border: 1px dashed rgba(255, 255, 255, 0.14);
+            animation: joinFloatA 31s ease-in-out infinite reverse;
+        }
+    }
+
+    // ---- the halo that turns around the sheet ----
+    // A conic gradient on an oversized square, rotated; the wrapper's padding
+    // is the only part of it that shows, which reads as light travelling
+    // around the edge rather than a border that simply sits there.
+    .sheet-wrap {
+        position: relative;
+        z-index: 1;
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        padding: 3px;
+        border-radius: 29px;
+        overflow: hidden;
+        box-shadow: 0 50px 90px -40px rgba(4, 28, 36, 0.75);
+        animation: joinLand 0.7s $j-ease both;
+        // gives the sheet's tilt somewhere to happen
+        perspective: 1600px;
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: -70%;
+            background: conic-gradient(
+                from 0deg,
+                transparent 0deg 170deg,
+                rgba(238, 184, 7, 0.85) 215deg,
+                rgba(255, 255, 255, 0.9) 250deg,
+                rgba(25, 139, 175, 0.85) 285deg,
+                transparent 330deg 360deg
+            );
+            animation: joinSpin 11s linear infinite;
+        }
+    }
+
+    // ---- the floating sheet ----
+    .sheet {
+        position: relative;
+        z-index: 1;
+        flex: 1;
+        width: 100%;
+        min-height: 0;
+        background: $white;
+        border-radius: 26px;
+        overflow: hidden;
+        display: flex;
+        flex-wrap: wrap;
+        transform-style: preserve-3d;
+        transition: transform 0.25s ease-out;
+    }
+
+    // ---- white half: pitch + services ----
+    .sheet-left {
+        flex: 1 1 360px;
+        min-width: 0;
+        padding: clamp(26px, 3vw, 52px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 22px;
+
+        // "logo copy.png" is 176x60 with the drawing in its left ~31% and the
+        // wordmark in the rest. Both halves are cropped out of the same file
+        // with background-position, so the drawing can lead the row while the
+        // wordmark stacks above the subtitle. $logo-h drives everything else.
+        $logo-h: 44px;
+        $logo-scaled-w: $logo-h * (176 / 60); // the file's own aspect
+        $logo-mark-w: $logo-scaled-w * 0.315; // where the drawing ends
+
+        .bar {
+            display: flex;
+            // drawing first, then the name over its subtitle, centred against it
+            align-items: center;
+            gap: 11px;
+            animation: joinRise 0.5s $j-ease both;
+            animation-delay: 120ms;
+
+            .mark {
+                flex: none;
+                display: block;
+                width: $logo-mark-w;
+                height: $logo-h;
+                background-repeat: no-repeat;
+                background-position: left center;
+                background-size: auto 100%;
+            }
+
+            .wm {
+                line-height: 1.3;
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+
+                .name {
+                    display: block;
+                    width: $logo-scaled-w - $logo-mark-w;
+                    height: $logo-h * 0.56;
+                    background-repeat: no-repeat;
+                    background-position: right center;
+                    background-size: auto #{$logo-h};
+                }
+
+                small {
+                    display: block;
+                    font-size: 13px;
+                    font-weight: $w-reg;
+                    color: $j-ink-3;
+                }
+            }
         }
 
         h1 {
-            font: $big-size-black;
-            margin-bottom: 10px;
+            margin: 0;
+            font-size: clamp(25px, 2.6vw, 42px);
+            font-weight: $w-black;
+            line-height: 1.2;
+            letter-spacing: -0.025em;
+            color: $j-ink;
+            max-width: 19ch;
+            // Reserved for the longest line at three rows, so erasing and
+            // retyping never nudges the lede, the button or the cards below.
+            min-height: 3.6em;
+            display: flex;
+            align-items: flex-start;
+
+            .grad {
+                background: linear-gradient(135deg, $blue, $dark-blue);
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+            }
+
+            // the line that types itself; the caret keeps it from collapsing
+            // to zero width between phrases
+            .typed { display: inline; }
+
+            .caret {
+                display: inline-block;
+                width: 3px;
+                height: 0.82em;
+                margin-inline-start: 4px;
+                vertical-align: -0.08em;
+                border-radius: 2px;
+                background: $blue;
+                animation: joinCaret 1.05s steps(1, end) infinite;
+            }
         }
 
-        .tagline {
-            font: $med-size-reg;
-            max-width: 600px;
-            margin: 0 auto 30px;
-            opacity: 0.9;
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip-path: inset(50%);
+        }
+
+        .lede {
+            margin: 0;
+            font-size: clamp(14px, 1.1vw, 17px);
+            font-weight: $w-reg;
+            line-height: 1.85;
+            color: $j-ink-2;
+            max-width: 38ch;
+            animation: joinRise 0.6s $j-ease both;
+            animation-delay: 620ms;
         }
 
         .hero-cta {
-            display: inline-block;
-            background: $yellow;
-            color: $dark-blue-one;
-            font: $small-size-bold;
-            padding: 14px 40px;
-            border-radius: 30px;
+            align-self: flex-start;
+            display: inline-flex;
+            align-items: center;
+            min-height: 48px;
+            padding: 0 30px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, $dark-blue, $blue);
+            color: $white;
+            font-size: 15px;
+            font-weight: $w-bold;
             text-decoration: none;
-            transition: transform 0.15s ease;
+            box-shadow: none;
+            animation: joinRise 0.6s $j-ease both;
+            animation-delay: 700ms;
+            transition: transform 0.18s $j-ease, filter 0.2s ease;
 
             &:hover {
-                transform: translateY(-2px);
-                color: $dark-blue-one;
+                transform: translateY(-3px);
+                filter: brightness(1.12);
+                color: $white;
+            }
+
+            &:active { transform: translateY(0); }
+        }
+
+        .svch {
+            margin-top: 4px;
+            font-size: 11.5px;
+            font-weight: $w-bold;
+            letter-spacing: 0.14em;
+            color: $j-ink-3;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: joinRise 0.55s $j-ease both;
+            animation-delay: 760ms;
+
+            &::after {
+                content: "";
+                flex: 1;
+                height: 2px;
+                border-radius: 2px;
+                background: linear-gradient(135deg, $dark-blue, $blue);
+                opacity: 0.4;
+            }
+        }
+
+        // Deliberately NOT stretched: the cards stay the size of their content
+        // and the sheet's leftover height becomes breathing room around the
+        // centred column instead of hollow space inside each card.
+        .svcs {
+            display: grid;
+            gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 235px), 1fr));
+        }
+
+        .svc {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid $j-line;
+            border-radius: 14px;
+            padding: 15px 17px;
+            min-height: 92px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            // hidden until it scrolls into view; JS adds .in (and a safety net
+            // reveals everything after 1.8s if the observer never fires)
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.5s $j-ease var(--d, 0ms),
+                        transform 0.5s $j-ease var(--d, 0ms),
+                        border-color 0.22s ease, box-shadow 0.26s ease;
+
+            &.in {
+                opacity: 1;
+                transform: none;
+            }
+
+            // a glow that follows the pointer, in this service's own colour
+            &::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                border-radius: inherit;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                background: radial-gradient(
+                    200px circle at var(--mx, 50%) var(--my, 50%),
+                    var(--c-tint, #e4f2f7),
+                    transparent 62%
+                );
+            }
+
+            &:hover::after { opacity: 1; }
+
+            // The glyph is no longer a small boxed icon -- it is an oversized
+            // watermark bleeding off the card's far corner, drawn in outline at
+            // low opacity and permanently redrawing itself. Each service keeps
+            // its own hue and its own secondary motion.
+            .ic {
+                position: absolute;
+                inset-inline-end: -14px;
+                bottom: -16px;
+                width: 92px;
+                height: 92px;
+                color: var(--c, #{$j-ink-3});
+                opacity: 0.15;
+                pointer-events: none;
+                transition: opacity 0.3s ease, transform 0.35s $j-ease;
+
+                svg {
+                    width: 100%;
+                    height: 100%;
+                    display: block;
+                    // the stroke scales with the box, so it is thinned right
+                    // down to keep the watermark a line drawing, not a blob
+                    stroke-width: 1.05;
+                    animation-duration: 4.6s;
+                    animation-timing-function: ease-in-out;
+                    animation-iteration-count: infinite;
+                    animation-delay: var(--d, 0ms);
+
+                    path,
+                    rect,
+                    circle,
+                    line {
+                        stroke-dasharray: 160;
+                        stroke-dashoffset: 160;
+                        animation: joinGhostDraw 5.4s ease-in-out infinite;
+                        animation-delay: calc(var(--d, 0ms) + 200ms);
+                    }
+                }
+
+                &.a-pulse svg { animation-name: aPulse; }
+                &.a-stamp svg { animation-name: aStamp; animation-duration: 5.2s; }
+                &.a-climb svg { animation-name: aClimb; animation-duration: 4.2s; }
+                &.a-wiggle svg { animation-name: aWiggle; animation-duration: 5.6s; }
+                &.a-flip svg { animation-name: aFlip; animation-duration: 6s; }
+                &.a-swipe svg { animation-name: aSwipe; animation-duration: 5s; }
+            }
+
+            .tx {
+                position: relative;
+                z-index: 1;
+                min-width: 0;
+
+                b {
+                    display: block;
+                    font-size: 14.5px;
+                    font-weight: $w-bold;
+                    color: $j-ink;
+                    line-height: 1.5;
+                }
+
+                span {
+                    font-size: 12px;
+                    font-weight: $w-reg;
+                    line-height: 1.65;
+                    color: $j-ink-2;
+                }
+            }
+
+            &:hover {
+                border-color: var(--c, #{$j-line-hi});
+                box-shadow: 0 16px 30px -18px rgba(22, 48, 58, 0.55);
+
+                // the watermark steps forward rather than changing shape
+                .ic {
+                    opacity: 0.28;
+                    transform: scale(1.06) translate(-4px, -4px);
+                }
             }
         }
     }
 
-    // Services
-    .services {
-        background: $light-blue;
+    // ---- gradient half: the form ----
+    .sheet-panel {
+        position: relative;
+        // the panel is given room; the type inside it stays at its own scale
+        flex: 0 1 660px;
+        min-width: 0;
+        background: linear-gradient(135deg, $dark-blue, $blue);
+        color: $white;
+        padding: clamp(28px, 3.2vw, 60px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        // headings, helper lines and the links run down the middle; the fields
+        // themselves keep their own right-aligned RTL text
+        text-align: center;
+
+        // No fade at the seam -- the panel ends on a clean edge against the
+        // white half.
+
+        // Width only: the panel keeps its generous footprint, but the column
+        // of fields inside it is capped and centred so they are not stretched
+        // the full width of it. Heights and type sizes are untouched.
+        .panel-face {
+            width: 100%;
+            max-width: 480px;
+            margin-inline: auto;
+            transition: opacity 0.4s $j-ease, transform 0.45s $j-ease;
+        }
+
+        // the "done" face, revealed for a beat after a successful signup
+        .panel-done {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-align: center;
+            padding: 24px;
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+            transition: opacity 0.4s $j-ease, transform 0.45s $j-ease;
+
+            .seal {
+                width: 76px;
+                height: 76px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.16);
+                border: 1px solid rgba(255, 255, 255, 0.35);
+                color: $white;
+                display: grid;
+                place-items: center;
+
+                svg { width: 36px; height: 36px; }
+            }
+
+            b {
+                font-size: clamp(22px, 2.2vw, 30px);
+                font-weight: $w-black;
+                color: $white;
+            }
+
+            .note {
+                font-size: 15px;
+                font-weight: $w-reg;
+                color: #d4edf5;
+            }
+        }
+
+        &.done {
+            .panel-face {
+                opacity: 0;
+                transform: scale(0.97);
+                pointer-events: none;
+            }
+
+            .panel-done {
+                opacity: 1;
+                transform: none;
+            }
+        }
 
         h2 {
-            text-align: center;
-            font: $large-size-black;
-            color: $dark-blue-one;
-            margin-bottom: 40px;
+            margin: 0;
+            font-size: clamp(22px, 2vw, 32px);
+            font-weight: $w-black;
+            letter-spacing: -0.02em;
+            color: $white;
+            animation: joinRise 0.6s $j-ease both;
+            animation-delay: 200ms;
         }
 
-        .services-grid {
+        .signup-subtitle {
+            margin: 8px 0 0;
+            font-size: 13.5px;
+            font-weight: $w-reg;
+            line-height: 1.8;
+            color: #d4edf5;
+            animation: joinRise 0.6s $j-ease both;
+            animation-delay: 260ms;
+        }
+
+        form { margin-top: 20px; }
+
+        .fields {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-
-            @media (max-width: 900px) {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            @media (max-width: 600px) {
-                grid-template-columns: 1fr;
-            }
+            gap: 11px;
         }
 
-        .service-card {
-            background: $white;
-            border-radius: 12px;
-            padding: 30px 24px;
-            text-align: center;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+        // Two things are being overridden here:
+        //  - PrimeReact's theme sizing on .p-inputtext
+        //  - index.scss's `font-family/font-weight: ... !important` on every
+        //    .p-inputtext and .p-float-label label, which otherwise forces
+        //    SemiBold on the fields regardless of what this file says
+        .p-float-label {
+            display: block;
+            position: relative;
+            text-align: start;
+            animation: joinFieldIn 0.55s $j-ease both;
+            animation-delay: var(--d, 0ms);
 
-            i {
-                font-size: 34px;
-                color: $blue;
-                margin-bottom: 14px;
-                display: block;
+            input,
+            textarea {
+                width: 100%;
+                background: rgba(255, 255, 255, 0.14);
+                // no visible outline at rest -- the border is kept, but
+                // transparent, so the gold focus ring can appear without the
+                // field shifting by its width
+                border: 1.5px solid transparent;
+                border-radius: 8px;
+                color: $white;
+                padding: 25px 15px 9px;
+                font-size: 15px;
+                font-weight: $w-reg !important;
+                line-height: 1.4;
+                box-shadow: none;
+                resize: none;
+                transition: background 0.2s ease, border-color 0.2s ease;
+
+                // no glow ring on focus -- the gold border carries the state
+                &:enabled:focus,
+                &:enabled:focus-visible,
+                &:focus {
+                    background: rgba(255, 255, 255, 0.24);
+                    border-color: $yellow;
+                    box-shadow: none;
+                    outline: none;
+                }
+
+                &::placeholder { color: transparent; }
             }
 
-            h3 {
-                font: $small-size-bold;
-                color: $dark-blue-one;
-                margin-bottom: 8px;
+            textarea {
+                min-height: 72px;
+                padding-top: 28px;
+                line-height: 1.6;
             }
 
-            p {
-                font: $tiny-size-reg;
-                color: $dark-blue-two;
-                margin: 0;
-            }
-        }
-    }
-
-    // Signup
-    .signup {
-        .signup-card {
-            max-width: 480px;
-            margin: 0 auto;
-            text-align: center;
-            padding: 10px;
-
-            h2 {
-                font: $large-size-black;
-                color: $dark-blue-one;
-                margin-bottom: 6px;
+            label {
+                position: absolute;
+                top: 17px;
+                right: 15px;
+                left: auto;
+                margin-top: 0;
+                line-height: 1.2;
+                font-size: 14.5px;
+                font-weight: $w-reg !important;
+                color: #cfe9f2;
+                pointer-events: none;
+                transform-origin: right top;
+                transition: top 0.22s $j-ease, font-size 0.22s $j-ease, color 0.22s ease;
             }
 
-            .signup-subtitle {
-                font: $small-size-reg;
-                color: $dark-blue-two;
-                margin-bottom: 20px;
+            input:focus ~ label,
+            input.p-filled ~ label,
+            input:not(:placeholder-shown) ~ label,
+            textarea:focus ~ label,
+            textarea.p-filled ~ label,
+            textarea:not(:placeholder-shown) ~ label {
+                top: 7px;
+                font-size: 11px;
+                font-weight: $w-bold !important;
+                color: $yellow;
             }
         }
 
         .signup-button {
-            background: $blue;
-            border-color: $blue;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            min-height: 54px;
+            margin-top: 5px;
+            justify-content: center;
+            gap: 9px;
+            background: $yellow;
+            border-color: $yellow;
+            border-radius: 12px;
+            color: $j-gold-ink;
+            font-size: 17px;
+            font-weight: $w-black;
+            box-shadow: none;
+            animation: joinFieldIn 0.55s $j-ease both;
+            animation-delay: var(--d, 0ms);
+            transition: filter 0.2s ease, transform 0.16s $j-ease;
+
+            .p-button-label {
+                flex: none;
+                font-weight: $w-black;
+                font-size: 17px;
+            }
+
+            // PrimeReact renders the `icon` prop as a span; this turns that
+            // span into the loading spinner while the request is in flight
+            .join-spin {
+                width: 17px;
+                height: 17px;
+                border-radius: 50%;
+                border: 2.5px solid rgba(46, 35, 0, 0.28);
+                border-top-color: $j-gold-ink;
+                animation: joinSpin 0.7s linear infinite;
+            }
+
+            // a shine sweeps across on hover
+            &::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                width: 45%;
+                inset-inline-start: -60%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+                transform: skewX(-18deg);
+                transition: inset-inline-start 0.65s $j-ease;
+            }
+
+            &:enabled:hover {
+                background: $yellow;
+                border-color: $yellow;
+                filter: brightness(1.07);
+                transform: translateY(-3px);
+                box-shadow: none;
+
+                &::after { inset-inline-start: 120%; }
+            }
+
+            &:enabled:active { transform: translateY(0); }
+        }
+
+        .fine {
+            margin: 13px 0 0;
+            font-size: 12px;
+            font-weight: $w-reg;
+            line-height: 1.7;
+            color: #bfe2ec;
+            text-align: center;
+        }
+
+        .signin {
+            margin: 12px 0 0;
+            font-size: 13.5px;
+            font-weight: $w-reg;
+            color: #bfe2ec;
+            text-align: center;
+
+            a {
+                color: $yellow;
+                font-weight: $w-bold;
+                text-decoration: none;
+
+                &:hover { text-decoration: underline; }
+            }
         }
     }
 
-    // Success state
-    .success-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        padding: 20px;
+    // three columns on a wide sheet -- the six services read as two tidy rows
+    @media (min-width: 1250px) {
+        .sheet-left .svcs {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
     }
 
-    .success-card {
-        max-width: 480px;
-        text-align: center;
-        padding: 20px;
-
-        .success-icon {
-            font-size: 60px;
-            color: $successTxt;
-            margin-bottom: 16px;
-            display: block;
+    @media (prefers-reduced-motion: reduce) {
+        &,
+        &::before,
+        &::after,
+        .orbs span,
+        .sheet-wrap,
+        .sheet-wrap::before,
+        .sheet-left .bar,
+        .sheet-left .lede,
+        .sheet-left .hero-cta,
+        .sheet-left .svch,
+        .sheet-left h1 .caret,
+        .sheet-left .svc .ic svg,
+        .sheet-left .svc .ic svg path,
+        .sheet-left .svc .ic svg rect,
+        .sheet-left .svc .ic svg circle,
+        .sheet-left .svc .ic svg line,
+        .sheet-panel h2,
+        .sheet-panel .signup-subtitle,
+        .sheet-panel .p-float-label,
+        .sheet-panel .signup-button {
+            animation: none;
         }
 
-        h2 {
-            font: $large-size-black;
-            color: $dark-blue-one;
-            margin-bottom: 12px;
+        .sheet-left .svc .ic svg path,
+        .sheet-left .svc .ic svg rect,
+        .sheet-left .svc .ic svg circle,
+        .sheet-left .svc .ic svg line {
+            stroke-dashoffset: 0;
         }
 
-        p {
-            font: $small-size-reg;
-            color: $dark-blue-two;
-            line-height: 1.8;
+        .sheet,
+        .sheet-left .svc,
+        .sheet-left .svc .ic,
+        .sheet-left .svc::after,
+        .sheet-left .hero-cta,
+        .sheet-panel .signup-button,
+        .sheet-panel .signup-button::after {
+            transition: none;
         }
     }
 }

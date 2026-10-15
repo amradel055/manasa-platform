@@ -1,14 +1,11 @@
 import React, { Component, createRef } from "react";
 
-// CSS
-import "./Join.scss";
-
 // Components
-import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Toast } from "primereact/toast";
 import { Button } from "primereact/button";
+import { Link } from "react-router-dom";
 
 // Helper
 import { setCookie } from "../../Helper/Cookies";
@@ -17,15 +14,13 @@ import { apiFetch, login, saveSession } from "../../Helper/Api";
 // Properties
 const properties = require("../../properties.json");
 
-const SERVICES = [
-  { icon: "pi-video", title: "دروس تفاعلية", desc: "ارفع فيديو وصوت لكل درس، متاحة لطلابك في أي وقت وأي مكان" },
-  { icon: "pi-file-edit", title: "امتحانات إلكترونية", desc: "أنشئ امتحاناتك وخلي التصحيح فوري وتلقائي بمجرد التسليم" },
-  { icon: "pi-chart-line", title: "متابعة أداء الطلاب", desc: "أرشيف كامل لكل امتحانات ودرجات طلابك" },
-  { icon: "pi-comments", title: "تواصل مباشر", desc: "راسل طلابك واستقبل استفساراتهم في مكان واحد" },
-  { icon: "pi-calendar", title: "جدول الحصص", desc: "نظّم مواعيد حصصك ومحاضراتك في مكان واحد" },
-  { icon: "pi-credit-card", title: "إدارة الاشتراكات", desc: "تابع اشتراكات طلابك بالفترات الدراسية بسهولة" },
-];
+const SUCCESS_HOLD = 1600; // ms the "done" panel shows before /onboarding
 
+/**
+ * Only the signup panel. Everything around it -- the gradient, the sheet, the
+ * headline, the service cards -- lives in AuthLayout, which stays mounted when
+ * the viewer moves between this and the sign-in form.
+ */
 class Join extends Component {
   constructor(props) {
     super(props);
@@ -33,6 +28,7 @@ class Join extends Component {
   }
 
   state = {
+    succeeded: false,
     fullName: "",
     email: "",
     password: "",
@@ -97,9 +93,12 @@ class Join extends Component {
         detail: "تم إنشاء حسابك، خطوات بسيطة كمان وتبقى جاهز...",
       });
 
+      // the panel turns over to its "done" face, then moves on
+      this.setState({ succeeded: true });
+
       setTimeout(function () {
         window.location.href = `/onboarding`;
-      }, 800);
+      }, SUCCESS_HOLD);
     } catch (error) {
       console.error("Error:", error);
       this.setState({ submitting: false });
@@ -112,120 +111,102 @@ class Join extends Component {
   };
 
   render() {
-    const { submitting } = this.state;
+    const { submitting, succeeded } = this.state;
 
     return (
-      <div className="join-page">
+      <div className={`sheet-panel${succeeded ? " done" : ""}`} id="signup">
         <Toast ref={this.toast}></Toast>
 
-        <section className="hero">
-          <div className="container">
-            <img
-              className="logo"
-              src={require(`../../assets/img/${properties.teacher.logo}`).default}
-              alt={properties.site_name}
-            />
-            <h1>{properties.site_name}</h1>
-            <p className="tagline">
-              منصتك التعليمية المتكاملة كمعلم — إدارة دروسك وامتحاناتك
-              وطلابك في مكان واحد
-            </p>
-            <a href="#signup" className="hero-cta">
-              اشترك الآن مجانًا
-            </a>
-          </div>
-        </section>
-
-        <section className="services">
-          <div className="container">
-            <h2>خدمات المنصة</h2>
-            <div className="services-grid">
-              {SERVICES.map((s, i) => (
-                <div className="service-card" key={i}>
-                  <i className={`pi ${s.icon}`}></i>
-                  <h3>{s.title}</h3>
-                  <p>{s.desc}</p>
-                </div>
-              ))}
+        <div className="panel-face">
+          <h2>اشترك كمعلم</h2>
+          <p className="signup-subtitle">
+            أنشئ حسابك مجانًا وابدأ في استخدام لوحة التحكم فورًا
+          </p>
+          <form onSubmit={this.handleSubmit}>
+            <div className="fields">
+              {/* placeholder=" " keeps :not(:placeholder-shown) working, so the
+                  floating label never sits on top of a typed value. */}
+              <span className="p-float-label" style={{ "--d": "320ms" }}>
+                <InputText
+                  id="fullName"
+                  placeholder=" "
+                  value={this.state.fullName}
+                  onChange={(e) => this.setState({ fullName: e.target.value })}
+                />
+                <label htmlFor="fullName">الاسم الكامل</label>
+              </span>
+              <span className="p-float-label" style={{ "--d": "380ms" }}>
+                <InputText
+                  id="email"
+                  type="email"
+                  dir="ltr"
+                  placeholder=" "
+                  value={this.state.email}
+                  onChange={(e) => this.setState({ email: e.target.value })}
+                />
+                <label htmlFor="email">البريد الإلكتروني</label>
+              </span>
+              <span className="p-float-label" style={{ "--d": "440ms" }}>
+                <InputText
+                  id="password"
+                  type="password"
+                  placeholder=" "
+                  value={this.state.password}
+                  onChange={(e) => this.setState({ password: e.target.value })}
+                />
+                <label htmlFor="password">كلمة السر (8 أحرف على الأقل)</label>
+              </span>
+              <span className="p-float-label" style={{ "--d": "500ms" }}>
+                <InputText
+                  id="mobile"
+                  dir="ltr"
+                  placeholder=" "
+                  value={this.state.mobile}
+                  onChange={(e) => this.setState({ mobile: e.target.value })}
+                />
+                <label htmlFor="mobile">رقم الموبايل</label>
+              </span>
+              <span className="p-float-label" style={{ "--d": "560ms" }}>
+                <InputTextarea
+                  id="description"
+                  rows={2}
+                  placeholder=" "
+                  value={this.state.description}
+                  onChange={(e) => this.setState({ description: e.target.value })}
+                />
+                <label htmlFor="description">نبذة عن تخصصك (اختياري)</label>
+              </span>
+              <Button
+                type="submit"
+                className="signup-button"
+                style={{ "--d": "630ms" }}
+                icon={submitting ? "join-spin" : null}
+                label={submitting ? "جاري إنشاء الحساب..." : "إنشاء الحساب"}
+                disabled={submitting}
+              />
             </div>
-          </div>
-        </section>
+          </form>
+          <p className="fine">بالتسجيل بتوافق على شروط استخدام المنصة.</p>
+          <p className="signin">عندك حساب؟ <Link to="/">سجّل دخولك</Link></p>
+        </div>
 
-        <section className="signup" id="signup">
-          <div className="container">
-            <Card className="signup-card">
-              <h2>اشترك كمعلم</h2>
-              <p className="signup-subtitle">
-                أنشئ حسابك مجانًا وابدأ في استخدام لوحة التحكم فورًا
-              </p>
-              <form onSubmit={this.handleSubmit}>
-                <div className="p-grid p-fluid">
-                  <div className="p-col-12 p-mt-3">
-                    <span className="p-float-label">
-                      <InputText
-                        id="fullName"
-                        value={this.state.fullName}
-                        onChange={(e) => this.setState({ fullName: e.target.value })}
-                      />
-                      <label htmlFor="fullName">الاسم الكامل</label>
-                    </span>
-                  </div>
-                  <div className="p-col-12 p-mt-4">
-                    <span className="p-float-label">
-                      <InputText
-                        id="email"
-                        type="email"
-                        value={this.state.email}
-                        onChange={(e) => this.setState({ email: e.target.value })}
-                      />
-                      <label htmlFor="email">البريد الإلكتروني</label>
-                    </span>
-                  </div>
-                  <div className="p-col-12 p-mt-4">
-                    <span className="p-float-label">
-                      <InputText
-                        id="password"
-                        type="password"
-                        value={this.state.password}
-                        onChange={(e) => this.setState({ password: e.target.value })}
-                      />
-                      <label htmlFor="password">كلمة السر (8 أحرف على الأقل)</label>
-                    </span>
-                  </div>
-                  <div className="p-col-12 p-mt-4">
-                    <span className="p-float-label">
-                      <InputText
-                        id="mobile"
-                        value={this.state.mobile}
-                        onChange={(e) => this.setState({ mobile: e.target.value })}
-                      />
-                      <label htmlFor="mobile">رقم الموبايل</label>
-                    </span>
-                  </div>
-                  <div className="p-col-12 p-mt-4">
-                    <span className="p-float-label">
-                      <InputTextarea
-                        id="description"
-                        rows={3}
-                        value={this.state.description}
-                        onChange={(e) => this.setState({ description: e.target.value })}
-                      />
-                      <label htmlFor="description">نبذة عن تخصصك (اختياري)</label>
-                    </span>
-                  </div>
-                  <div className="p-col-12 p-mt-4">
-                    <Button
-                      type="submit"
-                      className="signup-button"
-                      label={submitting ? "جاري إنشاء الحساب..." : "إنشاء الحساب"}
-                      disabled={submitting}
-                    />
-                  </div>
-                </div>
-              </form>
-            </Card>
-          </div>
-        </section>
+        {/* shown for a beat on success, before /onboarding takes over */}
+        <div className="panel-done" aria-hidden={!succeeded}>
+          <span className="seal">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="m4.5 12.5 5 5 10-11" />
+            </svg>
+          </span>
+          <b>تم إنشاء حسابك</b>
+          <span className="note">خطوات بسيطة كمان وتبقى جاهز...</span>
+        </div>
       </div>
     );
   }

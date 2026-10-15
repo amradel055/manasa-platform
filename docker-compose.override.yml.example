@@ -1,0 +1,24 @@
+# Developer-only extras. Copy to docker-compose.override.yml and Docker Compose
+# will merge it automatically on your machine:
+#
+#     cp docker-compose.override.yml.example docker-compose.override.yml
+#
+# docker-compose.override.yml is git-ignored on purpose. It must never reach a
+# server: the bind mounts below would shadow the code baked into the image with
+# whatever happens to be in the checkout, and CHOKIDAR_USEPOLLING burns CPU
+# round the clock for no benefit outside development.
+
+services:
+  react:
+    # The source is bind-mounted, so an edit on the host reaches the dev server
+    # straight away -- no rebuild to see a change. node_modules deliberately
+    # stays the copy installed inside the image, which is why only src/ and
+    # public/ are mounted and not the whole folder.
+    volumes:
+      - ./manasa_react/src:/app/src
+      - ./manasa_react/public:/app/public
+    environment:
+      # Windows and macOS bind mounts deliver no inotify events, so the file
+      # watcher has to poll instead.
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true

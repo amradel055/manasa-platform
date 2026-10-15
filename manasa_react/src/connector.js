@@ -39,17 +39,27 @@ import Notifications from './pages/notifications/notifications.js';
 import SchoolStages from './pages/Settings/SchoolStages.js';
 import Materials from './pages/Settings/Materials.js';
 import Join from './pages/Join/Join.js';
+import AuthLayout from './pages/Auth/AuthLayout.js';
 import Onboarding from './pages/Onboarding/Onboarding.js';
 class Connector extends Component {
   render() {
     return (
       <Router>
         <Switch >
-          <Route path="/" exact>
-            <SignIn />
-          </Route>
-          <Route path="/join" exact>
-            <Join />
+          {/* One layout for both forms. Mounted above the inner Switch, so
+              moving between sign-in and signup swaps only the panel -- the
+              headline keeps typing and the cards keep their state. */}
+          <Route path={["/", "/join"]} exact>
+            <AuthLayout>
+              <Switch>
+                <Route path="/join" exact>
+                  <Join />
+                </Route>
+                <Route path="/" exact>
+                  <SignIn />
+                </Route>
+              </Switch>
+            </AuthLayout>
           </Route>
           <Route path="/onboarding" exact>
             <Onboarding />

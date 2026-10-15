@@ -1,3 +1,4 @@
+import "./applyEnvOverrides"; // keep first: applies REACT_APP_* onto properties
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.scss";

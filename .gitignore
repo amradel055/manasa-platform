@@ -1,0 +1,41 @@
+# ---- Build output ----
+target/
+build/
+out/
+dist/
+.gradle/
+.dart_tool/
+**/android/build/
+*.class
+*.jar
+*.war
+
+# ---- Dependencies ----
+node_modules/
+
+# ---- IDE / editor ----
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
+
+# ---- Local dev only (never deployed) ----
+docker-compose.override.yml
+
+# ---- Logs / local env ----
+*.log
+npm-debug.log*
+.env
+.env.local
+
+# ---- hiilt-marketplace ----
+# A separate repository (github.com/amradel055/hiilt-marketplace), cloned here
+# only for convenience. It carries its own .git, so without this entry git
+# stages it as a submodule pointer and anyone who pulls gets an empty folder.
+# It is not part of this project -- keep it ignored, or clone it alongside this
+# repo rather than inside it.
+hiilt-marketplace/

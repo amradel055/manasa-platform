@@ -302,3 +302,54 @@ a:hover {
     border-bottom: 1px solid var(--surface-d);
   }
 }
+// ---------------------------------------------------------------------------
+// Scrollbars
+// The browser default is a wide grey slab that cuts into every panel, table and
+// dialog in the dashboard. This slims it down and ties it to the brand, with a
+// transparent track so it reads as part of the surface it sits on. Firefox gets
+// the two properties it supports; WebKit/Blink get the pseudo-elements.
+// ---------------------------------------------------------------------------
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(25, 139, 175, 0.45) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(25, 139, 175, 0.42);
+  border-radius: 999px;
+  // the transparent border + content-box clip is what keeps the thumb slim
+  // while leaving the full 10px as a hit area
+  border: 3px solid transparent;
+  background-clip: content-box;
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(15, 58, 71, 0.7);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+// On a dark surface the teal thumb disappears; these two pages set their own.
+.join-page {
+  scrollbar-color: rgba(255, 255, 255, 0.45) transparent;
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.65);
+  }
+}

@@ -1,13 +1,10 @@
 import React, { Component, createRef } from "react";
 
-// CSS
-import "./Sign-In.scss";
-
 // Components
-import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import { Button } from "primereact/button";
+import { Link } from "react-router-dom";
 
 // Helper
 import { setCookie, checkCookie } from "../../Helper/Cookies";
@@ -16,6 +13,11 @@ import { login, saveSession, toLoginEmail } from "../../Helper/Api";
 // Properties
 const properties = require("../../properties.json");
 
+/**
+ * Only the sign-in panel. Everything around it -- the gradient, the sheet, the
+ * headline, the service cards -- lives in AuthLayout, which stays mounted when
+ * the viewer moves between this and the signup form.
+ */
 class SignIn extends Component {
   constructor(props) {
     super(props);
@@ -90,75 +92,55 @@ class SignIn extends Component {
       }
     };
 
+    const busy = this.state.buttonColor === "loading";
+
     return (
-      <div className="sign-in-page">
+      <div className="sheet-panel">
         <Toast ref={this.toast}></Toast>
 
-        <div className="container">
-          <div className="row align-items-center justify-content-center">
-            <div className="col-md-6">
-              <img
-                className="logo"
-                src={
-                  require(`../../assets/img/${properties.teacher.logo}`).default
-                }
-                alt={properties.teacher.name}
+        <div className="panel-face">
+          <h2>تسجيل الدخول</h2>
+          <p className="signup-subtitle">أدخل بياناتك للوصول للوحة التحكم</p>
+          <form action="/lessons" method="POST" onSubmit={signIn}>
+            <div className="fields">
+              {/* placeholder=" " keeps :not(:placeholder-shown) working, so the
+                  floating label never sits on top of a typed value. */}
+              <span className="p-float-label" style={{ "--d": "320ms" }}>
+                <InputText
+                  id="username"
+                  value={this.state.username}
+                  name="username"
+                  type="text"
+                  placeholder=" "
+                  onChange={(e) => {
+                    this.setState({ username: e.target.value });
+                  }}
+                />
+                <label htmlFor="username">إسم المستخدم</label>
+              </span>
+              <span className="p-float-label" style={{ "--d": "380ms" }}>
+                <InputText
+                  id="password"
+                  type="password"
+                  value={this.state.password}
+                  name="password"
+                  placeholder=" "
+                  onChange={(e) => {
+                    this.setState({ password: e.target.value });
+                  }}
+                />
+                <label htmlFor="password">كلمة السر</label>
+              </span>
+              <Button
+                className={`signup-button add-button ${this.state.buttonColor}`}
+                style={{ "--d": "440ms" }}
+                icon={busy ? "join-spin" : null}
+                label={this.state.buttonText}
+                onClick={signIn}
               />
-              <div className="sign-form">
-                <Card>
-                  <form action="/lessons" method="POST" onSubmit={signIn}>
-                    <div className="p-grid p-fluid">
-                      <div className="p-col-12 p-md-12 p-mt-2">
-                        <div className="p-inputgroup">
-                          <span className="p-float-label">
-                            <InputText
-                              id="username"
-                              value={this.state.username}
-                              name="username"
-                              type="text"
-                              onChange={(e) => {
-                                this.setState({ username: e.target.value });
-                              }}
-                            />
-
-                            <label htmlFor="username">إسم المستخدم</label>
-                          </span>
-                        </div>
-                      </div>
-                      <div className="p-col-12 p-md-12 p-mt-2">
-                        <div className="p-inputgroup">
-                          <span className="p-float-label">
-                            <InputText
-                              id="password"
-                              type="password"
-                              value={this.state.password}
-                              name="password"
-                              onChange={(e) => {
-                                this.setState({ password: e.target.value });
-                              }}
-                            />
-
-                            <label htmlFor="password">كلمة السر</label>
-                          </span>
-                        </div>
-                      </div>
-                      <div className="p-col-12 p-md-12">
-                        <div className="p-inputgroup">
-                          <span className="p-float-label">
-                            <Button
-                              className={`add-button ${this.state.buttonColor}`}
-                              label={this.state.buttonText}
-                              onClick={signIn}
-                            />
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                </Card>
-              </div>
             </div>
-          </div>
+          </form>
+          <p className="signin">ما عندك حساب؟ <Link to="/join">اشترك مجانًا</Link></p>
         </div>
       </div>
     );
