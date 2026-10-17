@@ -1,4 +1,5 @@
 import React, {Component, createRef} from 'react';
+import { withRouter } from 'react-router-dom';
 
 // CSS
 import './Exams.scss';
@@ -143,7 +144,7 @@ class ExamsReports extends Component {
         const actionBodyTemplate = (rowData) => {
             return (
                 <React.Fragment>
-                    <Button icon="pi pi-pencil" className="p-button-rounded p-button-secondary p-ml-2" onClick={() => window.location.href = `exams/edit/${rowData.id}`} />
+                    <Button icon="pi pi-pencil" className="p-button-rounded p-button-secondary p-ml-2" onClick={() => this.props.history.push(`/exams/edit/${rowData.id}`)} />
                     <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => this.deleteExam(rowData.id)} />
                 </React.Fragment>
             );
@@ -189,4 +190,6 @@ class ExamsReports extends Component {
     }
 }
 
-export default ExamsReports;
+// withRouter: this page is mounted as a Route's child, so it is handed
+// no router props of its own and cannot reach history without it.
+export default withRouter(ExamsReports);

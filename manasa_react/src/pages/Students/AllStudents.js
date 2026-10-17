@@ -1,5 +1,5 @@
 import React, {Component, createRef} from 'react';
-import {Link, NavLink} from 'react-router-dom';
+import { Link, NavLink, withRouter } from 'react-router-dom';
 import {Dialog} from 'primereact/dialog'
 import Popup from 'reactjs-popup';
 // CSS
@@ -176,7 +176,7 @@ class AllStudents extends Component {
                         being handed rowData.id, which is the period-order's.
                         And the path was relative, so where it landed depended
                         on the page it was clicked from. */}
-                    <Button icon="pi pi-eye" title="امتحانات الطالب" className="p-button-rounded p-button-secondary p-ml-2" onClick={() => window.location.href = `/exams/view/${rowData.studentId}`} />
+                    <Button icon="pi pi-eye" title="امتحانات الطالب" className="p-button-rounded p-button-secondary p-ml-2" onClick={() => this.props.history.push(`/exams/view/${rowData.studentId}`)} />
 
                     <Button
             icon="pi pi-check"
@@ -266,4 +266,6 @@ class AllStudents extends Component {
     }
 }
 
-export default AllStudents;
+// withRouter: this page is mounted as a Route's child, so it is handed
+// no router props of its own and cannot reach history without it.
+export default withRouter(AllStudents);

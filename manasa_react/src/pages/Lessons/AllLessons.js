@@ -1,4 +1,5 @@
 import React, { Component, createRef } from "react";
+import { withRouter } from 'react-router-dom';
 
 // CSS
 import "./Lessons.scss";
@@ -191,7 +192,7 @@ class AllLessons extends Component {
             icon="pi pi-pencil"
             className="p-button-rounded p-button-secondary p-ml-2"
             onClick={() =>
-              (window.location.href = `lessons/edit/${rowData.id}`)
+              this.props.history.push(`/lessons/edit/${rowData.id}`)
             }
           />
           <Button
@@ -290,4 +291,6 @@ class AllLessons extends Component {
   }
 }
 
-export default AllLessons;
+// withRouter: this page is mounted as a Route's child, so it is handed
+// no router props of its own and cannot reach history without it.
+export default withRouter(AllLessons);

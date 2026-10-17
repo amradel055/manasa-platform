@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 // CSS -- these three are what load PrimeReact's theme and icons for the whole
 // dashboard. They used to live in Header.js; keep them here, since this layout
@@ -298,7 +298,7 @@ class DashboardLayout extends Component {
                     name on the right -- the start of an RTL row. Each half is
                     drawn as a cropped background of that same file instead, so
                     the drawing leads and the name sits at the end. */}
-                <a className="rail-brand" href="/" aria-label={properties.teacher.name}>
+                <Link className="rail-brand" to="/" aria-label={properties.teacher.name}>
                   <span
                     className="bm-mark"
                     style={{ backgroundImage: `url(${LOGO})` }}
@@ -307,7 +307,7 @@ class DashboardLayout extends Component {
                     className="bm-name"
                     style={{ backgroundImage: `url(${LOGO})` }}
                   ></span>
-                </a>
+                </Link>
               </div>
 
               <div className="rail-list">
@@ -324,14 +324,20 @@ class DashboardLayout extends Component {
                   if (!kids.length && item.url) {
                     return (
                       <div className="rail-sec" key={i}>
-                        <a
+                        {/* Link, not <a href>. An anchor hands the URL back
+                            to the browser, which throws the whole app away
+                            and boots it again -- every fetch re-run, every
+                            bit of state lost, a white flash between pages.
+                            This is a single-page app; the router can swap
+                            the page without any of that. */}
+                        <Link
                           className={`rail-top${here ? " here" : ""}`}
-                          href={item.url}
+                          to={item.url}
                           aria-current={here ? "page" : undefined}
                         >
                           <i className={item.icon}></i>
                           <span className="lbl">{item.label}</span>
-                        </a>
+                        </Link>
                       </div>
                     );
                   }
@@ -362,15 +368,15 @@ class DashboardLayout extends Component {
                             section's own icon, so the marks added noise without
                             telling the reader anything */}
                         {kids.map((k, j) => (
-                          <a
-                            href={k.url}
+                          <Link
+                            to={k.url}
                             key={j}
                             className={isHere(k.url) ? "here" : undefined}
                             aria-current={isHere(k.url) ? "page" : undefined}
                           >
                             <span className="dot" aria-hidden="true"></span>
                             <span>{k.label}</span>
-                          </a>
+                          </Link>
                         ))}
                         </div>
                       </div>

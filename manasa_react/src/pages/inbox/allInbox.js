@@ -1,4 +1,5 @@
 import React, {Component, createRef} from 'react';
+import { withRouter } from 'react-router-dom';
 
 // CSS
 import './Exams.scss';
@@ -142,7 +143,7 @@ class AllInbox extends Component {
         const actionBodyTemplate = (rowData) => {
             return (
                 <React.Fragment>
-                    <Button icon="pi pi-pencil" className="p-button-rounded p-button-secondary p-ml-2" onClick={() => window.location.href = `/allInbox/edit/${rowData.id}`} />
+                    <Button icon="pi pi-pencil" className="p-button-rounded p-button-secondary p-ml-2" onClick={() => this.props.history.push(`/allInbox/edit/${rowData.id}`)} />
                     {/* <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => this.deleteExam(rowData.id)} /> */}
                 </React.Fragment>
             );
@@ -249,4 +250,6 @@ class AllInbox extends Component {
     }
 }
 
-export default AllInbox;
+// withRouter: this page is mounted as a Route's child, so it is handed
+// no router props of its own and cannot reach history without it.
+export default withRouter(AllInbox);
