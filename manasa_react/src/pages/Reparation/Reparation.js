@@ -9,6 +9,11 @@ import { apiFetch, getCurrentUser } from '../../Helper/Api';
 
 // Components
 import Header from '../../components/Header/Header';
+import TableShell from '../../components/Table/TableShell';
+import TableEmpty from '../../components/Table/TableEmpty';
+import Modal from '../../components/Modal/Modal';
+import Confirm from '../../components/Modal/Confirm';
+import '../../components/Field/Form.scss';
 import { Card } from 'primereact/card';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
@@ -68,24 +73,68 @@ class Reparation extends Component {
             branchId: properties.branch_id,
             companyId: properties.company_id,
             thumb: "",
-        }
+        },
+
+        // whether the add modal is open. `visible` below is the edit
+        // dialog's own flag and is left alone -- nothing opens it.
+        addOpen: false,
+
+        // True from the start: the list is fetched on mount, so there is a
+        // wait to report before the first rows arrive. Only TableEmpty reads
+        // it, so the waiting row appears where the answer will.
+        tableLoading: true,
+
+        // one flag per lookup list, raised inside its own fetch
+        gradesLoading: false,
+        materialsLoading: false,
+
+        // one flag per action -- never a shared one, or a slow save in the
+        // modal greys out the delete button in the table
+        adding: false,
+        deleting: false,
+
+        // the row waiting on a yes
+        confirmRow: null
 
     }
 
      getMaterialByStage = (schoolStagesId) => {
+        // inside the fetch, so opening the list reports the wait too
+        this.setState({ materialsLoading: true });
+
         // Get Materials From API
         apiFetch("/lookup/materials/by-stage", { query: { stageId: schoolStagesId } })
           .then((fetchMaterials) => {
             this.setState({
               getMaterialsList: fetchMaterials,
+              materialsLoading: false,
             });
           })
-          .catch((error) => console.error("Error:", error));
+          .catch((error) => {
+            this.setState({ materialsLoading: false });
+            console.error("Error:", error);
+          });
+      };
+
+     // Lifted out of componentDidMount unchanged, so the stage list can be
+     // asked for again when its dropdown is opened rather than staying the
+     // snapshot it was at mount.
+     getGrades = () => {
+        this.setState({ gradesLoading: true });
+
+        apiFetch("/lookup/school-stages/by-teacher", { query: { teacherUserId: getCurrentUser()?.userId } })
+          .then((grades) => {
+            this.setState({ allGrades: grades, gradesLoading: false });
+          })
+          .catch((error) => {
+            this.setState({ gradesLoading: false });
+            console.error("Error:", error);
+          });
       };
 
 
     componentDidMount () {
-        document.title = properties.site_name + " | إضافة فترة جديدة";
+        document.title = properties.site_name + " | التعويضات";
         this.allNews();
         // this.getPeriods();
        // Redirect To Sign In Page If The User Is Already Logged Out & Remove The Data If It Exists
@@ -94,24 +143,29 @@ class Reparation extends Component {
             window.location.href = `/`;
         };
 
-        apiFetch("/lookup/school-stages/by-teacher", { query: { teacherUserId: getCurrentUser()?.userId } })
-          .then((grades) => {
-            this.setState({ allGrades: grades });
-          })
-          .catch((error) => console.error("Error:", error));
+        this.getGrades();
 
         // Get Periods From API
 
     }
     allNews = () => {
         var _this = this ;
+
+       // Every call announces itself, not just the first: this runs again
+       // after an add and after a delete, and a silent refetch reads as
+       // though the action never registered. The rows go with it so the
+       // waiting row has somewhere to appear.
+       this.setState({ tableLoading: true, data: [] });
+
        // Send the data to the server
        apiFetch("/other-appointments")
        .then(done => {
-        this.setState({data : done});
+        this.setState({data : done, tableLoading: false});
 
        })
        .catch(error => {
+           // the wait ends on failure too, or the table waits for ever
+           this.setState({ tableLoading: false });
            console.error('Error:', error)
            _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
        });
@@ -171,6 +225,9 @@ class Reparation extends Component {
 
      addNews = () => {
         var _this = this ;
+
+        this.setState({ adding: true });
+
        // Send the data to the server
        apiFetch("/other-appointments", {
            method: "POST",
@@ -185,8 +242,11 @@ class Reparation extends Component {
        .then(() => {
            _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: 'تمت إضافة التعويض بنجاح'});
            this.allNews();
+           this.setState({ adding: false, addOpen: false });
        })
        .catch(error => {
+           // left open, with what was chosen still chosen
+           this.setState({ adding: false });
            console.error('Error:', error)
            _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
        });
@@ -233,18 +293,24 @@ class Reparation extends Component {
 
         var deletePeriod = (e) => {
             var _this = this;
+
+            this.setState({ deleting: true });
+
             // Send the data to the server
             apiFetch(`/other-appointments/${e.id}`, { method: "DELETE" })
             .then(() => {
+                _this.setState({ deleting: false, confirmRow: null });
                 _this.allNews();
                 _this.toast.current.show({severity: 'success', summary: 'تم بنجاح', detail: 'تم الحذف بنجاح'});
             })
             .catch(error => {
                 console.error('Error:', error)
 
+                // the question stays open on failure, so it can be retried
                 _this.setState({
                    buttonText: "إضافة الخبر",
-                   buttonColor: ""
+                   buttonColor: "",
+                   deleting: false
                });
 
                _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
@@ -253,128 +319,118 @@ class Reparation extends Component {
 
         
         
+        // The toolbar is a toolbar again. What used to be passed as the
+        // table's `header` was the entire add form -- a Card, a grid and an
+        // upload -- rendered inside the table's own toolbar slot.
         const header = (
-            <div className="container">
-            <Card>
-                    <div className="p-grid p-fluid">
-                        {/* <div className="p-col-12 p-md-4">
-                            <div className="p-inputgroup">
-                                <span className="p-float-label">
-                                    <InputText id="address" value={this.state.address} name="address" type="text" onChange={(e) => {this.setState({address : e.target.value})}} />
-                                    <label htmlFor="address">عنوان الخبر </label>
-                                </span>
-                            </div>
-                        </div>
-                        <div className="p-col-12 p-md-20 p-mt-4">
-                            <div className="p-inputgroup">
-                                <span className="p-float-label">
-                                    <InputText id="post" value={this.state.post} name="post" type="text" onChange={(e) => {this.setState({post : e.target.value})}} />
-                                    <label htmlFor="post">  الخبر   لا يتعدي 250 حرف    </label>
-                                </span>
-                            </div>
-                        </div>
-                        <span className="p-col-12 p-md-2">
-                                                <Select value={this.state.type} options={typeList} onChange={(e) => this.setState({type: e.value})} name="type" placeholder="نوع الخبر"/>
-                                            </span>
-                                            <span className="p-col-12 p-md-2   ">
-                                                <Select value={this.state.active} options={active} onChange={(e) => this.setState({active: e.value})} name="type" placeholder="حالة الخبر"/>
-                        </span> */}
-                        {/* <div className="p-col-12 p-md-4">
-                                        <div className="p-inputgroup">
-                                            <span className="p-float-label">
-                                                <Select value={this.state.schoolStageId} options={grades} onChange={(e) => this.setState({schoolStageId: e.value})} name="grade" placeholder="المرحلة الدراسية"/>
-                                            </span>
-                                        </div>
-                                    </div> */}
-                                      <div className="p-col-12 p-md-4 p-mt-3">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                        <Select
-                          value={this.state.grade}
-                          options={grades}
-                          onChange={ (e) =>
-                            this.setState({
-                                schoolStageId: e.value,
-                                grade:e.value
-                             
-                              
-                            },
-                            this.getMaterialByStage(e.value )
-                            ) 
-                          }
-                          
-                          name="grade"
-                          placeholder="المرحلة الدراسية"
-                        />
-                      </span>
-                    </div>
-                  </div>
-                  <div className="p-col-12 p-md-4 p-mt-3">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                        <Select
-                          value={this.state.material}
-                          options={materialList}
-                          onChange={(e) =>
-                            this.setState({
-                              material: e.value,
-                              formContent: {
-                                ...this.state.formContent,
-                                materialId: e.value,
-                              },
-                            },
-                          
-                            )
-                          }
-                          name="subject"
-                          placeholder="إختر المادة"
-                        />
-                      </span>
-                    </div>
-                  </div>
-                  {/* <div className="p-col-12 p-md-4 p-mt-3">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                      <Select value={this.state.type} options={typeList} onChange={(e) => this.setState({type: e.value})} name="type" placeholder="نوع التعويض"/>
-
-                      </span>
-                    </div>
-                  </div>
-                */}
-                        <div className="p-col-12 p-md-12">
-                                        <div className="p-inputgroup">
-                                            <span className="p-float-label">
-                                                <Toast ref={this.toast}></Toast>
-                                                <FileUpload name="thumb" onUpload={onUploadThumb} invalidFileSizeMessageSummary="حجم الفيديو كبير:" invalidFileSizeMessageDetail="أقصى حجم للصورة هو (100 MB)" url={`${properties.uploads_path}/upload-thumb.php`} customUpload={false} multiple={false} accept="image/*" maxFileSize={1000000000} chooseLabel="إختيار صورة مصغرة" uploadLabel="رفع الصورة" cancelLabel="إلغاء" emptyTemplate={<p className="p-m-0">إسحب الصورة هنا ليبدأ التحميل</p>} />
-                                            </span>
-                                        </div>
-                                         <div>
-                            <img className="preview-thumb image" src={`${properties.uploads_path}/thumb/${this.state.formContent.thumb.split('/')}`} alt={this.state.formContent.thumb.split('/')} onClick={(e)=>e.target.requestFullscreen()}/>
-                            <button type="button" class="btn btn-danger" 
-                            // onClick={(e) => deletImage(e,object,i)  }
-                            >حذف الصوره</button>
-
-                                        </div>
-                                    </div>
-                        <div className="p-col-12 p-md-12 p-mt-2">
-                            <div className="p-inputgroup">
-                                <span className="p-float-label">
-                                    <Button className={`add-button ${this.state.buttonColor}`} label={this.state.buttonText} onClick={this.addNews}/>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-            </Card>
-        </div>
+            <div className="table-header">
+                {/* no heading here: the page header above carries it */}
+                <span className="p-input-icon-left m-tool-search">
+                    <i className="pi pi-search" />
+                    <InputText type="search" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="بحث في التعويضات" />
+                </span>
+            </div>
         );
 
-    
+        // Three controls and one decision, so a modal rather than a
+        // slide-over. The commented-out fields that used to sit here --
+        // address, post, type, active, all copy-paste from AddNews -- are in
+        // the history; they were never rendered.
+        const reparationForm = (
+            <div className="m-form">
+                <section className="m-sec">
+                    <h3>
+                        <span className="m-sec-n">١</span>
+                        الحصة المعوَّضة
+                        <small>اختر المرحلة أولاً، ثم مادتها</small>
+                    </h3>
+
+                    <div className="m-grid">
+                        <div className="m-fld">
+                            <label htmlFor="rep-grade">المرحلة الدراسية</label>
+                            <Select
+                              inputId="rep-grade"
+                              value={this.state.grade}
+                              options={grades}
+                              onChange={ (e) =>
+                                this.setState({
+                                    schoolStageId: e.value,
+                                    grade:e.value
+
+
+                                })
+                              }
+
+                              name="grade"
+                              placeholder="المرحلة الدراسية"
+                              optionLabel="label"
+                              loading={this.state.gradesLoading}
+                              onOpen={() => this.getGrades()}
+                            />
+                        </div>
+
+                        <div className="m-fld">
+                            <label htmlFor="rep-subject">المادة</label>
+                            <Select
+                              inputId="rep-subject"
+                              value={this.state.material}
+                              options={materialList}
+                              onChange={(e) =>
+                                this.setState({
+                                  material: e.value,
+                                  formContent: {
+                                    ...this.state.formContent,
+                                    materialId: e.value,
+                                  },
+                                },
+
+                                )
+                              }
+                              name="subject"
+                              placeholder="إختر المادة"
+                              optionLabel="label"
+                              loading={this.state.materialsLoading}
+                              needs={this.state.grade}
+                              needsLabel="اختر المرحلة الدراسية أولاً"
+                              onOpen={() => this.getMaterialByStage(this.state.grade)}
+                            />
+                        </div>
+                    </div>
+                </section>
+
+                <section className="m-sec">
+                    <h3>
+                        <span className="m-sec-n">٢</span>
+                        صورة التعويض
+                        <small>اختياري</small>
+                    </h3>
+
+                    <div className="m-grid">
+                        <div className="m-drop">
+                            <FileUpload name="thumb" onUpload={onUploadThumb} invalidFileSizeMessageSummary="حجم الفيديو كبير:" invalidFileSizeMessageDetail="أقصى حجم للصورة هو (100 MB)" url={`${properties.uploads_path}/upload-thumb.php`} customUpload={false} multiple={false} accept="image/*" maxFileSize={1000000000} chooseLabel="إختيار صورة مصغرة" uploadLabel="رفع الصورة" cancelLabel="إلغاء" emptyTemplate={<p className="p-m-0">إسحب الصورة هنا ليبدأ التحميل</p>} />
+                        </div>
+
+                        {/* Only once there is something to preview. It used to
+                            render whatever happened -- on an empty form that
+                            was a broken-image icon and a button beside it. */}
+                        {this.state.formContent.thumb ? (
+                            <div className="m-files">
+                                <img className="preview-thumb image" src={`${properties.uploads_path}/thumb/${this.state.formContent.thumb.split('/')}`} alt={this.state.formContent.thumb.split('/')} onClick={(e)=>e.target.requestFullscreen()}/>
+                                <button type="button"
+                                // onClick={(e) => deletImage(e,object,i)  }
+                                >حذف الصوره</button>
+                            </div>
+                        ) : null}
+                    </div>
+                </section>
+            </div>
+        );
 
         const actionBodyTemplate = (rowData) => {
             return (
                 <React.Fragment>
                     {/* <Button icon="pi pi-pencil" className="p-button-rounded p-button-secondary p-ml-2" onClick={ () =>this.setState({visible: true , editableData : rowData , selectedPeriod : null})} /> */}
-                    <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => deletePeriod(rowData)} />
+                    <Button icon="pi pi-trash" title="حذف التعويض" className="p-button-rounded p-button-danger" onClick={() => this.setState({ confirmRow: rowData })} />
                 </React.Fragment>
             );
         }
@@ -382,30 +438,86 @@ class Reparation extends Component {
             return (
                 <React.Fragment>
                     {/* <Button icon="pi pi-pencil" className="p-button-rounded p-button-secondary p-ml-2" onClick={ () =>this.setState({visible: true , editableData : rowData , selectedPeriod : null})} /> */}
-                    <img className="preview-thumb image" src={`${properties.uploads_path}/thumb/${rowData['img']}`} alt={rowData['img']} onClick={(e)=>e.target.requestFullscreen()}/>
+                    <img className="m-row-thumb" src={`${properties.uploads_path}/thumb/${rowData['img']}`} alt={rowData['img']} onClick={(e)=>e.target.requestFullscreen()}/>
                 </React.Fragment>
             );
         }
 
         return (
             <>
-                <Header pageName="التعويضات" />
+                <Header
+                    pageName="التعويضات"
+                    action={{ label: "إضافة تعويض", icon: "pi pi-plus", onClick: () => this.setState({ addOpen: true }) }}
+                />
+
+                {/* One Toast for the page. There used to be another inside
+                    the form, mounted after this one and therefore the only
+                    one the ref could point at -- which meant the ref went
+                    null the moment that form unmounted. */}
                 <Toast ref={this.toast}></Toast>
+
+                <Modal
+                    visible={this.state.addOpen}
+                    onHide={() => this.setState({ addOpen: false })}
+                    title="إضافة تعويض جديد"
+                    subtitle="اختر المرحلة والمادة، وأرفق صورة إن أردت"
+                    busy={this.state.adding}
+                    width={640}
+                    actions={
+                        <Button
+                            className={this.state.buttonColor}
+                            icon={this.state.adding ? "pi pi-spin pi-spinner" : undefined}
+                            label={this.state.adding ? "جارٍ الحفظ…" : this.state.buttonText}
+                            disabled={this.state.adding}
+                            onClick={this.addNews}
+                        />
+                    }
+                >
+                    {reparationForm}
+                </Modal>
+
+                {/* the question the delete button never used to ask */}
+                <Confirm
+                    visible={this.state.confirmRow !== null}
+                    onHide={() => this.setState({ confirmRow: null })}
+                    onConfirm={() => deletePeriod(this.state.confirmRow)}
+                    busy={this.state.deleting}
+                    title="حذف تعويض"
+                    message="هل أنت متأكد من حذف هذا التعويض؟"
+                    note="لن يظهر بعدها لأي طالب. لا يمكن التراجع عن هذه الخطوة."
+                    confirmLabel="نعم، احذف"
+                    busyLabel="جارٍ الحذف…"
+                />
                 <div className="content">
                     <div className="container">
                         <div className="card">      
-                            <Card title="إضافة تعويض جديد">         
-                                <DataTable 
-                                header={header} sortable 
+                            {/* no title: the page header above already says it,
+                                and what it said -- "إضافة تعويض جديد" -- was the
+                                title of the form, not of this list */}
+                            <Card>
+                                {/* presentation only -- see components/Table/TableShell.js */}
+                                <TableShell>
+                                <DataTable
+                                header={header} sortable
                                 globalFilter={this.state.globalFilter}
                                  className="p-datatable-responsive-demo p-datatable-gridlines p-datatable-striped"
-                                  value={this.state.data} paginator rows={10} rowsPerPageOptions={[10,20,50]}
-                                   currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"  
-                                   emptyMessage="لا يوجد تعويضات">
-                                        <Column  field = "schoolStageName" 
+                                  value={this.state.data} paginator
+                                   paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown CurrentPageReport"
+                                   rows={10} rowsPerPageOptions={[10,20,50]}
+                                   currentPageReportTemplate="عرض {first} – {last} من {totalRecords} تعويض"
+                                   emptyMessage={
+                                     <TableEmpty
+                                       loading={this.state.tableLoading}
+                                       icon="pi pi-replay"
+                                       title="لا يوجد تعويضات"
+                                       hint="أضف أول تعويض، وسيظهر هنا ولطلابك في التطبيق"
+                                       action={{ label: "إضافة تعويض", onClick: () => this.setState({ addOpen: true }) }}
+                                     />
+                                   }>
+                                        <Column sortable field = "schoolStageName"
                                     header= " السنه الدراسيه " >
                                     </Column>
-                                    <Column  field = "materialName" 
+                                    <Column sortable field = "materialName"
                                     header= " الماده " >
                                     </Column>
                                     <Column 
@@ -416,10 +528,12 @@ class Reparation extends Component {
 // }
                                     header= " الصوره " >
                                     </Column>
-                                    <Column header="  حذف" 
+                                    <Column header="الإجراءات"
+                                    headerStyle={{ width: '84px' }} bodyStyle={{ width: '84px' }}
                                     body={actionBodyTemplate}
                                     ></Column>
                                 </DataTable>
+                                </TableShell>
                             </Card>
                         </div>
                     </div>

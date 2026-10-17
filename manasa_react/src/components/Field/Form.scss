@@ -158,6 +158,43 @@ $f-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
         resize: vertical;
     }
 
+    // ---- a date or a time ----
+    // PrimeReact wraps the input in an inline-flex .p-calendar carrying no
+    // width of its own, so in a field it shrank to the text it held while
+    // every control beside it filled its column.
+    .p-calendar {
+        display: flex;
+        width: 100%;
+
+        .p-inputtext { flex: 1; min-width: 0; }
+    }
+
+    // The overlay is portalled to <body> by the pages that use it, so it is
+    // matched from the root rather than from inside .m-form.
+}
+
+.p-datepicker {
+    border: 1px solid $f-line;
+    border-radius: 14px;
+    box-shadow: 0 24px 48px -28px rgba(22, 48, 58, 0.55);
+    overflow: hidden;
+
+    .p-timepicker {
+        padding: 10px 6px;
+
+        span { font-size: 15px; font-weight: $f-sbold; color: $f-ink; }
+
+        button {
+            width: 30px;
+            height: 30px;
+            border-radius: 9px;
+            color: $f-ink-2;
+
+            &:enabled:hover { background: #e8f1f4; color: $blue; }
+            &:focus { box-shadow: none; }
+        }
+    }
+
 }
 
 // ---- the dropdown ----
@@ -447,6 +484,32 @@ $f-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
             border-radius: 10px;
             border: 1px solid $f-line;
             cursor: zoom-in;
+        }
+
+        // Sits beside a preview rather than under it, and is tinted with what
+        // it does: this is the one control in a file row that destroys
+        // something, so it does not get to look like the file chips next to it.
+        button {
+            align-self: center;
+            padding: 8px 14px;
+            border: 1px solid rgba(190, 70, 70, 0.32);
+            border-radius: 999px;
+            background: rgba(190, 70, 70, 0.08);
+            color: $warningTxt;
+            font: $tiny-size-sbold;
+            font-size: 12.5px;
+            font-weight: $f-sbold;
+            cursor: pointer;
+            transition: background 0.18s ease, border-color 0.18s ease,
+                        color 0.18s ease;
+
+            &:hover {
+                background: $warningTxt;
+                border-color: $warningTxt;
+                color: $white;
+            }
+
+            &:focus { outline: none; box-shadow: none; }
         }
     }
 

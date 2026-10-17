@@ -172,6 +172,13 @@ $k-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
                 background: transparent;
 
                 > h3 { display: none; }
+
+                // The section chrome is stripped above -- no border, no
+                // heading -- so without this two groups run straight into
+                // each other and an upload zone lands flush under the last
+                // field, reading as part of it. This is the only thing left
+                // telling them apart.
+                + .m-sec { margin-top: 20px; }
             }
 
             // Not one fixed column: this modal is sized by its content, and

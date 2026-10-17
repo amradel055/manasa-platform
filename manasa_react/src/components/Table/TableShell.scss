@@ -393,6 +393,61 @@ $m-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
         }
     }
 
+    // A picture standing in for a row's content. Held to a thumbnail so one
+    // tall image cannot set the height of every row around it, and so the
+    // column keeps the same rhythm as the text columns beside it.
+    .m-row-thumb {
+        display: block;
+        width: 86px;
+        height: 58px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 1px solid $m-line;
+        background: #f3f7f8;
+        cursor: zoom-in;
+        transition: border-color 0.18s ease, transform 0.18s $m-ease;
+
+        &:hover { border-color: $m-line-hi; transform: translateY(-1px); }
+    }
+
+    // A URL standing in a cell. Long, unbreakable and meaningless to
+    // read in full, so it is clipped to the column and carries its own
+    // affordance -- the row says what it is, the link goes there.
+    .m-row-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        max-width: 100%;
+        padding: 6px 12px;
+        border: 1px solid $m-line;
+        border-radius: 999px;
+        background: $white;
+        color: #0f6d8a;
+        text-decoration: none;
+        font-size: 12.5px;
+        font-weight: 200;
+        direction: ltr;
+        overflow: hidden;
+        transition: border-color 0.18s ease, background 0.18s ease;
+
+        .pi { flex: none; font-size: 11px; }
+
+        span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        &:hover { border-color: $blue; background: #f2f9fb; }
+
+        // not a link at all -- no scheme to open, so it is only text
+        &.is-plain {
+            border-style: dashed;
+            color: $m-ink-3;
+            cursor: default;
+        }
+    }
+
     // ---- nothing to show, or nothing yet ----
     // The empty row is still one card, just a tall one, so an empty table
     // does not look like a different page from a full one.
