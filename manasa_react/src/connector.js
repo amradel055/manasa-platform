@@ -40,6 +40,7 @@ import SchoolStages from './pages/Settings/SchoolStages.js';
 import Materials from './pages/Settings/Materials.js';
 import Join from './pages/Join/Join.js';
 import AuthLayout from './pages/Auth/AuthLayout.js';
+import DashboardLayout from './pages/Dashboard/DashboardLayout.js';
 import Onboarding from './pages/Onboarding/Onboarding.js';
 class Connector extends Component {
   render() {
@@ -61,9 +62,18 @@ class Connector extends Component {
               </Switch>
             </AuthLayout>
           </Route>
+          {/* No rail on onboarding: the teacher is still being set up. */}
           <Route path="/onboarding" exact>
             <Onboarding />
           </Route>
+
+          {/* Everything else is a dashboard page. The layout -- gradient,
+              sheet and rail -- is mounted above this inner Switch, so moving
+              between pages swaps only the content and the menu keeps its
+              open sections and its scroll position. */}
+          <Route>
+            <DashboardLayout>
+              <Switch>
           <Route path="/lessons" exact>
             <AllLessons />
           </Route>
@@ -144,6 +154,9 @@ class Connector extends Component {
           </Route>
           <Route path="/settings/materials" exact>
             <Materials />
+          </Route>
+              </Switch>
+            </DashboardLayout>
           </Route>
         </Switch>
       </Router>

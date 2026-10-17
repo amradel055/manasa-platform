@@ -1,0 +1,619 @@
+// Variables
+@import "../../assets/css/vars";
+
+// One sheet for the whole dashboard, the same shape the sign-in screen uses:
+// the platform's gradient as the ground, and a single rounded card floating on
+// it holding the rail and the page side by side. The sheet is exactly one
+// screen tall and clipped, so the window never scrolls -- the rail and the
+// page each scroll inside their own half.
+//
+// The rail is dark glass rather than the brand gradient: the gradient is
+// already doing the work outside the sheet, and repeating it inside flattened
+// the two apart.
+//
+// NOTE on weights -- index.scss remaps Cairo: 100 = Regular, 200 = SemiBold,
+// 300 = Bold, 400 = Black. The usual 400/700 land on the wrong face.
+$d-reg: 100;
+$d-sbold: 200;
+$d-bold: 300;
+$d-black: 400;
+$d-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
+$rail-w: 300px;
+// Flat ink, darker than anything in the ground outside. The brand gradient
+// in here was the same hue family as that ground, so the rail melted into it.
+$d-rail: $ink-rail;
+$d-dim: $ink-rail-dim;
+// The children sit a step brighter than the section headings they hang
+// under. They are the actual destinations -- the headings above them only
+// open a drawer -- so reading them should not be the harder of the two.
+$d-link: #c2d9e2;
+$d-line: #e3eaec;
+
+// The ground is larger than the screen and slides along its own axis. Not a
+// colour change and not a repaint -- just an offset -- so it stays cheap on
+// a weak laptop with the dashboard open all day.
+@keyframes dashGround {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+@keyframes dashLand {
+    from { opacity: 0; transform: translateY(20px) scale(0.985); }
+}
+@keyframes railIn {
+    from { opacity: 0; transform: translateX(10px); }
+}
+// the halo's one slow turn
+@keyframes dashSpin {
+    to { transform: rotate(360deg); }
+}
+@keyframes pfPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(57, 196, 106, 0.55); }
+    60% { box-shadow: 0 0 0 6px rgba(57, 196, 106, 0); }
+}
+
+.dash {
+    direction: rtl;
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: stretch;
+    // One value on all four sides. Separate vh and vw readings drifted apart
+    // as the window changed shape, and the gap around the sheet stopped
+    // looking like a margin and started looking like a mistake.
+    padding: clamp(14px, 2vh, 26px);
+    // The same ground the sign-in screen stands on, so the two read as one
+    // place: one sweep of the platform's teal, sliding along its own axis
+    // over half a minute. Slow enough that it is never the thing you notice,
+    // which is the point -- this dashboard is open all day.
+    background: $ink-ground;
+    background-size: 180% 180%;
+    animation: dashGround 34s ease-in-out infinite;
+    font-family: $font;
+
+    // ---- the halo that turns around the sheet ----
+    // A conic gradient on an oversized square, rotated; the wrapper clips all
+    // of it away except the ring of padding, which is why it reads as light
+    // moving along the edge instead of a ring that simply sits there.
+    .dash-wrap {
+        position: relative;
+        z-index: 1;
+        flex: 1;
+        min-width: 0;
+        min-height: 0;
+        display: flex;
+        padding: 3px;
+        border-radius: 17px;
+        overflow: hidden;
+        box-shadow: $ink-lift;
+        animation: dashLand 0.6s $d-ease both;
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: -70%;
+            background: conic-gradient(
+                from 0deg,
+                transparent 0deg 170deg,
+                rgba(238, 184, 7, 0.85) 215deg,
+                rgba(255, 255, 255, 0.9) 250deg,
+                rgba(25, 139, 175, 0.85) 285deg,
+                transparent 330deg 360deg
+            );
+            animation: dashSpin 11s linear infinite;
+        }
+    }
+
+    // ---- the one sheet ----
+    .dash-sheet {
+        position: relative;
+        z-index: 1;
+        flex: 1;
+        min-width: 0;
+        // min-height:0 is what lets the two panes below actually scroll rather
+        // than stretching the sheet past the screen
+        min-height: 0;
+        display: flex;
+        background: $ink-panel;
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    // ---- the rail ----
+    .side-rail {
+        flex: none;
+        width: $rail-w;
+        min-height: 0;
+        background: $d-rail;
+        border-inline-end: 1px solid $ink-edge;
+        display: flex;
+        flex-direction: column;
+        // The rail itself never scrolls. That is the whole trick: the brand
+        // stays at its head and the teacher stays at its foot however far
+        // down the nine sections run, because only the list between them
+        // moves.
+        overflow: hidden;
+    }
+
+    // ---- logo ----
+    .rail-head {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 84px;
+        // more room below than above: the gap under the mark is what now does
+        // the separating, so it has to read as deliberate rather than as slack
+        padding: 20px 18px 22px;
+    }
+
+    .rail-brand {
+        // not flex:1 any more -- the link shrinks to the artwork so that
+        // centring the head actually centres the mark, not an empty box
+        flex: 0 1 auto;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        // none needed: the cut runs through the middle of the blank column
+        // inside the file, so each half brings its own half of that gap
+        gap: 0;
+
+        // $logo-h drives the rest. The aspect and the cut are both measured
+        // off the file itself (442x153, blank column at x=150..198), not
+        // guessed -- a cut a few per cent out clips the drawing or drags a
+        // sliver of the name into the other box.
+        $logo-h: 42px;
+        $logo-w: $logo-h * (442 / 153);
+        $logo-cut: 0.3937;
+
+        // the drawing: first in the row, so it leads in RTL
+        .bm-mark {
+            flex: none;
+            display: block;
+            width: $logo-w * $logo-cut;
+            height: $logo-h;
+            background-repeat: no-repeat;
+            background-position: left center;
+            background-size: auto 100%;
+        }
+
+        // the name, cropped out of the same file, at the end of the row
+        .bm-name {
+            flex: none;
+            display: block;
+            width: $logo-w * (1 - $logo-cut);
+            height: $logo-h;
+            background-repeat: no-repeat;
+            background-position: right center;
+            background-size: auto 100%;
+        }
+    }
+
+    // ---- sections ----
+    .rail-list {
+        flex: 1;
+        // Without this the list refuses to shrink below its content and
+        // pushes the profile off the bottom of the rail instead of
+        // scrolling -- the one line this whole thing rests on.
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 14px 12px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        scrollbar-width: thin;
+        scrollbar-color: rgba(238, 184, 7, 0.34) transparent;
+
+        &::-webkit-scrollbar { width: 2px; }
+        &::-webkit-scrollbar-track { background: transparent; }
+        &::-webkit-scrollbar-thumb {
+            background: rgba(238, 184, 7, 0.34);
+            border-radius: 99px;
+        }
+        &::-webkit-scrollbar-thumb:hover { background: rgba(238, 184, 7, 0.6); }
+    }
+
+    .rail-sec {
+        animation: railIn 0.4s $d-ease both;
+
+        @for $i from 1 through 10 {
+            &:nth-child(#{$i}) { animation-delay: #{$i * 35}ms; }
+        }
+    }
+
+    .rail-top {
+        width: 100%;
+        min-height: 52px;
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        padding: 0 13px;
+        border: 1px solid transparent;
+        border-radius: 13px;
+        background: transparent;
+        color: $d-dim;
+        cursor: pointer;
+        text-align: start;
+        // some rows are <a> now: they inherit everything else from here, but
+        // not this
+        text-decoration: none;
+        font: $tiny-size-bold;
+        font-size: 14.5px;
+        font-weight: $d-bold;
+        white-space: nowrap;
+        transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+
+        // the glyph sits in its own tile, so the column reads as a list of
+        // objects rather than a column of loose marks
+        > .pi:first-child {
+            flex: none;
+            width: 36px;
+            height: 36px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.07);
+            font-size: 16px;
+            transition: background 0.24s ease, color 0.24s ease;
+        }
+
+        .lbl {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .cr {
+            flex: none;
+            font-size: 11px;
+            opacity: 0.5;
+            transition: transform 0.26s $d-ease;
+        }
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: $gold-soft;
+            color: $white;
+        }
+    }
+
+    .rail-sec.open > .rail-top {
+        background: $gold-soft;
+        border-color: $gold-line;
+        color: $white;
+
+        // against ink there is room for gold to carry the whole open row --
+        // the plate, the edge and the tile -- not the tile on its own
+        > .pi:first-child {
+            background: $yellow;
+            color: #2e2300;
+        }
+
+        .cr { transform: rotate(180deg); }
+    }
+
+    // ---- children ----
+    .rail-kids {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.3s $d-ease;
+
+        > * {
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        a {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            min-height: 40px;
+            padding: 0 13px;
+            margin-inline-start: 31px;
+            border-radius: 9px;
+            color: $d-link;
+            text-decoration: none;
+            // SemiBold on this project's remapped Cairo scale -- one step up
+            // from Regular, still a step below the Bold of the heading, so
+            // the hierarchy holds while the text stops being faint.
+            font: $tiny-size-sbold;
+            font-size: 13.5px;
+            font-weight: $d-sbold;
+            white-space: nowrap;
+            transition: background 0.18s ease, color 0.18s ease,
+                        padding 0.2s $d-ease;
+
+            .dot {
+                flex: none;
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: currentColor;
+                opacity: 0.7;
+                transition: opacity 0.18s ease, transform 0.22s $d-ease,
+                            background 0.18s ease;
+            }
+
+            &:hover {
+                background: $gold-soft;
+                color: $white;
+                padding-inline-start: 18px;
+
+                .dot {
+                    opacity: 1;
+                    background: $yellow;
+                    transform: scale(1.25);
+                }
+            }
+        }
+    }
+
+    .rail-sec.open .rail-kids {
+        grid-template-rows: 1fr;
+        padding-block: 3px;
+    }
+
+    // ---- who is signed in, pinned to the foot of the rail ----
+    .rail-profile {
+        position: relative;
+        flex: none;
+        margin: 8px 12px 14px;
+
+        // Rows reaching the foot of the list fade out under the profile
+        // rather than being cut off by it, which is what says "there is more
+        // above" without printing a line to say it. It can be a flat fade
+        // because the rail is a flat colour -- against the old gradient this
+        // would have shown as a band.
+        &::before {
+            content: "";
+            position: absolute;
+            inset-inline: -12px;
+            bottom: 100%;
+            height: 24px;
+            pointer-events: none;
+            background: linear-gradient(to top, $d-rail, rgba(14, 51, 65, 0));
+        }
+        padding: 11px;
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        min-width: 0;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.07);
+        animation: railIn 0.45s $d-ease both;
+        animation-delay: 420ms;
+        transition: background 0.22s ease, transform 0.26s $d-ease;
+
+        &:hover {
+            background: $gold-soft;
+            transform: translateY(-2px);
+        }
+
+        .pf-avatar {
+            position: relative;
+            flex: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(140deg, $yellow, #f6cf52);
+            color: #2e2300;
+            font: $tiny-size-bold;
+            font-size: 14px;
+            font-weight: $d-black;
+            // Arabic initials read right-to-left like the rest of the name
+            direction: rtl;
+        }
+
+        // the small mark that says the session is live
+        .pf-live {
+            position: absolute;
+            inset-block-end: 1px;
+            inset-inline-end: 1px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #39c46a;
+            border: 2px solid $ink-rail-pf;
+            animation: pfPulse 2.6s ease-in-out infinite;
+        }
+
+        .pf-who {
+            flex: 1;
+            min-width: 0;
+            line-height: 1.35;
+
+            b {
+                display: block;
+                font: $tiny-size-bold;
+                font-size: 13.5px;
+                font-weight: $d-bold;
+                color: $white;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            small {
+                display: block;
+                font: $tiny-size-reg;
+                font-size: 11px;
+                font-weight: $d-reg;
+                color: $d-dim;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                // The element carries dir="ltr" so the address reads as Latin text,
+                // which makes ITS start the left edge -- the opposite side from
+                // the name above it. end is what lines the two up again.
+                text-align: end;
+            }
+        }
+
+        .pf-out {
+            flex: none;
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.06);
+            color: $d-dim;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease,
+                        border-color 0.2s ease, transform 0.22s $d-ease;
+
+            .pi { font-size: 15px; }
+
+            &:hover {
+                background: rgba(214, 72, 72, 0.4);
+                border-color: rgba(255, 140, 140, 0.6);
+                color: $white;
+                transform: rotate(8deg);
+            }
+        }
+    }
+
+    // ---- the page itself ----
+    .dash-main {
+        flex: 1;
+        min-width: 0;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: $ink-panel;
+
+        scrollbar-width: thin;
+        scrollbar-color: rgba(18, 58, 72, 0.32) transparent;
+
+        &::-webkit-scrollbar { width: 6px; }
+        &::-webkit-scrollbar-track { background: transparent; }
+        &::-webkit-scrollbar-thumb {
+            background: rgba(18, 58, 72, 0.3);
+            border-radius: 99px;
+        }
+
+        // every page renders .content > .container > .card
+        .content { padding: 0 0 26px; }
+
+        .content > .container {
+            max-width: none;
+            width: 100%;
+            margin: 0;
+            padding-inline: clamp(16px, 2.2vw, 32px);
+        }
+
+        // No chrome on the card. It was a third nested surface -- the page,
+        // then this white panel, then the table's own white rows -- and the
+        // thread along its top edge was announcing a title the page header
+        // already carries. What is left is the entrance and the flattening
+        // of the PrimeReact Card inside it.
+        .content .card {
+            position: relative;
+            // index.scss imports Bootstrap 4.3, which claims the bare class
+            // name .card and gives it a white fill, a border and a radius.
+            // Dropping our own chrome just uncovered Bootstrap's, so it has
+            // to be turned off by name rather than simply left unset.
+            background: transparent;
+            border: 0;
+            border-radius: 0;
+            margin-bottom: 0;
+            animation: dashLand 0.45s $d-ease both;
+            animation-delay: 80ms;
+
+            // the PrimeReact Card inside carries its own chrome; flatten it so
+            // there are not two nested boxes
+            > .p-card {
+                background: transparent;
+                border: 0;
+                box-shadow: none;
+
+                > .p-card-body { padding: 0; }
+            }
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &,
+        .dash-wrap,
+        .dash-wrap::before,
+        .dash-sheet,
+        .rail-sec,
+        .rail-top,
+        .rail-top > .pi:first-child,
+        .rail-kids,
+        .rail-kids a,
+        .rail-profile,
+        .dash-main .content .card {
+            animation: none;
+            transition: none;
+        }
+    }
+
+    // On a phone the rail becomes a strip along the bottom of the sheet.
+    @media (max-width: 760px) {
+        padding: 0;
+
+        .dash-wrap {
+            padding: 0;
+            border-radius: 0;
+            box-shadow: none;
+
+            // no edge left to light, and the turning square underneath would
+            // only cost frames on the weakest device in the room
+            &::before { display: none; }
+        }
+
+        .dash-sheet {
+            border-radius: 0;
+            flex-direction: column-reverse;
+        }
+
+        .side-rail {
+            width: 100%;
+            flex: none;
+            height: 60px;
+            // the strip is below the page now; its top edge is the one facing it
+            border-inline-end: 0;
+            border-block-start: 1px solid $ink-edge;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        // sideways here, and the fade points the wrong way in a row
+        .rail-list {
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        .rail-profile::before { display: none; }
+
+        .rail-head,
+        .rail-kids,
+        .rail-top .lbl,
+        .rail-top .cr,
+        .rail-profile .pf-who {
+            display: none;
+        }
+
+        .rail-list {
+            flex-direction: row;
+            padding: 0 6px;
+            gap: 2px;
+        }
+
+        .rail-top {
+            min-width: 48px;
+            justify-content: center;
+            padding: 0 8px;
+        }
+
+        .rail-profile { margin: 0 6px; padding: 6px; }
+    }
+}

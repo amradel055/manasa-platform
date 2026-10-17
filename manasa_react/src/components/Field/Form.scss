@@ -1,0 +1,476 @@
+// Variables
+@import "../../assets/css/vars";
+
+// Form fields, built on our own scaffolding.
+//
+// The old markup wrapped every control in PrimeReact's `p-inputgroup` +
+// `p-float-label` + `p-grid`. Two things in there fought every attempt to
+// style this form:
+//   1. `.p-inputgroup .p-inputtext { flex: 1 1 auto; width: 1% }` -- which is
+//      why one field rendered about forty pixels wide;
+//   2. a float label parked at `top: 50%`, sitting on the value underneath it.
+// Neither is fought here. The scaffolding is gone, so there is nothing left
+// to beat: `.m-fld` puts the label above the control and that is all.
+//
+// Scoped to `.m-form` so it reaches the pages that opt in, whether they are
+// shown as a page or inside a slide-over panel.
+//
+// NOTE on weights -- index.scss remaps Cairo: 100 = Regular, 200 = SemiBold,
+// 300 = Bold, 400 = Black. The usual 400/700 land on the wrong face.
+$f-reg: 100;
+$f-sbold: 200;
+$f-bold: 300;
+$f-black: 400;
+
+$f-line: #e3eaec;
+$f-line-hi: #cfdde1;
+$f-line-2: #eef2f3;
+$f-ink: #16303a;
+$f-ink-2: #5b747d;
+$f-ink-3: #8299a1;
+$f-h: 48px;
+$f-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
+
+.m-form {
+    // ---- a titled group of fields ----
+    .m-sec {
+        background: $white;
+        border: 1px solid $f-line;
+        border-radius: 14px;
+        overflow: hidden;
+        margin-bottom: 14px;
+
+        > h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+            padding: 15px 18px;
+            border-bottom: 1px solid $f-line-2;
+            font: $small-size-bold;
+            font-size: 14px;
+            font-weight: $f-bold;
+            color: $dark-blue-one;
+
+            // the step number, so a long form reads as a sequence
+            .m-sec-n {
+                flex: none;
+                width: 26px;
+                height: 26px;
+                display: grid;
+                place-items: center;
+                border-radius: 8px;
+                background: #e8f1f4;
+                color: $blue;
+                font-size: 12px;
+                font-weight: $f-black;
+            }
+
+            small {
+                margin-inline-start: auto;
+                font: $tiny-size-reg;
+                font-size: 11.5px;
+                font-weight: $f-reg;
+                color: $f-ink-3;
+            }
+        }
+    }
+
+    // Columns that size themselves. The old grid used fixed p-md-4 thirds and
+    // an empty spacer div to fill a hole; this leaves no hole to fill.
+    .m-grid {
+        display: grid;
+        // Three, fixed. auto-fit was letting a wide panel pack four fields
+        // into a row, which made each one too narrow for the labels and
+        // changed the column count as the window resized.
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        padding: 18px;
+
+        > .m-wide { grid-column: 1 / -1; }
+
+        @media (max-width: 900px) { grid-template-columns: repeat(2, 1fr); }
+        @media (max-width: 600px) { grid-template-columns: 1fr; }
+    }
+
+    // ---- one field ----
+    .m-fld {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        min-width: 0;
+
+        > label {
+            font: $tiny-size-bold;
+            font-size: 12.5px;
+            font-weight: $f-bold;
+            color: $f-ink-2;
+
+            .req { color: #c0392b; margin-inline-start: 3px; }
+        }
+
+        .m-note {
+            font: $tiny-size-reg;
+            font-size: 11.5px;
+            font-weight: $f-reg;
+            color: $f-ink-3;
+        }
+    }
+
+    // ---- the controls ----
+    // index.scss forces font-weight on .p-inputtext with !important, so the
+    // weight here needs one too; nothing else in this file does.
+    .p-inputtext,
+    .p-inputtextarea {
+        width: 100%;
+        min-height: $f-h;
+        padding: 0 15px;
+        border: 1px solid $f-line;
+        border-radius: 11px;
+        background: $white;
+        font: $small-size-sbold;
+        font-size: 14px;
+        font-weight: $f-sbold !important;
+        color: $f-ink;
+        box-shadow: none;
+        transition: border-color 0.18s ease;
+
+        &::placeholder {
+            color: $f-ink-3;
+            font-weight: $f-reg !important;
+        }
+
+        &:enabled:hover { border-color: $f-line-hi; }
+
+        // no ring on focus anywhere in this project; the border carries it
+        &:enabled:focus,
+        &:focus {
+            outline: 0;
+            box-shadow: none;
+            border-color: $blue;
+        }
+    }
+
+    .p-inputtextarea {
+        min-height: 120px;
+        padding: 13px 15px;
+        line-height: 1.8;
+        resize: vertical;
+    }
+
+    // ---- the dropdown ----
+    .m-select.p-dropdown {
+        width: 100%;
+        min-height: $f-h;
+        display: flex;
+        align-items: center;
+        padding: 0;
+        border: 1px solid $f-line;
+        border-radius: 11px;
+        background: $white;
+        box-shadow: none;
+        transition: border-color 0.18s ease;
+
+        &:not(.p-disabled):hover { border-color: $f-line-hi; }
+
+        &:not(.p-disabled).p-focus,
+        &.p-inputwrapper-focus {
+            box-shadow: none;
+            border-color: $blue;
+        }
+
+        .p-dropdown-label {
+            padding: 0 15px;
+            font: $small-size-sbold;
+            font-size: 14px;
+            font-weight: $f-sbold !important;
+            color: $f-ink;
+            line-height: #{$f-h - 2px};
+        }
+
+        // the placeholder has to read lighter than a value, or a filled
+        // field and an empty one look the same at a glance
+        .p-dropdown-label.p-placeholder {
+            color: $f-ink-3;
+            font-weight: $f-reg !important;
+        }
+
+        .p-dropdown-trigger {
+            width: 40px;
+            color: $f-ink-3;
+
+            .p-dropdown-trigger-icon { font-size: 11px; }
+        }
+
+        &.p-disabled {
+            background: #f4f7f8;
+            opacity: 1;
+
+            .p-dropdown-label { color: $f-ink-3; }
+        }
+    }
+}
+
+// The options list is rendered on <body>, outside .m-form, so it is matched
+// by its own class instead.
+.p-dropdown-panel {
+    margin-top: 6px;
+    border: 1px solid $f-line;
+    border-radius: 12px;
+    box-shadow: 0 18px 40px -22px rgba(22, 48, 58, 0.55);
+    overflow: hidden;
+
+    .p-dropdown-items { padding: 6px; }
+
+    .p-dropdown-item {
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+        padding: 0 11px;
+        border-radius: 9px;
+        font: $tiny-size-sbold;
+        font-size: 13.5px;
+        font-weight: 200;
+        color: $dark-blue-two;
+        transition: background 0.15s ease, color 0.15s ease;
+
+        &:hover { background: #f1f6f7; color: $dark-blue-one; }
+
+        &.p-highlight {
+            background: #e8f1f4;
+            color: #0f6d8a;
+        }
+    }
+
+    .p-dropdown-filter-container .p-inputtext {
+        min-height: 40px;
+        border-radius: 9px;
+        font-size: 13.5px;
+    }
+}
+
+.m-form {
+    // ---- upload zones ----
+    // PrimeReact's FileUpload draws a bar of buttons and then an area of
+    // content. Read in that order it asks you to act before it has said what
+    // for, so the content is pulled above the buttons with `order` and the
+    // two are wrapped in one dashed card.
+    .m-drop {
+        grid-column: 1 / -1;
+
+        .p-fileupload {
+            display: flex;
+            flex-direction: column;
+            border: 1.5px dashed $f-line-hi;
+            border-radius: 14px;
+            background: #fbfdfd;
+            overflow: hidden;
+            transition: border-color 0.2s ease, background 0.2s ease;
+
+            &:hover {
+                border-color: $blue;
+                background: #f5fbfc;
+            }
+        }
+
+        // the prompt, and the mark above it
+        .p-fileupload-content {
+            order: -1;
+            padding: 22px 16px 0;
+            border: 0;
+            background: transparent;
+            text-align: center;
+            color: $f-ink-3;
+            font: $tiny-size-sbold;
+            font-size: 13px;
+            font-weight: $f-sbold;
+
+            &::before {
+                content: "";
+                display: block;
+                width: 46px;
+                height: 46px;
+                margin: 0 auto 12px;
+                border-radius: 15px;
+                background: #e9eff1 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237fa0ac' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 15.5V4M7.5 8.5 12 4l4.5 4.5M4.5 16.5v2a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-2'/%3E%3C/svg%3E") center / 20px no-repeat;
+            }
+        }
+
+        .p-fileupload-buttonbar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 16px 20px;
+            border: 0;
+            background: transparent;
+        }
+
+        // Every one of the three is an outline. index.scss declares
+        //   .p-button.p-fileupload-choose { background-color: $blue !important }
+        // globally, which is where the solid teal came from; other pages may
+        // want it, so it is answered here rather than changed there -- and an
+        // !important can only be answered by another one.
+        .p-fileupload-buttonbar .p-button {
+            min-height: 40px;
+            padding: 0 16px;
+            border: 1px solid $f-line !important;
+            border-radius: 10px;
+            background: $white !important;
+            background-color: $white !important;
+            color: $f-ink-2;
+            font: $tiny-size-bold;
+            font-size: 13px;
+            font-weight: $f-bold;
+            box-shadow: none;
+            transition: border-color 0.18s ease, color 0.18s ease,
+                        transform 0.18s $f-ease;
+
+            .p-button-icon { font-size: 12px; }
+
+            &:enabled:hover {
+                border-color: $blue !important;
+                color: $blue;
+                transform: translateY(-1px);
+            }
+
+            &:focus { box-shadow: none; }
+
+            // the one that opens the file picker leads the other two
+            &.p-fileupload-choose {
+                color: $blue;
+                border-color: #bcd9e2 !important;
+            }
+        }
+    }
+
+    // ---- what has already been uploaded ----
+    .m-files {
+        grid-column: 1 / -1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+
+        a {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            max-width: 100%;
+            padding: 7px 13px;
+            border: 1px solid $f-line;
+            border-radius: 999px;
+            background: $white;
+            color: $f-ink-2;
+            text-decoration: none;
+            font: $tiny-size-sbold;
+            font-size: 12.5px;
+            font-weight: $f-sbold;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            transition: border-color 0.18s ease, color 0.18s ease;
+
+            &:hover { border-color: $blue; color: $blue; }
+        }
+
+        img {
+            width: 96px;
+            height: 68px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid $f-line;
+            cursor: zoom-in;
+        }
+    }
+
+    // ---- the bar that saves ----
+    // Pinned to the top of whatever scrolls. At the foot it was one more card
+    // floating in the form; at the head it reads as the form's own toolbar,
+    // and on a long form the way out is never below the fold either way.
+    .m-actions {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+        padding: 12px 18px;
+        background: $white;
+        border: 1px solid $f-line;
+        border-radius: 14px;
+        box-shadow: 0 12px 24px -22px rgba(22, 48, 58, 0.6);
+
+        .m-actions-hint {
+            font: $tiny-size-reg;
+            font-size: 12px;
+            font-weight: $f-reg;
+            color: $f-ink-3;
+        }
+
+        .p-button {
+            // index.scss declares  .add-button { width: 100% !important }
+            // globally, which is why this one stretched the whole bar. Other
+            // pages may well want that, so it is overridden here rather than
+            // changed there -- and an !important can only be answered by one.
+            width: auto !important;
+            margin-inline-start: auto;
+            min-height: 44px;
+            padding: 0 24px;
+            border: 0;
+            border-radius: 11px;
+            background: $yellow;
+            // white on gold, as asked -- see the note beside $j-gold-ink
+            color: $white;
+            font: $small-size-bold;
+            font-size: 14.5px;
+            font-weight: $f-bold;
+            box-shadow: none;
+            transition: transform 0.2s $f-ease, filter 0.18s ease;
+
+            &:enabled:hover {
+                background: $yellow;
+                transform: translateY(-2px);
+                filter: brightness(1.06);
+            }
+
+            &:enabled:active { transform: none; }
+            &:focus { box-shadow: none; }
+
+            // the saving state the page already sets by class name
+            &.loading { background: $dark-blue-one; color: $white; }
+        }
+    }
+
+    // a small inline action, such as the one beside a video link
+    .m-inline {
+        display: flex;
+        gap: 8px;
+        align-items: stretch;
+
+        > .p-inputtext { flex: 1; min-width: 0; }
+
+        > .p-button {
+            flex: none;
+            min-height: $f-h;
+            padding: 0 18px;
+            border: 1px solid $f-line;
+            border-radius: 11px;
+            background: $white;
+            color: $f-ink-2;
+            font: $tiny-size-bold;
+            font-size: 13px;
+            font-weight: $f-bold;
+            box-shadow: none;
+            transition: border-color 0.18s ease, color 0.18s ease;
+
+            &:enabled:hover { background: $white; border-color: $blue; color: $blue; }
+            &:focus { box-shadow: none; }
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .m-form * { transition: none !important; }
+}

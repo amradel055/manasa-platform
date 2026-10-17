@@ -1,0 +1,473 @@
+// Variables
+@import "../../assets/css/vars";
+
+// Rows as cards.
+//
+// Every rule lives inside `.m-table` on purpose. index.scss carries global
+// `.p-datatable` rules that all 30 dashboard pages depend on -- right-aligned
+// cells, the Cairo faces, white icons inside cells, the LTR paginator, the
+// responsive stacking under 768px -- and none of those are touched here. The
+// scope is also what makes the extra class weight that lets these rules win
+// over the ones in index.scss and over PrimeReact's own theme, without a
+// single !important.
+//
+// NOTE on weights -- index.scss remaps Cairo: 100 = Regular, 200 = SemiBold,
+// 300 = Bold, 400 = Black. The usual 400/700 land on the wrong face.
+$m-reg: 100;
+$m-sbold: 200;
+$m-bold: 300;
+
+$m-line: #e3eaec;
+$m-line-hi: #cfe0e5;
+$m-ink: #16303a;
+$m-ink-2: #5b747d;
+$m-ink-3: #8299a1;
+$m-gap: 8px;
+$m-radius: 12px;
+$m-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
+
+.m-table {
+    // ---- the toolbar PrimeReact renders from `header` ----
+    .p-datatable .p-datatable-header {
+        background: transparent;
+        border: 0;
+        padding: 0 2px 14px;
+        font: $small-size-bold;
+        font-weight: $m-bold;
+        color: $m-ink;
+    }
+
+    // with the duplicated heading gone, the toolbar is the search alone
+    .p-datatable .p-datatable-header .table-header {
+        justify-content: flex-start;
+    }
+
+    .p-input-icon-left {
+        display: inline-flex;
+        align-items: center;
+        width: 100%;
+        // the search is the only control on this row now, so it can take
+        // the room the heading used to take instead of sitting in a stub
+        max-width: 520px;
+
+        > i:first-child {
+            inset-inline-start: 16px;
+            inset-inline-end: auto;
+            margin-top: -0.5rem;
+            color: $m-ink-3;
+            font-size: 15px;
+            transition: color 0.2s ease;
+            pointer-events: none;
+        }
+
+        // the icon lights up with the field, so the two read as one control
+        &:focus-within > i:first-child { color: $blue; }
+    }
+
+    .p-input-icon-left > .p-inputtext {
+        width: 100%;
+        min-height: 48px;
+        // the icon sits at the start, so the text has to begin after it
+        padding-inline: 46px 16px;
+        border: 1px solid $m-line;
+        border-radius: 12px;
+        background: $white;
+        font: $small-size-sbold;
+        font-size: 14px;
+        font-weight: $m-sbold;
+        color: $m-ink;
+        transition: border-color 0.2s ease, background 0.2s ease;
+
+        &::placeholder {
+            color: $m-ink-3;
+            font-weight: $m-reg;
+        }
+
+        // No ring on focus anywhere in this project -- the border carries it.
+        &:enabled:hover { border-color: #cfdde1; }
+
+        &:enabled:focus {
+            box-shadow: none;
+            border-color: $blue;
+        }
+    }
+
+    // ---- the table stops being a grid and becomes a stack ----
+    // border-spacing is what puts real air between the cards; it needs
+    // separate borders, which is also what lets each cell round its own end.
+    //
+    // Targeted through the wrapper on purpose: in PrimeReact 6 the <table>
+    // element carries no class at all (tableClassName defaults to null), so
+    // the .p-datatable-table selector that later versions use matches
+    // nothing here. The .m-table scope keeps this bare element selector from
+    // reaching any other table on the page.
+    .p-datatable-wrapper > table {
+        border-collapse: separate;
+        border-spacing: 0 $m-gap;
+    }
+
+    // ---- the head: labels, not a band ----
+    // The two !important here are the only ones in this file, and they are
+    // here to beat one. pages/Exams/view.scss and its two copies declare a
+    // bare, unscoped  table thead th { background-color: $blue !important }
+    // and CRA bundles every imported stylesheet globally -- so that rule
+    // paints the head of EVERY table in the dashboard, this one included.
+    // Specificity alone cannot win against an !important; only another one
+    // from a heavier selector can.
+    .p-datatable .p-datatable-thead > tr > th {
+        // Pinned to the top of the page's scroller, so the column names stay
+        // readable once the list is long enough to scroll. A sticky cell has
+        // to be opaque or the rows travel visibly underneath it, which is
+        // why this is the page surface rather than transparent.
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        background: $ink-panel !important;
+        border: 0;
+        border-color: transparent !important;
+        padding: 10px 16px 8px;
+        font: $tiny-size-bold;
+        font-size: 11.5px;
+        font-weight: $m-bold;
+        letter-spacing: 0.4px;
+        color: $m-ink-3;
+
+        &:focus { box-shadow: none; }
+
+        .p-sortable-column-icon {
+            margin-inline-start: 6px;
+            font-size: 11px;
+            color: $m-ink-3;
+            opacity: 0.6;
+            transition: opacity 0.18s ease, color 0.18s ease;
+        }
+
+        &:hover .p-sortable-column-icon,
+        &.p-highlight .p-sortable-column-icon {
+            opacity: 1;
+            color: $blue;
+        }
+    }
+
+    // a sorted column should not repaint the whole label cell
+    .p-datatable .p-datatable-thead > tr > th.p-sortable-column:not(.p-highlight):hover,
+    .p-datatable .p-datatable-thead > tr > th.p-highlight {
+        background: transparent !important;
+        color: $m-ink-2;
+    }
+
+    // ---- the filter row, quietened ----
+    // The inputs stay exactly where PrimeReact puts them -- removing them
+    // would remove a feature -- they just stop being big white slabs inside
+    // a coloured band.
+    .p-datatable .p-datatable-thead > tr > th.p-filter-column {
+        padding: 0 16px 10px;
+    }
+
+    .p-filter-column .p-inputtext,
+    .p-filter-column .p-column-filter input {
+        width: 100%;
+        min-height: 34px;
+        padding: 0 10px;
+        border: 1px solid $m-line;
+        border-radius: 8px;
+        background: $white;
+        font-size: 12.5px;
+        font-weight: $m-sbold;
+        color: $m-ink;
+
+        &:enabled:focus {
+            box-shadow: none;
+            border-color: $blue;
+        }
+    }
+
+    // ---- the body: one card per row ----
+    .p-datatable .p-datatable-tbody > tr {
+        background: transparent;
+        outline: 0;
+    }
+
+    .p-datatable .p-datatable-tbody > tr > td {
+        background: $white;
+        // the side borders are added back only on the two end cells, so the
+        // card is outlined once rather than every cell being boxed
+        border: 1px solid $m-line;
+        border-inline-width: 0;
+        padding: 15px 16px;
+        font: $small-size-sbold;
+        font-size: 13.5px;
+        font-weight: $m-sbold;
+        color: $m-ink;
+        transition: border-color 0.2s $m-ease, box-shadow 0.2s $m-ease;
+    }
+
+    .p-datatable .p-datatable-tbody > tr > td:first-child {
+        border-inline-start-width: 1px;
+        border-start-start-radius: $m-radius;
+        border-end-start-radius: $m-radius;
+        font-weight: $m-bold;
+    }
+
+    .p-datatable .p-datatable-tbody > tr > td:last-child {
+        border-inline-end-width: 1px;
+        border-start-end-radius: $m-radius;
+        border-end-end-radius: $m-radius;
+    }
+
+    // the whole card answers the pointer, not the single cell under it
+    .p-datatable .p-datatable-tbody > tr:hover > td {
+        border-color: $m-line-hi;
+        box-shadow: 0 10px 22px -16px rgba(22, 48, 58, 0.5);
+    }
+
+    // Striping and gridlines are the opposite of a card: both are there to
+    // tie rows into one block. The page keeps its classes; they just stop
+    // drawing inside this scope.
+    .p-datatable.p-datatable-striped .p-datatable-tbody > tr:nth-child(even) {
+        background: transparent;
+    }
+
+    .p-datatable.p-datatable-gridlines .p-datatable-tbody > tr > td {
+        border-block-width: 1px;
+        border-inline-width: 0;
+    }
+
+    .p-datatable.p-datatable-gridlines .p-datatable-tbody > tr > td:first-child {
+        border-inline-start-width: 1px;
+    }
+
+    .p-datatable.p-datatable-gridlines .p-datatable-tbody > tr > td:last-child {
+        border-inline-end-width: 1px;
+    }
+
+    .p-datatable.p-datatable-gridlines .p-datatable-thead > tr > th {
+        border-width: 0;
+    }
+
+    // ---- the row actions ----
+    // index.scss paints every .pi inside a cell white, which was right when
+    // these buttons were solid colour. As outlines on a white card they have
+    // to carry their own ink.
+    .p-datatable .p-datatable-tbody > tr > td .p-button {
+        width: 34px;
+        height: 34px;
+        margin-inline-start: 6px;
+        border: 1px solid $m-line;
+        border-radius: 9px;
+        background: $white;
+        color: $m-ink-2;
+        box-shadow: none;
+        transition: border-color 0.18s ease, color 0.18s ease,
+                    background 0.18s ease, transform 0.18s $m-ease;
+
+        .pi { color: inherit; font-size: 13px; }
+
+        &:enabled:hover {
+            background: $white;
+            border-color: $blue;
+            color: $blue;
+            transform: translateY(-1px);
+        }
+
+        &:focus { box-shadow: none; }
+
+        &.p-button-danger:enabled:hover {
+            background: #fdf3f1;
+            border-color: #e3a79e;
+            color: $warningTxt;
+        }
+    }
+
+    // ---- nothing to show ----
+    // The empty row is still one card, just a tall one, so an empty table
+    // does not look like a different page from a full one.
+    .p-datatable .p-datatable-tbody > tr.p-datatable-emptymessage > td {
+        padding: 0;
+        border-radius: $m-radius;
+        border-inline-width: 1px;
+    }
+
+    .m-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 52px 24px 56px;
+        text-align: center;
+
+        .m-empty-ico {
+            width: 58px;
+            height: 58px;
+            margin-bottom: 7px;
+            display: grid;
+            place-items: center;
+            border-radius: 18px;
+            background: #e9eff1;
+            color: #7fa0ac;
+
+            .pi { font-size: 22px; }
+        }
+
+        b {
+            font: $small-size-bold;
+            font-size: 15.5px;
+            font-weight: $m-bold;
+            color: $m-ink;
+        }
+
+        .m-empty-hint {
+            font: $tiny-size-reg;
+            font-size: 13px;
+            font-weight: $m-reg;
+            color: $m-ink-3;
+            max-width: 34ch;
+            line-height: 1.7;
+        }
+
+        // the way out of an empty table, where the eye already is
+        .m-empty-act {
+            display: inline-flex;
+            border: 0;
+            font-family: $font;
+            cursor: pointer;
+            align-items: center;
+            gap: 8px;
+            min-height: 42px;
+            margin-top: 11px;
+            padding: 0 20px;
+            border-radius: 10px;
+            background: $yellow;
+            color: $white;
+            text-decoration: none;
+            font: $tiny-size-bold;
+            font-size: 14px;
+            font-weight: $m-bold;
+            transition: transform 0.22s $m-ease, filter 0.2s ease;
+
+            .pi { font-size: 12px; }
+
+            &:hover { transform: translateY(-2px); filter: brightness(1.06); }
+            &:active { transform: none; }
+        }
+    }
+
+    // ---- the paginator ----
+    // index.scss sets the paginator to LTR so the arrows keep pointing the
+    // way they are drawn; that is left alone. What changes is the layout:
+    // controls at one end, the count pushed to the other.
+    .p-datatable .p-paginator-bottom {
+        background: transparent;
+        border: 0;
+        border-top: 1px solid $m-line;
+        margin-top: 6px;
+        padding: 13px 4px 2px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 4px;
+    }
+
+    // Nothing to page through, so nothing to show. The element stays in the
+    // DOM and keeps working -- this only stops it being drawn while the
+    // table is empty, where it could otherwise read "عرض 0 – 0 من 0". A
+    // browser without :has() simply keeps showing it.
+    .p-datatable:has(.p-datatable-emptymessage) .p-paginator-bottom {
+        display: none;
+    }
+
+    .p-paginator .p-paginator-current {
+        // The strip is LTR -- index.scss decided that, so the arrows keep
+        // pointing the way they are drawn -- while this one label is RTL.
+        // A logical margin resolves against the ELEMENT's own direction, so
+        // margin-inline-start here means margin-RIGHT and pins the count to
+        // the left, which is what it did. Physical on purpose.
+        margin-left: auto;
+        padding: 0;
+        min-width: 0;
+        height: auto;
+        direction: rtl;
+        font: $tiny-size-sbold;
+        font-size: 12.5px;
+        font-weight: $m-sbold;
+        color: $m-ink-3;
+    }
+
+    // an arrow that cannot go anywhere should look like it
+    .p-paginator .p-paginator-element.p-disabled {
+        opacity: 0.35;
+        background: transparent;
+        border-color: transparent;
+    }
+
+    .p-paginator .p-paginator-icon { font-size: 12px; }
+
+    // the page-size control is a different kind of thing from the arrows,
+    // so it gets air rather than sitting flush against them
+    .p-paginator .p-dropdown {
+        margin-left: 12px;
+        min-width: 72px;
+    }
+
+    .p-paginator .p-paginator-pages .p-paginator-page,
+    .p-paginator .p-paginator-first,
+    .p-paginator .p-paginator-prev,
+    .p-paginator .p-paginator-next,
+    .p-paginator .p-paginator-last {
+        min-width: 34px;
+        height: 34px;
+        margin: 0 2px;
+        border: 1px solid transparent;
+        border-radius: 9px;
+        color: $m-ink-2;
+        transition: background 0.18s ease, color 0.18s ease,
+                    border-color 0.18s ease;
+
+        &:not(.p-disabled):not(.p-highlight):hover {
+            background: $white;
+            border-color: $m-line;
+            color: $m-ink;
+        }
+    }
+
+    .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+        background: $dark-blue;
+        border-color: $dark-blue;
+        color: $white;
+    }
+
+    .p-paginator .p-dropdown {
+        height: 34px;
+        border: 1px solid $m-line;
+        border-radius: 9px;
+        background: $white;
+
+        &:not(.p-disabled).p-focus { box-shadow: none; border-color: $blue; }
+    }
+
+    // ---- stacked on a phone ----
+    // index.scss turns each cell into a full-width block under 768px, so the
+    // card has to be rebuilt the other way round: the ends are now the top
+    // and bottom of the row, not its sides.
+    @media screen and (max-width: 768px) {
+        .p-datatable-wrapper > table { border-spacing: 0 10px; }
+
+        .p-datatable .p-datatable-tbody > tr > td {
+            border-inline-width: 1px;
+            border-block-end-width: 0;
+            border-radius: 0;
+        }
+
+        .p-datatable .p-datatable-tbody > tr > td:first-child {
+            border-start-start-radius: $m-radius;
+            border-start-end-radius: $m-radius;
+        }
+
+        .p-datatable .p-datatable-tbody > tr > td:last-child {
+            border-block-end-width: 1px;
+            border-end-start-radius: $m-radius;
+            border-end-end-radius: $m-radius;
+        }
+    }
+}

@@ -1,0 +1,327 @@
+// Variables
+@import "../../assets/css/vars";
+
+// The slide-over panel, and the form inside it.
+//
+// Everything is scoped to `.m-panel` for the same reason TableShell.scss is
+// scoped: index.scss carries global PrimeReact rules the whole dashboard
+// depends on, and two of them have to be beaten in here specifically --
+// see the float-label section below.
+//
+// NOTE on weights -- index.scss remaps Cairo: 100 = Regular, 200 = SemiBold,
+// 300 = Bold, 400 = Black. The usual 400/700 land on the wrong face.
+$p-reg: 100;
+$p-sbold: 200;
+$p-bold: 300;
+$p-black: 400;
+
+$p-line: #e3eaec;
+$p-line-hi: #cfdde1;
+$p-ink: #16303a;
+$p-ink-2: #5b747d;
+$p-ink-3: #8299a1;
+$p-surface: #f4f7f8;
+$p-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
+// the body's side padding, named because the action bar below cancels
+// exactly this much to reach the panel's own edges
+$p-pad: clamp(13px, 1.5vw, 20px);
+$p-field-h: 56px;
+
+// The panel belongs to the dashboard sheet, not to the window, so it is
+// inset to exactly where that sheet starts. These two numbers are the only
+// thing tying this file to DashboardLayout.scss and they have to stay in
+// step with it: $p-gap is the .dash padding, and the 3px is the halo ring
+// that .dash-wrap holds around the sheet.
+$p-gap: clamp(14px, 2vh, 26px);
+$p-inset: calc(#{$p-gap} + 3px);
+$p-rail: 300px;
+$p-radius: 14px;
+
+// PrimeReact builds the dim layer imperatively on <body> with the generic
+// .p-component-overlay class, which dialogs also use -- the scrollblocker
+// class is the only thing that marks it as this panel's, and it is there
+// because SlidePanel passes blockScroll.
+.p-component-overlay.p-sidebar-mask-scrollblocker {
+    position: fixed;
+    inset: $p-inset;
+    width: auto;
+    height: auto;
+    border-radius: $p-radius;
+    background: rgba(6, 30, 40, 0.52);
+    backdrop-filter: blur(2px);
+}
+
+// the Sidebar root is placed on <body>, so this one selector sits outside
+.p-sidebar.m-panel {
+    // .p-sidebar-left pins top/left and sets height:100%; all three go.
+    // A physical "left" on purpose, not inset-inline-start: the page is RTL,
+    // so the logical property resolves to the RIGHT edge and put the panel
+    // on the wrong side. This one slides in from the left, physically.
+    top: $p-inset;
+    bottom: $p-inset;
+    left: $p-inset;
+    height: auto;
+    // wide, but never so wide that the rail disappears behind it
+    width: clamp(320px, calc(100vw - (#{$p-inset} * 2) - #{$p-rail} - 24px), 1060px);
+    max-width: none;
+    border-radius: $p-radius;
+    overflow: hidden;
+    background: $p-surface;
+    box-shadow: 0 30px 70px -28px rgba(4, 28, 36, 0.6);
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+
+    // PrimeReact slides a left sidebar in from translateX(-100%). For a
+    // panel this wide that means it flies in from well beyond the window,
+    // crossing the gradient outside the sheet on the way -- which is the one
+    // thing it should not look like now that it belongs to the sheet.
+    //
+    // A short travel and a fade instead. 14px is deliberately less than
+    // $p-inset above, so the panel never crosses the sheet's own edge at any
+    // window height; it reads as coming out of that edge rather than from
+    // off-screen.
+    &.p-sidebar-enter {
+        opacity: 0;
+        transform: translateX(-14px);
+    }
+
+    &.p-sidebar-enter-active {
+        opacity: 1;
+        transform: none;
+        transition: transform 0.34s $p-ease, opacity 0.26s ease;
+    }
+
+    &.p-sidebar-exit {
+        opacity: 1;
+        transform: none;
+    }
+
+    &.p-sidebar-exit-active {
+        opacity: 0;
+        transform: translateX(-14px);
+        transition: transform 0.26s $p-ease, opacity 0.22s ease;
+    }
+
+    // PrimeReact puts its own close button first in the panel; it is off via
+    // showCloseIcon, but the rule stays so a future `true` cannot sneak a
+    // second × into a panel that already has one.
+    > .p-sidebar-close { display: none; }
+
+    // The strip that close button lives in. Empty here, but the theme still
+    // gives it `padding: 1rem` -- which was the band of dead space sitting
+    // above our own header.
+    > .p-sidebar-header { display: none; }
+
+    // THIS is the element PrimeReact scrolls, not .m-panel-body. Our header
+    // and body are both inside it, which is why the header scrolled away
+    // with the form however many times it was told to stay. The column lives
+    // here now, and this element stops scrolling so the body can.
+    > .p-sidebar-content {
+        position: relative;
+        flex: 1;
+        min-height: 0;
+        width: auto;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        // the theme's 1rem, which was a second ring of space around the form
+        padding: 0;
+    }
+
+    // ---- the panel's own header ----
+    // One flat row: the title, the form's own action, and the way out.
+    // No card treatment -- it is the panel's edge, not something sitting on
+    // it -- just a hairline where the content begins.
+    .m-panel-head {
+        flex: none;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 9px $p-pad;
+        background: $p-surface;
+        border-bottom: 1px solid $p-line;
+    }
+
+    // the form's primary action lands here
+    .m-panel-slot {
+        margin-inline-start: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        &:empty { display: none; }
+    }
+
+    .m-panel-title {
+        flex: 1;
+        min-width: 0;
+
+        b {
+            display: block;
+            font: $med-size-black;
+            font-size: clamp(15px, 1.2vw, 17px);
+            font-weight: $p-black;
+            letter-spacing: -0.02em;
+            color: $dark-blue-one;
+        }
+
+        small {
+            display: block;
+            margin-top: 1px;
+            font: $tiny-size-reg;
+            font-size: 11.5px;
+            font-weight: $p-reg;
+            color: $p-ink-3;
+        }
+    }
+
+    .m-panel-x {
+        flex: none;
+        width: 32px;
+        height: 32px;
+        display: grid;
+        place-items: center;
+        border: 1px solid $p-line;
+        border-radius: 11px;
+        background: $white;
+        color: $p-ink-2;
+        cursor: pointer;
+        transition: border-color 0.18s ease, color 0.18s ease,
+                    background 0.18s ease, transform 0.22s $p-ease;
+
+        .pi { font-size: 14px; }
+
+        &:hover {
+            background: #fdf3f1;
+            border-color: #e3a79e;
+            color: $warningTxt;
+            transform: rotate(90deg);
+        }
+    }
+
+    // ---- the only part that scrolls ----
+    .m-panel-body {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        // Enough to let each group read as its own card without the ring
+        // of wasted space the old clamp() left around them.
+        padding: 10px 10px 14px;
+
+        scrollbar-width: thin;
+        scrollbar-color: rgba(18, 58, 72, 0.3) transparent;
+
+        &::-webkit-scrollbar { width: 6px; }
+        &::-webkit-scrollbar-track { background: transparent; }
+        &::-webkit-scrollbar-thumb {
+            background: rgba(18, 58, 72, 0.28);
+            border-radius: 99px;
+        }
+    }
+
+    // The action bar reaches the panel's own edges and loses the rounding
+    // and the side borders it no longer has anything to be separated from.
+    // With the header's rule gone above it, the two are one block -- and
+    // because the bar is sticky, that block stays whole while the form
+    // scrolls under it.
+    // nothing left to draw: the button that was in here is in the header
+    .m-actions { display: none; }
+
+    // Each group is a card with air around it, as on the standalone page --
+    // Field/Form.scss already says so, so there is nothing to override here.
+    .m-sec { margin-bottom: 10px; }
+
+    .m-sec:last-of-type { margin-bottom: 0; }
+
+    // =================================================================
+    // the page that was mounted inside
+    // =================================================================
+    // The form came from a full page, so it brings a page's chrome with it:
+    // its own title strip, its content wrapper, its Bootstrap card. None of
+    // that is removed from the page itself -- it is only not drawn in here,
+    // where the panel's own header already says what this is.
+    .page-head { display: none; }
+
+    .content,
+    .container {
+        padding: 0;
+        margin: 0;
+        max-width: none;
+        width: 100%;
+    }
+
+    .card {
+        background: transparent;
+        border: 0;
+        border-radius: 0;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+    }
+
+    .p-card {
+        background: $white;
+        border: 1px solid $p-line;
+        border-radius: 14px;
+        box-shadow: none;
+
+        > .p-card-body { padding: clamp(16px, 1.8vw, 24px); }
+
+        .p-card-title {
+            margin: 0 0 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid $p-line;
+            font: $med-size-bold;
+            font-size: 16px;
+            font-weight: $p-bold;
+            color: $dark-blue-one;
+        }
+    }
+
+    // ---- the grid the fields sit in ----
+    .p-grid {
+        margin: 0 -8px;
+
+        > [class*="p-col"] { padding: 8px; }
+    }
+
+    // an input group here is one field, not a row of joined controls
+    .p-inputgroup {
+        display: block;
+
+        > * { width: 100%; }
+    }
+
+    // Fields are not styled here. They were, back when this panel was the
+    // only thing that mounted a form; components/Field/Form.scss owns them
+    // now, scoped to .m-form, so a form looks the same whether it is opened
+    // in this panel or visited at its own route.
+}
+
+// On a phone the dashboard drops its padding and the rail becomes a strip
+// along the bottom, so there is no sheet inset left to honour.
+@media (max-width: 760px) {
+    .p-component-overlay.p-sidebar-mask-scrollblocker {
+        inset: 0;
+        border-radius: 0;
+    }
+
+    .p-sidebar.m-panel {
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        border-radius: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .p-sidebar.m-panel,
+    .p-sidebar.m-panel * {
+        animation: none !important;
+        transition: none !important;
+    }
+}

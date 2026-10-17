@@ -38,3 +38,30 @@ $big-size-reg: 100 35px #{$font};
 $big-size-sbold: 200 35px #{$font};
 $big-size-bold: 300 35px #{$font};
 $big-size-black: 400 35px #{$font};
+
+// The shell palette: the ground the sign-in screen and the dashboard float
+// on, and the surfaces that float on it. Deliberately new names: the
+// palette above is read by all 33 pages, and none of those values change.
+//
+// The ground is the platform's own teal, dark at one corner and bright at
+// the other -- one single sweep, not pools of colour drifting over a base.
+// It is oversized and drifts slowly along its own axis, which is the only
+// way a flat gradient stays alive without anything moving ON it.
+$ink-ground: linear-gradient(110deg, #0c3e4f 0%, #156d88 46%, #1f93b5 100%);
+$ink-rail: #0e3341;        // the rail's own ground, a shade off the darkest
+                           // corner of $ink-ground so it reads as the same
+                           // material, not a hole cut into it
+$ink-rail-dim: #94b6c3;    // rail text at rest
+$ink-panel: #f4f7f8;       // the page surface inside the sheet
+// the signup half, and every thread of brand colour inside the sheet: the
+// same sweep turned downward, so the panel and the ground are one material
+$ink-form: linear-gradient(150deg, #0d3d4d 0%, #176f8c 62%, #1d8aab 100%);
+// $ink-rail with its own 7% white wash already mixed in, for the one
+// border that has to match whatever sits behind it
+$ink-rail-pf: #1f414e;
+$ink-edge: rgba(238, 184, 7, 0.22);   // the hairline along the rail
+$gold-soft: rgba(238, 184, 7, 0.14);  // gold as a plate
+$gold-line: rgba(238, 184, 7, 0.45);  // gold as an edge
+// the ground is bright at one corner now, so the lift goes back to the
+// deep teal shadow rather than pure black, which read as a smudge on it
+$ink-lift: 0 42px 84px -40px rgba(4, 28, 36, 0.8);

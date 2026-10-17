@@ -9,6 +9,10 @@ import { apiFetch, getCurrentUser } from "../../Helper/Api";
 
 // Components
 import Header from "../../components/Header/Header";
+import TableShell from "../../components/Table/TableShell";
+import TableEmpty from "../../components/Table/TableEmpty";
+import SlidePanel from "../../components/Panel/SlidePanel";
+import AddLesson from "./AddLesson";
 import { Toast } from "primereact/toast";
 import { Card } from "primereact/card";
 import { DataTable } from "primereact/datatable";
@@ -27,6 +31,11 @@ class AllLessons extends Component {
 
   state = {
     globalFilter: null,
+
+    // whether the add-a-lesson panel is open. Nothing else about adding a
+    // lesson lives here: the panel mounts the very same AddLesson component
+    // the /lessons/add route mounts, with its own state and its own submit.
+    addOpen: false,
 
     // Teacher Identifier
     branchID: properties.branch_id,
@@ -132,7 +141,8 @@ class AllLessons extends Component {
   render() {
     const header = (
       <div className="table-header">
-        كل الدروس
+        {/* no heading here: the page header above carries it, and it was the
+            same four words twice, twenty pixels apart */}
         <span className="p-input-icon-left">
           <i className="pi pi-search" />
           <InputText
@@ -153,6 +163,12 @@ class AllLessons extends Component {
     //     setProduct(product);
     //     setDeleteProductDialog(true);
     // }
+
+    // Mounted only while the panel is open, so each opening starts from a
+    // clean form and its lookups are fetched then -- exactly as arriving at
+    // /lessons/add does. That route still works and is untouched.
+    const openAdd = () => this.setState({ addOpen: true });
+    const closeAdd = () => this.setState({ addOpen: false });
 
     const actionBodyTemplate = (rowData) => {
       return (
@@ -175,51 +191,79 @@ class AllLessons extends Component {
 
     return (
       <>
-        <Header pageName="كل الدروس" />
+        <Header
+          pageName="كل الدروس"
+          action={{ label: "إضافة حصة", icon: "pi pi-plus", onClick: openAdd }}
+        />
 
         <Toast ref={this.toast}></Toast>
+
+        <SlidePanel
+          visible={this.state.addOpen}
+          onHide={closeAdd}
+          title="إضافة حصة"
+          subtitle="املأ بيانات الحصة، وستظهر في الجدول بعد الحفظ"
+        >
+          {this.state.addOpen ? <AddLesson /> : null}
+        </SlidePanel>
 
         <div className="content">
           <div className="container">
             <div className="card">
-              <Card title="كل الدروس">
-                <DataTable
-                  header={header}
-                  sortable
-                  globalFilter={this.state.globalFilter}
-                  className="p-datatable-responsive-demo p-datatable-gridlines p-datatable-striped"
-                  value={this.state.data}
-                  paginator
-                  rows={10}
-                  rowsPerPageOptions={[10, 20, 50]}
-                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
-                  emptyMessage="لا يوجد دروس"
-                >
-                  <Column
-                    filter
+              {/* no title: the page header above already says it */}
+              <Card>
+                {/* presentation only -- see components/Table/TableShell.js */}
+                <TableShell>
+                  <DataTable
+                    header={header}
                     sortable
-                    field="lessonName"
-                    header="إسم الدرس"
-                  ></Column>
-                  <Column
-                    sortable
-                    field="schoolStagesGuideId"
-                    body={(row) => this.state.stagesById[row.schoolStagesGuideId] || ""}
-                    header="المرحلة الدراسية"
-                  ></Column>
-                  {/* <Column filter sortable field="monthId" body={(row) => this.state.namedMonths[row.monthId - 1]} header="الفترة"></Column> */}
-                  <Column
-                    filter
-                    sortable
-                    field="lessonType"
-                    body={(row) => this.state.lessonTypes[row.lessonType]}
-                    header="نوع الدرس"
-                  ></Column>
-                  <Column
-                    header="تعديل / حذف"
-                    body={actionBodyTemplate}
-                  ></Column>
-                </DataTable>
+                    globalFilter={this.state.globalFilter}
+                    className="p-datatable-responsive-demo p-datatable-gridlines p-datatable-striped"
+                    value={this.state.data}
+                    paginator
+                    // The report was already configured below but never shown:
+                    // PrimeReact's default template leaves CurrentPageReport
+                    // out, so the count has been silently dropped all along.
+                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown CurrentPageReport"
+                    rows={10}
+                    rowsPerPageOptions={[10, 20, 50]}
+                    currentPageReportTemplate="عرض {first} – {last} من {totalRecords} درس"
+                    emptyMessage={
+                      <TableEmpty
+                        icon="pi pi-video"
+                        title="لا يوجد دروس"
+                        hint="ابدأ بإضافة أول حصة، وستظهر هنا لك ولطلابك"
+                        action={{ label: "إضافة حصة", onClick: openAdd }}
+                      />
+                    }
+                  >
+                    {/* no column filter: the search above already covers all
+                        three columns, and the two empty boxes it put inside the
+                        header row said nothing about what they filtered */}
+                    <Column
+                      sortable
+                      field="lessonName"
+                      header="إسم الدرس"
+                    ></Column>
+                    <Column
+                      sortable
+                      field="schoolStagesGuideId"
+                      body={(row) => this.state.stagesById[row.schoolStagesGuideId] || ""}
+                      header="المرحلة الدراسية"
+                    ></Column>
+                    {/* <Column filter sortable field="monthId" body={(row) => this.state.namedMonths[row.monthId - 1]} header="الفترة"></Column> */}
+                    <Column
+                      sortable
+                      field="lessonType"
+                      body={(row) => this.state.lessonTypes[row.lessonType]}
+                      header="نوع الدرس"
+                    ></Column>
+                    <Column
+                      header="تعديل / حذف"
+                      body={actionBodyTemplate}
+                    ></Column>
+                  </DataTable>
+                </TableShell>
               </Card>
             </div>
           </div>

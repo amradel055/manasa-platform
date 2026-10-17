@@ -189,9 +189,339 @@ a:hover {
   }
 }
 
-.p-toast-message-text {
-  margin-left: 0 !important;
-  margin-right: 15px !important;
+// ---------------------------------------------------------------------------
+// Toast -- compact pill
+//
+// Styling only. Every page renders <Toast ref={this.toast} /> with no props,
+// so the markup and the 3s life stay exactly as they are. The component still
+// prints its default `p-toast-top-right`; the pill is re-anchored to the top
+// centre here rather than by passing `position` to thirty-five call sites.
+// Three more things worth knowing before editing this block:
+//
+//  * The PrimeReact theme is imported after this file (Header.js), so these
+//    selectors are deliberately one class deeper than the theme's own -- that
+//    is what `.p-toast.p-component` is for, rather than `!important`.
+//  * The theme paints the background, the 6px rail and the text colour from
+//    `.p-toast .p-toast-message.p-toast-message-<severity>`, which is three
+//    classes deep. Anything that has to beat it therefore belongs in the
+//    severity mixin below and not in the shared block: matching its weight
+//    only ties, and a tie hands the pixel back to the theme.
+//  * The severity glyph is drawn with a CSS mask instead of the primeicons
+//    font. That keeps the pill self-contained and stops `error` from reusing
+//    the very same "times" glyph as its own close button.
+// ---------------------------------------------------------------------------
+
+// Brand hues, lifted for legibility against the dark pill.
+$toast-bg: $dark-blue;
+$toast-glyph: #0a2730;
+$toast-success: #45c96f;
+$toast-error: #f2655f;
+$toast-info: #46bfe0;
+$toast-warn: #f0c04a;
+
+$toast-icon-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+$toast-icon-alert: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9.2'/%3E%3Cpath d='M12 7.4v5.4'/%3E%3Cpath d='M12 16.4h.01'/%3E%3C/svg%3E");
+$toast-icon-info: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9.2'/%3E%3Cpath d='M12 11.1v5.5'/%3E%3Cpath d='M12 7.6h.01'/%3E%3C/svg%3E");
+$toast-icon-warn: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3.6 2.4 20.2h19.2L12 3.6Z'/%3E%3Cpath d='M12 9.6v4'/%3E%3Cpath d='M12 17.1h.01'/%3E%3C/svg%3E");
+$toast-icon-close: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M18 6 6 18M6 6l12 12'/%3E%3C/svg%3E");
+
+@mixin toast-mask($image) {
+  -webkit-mask-image: $image;
+  mask-image: $image;
+}
+
+@mixin toast-glyph($image) {
+  content: "";
+  display: block;
+  width: 1em;
+  height: 1em;
+  background-color: currentColor;
+  @include toast-mask($image);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+// Carries everything the theme's own severity rules would otherwise win, plus
+// the accent that the chip and its ring are drawn from. The summary is left to
+// inherit `color` from here so it cannot be reached by the theme at all.
+@mixin toast-severity($accent, $icon) {
+  border: 0;
+  background: $toast-bg;
+  color: $white;
+
+  .p-toast-message-content .p-toast-message-icon {
+    background: $accent;
+
+    &::before {
+      @include toast-mask($icon);
+    }
+
+    &::after {
+      color: $accent;
+    }
+  }
+
+  // The theme tints the close button per severity, four classes deep
+  // (`.p-toast .p-toast-message.p-toast-message-error .p-toast-icon-close`
+  // paints it #73000c), which on this dark pill leaves it all but invisible.
+  // Outranking that needs the severity class, so the colour belongs here.
+  .p-toast-icon-close {
+    color: rgba(255, 255, 255, 0.62);
+
+    &:hover {
+      color: $white;
+    }
+  }
+}
+
+@keyframes toast-icon-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.2) rotate(-35deg);
+  }
+
+  60% {
+    opacity: 1;
+    transform: scale(1.14) rotate(5deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
+// One ring pulse as the pill lands, in the severity's own colour.
+@keyframes toast-icon-ring {
+  from {
+    opacity: 0.55;
+    box-shadow: 0 0 0 0 currentColor;
+  }
+
+  to {
+    opacity: 0;
+    box-shadow: 0 0 0 11px currentColor;
+  }
+}
+
+@keyframes toast-text-in {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.p-toast.p-component {
+  // The pill hugs its own text instead of filling the theme's fixed 25rem.
+  width: auto;
+  max-width: 34rem;
+  opacity: 1;
+
+  // Re-anchors the component's own top-right position to the top centre.
+  // Pinning both edges and letting the auto margins settle it keeps the
+  // centring exact at any width, which `transform: translateX(-50%)` would
+  // not: that measures against whatever room is left beside `left: 50%`,
+  // so a pill wider than half the window would wrap instead of centre.
+  &.p-toast-top-right {
+    top: 20px;
+    right: 0;
+    left: 0;
+    width: -moz-fit-content;
+    width: fit-content;
+    margin-inline: auto;
+  }
+
+  .p-toast-message {
+    width: -moz-fit-content;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 0 12px;
+    margin-inline: auto; // centres a short pill under a longer one
+    border-radius: 999px;
+    box-shadow: 0 14px 32px -12px rgba(15, 58, 71, 0.55);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 38px -14px rgba(15, 58, 71, 0.62);
+    }
+
+    &.p-toast-message-success {
+      @include toast-severity($toast-success, $toast-icon-check);
+    }
+
+    &.p-toast-message-error {
+      @include toast-severity($toast-error, $toast-icon-alert);
+    }
+
+    &.p-toast-message-info {
+      @include toast-severity($toast-info, $toast-icon-info);
+    }
+
+    &.p-toast-message-warn {
+      @include toast-severity($toast-warn, $toast-icon-warn);
+    }
+
+    .p-toast-message-content {
+      align-items: center;
+      gap: 12px;
+      border: 0;
+      padding-block: 11px;
+      padding-inline-start: 14px;
+      padding-inline-end: 11px;
+
+      .p-toast-message-icon {
+        position: relative;
+        display: inline-grid;
+        place-items: center;
+        flex: none;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        font-size: 13px;
+        line-height: 1;
+        color: $toast-glyph;
+        animation: toast-icon-pop 0.44s cubic-bezier(0.17, 1.3, 0.45, 1) 0.07s
+          both;
+
+        &::before {
+          @include toast-glyph($toast-icon-alert);
+        }
+
+        &::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          animation: toast-icon-ring 0.85s ease-out 0.26s both;
+        }
+      }
+
+      .p-toast-message-text {
+        flex: 1 1 auto;
+        min-width: 0;
+        margin: 0;
+        animation: toast-text-in 0.42s ease 0.12s both;
+      }
+
+      // Summary and detail share one line; weights follow this project's
+      // Cairo map (300 = Bold, 100 = Regular).
+      .p-toast-summary {
+        margin-inline-end: 8px;
+        font-size: 15px;
+        font-weight: 300;
+      }
+
+      .p-toast-detail {
+        display: inline;
+        margin: 0;
+        font-size: 14px;
+        font-weight: 100;
+        color: rgba(255, 255, 255, 0.72);
+      }
+    }
+
+    .p-toast-icon-close {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.62);
+      background: rgba(255, 255, 255, 0.09);
+      transition: background-color 0.15s, color 0.15s;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: $white;
+      }
+
+      &:focus {
+        outline: 0 none;
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.45);
+      }
+
+      .p-toast-icon-close-icon {
+        display: inline-grid;
+        place-items: center;
+        width: 1em;
+        height: 1em;
+        line-height: 1;
+
+        &::before {
+          @include toast-glyph($toast-icon-close);
+        }
+      }
+    }
+  }
+
+  // Drops in from above, since the pill now sits against the top edge.
+  .p-toast-message-enter {
+    opacity: 0;
+    transform: translateY(-26px) scale(0.94);
+  }
+
+  .p-toast-message-enter-active {
+    opacity: 1;
+    transform: none;
+    transition: transform 0.44s cubic-bezier(0.17, 1.12, 0.36, 1),
+      opacity 0.3s ease;
+  }
+
+  .p-toast-message-exit-active {
+    opacity: 0;
+    max-height: 0;
+    margin-bottom: 0;
+    overflow: hidden;
+    transform: translateY(-20px) scale(0.96);
+    transition: max-height 0.42s cubic-bezier(0.33, 0, 0.67, 0),
+      opacity 0.26s ease, transform 0.32s ease, margin-bottom 0.42s ease;
+  }
+}
+
+@media (max-width: 575px) {
+  .p-toast.p-component {
+    max-width: none;
+
+    &.p-toast-top-right {
+      top: 12px;
+      right: 12px;
+      left: 12px;
+      width: auto;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .p-toast.p-component {
+    .p-toast-message {
+      transition: none;
+
+      &:hover {
+        transform: none;
+      }
+
+      .p-toast-message-content .p-toast-message-icon,
+      .p-toast-message-content .p-toast-message-icon::after,
+      .p-toast-message-content .p-toast-message-text {
+        animation: none;
+      }
+    }
+
+    .p-toast-message-enter-active,
+    .p-toast-message-exit-active {
+      transform: none;
+      transition-property: opacity;
+    }
+  }
 }
 
 .p-dropdown .p-dropdown-clear-icon {
@@ -353,3 +683,4 @@ a:hover {
     background-color: rgba(255, 255, 255, 0.65);
   }
 }
+

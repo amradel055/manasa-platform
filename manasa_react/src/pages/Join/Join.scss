@@ -25,6 +25,13 @@ $j-line: #e3eaec;
 $j-line-hi: #c3d9df;
 $j-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
 
+// The ground is larger than the screen and slides along its own axis. Not a
+// colour change and not a repaint -- just an offset -- so it stays cheap on
+// a weak laptop with the dashboard open all day.
+@keyframes groundDrift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
 @keyframes joinRise {
     from { opacity: 0; transform: translateY(16px); }
 }
@@ -49,10 +56,6 @@ $j-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
     42% { stroke-dashoffset: 0; }
     68% { stroke-dashoffset: 0; }
     100% { stroke-dashoffset: -160; }
-}
-// the gradient itself drifts, very slowly, so the ground is never quite static
-@keyframes joinShift {
-    50% { background-position: 100% 50%; }
 }
 @keyframes joinFloatA {
     50% { transform: translate(26px, 34px); }
@@ -98,81 +101,22 @@ $j-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
     min-height: 100vh;
     display: flex;
     align-items: stretch;
-    // 2.5% on each side leaves the sheet filling 95% of the viewport
-    padding: 2.5vh 2.5vw;
-    // lighter than the brand gradient on purpose: the sheet sits on top of it
-    // and needs the ground to stay back, not compete
-    background: linear-gradient(135deg, #1a6a84, #33acd0, #1a6a84);
-    background-size: 220% 220%;
-    animation: joinShift 26s ease-in-out infinite;
+    // One value on all four sides. Separate vh and vw readings drifted apart
+    // as the window changed shape, and the gap around the sheet stopped
+    // looking like a margin and started looking like a mistake.
+    padding: clamp(14px, 2vh, 26px);
+    // One sweep of the platform's teal, dark at one corner and bright at the
+    // other, drifting slowly along its own axis. What went wrong before was
+    // three separate pools of this colour wandering independently: they
+    // muddied into each other and nothing on top of them could separate.
+    background: $ink-ground;
+    background-size: 180% 180%;
+    animation: groundDrift 34s ease-in-out infinite;
     font-family: $font;
 
-    &::before,
-    &::after {
-        content: "";
-        position: absolute;
-        border-radius: 50%;
-        pointer-events: none;
-    }
-
-    &::before {
-        width: 560px;
-        height: 560px;
-        top: -20%;
-        inset-inline-start: -10%;
-        background: rgba(255, 255, 255, 0.06);
-        animation: joinFloatA 22s ease-in-out infinite;
-    }
-
-    &::after {
-        width: 360px;
-        height: 360px;
-        bottom: -14%;
-        inset-inline-end: -4%;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        animation: joinFloatB 18s ease-in-out infinite;
-    }
-
-    // ---- drifting orbs behind the sheet ----
-    .orbs {
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        z-index: 0;
-
-        span {
-            position: absolute;
-            border-radius: 50%;
-            display: block;
-        }
-
-        .o1 {
-            width: 300px;
-            height: 300px;
-            top: 12%;
-            inset-inline-end: 8%;
-            background: rgba(255, 255, 255, 0.05);
-            animation: joinFloatA 19s ease-in-out infinite;
-        }
-
-        .o2 {
-            width: 190px;
-            height: 190px;
-            bottom: 18%;
-            inset-inline-start: 14%;
-            border: 1px solid rgba(238, 184, 7, 0.28);
-            animation: joinFloatB 25s ease-in-out infinite;
-        }
-
-        .o3 {
-            width: 420px;
-            height: 420px;
-            top: 46%;
-            inset-inline-end: 38%;
-            border: 1px dashed rgba(255, 255, 255, 0.14);
-            animation: joinFloatA 31s ease-in-out infinite reverse;
-        }
-    }
+    // The rings and discs that used to float here are gone: the aurora ground
+    // already carries the movement, and outlines on top of it only muddied it.
+    .orbs { display: none; }
 
     // ---- the halo that turns around the sheet ----
     // A conic gradient on an oversized square, rotated; the wrapper's padding
@@ -185,9 +129,11 @@ $j-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
         min-height: 0;
         display: flex;
         padding: 3px;
-        border-radius: 29px;
+        // the wrapper is three pixels larger on every side, so its radius has
+        // to be three larger too or the halo pinches at the corners
+        border-radius: 17px;
         overflow: hidden;
-        box-shadow: 0 50px 90px -40px rgba(4, 28, 36, 0.75);
+        box-shadow: $ink-lift;
         animation: joinLand 0.7s $j-ease both;
         // gives the sheet's tilt somewhere to happen
         perspective: 1600px;
@@ -216,7 +162,7 @@ $j-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
         width: 100%;
         min-height: 0;
         background: $white;
-        border-radius: 26px;
+        border-radius: 14px;
         overflow: hidden;
         display: flex;
         flex-wrap: wrap;
@@ -299,7 +245,7 @@ $j-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
             align-items: flex-start;
 
             .grad {
-                background: linear-gradient(135deg, $blue, $dark-blue);
+                background: $ink-form;
                 -webkit-background-clip: text;
                 background-clip: text;
                 color: transparent;
@@ -347,7 +293,7 @@ $j-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
             min-height: 48px;
             padding: 0 30px;
             border-radius: 999px;
-            background: linear-gradient(135deg, $dark-blue, $blue);
+            background: $ink-form;
             color: $white;
             font-size: 15px;
             font-weight: $w-bold;
@@ -383,7 +329,7 @@ $j-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
                 flex: 1;
                 height: 2px;
                 border-radius: 2px;
-                background: linear-gradient(135deg, $dark-blue, $blue);
+                background: $ink-form;
                 opacity: 0.4;
             }
         }
@@ -524,7 +470,7 @@ $j-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
         // the panel is given room; the type inside it stays at its own scale
         flex: 0 1 660px;
         min-width: 0;
-        background: linear-gradient(135deg, $dark-blue, $blue);
+        background: $ink-form;
         color: $white;
         padding: clamp(28px, 3.2vw, 60px);
         display: flex;
@@ -733,7 +679,7 @@ $j-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
             background: $yellow;
             border-color: $yellow;
             border-radius: 12px;
-            color: $j-gold-ink;
+            color: $white;
             font-size: 17px;
             font-weight: $w-black;
             box-shadow: none;
@@ -753,8 +699,8 @@ $j-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
                 width: 17px;
                 height: 17px;
                 border-radius: 50%;
-                border: 2.5px solid rgba(46, 35, 0, 0.28);
-                border-top-color: $j-gold-ink;
+                border: 2.5px solid rgba(255, 255, 255, 0.35);
+                border-top-color: $white;
                 animation: joinSpin 0.7s linear infinite;
             }
 

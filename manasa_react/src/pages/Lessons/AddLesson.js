@@ -1,4 +1,5 @@
 import React, { Component, createRef } from "react";
+import ReactDOM from "react-dom";
 
 // CSS
 import "./Lessons.scss";
@@ -12,7 +13,10 @@ import { apiFetch, getCurrentUser } from "../../Helper/Api";
 import Header from "../../components/Header/Header";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
-import { Dropdown } from "primereact/dropdown";
+// Our dropdown: a wrapper that passes every prop through to PrimeReact's,
+// so the value, the options and the handler below are unchanged.
+import Select from "../../components/Field/Select";
+import "../../components/Field/Form.scss";
 import { InputTextarea } from "primereact/inputtextarea";
 import { FileUpload } from "primereact/fileupload";
 import { Toast } from "primereact/toast";
@@ -32,6 +36,10 @@ class AddLessons extends Component {
     // Submit Button
     buttonText: "إضافة حصة",
     buttonColor: "",
+
+    // The panel header's slot, when this form is open inside one. Null on
+    // the standalone route, where the button stays in its own bar.
+    headerSlot: null,
 
     // Form Select Boxes
     type: null,
@@ -116,6 +124,17 @@ class AddLessons extends Component {
 
   componentDidMount() {
     document.title = properties.site_name + " | إضافة حصة جديدة";
+
+    // Opened inside a slide-over? Then the save button belongs on the
+    // panel's header row, not in a second bar underneath it. It is moved
+    // there with a portal, so it stays in THIS component's tree and its
+    // label and colour are still driven from this state -- and the `form`
+    // attribute on it is what keeps a native submit, and therefore the
+    // browser's own `required` checking, working from outside the <form>.
+    // The whole tree is in the DOM before any componentDidMount runs, so
+    // the slot is already there if there is one.
+    const slot = document.querySelector(".m-panel-slot");
+    if (slot) this.setState({ headerSlot: slot });
 
     // Redirect To Sign In Page If The User Is Already Logged Out & Remove The Data If It Exists
     if (!checkCookie("name")) {
@@ -368,397 +387,422 @@ class AddLessons extends Component {
       });
     };
 
+    // One element, rendered in one of two places. `form` is what lets it
+    // submit #add-lesson-form from wherever it ends up; PrimeReact passes
+    // any prop it does not recognise straight on to the <button>.
+    const saveButton = (
+      <Button
+        type="submit"
+        form="add-lesson-form"
+        className={`add-button ${this.state.buttonColor}`}
+        label={this.state.buttonText}
+      />
+    );
+
     return (
-      <div className="add-lesson-page">
+      <div className="add-lesson-page m-form">
         <Header pageName="إضافة حصة" />
 
         <div className="content">
           <Toast ref={this.toast}></Toast>
 
           <div className="container">
-            <Card title="إدخال حصة جديد">
-            <a href="https://bobbyhadz.com" target="_blank" rel="noopener noreferrer">
+            <div className="card">
+              <form id="add-lesson-form" onSubmit={addLesson} action="#" method="POST">
 
-            <Button
-        className="p-col-20 p-mr-1 m-3"
-        label="فيديو الشرح"
-        // icon="pi pi-power-off"
-        // onClick={}
-      />
-      </a>
-              <form onSubmit={addLesson} action="#" method="POST">
-                <div className="p-grid p-fluid">
-                  <div className="p-col-12 p-md-4">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                        <InputText
-                          id="lesson-name"
-                          required
-                          value={this.state.formContent.lessonName}
-                          name="lesson-name"
-                          type="text"
-                          onChange={(e) => {
-                            this.setState({
-                              formContent: {
-                                ...this.state.formContent,
-                                lessonName: e.target.value,
-                              },
-                            });
-                          }}
-                        />
+                {/* In a panel the button goes up into the header row; on the
+                    standalone page it keeps its own bar. Same element either
+                    way, with the same state behind it. */}
+                {this.state.headerSlot ? (
+                  ReactDOM.createPortal(saveButton, this.state.headerSlot)
+                ) : (
+                  <div className="m-actions">
+                    <span className="m-actions-hint">لن تُحفظ الحصة حتى تضغط الزر</span>
+                    {saveButton}
+                  </div>
+                )}
 
-                        <label htmlFor="lesson-name">إسم الحصة</label>
-                      </span>
-                    </div>
-                  </div>
-                  <div className="p-col-12 p-md-4">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                        <Dropdown
-                          value={this.state.type}
-                          options={typeList}
-                          required
-                          onChange={(e) =>
-                            this.setState({
-                              type: e.value,
-                              formContent: {
-                                ...this.state.formContent,
-                                lessonType: e.value,
-                              },
-                            })
-                          }
-                          name="type"
-                          placeholder="نوع الحصة"
-                        />
-                      </span>
-                    </div>
-                  </div>
-                  <div className="p-col-12 p-md-4"></div>
-                  
-                  <div className="p-col-12 p-md-4 p-mt-3">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                        <Dropdown
-                          value={this.state.grade}
-                          options={grades}
-                          required
-                          onChange={ (e) =>
-                            this.setState({
-                              grade: e.value,
-                              formContent: {
-                                ...this.state.formContent,
-                                schoolId: e.value,
-                              },
-                              
+                {/* ---------------- 1. the lesson itself ---------------- */}
+                <section className="m-sec">
+                  <h3>
+                    <span className="m-sec-n">١</span>
+                    معلومات الحصة
+                    <small>الحقول المطلوبة معلّمة بـ *</small>
+                  </h3>
+
+                  <div className="m-grid">
+                    <div className="m-fld">
+                      <label htmlFor="lesson-name">
+                        إسم الحصة <span className="req">*</span>
+                      </label>
+                      <InputText
+                        id="lesson-name"
+                        required
+                        value={this.state.formContent.lessonName}
+                        name="lesson-name"
+                        type="text"
+                        placeholder="مثال: الوحدة الثالثة — المعادلات"
+                        onChange={(e) => {
+                          this.setState({
+                            formContent: {
+                              ...this.state.formContent,
+                              lessonName: e.target.value,
                             },
-                            this.getMaterialByStage(e.value )
-                            ) 
-                          }
-                          
-                          name="grade"
-                          placeholder="المرحلة الدراسية"
-                        />
-                      </span>
+                          });
+                        }}
+                      />
                     </div>
-                  </div>
-                  <div className="p-col-12 p-md-4 p-mt-3">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                        <Dropdown
-                          value={this.state.material}
-                          options={materialList}
-                          required
-                          onChange={(e) =>
-                            this.setState({
-                              material: e.value,
-                              formContent: {
-                                ...this.state.formContent,
-                                materialId: e.value,
-                              },
+
+                    <div className="m-fld">
+                      <label htmlFor="type">
+                        نوع الحصة <span className="req">*</span>
+                      </label>
+                      <Select
+                        inputId="type"
+                        value={this.state.type}
+                        options={typeList}
+                        required
+                        onChange={(e) =>
+                          this.setState({
+                            type: e.value,
+                            formContent: {
+                              ...this.state.formContent,
+                              lessonType: e.value,
                             },
-                            this.getPeriod(e.value )
-                            )
-                          }
-                          name="subject"
-                          placeholder="إختر المادة"
-                        />
-                      </span>
-                    </div>
-                  </div>
-                  <div className="p-col-12 p-md-4 p-mt-3">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                        <Dropdown
-                          value={this.state.period}
-                          options={periods}
-                          required
-                          onChange={(e) =>
-                            this.setState({
-                              period: e.value,
-                              formContent: {
-                                ...this.state.formContent,
-                                periodId: e.value,
-                              },
-                            })
-                          }
-                          name="months"
-                          placeholder="الفتره"
-                        />
-                      </span>
-                    </div>
-                  </div>
-                  <div className="p-col-12 p-md-4 p-mt-3">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                        <Dropdown
-                          value={this.state.setVideoType}
-                          options={videoType}
-                          
-                          onChange={(e) => this.changeVideoType(e)
-                          //   this.setState({
-                          //     setVideoType: e.value,
-                          //     formContent: {
-                          //       ...this.state.formContent,
-                          //       setVideoType: e.value,
-                          //     },
-                          //   })
-                          }
-                          name="vedioes"
-                          placeholder="نوع الفيديو"
-                        />
-                      </span>
-                    </div>
-                  </div>
-                   {(this.state.setVideoType === 0) ? (
-                                        <div className="p-col-12 p-md-4 p-mt-3">
-                                            <div className="p-inputgroup">
-                                                <span className="p-float-label">
-                                                    <InputText id="video-link" value={this.state.youtubeLink} name="video-link" type="text" onChange={(e) => {this.setState({
-
-                                                   
-                                                        // ...this.state.videos,
-                                                        // lessonVideoList: this.state.videos.lessonVideoList.concat(res.video_url.split('/').pop()),
-
-                                                        youtubeLink:e.target.value,
-                                                       
-                                                      }   )}} />
-                                                      <Button    onClick={()=>uploadVideoYoutube(this.state.youtubeLink)}>اضافه</Button>
-
-                                                    <label htmlFor="video-link">لينك Youtube</label>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    ): ""} 
-                                    {(this.state.setVideoType === 1) ? (
-                                       <div className="p-col-12 p-md-12">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                        {
-                          // (this.state.setVideoType === 1) ?
-                          <FileUpload
-                            name="LessonVideo"
-                            onUpload={uploadVideo}
-                            invalidFileSizeMessageSummary="حجم الفيديو  كبير:"
-                            invalidFileSizeMessageDetail="أقصى حجم للصوت هو (2 GB)"
-                            url={`${properties.uploads_path}/upload-video.php`}
-                            customUpload={false}
-                            multiple={true}
-                            accept=".mp3"
-                            maxFileSize={50000000000}
-                            chooseLabel="إختيار الفيديو"
-                            uploadLabel="رفع الفيديو"
-                            cancelLabel="إلغاء"
-                            emptyTemplate={
-                              <p className="p-m-0">
-                                إسحب الفيديو هنا ليبدأ التحميل
-                              </p>
-                            }
-                          />
-                          //  : ""
+                          })
                         }
-                      </span>
+                        name="type"
+                        placeholder="نوع الحصة"
+                      />
                     </div>
-                    {/* {this.state.videos.lessonVideoList.map((object, i) =>              
-                   
-                   <a href={`${properties.uploads_path}/videos/${object}`} download target="_blank">{`${object}`}</a>
- )}  */}
-                  </div>
-                                  ): ""} 
-                  {(this.state.setVideoType === 2) ? (
-                                        <div className="p-col-12 p-md-4 p-mt-3">
-                                            <div className="p-inputgroup">
-                                                <span className="p-float-label">
-                                                <InputText id="video-link" value={this.state.vimeoLink} name="video-link" type="text" onChange={(e) => {this.setState({
 
-                                                   
-// ...this.state.videos,
-// lessonVideoList: this.state.videos.lessonVideoList.concat(res.video_url.split('/').pop()),
+                    <div className="m-fld">
+                      <label htmlFor="grade">
+                        المرحلة الدراسية <span className="req">*</span>
+                      </label>
+                      <Select
+                        inputId="grade"
+                        value={this.state.grade}
+                        options={grades}
+                        required
+                        onChange={ (e) =>
+                          this.setState({
+                            grade: e.value,
+                            formContent: {
+                              ...this.state.formContent,
+                              schoolId: e.value,
+                            },
 
-vimeoLink:e.target.value,
-
-}   )}} />
-                                               <Button    onClick={()=>uploadVideoViemo(this.state.vimeoLink)}>اضافه</Button>
-
-
-                                                    <label htmlFor="video-link">لينك Vimeo</label>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    ): ""} 
-                                    <div>
-                      {this.state.formContent.videoLinks.map((object, i) =>              
-                   
-                   <a href={`${properties.uploads_path}/videos/${object}`} download target="_blank" key={i}>{`${object}`}</a>
- )} 
-     
-        {this.state.formContent.youtubeLinks.map((object, i) =>      
-        <div>                  
-           <a href={`${properties.uploads_path}/videos/${object}`} download target="_blank" key={i}>{`${object}`}</a>
-        </div>        
-                   
- )} 
-      
-         
-          {this.state.formContent.vimeoLinks.map((object, i) =>              
-                   <div> 
-                   <a href={`${properties.uploads_path}/videos/${object}`} download target="_blank" key={i}>{`${object}`}</a>
-
-                   </div>   )} 
-     
-       
-                   </div>
-                  <div className="p-col-12 p-md-12 p-mt-3">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                        <InputTextarea
-                          rows={5}
-                          required
-                          value={this.state.formContent.lessonDescription}
-                          onChange={(e) => {
-                            this.setState({
-                              formContent: {
-                                ...this.state.formContent,
-                                lessonDescription: e.target.value,
-                              },
-                            });
-                          }}
-                          name="lesson-description"
-                          id="lesson-description"
-                        />
-                        <label htmlFor="lesson-description">وصف الحصة</label>
-                      </span>
-                    </div>
-                  </div>
-                  <div className="p-col-12 p-md-12">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                        {
-                          // (this.state.setVideoType === 1) ?
-                          <FileUpload
-                            name="LessonVideo"
-                            onUpload={onUploadVoice}
-                            invalidFileSizeMessageSummary="حجم الصوت  كبير:"
-                            invalidFileSizeMessageDetail="أقصى حجم للصوت هو (2 GB)"
-                            url={`${properties.uploads_path}/upload-video.php`}
-                            customUpload={false}
-                            multiple={true}
-                            accept=".mp3"
-                            maxFileSize={50000000000}
-                            chooseLabel="إختيار الصوت"
-                            uploadLabel="رفع الصوت"
-                            cancelLabel="إلغاء"
-                            emptyTemplate={
-                              <p className="p-m-0">
-                                إسحب الصوت هنا ليبدأ التحميل
-                              </p>
-                            }
-                          />
-                          //  : ""
+                          },
+                          this.getMaterialByStage(e.value )
+                          )
                         }
-                      </span>
-                    </div>
-                    {this.state.formContent.lessonVoiceList.map((object, i) =>              
-                   
-                   <a href={`${properties.uploads_path}/videos/${object}`} download target="_blank">{`${object}`}</a>
-)}
-                  </div>
-                  <div className="p-col-12 p-md-12">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                        <Toast ref={this.toast}></Toast>
-                        <FileUpload
-                          name="thumb"
-                          onUpload={onUploadThumb}
-                          invalidFileSizeMessageSummary="حجم الفيديو كبير:"
-                          invalidFileSizeMessageDetail="أقصى حجم للصورة هو (50 MB)"
-                          url={`${properties.uploads_path}/upload-thumb.php`}
-                          customUpload={false}
-                          multiple={true}
-                          accept="image/*"
-                          maxFileSize={500000000}
-                          chooseLabel="إختيار صورة مصغرة"
-                          uploadLabel="رفع الصورة"
-                          cancelLabel="إلغاء"
-                          emptyTemplate={
-                            <p className="p-m-0">
-                              إسحب الصورة هنا ليبدأ التحميل
-                            </p>
-                          }
-                        />
-                      </span>
-        
 
+                        name="grade"
+                        placeholder="المرحلة الدراسية"
+                      />
                     </div>
-                    {this.state.thumbs.map((object, i) =>              
-                            <img className="preview-thumb image" src={`${properties.uploads_path}/thumb/${object}`} alt={object} onClick={(e)=>e.target.requestFullscreen()}/>
-  )}
-                  </div>
-                  <div className="p-col-12 p-md-12">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                        <Toast ref={this.toast}></Toast>
-                        <FileUpload
-                          name="LessonPDFs[]"
-                          onUpload={onUploadPDFs}
-                          invalidFileSizeMessageSummary="حجم الفيديو كبير:"
-                          invalidFileSizeMessageDetail="أقصى حجم للمذكرة هو (100 MB)"
-                          url={`${properties.uploads_path}/upload-pdf.php`}
-                          customUpload={false}
-                          multiple={true}
-                          accept=".doc, .docx, .pdf, .ppt, .pptx"
-                          maxFileSize={100000000}
-                          chooseLabel="إختيار المذكرات"
-                          uploadLabel="رفع المذكرات"
-                          cancelLabel="إلغاء"
-                          emptyTemplate={
-                            <p className="p-m-0">
-                              إسحب المذكرات هنا ليبدأ التحميل
-                            </p>
-                          }
-                        />
-                      </span>
+
+                    <div className="m-fld">
+                      <label htmlFor="subject">
+                        إختر المادة <span className="req">*</span>
+                      </label>
+                      <Select
+                        inputId="subject"
+                        value={this.state.material}
+                        options={materialList}
+                        required
+                        onChange={(e) =>
+                          this.setState({
+                            material: e.value,
+                            formContent: {
+                              ...this.state.formContent,
+                              materialId: e.value,
+                            },
+                          },
+                          this.getPeriod(e.value )
+                          )
+                        }
+                        name="subject"
+                        placeholder="إختر المادة"
+                      />
                     </div>
-                    {this.state.formContent.documents.map((object, i) =>              
-                   
-                        <a href={`${properties.uploads_path}/documents/${object}`} download target="_blank">{`${object}`}</a>
-  )}
+
+                    <div className="m-fld">
+                      <label htmlFor="months">
+                        الفتره <span className="req">*</span>
+                      </label>
+                      <Select
+                        inputId="months"
+                        value={this.state.period}
+                        options={periods}
+                        required
+                        onChange={(e) =>
+                          this.setState({
+                            period: e.value,
+                            formContent: {
+                              ...this.state.formContent,
+                              periodId: e.value,
+                            },
+                          })
+                        }
+                        name="months"
+                        placeholder="الفتره"
+                      />
+                    </div>
+
+                    <div className="m-fld m-wide">
+                      <label htmlFor="lesson-description">
+                        وصف الحصة <span className="req">*</span>
+                      </label>
+                      <InputTextarea
+                        rows={5}
+                        required
+                        value={this.state.formContent.lessonDescription}
+                        placeholder="اكتب شرحاً مختصراً يظهر لطلابك قبل فتح الحصة"
+                        onChange={(e) => {
+                          this.setState({
+                            formContent: {
+                              ...this.state.formContent,
+                              lessonDescription: e.target.value,
+                            },
+                          });
+                        }}
+                        name="lesson-description"
+                        id="lesson-description"
+                      />
+                    </div>
                   </div>
-                  <div className="p-col-12 p-md-12">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
+                </section>
+
+                {/* ---------------- 2. the video ---------------- */}
+                <section className="m-sec">
+                  <h3>
+                    <span className="m-sec-n">٢</span>
+                    الفيديو
+                    <small>اختر المصدر ثم أضف الرابط أو ارفع الملف</small>
+                  </h3>
+
+                  <div className="m-grid">
+                    <div className="m-fld">
+                      <label htmlFor="vedioes">نوع الفيديو</label>
+                      <Select
+                        inputId="vedioes"
+                        value={this.state.setVideoType}
+                        options={videoType}
+
+                        onChange={(e) => this.changeVideoType(e)
+                        //   this.setState({
+                        //     setVideoType: e.value,
+                        //     formContent: {
+                        //       ...this.state.formContent,
+                        //       setVideoType: e.value,
+                        //     },
+                        //   })
+                        }
+                        name="vedioes"
+                        placeholder="نوع الفيديو"
+                      />
+                    </div>
+
+                    {/* Left exactly as it was found: an external link to
+                        bobbyhadz.com wrapped around a button with no handler.
+                        It looks like development debris rather than anything
+                        a teacher should be sent to -- worth deleting, but
+                        that is a call to make deliberately, not in a restyle. */}
+                    <div className="m-fld">
+                      <label>&nbsp;</label>
+                      <a href="https://bobbyhadz.com" target="_blank" rel="noopener noreferrer">
                         <Button
-                          className={`add-button ${this.state.buttonColor}`}
-                          label={this.state.buttonText}
+                          className="p-col-20 p-mr-1 m-3"
+                          label="فيديو الشرح"
+                          // icon="pi pi-power-off"
+                          // onClick={}
                         />
-                      </span>
+                      </a>
+                    </div>
+
+                    {(this.state.setVideoType === 0) ? (
+                      <div className="m-fld m-wide">
+                        <label htmlFor="video-link">لينك Youtube</label>
+                        <div className="m-inline">
+                          <InputText id="video-link" value={this.state.youtubeLink} name="video-link" type="text" placeholder="https://youtube.com/watch?v=..." onChange={(e) => {this.setState({
+
+
+                              // ...this.state.videos,
+                              // lessonVideoList: this.state.videos.lessonVideoList.concat(res.video_url.split('/').pop()),
+
+                              youtubeLink:e.target.value,
+
+                            }   )}} />
+                          <Button    onClick={()=>uploadVideoYoutube(this.state.youtubeLink)}>اضافه</Button>
+                        </div>
+                      </div>
+                    ): ""}
+
+                    {(this.state.setVideoType === 1) ? (
+                      <div className="m-drop">
+                        <FileUpload
+                          name="LessonVideo"
+                          onUpload={uploadVideo}
+                          invalidFileSizeMessageSummary="حجم الفيديو  كبير:"
+                          invalidFileSizeMessageDetail="أقصى حجم للصوت هو (2 GB)"
+                          url={`${properties.uploads_path}/upload-video.php`}
+                          customUpload={false}
+                          multiple={true}
+                          accept=".mp3"
+                          maxFileSize={50000000000}
+                          chooseLabel="إختيار الفيديو"
+                          uploadLabel="رفع الفيديو"
+                          cancelLabel="إلغاء"
+                          emptyTemplate={
+                            <p className="p-m-0">
+                              إسحب الفيديو هنا ليبدأ التحميل
+                            </p>
+                          }
+                        />
+                      </div>
+                    ): ""}
+
+                    {(this.state.setVideoType === 2) ? (
+                      <div className="m-fld m-wide">
+                        <label htmlFor="video-link">لينك Vimeo</label>
+                        <div className="m-inline">
+                          <InputText id="video-link" value={this.state.vimeoLink} name="video-link" type="text" placeholder="https://vimeo.com/..." onChange={(e) => {this.setState({
+
+
+                              // ...this.state.videos,
+                              // lessonVideoList: this.state.videos.lessonVideoList.concat(res.video_url.split('/').pop()),
+
+                              vimeoLink:e.target.value,
+
+                            }   )}} />
+                          <Button    onClick={()=>uploadVideoViemo(this.state.vimeoLink)}>اضافه</Button>
+                        </div>
+                      </div>
+                    ): ""}
+
+                    <div className="m-files">
+                      {this.state.formContent.videoLinks.map((object, i) =>
+
+                        <a href={`${properties.uploads_path}/videos/${object}`} download target="_blank" key={i}>{`${object}`}</a>
+                      )}
+
+                      {this.state.formContent.youtubeLinks.map((object, i) =>
+                        <a href={`${properties.uploads_path}/videos/${object}`} download target="_blank" key={i}>{`${object}`}</a>
+                      )}
+
+                      {this.state.formContent.vimeoLinks.map((object, i) =>
+                        <a href={`${properties.uploads_path}/videos/${object}`} download target="_blank" key={i}>{`${object}`}</a>
+                      )}
                     </div>
                   </div>
-                </div>
+                </section>
+
+                {/* ---------------- 3. everything else ---------------- */}
+                <section className="m-sec">
+                  <h3>
+                    <span className="m-sec-n">٣</span>
+                    الصوت والصور والمذكرات
+                    <small>اختياري</small>
+                  </h3>
+
+                  <div className="m-grid">
+                    <div className="m-drop">
+                      <FileUpload
+                        name="LessonVideo"
+                        onUpload={onUploadVoice}
+                        invalidFileSizeMessageSummary="حجم الصوت  كبير:"
+                        invalidFileSizeMessageDetail="أقصى حجم للصوت هو (2 GB)"
+                        url={`${properties.uploads_path}/upload-video.php`}
+                        customUpload={false}
+                        multiple={true}
+                        accept=".mp3"
+                        maxFileSize={50000000000}
+                        chooseLabel="إختيار الصوت"
+                        uploadLabel="رفع الصوت"
+                        cancelLabel="إلغاء"
+                        emptyTemplate={
+                          <p className="p-m-0">
+                            إسحب الصوت هنا ليبدأ التحميل
+                          </p>
+                        }
+                      />
+                    </div>
+
+                    <div className="m-files">
+                      {this.state.formContent.lessonVoiceList.map((object, i) =>
+
+                        <a href={`${properties.uploads_path}/videos/${object}`} download target="_blank" key={i}>{`${object}`}</a>
+                      )}
+                    </div>
+
+                    <div className="m-drop">
+                      <Toast ref={this.toast}></Toast>
+                      <FileUpload
+                        name="thumb"
+                        onUpload={onUploadThumb}
+                        invalidFileSizeMessageSummary="حجم الفيديو كبير:"
+                        invalidFileSizeMessageDetail="أقصى حجم للصورة هو (50 MB)"
+                        url={`${properties.uploads_path}/upload-thumb.php`}
+                        customUpload={false}
+                        multiple={true}
+                        accept="image/*"
+                        maxFileSize={500000000}
+                        chooseLabel="إختيار صورة مصغرة"
+                        uploadLabel="رفع الصورة"
+                        cancelLabel="إلغاء"
+                        emptyTemplate={
+                          <p className="p-m-0">
+                            إسحب الصورة هنا ليبدأ التحميل
+                          </p>
+                        }
+                      />
+                    </div>
+
+                    <div className="m-files">
+                      {this.state.thumbs.map((object, i) =>
+                        <img className="preview-thumb image" src={`${properties.uploads_path}/thumb/${object}`} alt={object} key={i} onClick={(e)=>e.target.requestFullscreen()}/>
+                      )}
+                    </div>
+
+                    <div className="m-drop">
+                      <Toast ref={this.toast}></Toast>
+                      <FileUpload
+                        name="LessonPDFs[]"
+                        onUpload={onUploadPDFs}
+                        invalidFileSizeMessageSummary="حجم الفيديو كبير:"
+                        invalidFileSizeMessageDetail="أقصى حجم للمذكرة هو (100 MB)"
+                        url={`${properties.uploads_path}/upload-pdf.php`}
+                        customUpload={false}
+                        multiple={true}
+                        accept=".doc, .docx, .pdf, .ppt, .pptx"
+                        maxFileSize={100000000}
+                        chooseLabel="إختيار المذكرات"
+                        uploadLabel="رفع المذكرات"
+                        cancelLabel="إلغاء"
+                        emptyTemplate={
+                          <p className="p-m-0">
+                            إسحب المذكرات هنا ليبدأ التحميل
+                          </p>
+                        }
+                      />
+                    </div>
+
+                    <div className="m-files">
+                      {this.state.formContent.documents.map((object, i) =>
+
+                        <a href={`${properties.uploads_path}/documents/${object}`} download target="_blank" key={i}>{`${object}`}</a>
+                      )}
+                    </div>
+                  </div>
+                </section>
+
               </form>
-            </Card>
+            </div>
           </div>
         </div>
-        
+
       </div>
     );
   }
