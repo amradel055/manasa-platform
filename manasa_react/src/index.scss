@@ -649,8 +649,19 @@ $toast-icon-close: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/
 // not for mouse clicks, add:
 //
 //   *:focus-visible { outline: 2px solid $yellow; outline-offset: 2px; }
+// `*` alone is not enough here. bootstrap-reboot carries
+//   button:focus { outline: 5px auto -webkit-focus-ring-color; }
+// whose weight (0,1,1) beats the universal selector's (0,1,0), so the ring
+// survived on every button in the dashboard. The element names below match
+// it and then some.
 *:focus,
-*:focus-visible {
+*:focus-visible,
+button:focus,
+button:focus-visible,
+a:focus,
+a:focus-visible,
+[tabindex]:focus,
+[tabindex]:focus-visible {
   outline: none;
 }
 

@@ -191,16 +191,12 @@ class DashboardLayout extends Component {
        
     //   ],
     // },
+    // One child, so a drawer that opens onto a single row -- two clicks to
+    // reach one page. A link goes straight there.
     {
       label: "التقارير",
       icon: "pi pi-fw pi-chart-bar",
-      items: [
-        {
-          label: "تقارير الامتحانات",
-          icon: "pi pi-fw pi-chart-line",
-          url: `/examsReports`,
-        },
-      ],
+      url: `/examsReports`,
     },
     { label: "الإعدادات",
       icon: "pi pi-fw pi-cog",
