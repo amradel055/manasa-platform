@@ -9,7 +9,7 @@ import Header from "../../components/Header/Header";
 import { Card } from "primereact/card";
 import { Toast } from "primereact/toast";
 import { Button } from "primereact/button";
-import { Dropdown } from "primereact/dropdown";
+import Select from '../../components/Field/Select';
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Dialog } from "primereact/dialog";
@@ -345,7 +345,7 @@ class Schedule extends Component {
 
             <div className="p-col-12 p-md-4">
               <div className="p-inputgroup">
-                <Dropdown
+                <Select
                   value={this.state.day}
                   options={dayList}
                   onChange={(e) => this.setState({ day: e.value })}
@@ -356,7 +356,7 @@ class Schedule extends Component {
             </div>
 
             <span className="p-col-12 p-md-2">
-              <Dropdown
+              <Select
                 value={this.state.type}
                 options={typeList}
                 onChange={(e) => this.setState({ type: e.value })}
@@ -368,7 +368,7 @@ class Schedule extends Component {
             <div className="p-col-12 p-md-4">
               <div className="p-inputgroup">
                 <span className="p-float-label">
-                  <Dropdown
+                  <Select
                     value={this.state.schoolStageId}
                     options={grades}
                     onChange={(e) => this.setState({ schoolStageId: e.value })}
@@ -381,7 +381,7 @@ class Schedule extends Component {
             <div className="p-col-12 p-md-4">
               <div className="p-inputgroup">
                 <span className="p-float-label">
-                  <Dropdown
+                  <Select
                     value={this.state.selectedMaterial}
                     options={materialList}
                     placeholder="إختر المكان"
@@ -592,7 +592,7 @@ class Schedule extends Component {
 
                       <div className="p-col-12 p-md-4">
                         <div className="p-inputgroup">
-                          <Dropdown
+                          <Select
                             value={this.state.editableData["day"]}
                             options={dayList}
                             onChange={(e) =>
@@ -610,7 +610,7 @@ class Schedule extends Component {
                       </div>
 
                       <span className="p-col-12 p-md-2">
-                        <Dropdown
+                        <Select
                           value={this.state.editableData["appointmentType"]}
                           options={typeList}
                           onChange={(e) =>
@@ -629,7 +629,7 @@ class Schedule extends Component {
                       <div className="p-col-12 p-md-4">
                         <div className="p-inputgroup">
                           <span className="p-float-label">
-                            <Dropdown
+                            <Select
                               value={this.state.editableData["schoolStageId"]}
                               options={grades}
                               onChange={(e) =>
@@ -649,7 +649,7 @@ class Schedule extends Component {
                       <div className="p-col-12 p-md-4">
                         <div className="p-inputgroup">
                           <span className="p-float-label">
-                            <Dropdown
+                            <Select
                               value={
                                 this.state.editableData["lessonLocationId"]
                               }

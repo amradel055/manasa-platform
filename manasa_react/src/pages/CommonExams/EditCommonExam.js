@@ -15,7 +15,7 @@ import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import { Button } from "primereact/button";
-import { Dropdown } from "primereact/dropdown";
+import Select from '../../components/Field/Select';
 import { RadioButton } from "primereact/radiobutton";
 import { FileUpload } from "primereact/fileupload";
 // Required component 
@@ -465,7 +465,7 @@ class EditCommonExam extends Component {
           {/* <div className="p-col-12 p-md-2">
             <div className="p-inputgroup">
               <span className="p-float-label">
-                <Dropdown
+                <Select
                   value={qn.type}
                   options={questionType}
                   placeholder="نوع السؤال"
@@ -717,7 +717,7 @@ class EditCommonExam extends Component {
                   <div className="p-col-12 p-md-4">
                     <div className="p-inputgroup">
                       <span className="p-float-label">
-                        <Dropdown
+                        <Select
                           value={this.state.levelId}
                           options={gradesList}
                           placeholder="إختر المرحلة الدراسية"
@@ -743,7 +743,7 @@ class EditCommonExam extends Component {
                   <div className="p-col-12 p-md-4">
                     <div className="p-inputgroup">
                       <span className="p-float-label">
-                        <Dropdown
+                        <Select
                           value={this.state.materialId}
                           options={materialList}
                           placeholder="إختر المادة"

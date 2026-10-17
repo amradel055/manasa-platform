@@ -37,9 +37,95 @@ $m-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
         color: $m-ink;
     }
 
-    // with the duplicated heading gone, the toolbar is the search alone
+    // The toolbar. Some pages carry only a search; others add a filter and
+    // an inline "new row" field. One row, wrapping when it has to.
     .p-datatable .p-datatable-header .table-header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
         justify-content: flex-start;
+    }
+
+    .m-tool-search { flex: 1 1 240px; max-width: 420px; }
+
+    .m-tool-stage {
+        flex: 0 1 260px;
+
+        .p-dropdown { width: 100%; }
+    }
+
+    // a figure that belongs to the table, not a control
+    .m-tool-count {
+        margin-inline-start: auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 48px;
+        padding: 0 16px;
+        border: 1px solid $m-line;
+        border-radius: 12px;
+        background: $white;
+        font: $tiny-size-sbold;
+        font-size: 13px;
+        font-weight: $m-sbold;
+        color: $m-ink-3;
+        white-space: nowrap;
+
+        b {
+            font: $small-size-black;
+            font-size: 16px;
+            font-weight: 400;
+            color: $dark-blue-one;
+        }
+    }
+
+    // the field and its button read as one control
+    .m-tool-add {
+        flex: 0 1 340px;
+        display: flex;
+        margin-inline-start: auto;
+
+        .p-inputtext {
+            flex: 1;
+            min-width: 0;
+            min-height: 48px;
+            padding: 0 15px;
+            border: 1px solid $m-line;
+            border-start-end-radius: 12px;
+            border-end-end-radius: 12px;
+            border-start-start-radius: 0;
+            border-end-start-radius: 0;
+            border-inline-start: 0;
+            background: $white;
+            font-size: 14px;
+            font-weight: 200;
+
+            &:enabled:focus { box-shadow: none; border-color: $blue; }
+        }
+
+        .m-tool-btn {
+            flex: none;
+            min-height: 48px;
+            padding: 0 18px;
+            border: 0;
+            border-start-start-radius: 12px;
+            border-end-start-radius: 12px;
+            border-start-end-radius: 0;
+            border-end-end-radius: 0;
+            background: $yellow;
+            color: $white;
+            font: $tiny-size-bold;
+            font-size: 13.5px;
+            font-weight: 300;
+            box-shadow: none;
+            transition: filter 0.18s ease;
+
+            .p-button-icon { font-size: 12px; }
+
+            &:enabled:hover { background: $yellow; filter: brightness(1.06); }
+            &:focus { box-shadow: none; }
+        }
     }
 
     .p-input-icon-left {
@@ -245,18 +331,27 @@ $m-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
         border-width: 0;
     }
 
+    // The actions cell never breaks its line. It is the narrowest column in
+    // the table, and two inline-flex buttons in it are one pixel of slack
+    // away from stacking on top of each other.
+    .p-datatable .p-datatable-tbody > tr > td:last-child {
+        white-space: nowrap;
+    }
+
     // ---- the row actions ----
-    // index.scss paints every .pi inside a cell white, which was right when
-    // these buttons were solid colour. As outlines on a white card they have
-    // to carry their own ink.
+    // Each one is tinted with its own meaning rather than left grey until
+    // hovered: editing reads as the brand, deleting as a warning, so the two
+    // are told apart before the pointer gets there. index.scss paints every
+    // .pi inside a cell white -- right when these were solid colour, wrong
+    // on a tint -- so the ink is set here.
     .p-datatable .p-datatable-tbody > tr > td .p-button {
         width: 34px;
         height: 34px;
         margin-inline-start: 6px;
-        border: 1px solid $m-line;
-        border-radius: 9px;
-        background: $white;
-        color: $m-ink-2;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        background: #e8f1f4;
+        color: #0f6d8a;
         box-shadow: none;
         transition: border-color 0.18s ease, color 0.18s ease,
                     background 0.18s ease, transform 0.18s $m-ease;
@@ -264,22 +359,41 @@ $m-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
         .pi { color: inherit; font-size: 13px; }
 
         &:enabled:hover {
-            background: $white;
+            background: $blue;
             border-color: $blue;
-            color: $blue;
+            color: $white;
             transform: translateY(-1px);
         }
 
+        &:enabled:active { transform: none; }
         &:focus { box-shadow: none; }
 
-        &.p-button-danger:enabled:hover {
-            background: #fdf3f1;
-            border-color: #e3a79e;
+        &.p-button-danger {
+            background: #fdeceA;
             color: $warningTxt;
+
+            &:enabled:hover {
+                background: $warningTxt;
+                border-color: $warningTxt;
+                color: $white;
+            }
+        }
+
+        // approving something -- green, so it cannot be confused with the
+        // neutral action beside it or the destructive one beyond it
+        &.p-button-success {
+            background: #e7f4ec;
+            color: $successTxt;
+
+            &:enabled:hover {
+                background: $successTxt;
+                border-color: $successTxt;
+                color: $white;
+            }
         }
     }
 
-    // ---- nothing to show ----
+    // ---- nothing to show, or nothing yet ----
     // The empty row is still one card, just a tall one, so an empty table
     // does not look like a different page from a full one.
     .p-datatable .p-datatable-tbody > tr.p-datatable-emptymessage > td {
@@ -307,6 +421,20 @@ $m-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
             color: #7fa0ac;
 
             .pi { font-size: 22px; }
+        }
+
+        // ---- waiting, in the same tile the icon would sit in ----
+        .m-empty-spin {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 2.5px solid rgba(127, 160, 172, 0.35);
+            border-top-color: $blue;
+            animation: mTableSpin 0.7s linear infinite;
+        }
+
+        &.is-loading {
+            b { color: $m-ink-2; }
         }
 
         b {
@@ -470,4 +598,8 @@ $m-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
             border-end-end-radius: $m-radius;
         }
     }
+}
+
+@keyframes mTableSpin {
+    to { transform: rotate(360deg); }
 }

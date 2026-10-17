@@ -12,7 +12,7 @@ import { apiFetch, getCurrentUser } from '../../Helper/Api';
 import Header from '../../components/Header/Header';
 import { Card } from 'primereact/card';
 import { InputText } from 'primereact/inputtext';
-import { Dropdown } from 'primereact/dropdown';
+import Select from '../../components/Field/Select';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { FileUpload } from 'primereact/fileupload';
 import { Toast } from 'primereact/toast';
@@ -692,7 +692,7 @@ class EditLessons extends Component {
                                      <div className="p-col-12 p-md-4">
                                         <div className="p-inputgroup">
                                             <span className="p-float-label">
-                                                <Dropdown value={this.state.type} options={typeList} onChange={(e) => this.setState({type: e.value, formContent: {
+                                                <Select value={this.state.type} options={typeList} onChange={(e) => this.setState({type: e.value, formContent: {
                                                     ...this.state.formContent,
                                                     lessonType: e.value
                                                 }})} name="type" placeholder="نوع الحصة"/>
@@ -702,7 +702,7 @@ class EditLessons extends Component {
                                     <div className="p-col-12 p-md-4">
                                         <div className="p-inputgroup">
                                             <span className="p-float-label">
-                                                <Dropdown value={this.state.period} options={periods} onChange={(e) => this.setState({period: e.value, formContent: {
+                                                <Select value={this.state.period} options={periods} onChange={(e) => this.setState({period: e.value, formContent: {
                                                     ...this.state.formContent,
                                                     periodId: e.value
                                                 }})} name="periods" placeholder="الفترة"/>
@@ -713,7 +713,7 @@ class EditLessons extends Component {
                                     <div className="p-col-12 p-md-4 p-mt-3">
                                         <div className="p-inputgroup">
                                             <span className="p-float-label">
-                                                <Dropdown value={this.state.grade} options={grades} onChange={(e) => this.setState({grade: e.value,
+                                                <Select value={this.state.grade} options={grades} onChange={(e) => this.setState({grade: e.value,
                                                     formContent: {
                                                         ...this.state.formContent,
                                                         schoolId: e.value
@@ -728,7 +728,7 @@ class EditLessons extends Component {
                                     <div className="p-col-12 p-md-4 p-mt-3">
                                         <div className="p-inputgroup">
                                             <span className="p-float-label">
-                                                <Dropdown value={this.state.material} options={materialList} onChange={(e) => this.setState({material : e.value ,
+                                                <Select value={this.state.material} options={materialList} onChange={(e) => this.setState({material : e.value ,
                                                 formContent: {
                                                     ...this.state.formContent,
                                                     materialId: e.value
@@ -781,7 +781,7 @@ class EditLessons extends Component {
                                     <div className="p-col-12 p-md-4 p-mt-3">
                     <div className="p-inputgroup">
                       <span className="p-float-label">
-                        <Dropdown
+                        <Select
                           value={this.state.setVideoType}
                           options={videoType}
                           

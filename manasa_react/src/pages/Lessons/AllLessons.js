@@ -37,6 +37,10 @@ class AllLessons extends Component {
     // the /lessons/add route mounts, with its own state and its own submit.
     addOpen: false,
 
+    // The rows are fetched; until they arrive the table says so rather than
+    // claiming there are none. Only the DataTable's `loading` reads it.
+    tableLoading: true,
+
     // Teacher Identifier
     branchID: properties.branch_id,
     companyID: properties.company_id,
@@ -69,14 +73,24 @@ class AllLessons extends Component {
   };
 
   getLessons = () => {
+    // Every call announces itself, not just the first: this runs again after
+    // an add or a delete, and a refetch that showed nothing looked as though
+    // the action had not registered. The rows are cleared with it so the
+    // waiting row has somewhere to appear -- TableEmpty only renders when
+    // the table is empty.
+    this.setState({ tableLoading: true, data: [] });
+
     // teacherUserId is resolved from the JWT on the server -- no need to send it.
     apiFetch("/lessons")
       .then((fetchLessons) => {
         this.setState({
           data: fetchLessons,
+          tableLoading: false,
         });
       })
       .catch((error) => {
+        // the wait ends on failure too, or the table spins for ever
+        this.setState({ tableLoading: false });
         console.error("Error:", error);
       });
   };
@@ -230,6 +244,7 @@ class AllLessons extends Component {
                     currentPageReportTemplate="عرض {first} – {last} من {totalRecords} درس"
                     emptyMessage={
                       <TableEmpty
+                        loading={this.state.tableLoading}
                         icon="pi pi-video"
                         title="لا يوجد دروس"
                         hint="ابدأ بإضافة أول حصة، وستظهر هنا لك ولطلابك"
@@ -259,7 +274,9 @@ class AllLessons extends Component {
                       header="نوع الدرس"
                     ></Column>
                     <Column
-                      header="تعديل / حذف"
+                      header="الإجراءات"
+                      headerStyle={{ width: "124px" }}
+                      bodyStyle={{ width: "124px" }}
                       body={actionBodyTemplate}
                     ></Column>
                   </DataTable>

@@ -9,6 +9,12 @@ import { apiFetch, getCurrentUser } from '../../Helper/Api';
 
 // Components
 import Header from '../../components/Header/Header';
+import TableShell from '../../components/Table/TableShell';
+import TableEmpty from '../../components/Table/TableEmpty';
+import SlidePanel from '../../components/Panel/SlidePanel';
+import Confirm from '../../components/Modal/Confirm';
+import AddExam from './AddExam';
+import '../../components/Field/Form.scss';
 import { Toast } from 'primereact/toast';
 import { Card } from 'primereact/card';
 import { DataTable } from 'primereact/datatable';
@@ -37,43 +43,63 @@ class AllExams extends Component {
         lessonsById: {},
 
         // Update Data
-        resend: false
+        resend: false,
+
+        // whether the add panel is open. It mounts the very same AddExam the
+        // /exams/add route mounts; that route still works.
+        addOpen: false,
+
+        // the rows are fetched on mount
+        tableLoading: true,
+
+        // a delete is in flight, and the row waiting on a yes
+        deleting: false,
+        confirmRow: null,
     }
 
     getExams = () => {
         var _this = this;
         // Get Exams From API
+        // Every call, not just the first: a silent refetch after a delete
+        // reads as though nothing happened. The rows go with it so the
+        // waiting row has somewhere to appear.
+        this.setState({ tableLoading: true, data: [] });
+
         apiFetch("/exams")
         .then(fetchExams => {
             this.setState({
-                data: fetchExams
+                data: fetchExams,
+                tableLoading: false
             });
         })
         .catch(error => {
+            // the wait ends on failure too, or the table waits for ever
+            this.setState({ tableLoading: false });
             console.error('Error:', error)
 
             _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
         });
     }
 
+    // The confirmation that used to be window.confirm is the Confirm modal
+    // in the render below. The gate is the same, and so is everything under it.
     deleteExam = (id) => {
         var _this = this;
 
-        // Confirm Deletion
-        var con = window.confirm("هل أنت متأكد من أنك تريد حذف هذا العنصر");
+        this.setState({ deleting: true });
 
-        if (con) {
-            // Delete Subscription By ID
-            apiFetch(`/exams/${id}`, { method: "DELETE" })
-            .then(() => {
-                this.setState({resend: true});
-                _this.toast.current.show({severity: 'success', summary: 'تمت العملية', detail: 'تم الحذف بنجاح'});
-            })
-            .catch(error => {
-                console.error('Error:', error)
-                _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
-            });
-        }
+        // Delete Subscription By ID
+        apiFetch(`/exams/${id}`, { method: "DELETE" })
+        .then(() => {
+            this.setState({resend: true, deleting: false, confirmRow: null});
+            _this.toast.current.show({severity: 'success', summary: 'تمت العملية', detail: 'تم الحذف بنجاح'});
+        })
+        .catch(error => {
+            // the question stays open on failure, so it can be retried
+            this.setState({ deleting: false });
+            console.error('Error:', error)
+            _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: error.message || 'خطأ في الإتصال'});
+        });
     }
 
     componentDidMount () {
@@ -114,10 +140,13 @@ class AllExams extends Component {
     render() {
         const header = (
             <div className="table-header">
-                كل الإمتحانات
-                <span className="p-input-icon-left">
+                <span className="p-input-icon-left m-tool-search">
                     <i className="pi pi-search" />
                     <InputText type="search" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="بحث في الإمتحانات" />
+                </span>
+
+                <span className="m-tool-count">
+                    عدد الإمتحانات <b>{this.state.data.length}</b>
                 </span>
             </div>
         );
@@ -125,30 +154,78 @@ class AllExams extends Component {
         const actionBodyTemplate = (rowData) => {
             return (
                 <React.Fragment>
-                    <Button icon="pi pi-pencil" className="p-button-rounded p-button-secondary p-ml-2" onClick={() => window.location.href = `exams/edit/${rowData.id}`} />
-                    <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => this.deleteExam(rowData.id)} />
+                    <Button icon="pi pi-pencil" title="تعديل الإمتحان" className="p-button-rounded p-button-secondary p-ml-2" onClick={() => window.location.href = `/exams/edit/${rowData.id}`} />
+                    <Button icon="pi pi-trash" title="حذف الإمتحان" className="p-button-rounded p-button-danger" onClick={() => this.setState({ confirmRow: rowData })} />
                 </React.Fragment>
             );
         }
 
         return (
             <>
-                <Header pageName="كل الإمتحانات" />
+                <Header
+                    pageName="كل الإمتحانات"
+                    action={{ label: "إضافة إمتحان", icon: "pi pi-plus", onClick: () => this.setState({ addOpen: true }) }}
+                />
 
                 <Toast ref={this.toast}></Toast>
+
+                {/* A question builder is a long form, so a slide-over rather
+                    than a modal. It is wrapped in .m-form-legacy rather than
+                    rewritten: 840 lines of p-inputgroup scaffolding, every
+                    one of which is a handler that does not need touching to
+                    look right. */}
+                <SlidePanel
+                    visible={this.state.addOpen}
+                    onHide={() => this.setState({ addOpen: false })}
+                    title="إضافة إمتحان"
+                    subtitle="املأ بيانات الإمتحان وأسئلته، ثم احفظه"
+                >
+                    <div className="m-form m-form-legacy">
+                        {this.state.addOpen ? <AddExam /> : null}
+                    </div>
+                </SlidePanel>
+
+                {/* the question that used to be the browser's */}
+                <Confirm
+                    visible={this.state.confirmRow !== null}
+                    onHide={() => this.setState({ confirmRow: null })}
+                    onConfirm={() => this.deleteExam(this.state.confirmRow.id)}
+                    busy={this.state.deleting}
+                    title="حذف إمتحان"
+                    message={`هل أنت متأكد من حذف «${this.state.confirmRow ? this.state.confirmRow.examName : ''}»؟`}
+                    note="ستُحذف أسئلته ونتائج طلابه معه. لا يمكن التراجع عن هذه الخطوة."
+                    confirmLabel="نعم، احذف"
+                    busyLabel="جارٍ الحذف…"
+                />
 
                 <div className="content">
                     <div className="container">
                         <div className="card">
-                            <Card title="كل الإمتحانات">
-                                <DataTable header={header} sortable globalFilter={this.state.globalFilter} className="p-datatable-responsive-demo p-datatable-gridlines p-datatable-striped" value={this.state.data} paginator rows={10} rowsPerPageOptions={[10,20,50]} currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"  emptyMessage="لا يوجد إمتحانات">
-                                    <Column filter sortable field="examName" header="إسم الإمتحان"></Column>
-                                    <Column filter sortable body={(row) => this.state.stagesById[row.schoolStagesId] || ''} header="المرحلة الدراسية"></Column>
-                                    <Column filter sortable body={(row) => this.state.lessonsById[row.lessonId] || ''} header="الدرس"></Column>
-                                    <Column filter sortable field="degree" header="درجه الامتحان"></Column>
-                                    <Column filter sortable field="timer" header="الوقت"></Column>
-                                    <Column header="تعديل / حذف" body={actionBodyTemplate}></Column>
+                            {/* no title: the page header above already says it */}
+                            <Card>
+                                {/* presentation only -- see components/Table/TableShell.js */}
+                                <TableShell>
+                                <DataTable header={header} sortable globalFilter={this.state.globalFilter} className="p-datatable-responsive-demo p-datatable-gridlines p-datatable-striped" value={this.state.data} paginator
+                                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown CurrentPageReport"
+                                rows={10} rowsPerPageOptions={[10,20,50]} currentPageReportTemplate="عرض {first} – {last} من {totalRecords} إمتحان"
+                                emptyMessage={
+                                  <TableEmpty
+                                    loading={this.state.tableLoading}
+                                    icon="pi pi-check-square"
+                                    title="لا يوجد إمتحانات"
+                                    hint="أنشئ أول إمتحان، وسيظهر هنا لطلابك"
+                                    action={{ label: "إضافة إمتحان", onClick: () => this.setState({ addOpen: true }) }}
+                                  />
+                                }>
+                                    {/* no column filters: the search above covers these */}
+                                    <Column sortable field="examName" header="إسم الإمتحان"></Column>
+                                    <Column sortable body={(row) => this.state.stagesById[row.schoolStagesId] || ''} header="المرحلة الدراسية"></Column>
+                                    <Column sortable body={(row) => this.state.lessonsById[row.lessonId] || ''} header="الدرس"></Column>
+                                    <Column sortable field="degree" header="درجه الامتحان"></Column>
+                                    <Column sortable field="timer" header="الوقت"></Column>
+                                    <Column header="الإجراءات" headerStyle={{ width: '124px' }} bodyStyle={{ width: '124px' }} body={actionBodyTemplate}></Column>
                                 </DataTable>
+                                </TableShell>
                             </Card>
                         </div>
                     </div>

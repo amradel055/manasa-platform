@@ -1,5 +1,6 @@
 /* eslint-disable no-loop-func */
 import React, { Component, createRef } from "react";
+import ReactDOM from "react-dom";
 
 // CSS
 import "./Exams.scss";
@@ -14,7 +15,7 @@ import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import { Button } from "primereact/button";
-import { Dropdown } from "primereact/dropdown";
+import Select from '../../components/Field/Select';
 import { RadioButton } from "primereact/radiobutton";
 import { FileUpload } from "primereact/fileupload";
 
@@ -28,6 +29,13 @@ class AddExam extends Component {
   }
 
   state = {
+
+    // The panel header's slot, when this form is open inside one. Null on
+
+    // the standalone route, where the button keeps its own card.
+
+    headerSlot: null,
+
     // Submit Button
     buttonText: "إضافة الإمتحان",
     buttonColor: "",
@@ -120,6 +128,14 @@ class AddExam extends Component {
   }
 
   componentDidMount() {
+    // Opened inside a slide-over? Then the save button belongs on the
+    // panel's header row, not at the far end of a form this long. It is
+    // moved there with a portal, so it stays in THIS component's tree and
+    // its label and colour are still driven from this state. The whole tree
+    // is in the DOM before any componentDidMount runs, so the slot is
+    // already there if there is one.
+    const slot = document.querySelector(".m-panel-slot");
+    if (slot) this.setState({ headerSlot: slot });
     document.title = properties.site_name + " | إضافة إمتحان جديد";
     // Redirect To Sign In Page If The User Is Already Logged Out & Remove The Data If It Exists
     if (!checkCookie("name")) {
@@ -345,7 +361,7 @@ class AddExam extends Component {
           <div className="p-col-12 p-md-2">
             <div className="p-inputgroup">
               <span className="p-float-label">
-                <Dropdown
+                <Select
                   value={qn.type}
                   options={questionType}
                   placeholder="نوع السؤال"
@@ -580,7 +596,7 @@ class AddExam extends Component {
                 <div className="p-col-12 p-md-4">
                     <div className="p-inputgroup">
                       <span className="p-float-label">
-                        <Dropdown
+                        <Select
                           value={this.state.selectedType}
                           options={type}
                           placeholder="نوع الإمتحان"
@@ -612,7 +628,7 @@ class AddExam extends Component {
                   <div className="p-col-12 p-md-4">
                     <div className="p-inputgroup">
                       <span className="p-float-label">
-                        <Dropdown
+                        <Select
                           value={this.state.selectedStage}
                           options={gradesList}
                           placeholder="إختر المرحلة الدراسية"
@@ -638,7 +654,7 @@ class AddExam extends Component {
                   <div className="p-col-12 p-md-4">
                     <div className="p-inputgroup">
                       <span className="p-float-label">
-                        <Dropdown
+                        <Select
                           value={this.state.selectedMaterial}
                           options={materialList}
                           placeholder="إختر المادة"
@@ -666,7 +682,7 @@ class AddExam extends Component {
                   <div className="p-col-12 p-md-4">
                     <div className="p-inputgroup">
                       <span className="p-float-label">
-                        <Dropdown
+                        <Select
                           value={this.state.selectedPeriod}
                           options={periods}
                           placeholder="  إختر الفترة "
@@ -690,7 +706,7 @@ class AddExam extends Component {
                 { this.state.selectedType===1? <div className="p-col-12 p-md-4">
                     <div className="p-inputgroup">
                       <span className="p-float-label">
-                        <Dropdown
+                        <Select
                           value={this.state.selectedLesson}
                           options={lessonsList}
                           placeholder="إختر الدرس"
@@ -709,7 +725,7 @@ class AddExam extends Component {
                   <div className="p-col-12 p-md-4">
                     <div className="p-inputgroup">
                       <span className="p-float-label">
-                        <Dropdown
+                        <Select
                           value={this.state.selectedStatus}
                           options={status}
                           placeholder="حالة الإمتحان"
@@ -817,19 +833,35 @@ class AddExam extends Component {
               {answersInputs}
             </Card>
 
-            <Card className="p-mt-5">
-              <div className="p-col-12 p-md-12 p-mt-2">
-                <div className="p-inputgroup">
-                  <span className="p-float-label">
-                    <Button
-                      onClick={addExam}
-                      className={`add-button ${this.state.buttonColor}`}
-                      label={this.state.buttonText}
-                    />
-                  </span>
+            {/* In a panel the save button goes up into the header row; on
+                the standalone page it keeps its card at the foot of the form.
+                It is the same element either way, with the same state behind
+                it -- and it submits through onClick, not a native submit, so
+                moving it out of the <form> changes nothing. */}
+            {this.state.headerSlot ? (
+              ReactDOM.createPortal(
+                <Button
+                  onClick={addExam}
+                  className={`add-button ${this.state.buttonColor}`}
+                  label={this.state.buttonText}
+                />,
+                this.state.headerSlot
+              )
+            ) : (
+              <Card className="p-mt-5">
+                <div className="p-col-12 p-md-12 p-mt-2">
+                  <div className="p-inputgroup">
+                    <span className="p-float-label">
+                      <Button
+                        onClick={addExam}
+                        className={`add-button ${this.state.buttonColor}`}
+                        label={this.state.buttonText}
+                      />
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </Card>
+              </Card>
+            )}
           </div>
         </div>
       </>

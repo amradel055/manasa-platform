@@ -14,7 +14,7 @@ import { Card } from 'primereact/card';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
-import { Dropdown } from 'primereact/dropdown';
+import Select from '../../components/Field/Select';
 import { RadioButton } from 'primereact/radiobutton';
 import AddExam from '../Exams/AddExam';
 import { FileUpload } from 'primereact/fileupload';
@@ -516,7 +516,7 @@ class EditInboxDetail extends Component {
           <div className="p-col-12 p-md-4 p-mt-3">
                     <div className="p-inputgroup">
                       <span className="p-float-label">
-                        <Dropdown
+                        <Select
                           value={this.state.setVideoType}
                           options={videoType}
                           onChange={(e) => this.changeVideoType(e)

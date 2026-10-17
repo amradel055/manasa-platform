@@ -12,7 +12,7 @@ import { apiFetch, getCurrentUser } from '../../Helper/Api';
 import Header from '../../components/Header/Header';
 import { Card } from 'primereact/card';
 import { InputText } from 'primereact/inputtext';
-import { Dropdown } from 'primereact/dropdown';
+import Select from '../../components/Field/Select';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 
@@ -236,14 +236,14 @@ class EditStudent extends Component {
                                     <div className="p-col-12 p-md-4">
                                         <div className="p-inputgroup">
                                             <span className="p-float-label">
-                                                <Dropdown value={this.state.city} options={cirtiesList} onChange={(e) => updateAndGetState(e)} name="type" placeholder="المحافظة"/>
+                                                <Select value={this.state.city} options={cirtiesList} onChange={(e) => updateAndGetState(e)} name="type" placeholder="المحافظة"/>
                                             </span>
                                         </div>
                                     </div>
                                     <div className="p-col-12 p-md-4">
                                         <div className="p-inputgroup">
                                             <span className="p-float-label">
-                                                <Dropdown value={this.state.state} options={statesList} onChange={(e) => this.setState({state: e.value,
+                                                <Select value={this.state.state} options={statesList} onChange={(e) => this.setState({state: e.value,
                                                 formContent: {
                                                     ...this.state.formContent,
                                                     cityState: e.value
@@ -255,7 +255,7 @@ class EditStudent extends Component {
                                     <div className="p-col-12 p-md-4 p-mt-3">
                                         <div className="p-inputgroup">
                                             <span className="p-float-label">
-                                                <Dropdown value={this.state.grade} options={gradesList} onChange={(e) => this.setState({grade: e.value,
+                                                <Select value={this.state.grade} options={gradesList} onChange={(e) => this.setState({grade: e.value,
                                                 formContent: {
                                                     ...this.state.formContent,
                                                     grade: e.value
@@ -267,7 +267,7 @@ class EditStudent extends Component {
                                     <div className="p-col-12 p-md-4 p-mt-3">
                                         <div className="p-inputgroup">
                                             <span className="p-float-label">
-                                                <Dropdown value={this.state.gender} options={genderList} onChange={(e) => this.setState({gender: e.value,
+                                                <Select value={this.state.gender} options={genderList} onChange={(e) => this.setState({gender: e.value,
                                                 formContent: {
                                                     ...this.state.formContent,
                                                     gender: e.value

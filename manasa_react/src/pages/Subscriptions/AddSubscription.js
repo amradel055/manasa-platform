@@ -1,4 +1,5 @@
 import React, { Component, createRef } from "react";
+import ReactDOM from "react-dom";
 
 // CSS
 import "./Subscription.scss";
@@ -13,7 +14,10 @@ import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import { Button } from "primereact/button";
-import { Dropdown } from "primereact/dropdown";
+// Our dropdown: a wrapper that passes every prop through to PrimeReact's,
+// so the values, the options and the handlers below are unchanged.
+import Select from "../../components/Field/Select";
+import "../../components/Field/Form.scss";
 
 // Properties
 const properties = require("../../properties.json");
@@ -25,6 +29,17 @@ class AddSubscriptions extends Component {
   }
 
   state = {
+    // The modal footer's slot, when this form is open inside one. Null on the
+    // standalone route, where the button keeps its own bar.
+    footerSlot: null,
+
+    // One flag per list. Each is raised inside its own fetch, so opening a
+    // list reports the wait as well as the first load does.
+    stagesLoading: false,
+    materialsLoading: false,
+    periodsLoading: false,
+    studentsLoading: false,
+
     // Submit Button
     buttonText: "إضافة الإشتراك",
     buttonColor: "",
@@ -59,22 +74,40 @@ class AddSubscriptions extends Component {
       .catch((error) => console.error("Error:", error));
   };
   getPeriod(materialId) {
+    this.setState({ periodsLoading: true });
+
     apiFetch("/periods/by-material", { query: { materialId } })
       .then((grades) => {
-        this.setState({ getPeriods: grades });
+        this.setState({ getPeriods: grades, periodsLoading: false });
       })
-      .catch((error) => console.error("Error:", error));
+      .catch((error) => {
+        this.setState({ periodsLoading: false });
+        console.error("Error:", error);
+      });
   }
 
   getMaterialByStage(stageId) {
+    this.setState({ materialsLoading: true });
+
     apiFetch("/lookup/materials/by-stage", { query: { stageId } })
       .then((grades) => {
-        this.setState({ getMaterialsList: grades });
+        this.setState({ getMaterialsList: grades, materialsLoading: false });
       })
-      .catch((error) => console.error("Error:", error));
+      .catch((error) => {
+        this.setState({ materialsLoading: false });
+        console.error("Error:", error);
+      });
   }
 
   componentDidMount() {
+    // Opened inside a modal? Then the save button belongs in its footer, not
+    // in a bar of its own above the fields. It is moved there with a portal,
+    // so it stays in THIS component's tree and its label and colour are still
+    // driven from this state. The whole tree is in the DOM before any
+    // componentDidMount runs, so the slot is already there if there is one.
+    const slot = document.querySelector(".m-modal-slot");
+    if (slot) this.setState({ footerSlot: slot });
+
     document.title = properties.site_name + " | دفع شهر جديد";
 
     // Redirect To Sign In Page If The User Is Already Logged Out & Remove The Data If It Exists
@@ -83,24 +116,38 @@ class AddSubscriptions extends Component {
       window.location.href = `/`;
     }
 
-    // Get Grades From API
-    apiFetch("/lookup/school-stages/by-teacher", { query: { teacherUserId: getCurrentUser()?.userId } })
-      .then((grades) => {
-        this.setState({ getSchoolStages: grades });
-      })
-      .catch((error) => console.error("Error:", error));
+    // Not fetched here any more: the stage list fetches when it is opened
+    // (see the Select's onOpen), and doing both asked for it twice.
   }
 
+  // Lifted out of componentDidMount, where it was written inline and so could
+  // only ever run once. Same request, same state write.
+  getSchoolStages = () => {
+    this.setState({ stagesLoading: true });
+
+    apiFetch("/lookup/school-stages/by-teacher", { query: { teacherUserId: getCurrentUser()?.userId } })
+      .then((grades) => {
+        this.setState({ getSchoolStages: grades, stagesLoading: false });
+      })
+      .catch((error) => {
+        this.setState({ stagesLoading: false });
+        console.error("Error:", error);
+      });
+  };
+
   getStudentsByStageID = (e) => {
-    this.setState({ selectedStage: e.value }, () => {
+    this.setState({ selectedStage: e.value, studentsLoading: true }, () => {
       // Get Students From API
       apiFetch("/students", {
         query: { branchId: this.state.branchID, schoolStagesId: this.state.selectedStage },
       })
         .then((fetchStudents) => {
-          this.setState({ getStudentNames: fetchStudents });
+          this.setState({ getStudentNames: fetchStudents, studentsLoading: false });
         })
-        .catch((error) => console.error("Error:", error));
+        .catch((error) => {
+          this.setState({ studentsLoading: false });
+          console.error("Error:", error);
+        });
     });
   };
 
@@ -179,206 +226,164 @@ class AddSubscriptions extends Component {
         value: grade.id,
       };
     });
+    // One element, rendered in one of two places. `form` is what lets it
+    // submit #add-subscription-form from wherever it ends up; PrimeReact
+    // passes any prop it does not recognise straight on to the <button>.
+    const saveButton = (
+      <Button
+        type="submit"
+        form="add-subscription-form"
+        className={`add-button ${this.state.buttonColor}`}
+        label={this.state.buttonText}
+      />
+    );
+
     return (
-      <>
+      <div className="add-subscription-page m-form">
         <Header pageName="دفع فتره جديده" />
 
         <div className="content">
           <Toast ref={this.toast}></Toast>
 
           <div className="container">
-            <Card title="دفع فتره جديده">
-              <form onSubmit={addSubscription} action="#" method="POST">
-                <div className="p-grid p-fluid">
-                <div className="p-col-12 p-md-4">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                        <Dropdown
-                          value={this.state.selectedStage}
-                          options={gradesList}
-                          placeholder="إختر المرحلة الدراسية"
-                          onChange={(e) => {
-                            this.setState(
-                              { selectedStage: e.value },
-                              this.getLessonsByStage(
-                                e.value,
-                                this.state.selectedMaterial,
-                                this.state.selectedPeriod
-                              ),
-                              this.getMaterialByStage(e.value)
-                            
-                            );
-                            this.getStudentsByStageID(e)
-                          }}
-                          optionLabel="label"
-                          filter
-                          showClear
-                          filterBy="label"
-                        />
-                      </span>
-                    </div>
-                  </div>
-                  <div className="p-col-12 p-md-4">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                        <Dropdown
-                          value={this.state.selectedMaterial}
-                          options={materialList}
-                          placeholder="إختر المادة"
-                          onChange={(e) =>
-                            this.setState({ selectedMaterial: e.value }
-                              ,this.getPeriod(e.value), this.getLessonsByStage(
-                                this.state.selectedStage,
-                                e.value,
-                                this.state.selectedPeriod
-                              ),
-                              )
-                            
-                           
-                            
-                          }
-                          optionLabel="label"
-                          filter
-                          showClear
-                          filterBy="label"
-                        />
-                      </span>
-                    </div>
-                  </div>
-                 
-                  <div className="p-col-12 p-md-4">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                        <Dropdown
-                          value={this.state.selectedPeriod}
-                          options={periods}
-                          placeholder="  إختر الفترة "
-                          onChange={(e) =>
-                            this.setState({ selectedPeriod: e.value },
-                              this.getLessonsByStage(
-                                this.state.selectedStage,
-                                this.state.selectedMaterial,
-                                e.value
-                              ),
-                            //  this.state.selectedType==1? 
-                            
-                            //  :null
-                              )
-                              
-                              
+            <div className="card">
+              <form id="add-subscription-form" onSubmit={addSubscription} action="#" method="POST">
 
-                             
-                          }
-                          optionLabel="label"
-                          filter
-                          showClear
-                          filterBy="label"
-                        />
-                      </span>
-                    </div>
+                {/* In a modal the button goes down into the footer; on the
+                    standalone page it keeps its own bar. Same element either
+                    way, with the same state behind it. */}
+                {this.state.footerSlot ? (
+                  ReactDOM.createPortal(saveButton, this.state.footerSlot)
+                ) : (
+                  <div className="m-actions">
+                    <span className="m-actions-hint">لن يُسجَّل الإشتراك حتى تضغط الزر</span>
+                    {saveButton}
                   </div>
-                  {/* <div className="p-col-12 p-md-4">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                        <Dropdown
-                          value={this.state.selectedStage}
-                          options={schoolStages}
-                          placeholder="إختر المرحلة الدراسية"
-                          onChange={(e) => this.getStudentsByStageID(e)}
-                          optionLabel="label"
-                          filter
-                          showClear
-                          filterBy="label"
-                        />
-                      </span>
-                    </div>
-                  </div> */}
-                  <div className="p-col-12 p-md-4">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                        <Dropdown
-                          value={this.state.selectedStudent}
-                          options={studentNames}
-                          placeholder="إختر طالب"
-                          onChange={(e) =>
-                            this.setState({ selectedStudent: e.value })
-                          }
-                          optionLabel="label"
-                          filter
-                          showClear
-                          filterBy="label"
-                        />
-                      </span>
-                    </div>
+                )}
+
+                <div className="m-grid">
+                  <div className="m-fld">
+                    <label htmlFor="sub-stage">المرحلة الدراسية</label>
+                    <Select
+                      inputId="sub-stage"
+                      value={this.state.selectedStage}
+                      options={gradesList}
+                      placeholder="إختر المرحلة الدراسية"
+                      // The materials and the students used to be fetched
+                      // from here as well. Both lists now fetch when they are
+                      // opened, so doing it here too asked the server for the
+                      // same thing twice -- once on the change and once on the
+                      // open. getLessonsByStage stays: nothing opens a lesson
+                      // list, so this is its only trigger.
+                      onChange={(e) => {
+                        this.setState(
+                          { selectedStage: e.value },
+                          this.getLessonsByStage(
+                            e.value,
+                            this.state.selectedMaterial,
+                            this.state.selectedPeriod
+                          )
+                        );
+                      }}
+                      optionLabel="label"
+                      showClear
+                      loading={this.state.stagesLoading}
+                      onOpen={this.getSchoolStages}
+                    />
                   </div>
-                  {/* <div className="p-col-12 p-md-4">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                        <Dropdown
-                          value={this.state.selectedPeriod}
-                          options={periodList}
-                          placeholder="إختر الفترة"
-                          onChange={(e) =>
-                            this.setState({ selectedPeriod: e.value })
-                          }
-                          optionLabel="label"
-                          filter
-                          showClear
-                          filterBy="label"
-                        />
-                      </span>
-                    </div>
+
+                  <div className="m-fld">
+                    <label htmlFor="sub-material">المادة</label>
+                    <Select
+                      inputId="sub-material"
+                      value={this.state.selectedMaterial}
+                      options={materialList}
+                      placeholder="إختر المادة"
+                      // getPeriod used to run from here too; the period
+                      // list fetches itself when opened.
+                      onChange={(e) =>
+                        this.setState({ selectedMaterial: e.value }
+                          ,this.getLessonsByStage(
+                            this.state.selectedStage,
+                            e.value,
+                            this.state.selectedPeriod
+                          ),
+                          )
+                      }
+                      optionLabel="label"
+                      showClear
+                      loading={this.state.materialsLoading}
+                      needs={this.state.selectedStage}
+                      needsLabel="اختر المرحلة الدراسية أولاً"
+                      onOpen={() => this.getMaterialByStage(this.state.selectedStage)}
+                    />
                   </div>
-                  <div className="p-col-12 p-md-4">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                        <Dropdown
-                          value={this.state.selectedMaterial}
-                          options={materialList}
-                          placeholder="إختر المادة"
-                          onChange={(e) =>
-                            this.setState({ selectedMaterial: e.value })
-                          }
-                          optionLabel="label"
-                          filter
-                          showClear
-                          filterBy="label"
-                        />
-                      </span>
-                    </div>
-                  </div> */}
-                  <div className="p-col-12 p-md-4">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                        <InputText
-                          id="cost"
-                          value={this.state.cost}
-                          name="cost"
-                          type="text"
-                          onChange={(e) => {
-                            this.setState({ cost: e.target.value });
-                          }}
-                        />
-                        <label htmlFor="cost">السعر</label>
-                      </span>
-                    </div>
+
+                  <div className="m-fld">
+                    <label htmlFor="sub-period">الفترة</label>
+                    <Select
+                      inputId="sub-period"
+                      value={this.state.selectedPeriod}
+                      options={periods}
+                      placeholder="  إختر الفترة "
+                      onChange={(e) =>
+                        this.setState({ selectedPeriod: e.value },
+                          this.getLessonsByStage(
+                            this.state.selectedStage,
+                            this.state.selectedMaterial,
+                            e.value
+                          ),
+                          )
+                      }
+                      optionLabel="label"
+                      showClear
+                      loading={this.state.periodsLoading}
+                      needs={this.state.selectedMaterial}
+                      needsLabel="اختر المادة أولاً"
+                      onOpen={() => this.getPeriod(this.state.selectedMaterial)}
+                    />
                   </div>
-                  <div className="p-col-12 p-md-12 p-mt-2">
-                    <div className="p-inputgroup">
-                      <span className="p-float-label">
-                        <Button
-                          className={`add-button ${this.state.buttonColor}`}
-                          label={this.state.buttonText}
-                        />
-                      </span>
-                    </div>
+
+                  <div className="m-fld">
+                    <label htmlFor="sub-student">الطالب</label>
+                    <Select
+                      inputId="sub-student"
+                      value={this.state.selectedStudent}
+                      options={studentNames}
+                      placeholder="إختر طالب"
+                      onChange={(e) =>
+                        this.setState({ selectedStudent: e.value })
+                      }
+                      optionLabel="label"
+                      showClear
+                      loading={this.state.studentsLoading}
+                      needs={this.state.selectedStage}
+                      needsLabel="اختر المرحلة الدراسية أولاً"
+                      // the same call the stage picker makes: it re-sets the
+                      // stage to what it already is and refetches its students
+                      onOpen={() => this.getStudentsByStageID({ value: this.state.selectedStage })}
+                    />
+                  </div>
+
+                  <div className="m-fld">
+                    <label htmlFor="cost">السعر</label>
+                    <InputText
+                      id="cost"
+                      value={this.state.cost}
+                      name="cost"
+                      type="text"
+                      placeholder="مثال: 150"
+                      onChange={(e) => {
+                        this.setState({ cost: e.target.value });
+                      }}
+                    />
                   </div>
                 </div>
               </form>
-            </Card>
+            </div>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 }

@@ -17,17 +17,21 @@ import "./SlidePanel.scss";
  * The built-in close icon is off, so the × can live in the panel's own
  * header beside the title rather than floating over the content.
  *
- * `.m-panel-slot` is an empty element in that header. A form mounted inside
- * can portal its own submit button into it, which is how the title, the
- * action and the × end up on one row without the button leaving the form's
- * React tree -- see AddLesson.
+ * The header's middle holds the panel's primary action. There are two ways
+ * to put one there:
+ *
+ *  - pass `actions`, when whoever opens the panel also owns the handler
+ *    (Materials does: adding a material is one click, not a form submit);
+ *  - or portal into `.m-panel-slot` from inside, when the action belongs to
+ *    a form that is mounted in the panel and must stay in its React tree
+ *    (AddLesson does, so its button keeps the form's own state).
  *
  * blockScroll also matters for the look, not just the scrolling: it is what
  * puts the class on PrimeReact's mask that SlidePanel.scss needs in order to
  * find it. The mask is created imperatively on <body> with only the generic
  * .p-component-overlay class otherwise, which dialogs share.
  */
-const SlidePanel = ({ visible, onHide, title, subtitle, children }) => (
+const SlidePanel = ({ visible, onHide, title, subtitle, actions, children }) => (
   <Sidebar
     visible={visible}
     onHide={onHide}
@@ -44,7 +48,7 @@ const SlidePanel = ({ visible, onHide, title, subtitle, children }) => (
       </div>
 
       {/* whatever is inside puts its primary action here */}
-      <div className="m-panel-slot"></div>
+      <div className="m-panel-slot">{actions}</div>
 
       <button
         type="button"

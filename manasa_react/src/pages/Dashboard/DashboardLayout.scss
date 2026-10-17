@@ -225,14 +225,15 @@ $d-line: #e3eaec;
     }
 
     .rail-top {
+        position: relative;
         width: 100%;
         min-height: 52px;
         display: flex;
         align-items: center;
         gap: 13px;
         padding: 0 13px;
-        border: 1px solid transparent;
-        border-radius: 13px;
+        border: 0;
+        border-radius: 9px;
         background: transparent;
         color: $d-dim;
         cursor: pointer;
@@ -276,14 +277,50 @@ $d-line: #e3eaec;
 
         &:hover {
             background: rgba(255, 255, 255, 0.07);
-            border-color: $gold-soft;
             color: $white;
         }
     }
 
+    // ---- where you are ----
+    // No bar on the rail's edge any more: the heading takes the full text
+    // colour and its glyph takes the gold, which is enough to find at a
+    // glance without a second mark outside the row.
+    .rail-top.here {
+        color: $white;
+
+        > .pi:first-child {
+            background: $gold-soft;
+            color: $yellow;
+        }
+    }
+
+    // A child that is the current page: the text takes the colour, not a
+    // plate behind it. Hover already paints a plate, so a plate here would
+    // have made "where I am" and "where the pointer is" the same signal.
+    .rail-kids a.here {
+        background: transparent;
+        color: $yellow;
+
+        .dot {
+            opacity: 1;
+            background: $yellow;
+            transform: scale(1.25);
+        }
+
+        // and it keeps its colour under the pointer
+        &:hover { color: $yellow; }
+    }
+
+    // the open section's own heading already carries gold; the bar is enough
+    .rail-sec.open > .rail-top.here > .pi:first-child {
+        background: $yellow;
+        color: #2e2300;
+    }
+
+    // No outline on the open row: the plate behind it already separates it,
+    // and a border on top of a plate is the same edge drawn twice.
     .rail-sec.open > .rail-top {
         background: $gold-soft;
-        border-color: $gold-line;
         color: $white;
 
         // against ink there is room for gold to carry the whole open row --
@@ -314,7 +351,7 @@ $d-line: #e3eaec;
             min-height: 40px;
             padding: 0 13px;
             margin-inline-start: 31px;
-            border-radius: 9px;
+            border-radius: 7px;
             color: $d-link;
             text-decoration: none;
             // SemiBold on this project's remapped Cairo scale -- one step up

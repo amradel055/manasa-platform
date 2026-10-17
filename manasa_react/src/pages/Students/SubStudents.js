@@ -1,6 +1,5 @@
 import React, { Component, createRef } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { Dialog } from "primereact/dialog";
 // CSS
 import "./Students.scss";
 
@@ -10,12 +9,17 @@ import { apiFetch } from "../../Helper/Api";
 
 // Components
 import Header from "../../components/Header/Header";
+import TableShell from "../../components/Table/TableShell";
+import TableEmpty from "../../components/Table/TableEmpty";
+import Select from "../../components/Field/Select";
+import Modal from "../../components/Modal/Modal";
+import Confirm from "../../components/Modal/Confirm";
+import "../../components/Field/Form.scss";
 import { Toast } from "primereact/toast";
 import { Card } from "primereact/card";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
-import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 
 // Properties
@@ -50,89 +54,131 @@ class SubStudents extends Component {
     studentEmail: null,
     studentCode: null,
 
+    // the rows and the period list are both fetched on mount
+    tableLoading: true,
+    periodsLoading: true,
+
+    // A request is in flight. One flag each, so a slow reset cannot grey out
+    // a delete, and neither can grey out the other's button.
+    deleting: false,
+    resetting: false,
+
+    // The row waiting on a yes, or null -- one for each question this page
+    // asks. The row itself rather than a boolean, so the question can name
+    // the student it is about.
+    confirmDelete: null,
+    confirmReset: null,
   };
   getPeriods = () => {
+    // inside the fetch, so opening the list reports the wait too
+    this.setState({ periodsLoading: true });
+
     apiFetch("/periods")
       .then((fetchPeriods) => {
         this.setState({
           getPeriodsList: fetchPeriods,
+          periodsLoading: false,
         });
       })
-      .catch((error) => console.error("Error:", error));
+      .catch((error) => {
+        // the wait ends on failure too, or the field spins for ever
+        this.setState({ periodsLoading: false });
+        console.error("Error:", error);
+      });
   };
 
   getStudents = (periodId) => {
+    // Every call announces itself, not just the first: this runs again after
+    // a delete, and a silent refetch reads as though nothing happened. The
+    // rows go with it so the waiting row has somewhere to appear -- the
+    // empty state only renders while the table is empty.
+    this.setState({ tableLoading: true, data: [] });
+
     apiFetch("/students/enrollments", { query: { periodId } })
       .then((fetchStudents) => {
         this.setState({
           data: fetchStudents,
+          tableLoading: false,
         });
       })
-      .catch((error) => console.error("Error:", error));
+      .catch((error) => {
+        this.setState({ tableLoading: false });
+        console.error("Error:", error);
+      });
   };
 
   viewStudent = (R) => {};
 
+  // The confirmation that used to be window.confirm is the Confirm modal in
+  // the render below. The gate is the same -- this still only runs on a yes
+  // -- and the request, the toasts and the refetch under it are unchanged.
   deleteStudent = (id, studentId, pId) => {
     var _this = this;
 
-    // Confirm Deletion
-    var con = window.confirm("هل أنت متأكد من أنك تريد حذف هذا العنصر");
+    this.setState({ deleting: true });
 
-    if (con) {
-      apiFetch(`/students/enrollments/${id}`, { method: "DELETE" })
-        .then(() => {
-          _this.toast.current.show({
-            severity: "success",
-            summary: "تمت العملية",
-            detail: "تم الحذف بنجاح",
-          });
-          this.getStudents(pId);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-
-          _this.toast.current.show({
-            severity: "error",
-            summary: "لم تتم العملية",
-            detail: "خطأ في الإتصال",
-          });
+    apiFetch(`/students/enrollments/${id}`, { method: "DELETE" })
+      .then(() => {
+        this.setState({ deleting: false, confirmDelete: null });
+        _this.toast.current.show({
+          severity: "success",
+          summary: "تمت العملية",
+          detail: "تم الحذف بنجاح",
         });
-    }
+        this.getStudents(pId);
+      })
+      .catch((error) => {
+        // the question stays open on failure, so it can be retried
+        this.setState({ deleting: false });
+        console.error("Error:", error);
+
+        _this.toast.current.show({
+          severity: "error",
+          summary: "لم تتم العملية",
+          detail: "خطأ في الإتصال",
+        });
+      });
   };
 
   /** Passwords are bcrypt-hashed now (never shown in plaintext) -- this generates and shows a NEW one. */
   resetStudent = (studentProfileId) => {
     var _this = this;
 
-    var con = window.confirm("هل أنت متأكد من أنك تريد اعادة ضبط كلمة المرور لهذا الطالب؟ سيتم إنشاء كلمة مرور جديدة");
+    this.setState({ resetting: true });
 
-    if (con) {
-      apiFetch(`/students/${studentProfileId}/reset-password`, { method: "POST" })
-        .then((result) => {
-          this.setState({ studentPassword: result.newPassword, visible: true, studentId: studentProfileId });
-          _this.toast.current.show({
-            severity: "success",
-            summary: "تمت العملية",
-            detail: "تم إنشاء كلمة مرور جديدة",
-          });
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-
-          _this.toast.current.show({
-            severity: "error",
-            summary: "لم تتم العملية",
-            detail: "خطأ في الإتصال",
-          });
+    apiFetch(`/students/${studentProfileId}/reset-password`, { method: "POST" })
+      .then((result) => {
+        // the question closes and the new password takes its place
+        this.setState({
+          studentPassword: result.newPassword,
+          visible: true,
+          studentId: studentProfileId,
+          resetting: false,
+          confirmReset: null,
         });
-    }
+        _this.toast.current.show({
+          severity: "success",
+          summary: "تمت العملية",
+          detail: "تم إنشاء كلمة مرور جديدة",
+        });
+      })
+      .catch((error) => {
+        this.setState({ resetting: false });
+        console.error("Error:", error);
+
+        _this.toast.current.show({
+          severity: "error",
+          summary: "لم تتم العملية",
+          detail: "خطأ في الإتصال",
+        });
+      });
   };
 
  
 
   componentDidMount() {
-    this.getPeriods();
+    // Not fetched here any more: the period list fetches when it is opened
+    // (see the Select's onOpen), and doing both asked for it twice.
     this.getStudents();
 
     document.title = properties.site_name + " | طلابي";
@@ -152,38 +198,39 @@ class SubStudents extends Component {
     });
     const header = (
       <div className="table-header">
-        عدد الطلاب
-        <span>{this.state.data.length}</span>
-        <div className="p-col-12 p-md-4">
-          <div className="p-inputgroup">
-            <span className="p-float-label">
-              <Dropdown
-                value={this.state.selectedPeriod}
-                options={periodList}
-                placeholder="إختر الفترة"
-                onChange={(e) => {
-                  this.setState({
-                    selectedPeriod: e.value,
-                    globalFilter: e.lable,
-                  });
-
-                  this.getStudents(e.value);
-                }}
-                optionLabel="label"
-                filter
-                showClear
-                filterBy="label"
-              />
-            </span>
-          </div>
-        </div>
-        <span className="p-input-icon-left">
+        <span className="p-input-icon-left m-tool-search">
           <i className="pi pi-search" />
           <InputText
             type="search"
             onInput={(e) => this.setState({ globalFilter: e.target.value })}
             placeholder="بحث في الطلاب"
           />
+        </span>
+
+        <div className="m-tool-stage">
+          <Select
+            value={this.state.selectedPeriod}
+            options={periodList}
+            placeholder="إختر الفترة"
+            onChange={(e) => {
+              this.setState({
+                selectedPeriod: e.value,
+                globalFilter: e.lable,
+              });
+
+              this.getStudents(e.value);
+            }}
+            optionLabel="label"
+            showClear
+            loading={this.state.periodsLoading}
+            onOpen={this.getPeriods}
+          />
+        </div>
+
+        {/* the count was loose text between the controls; it is a figure, so
+            it is drawn as one */}
+        <span className="m-tool-count">
+          عدد الطلاب <b>{this.state.data.length}</b>
         </span>
       </div>
     );
@@ -194,12 +241,12 @@ class SubStudents extends Component {
           <Button
             icon="pi pi-refresh"
             className="p-button-rounded p-button-warning p-ml-2"
-            onClick={() => this.resetStudent(rowData.studentProfileId)}
+            onClick={() => this.setState({ confirmReset: rowData })}
           />
           <Button
             icon="pi pi-trash"
             className="p-button-rounded p-button-danger"
-            onClick={() => this.deleteStudent(rowData.id, rowData.studentProfileId, rowData.periodId)}
+            onClick={() => this.setState({ confirmDelete: rowData })}
           />
         </React.Fragment>
       );
@@ -213,10 +260,46 @@ class SubStudents extends Component {
 
         <Toast ref={this.toast}></Toast>
 
+        {/* the two questions that used to be the browser's */}
+        <Confirm
+          visible={this.state.confirmDelete !== null}
+          onHide={() => this.setState({ confirmDelete: null })}
+          onConfirm={() =>
+            this.deleteStudent(
+              this.state.confirmDelete.id,
+              this.state.confirmDelete.studentProfileId,
+              this.state.confirmDelete.periodId
+            )
+          }
+          busy={this.state.deleting}
+          title="حذف اشتراك طالب"
+          message={`هل أنت متأكد من حذف «${this.state.confirmDelete ? this.state.confirmDelete.studentName : ""}» من هذه الفترة؟`}
+          note="سيفقد الطالب وصوله إلى حصص هذه الفترة. لا يمكن التراجع عن هذه الخطوة."
+          confirmLabel="نعم، احذف"
+          busyLabel="جارٍ الحذف…"
+        />
+
+        <Confirm
+          visible={this.state.confirmReset !== null}
+          onHide={() => this.setState({ confirmReset: null })}
+          onConfirm={() => this.resetStudent(this.state.confirmReset.studentProfileId)}
+          busy={this.state.resetting}
+          tone="brand"
+          icon="pi pi-refresh"
+          title="إعادة ضبط كلمة المرور"
+          message={`إنشاء كلمة مرور جديدة لـ «${this.state.confirmReset ? this.state.confirmReset.studentName : ""}»؟`}
+          note="كلمة المرور الحالية ستتوقف عن العمل فوراً، وستظهر الجديدة مرة واحدة فقط."
+          confirmLabel="نعم، أنشئ كلمة مرور"
+          busyLabel="جارٍ الإنشاء…"
+        />
+
         <div className="content">
           <div className="container">
             <div className="card">
-              <Card title="طلابي">
+              {/* no title: the page header above already says it */}
+              <Card>
+                {/* presentation only -- see components/Table/TableShell.js */}
+                <TableShell>
                 <DataTable
                   header={header}
                   sortable
@@ -224,51 +307,69 @@ class SubStudents extends Component {
                   className="p-datatable-responsive-demo p-datatable-gridlines p-datatable-striped"
                   value={this.state.data}
                   paginator
+                  paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown CurrentPageReport"
                   rows={10}
                   rowsPerPageOptions={[10, 20, 50]}
-                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
-                  emptyMessage="لا يوجد طلاب"
+                  currentPageReportTemplate="عرض {first} – {last} من {totalRecords} طالب"
+                  emptyMessage={
+                    <TableEmpty
+                      loading={this.state.tableLoading}
+                      icon="pi pi-user"
+                      title="لا يوجد طلاب"
+                      hint="اختر فترة من القائمة أعلاه، أو فعّل اشتراك طالب جديد"
+                    />
+                  }
                 >
+                  {/* no column filters: the search above covers all three of
+                      these columns and the period picker covers the third on
+                      its own, and the empty boxes cost a whole row above every
+                      table without saying what they filtered */}
                   <Column
-                    filter
                     sortable
                     field="studentName"
                     header="إسم الطالب"
                   ></Column>
                   <Column
-                    filter
                     sortable
                     field="studentMobile"
                     header="رقم التلفون"
                   ></Column>
                   <Column
-                    filter
                     sortable
                     field="periodName"
                     header="الفترة"
                   ></Column>
 
                   <Column
-                    header=" اعاده الضبط/رؤيه / بياتات / حذف"
+                    header="الإجراءات"
+                    headerStyle={{ width: "124px" }}
+                    bodyStyle={{ width: "124px" }}
                     body={actionBodyTemplate}
                   ></Column>
                 </DataTable>
+                </TableShell>
               </Card>
             </div>
           </div>
-          <Dialog
-
-            header="بيانات الطالب"
+          {/* shown once, and only once: there is no second chance to read
+              it, so it gets its own modal rather than a toast */}
+          <Modal
             visible={this.state.visible}
-            style={{ width: "50vw" }}
             onHide={() => this.setState({ visible: false })}
+            title="بيانات الطالب"
+            subtitle="كلمة المرور الجديدة — انسخها الآن"
+            actions={<Button label="تم" onClick={() => this.setState({ visible: false })} />}
           >
-            <div className="p-col-12">
-              <label>كلمة المرور الجديدة</label>
-              <InputText readOnly tooltip="كلمة المرور الجديدة" value={this.state.studentPassword}></InputText>
-              <p>يرجى إرسال كلمة المرور هذه للطالب -- لن تظهر مرة أخرى.</p>
+            <div className="m-form">
+              <div className="m-grid">
+                <div className="m-fld">
+                  <label htmlFor="new-password">كلمة المرور الجديدة</label>
+                  <InputText id="new-password" dir="ltr" readOnly tooltip="كلمة المرور الجديدة" value={this.state.studentPassword}></InputText>
+                  <span className="m-note">يرجى إرسال كلمة المرور هذه للطالب -- لن تظهر مرة أخرى.</span>
+                </div>
+              </div>
             </div>
-          </Dialog>
+          </Modal>
         </div>
       </>
     );

@@ -1,4 +1,5 @@
 import React, {Component, createRef} from 'react';
+import ReactDOM from 'react-dom';
 
 // CSS
 import './Gallery.scss';
@@ -13,7 +14,7 @@ import Header from '../../components/Header/Header';
 import { Card } from 'primereact/card';
 import { FileUpload } from 'primereact/fileupload';
 import { Toast } from 'primereact/toast';
-import { Dropdown } from 'primereact/dropdown';
+import Select from '../../components/Field/Select';
 import { Button } from 'primereact/button';
 
 // Properties
@@ -26,6 +27,10 @@ class AddItem extends Component {
     }
 
     state = {
+        // The modal footer's slot, when this form is open inside one. Null on
+        // the standalone route, where the button keeps its place in the form.
+        footerSlot: null,
+
         // Submit Button
         buttonText: "إضافة صورة/فيديو",
         buttonColor: "",
@@ -40,6 +45,13 @@ class AddItem extends Component {
     }
 
     componentDidMount() {
+        // Opened inside a modal? Then the save button belongs in its footer.
+        // It is portalled there, so it stays in THIS component's tree and its
+        // label and colour are still driven from this state; `form` on it is
+        // what keeps a native submit working from outside the <form>.
+        const slot = document.querySelector(".m-modal-slot");
+        if (slot) this.setState({ footerSlot: slot });
+
         document.title = `${properties.site_name} | إضافة صورة/فيديو جديد`;
 
         // Redirect To Sign In Page If The User Is Already Logged Out & Remove The Data If It Exists
@@ -121,12 +133,12 @@ class AddItem extends Component {
 
                     <div className="container">
                         <Card title="إدخال صورة/فيديو جديد">
-                            <form onSubmit={addMedia} action="#" method="POST">
+                            <form id="add-media-form" onSubmit={addMedia} action="#" method="POST">
                                 <div className="p-grid p-fluid">
                                     <div className="p-col-12 p-md-4 p-mt-3">
                                         <div className="p-inputgroup">
                                             <span className="p-float-label">
-                                                <Dropdown value={this.state.formContent.mediaType} options={mediaType} onChange={(e) => this.setState({formContent: {
+                                                <Select value={this.state.formContent.mediaType} options={mediaType} onChange={(e) => this.setState({formContent: {
                                                     ...this.state.formContent,
                                                     mediaType: e.value
                                                 }})} name="videoType" placeholder="نوع الملف"/>
@@ -153,7 +165,12 @@ class AddItem extends Component {
                                     <div className="p-col-12 p-md-12">
                                         <div className="p-inputgroup">
                                             <span className="p-float-label">
-                                                <Button className={`add-button ${this.state.buttonColor}`} label={this.state.buttonText}/>
+                                                {this.state.footerSlot
+                                                  ? ReactDOM.createPortal(
+                                                      <Button type="submit" form="add-media-form" className={`add-button ${this.state.buttonColor}`} label={this.state.buttonText}/>,
+                                                      this.state.footerSlot
+                                                    )
+                                                  : <Button className={`add-button ${this.state.buttonColor}`} label={this.state.buttonText}/>}
                                             </span>
                                         </div>
                                     </div>

@@ -1,6 +1,5 @@
 import React, {Component, createRef} from 'react';
 import {Link, NavLink} from 'react-router-dom';
-import { Dropdown } from 'primereact/dropdown';
 import {Dialog} from 'primereact/dialog'
 import Popup from 'reactjs-popup';
 // CSS
@@ -12,6 +11,9 @@ import { apiFetch } from '../../Helper/Api';
 
 // Components
 import Header from '../../components/Header/Header';
+import TableShell from '../../components/Table/TableShell';
+import TableEmpty from '../../components/Table/TableEmpty';
+import Confirm from '../../components/Modal/Confirm';
 import { Toast } from 'primereact/toast';
 import { Card } from 'primereact/card';
 import { DataTable } from 'primereact/datatable';
@@ -37,19 +39,43 @@ class AllStudents extends Component {
         // Data
         data: [],
 
+        // the requests are fetched on mount
+        tableLoading: true,
+
+        // A request is in flight. One flag each: activating one student must
+        // not grey out the buttons on another row.
+        activating: false,
+        deleting: false,
+
+        // the row waiting on a yes, or null -- one per question. The row
+        // itself, so each question can name the student it is about.
+        confirmActivate: null,
+        confirmDelete: null,
+
         // Update Data
-        resend: false , 
-        visible : false 
+        resend: false ,
+        visible : false
     }
-    
+
     getStudents = () => {
+        // Every call, not just the first: componentDidUpdate runs this again
+        // after an activation or a rejection, and a silent refetch reads as
+        // though nothing happened. The rows go with it so the waiting row
+        // has somewhere to appear.
+        this.setState({ tableLoading: true, data: [] });
+
         apiFetch("/students/period-orders", { query: { branchId: this.state.branchID } })
         .then(fetchStudents => {
             this.setState({
-                data: fetchStudents
+                data: fetchStudents,
+                tableLoading: false
             });
         })
-        .catch(error => console.error("Error:", error));
+        .catch(error => {
+            // the wait ends on failure too, or the table waits for ever
+            this.setState({ tableLoading: false });
+            console.error("Error:", error);
+        });
     }
 
     viewStudent =(R)=>{
@@ -57,34 +83,44 @@ class AllStudents extends Component {
 
     }
 
+    // The confirmation that used to be window.confirm is the Confirm modal
+    // in the render below. The gate is the same -- this still only runs on a
+    // yes -- and the request, the toasts and the `resend` flip that triggers
+    // the refetch are unchanged.
     deleteStudent = (periodOrderId) => {
         var _this = this;
 
-        // Confirm Deletion
-        var con = window.confirm("هل أنت متأكد من أنك تريد حذف هذا العنصر");
+        this.setState({ deleting: true });
 
-        if (con) {
-            apiFetch(`/students/period-orders/${periodOrderId}`, { method: "DELETE" })
-            .then(() => {
-                this.setState({resend: true});
-                _this.toast.current.show({severity: 'success', summary: 'تمت العملية', detail: 'تم الحذف بنجاح'});
-            })
-            .catch(error => {
-                console.error('Error:', error)
-                _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
-            });
-        }
+        apiFetch(`/students/period-orders/${periodOrderId}`, { method: "DELETE" })
+        .then(() => {
+            this.setState({resend: true, deleting: false, confirmDelete: null});
+            _this.toast.current.show({severity: 'success', summary: 'تمت العملية', detail: 'تم الحذف بنجاح'});
+        })
+        .catch(error => {
+            // the question stays open on failure, so it can be retried
+            this.setState({ deleting: false });
+            console.error('Error:', error)
+            _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
+        });
     }
 
+    // NOTE -- this one gained a confirmation it did not have. Activating a
+    // request grants a student paid access to a whole period, and it was a
+    // single click on a small round button beside a delete button of the
+    // same size. The request itself is untouched.
     editStudent = (periodOrderId) => {
         var _this = this;
 
+        this.setState({ activating: true });
+
         apiFetch(`/students/period-orders/${periodOrderId}/confirm`, { method: "POST" })
         .then(() => {
-            this.setState({resend: true});
+            this.setState({resend: true, activating: false, confirmActivate: null});
             _this.toast.current.show({severity: 'success', summary: 'تمت العملية', detail: 'تم الاشتراك بنجاح'});
         })
         .catch(error => {
+            this.setState({ activating: false });
             console.error('Error:', error)
             _this.toast.current.show({severity: 'error', summary: 'لم تتم العملية', detail: 'خطأ في الإتصال'});
         });
@@ -110,20 +146,24 @@ class AllStudents extends Component {
     }
 
         render() {
-       
-    
+
+
         const header = (
             <div className="table-header">
-                عدد الطلاب
-                <span>{this.state.data.length}</span>
-                <span className="p-input-icon-left">
+                <span className="p-input-icon-left m-tool-search">
                     <i className="pi pi-search" />
                     <InputText type="search" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="بحث في الطلاب" />
                 </span>
+
+                {/* the count was loose text beside the search; it is a figure,
+                    so it is drawn as one */}
+                <span className="m-tool-count">
+                    عدد الطلبات <b>{this.state.data.length}</b>
+                </span>
             </div>
         );
-        
-       
+
+
         const showResetPopUp = (rowData) => {
             this.setState({ visible: true, studentId: rowData.studentId });
           };
@@ -131,21 +171,24 @@ class AllStudents extends Component {
         const actionBodyTemplate = (rowData) => {
             return (
                 <React.Fragment>
-                    <Button icon="pi pi-eye" className="p-button-rounded p-button-secondary p-ml-2" onClick={() => window.location.href = `exams/view/${rowData.id}`} />
+                    {/* Two things were wrong with this link. The route is
+                        /exams/view/:studentId -- a STUDENT id -- and it was
+                        being handed rowData.id, which is the period-order's.
+                        And the path was relative, so where it landed depended
+                        on the page it was clicked from. */}
+                    <Button icon="pi pi-eye" title="امتحانات الطالب" className="p-button-rounded p-button-secondary p-ml-2" onClick={() => window.location.href = `/exams/view/${rowData.studentId}`} />
 
                     <Button
-            icon="pi pi-plus"
+            icon="pi pi-check"
+            title="تفعيل الاشتراك"
             className="p-button-rounded p-button-success p-ml-2"
-            onClick={() =>
-              this.editStudent(rowData.id)
-            }
+            onClick={() => this.setState({ confirmActivate: rowData })}
           />
           <Button
             icon="pi pi-trash"
+            title="رفض الطلب"
             className="p-button-rounded p-button-danger"
-            onClick={() =>
-              this.deleteStudent(rowData.id)
-            }
+            onClick={() => this.setState({ confirmDelete: rowData })}
           />                </React.Fragment>
             );
         }
@@ -155,27 +198,72 @@ class AllStudents extends Component {
 
                 <Toast ref={this.toast}></Toast>
 
+                {/* Activating grants access to a whole period, so it asks --
+                    it did not before. Rejecting asked through the browser's
+                    own dialog; now both ask the same way. */}
+                <Confirm
+                    visible={this.state.confirmActivate !== null}
+                    onHide={() => this.setState({ confirmActivate: null })}
+                    onConfirm={() => this.editStudent(this.state.confirmActivate.id)}
+                    busy={this.state.activating}
+                    tone="brand"
+                    icon="pi pi-user-plus"
+                    title="تفعيل اشتراك"
+                    message={`تفعيل اشتراك «${this.state.confirmActivate ? this.state.confirmActivate.studentFullName : ''}» في فترة «${this.state.confirmActivate ? this.state.confirmActivate.periodName : ''}»؟`}
+                    note="سيحصل الطالب على وصول كامل لحصص هذه الفترة."
+                    confirmLabel="نعم، فعّل"
+                    busyLabel="جارٍ التفعيل…"
+                />
+
+                <Confirm
+                    visible={this.state.confirmDelete !== null}
+                    onHide={() => this.setState({ confirmDelete: null })}
+                    onConfirm={() => this.deleteStudent(this.state.confirmDelete.id)}
+                    busy={this.state.deleting}
+                    title="رفض طلب اشتراك"
+                    message={`هل أنت متأكد من رفض طلب «${this.state.confirmDelete ? this.state.confirmDelete.studentFullName : ''}»؟`}
+                    note="سيُحذف الطلب من القائمة. لا يمكن التراجع عن هذه الخطوة."
+                    confirmLabel="نعم، ارفض"
+                    busyLabel="جارٍ الحذف…"
+                />
+
                 <div className="content">
                     <div className="container">
                         <div className="card">
-                            <Card title="تفعيل الطلاب">
-                                <DataTable header={header} sortable globalFilter={this.state.globalFilter} 
-                                className="p-datatable-responsive-demo p-datatable-gridlines p-datatable-striped" 
-                                value={this.state.data} paginator rows={10} rowsPerPageOptions={[10,20,50]} currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"  emptyMessage="لا يوجد طلاب">
-                                    <Column filter sortable field="studentFullName" header="إسم الطالب"></Column>
-                                    <Column filter sortable field="studentMobile" header="رقم التلفون"></Column>
-                                    <Column filter sortable field="periodName" header="الفتره "></Column>
-                                    <Column header=" رؤيه / اضافه / حذف " body={actionBodyTemplate}></Column>
-                                    
+                            {/* no title: the page header above already says it */}
+                            <Card>
+                                {/* presentation only -- see components/Table/TableShell.js */}
+                                <TableShell>
+                                <DataTable header={header} sortable globalFilter={this.state.globalFilter}
+                                className="p-datatable-responsive-demo p-datatable-gridlines p-datatable-striped"
+                                value={this.state.data} paginator
+                                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown CurrentPageReport"
+                                rows={10} rowsPerPageOptions={[10,20,50]} currentPageReportTemplate="عرض {first} – {last} من {totalRecords} طلب"
+                                emptyMessage={
+                                  <TableEmpty
+                                    loading={this.state.tableLoading}
+                                    icon="pi pi-user-plus"
+                                    title="لا يوجد طلبات اشتراك"
+                                    hint="عندما يسجّل طالب ويطلب فترة، سيظهر طلبه هنا لتفعّله"
+                                  />
+                                }>
+                                    {/* no column filters: the search above covers all
+                                        three of these columns on its own */}
+                                    <Column sortable field="studentFullName" header="إسم الطالب"></Column>
+                                    <Column sortable field="studentMobile" header="رقم التلفون"></Column>
+                                    <Column sortable field="periodName" header="الفتره "></Column>
+                                    <Column header="الإجراءات" headerStyle={{ width: '160px' }} bodyStyle={{ width: '160px' }} body={actionBodyTemplate}></Column>
+
                                 </DataTable>
+                                </TableShell>
                             </Card>
                         </div>
                     </div>
-               
+
                 </div>
             </>
         );
     }
 }
- 
+
 export default AllStudents;

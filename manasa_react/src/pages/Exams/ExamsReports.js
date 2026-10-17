@@ -15,7 +15,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import { Dropdown } from 'primereact/dropdown';
+import Select from '../../components/Field/Select';
 
 // Properties
 const properties = require('../../properties.json');
@@ -160,7 +160,7 @@ class ExamsReports extends Component {
                     <div className="p-my-4 ">
                             
                             <span className="p-px-4">
-                                <Dropdown className="p-dropDown-lg p-px-6 p-text-center" value={this.state.selectedExam} options={allExams} onChange={(e) => this.setState({selectedExam: e.value} , this.getData(e.value))} name="type" placeholder="اختر الامتحان"/>
+                                <Select className="p-dropDown-lg p-px-6 p-text-center" value={this.state.selectedExam} options={allExams} onChange={(e) => this.setState({selectedExam: e.value} , this.getData(e.value))} name="type" placeholder="اختر الامتحان"/>
                                </span>
                         
                         </div>

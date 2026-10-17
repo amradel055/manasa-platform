@@ -15,7 +15,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import { Dropdown } from 'primereact/dropdown';
+import Select from '../../components/Field/Select';
 
 // Properties
 const properties = require('../../properties.json');
@@ -162,7 +162,7 @@ class AllInbox extends Component {
                             <div className="p-col-12 p-md-4 p-mt-3 ">
                       <div className="p-inputgroup">
                         <span className="p-float-label">
-                          <Dropdown
+                          <Select
                             value={this.state.selectedSchoolStages}
                             options={schoolStages}
                             onChange={ (e) =>
@@ -189,7 +189,7 @@ class AllInbox extends Component {
                     <div className="p-col-12 p-md-4 p-mt-3">
                       <div className="p-inputgroup">
                         <span className="p-float-label">
-                          <Dropdown
+                          <Select
                             value={this.state.material}
                             options={materials}
                             onChange={(e) =>
@@ -213,7 +213,7 @@ class AllInbox extends Component {
                     <div className="p-col-12 p-md-4  p-mt-3">
             <div className="p-inputgroup">
               <span className="p-float-label">
-                <Dropdown
+                <Select
                   value={this.state.selectedType}
                   options={type}
                   placeholder="نوع السؤال"

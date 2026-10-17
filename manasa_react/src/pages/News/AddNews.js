@@ -13,7 +13,7 @@ import { Card } from 'primereact/card';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
-import { Dropdown } from 'primereact/dropdown';
+import Select from '../../components/Field/Select';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import {Dialog} from 'primereact/dialog' ;
@@ -219,15 +219,15 @@ class AddNews extends Component {
                             </div>
                         </div>
                         <span className="p-col-12 p-md-2">
-                                                <Dropdown value={this.state.type} options={typeList} onChange={(e) => this.setState({type: e.value})} name="type" placeholder="نوع الخبر"/>
+                                                <Select value={this.state.type} options={typeList} onChange={(e) => this.setState({type: e.value})} name="type" placeholder="نوع الخبر"/>
                                             </span>
                                             <span className="p-col-12 p-md-2   ">
-                                                <Dropdown value={this.state.active} options={active} onChange={(e) => this.setState({active: e.value})} name="type" placeholder="حالة الخبر"/>
+                                                <Select value={this.state.active} options={active} onChange={(e) => this.setState({active: e.value})} name="type" placeholder="حالة الخبر"/>
                         </span>
                         <div className="p-col-12 p-md-4">
                                         <div className="p-inputgroup">
                                             <span className="p-float-label">
-                                                <Dropdown value={this.state.schoolStageId} options={grades} onChange={(e) => this.setState({schoolStageId: e.value})} name="grade" placeholder="المرحلة الدراسية"/>
+                                                <Select value={this.state.schoolStageId} options={grades} onChange={(e) => this.setState({schoolStageId: e.value})} name="grade" placeholder="المرحلة الدراسية"/>
                                             </span>
                                         </div>
                                     </div>
@@ -327,15 +327,15 @@ class AddNews extends Component {
                                              </div>
                                          </div>
                                          <span className="p-col-12 p-md-4">
-                                                                 <Dropdown value={this.state.editableData["newsType"]} options={typeList} onChange={(e) =>  this.setState({editableData :{...this.state.editableData , newsType : e.value}})} name="type" placeholder="نوع الخبر"/>
+                                                                 <Select value={this.state.editableData["newsType"]} options={typeList} onChange={(e) =>  this.setState({editableData :{...this.state.editableData , newsType : e.value}})} name="type" placeholder="نوع الخبر"/>
                                                              </span>
                                                              <span className="p-col-12 p-md-4   ">
-                                                                 <Dropdown value={this.state.editableData["active"]} options={active} onChange={(e) =>  this.setState({editableData :{...this.state.editableData , active : e.value}})} name="type" placeholder="حالة الخبر"/>
+                                                                 <Select value={this.state.editableData["active"]} options={active} onChange={(e) =>  this.setState({editableData :{...this.state.editableData , active : e.value}})} name="type" placeholder="حالة الخبر"/>
                                          </span>
                                          <div className="p-col-12 p-md-4">
                                                          <div className="p-inputgroup">
                                                              <span className="p-float-label">
-                                                                 <Dropdown value={this.state.editableData["schoolStageId"]} options={grades} onChange={(e) =>  this.setState({editableData :{...this.state.editableData , schoolStageId : e.value}})} name="grade" placeholder="المرحلة الدراسية"/>
+                                                                 <Select value={this.state.editableData["schoolStageId"]} options={grades} onChange={(e) =>  this.setState({editableData :{...this.state.editableData , schoolStageId : e.value}})} name="grade" placeholder="المرحلة الدراسية"/>
                                                              </span>
                                                          </div>
                                                      </div>

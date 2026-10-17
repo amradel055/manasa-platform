@@ -9,6 +9,12 @@ import { apiFetch } from "../../Helper/Api";
 
 // Components
 import Header from "../../components/Header/Header";
+import TableShell from "../../components/Table/TableShell";
+import TableEmpty from "../../components/Table/TableEmpty";
+import Modal from "../../components/Modal/Modal";
+import Confirm from "../../components/Modal/Confirm";
+import AddSubscription from "./AddSubscription";
+import "../../components/Field/Form.scss";
 import { Toast } from "primereact/toast";
 import { Card } from "primereact/card";
 import { DataTable } from "primereact/datatable";
@@ -27,6 +33,18 @@ class AllSubscriptions extends Component {
 
   state = {
     globalFilter: null,
+
+    // whether the add-a-subscription modal is open. The modal mounts the very
+    // same AddSubscription component the /subscriptions/add route mounts,
+    // with its own state and its own submit -- that route still works.
+    addOpen: false,
+
+    // the rows are fetched on mount
+    tableLoading: true,
+
+    // a delete is in flight, and the row waiting on a yes
+    deleting: false,
+    confirmRow: null,
 
     // Teacher Identifier
     branchID: properties.branch_id,
@@ -55,42 +73,54 @@ class AllSubscriptions extends Component {
   };
 
   getSubscriptions = () => {
+    // Every call, not just the first: this runs again after a delete, and a
+    // silent refetch reads as though nothing happened. The rows go with it
+    // so the waiting row has somewhere to appear.
+    this.setState({ tableLoading: true, data: [] });
+
     apiFetch("/students/enrollments")
       .then((fetchStudents) => {
         this.setState({
           data: fetchStudents,
+          tableLoading: false,
         });
       })
-      .catch((error) => console.error("Error:", error));
+      .catch((error) => {
+        // the wait ends on failure too, or the table waits for ever
+        this.setState({ tableLoading: false });
+        console.error("Error:", error);
+      });
   };
 
+  // The confirmation that used to be window.confirm is the Confirm modal in
+  // the render below. The gate is the same -- this still only runs on a yes
+  // -- and the request, the toasts and the refetch under it are unchanged.
   deleteSubscription = (id) => {
     var _this = this;
 
-    // Confirm Deletion
-    var con = window.confirm("هل أنت متأكد من أنك تريد حذف هذا العنصر");
+    this.setState({ deleting: true });
 
-    if (con) {
-      apiFetch(`/students/enrollments/${id}`, { method: "DELETE" })
-        .then(() => {
-          this.setState({ resend: true });
-          _this.toast.current.show({
-            severity: "success",
-            summary: "تمت العملية",
-            detail: "تم الحذف بنجاح",
-          });
-          this.getSubscriptions()
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-
-          _this.toast.current.show({
-            severity: "error",
-            summary: "لم تتم العملية",
-            detail: "خطأ في الإتصال",
-          });
+    apiFetch(`/students/enrollments/${id}`, { method: "DELETE" })
+      .then(() => {
+        this.setState({ resend: true, deleting: false, confirmRow: null });
+        _this.toast.current.show({
+          severity: "success",
+          summary: "تمت العملية",
+          detail: "تم الحذف بنجاح",
         });
-    }
+        this.getSubscriptions()
+      })
+      .catch((error) => {
+        // the question stays open on failure, so it can be retried
+        this.setState({ deleting: false });
+        console.error("Error:", error);
+
+        _this.toast.current.show({
+          severity: "error",
+          summary: "لم تتم العملية",
+          detail: "خطأ في الإتصال",
+        });
+      });
   };
 
   componentDidMount() {
@@ -116,15 +146,17 @@ class AllSubscriptions extends Component {
   render() {
     const header = (
       <div className="table-header">
-        عدد الإشتراكات
-        <span>{this.state.data.length}</span>
-        <span className="p-input-icon-left">
+        <span className="p-input-icon-left m-tool-search">
           <i className="pi pi-search" />
           <InputText
             type="search"
             onInput={(e) => this.setState({ globalFilter: e.target.value })}
             placeholder="بحث في الإشتراكات"
           />
+        </span>
+
+        <span className="m-tool-count">
+          عدد الإشتراكات <b>{this.state.data.length}</b>
         </span>
       </div>
     );
@@ -136,7 +168,8 @@ class AllSubscriptions extends Component {
           <Button
             icon="pi pi-trash"
             className="p-button-rounded p-button-danger"
-            onClick={() => this.deleteSubscription(rowData.id)}
+            title="حذف الإشتراك"
+            onClick={() => this.setState({ confirmRow: rowData })}
           />
         </React.Fragment>
       );
@@ -144,14 +177,49 @@ class AllSubscriptions extends Component {
 
     return (
       <>
-        <Header pageName="كل إشتراكات الشهور" />
+        <Header
+          pageName="كل إشتراكات الشهور"
+          action={{ label: "إشتراك فترة جديد", icon: "pi pi-plus", onClick: () => this.setState({ addOpen: true }) }}
+        />
 
         <Toast ref={this.toast}></Toast>
+
+        {/* The same AddSubscription the /subscriptions/add route mounts, in
+            a modal instead of a page of its own. It is mounted only while the
+            modal is open, so each opening starts from a clean form and its
+            lookups are fetched then -- exactly as arriving at the route does.
+            `slot` gives its submit button somewhere to land in the footer. */}
+        <Modal
+          visible={this.state.addOpen}
+          onHide={() => this.setState({ addOpen: false })}
+          title="إشتراك فترة جديد"
+          subtitle="اختر المرحلة والمادة والفترة، ثم الطالب والسعر"
+          width={780}
+          slot
+        >
+          {this.state.addOpen ? <AddSubscription /> : null}
+        </Modal>
+
+        {/* the question that used to be the browser's */}
+        <Confirm
+          visible={this.state.confirmRow !== null}
+          onHide={() => this.setState({ confirmRow: null })}
+          onConfirm={() => this.deleteSubscription(this.state.confirmRow.id)}
+          busy={this.state.deleting}
+          title="حذف إشتراك"
+          message={`هل أنت متأكد من حذف إشتراك «${this.state.confirmRow ? this.state.confirmRow.studentName : ""}»؟`}
+          note="سيفقد الطالب وصوله إلى حصص هذه الفترة. لا يمكن التراجع عن هذه الخطوة."
+          confirmLabel="نعم، احذف"
+          busyLabel="جارٍ الحذف…"
+        />
 
         <div className="content">
           <div className="container">
             <div className="card">
-              <Card title="كل إشتراكات الشهور">
+              {/* no title: the page header above already says it */}
+              <Card>
+                {/* presentation only -- see components/Table/TableShell.js */}
+                <TableShell>
                 <DataTable
                   header={header}
                   sortable
@@ -159,19 +227,27 @@ class AllSubscriptions extends Component {
                   className="p-datatable-responsive-demo p-datatable-gridlines p-datatable-striped"
                   value={this.state.data}
                   paginator
+                  paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown CurrentPageReport"
                   rows={10}
                   rowsPerPageOptions={[10, 20, 50]}
-                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
-                  emptyMessage="لا يوجد مدفوعات"
+                  currentPageReportTemplate="عرض {first} – {last} من {totalRecords} إشتراك"
+                  emptyMessage={
+                    <TableEmpty
+                      loading={this.state.tableLoading}
+                      icon="pi pi-calendar"
+                      title="لا يوجد مدفوعات"
+                      hint="سجّل أول إشتراك فترة لطالب، وسيظهر هنا"
+                      action={{ label: "إشتراك فترة جديد", onClick: () => this.setState({ addOpen: true }) }}
+                    />
+                  }
                 >
+                  {/* no column filters: the search above covers these */}
                   <Column
-                    filter
                     sortable
                     field="studentName"
                     header="إسم الطالب"
                   ></Column>
                   <Column
-                    filter
                     sortable
                     field="studentMobile"
                     header="رقم الموبايل"
@@ -184,13 +260,18 @@ class AllSubscriptions extends Component {
                     header="الشهر"
                   ></Column> */}
                   <Column
-                    filter
                     sortable
                     field="value"
                     header="المبلغ"
                   ></Column>
-                  <Column header="حذف" body={actionBodyTemplate}></Column>
+                  <Column
+                    header="الإجراءات"
+                    headerStyle={{ width: "92px" }}
+                    bodyStyle={{ width: "92px" }}
+                    body={actionBodyTemplate}
+                  ></Column>
                 </DataTable>
+                </TableShell>
               </Card>
             </div>
           </div>

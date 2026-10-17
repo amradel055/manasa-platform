@@ -1,0 +1,376 @@
+// Variables
+@import "../../assets/css/vars";
+
+// The centred dialog. Scoped to `.m-modal`, which Modal.js puts on
+// PrimeReact's Dialog root, so no other dialog in the dashboard is touched.
+//
+// NOTE on weights -- index.scss remaps Cairo: 100 = Regular, 200 = SemiBold,
+// 300 = Bold, 400 = Black. The usual 400/700 land on the wrong face.
+$k-reg: 100;
+$k-sbold: 200;
+$k-bold: 300;
+$k-black: 400;
+
+$k-line: #e3eaec;
+$k-ink: #16303a;
+$k-ink-2: #5b747d;
+$k-ink-3: #8299a1;
+$k-surface: #f4f7f8;
+$k-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
+
+.p-dialog.m-modal {
+    border: 0;
+    border-radius: 16px;
+    box-shadow: 0 40px 90px -35px rgba(4, 28, 36, 0.6);
+    overflow: hidden;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+
+    // PrimeReact's own header is off via showHeader, but the rule stays so
+    // turning it back on cannot put a second title above ours.
+    > .p-dialog-header { display: none; }
+
+    // The content element is the dialog's only child, so it is the column
+    // that holds our three rows -- and it must not scroll itself, or the
+    // head and the foot scroll away with the fields.
+    > .p-dialog-content {
+        flex: 1;
+        min-height: 0;
+        padding: 0;
+        border-radius: 0;
+        background: $k-surface;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    // ---- head ----
+    .m-modal-head {
+        flex: none;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 18px;
+        background: $white;
+        border-bottom: 1px solid $k-line;
+    }
+
+    .m-modal-title {
+        flex: 1;
+        min-width: 0;
+
+        b {
+            display: block;
+            font: $med-size-black;
+            font-size: 17px;
+            font-weight: $k-black;
+            letter-spacing: -0.02em;
+            color: $dark-blue-one;
+        }
+
+        small {
+            display: block;
+            margin-top: 2px;
+            font: $tiny-size-reg;
+            font-size: 11.5px;
+            font-weight: $k-reg;
+            color: $k-ink-3;
+        }
+    }
+
+    .m-modal-x {
+        flex: none;
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border: 1px solid $k-line;
+        border-radius: 10px;
+        background: $white;
+        color: $k-ink-2;
+        cursor: pointer;
+        transition: border-color 0.18s ease, color 0.18s ease,
+                    background 0.18s ease, transform 0.22s $k-ease;
+
+        .pi { font-size: 13px; }
+
+        &:hover:enabled {
+            background: #fdf3f1;
+            border-color: #e3a79e;
+            color: $warningTxt;
+            transform: rotate(90deg);
+        }
+
+        &:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+    }
+
+    // ---- body: the only part that may scroll ----
+    .m-modal-body {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        padding: 16px 18px;
+
+        scrollbar-width: thin;
+        scrollbar-color: rgba(18, 58, 72, 0.3) transparent;
+
+        &::-webkit-scrollbar { width: 6px; }
+        &::-webkit-scrollbar-track { background: transparent; }
+        &::-webkit-scrollbar-thumb {
+            background: rgba(18, 58, 72, 0.28);
+            border-radius: 99px;
+        }
+
+        // =============================================================
+        // a whole page mounted inside
+        // =============================================================
+        // AddSubscription is a route component: it brings its own title
+        // strip, its content wrapper and a div called "card" -- which
+        // Bootstrap claims, giving it a white fill and a border. None of
+        // that is removed from the page; it is only not drawn in here,
+        // where the modal's own header already says what this is.
+        //
+        // These rules live here rather than in Form.scss because the
+        // standalone route still wants its header: it is the only thing on
+        // that page that names it.
+        .page-head { display: none; }
+
+        .content,
+        .container {
+            padding: 0;
+            margin: 0;
+            max-width: none;
+            width: 100%;
+        }
+
+        .card,
+        .p-card {
+            background: transparent;
+            border: 0;
+            border-radius: 0;
+            margin: 0;
+            padding: 0;
+            box-shadow: none;
+        }
+
+        .p-card > .p-card-body { padding: 0; }
+
+        // the form's own action bar: its button is in the footer now
+        .m-actions { display: none; }
+
+        // A short form here is a single column: this is a narrow box, and
+        // Field/Form.scss's three columns would make each field unusable.
+        .m-form {
+            .m-sec {
+                border: 0;
+                border-radius: 0;
+                margin: 0;
+                background: transparent;
+
+                > h3 { display: none; }
+            }
+
+            // Not one fixed column: this modal is sized by its content, and
+            // a 780px one holding five fields should use the width it asked
+            // for. auto-fit collapses to a single column on a narrow one.
+            .m-grid {
+                grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+                gap: 13px;
+                padding: 0;
+            }
+        }
+    }
+
+    // a form inside portals its own submit button here
+    .m-modal-slot {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+
+        &:empty { display: none; }
+    }
+
+    // ---- foot ----
+    .m-modal-foot {
+        flex: none;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        // the end of the row, which in this RTL dashboard is the left
+        justify-content: flex-end;
+        gap: 9px;
+        padding: 13px 18px;
+        background: $white;
+        border-top: 1px solid $k-line;
+
+        .p-button {
+            min-height: 44px;
+            padding: 0 22px;
+            border: 0;
+            border-radius: 11px;
+            // index.scss declares  .p-button.add-button { background-color:
+            // $blue !important }  globally, and the button a form portals in
+            // here carries that class. An !important can only be answered by
+            // another one.
+            background: $yellow !important;
+            background-color: $yellow !important;
+            color: $white;
+            font: $small-size-bold;
+            font-size: 14px;
+            font-weight: $k-bold;
+            box-shadow: none;
+            transition: transform 0.2s $k-ease, filter 0.18s ease;
+
+            .p-button-icon { font-size: 12px; }
+
+            &:enabled:hover {
+                background: $yellow !important;
+                transform: translateY(-2px);
+                filter: brightness(1.06);
+            }
+
+            &:enabled:active { transform: none; }
+            &:focus { box-shadow: none; }
+
+            // working: it stays gold so it is still the thing you just
+            // pressed, but it stops inviting another press
+            &:disabled {
+                opacity: 0.75;
+                cursor: progress;
+            }
+
+            // a second, quieter action beside the main one
+            &.p-button-secondary {
+                background: $white !important;
+                background-color: $white !important;
+                border: 1px solid $k-line;
+                color: $k-ink-2;
+
+                &:enabled:hover {
+                    background: $white !important;
+                    border-color: #cfdde1;
+                    color: $k-ink;
+                }
+            }
+        }
+    }
+}
+
+// ---- the entrance ----
+// PrimeReact opens a dialog from scale(0.7) in 150ms, which at this size
+// reads as a pop rather than something arriving. A smaller scale, a short
+// rise and a little overshoot instead; the exit is faster and does not
+// overshoot, because leaving should answer the click immediately.
+.p-dialog.m-modal.p-dialog-enter {
+    opacity: 0;
+    transform: scale(0.94) translateY(14px);
+}
+
+.p-dialog.m-modal.p-dialog-enter-active {
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.2s ease,
+                transform 0.34s cubic-bezier(0.34, 1.32, 0.4, 1);
+}
+
+.p-dialog.m-modal.p-dialog-exit-active {
+    opacity: 0;
+    transform: scale(0.97) translateY(8px);
+    transition: opacity 0.16s ease, transform 0.2s ease-in;
+}
+
+// ---- a confirmation ----
+.p-dialog.m-modal {
+    .m-confirm {
+        padding: 6px 2px 2px;
+        text-align: center;
+
+        .m-confirm-ico {
+            position: relative;
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 14px;
+            display: grid;
+            place-items: center;
+            border-radius: 18px;
+            background: #fdeceA;
+            color: $warningTxt;
+
+            .pi { font-size: 22px; }
+
+            // one ring travels outward as it appears, then stops: a loop
+            // would keep pulling the eye after the question is read
+            &::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                border-radius: inherit;
+                border: 2px solid currentColor;
+                opacity: 0.5;
+                animation: mConfirmRing 0.6s $k-ease 0.1s both;
+            }
+        }
+
+        &.is-brand .m-confirm-ico {
+            background: #e8f1f4;
+            color: $blue;
+        }
+
+        .m-confirm-msg {
+            margin: 0;
+            font: $small-size-bold;
+            font-size: 15px;
+            font-weight: $k-bold;
+            line-height: 1.7;
+            color: $k-ink;
+        }
+
+        .m-confirm-note {
+            margin: 7px 0 0;
+            font: $tiny-size-reg;
+            font-size: 12.5px;
+            font-weight: $k-reg;
+            line-height: 1.75;
+            color: $k-ink-3;
+        }
+    }
+
+    // the destructive answer is the only red on the page, so it cannot be
+    // mistaken for the way out
+    .m-modal-foot .p-button.m-confirm-go.is-danger {
+        background: $warningTxt;
+        color: $white;
+
+        &:enabled:hover { background: #9b2a2a; }
+    }
+
+    .m-modal-foot .p-button.m-confirm-go.is-brand {
+        background: $blue;
+        color: $white;
+
+        &:enabled:hover { background: $dark-blue; }
+    }
+}
+
+@keyframes mConfirmRing {
+    from { transform: scale(0.82); opacity: 0; }
+    to { transform: scale(1.28); opacity: 0; }
+}
+
+// the scrim behind it
+.p-dialog-mask.p-component-overlay {
+    background: rgba(6, 30, 40, 0.5);
+    backdrop-filter: blur(2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .p-dialog.m-modal,
+    .p-dialog.m-modal * {
+        animation: none !important;
+        transition: none !important;
+    }
+}

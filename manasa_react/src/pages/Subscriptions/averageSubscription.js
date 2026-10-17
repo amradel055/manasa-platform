@@ -13,7 +13,7 @@ import { Card } from 'primereact/card';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
-import { Dropdown } from 'primereact/dropdown';
+import Select from '../../components/Field/Select';
 
 // Properties
 const properties = require('../../properties.json');
@@ -145,7 +145,7 @@ class AverageSubscription extends Component {
                                     <div className="p-col-12 p-md-4">
                                         <div className="p-inputgroup">
                                             <span className="p-float-label">
-                                                <Dropdown value={this.state.selectedStage} options={schoolStages} placeholder="إختر المرحلة الدراسية" onChange={(e) => this.getStudentsByStageID(e)} optionLabel="label" filter showClear filterBy="label" />   
+                                                <Select value={this.state.selectedStage} options={schoolStages} placeholder="إختر المرحلة الدراسية" onChange={(e) => this.getStudentsByStageID(e)} optionLabel="label" filter showClear filterBy="label" />   
                                          
                                             </span>
                                         </div>

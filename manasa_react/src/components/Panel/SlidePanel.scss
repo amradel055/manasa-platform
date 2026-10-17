@@ -144,7 +144,7 @@ $p-radius: 14px;
         border-bottom: 1px solid $p-line;
     }
 
-    // the form's primary action lands here
+    // the panel's primary action lands here, from either direction
     .m-panel-slot {
         margin-inline-start: auto;
         display: flex;
@@ -152,6 +152,39 @@ $p-radius: 14px;
         gap: 8px;
 
         &:empty { display: none; }
+
+        // matches the button Field/Form.scss gives a form's own save action,
+        // so a panel looks the same whichever way its action arrived
+        .p-button {
+            min-height: 36px;
+            padding: 0 18px;
+            border: 0;
+            border-radius: 10px;
+            // index.scss declares  .add-button { width: 100% !important }  and
+            // .p-button.add-button { background-color: $blue !important }
+            // globally, and a form portalling its save button up here brings
+            // that class with it. An !important can only be answered by one.
+            width: auto !important;
+            background: $yellow !important;
+            background-color: $yellow !important;
+            color: $white;
+            font: $tiny-size-bold;
+            font-size: 13.5px;
+            font-weight: $p-bold;
+            box-shadow: none;
+            transition: transform 0.2s $p-ease, filter 0.18s ease;
+
+            .p-button-icon { font-size: 12px; }
+
+            &:enabled:hover {
+                background: $yellow !important;
+                transform: translateY(-2px);
+                filter: brightness(1.06);
+            }
+
+            &:enabled:active { transform: none; }
+            &:focus { box-shadow: none; }
+        }
     }
 
     .m-panel-title {

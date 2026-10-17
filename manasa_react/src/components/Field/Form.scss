@@ -158,62 +158,129 @@ $f-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
         resize: vertical;
     }
 
-    // ---- the dropdown ----
-    .m-select.p-dropdown {
-        width: 100%;
-        min-height: $f-h;
-        display: flex;
-        align-items: center;
-        padding: 0;
-        border: 1px solid $f-line;
-        border-radius: 11px;
-        background: $white;
+}
+
+// ---- the dropdown ----
+// Deliberately NOT inside .m-form. A Select is used in toolbars and filter
+// bars too, not only in forms, and scoped to .m-form it looked like ours in
+// one place and like PrimeReact's default in the other.
+//
+// `.p-component` is on the selector for weight, not for meaning: the theme's
+// own rules are two classes deep, so matching that only ties -- and a tie is
+// decided by which stylesheet the bundler happens to emit last.
+.m-select.p-dropdown.p-component {
+    width: 100%;
+    min-height: $f-h;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    border: 1px solid $f-line;
+    border-radius: 11px;
+    background: $white;
+    box-shadow: none;
+    transition: border-color 0.18s ease;
+
+    &:not(.p-disabled):hover { border-color: $f-line-hi; }
+
+    &:not(.p-disabled).p-focus,
+    &.p-inputwrapper-focus {
         box-shadow: none;
-        transition: border-color 0.18s ease;
+        border-color: $blue;
+    }
 
-        &:not(.p-disabled):hover { border-color: $f-line-hi; }
+    .p-dropdown-label {
+        padding: 0 15px;
+        font: $small-size-sbold;
+        font-size: 14px;
+        font-weight: $f-sbold !important;
+        color: $f-ink;
+        line-height: #{$f-h - 2px};
+    }
 
-        &:not(.p-disabled).p-focus,
-        &.p-inputwrapper-focus {
-            box-shadow: none;
-            border-color: $blue;
-        }
+    // the placeholder has to read lighter than a value, or a filled
+    // field and an empty one look the same at a glance
+    .p-dropdown-label.p-placeholder {
+        color: $f-ink-3;
+        font-weight: $f-reg !important;
+    }
 
-        .p-dropdown-label {
-            padding: 0 15px;
-            font: $small-size-sbold;
-            font-size: 14px;
-            font-weight: $f-sbold !important;
-            color: $f-ink;
-            line-height: #{$f-h - 2px};
-        }
+    .p-dropdown-trigger {
+        width: 40px;
+        color: $f-ink-3;
 
-        // the placeholder has to read lighter than a value, or a filled
-        // field and an empty one look the same at a glance
-        .p-dropdown-label.p-placeholder {
-            color: $f-ink-3;
-            font-weight: $f-reg !important;
-        }
+        .p-dropdown-trigger-icon { font-size: 11px; }
+    }
 
-        .p-dropdown-trigger {
-            width: 40px;
-            color: $f-ink-3;
+    &.p-disabled {
+        background: #f4f7f8;
+        opacity: 1;
 
-            .p-dropdown-trigger-icon { font-size: 11px; }
-        }
+        .p-dropdown-label { color: $f-ink-3; }
+    }
 
-        &.p-disabled {
-            background: #f4f7f8;
-            opacity: 1;
+    // ---- waiting on the field before it ----
+    // Dashed, because a solid disabled field reads as broken while this one
+    // is only not ready yet; the cursor says the same thing.
+    &.is-blocked {
+        border-style: dashed;
+        cursor: not-allowed;
 
-            .p-dropdown-label { color: $f-ink-3; }
+        .p-dropdown-label { color: $f-ink-3; }
+        .p-dropdown-trigger { opacity: 0.45; }
+    }
+
+    // ---- waiting for its options ----
+    // The chevron is replaced by a spinner rather than joined by one: a
+    // chevron promises a list to open, and there is not one yet.
+    &.is-loading {
+        background: $white;
+        cursor: progress;
+
+        .p-dropdown-label { color: $f-ink-3; }
+
+        .p-dropdown-trigger .p-dropdown-trigger-icon { display: none; }
+
+        .p-dropdown-trigger::after {
+            content: "";
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: 2px solid $f-line;
+            border-top-color: $blue;
+            animation: mSelectSpin 0.7s linear infinite;
         }
     }
+}
+
+@keyframes mSelectSpin {
+    to { transform: rotate(360deg); }
 }
 
 // The options list is rendered on <body>, outside .m-form, so it is matched
 // by its own class instead.
 .p-dropdown-panel {
+    // ---- still arriving ----
+    // The message element is where "no results" would go, which is exactly
+    // the right place: it is the only thing in an empty list, and it is what
+    // the reader is already looking at.
+    &.is-loading .p-dropdown-empty-message {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        color: #5b747d;
+
+        &::before {
+            content: "";
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid #e3eaec;
+            border-top-color: #198baf;
+            animation: mSelectSpin 0.7s linear infinite;
+        }
+    }
+
     margin-top: 6px;
     border: 1px solid $f-line;
     border-radius: 12px;
@@ -468,6 +535,352 @@ $f-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
             &:enabled:hover { background: $white; border-color: $blue; color: $blue; }
             &:focus { box-shadow: none; }
         }
+    }
+}
+
+// =====================================================================
+// Legacy scaffolding
+// =====================================================================
+// Most forms in this project are still built the old way: p-grid + p-col for
+// the columns, p-inputgroup + p-float-label around every control. Rebuilding
+// each one the way AddLesson was rebuilt is the better end state, but it is
+// also 300-odd lines of JSX per page and every one of those lines is a
+// chance to break a handler.
+//
+// So a page can instead be WRAPPED in .m-form.m-form-legacy and left
+// completely alone. The two things that made the old scaffolding look broken
+// are fixed from here:
+//
+//   1. PrimeReact's own rule giving .p-inputgroup .p-inputtext a width of
+//      1%, which is why a field could render forty pixels wide;
+//   2. a float label parked at top: 50%, sitting on top of the value.
+//
+// A label is raised on three separate triggers below, because a Dropdown, a
+// typed input and a browser-autofilled input each announce "filled"
+// differently -- and index.scss forces a weight on both the field and the
+// label with !important, so the weights here need one too.
+.m-form-legacy {
+    // the page's own chrome, when a whole page is mounted inside a modal
+    .page-head { display: none; }
+
+    .content,
+    .container {
+        padding: 0;
+        margin: 0;
+        max-width: none;
+        width: 100%;
+    }
+
+    .card,
+    .p-card {
+        background: transparent;
+        border: 0;
+        border-radius: 0;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+    }
+
+    .p-card > .p-card-body { padding: 0; }
+    .p-card .p-card-title { display: none; }
+
+    .p-grid {
+        margin: 0 -7px;
+
+        > [class*="p-col"] { padding: 7px; }
+    }
+
+    // one field, not a row of joined controls
+    .p-inputgroup {
+        display: block;
+
+        > * { width: 100%; }
+    }
+
+    .p-float-label {
+        position: relative;
+        display: block;
+
+        > label {
+            inset-inline-start: 15px;
+            top: 50%;
+            margin-top: -0.5em;
+            font: $tiny-size-reg;
+            font-size: 13.5px;
+            font-weight: $f-reg !important;
+            color: $f-ink-3;
+            transition: top 0.18s $f-ease, font-size 0.18s $f-ease,
+                        color 0.18s ease;
+            pointer-events: none;
+        }
+    }
+
+    .p-inputtext,
+    .p-inputtextarea,
+    .p-dropdown {
+        width: 100%;
+        min-height: 54px;
+        // the top padding is the room the raised label drops into
+        padding: 22px 15px 7px;
+        border: 1px solid $f-line;
+        border-radius: 11px;
+        background: $white;
+        font: $small-size-sbold;
+        font-size: 14px;
+        font-weight: $f-sbold !important;
+        color: $f-ink;
+        box-shadow: none;
+        transition: border-color 0.18s ease;
+
+        &:enabled:hover { border-color: $f-line-hi; }
+
+        &:enabled:focus,
+        &:focus {
+            outline: 0;
+            box-shadow: none;
+            border-color: $blue;
+        }
+    }
+
+    // a Dropdown is a wrapper: its own padding comes off and the label it
+    // shows carries it instead
+    .p-dropdown {
+        padding: 0;
+        display: flex;
+        align-items: center;
+
+        .p-dropdown-label {
+            padding: 22px 15px 7px;
+            font-weight: $f-sbold !important;
+            line-height: 1.2;
+        }
+
+        // Hidden only when there is a label to take its place. Several of
+        // these older forms wrap a Dropdown in .p-float-label without ever
+        // giving it a <label>, and hiding the placeholder there left an
+        // empty box with nothing in it at all.
+        .p-float-label:has(> label) &.p-dropdown-label.p-placeholder,
+        .p-float-label:has(> label) .p-dropdown-label.p-placeholder {
+            color: transparent;
+        }
+
+        .p-dropdown-trigger {
+            width: 40px;
+            color: $f-ink-3;
+
+            .p-dropdown-trigger-icon { font-size: 11px; }
+        }
+
+        &:not(.p-disabled).p-focus { box-shadow: none; border-color: $blue; }
+    }
+
+    // ---- the three ways a field can read as filled ----
+    .p-float-label input:focus ~ label,
+    .p-float-label input.p-filled ~ label,
+    .p-float-label input:not(:placeholder-shown) ~ label,
+    .p-float-label textarea:focus ~ label,
+    .p-float-label textarea.p-filled ~ label,
+    .p-float-label .p-inputwrapper-focus ~ label,
+    .p-float-label .p-inputwrapper-filled ~ label {
+        top: 8px;
+        margin-top: 0;
+        font-size: 11px;
+        font-weight: $f-bold !important;
+        color: $blue;
+    }
+
+    // A Dropdown with nothing chosen shows its placeholder where the label
+    // sits, so the placeholder is hidden until the label gets out of the way.
+    .p-float-label .p-inputwrapper-focus .p-dropdown-label.p-placeholder,
+    .p-float-label .p-inputwrapper-filled .p-dropdown-label.p-placeholder {
+        color: $f-ink-3;
+    }
+
+    // ---- upload zones ----
+    // The same drop zone the rebuilt forms get, applied to the FileUpload
+    // these older pages render directly. PrimeReact draws the buttons first
+    // and the prompt second; `order` puts the prompt where it is read first.
+    .p-fileupload {
+        display: flex;
+        flex-direction: column;
+        border: 1.5px dashed $f-line-hi;
+        border-radius: 14px;
+        background: #fbfdfd;
+        overflow: hidden;
+        transition: border-color 0.2s ease, background 0.2s ease;
+
+        &:hover { border-color: $blue; background: #f5fbfc; }
+    }
+
+    .p-fileupload .p-fileupload-content {
+        order: -1;
+        padding: 22px 16px 0;
+        border: 0;
+        background: transparent;
+        text-align: center;
+        color: $f-ink-3;
+        font: $tiny-size-sbold;
+        font-size: 13px;
+        font-weight: $f-sbold;
+
+        &::before {
+            content: "";
+            display: block;
+            width: 46px;
+            height: 46px;
+            margin: 0 auto 12px;
+            border-radius: 15px;
+            background: #e9eff1 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237fa0ac' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 15.5V4M7.5 8.5 12 4l4.5 4.5M4.5 16.5v2a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-2'/%3E%3C/svg%3E") center / 20px no-repeat;
+        }
+    }
+
+    // One more ancestor than the theme uses, so these win outright instead
+    // of tying on two classes and leaving the result to file order.
+    .p-fileupload .p-fileupload-buttonbar {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        padding: 14px 16px 20px;
+        border: 0;
+        background: transparent;
+    }
+
+    // index.scss paints .p-fileupload-choose solid teal with !important, so
+    // the outline here needs one of its own to answer it.
+    .p-fileupload .p-fileupload-buttonbar .p-button {
+        min-height: 40px;
+        padding: 0 16px;
+        border: 1px solid $f-line !important;
+        border-radius: 10px;
+        background: $white !important;
+        background-color: $white !important;
+        color: $f-ink-2;
+        font: $tiny-size-bold;
+        font-size: 13px;
+        font-weight: $f-bold;
+        box-shadow: none;
+        transition: border-color 0.18s ease, color 0.18s ease,
+                    transform 0.18s $f-ease;
+
+        .p-button-icon { font-size: 12px; }
+
+        &:enabled:hover {
+            border-color: $blue !important;
+            color: $blue;
+            transform: translateY(-1px);
+        }
+
+        &.p-fileupload-choose {
+            color: $blue;
+            border-color: #bcd9e2 !important;
+        }
+    }
+
+    // =================================================================
+    // the question builder
+    // =================================================================
+    // AddExam and AddCommonExam repeat a row per question and per answer.
+    // Each row is given a card of its own so a long builder reads as a list
+    // of things rather than one continuous field of inputs.
+    .question,
+    .answer {
+        margin-bottom: 12px !important;
+        padding: 12px;
+        border: 1px solid $f-line;
+        border-radius: 12px;
+        background: $white;
+        transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    // Bootstrap's .bg-success marks the question whose answers are being
+    // edited. Worth marking -- but not in full-strength green, which means
+    // "succeeded" and swamps the fields sitting on it.
+    .question.bg-success {
+        background: #f2f8f4 !important;
+        border-color: #b9dcc6;
+    }
+
+    // the add-a-question / add-an-answer button is secondary to the one that
+    // saves the whole form, so it is an outline and not a second solid block
+    .add-question {
+        min-height: 42px !important;
+        padding: 0 18px !important;
+        border: 1px solid #bcd9e2 !important;
+        border-radius: 10px !important;
+        background: $white !important;
+        background-color: $white !important;
+        color: $blue !important;
+        font-size: 13.5px !important;
+
+        &:enabled:hover {
+            background: #f1f8fa !important;
+            background-color: #f1f8fa !important;
+            border-color: $blue !important;
+        }
+    }
+
+    // the round buttons that sit on a question row: tinted by meaning, the
+    // way the table's row actions are
+    .question .p-button.p-button-rounded,
+    .answer .p-button.p-button-rounded {
+        width: 36px !important;
+        height: 36px !important;
+        min-height: 36px !important;
+        padding: 0 !important;
+        border: 1px solid transparent !important;
+        border-radius: 10px !important;
+        background: #e8f1f4 !important;
+        background-color: #e8f1f4 !important;
+        color: #0f6d8a !important;
+        box-shadow: none;
+
+        .pi { color: inherit; font-size: 13px; }
+
+        &:enabled:hover {
+            background: $blue !important;
+            background-color: $blue !important;
+            color: $white !important;
+        }
+
+        &.p-button-danger {
+            background: #fdeceA !important;
+            background-color: #fdeceA !important;
+            color: $warningTxt !important;
+
+            &:enabled:hover {
+                background: $warningTxt !important;
+                background-color: $warningTxt !important;
+                color: $white !important;
+            }
+        }
+    }
+
+    // ---- the button that submits ----
+    .p-button {
+        min-height: 48px;
+        padding: 0 24px;
+        border: 0;
+        border-radius: 11px;
+        background: $yellow;
+        color: $white;
+        font: $small-size-bold;
+        font-size: 14.5px;
+        font-weight: $f-bold;
+        box-shadow: none;
+        transition: transform 0.2s $f-ease, filter 0.18s ease;
+
+        &:enabled:hover {
+            background: $yellow;
+            transform: translateY(-2px);
+            filter: brightness(1.06);
+        }
+
+        &:enabled:active { transform: none; }
+        &:focus { box-shadow: none; }
+
+        // the saving state these pages set by class name
+        &.loading { background: $dark-blue-one; color: $white; }
     }
 }
 

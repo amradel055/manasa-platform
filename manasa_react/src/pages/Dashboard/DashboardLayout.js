@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 
 // CSS -- these three are what load PrimeReact's theme and icons for the whole
 // dashboard. They used to live in Header.js; keep them here, since this layout
@@ -25,11 +26,51 @@ const LOGO = require(`../../assets/img/${properties.teacher.logo}`).default;
  * swaps only the content -- the rail keeps its open sections and its scroll.
  */
 class DashboardLayout extends Component {
-  // which section is expanded in the rail; null = all closed
-  state = { open: null };
+  // Which section is expanded in the rail.
+  //
+  //   undefined -- nobody has touched the rail yet, so the section holding
+  //                the current page opens itself (see openIndex in render)
+  //   a number  -- that section, chosen by a click
+  //   null      -- all closed, also by a click
+  //
+  // The three states are distinct on purpose: without the first one there is
+  // no way to tell "closed because you closed it" from "closed because you
+  // have not touched it", and the rail would re-open itself every render.
+  state = { open: undefined };
 
-  toggleSection = (i) => {
-    this.setState((s) => ({ open: s.open === i ? null : i }));
+  /**
+   * Which single rail entry leads to the page being looked at.
+   *
+   * A prefix match on its own is not enough, because rail entries are
+   * prefixes of each other: standing on /subscriptions/addPeriod, both it
+   * and /subscriptions match, and the rail lit up twice. So every entry that
+   * matches is collected and the LONGEST one wins -- the most specific route
+   * that still contains the current page.
+   *
+   * The trailing slash in the prefix test is what stops /lessons matching
+   * /lessonsomething. The prefix part itself is still wanted: /lessons/add
+   * has no entry of its own, and should light "الحصص".
+   */
+  activeUrl = (items) => {
+    const here = this.props.location.pathname;
+
+    const urls = [];
+    items.forEach((item) => {
+      if (item.url) urls.push(item.url);
+      (item.items || []).forEach((k) => {
+        if (k.url) urls.push(k.url);
+      });
+    });
+
+    return urls
+      .filter((url) => here === url || here.startsWith(url + "/"))
+      .sort((a, b) => b.length - a.length)[0];
+  };
+
+  // `current` is the section open on screen, which is not always
+  // this.state.open -- it may be the one that opened itself.
+  toggleSection = (i, current) => {
+    this.setState({ open: current === i ? null : i });
   };
 
   // Whoever is signed in, as saved by the sign-in and signup flows. Read from
@@ -66,7 +107,6 @@ class DashboardLayout extends Component {
   };
 
   render() {
-    const { open } = this.state;
     const me = this.teacher();
 
     const items = [
@@ -98,14 +138,10 @@ class DashboardLayout extends Component {
         label: "الفترات ",
         icon: "pi pi-fw pi-calendar",
         items: [
-          {
-            label: "إشتراك فتره جديد",
-            icon: "pi pi-fw pi-plus",
-            url: `/subscriptions/add`,
-          },
-          {
-            separator: true,
-          },
+          // "إشتراك فتره جديد" is not here any more: that form opens as a
+          // modal from the button in the subscriptions page header, the way
+          // adding a lesson opens from the lessons page. The route still
+          // works; it is just not a second entry in a nine-item menu.
           {
             label: "اضافة فتره جديده",
             icon: "pi pi-fw pi-plus",
@@ -121,61 +157,25 @@ class DashboardLayout extends Component {
           },
         ],
       },
+      // One destination, so a link rather than a drawer: adding to the
+      // gallery is an action taken on the gallery page, not a second entry
+      // in a menu that already has nine of them. /gallery/add still works.
       {
           label:'المعرض',
           icon:'pi pi-fw pi-images',
-          items: [
-              {
-                  label: 'إضافة صورة/فيديو',
-                  icon: 'pi pi-fw pi-plus',
-                  url: `/gallery/add`
-              },
-              {
-                  separator:true
-              },
-              {
-                  label: 'كل المعرض',
-                  icon: 'pi pi-fw pi-images',
-                  url: `/gallery`
-              }
-          ]
+          url: `/gallery`
       },
+      // One destination: adding an exam is an action on the exams page.
+      // /exams/add still works.
       {
         label: "الإمتحانات",
         icon: "pi pi-fw pi-list",
-        items: [
-          {
-            label: "إضافة إمتحان",
-            icon: "pi pi-fw pi-plus",
-            url: `/exams/add`,
-          },
-          {
-            separator: true,
-          },
-          {
-            label: "كل الإمتحانات",
-            icon: "pi pi-fw pi-list",
-            url: `/exams`,
-          },
-        ],
+        url: `/exams`,
       },
+     // One destination, same reason.
      { label: "الاسئله الشائعه",
       icon: "pi pi-fw pi-list",
-      items: [
-        {
-          label: "إضافة سؤال ",
-          icon: "pi pi-fw pi-plus",
-          url: `/commonQuestions/add`,
-        },
-        {
-          separator: true,
-        },
-        {
-          label: "كل الاسئله",
-          icon: "pi pi-fw pi-list",
-          url: `/commonQuestions`,
-        },
-      ],
+      url: `/commonQuestions`,
     },
     // { label: "البريد",
     //   icon: "pi pi-fw pi-list",
@@ -264,6 +264,24 @@ class DashboardLayout extends Component {
      
     ];
 
+    // Worked out once for the whole rail, so there is exactly one answer.
+    const activeUrl = this.activeUrl(items);
+    const isHere = (url) => !!url && url === activeUrl;
+
+    // The section holding the page being looked at, so arriving at a child
+    // route does not land on a rail that gives no sign of where it is.
+    const autoOpen = items.findIndex((item) =>
+      (item.items || []).some((k) => isHere(k.url))
+    );
+
+    // state wins once the teacher has touched it; before that, the page does
+    const open =
+      this.state.open === undefined
+        ? autoOpen === -1
+          ? null
+          : autoOpen
+        : this.state.open;
+
     return (
       <div className="dash">
         {/* Only the three pixels of padding on this wrapper ever show of
@@ -296,13 +314,21 @@ class DashboardLayout extends Component {
                 {items.map((item, i) => {
                   const kids = (item.items || []).filter((k) => !k.separator);
 
+                  // a section counts as current when one of its children is
+                  const here =
+                    isHere(item.url) || kids.some((k) => isHere(k.url));
+
                   // Nothing underneath it: it goes somewhere instead of
                   // opening. No chevron either -- a chevron is a promise of
                   // something below, and there is nothing below.
                   if (!kids.length && item.url) {
                     return (
                       <div className="rail-sec" key={i}>
-                        <a className="rail-top" href={item.url}>
+                        <a
+                          className={`rail-top${here ? " here" : ""}`}
+                          href={item.url}
+                          aria-current={here ? "page" : undefined}
+                        >
                           <i className={item.icon}></i>
                           <span className="lbl">{item.label}</span>
                         </a>
@@ -311,11 +337,14 @@ class DashboardLayout extends Component {
                   }
 
                   return (
-                    <div className={`rail-sec${open === i ? " open" : ""}`} key={i}>
+                    <div
+                      className={`rail-sec${open === i ? " open" : ""}${here ? " here" : ""}`}
+                      key={i}
+                    >
                       <button
                         type="button"
-                        className="rail-top"
-                        onClick={() => this.toggleSection(i)}
+                        className={`rail-top${here ? " here" : ""}`}
+                        onClick={() => this.toggleSection(i, open)}
                         aria-expanded={open === i}
                       >
                         <i className={item.icon}></i>
@@ -323,15 +352,27 @@ class DashboardLayout extends Component {
                         <i className="pi pi-chevron-down cr"></i>
                       </button>
                       <div className="rail-kids">
+                        {/* One wrapper, not the links themselves: the 0fr-to-1fr
+                            accordion in the stylesheet collapses the rows the
+                            grid is TOLD about, and a grid told about one row
+                            gives every child after the first an implicit row of
+                            its own -- which is auto-height, and stays open. */}
+                        <div>
                         {/* a dot rather than a glyph: the children repeat the
                             section's own icon, so the marks added noise without
                             telling the reader anything */}
                         {kids.map((k, j) => (
-                          <a href={k.url} key={j}>
+                          <a
+                            href={k.url}
+                            key={j}
+                            className={isHere(k.url) ? "here" : undefined}
+                            aria-current={isHere(k.url) ? "page" : undefined}
+                          >
                             <span className="dot" aria-hidden="true"></span>
                             <span>{k.label}</span>
                           </a>
                         ))}
+                        </div>
                       </div>
                     </div>
                   );
@@ -370,4 +411,6 @@ class DashboardLayout extends Component {
   }
 }
 
-export default DashboardLayout;
+// withRouter, so the rail re-reads the path on every navigation rather than
+// only on the full page loads its own <a href> links happen to cause.
+export default withRouter(DashboardLayout);

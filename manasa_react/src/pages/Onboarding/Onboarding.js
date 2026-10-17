@@ -6,7 +6,7 @@ import "./Onboarding.scss";
 // Components
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
-import { Dropdown } from "primereact/dropdown";
+import Select from '../../components/Field/Select';
 import { Toast } from "primereact/toast";
 import { Button } from "primereact/button";
 
@@ -298,7 +298,7 @@ class Onboarding extends Component {
       <div className="step-content">
         <h2>2. أضف المواد لكل مرحلة</h2>
         <p className="step-desc">اختر المرحلة الدراسية، وسمّي المادة اللي هتدرّسها فيها</p>
-        <Dropdown
+        <Select
           value={selectedStageId}
           options={stageOptions}
           onChange={(e) => this.setState({ selectedStageId: e.value })}
@@ -347,7 +347,7 @@ class Onboarding extends Component {
       <div className="step-content">
         <h2>3. أنشئ الفترات الدراسية</h2>
         <p className="step-desc">الفترة هي اللي هيشترك فيها الطالب لمادة معيّنة (زي "الترم الأول")</p>
-        <Dropdown
+        <Select
           value={selectedMaterialId}
           options={materialOptions}
           onChange={(e) => this.setState({ selectedMaterialId: e.value })}

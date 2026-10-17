@@ -14,7 +14,7 @@ import { Card } from 'primereact/card';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
-import { Dropdown } from 'primereact/dropdown';
+import Select from '../../components/Field/Select';
 import { RadioButton } from 'primereact/radiobutton';
 import { FileUpload } from 'primereact/fileupload';
 
@@ -359,7 +359,7 @@ class EditExam extends Component {
                 <div className="p-col-12 p-md-2">
                     <div className="p-inputgroup">
                         <span className="p-float-label">
-                            <Dropdown value={qn.type} options={questionType} placeholder="نوع السؤال" onChange={(e) => {
+                            <Select value={qn.type} options={questionType} placeholder="نوع السؤال" onChange={(e) => {
                                 let temp = this.state.questions
                                 var q = temp.findIndex((ques => ques.id === qn.id));
                                 temp[q].type = e.value;
@@ -572,7 +572,7 @@ class EditExam extends Component {
                                     <div className="p-col-12 p-md-4">
                                         <div className="p-inputgroup">
                                             <span className="p-float-label">
-                                                <Dropdown value={this.state.selectedStage} options={gradesList} placeholder="إختر المرحلة الدراسية"
+                                                <Select value={this.state.selectedStage} options={gradesList} placeholder="إختر المرحلة الدراسية"
                                                  onChange={(e) => {this.setState({selectedStage: e.value});  this.getLessonsByStage(
                                                     e.value,
                                                     this.state.selectedMaterial,
@@ -585,7 +585,7 @@ class EditExam extends Component {
                                     <div className="p-col-12 p-md-4">
                     <div className="p-inputgroup">
                       <span className="p-float-label">
-                        <Dropdown
+                        <Select
                           value={this.state.selectedMaterial}
                           options={materialList}
                           placeholder="إختر المادة"
@@ -615,7 +615,7 @@ class EditExam extends Component {
                   <div className="p-col-12 p-md-4">
                     <div className="p-inputgroup">
                       <span className="p-float-label">
-                        <Dropdown
+                        <Select
                           value={this.state.selectedPeriod}
                           options={periods}
                           placeholder="  إختر الفترة "
@@ -638,21 +638,21 @@ class EditExam extends Component {
                                     <div className="p-col-12 p-md-4">
                                         <div className="p-inputgroup">
                                             <span className="p-float-label">
-                                                <Dropdown value={this.state.selectedLesson} options={lessonsList} placeholder="إختر الدرس" onChange={(e) => this.setState({selectedLesson: e.value})} optionLabel="label" filter showClear filterBy="label" />                                            
+                                                <Select value={this.state.selectedLesson} options={lessonsList} placeholder="إختر الدرس" onChange={(e) => this.setState({selectedLesson: e.value})} optionLabel="label" filter showClear filterBy="label" />                                            
                                             </span>
                                         </div>
                                     </div>
                                     <div className="p-col-12 p-md-4 p-mt-2">
                                         <div className="p-inputgroup">
                                             <span className="p-float-label">
-                                                <Dropdown value={this.state.selectedStatus} options={status} placeholder="حالة الإمتحان" onChange={(e) => this.setState({selectedStatus: e.value})} optionLabel="label" />                                            
+                                                <Select value={this.state.selectedStatus} options={status} placeholder="حالة الإمتحان" onChange={(e) => this.setState({selectedStatus: e.value})} optionLabel="label" />                                            
                                             </span>
                                         </div>
                                     </div>
                                     {/* <div className="p-col-12 p-md-4 p-mt-2">
                                         <div className="p-inputgroup">
                                             <span className="p-float-label">
-                                                <Dropdown value={this.state.selectedMonth} options={months} placeholder="الشهر" onChange={(e) => this.setState({selectedMonth: e.value})} optionLabel="label" />                                            
+                                                <Select value={this.state.selectedMonth} options={months} placeholder="الشهر" onChange={(e) => this.setState({selectedMonth: e.value})} optionLabel="label" />                                            
                                             </span>
                                         </div>
                                     </div> */}
@@ -669,7 +669,7 @@ class EditExam extends Component {
                   <div className="p-col-12 p-md-4">
                     <div className="p-inputgroup">
                       <span className="p-float-label">
-                        <Dropdown
+                        <Select
                           value={this.state.selectedType}
                           options={type}
                           placeholder="نوع الإمتحان"

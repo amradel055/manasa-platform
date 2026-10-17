@@ -633,6 +633,53 @@ $toast-icon-close: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/
   }
 }
 // ---------------------------------------------------------------------------
+// Focus
+//
+// No focus ring anywhere, on request.
+//
+// Two different things draw one, which is why this takes two rules: the
+// browser draws an `outline`, and the PrimeReact theme draws a `box-shadow`
+// on `:focus` for buttons, inputs, dropdowns and paginator links. Turning the
+// outline off never reached the second one.
+//
+// The cost, stated once: a teacher moving through a form with the Tab key now
+// has nothing telling them which field they are on. The fields themselves
+// still change their border colour on focus, so inputs are not silent -- but
+// buttons and links are. To bring back a ring for keyboard users only, and
+// not for mouse clicks, add:
+//
+//   *:focus-visible { outline: 2px solid $yellow; outline-offset: 2px; }
+*:focus,
+*:focus-visible {
+  outline: none;
+}
+
+// Matched by shape rather than by a list of components: PrimeReact spreads
+// this shadow across button, link, paginator, upload, checkbox and dialog
+// classes, and an enumerated list only has to miss one for the ring to come
+// back somewhere. `[class*="p-button"]` covers every variant of it at once.
+button:focus,
+button:active,
+a:focus,
+a:active,
+[class*="p-button"]:focus,
+[class*="p-button"]:active,
+[class*="p-button"]:enabled:focus,
+.p-link:focus,
+.p-link:active,
+.p-paginator .p-paginator-element:focus,
+.p-checkbox .p-checkbox-box:focus,
+.p-sidebar .p-sidebar-close:focus,
+.p-dialog .p-dialog-header-icon:focus,
+.p-inputtext:focus,
+.p-inputtext:enabled:focus,
+.p-dropdown:focus,
+.p-dropdown.p-focus,
+.p-dropdown:not(.p-disabled).p-focus {
+  box-shadow: none !important;
+}
+
+// ---------------------------------------------------------------------------
 // Scrollbars
 // The browser default is a wide grey slab that cuts into every panel, table and
 // dialog in the dashboard. This slims it down and ties it to the brand, with a
